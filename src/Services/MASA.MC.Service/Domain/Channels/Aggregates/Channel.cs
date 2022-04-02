@@ -27,9 +27,21 @@ namespace MASA.MC.Service.Admin.Domain.Channels.Aggregates
             DisplayName = displayName;
             Type = type;
             IsStatic = isStatic;
-            ExtraProperties = extraProperties ?? new();
+            foreach (var p in extraProperties)
+            {
+                SetDataValue(p.Key, p.Value);
+            }
         }
 
+        public string GetDataValue(string name)
+        {
+            return ExtraProperties?.GetOrDefault(name)??string.Empty;
+        }
+
+        public void SetDataValue(string name, string value)
+        {
+            ExtraProperties[name] = value;
+        }
     }
     
 }
