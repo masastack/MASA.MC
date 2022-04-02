@@ -1,16 +1,14 @@
-﻿using AutoMapper;
-using MASA.MC.Contracts.Admin.Dtos.NotificationTemplates;
+﻿using MASA.MC.Contracts.Admin.Dtos.NotificationTemplates;
 using MASA.MC.Service.Admin.Domain.NotificationTemplates.Aggregates;
 
-namespace MASA.MC.Service.Admin.Application.NotificationTemplates.Profiles
-{
-    public class NotificationTemplateProfile : Profile
-    {
-        public NotificationTemplateProfile()
-        {
+namespace MASA.MC.Service.Admin.Application.NotificationTemplates.Profiles;
 
-            CreateMap<NotificationTemplate, NotificationTemplateDto>();
-            CreateMap<NotificationTemplateCreateUpdateDto, NotificationTemplate>();
-        }
+public class NotificationTemplateProfile : Profile
+{
+    public NotificationTemplateProfile()
+    {
+
+        CreateMap<NotificationTemplate, NotificationTemplateDto>();
+        CreateMap<NotificationTemplateCreateUpdateDto, NotificationTemplate>();
     }
 }

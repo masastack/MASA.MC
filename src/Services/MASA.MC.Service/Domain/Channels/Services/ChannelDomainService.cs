@@ -1,25 +1,24 @@
 ﻿using MASA.MC.Service.Admin.Domain.Channels.Aggregates;
 using MASA.MC.Service.Admin.Domain.Channels.Repositories;
 
-namespace MASA.MC.Service.Admin.Domain.Channels.Services
+namespace MASA.MC.Service.Admin.Domain.Channels.Services;
+
+public class ChannelDomainService : DomainService
 {
-    public class ChannelDomainService : DomainService
+    private readonly IChannelRepository _channelRepository;
+
+    public ChannelDomainService(IDomainEventBus eventBus, IChannelRepository channelRepository) : base(eventBus)
     {
-        private readonly IChannelRepository _channelRepository;
+        _channelRepository = channelRepository;
+    }
 
-        public ChannelDomainService(IDomainEventBus eventBus, IChannelRepository channelRepository) : base(eventBus)
+    public async Task<Channel> DeleteAsync(Channel channel)
+    {
+        if (channel.IsStatic)
         {
-            _channelRepository = channelRepository;
+            throw new UserFriendlyException("该渠道不允许删除");
         }
 
-        public async Task<Channel> DeleteAsync(Channel channel)
-        {
-            if (channel.IsStatic)
-            {
-                throw new UserFriendlyException("该渠道不允许删除");
-            }
-
-            return await _channelRepository.RemoveAsync(channel);
-        }
+        return await _channelRepository.RemoveAsync(channel);
     }
 }

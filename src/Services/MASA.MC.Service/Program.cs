@@ -1,8 +1,4 @@
-﻿using Masa.Contrib.Configuration;
-using Masa.Utils.Exceptions.Extensions;
-using MASA.MC.Service.Admin.Infrastructure.EntityFrameworkCore;
-
-var builder = WebApplication.CreateBuilder(args);
+﻿var builder = WebApplication.CreateBuilder(args);
 builder.AddMasaConfiguration();
 builder.Services.AddDaprClient();
 builder.Services.AddActors(options =>
