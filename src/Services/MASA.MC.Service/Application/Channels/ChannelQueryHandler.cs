@@ -37,7 +37,7 @@ public class ChannelQueryHandler
             PageSize = options.PageSize,
             Sorting = new Dictionary<string, bool>
             {
-                [nameof(Channel.CreationTime)] = false
+                [nameof(Channel.CreationTime)] = true
             }
         });
         var dtos = _mapper.Map<List<ChannelDto>>(resultList.Result).ToList();
