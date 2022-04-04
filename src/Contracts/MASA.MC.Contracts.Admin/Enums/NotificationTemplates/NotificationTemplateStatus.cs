@@ -5,5 +5,6 @@ public enum NotificationTemplateStatus
     Normal,
     WaitAudit,
     Approved,
-    Refuse
+    Refuse,
+    Invalid
 }

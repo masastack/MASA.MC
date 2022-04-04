@@ -17,14 +17,14 @@ public class ChannelService : ServiceBase
         MapGet(GetAsync, "{id}");
         MapGet(GetListAsync, string.Empty);
     }
-    public async Task<PaginatedListDto<ChannelDto>> GetListAsync([FromServices] IEventBus eventbus, [FromQuery] ChannelType type, [FromQuery] int page = 1, [FromQuery] int pagesize = 20)
+    public async Task<PaginatedListDto<ChannelDto>> GetListAsync([FromServices] IEventBus eventbus, [FromQuery] ChannelType? type, [FromQuery] string displayName="", [FromQuery] string sorting = "", [FromQuery] int page = 1, [FromQuery] int pagesize = 20)
     {
-        var input = new GetChannelInput(page, pagesize, type);
+        var input = new GetChannelInput(type, displayName, sorting, page, pagesize);
         var query = new GetListChannelQuery(input);
         await eventbus.PublishAsync(query);
         return query.Result;
     }
-    //public async Task<PaginatedListDto<ChannelDto>> GetListAsync([FromServices] IEventBus eventBus, [FromQuery] GetChannelInput input)
+    //public async Task<PaginatedListDto<ChannelDto>> GetListAsync([FromServices] IEventBus eventBus, GetChannelInput input)
     //{
     //    var query = new GetListChannelQuery(input);
     //    await eventBus.PublishAsync(query);

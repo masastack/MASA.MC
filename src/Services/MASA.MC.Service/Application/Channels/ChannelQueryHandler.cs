@@ -45,11 +45,13 @@ public class ChannelQueryHandler
         query.Result = result;
     }
 
-    private async Task<Expression<Func<Channel, bool>>> CreateFilteredPredicate(GetChannelInput Input)
+    private async Task<Expression<Func<Channel, bool>>> CreateFilteredPredicate(GetChannelInput input)
     {
         Expression<Func<Channel, bool>> condition = channel => true;
-        if (Input.Type > 0)
-            condition = condition.And(channel => channel.Type == Input.Type);
+        if (input.Type.HasValue)
+            condition = condition.And(channel => channel.Type == input.Type);
+        if (!string.IsNullOrEmpty(input.DisplayName))
+            condition = condition.And(channel => channel.DisplayName.Contains(input.DisplayName));
         return await Task.FromResult(condition); ;
     }
 }

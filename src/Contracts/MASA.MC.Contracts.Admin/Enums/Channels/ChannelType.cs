@@ -5,5 +5,6 @@ public enum ChannelType
     Site = 1,
     Email,
     SMS,
-    WeiXin
+    WeChatOfficial,
+    WeChatMiniProgram
 }

@@ -16,31 +16,9 @@ public class NotificationTemplateDomainService : DomainService
     {
         if (template.IsStatic)
         {
-            throw new UserFriendlyException("该模板不允许删除");
+            throw new UserFriendlyException("The template cannot be deleted");
         }
 
         return await _repository.RemoveAsync(template);
-    }
-
-    public virtual async Task CreateAsync(NotificationTemplate template)
-    {
-        await ValidateNotificationTemplateAsync(template.Code);
-        await _repository.AddAsync(template);
-    }
-
-    public virtual async Task UpdateAsync(NotificationTemplate template)
-    {
-        await ValidateNotificationTemplateAsync(template.Code, template.Id);
-
-        await _repository.UpdateAsync(template);
-    }
-    
-    protected virtual async Task ValidateNotificationTemplateAsync(string code, Guid? expectedId = null)
-    {
-        var dict = await _repository.FindAsync(d => d.Code == code);
-        if (dict != null && dict.Id != expectedId)
-        {
-            throw new UserFriendlyException("Template code cannot be repeated");
-        }
     }
 }

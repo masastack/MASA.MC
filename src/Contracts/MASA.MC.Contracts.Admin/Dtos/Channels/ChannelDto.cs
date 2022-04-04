@@ -6,6 +6,8 @@ public class ChannelDto : AuditEntityDto<Guid, Guid?>
 {
     public string DisplayName { get; set; } = string.Empty;
 
+    public string Code { get; set; } = string.Empty;
+
     public ChannelType Type { get; set; }
 
     public bool IsStatic { get; set; }

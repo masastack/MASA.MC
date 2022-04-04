@@ -4,39 +4,38 @@ namespace MASA.MC.Service.Admin.Domain.NotificationTemplates.Aggregates;
 public class NotificationTemplate : AuditAggregateRoot<Guid, Guid?>
 {
     public virtual Guid ChannelId { get; protected set; }
-    public virtual string Code { get; protected set; }
-    public virtual string DisplayName { get; protected set; }
-    public virtual string Content { get; protected set; }
-    public virtual string TemplateId { get; protected set; }
+    public virtual string DisplayName { get; protected set; } = string.Empty;
+    public virtual string Content { get; protected set; } = string.Empty;
+    public virtual string Example { get; protected set; } = string.Empty;
+    public virtual string TemplateId { get; protected set; } = string.Empty;
     public virtual NotificationTemplateStatus Status { get; protected set; }
     public virtual bool IsStatic { get; protected set; }
-    public virtual ICollection<NotificationTemplateItem> Items { get; protected set; }
-    public NotificationTemplate()
+    public virtual ICollection<NotificationTemplateItem> Items { get; protected set; } = new List<NotificationTemplateItem>();
+    private NotificationTemplate()
     {
     }
     public NotificationTemplate(
-        string code,
         string displayName,
         string content,
+        string example,
         List<NotificationTemplateItem> items,
         NotificationTemplateStatus status = NotificationTemplateStatus.Normal,
-        bool isStatic = true)
+        bool isStatic = false)
     {
-        Code = code;
         Status = status;
         IsStatic = isStatic;
 
-        SetContent(displayName, content);
+        SetContent(displayName, content, example);
 
         Items = items ?? new List<NotificationTemplateItem>();
     }
-    public void AddOrUpdateItem(string key, string displayText, string description, bool isStatic = false)
+    public void AddOrUpdateItem(string code, string mappingCode, string displayText, string description, bool isStatic = false)
     {
-        var existingItem = Items.SingleOrDefault(item => item.Key == key);
+        var existingItem = Items.SingleOrDefault(item => item.Code == code);
 
         if (existingItem == null)
         {
-            Items.Add(new NotificationTemplateItem(Id, key, displayText, description, isStatic));
+            Items.Add(new NotificationTemplateItem(Id, code, mappingCode,displayText, description, isStatic));
         }
         else
         {
@@ -44,9 +43,10 @@ public class NotificationTemplate : AuditAggregateRoot<Guid, Guid?>
         }
     }
 
-    public void SetContent(string displayName, string content)
+    public void SetContent(string displayName, string content,string example)
     {
         DisplayName = displayName;
         Content = content;
+        Example = example;
     }
 }

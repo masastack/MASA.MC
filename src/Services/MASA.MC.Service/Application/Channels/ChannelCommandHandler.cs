@@ -24,16 +24,20 @@ public class ChannelCommandHandler
     {
 
         var entity = _mapper.Map<Channel>(createCommand.Channel);
-        await _repository.AddAsync(entity);
+        await _domainService.CreateAsync(entity);
     }
     [EventHandler]
     public async Task UpdateAsync(UpdateChannelCommand createCommand)
     {
         var entity = await _repository.FindAsync(createCommand.ChannelId);
-        if (entity == null)
+        if (entity == null) 
             throw new UserFriendlyException("channel not found");
+        if (createCommand.Channel.Type != entity.Type) 
+            throw new UserFriendlyException("type cannot be changed");
+        if (createCommand.Channel.Code != entity.Code) 
+            throw new UserFriendlyException("code cannot be changed");
         _mapper.Map(createCommand.Channel, entity);
-        await _repository.UpdateAsync(entity);
+        await _domainService.UpdateAsync(entity);
 
     }
    [EventHandler]
