@@ -16,7 +16,9 @@ public class ChannelService : ServiceBase
         MapDelete(DeleteAsync, "{id}");
         MapGet(GetAsync, "{id}");
         MapGet(GetListAsync, string.Empty);
+        MapGet(FindByCodeAsync);
     }
+
     public async Task<PaginatedListDto<ChannelDto>> GetListAsync([FromServices] IEventBus eventbus, [FromQuery] ChannelType? type, [FromQuery] string displayName="", [FromQuery] string sorting = "", [FromQuery] int page = 1, [FromQuery] int pagesize = 20)
     {
         var input = new GetChannelInput(type, displayName, sorting, page, pagesize);
@@ -36,6 +38,7 @@ public class ChannelService : ServiceBase
         await eventBus.PublishAsync(query);
         return query.Result;
     }
+
     public async Task CreateAsync([FromServices] IEventBus eventBus, [FromBody] ChannelCreateUpdateDto input)
     {
         var command = new CreateChannelCommand(input);
@@ -47,10 +50,16 @@ public class ChannelService : ServiceBase
         var command = new UpdateChannelCommand(id, input);
         await eventBus.PublishAsync(command);
     }
+
     public async Task DeleteAsync([FromServices] IEventBus eventBus, Guid id)
     {
         var command = new DeleteChannelCommand(id);
         await eventBus.PublishAsync(command); 
     }
 
+    public async Task FindByCodeAsync([FromServices] IEventBus eventBus, string code)
+    {
+        var command = new FindByCodeChannelQuery(code);
+        await eventBus.PublishAsync(command);
+    }
 }

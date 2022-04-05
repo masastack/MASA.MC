@@ -12,6 +12,6 @@ public class ChannelCreateUpdateDto
 
     public bool IsStatic { get; set; }
 
-    public Dictionary<string, string> ExtraProperties { get; set; }
-    
+    public ExtraPropertyDictionary ExtraProperties { get; set; }=new();
+
 }

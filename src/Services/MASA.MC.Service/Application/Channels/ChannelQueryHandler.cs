@@ -45,6 +45,15 @@ public class ChannelQueryHandler
         query.Result = result;
     }
 
+    [EventHandler]
+    public async Task FindByCodeAsync(FindByCodeChannelQuery query)
+    {
+        var entity = await _repository.FindAsync(d => d.Code == query.Code);
+        if (entity == null)
+            throw new UserFriendlyException("channel not found");
+        query.Result = _mapper.Map<ChannelDto>(entity);
+    }
+
     private async Task<Expression<Func<Channel, bool>>> CreateFilteredPredicate(GetChannelInput input)
     {
         Expression<Func<Channel, bool>> condition = channel => true;

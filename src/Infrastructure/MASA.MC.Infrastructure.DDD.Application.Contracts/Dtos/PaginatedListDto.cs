@@ -1,4 +1,4 @@
-﻿namespace MASA.MC.Contracts.Admin.Dtos;
+﻿namespace MASA.MC.Infrastructure.DDD.Application.Contracts.Dtos;
 
 public class PaginatedListDto<T>
 {

@@ -1,4 +1,5 @@
 ﻿using MASA.MC.Contracts.Admin.Enums.Channels;
+using MASA.MC.Infrastructure.ObjectExtending;
 using MASA.MC.Service.Admin.Infrastructure.Extensions;
 
 namespace MASA.MC.Service.Admin.Domain.Channels.Aggregates;
@@ -13,7 +14,7 @@ public class Channel : AuditAggregateRoot<Guid, Guid?>
 
     public virtual bool IsStatic { get; protected set; }
 
-    public virtual Dictionary<string, string> ExtraProperties { get; protected set; } = new();
+    public virtual ExtraPropertyDictionary ExtraProperties { get; protected set; } = new();
 
     private Channel()
     {
@@ -38,9 +39,9 @@ public class Channel : AuditAggregateRoot<Guid, Guid?>
         }
     }
 
-    public string GetDataValue(string name)
+    public object? GetDataValue(string name)
     {
-        return ExtraProperties?.GetOrDefault(name)??string.Empty;
+        return ExtraProperties?.GetOrDefault(name);
     }
 
     public void SetDataValue(string name, string value)

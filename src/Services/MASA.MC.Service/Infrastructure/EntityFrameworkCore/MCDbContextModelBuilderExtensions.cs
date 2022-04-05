@@ -1,7 +1,8 @@
-﻿using MASA.MC.Service.Admin.Domain.Channels.Aggregates;
+﻿using MASA.MC.Infrastructure.EntityFrameworkCore.EntityFrameworkCore.ValueConverters;
+using MASA.MC.Infrastructure.ObjectExtending;
+using MASA.MC.Service.Admin.Domain.Channels.Aggregates;
 using MASA.MC.Service.Admin.Domain.Consts;
 using MASA.MC.Service.Admin.Domain.NotificationTemplates.Aggregates;
-using System.Text.Json;
 
 namespace MASA.MC.Service.Admin.Infrastructure.EntityFrameworkCore;
 
@@ -15,7 +16,7 @@ public static class MCDbContextModelBuilderExtensions
             b.Property(c => c.Code).IsRequired().HasMaxLength(64);
             b.Property(c => c.DisplayName).IsRequired().HasMaxLength(128);
             b.Property(c => c.Description).HasMaxLength(512);
-            b.Property(c => c.ExtraProperties).HasConversion(v => SerializeObject(v),v => DeserializeObject(v));
+            b.Property(c => c.ExtraProperties).HasConversion(new ExtraPropertiesValueConverter());
         });
 
         builder.Entity<NotificationTemplate>(b =>
@@ -36,17 +37,5 @@ public static class MCDbContextModelBuilderExtensions
             b.HasKey(x => new { x.Code, x.NotificationTemplateId });
         });
     }
-    private static string SerializeObject(Dictionary<string, string> extraProperties)
-    {
-        return JsonSerializer.Serialize(extraProperties);
-    }
-
-    private static Dictionary<string, string> DeserializeObject(string extraPropertiesAsJson)
-    {
-        if (string.IsNullOrEmpty(extraPropertiesAsJson) || extraPropertiesAsJson == "{}")
-        {
-            return new Dictionary<string, string>();
-        }
-        return JsonSerializer.Deserialize<Dictionary<string, string>>(extraPropertiesAsJson) ?? new Dictionary<string, string>();
-    }
+    
 }

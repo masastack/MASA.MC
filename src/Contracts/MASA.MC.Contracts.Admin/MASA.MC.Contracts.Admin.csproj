@@ -10,4 +10,9 @@
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\Infrastructure\MASA.MC.Infrastructure.DDD.Application.Contracts\MASA.MC.Infrastructure.DDD.Application.Contracts.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\MASA.MC.Infrastructure.ObjectExtending\MASA.MC.Infrastructure.ObjectExtending.csproj" />
+  </ItemGroup>
+
 </Project>

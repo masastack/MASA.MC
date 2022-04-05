@@ -12,5 +12,5 @@ public class ChannelDto : AuditEntityDto<Guid, Guid?>
 
     public bool IsStatic { get; set; }
 
-    public Dictionary<string, string> ExtraProperties { get; set; } = new();
+    public ExtraPropertyDictionary ExtraProperties { get; set; } = new();
 }

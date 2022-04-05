@@ -8,13 +8,11 @@ public class GetChannelInput : PaginatedOptionsDto
 {
     public ChannelType? Type { get; set; }
     public string DisplayName { get; set; }
-    public GetChannelInput(ChannelType? type, string displayName, string sorting, int page, int pageSize)
+    public GetChannelInput(ChannelType? type, string displayName, 
+       string sorting, int page, int pageSize):base(sorting, page, pageSize)
     {
         Type = type;
         DisplayName = displayName;
-        Sorting = sorting;
-        Page = page;
-        PageSize = pageSize;
     }
     public static ValueTask<GetChannelInput?> BindAsync(HttpContext httpContext, ParameterInfo parameter)
     {
@@ -24,7 +22,6 @@ public class GetChannelInput : PaginatedOptionsDto
         int.TryParse(httpContext.Request.Query["page"], out var page);
         int.TryParse(httpContext.Request.Query["pageSize"], out var pageSize);
         
-
         return ValueTask.FromResult<GetChannelInput?>(
             new GetChannelInput(
                 type,

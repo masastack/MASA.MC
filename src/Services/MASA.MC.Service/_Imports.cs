@@ -1,4 +1,6 @@
-﻿global using Dapr.Actors;
+﻿global using AutoMapper;
+global using System.Text.Json;
+global using Dapr.Actors;
 global using Dapr.Actors.Client;
 global using Dapr.Actors.Runtime;
 global using FluentValidation;
@@ -27,7 +29,7 @@ global using Masa.Utils.Exceptions.Extensions;
 global using MASA.MC.Service.Infrastructure;
 global using MASA.MC.Service.Infrastructure.Middleware;
 global using MASA.MC.Service.Admin.Infrastructure.EntityFrameworkCore;
+global using MASA.MC.Infrastructure.DDD.Application.Contracts.Dtos;
 global using Microsoft.AspNetCore.Authentication.JwtBearer;
 global using Microsoft.EntityFrameworkCore;
 global using Microsoft.OpenApi.Models;
-global using AutoMapper;
