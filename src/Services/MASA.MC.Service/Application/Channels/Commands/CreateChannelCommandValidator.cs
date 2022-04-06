@@ -8,6 +8,4 @@ public class CreateChannelCommandValidator : AbstractValidator<CreateChannelComm
         RuleFor(cmd => cmd.Channel.Code).NotEmpty();
         RuleFor(cmd => cmd.Channel.Type).IsInEnum();
     }
-    
-
 }

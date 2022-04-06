@@ -57,9 +57,10 @@ public class ChannelService : ServiceBase
         await eventBus.PublishAsync(command); 
     }
 
-    public async Task FindByCodeAsync([FromServices] IEventBus eventBus, string code)
+    public async Task<ChannelDto> FindByCodeAsync([FromServices] IEventBus eventBus, string code)
     {
-        var command = new FindByCodeChannelQuery(code);
-        await eventBus.PublishAsync(command);
+        var query = new FindByCodeChannelQuery(code);
+        await eventBus.PublishAsync(query);
+        return query.Result;
     }
 }

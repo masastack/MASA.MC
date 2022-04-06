@@ -21,7 +21,7 @@ public class GetChannelInput : PaginatedOptionsDto
         var sorting = httpContext.Request.Query["sorting"];
         int.TryParse(httpContext.Request.Query["page"], out var page);
         int.TryParse(httpContext.Request.Query["pageSize"], out var pageSize);
-        
+
         return ValueTask.FromResult<GetChannelInput?>(
             new GetChannelInput(
                 type,

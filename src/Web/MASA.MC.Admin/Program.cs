@@ -1,8 +1,5 @@
-using Masa.Utils.Caller.Core;
-using System.Reflection;
-
 var builder = WebApplication.CreateBuilder(args);
-
+builder.Services.Configure<Settings>(builder.Configuration);
 // Add services to the container.
 builder.Services.AddMasaBlazor(new MasaBlazorOptions()
 {
