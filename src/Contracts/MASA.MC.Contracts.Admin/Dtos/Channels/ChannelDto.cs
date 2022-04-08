@@ -1,6 +1,6 @@
 ﻿namespace MASA.MC.Contracts.Admin.Dtos.Channels;
 
-public class ChannelDto : AuditEntityDto<Guid, Guid?>
+public class ChannelDto : AuditEntityDto<Guid, Guid>
 {
     public string DisplayName { get; set; } = string.Empty;
 

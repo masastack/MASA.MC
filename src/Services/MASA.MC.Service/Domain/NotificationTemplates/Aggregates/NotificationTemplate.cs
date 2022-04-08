@@ -1,5 +1,5 @@
 ﻿namespace MASA.MC.Service.Admin.Domain.NotificationTemplates.Aggregates;
-public class NotificationTemplate : AuditAggregateRoot<Guid, Guid?>
+public class NotificationTemplate : AuditAggregateRoot<Guid, Guid>
 {
     public virtual Guid ChannelId { get; protected set; }
     public virtual string DisplayName { get; protected set; } = string.Empty;

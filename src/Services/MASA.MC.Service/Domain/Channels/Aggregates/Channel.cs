@@ -1,6 +1,6 @@
 ﻿namespace MASA.MC.Service.Admin.Domain.Channels.Aggregates;
 
-public class Channel : AuditAggregateRoot<Guid, Guid?>
+public class Channel : AuditAggregateRoot<Guid, Guid>
 {
     public virtual string DisplayName { get; protected set; } = string.Empty;
     public virtual string Code { get; protected set; } = string.Empty;
