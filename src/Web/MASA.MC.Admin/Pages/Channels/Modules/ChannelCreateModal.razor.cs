@@ -18,7 +18,6 @@ public partial class ChannelCreateModal : AdminCompontentBase
 
     public async Task OpenModalAsync()
     {
-        //LoadExtraProperties(_model.Type);
         await InvokeAsync(() =>
         {
             _visible = true;

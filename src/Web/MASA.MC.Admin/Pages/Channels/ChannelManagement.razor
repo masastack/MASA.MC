@@ -5,7 +5,7 @@
 
 <MCard>
     <MCardTitle class="mx-2 py-6">
-        <DefaultTextField @bind-Value="_queryParam.DisplayName" Placeholder="@T("Search")" OnKeyDown="SearchKeyDown" OnClearClick="LoadData" PrependInnerIcon="mdi-magnify">
+        <DefaultTextField @bind-Value="_queryParam.DisplayName" Placeholder="@T("Search")" OnKeyDown="SearchKeyDown" OnClearClick="HandleClearAsync" PrependInnerIcon="mdi-magnify">
         </DefaultTextField>
     </MCardTitle>
     <MCardText>
@@ -22,7 +22,7 @@
                 </MCard>
             </MCol>
         </MRow>
-        <MPagination @bind-Value="_queryParam.Page" Length="_entities.TotalPages" OnInput="HandlePaginationChange"></MPagination>
+        <MPagination Class="mt-10" @bind-Value="_queryParam.Page" Length="_entities.TotalPages" OnInput="HandlePaginationChange"></MPagination>
     </MCardText>
 </MCard>
 

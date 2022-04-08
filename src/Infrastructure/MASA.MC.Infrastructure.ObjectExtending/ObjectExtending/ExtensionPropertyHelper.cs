@@ -33,14 +33,13 @@ public static class ExtensionPropertyHelper
             if (!dic.ContainsKey(field.Name))
                 continue;
             val = dic[field.Name].ToString();
-
             object defaultVal;
             if (field.PropertyType.Name.Equals("String"))
                 defaultVal = "";
             else if (field.PropertyType.Name.Equals("Boolean"))
             {
                 defaultVal = false;
-                val = (val.Equals("1") || val.Equals("on")).ToString();
+                //val = (val.Equals("1") || val.Equals("on")).ToString();
             }
             else if (field.PropertyType.Name.Equals("Decimal"))
                 defaultVal = 0M;

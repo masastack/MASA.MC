@@ -49,4 +49,10 @@ public partial class ChannelManagement : AdminCompontentBase
         _queryParam.Page = page;
         await LoadData();
     }
+
+    private async Task HandleClearAsync()
+    {
+        _queryParam.DisplayName = string.Empty;
+        await LoadData();
+    }
 }
