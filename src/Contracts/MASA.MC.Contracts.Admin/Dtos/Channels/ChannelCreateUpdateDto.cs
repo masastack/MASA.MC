@@ -10,6 +10,8 @@ public class ChannelCreateUpdateDto
 
     public ChannelType Type { get; set; }
 
+    public string Description { get; set; } = string.Empty;
+
     public bool IsStatic { get; set; }
 
     public ExtraPropertyDictionary ExtraProperties { get; set; }=new();

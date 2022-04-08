@@ -2,13 +2,13 @@
 
 public class AuditEntityDto<TKey, TUserId>: EntityDto<TKey>
 {
-    public bool IsDeleted { get; protected set; }
+    public bool IsDeleted { get; set; }
 
-    public TUserId Creator { get; protected set; } = default!;
+    public TUserId Creator { get; set; } = default!;
 
-    public DateTime CreationTime { get; protected set; }
+    public DateTime CreationTime { get; set; }
 
-    public TUserId Modifier { get; protected set; } = default!;
+    public TUserId Modifier { get; set; } = default!;
 
-    public DateTime ModificationTime { get; protected set; }
+    public DateTime ModificationTime { get; set; }
 }

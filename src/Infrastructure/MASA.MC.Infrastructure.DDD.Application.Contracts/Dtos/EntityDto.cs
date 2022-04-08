@@ -2,5 +2,5 @@
 
 public class EntityDto<TKey>
 {
-    public TKey Id { get; protected set; } = default!;
+    public TKey Id { get; set; } = default!;
 }

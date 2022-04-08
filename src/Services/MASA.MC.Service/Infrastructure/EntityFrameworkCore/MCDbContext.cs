@@ -5,7 +5,7 @@ namespace MASA.MC.Service.Admin.Infrastructure.EntityFrameworkCore;
 
 public class MCDbContext : IntegrationEventLogContext
 {
-    public DbSet<Channel> NotificationInfos { get; set; } = default!;
+    public DbSet<Channel> Channels { get; set; } = default!;
     public DbSet<NotificationTemplate> NotificationTemplates { get; set; } = default!;
     public MCDbContext(MasaDbContextOptions<MCDbContext> options) : base(options)
     {

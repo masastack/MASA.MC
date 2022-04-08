@@ -31,11 +31,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MASA.MC.Contracts.Admin", "
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{4660010F-BB9B-4C8E-B4F7-34AF77080EA0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MASA.MC.Infrastructure.ObjectExtending", "src\Infrastructure\MASA.MC.Infrastructure.ObjectExtending\MASA.MC.Infrastructure.ObjectExtending.csproj", "{C47B7220-BDF3-4DFA-93FE-0F6885DB89A4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MASA.MC.Infrastructure.ObjectExtending", "src\Infrastructure\MASA.MC.Infrastructure.ObjectExtending\MASA.MC.Infrastructure.ObjectExtending.csproj", "{C47B7220-BDF3-4DFA-93FE-0F6885DB89A4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MASA.MC.Infrastructure.DDD.Application.Contracts", "src\Infrastructure\MASA.MC.Infrastructure.DDD.Application.Contracts\MASA.MC.Infrastructure.DDD.Application.Contracts.csproj", "{6CAC62DA-A3AF-4BFE-8E1C-0DB9D0D81CD6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MASA.MC.Infrastructure.DDD.Application.Contracts", "src\Infrastructure\MASA.MC.Infrastructure.DDD.Application.Contracts\MASA.MC.Infrastructure.DDD.Application.Contracts.csproj", "{6CAC62DA-A3AF-4BFE-8E1C-0DB9D0D81CD6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MASA.MC.Infrastructure.EntityFrameworkCore", "src\Infrastructure\MASA.MC.Infrastructure.EntityFrameworkCore\MASA.MC.Infrastructure.EntityFrameworkCore.csproj", "{FAFDC558-45A7-4FF7-BFCE-015EDF58F3AE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MASA.MC.Infrastructure.EntityFrameworkCore", "src\Infrastructure\MASA.MC.Infrastructure.EntityFrameworkCore\MASA.MC.Infrastructure.EntityFrameworkCore.csproj", "{FAFDC558-45A7-4FF7-BFCE-015EDF58F3AE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MASA.MC.Admin.Server", "src\Web\MASA.MC.Admin.Server\MASA.MC.Admin.Server.csproj", "{8FA1D09B-F5B5-4B42-BF86-53512F1377B2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MASA.MC.Admin.WebAssembly", "src\Web\MASA.MC.Admin.WebAssembly\MASA.MC.Admin.WebAssembly.csproj", "{1644695E-4B4F-4D7D-833C-7E694E758641}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -101,6 +105,22 @@ Global
 		{FAFDC558-45A7-4FF7-BFCE-015EDF58F3AE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FAFDC558-45A7-4FF7-BFCE-015EDF58F3AE}.Release|x86.ActiveCfg = Release|Any CPU
 		{FAFDC558-45A7-4FF7-BFCE-015EDF58F3AE}.Release|x86.Build.0 = Release|Any CPU
+		{8FA1D09B-F5B5-4B42-BF86-53512F1377B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8FA1D09B-F5B5-4B42-BF86-53512F1377B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8FA1D09B-F5B5-4B42-BF86-53512F1377B2}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{8FA1D09B-F5B5-4B42-BF86-53512F1377B2}.Debug|x86.Build.0 = Debug|Any CPU
+		{8FA1D09B-F5B5-4B42-BF86-53512F1377B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8FA1D09B-F5B5-4B42-BF86-53512F1377B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8FA1D09B-F5B5-4B42-BF86-53512F1377B2}.Release|x86.ActiveCfg = Release|Any CPU
+		{8FA1D09B-F5B5-4B42-BF86-53512F1377B2}.Release|x86.Build.0 = Release|Any CPU
+		{1644695E-4B4F-4D7D-833C-7E694E758641}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1644695E-4B4F-4D7D-833C-7E694E758641}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1644695E-4B4F-4D7D-833C-7E694E758641}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1644695E-4B4F-4D7D-833C-7E694E758641}.Debug|x86.Build.0 = Debug|Any CPU
+		{1644695E-4B4F-4D7D-833C-7E694E758641}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1644695E-4B4F-4D7D-833C-7E694E758641}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1644695E-4B4F-4D7D-833C-7E694E758641}.Release|x86.ActiveCfg = Release|Any CPU
+		{1644695E-4B4F-4D7D-833C-7E694E758641}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -119,6 +139,8 @@ Global
 		{C47B7220-BDF3-4DFA-93FE-0F6885DB89A4} = {4660010F-BB9B-4C8E-B4F7-34AF77080EA0}
 		{6CAC62DA-A3AF-4BFE-8E1C-0DB9D0D81CD6} = {4660010F-BB9B-4C8E-B4F7-34AF77080EA0}
 		{FAFDC558-45A7-4FF7-BFCE-015EDF58F3AE} = {4660010F-BB9B-4C8E-B4F7-34AF77080EA0}
+		{8FA1D09B-F5B5-4B42-BF86-53512F1377B2} = {F3986DD3-0372-4929-B72A-09D93196541E}
+		{1644695E-4B4F-4D7D-833C-7E694E758641} = {F3986DD3-0372-4929-B72A-09D93196541E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B83BA2BA-19E5-41FB-A92A-16A03DA229E4}

@@ -7,7 +7,14 @@ namespace MASA.MC.Contracts.Admin.Dtos.Channels;
 public class GetChannelInput : PaginatedOptionsDto
 {
     public ChannelType? Type { get; set; }
-    public string DisplayName { get; set; }
+    public string DisplayName { get; set; } = string.Empty;
+    public GetChannelInput()
+    {
+
+    }
+    public GetChannelInput(int pageSize) : base("", 1, pageSize)
+    {
+    }
     public GetChannelInput(ChannelType? type, string displayName, 
        string sorting, int page, int pageSize):base(sorting, page, pageSize)
     {
