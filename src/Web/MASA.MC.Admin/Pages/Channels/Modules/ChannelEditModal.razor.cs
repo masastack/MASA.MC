@@ -76,7 +76,7 @@ public partial class ChannelEditModal : AdminCompontentBase
     }
     private void ResetForm()
     {
-        _form = new();
+        _model = new();
     }
 
     private ChannelCreateUpdateDto MapToCreateUpdateDto(ChannelDto dto)

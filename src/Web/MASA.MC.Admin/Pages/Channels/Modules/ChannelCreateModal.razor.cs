@@ -67,6 +67,6 @@ public partial class ChannelCreateModal : AdminCompontentBase
     private void ResetForm()
     {
         _step = 1;
-        _form = new();
+        _model = new();
     }
 }

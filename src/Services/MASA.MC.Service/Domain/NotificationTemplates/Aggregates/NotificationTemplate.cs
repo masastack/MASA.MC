@@ -10,7 +10,7 @@ public class NotificationTemplate : AuditAggregateRoot<Guid, Guid>
     public virtual bool IsStatic { get; protected set; }
     public virtual ICollection<NotificationTemplateItem> Items { get; protected set; } = new List<NotificationTemplateItem>();
 
-    private NotificationTemplate()
+    public NotificationTemplate(string displayName,string content,string example) : this(displayName, content, example, new List<NotificationTemplateItem>())
     {
     }
 
@@ -36,7 +36,7 @@ public class NotificationTemplate : AuditAggregateRoot<Guid, Guid>
 
         if (existingItem == null)
         {
-            Items.Add(new NotificationTemplateItem(Id, code, mappingCode,displayText, description, isStatic));
+            Items.Add(new NotificationTemplateItem(Id, code, mappingCode, displayText, description, isStatic));
         }
         else
         {
@@ -44,7 +44,7 @@ public class NotificationTemplate : AuditAggregateRoot<Guid, Guid>
         }
     }
 
-    public void SetContent(string displayName, string content,string example)
+    public void SetContent(string displayName, string content, string example)
     {
         DisplayName = displayName;
         Content = content;

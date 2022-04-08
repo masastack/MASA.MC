@@ -9,7 +9,7 @@ public class Channel : AuditAggregateRoot<Guid, Guid>
     public virtual bool IsStatic { get; protected set; }
     public virtual ExtraPropertyDictionary ExtraProperties { get; protected set; } = new();
 
-    private Channel()
+    public Channel(string displayName,string code,ChannelType type,string description) : this(displayName, code, type, description, new Dictionary<string, string>())
     {
     }
 
@@ -22,7 +22,7 @@ public class Channel : AuditAggregateRoot<Guid, Guid>
         bool isStatic = false)
     {
         DisplayName = displayName;
-        Code=code;
+        Code = code;
         Type = type;
         Description = description;
         IsStatic = isStatic;
