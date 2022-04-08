@@ -1,11 +1,4 @@
-﻿using MASA.MC.Contracts.Admin.Dtos;
-using MASA.MC.Contracts.Admin.Dtos.Channels;
-using MASA.MC.Service.Admin.Application.Channels.Queries;
-using MASA.MC.Service.Admin.Domain.Channels.Aggregates;
-using MASA.MC.Service.Admin.Domain.Channels.Repositories;
-using System.Linq.Expressions;
-
-namespace MASA.MC.Service.Admin.Application.Channels;
+﻿namespace MASA.MC.Service.Admin.Application.Channels;
 
 public class ChannelQueryHandler
 {
@@ -17,10 +10,11 @@ public class ChannelQueryHandler
         _repository = repository;
         _mapper = mapper;
     }
+
     [EventHandler]
     public async Task GetAsync(GetChannelQuery query)
     {
-        var entity = await _repository.FindAsync(query.ChannelId);
+        var entity = await _repository.FindAsync(x=>x.Id==query.ChannelId);
         if (entity == null)
             throw new UserFriendlyException("channel not found");
         query.Result = _mapper.Map<ChannelDto>(entity);

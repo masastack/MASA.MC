@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Masa.Utils.Caller.HttpClient" Version="0.3.0" />
+    <PackageReference Include="Masa.Utils.Caller.HttpClient" Version="0.3.5" />
     <PackageReference Include="Masa.Utils.Configuration.Json" Version="0.3.5" />
   </ItemGroup>
 

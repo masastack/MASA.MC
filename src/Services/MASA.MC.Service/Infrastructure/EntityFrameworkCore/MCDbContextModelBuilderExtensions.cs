@@ -1,10 +1,4 @@
-﻿using MASA.MC.Infrastructure.EntityFrameworkCore.EntityFrameworkCore.ValueConverters;
-using MASA.MC.Infrastructure.ObjectExtending;
-using MASA.MC.Service.Admin.Domain.Channels.Aggregates;
-using MASA.MC.Service.Admin.Domain.Consts;
-using MASA.MC.Service.Admin.Domain.NotificationTemplates.Aggregates;
-
-namespace MASA.MC.Service.Admin.Infrastructure.EntityFrameworkCore;
+﻿namespace MASA.MC.Service.Admin.Infrastructure.EntityFrameworkCore;
 
 public static class MCDbContextModelBuilderExtensions
 {

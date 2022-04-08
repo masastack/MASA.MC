@@ -7,6 +7,7 @@ public class PaginatedOptionsDto
     public int PageSize { get; set; }
 
     public string Sorting { get; set; }
+
     public PaginatedOptionsDto(string sorting = "", int page=1, int pageSize=20)
     {
         Sorting=sorting;

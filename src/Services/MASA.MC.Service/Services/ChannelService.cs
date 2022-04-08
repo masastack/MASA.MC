@@ -1,11 +1,4 @@
-﻿using MASA.MC.Contracts.Admin.Dtos;
-using MASA.MC.Contracts.Admin.Dtos.Channels;
-using MASA.MC.Contracts.Admin.Enums.Channels;
-using MASA.MC.Service.Admin.Application.Channels.Commands;
-using MASA.MC.Service.Admin.Application.Channels.Queries;
-using Microsoft.AspNetCore.Mvc;
-
-namespace MASA.MC.Service.Services;
+﻿namespace MASA.MC.Service.Services;
 
 public class ChannelService : ServiceBase
 {
@@ -19,45 +12,47 @@ public class ChannelService : ServiceBase
         MapGet(FindByCodeAsync);
     }
 
-    public async Task<PaginatedListDto<ChannelDto>> GetListAsync([FromServices] IEventBus eventbus, [FromQuery] ChannelType? type, [FromQuery] string displayName="", [FromQuery] string sorting = "", [FromQuery] int page = 1, [FromQuery] int pagesize = 20)
+    public async Task<PaginatedListDto<ChannelDto>> GetListAsync(IEventBus eventbus, [FromQuery] ChannelType? type, [FromQuery] string displayName="", [FromQuery] string sorting = "", [FromQuery] int page = 1, [FromQuery] int pagesize = 20)
     {
         var input = new GetChannelInput(type, displayName, sorting, page, pagesize);
         var query = new GetListChannelQuery(input);
         await eventbus.PublishAsync(query);
         return query.Result;
     }
+
     //public async Task<PaginatedListDto<ChannelDto>> GetListAsync([FromServices] IEventBus eventBus, GetChannelInput input)
     //{
     //    var query = new GetListChannelQuery(input);
     //    await eventBus.PublishAsync(query);
     //    return query.Result;
     //}
-    public async Task<ChannelDto> GetAsync([FromServices] IEventBus eventBus, Guid id)
+
+    public async Task<ChannelDto> GetAsync(IEventBus eventBus, Guid id)
     {
         var query = new GetChannelQuery(id);
         await eventBus.PublishAsync(query);
         return query.Result;
     }
 
-    public async Task CreateAsync([FromServices] IEventBus eventBus, [FromBody] ChannelCreateUpdateDto input)
+    public async Task CreateAsync(IEventBus eventBus, [FromBody] ChannelCreateUpdateDto input)
     {
         var command = new CreateChannelCommand(input);
         await eventBus.PublishAsync(command);
     }
 
-    public async Task UpdateAsync([FromServices] IEventBus eventBus, Guid id, [FromBody] ChannelCreateUpdateDto input)
+    public async Task UpdateAsync(IEventBus eventBus, Guid id, [FromBody] ChannelCreateUpdateDto input)
     {
         var command = new UpdateChannelCommand(id, input);
         await eventBus.PublishAsync(command);
     }
 
-    public async Task DeleteAsync([FromServices] IEventBus eventBus, Guid id)
+    public async Task DeleteAsync(IEventBus eventBus, Guid id)
     {
         var command = new DeleteChannelCommand(id);
         await eventBus.PublishAsync(command); 
     }
 
-    public async Task<ChannelDto> FindByCodeAsync([FromServices] IEventBus eventBus, string code)
+    public async Task<ChannelDto> FindByCodeAsync(IEventBus eventBus, string code)
     {
         var query = new FindByCodeChannelQuery(code);
         await eventBus.PublishAsync(query);

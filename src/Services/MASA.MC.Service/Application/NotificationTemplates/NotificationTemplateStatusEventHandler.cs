@@ -1,9 +1,4 @@
-﻿using MASA.MC.Contracts.Admin.Dtos.NotificationTemplates;
-using MASA.MC.Contracts.Admin.Enums.NotificationTemplates;
-using MASA.MC.Service.Admin.Application.NotificationTemplates.Commands;
-using MASA.MC.Service.Admin.Domain.NotificationTemplates.Events;
-
-namespace MASA.MC.Service.Admin.Application.NotificationTemplates;
+﻿namespace MASA.MC.Service.Admin.Application.NotificationTemplates;
 
 public class NotificationTemplateStatusEventHandler
 {

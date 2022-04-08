@@ -1,6 +1,4 @@
-﻿using MASA.MC.Contracts.Admin.Dtos.Channels;
-
-namespace MASA.MC.Service.Admin.Application.Channels.Queries;
+﻿namespace MASA.MC.Service.Admin.Application.Channels.Queries;
 
 public record FindByCodeChannelQuery(string Code) : Query<ChannelDto>
 {

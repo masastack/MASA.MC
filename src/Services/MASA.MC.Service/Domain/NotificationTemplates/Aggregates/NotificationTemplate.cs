@@ -1,6 +1,4 @@
-﻿using MASA.MC.Contracts.Admin.Enums.NotificationTemplates;
-
-namespace MASA.MC.Service.Admin.Domain.NotificationTemplates.Aggregates;
+﻿namespace MASA.MC.Service.Admin.Domain.NotificationTemplates.Aggregates;
 public class NotificationTemplate : AuditAggregateRoot<Guid, Guid?>
 {
     public virtual Guid ChannelId { get; protected set; }
@@ -11,9 +9,11 @@ public class NotificationTemplate : AuditAggregateRoot<Guid, Guid?>
     public virtual NotificationTemplateStatus Status { get; protected set; }
     public virtual bool IsStatic { get; protected set; }
     public virtual ICollection<NotificationTemplateItem> Items { get; protected set; } = new List<NotificationTemplateItem>();
+
     private NotificationTemplate()
     {
     }
+
     public NotificationTemplate(
         string displayName,
         string content,
@@ -29,6 +29,7 @@ public class NotificationTemplate : AuditAggregateRoot<Guid, Guid?>
 
         Items = items ?? new List<NotificationTemplateItem>();
     }
+
     public void AddOrUpdateItem(string code, string mappingCode, string displayText, string description, bool isStatic = false)
     {
         var existingItem = Items.SingleOrDefault(item => item.Code == code);

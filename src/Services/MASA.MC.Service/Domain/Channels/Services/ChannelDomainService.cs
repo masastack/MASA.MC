@@ -1,7 +1,4 @@
-﻿using MASA.MC.Service.Admin.Domain.Channels.Aggregates;
-using MASA.MC.Service.Admin.Domain.Channels.Repositories;
-
-namespace MASA.MC.Service.Admin.Domain.Channels.Services;
+﻿namespace MASA.MC.Service.Admin.Domain.Channels.Services;
 
 public class ChannelDomainService : DomainService
 {

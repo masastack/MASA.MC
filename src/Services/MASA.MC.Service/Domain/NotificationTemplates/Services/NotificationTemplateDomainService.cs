@@ -1,7 +1,4 @@
-﻿using MASA.MC.Service.Admin.Domain.NotificationTemplates.Aggregates;
-using MASA.MC.Service.Admin.Domain.NotificationTemplates.Repositories;
-
-namespace MASA.MC.Service.Admin.Domain.NotificationTemplates.Services;
+﻿namespace MASA.MC.Service.Admin.Domain.NotificationTemplates.Services;
 
 public class NotificationTemplateDomainService : DomainService
 {

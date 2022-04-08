@@ -19,9 +19,11 @@ public class NotificationTemplateItem : Entity
         yield return ("NotificationTemplateId", NotificationTemplateId!);
         yield return ("Code", Code!);
     }
+
     protected NotificationTemplateItem()
     {
     }
+
     public NotificationTemplateItem(
         Guid notificationTemplateId,
         string code,

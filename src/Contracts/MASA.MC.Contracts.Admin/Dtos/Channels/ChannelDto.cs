@@ -1,6 +1,4 @@
-﻿using MASA.MC.Contracts.Admin.Enums.Channels;
-
-namespace MASA.MC.Contracts.Admin.Dtos.Channels;
+﻿namespace MASA.MC.Contracts.Admin.Dtos.Channels;
 
 public class ChannelDto : AuditEntityDto<Guid, Guid?>
 {

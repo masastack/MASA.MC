@@ -1,7 +1,4 @@
-﻿using MASA.MC.Service.Admin.Domain.NotificationTemplates.Aggregates;
-using MASA.MC.Service.Admin.Domain.NotificationTemplates.Repositories;
-
-namespace MASA.MC.Service.Admin.Infrastructure.Repositories;
+﻿namespace MASA.MC.Service.Admin.Infrastructure.Repositories;
 
 public class NotificationTemplateRepository : Repository<MCDbContext, NotificationTemplate>, INotificationTemplateRepository
 {
@@ -9,6 +6,7 @@ public class NotificationTemplateRepository : Repository<MCDbContext, Notificati
         : base(context, unitOfWork)
     {
     }
+
     public async Task<IQueryable<NotificationTemplate>> GetQueryableAsync()
     {
         return await Task.FromResult(_context.Set<NotificationTemplate>().AsQueryable());

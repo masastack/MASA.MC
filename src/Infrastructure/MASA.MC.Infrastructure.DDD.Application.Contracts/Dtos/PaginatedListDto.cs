@@ -7,10 +7,12 @@ public class PaginatedListDto<T>
     public int TotalPages { get; set; }
 
     public List<T> Result { get; set; } = default!;
+
     public PaginatedListDto()
     {
         Result = new List<T>();
     }
+
     public PaginatedListDto(long total, int totalPages, List<T> result)
     {
         Total = total;

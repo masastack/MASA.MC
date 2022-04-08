@@ -8,23 +8,23 @@
 	
 	<ItemGroup>
 		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
-		<PackageReference Include="Masa.BuildingBlocks.Dispatcher.Events" Version="0.3.0" />
+		<PackageReference Include="Masa.BuildingBlocks.Dispatcher.Events" Version="0.3.3" />
 		<PackageReference Include="Masa.Contrib.Configuration" Version="0.3.3" />
-		<PackageReference Include="Masa.Contrib.Dispatcher.Events" Version="0.3.0" />
-		<PackageReference Include="Masa.Contrib.Dispatcher.IntegrationEvents.EventLogs.EF" Version="0.3.0" />
+		<PackageReference Include="Masa.Contrib.Dispatcher.Events" Version="0.3.3" />
+		<PackageReference Include="Masa.Contrib.Dispatcher.IntegrationEvents.EventLogs.EF" Version="0.3.3" />
 		<PackageReference Include="FluentValidation" Version="10.3.6" />
 		<PackageReference Include="FluentValidation.AspNetCore" Version="10.3.6" />
 		<PackageReference Include="Dapr.Actors.AspNetCore" Version="1.5.0" />
 		<PackageReference Include="Dapr.AspNetCore" Version="1.5.0" />
-		<PackageReference Include="Masa.BuildingBlocks.Ddd.Domain" Version="0.3.0" />
-		<PackageReference Include="Masa.Contrib.Ddd.Domain" Version="0.3.0" />
-		<PackageReference Include="Masa.Contrib.Ddd.Domain.Repository.EF" Version="0.3.0" />
-		<PackageReference Include="Masa.Contrib.ReadWriteSpliting.Cqrs" Version="0.3.0" />
-		<PackageReference Include="Masa.Contrib.Service.MinimalAPIs" Version="0.3.0" />
+		<PackageReference Include="Masa.BuildingBlocks.Ddd.Domain" Version="0.3.3" />
+		<PackageReference Include="Masa.Contrib.Ddd.Domain" Version="0.3.3" />
+		<PackageReference Include="Masa.Contrib.Ddd.Domain.Repository.EF" Version="0.3.3" />
+		<PackageReference Include="Masa.Contrib.ReadWriteSpliting.Cqrs" Version="0.3.3" />
+		<PackageReference Include="Masa.Contrib.Service.MinimalAPIs" Version="0.3.3" />
 		<PackageReference Include="Masa.Utils.Expressions" Version="0.3.5" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.1" />
-		<PackageReference Include="Masa.Contrib.Data.UoW.EF" Version="0.3.0" />
-		<PackageReference Include="Masa.Contrib.Dispatcher.IntegrationEvents.Dapr" Version="0.3.0" />
+		<PackageReference Include="Masa.Contrib.Data.UoW.EF" Version="0.3.3" />
+		<PackageReference Include="Masa.Contrib.Dispatcher.IntegrationEvents.Dapr" Version="0.3.3" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.1" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.1" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.1">

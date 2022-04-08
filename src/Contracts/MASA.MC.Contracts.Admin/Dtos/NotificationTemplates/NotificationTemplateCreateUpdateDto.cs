@@ -1,6 +1,4 @@
-﻿using MASA.MC.Contracts.Admin.Enums.NotificationTemplates;
-
-namespace MASA.MC.Contracts.Admin.Dtos.NotificationTemplates;
+﻿namespace MASA.MC.Contracts.Admin.Dtos.NotificationTemplates;
 
 public class NotificationTemplateCreateUpdateDto
 {

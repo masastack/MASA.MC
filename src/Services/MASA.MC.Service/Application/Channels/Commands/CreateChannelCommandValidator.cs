@@ -1,6 +1,4 @@
-﻿using MASA.MC.Contracts.Admin.Dtos.Channels.Validator;
-
-namespace MASA.MC.Service.Admin.Application.Channels.Commands;
+﻿namespace MASA.MC.Service.Admin.Application.Channels.Commands;
 
 public class CreateChannelCommandValidator : AbstractValidator<CreateChannelCommand>
 {

@@ -1,6 +1,4 @@
-﻿using System.Collections.Concurrent;
-
-namespace MASA.MC.Service.Admin.Infrastructure.Extensions;
+﻿namespace MASA.MC.Service.Admin.Infrastructure.Extensions;
 
 /// <summary>
 /// Extension methods for Dictionary.
