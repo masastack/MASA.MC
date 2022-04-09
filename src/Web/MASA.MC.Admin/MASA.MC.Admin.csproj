@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ViewModel\Channels\" />
+    <Folder Include="新文件夹\" />
   </ItemGroup>
 
   <ItemGroup>

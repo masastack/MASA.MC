@@ -49,11 +49,11 @@ public partial class ChannelCreateModal : AdminCompontentBase
 
     private async Task HandleOk(EditContext context)
     {
-        if (!await _form.ValidateAsync())
+        if (!context.Validate())
         {
             return;
         }
-        await ChannelCaller.CreateAsync(_model);
+        await ChannelCaller.CreateAsync(Mapper.Map<ChannelCreateUpdateDto>(_model));
         await SuccessMessageAsync(T("Create channel data success"));
         _visible = false;
         ResetForm();

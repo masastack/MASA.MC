@@ -5,6 +5,9 @@ public partial class ChannelEditModal : AdminCompontentBase
     [Parameter]
     public EventCallback OnOk { get; set; }
 
+    [Inject]
+    public ChannelCaller ChannelCaller { get; set; } = default!;
+
     private ChannelCreateUpdateDto _model = new();
     private MForm _form;
     private Guid _entityId;
@@ -12,13 +15,10 @@ public partial class ChannelEditModal : AdminCompontentBase
     private List<ChannelType> channelTypeItems = Enum.GetValues(typeof(ChannelType))
         .Cast<ChannelType>().ToList();
 
-    [Inject]
-    public ChannelCaller ChannelCaller { get; set; } = default!;
-
     public async Task OpenModalAsync(ChannelDto model)
     {
         _entityId = model.Id;
-        _model = MapToCreateUpdateDto(model);
+        _model = Mapper.Map<ChannelCreateUpdateDto>(model);
         await GetFormDataAsync();
         await InvokeAsync(() =>
         {
@@ -30,7 +30,7 @@ public partial class ChannelEditModal : AdminCompontentBase
     private async Task GetFormDataAsync()
     {
         var dto = await ChannelCaller.GetAsync(_entityId);
-        _model = MapToCreateUpdateDto(dto);
+        _model = Mapper.Map<ChannelCreateUpdateDto>(dto);
     }
 
     private void HandleCancel()
@@ -41,11 +41,11 @@ public partial class ChannelEditModal : AdminCompontentBase
 
     private async Task HandleOk(EditContext context)
     {
-        if (!await _form.ValidateAsync())
+        if (!context.Validate())
         {
             return;
         }
-        await ChannelCaller.UpdateAsync(_entityId, _model);
+        await ChannelCaller.UpdateAsync(_entityId, Mapper.Map<ChannelCreateUpdateDto>(_model));
         _visible = false;
         ResetForm();
         await SuccessMessageAsync(T("Edit channel data success"));
@@ -77,18 +77,5 @@ public partial class ChannelEditModal : AdminCompontentBase
     private void ResetForm()
     {
         _model = new();
-    }
-
-    private ChannelCreateUpdateDto MapToCreateUpdateDto(ChannelDto dto)
-    {
-        return new ChannelCreateUpdateDto
-        {
-            DisplayName = dto.DisplayName,
-            Code = dto.Code,
-            Type = dto.Type,
-            Description = dto.Description,
-            IsStatic = dto.IsStatic,
-            ExtraProperties = dto.ExtraProperties
-        };
     }
 }

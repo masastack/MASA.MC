@@ -1,8 +1,3 @@
-using Masa.Utils.Caller.Core;
-using MASA.MC.Caller;
-using MASA.MC.Contracts.Admin.Dtos.Channels.Validator;
-using System.Reflection;
-
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.Configure<Settings>(builder.Configuration);
 // Add services to the container.
@@ -21,7 +16,8 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddGlobalForServer();
 builder.Services.AddCaller(Assembly.Load("MASA.MC.Caller"));
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-builder.Services.AddSingleton<GetChannelInputValidator>();
+builder.Services.AddSingleton<Mapper>();
+builder.Services.AddSingleton<ChannelCreateUpdateDtoValidator>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
