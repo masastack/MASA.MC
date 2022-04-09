@@ -17,6 +17,7 @@
     <Navigation />
 
     <MMain Class="fill-lighten-1" Style="padding-top:60px">
+        <MErrorHandler>
         @if (GlobalConfig.PageMode == PageModes.Breadcrumb)
         {
             <div class="pa-6 max-width">
@@ -36,6 +37,8 @@
                 @Body
             </div>
         }
+        </MErrorHandler>
+        <MLoading />
     </MMain>
 
     <Settings @bind-Show=_showSetting />

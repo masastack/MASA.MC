@@ -45,7 +45,9 @@ public partial class ChannelEditModal : AdminCompontentBase
         {
             return;
         }
-        await ChannelCaller.UpdateAsync(_entityId, Mapper.Map<ChannelCreateUpdateDto>(_model));
+        Loading = true;
+        await ChannelCaller.UpdateAsync(_entityId, _model);
+        Loading = false;
         _visible = false;
         ResetForm();
         await SuccessMessageAsync(T("Edit channel data success"));
@@ -65,7 +67,9 @@ public partial class ChannelEditModal : AdminCompontentBase
     }
     private async Task DeleteAsync()
     {
+        Loading = true;
         await ChannelCaller.DeleteAsync(_entityId);
+        Loading = false;
         await SuccessMessageAsync(T("Delete channel data success"));
         _visible = false;
         ResetForm();

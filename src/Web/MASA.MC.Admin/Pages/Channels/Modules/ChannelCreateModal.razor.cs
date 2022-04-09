@@ -53,7 +53,9 @@ public partial class ChannelCreateModal : AdminCompontentBase
         {
             return;
         }
-        await ChannelCaller.CreateAsync(Mapper.Map<ChannelCreateUpdateDto>(_model));
+        Loading = true;
+        await ChannelCaller.CreateAsync(_model);
+        Loading = false;
         await SuccessMessageAsync(T("Create channel data success"));
         _visible = false;
         ResetForm();

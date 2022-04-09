@@ -20,8 +20,10 @@ public partial class ChannelManagement : AdminCompontentBase
     }
 
     private async Task LoadData()
-    {   
+    {
+        Loading = true;
         _entities = (await ChannelCaller.GetListAsync(_queryParam));
+        Loading = false;
         StateHasChanged();
     }
 
