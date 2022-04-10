@@ -2,12 +2,18 @@
 
 <MRow>
     <MCol Md="6">
-        <MTextField @bind-Value="_model.Environment"
-                    Label="@T("ChannelSiteOptions:Environment")"
-                    Dense
-                    Outlined
-                    HideDetails="@("auto")"
-                    TValue="string"
-                    OnChange="HandleChangeAsync"/>
+        <MSelect @bind-Value="@_model.Environment"
+                 Items="@_environmentItems"
+                 Label="@T("ChannelSiteOptions:Environment")"
+                 ItemText="item => item"
+                 ItemValue="item => item"
+                 Dense
+                 Outlined
+                 HideDetails="@("auto")"
+                 TItem="string"
+                 TItemValue="string"
+                 TValue="string"
+                 OnChange="HandleChangeAsync">
+        </MSelect>
     </MCol>
 </MRow>

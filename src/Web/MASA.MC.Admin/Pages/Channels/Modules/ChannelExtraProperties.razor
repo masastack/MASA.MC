@@ -2,13 +2,13 @@
 
 @if (Type==ChannelType.Emailing)
 {
-    <ChannelEmailingExtraProperties @bind-Value="Value" />
+    <ChannelEmailingExtraProperties @ref="_emailingExtraPropertiesRef" @bind-Value="Value" />
 }
 else if (Type==ChannelType.Sms)
 {
-    <ChannelSmsExtraProperties @bind-Value="Value" />
+    <ChannelSmsExtraProperties @ref="_smsExtraPropertiesRef" @bind-Value="Value" />
 }
 else if (Type==ChannelType.Site)
 {
-    <ChannelSiteExtraProperties @bind-Value="Value" />
+    <ChannelSiteExtraProperties @ref="_siteExtraPropertiesRef" @bind-Value="Value" />
 }

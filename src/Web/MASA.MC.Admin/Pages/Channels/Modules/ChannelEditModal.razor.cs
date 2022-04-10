@@ -9,11 +9,11 @@ public partial class ChannelEditModal : AdminCompontentBase
     public ChannelCaller ChannelCaller { get; set; } = default!;
 
     private ChannelCreateUpdateDto _model = new();
-    private MForm _form;
     private Guid _entityId;
     private bool _visible;
     private List<ChannelType> channelTypeItems = Enum.GetValues(typeof(ChannelType))
         .Cast<ChannelType>().ToList();
+    private ChannelExtraProperties _channelExtraPropertiesRef = default!;
 
     public async Task OpenModalAsync(ChannelDto model)
     {
@@ -41,6 +41,7 @@ public partial class ChannelEditModal : AdminCompontentBase
 
     private async Task HandleOk(EditContext context)
     {
+        await _channelExtraPropertiesRef.UpdateExtraPropertiesAsync();
         if (!context.Validate())
         {
             return;

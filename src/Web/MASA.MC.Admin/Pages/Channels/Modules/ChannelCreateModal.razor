@@ -1,7 +1,7 @@
 ﻿@inherits AdminCompontentBase
 <div @ref="Ref">
     <SheetDialog Value="@_visible" ValueChanged="(val)=>{if(!val)HandleCancel();}" Title="@T("Permission:CreateChannel")" ContentStyle="padding-right:228px;padding-left:228px;">
-            <MForm Model="_model" EnableValidation @ref="_form">
+            <MForm Model="_model" EnableValidation>
                 <MStepper Value="_step" Elevation=0 Class="d-flex flex-column full-height mt-6">
                     <MStepperHeader Class="mx-6" Style="box-shadow:none !important">
                         <MStepperStep Step="1" Complete="_step>1">
@@ -61,7 +61,7 @@
                                                 HideDetails="@("auto")" />
                                 </MCol>
                             </MRow>
-                            <ChannelExtraProperties @bind-Value="_model.ExtraProperties" @bind-Type="_model.Type" />
+                            <ChannelExtraProperties @ref="_channelExtraPropertiesRef" @bind-Value="_model.ExtraProperties" @bind-Type="_model.Type" />
                             <MRow>
                                 <MCol Cols="12">
                                     <MTextarea @bind-Value="_model.Description"

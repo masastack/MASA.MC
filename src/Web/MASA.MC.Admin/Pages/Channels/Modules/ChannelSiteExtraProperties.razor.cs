@@ -9,7 +9,7 @@ public partial class ChannelSiteExtraProperties : AdminCompontentBase
     public EventCallback<ExtraPropertyDictionary> ValueChanged { get; set; }
 
     private ChannelSiteOptions _model = new();
-
+    private List<string> _environmentItems = new List<string> {"Staging"};
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
@@ -19,9 +19,9 @@ public partial class ChannelSiteExtraProperties : AdminCompontentBase
         await base.OnAfterRenderAsync(firstRender);
     }
 
-    public void HandleChangeAsync()
+    public async Task HandleChangeAsync()
     {
         Value = ExtensionPropertyHelper.ObjMapToExtraProperty(_model);
-        ValueChanged.InvokeAsync(Value);
+        await ValueChanged.InvokeAsync(Value);
     }
 }

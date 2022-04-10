@@ -19,9 +19,9 @@ public partial class ChannelEmailingExtraProperties : AdminCompontentBase
         await base.OnAfterRenderAsync(firstRender);
     }
 
-    public void HandleChangeAsync()
+    public async Task HandleChangeAsync()
     {
         Value = ExtensionPropertyHelper.ObjMapToExtraProperty(_model);
-        ValueChanged.InvokeAsync(Value);
+        await ValueChanged.InvokeAsync(Value);
     }
 }
