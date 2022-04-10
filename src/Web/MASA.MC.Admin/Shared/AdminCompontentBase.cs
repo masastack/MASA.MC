@@ -62,7 +62,7 @@ public abstract class AdminCompontentBase : BDomComponentBase
     public async Task ConfirmAsync(string messgae, Func<PopupOkEventArgs, Task> callback, AlertTypes type = AlertTypes.Warning)
     {
         await PopupService.ConfirmAsync(
-        I18n.T("Operation confirmation"),
+        I18n.T("OperationConfirmation"),
         messgae,
         type,
         callback);

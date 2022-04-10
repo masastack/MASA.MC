@@ -23,10 +23,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="新文件夹\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Content Update="wwwroot\i18n\en-US.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

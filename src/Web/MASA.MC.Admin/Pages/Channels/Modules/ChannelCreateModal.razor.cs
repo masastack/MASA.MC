@@ -41,7 +41,7 @@ public partial class ChannelCreateModal : AdminCompontentBase
     {
         if (_model.Type==default)
         {
-            await WarningAsync(T("Please select the channel type first"));
+            await WarningAsync(T("Description:Channel.Type.Required"));
             return;
         }
         _step++;
@@ -56,7 +56,7 @@ public partial class ChannelCreateModal : AdminCompontentBase
         Loading = true;
         await ChannelCaller.CreateAsync(_model);
         Loading = false;
-        await SuccessMessageAsync(T("Create channel data success"));
+        await SuccessMessageAsync(T("ChannelCreateMessage"));
         _visible = false;
         ResetForm();
         if (OnOk.HasDelegate)

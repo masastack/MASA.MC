@@ -50,7 +50,7 @@ public partial class ChannelEditModal : AdminCompontentBase
         Loading = false;
         _visible = false;
         ResetForm();
-        await SuccessMessageAsync(T("Edit channel data success"));
+        await SuccessMessageAsync(T("ChannelEditMessage"));
         if (OnOk.HasDelegate)
         {
             await OnOk.InvokeAsync();
@@ -59,7 +59,7 @@ public partial class ChannelEditModal : AdminCompontentBase
 
     private async Task HandleDel()
     {
-        await ConfirmAsync(T("Are you sure delete data?"),async args =>
+        await ConfirmAsync(T("DeletionConfirmationMessage"),async args =>
         {
             await DeleteAsync();
         }
@@ -70,7 +70,7 @@ public partial class ChannelEditModal : AdminCompontentBase
         Loading = true;
         await ChannelCaller.DeleteAsync(_entityId);
         Loading = false;
-        await SuccessMessageAsync(T("Delete channel data success"));
+        await SuccessMessageAsync(T("ChannelDeleteMessage"));
         _visible = false;
         ResetForm();
         if (OnOk.HasDelegate)

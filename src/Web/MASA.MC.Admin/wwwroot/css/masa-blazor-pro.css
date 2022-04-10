@@ -61,7 +61,7 @@
     /* Headline 4 */
     font-family: Roboto !important;
     font-style: normal !important;
-    font-weight: bold !important;
+    font-weight: 700 !important;
     font-size: 2.125rem !important;
     line-height: 2.625rem !important;
     /* identical to box height */
@@ -70,6 +70,7 @@
     color: #323D6F;
 }
 
+/*24B1*/
 .h5, .text-h5, h5 {
     /* Headline 5 */
     font-family: Roboto !important;
@@ -95,6 +96,7 @@
     color: #1B2559;
 }
 
+/*18M2*/
 .h7, .text-h7, h7 {
     /* Headline 6 */
     font-family: Roboto !important;
@@ -120,12 +122,12 @@
     /* default color */
     color: #1B2559;
 }
-
+/*14B2*/
 .text-subtitle2 {
     /* Subtitle 2-2 */
     font-family: Roboto !important;
     font-style: normal !important;
-    font-weight: bold !important;
+    font-weight: 700 !important;
     font-size: 0.875rem !important;
     line-height: 1rem !important;
     /* identical to box height */
@@ -152,7 +154,7 @@
     font-style: normal !important;
     font-weight: normal !important;
     font-size: 0.875rem !important;
-    line-height: 1rem !important;
+    line-height: 1.3125rem !important;
     /* identical to box height */
     letter-spacing: 0.015625rem !important;
     /* default color */
@@ -163,7 +165,7 @@
     /* Body 1-内容 1 */
     font-family: Roboto !important;
     font-style: normal !important;
-    font-weight: normal !important;
+    font-weight: 500 !important;
     font-size: 1rem !important;
     /* identical to box height */
     line-height: 1.75rem !important;
@@ -171,18 +173,41 @@
     color: #485585;
 }
 
+.text-body4 {
+    /* Body 1-内容 1 */
+    font-family: Roboto !important;
+    font-style: normal !important;
+    font-weight: 400 !important;
+    font-size: 1rem !important;
+    /* identical to box height */
+    line-height: 1.75rem !important;
+    /* default color */
+    color: #7681AB;
+}
+
 .text-btn {
     /* BUTTON-按钮 */
     font-family: Roboto !important;
     font-style: normal !important;
-    font-weight: 500 !important;
+    font-weight: 400 !important;
     font-size: 0.875rem !important;
-    line-height: 1rem !important;
+    line-height: 1.25rem !important;
     /* default color */
-    color: #323D6F !important;
+    color: #A3AED0 !important;
 }
 
 .text-caption {
+    /* Caption-说明 */
+    font-family: Roboto !important;
+    font-style: normal !important;
+    font-weight: 400 !important;
+    font-size: 0.75rem !important;
+    line-height: 1.25rem !important;
+    /* default color */
+    color: #485585;
+}
+
+.text-caption2 {
     /* Caption-说明 */
     font-family: Roboto !important;
     font-style: normal !important;
@@ -190,7 +215,7 @@
     font-size: 0.75rem !important;
     line-height: 1.125rem !important;
     /* default color */
-    color: #A3AED0;
+    color: #7681AB;
 }
 
 .text-overline {
@@ -204,6 +229,15 @@
     letter-spacing: 0.09375rem !important;
     /* default color */
     color: #A3AED0;
+}
+
+.text-important {
+    font-family: 'Roboto' !important;
+    font-style: normal !important;
+    font-weight: 500 !important;
+    font-size: 0.875rem !important;
+    line-height: 1.3125rem !important;
+    color: #323D6F;
 }
 
 .pry-lighten-1 {
@@ -437,7 +471,72 @@
     align-items: center;
 }
 
+.small-button {
+    min-width: 100px !important;
+    height: 40px !important;
+    border-radius: 40px !important;
+    font-family: 'Roboto' !important;
+    font-style: normal !important;
+    font-weight: 500 !important;
+    font-size: 0.875rem !important;
+    line-height: 1.3125rem !important;
+}
+
+.medium-button {
+    min-width: 126px;
+    height: 40px;
+    border-radius: 99px;
+    font-family: 'Roboto' !important;
+    font-style: normal !important;
+    font-weight: 500 !important;
+    font-size: 0.875rem !important;
+    line-height: 1.3125rem !important;
+}
+
+.large-button {
+    min-width: 340px;
+    height: 48px;
+    border-radius: 90px;
+    font-family: 'Roboto' !important;
+    font-style: normal !important;
+    font-weight: 500 !important;
+    font-size: 0.875rem !important;
+    line-height: 1.3125rem !important;
+}
+
 /*组件样式全局修改start*/
+.button-group {
+    font-family: Roboto !important;
+    font-style: normal !important;
+    font-weight: 500 !important;
+    font-size: 1.125rem !important;
+    line-height: 1.6875rem !important;
+    /* identical to box height */
+    letter-spacing: 0.01em !important;
+    color: #A3AED0 !important;
+    background: #F6F8FD !important;
+}
+
+    .button-group .m-icon {
+        color: #A3AED0 !important;
+    }
+
+.button-group-active {
+    font-family: Roboto !important;
+    font-style: normal !important;
+    font-weight: 500 !important;
+    font-size: 1.125rem !important;
+    line-height: 1.6875rem !important;
+    /* identical to box height */
+    letter-spacing: 0.01em !important;
+    color: #323D6F !important;
+    background: #E9EDF7 !important;
+}
+
+    .button-group-active .m-icon {
+        color: #323D6F !important;
+    }
+
 .m-radio i {
     font-size: 21px !important;
 }
@@ -448,6 +547,7 @@
 
 .m-messages {
     min-height: 0px !important;
+    margin-top: 4px;
 }
 
 .m-navigation-drawer__border {
@@ -542,73 +642,73 @@
     overflow: visible !important;
 }
 
-.navigation .m-list-group__items .m-list-item {
-    padding-left:60px !important;
-}
+    .navigation .m-list-group__items .m-list-item {
+        padding-left: 60px !important;
+    }
 
-.navigation .m-list-item {
-    padding-left:28px;
-    padding-right:28px;
-}
+    .navigation .m-list-item {
+        padding-left: 28px;
+        padding-right: 28px;
+    }
 
-.navigation .m-list-item--link:before {
-    background-color: white !important;
-}
+    .navigation .m-list-item--link:before {
+        background-color: white !important;
+    }
 
-.navigation .m-list-item:hover {
-    background-color: none !important;
-    background: #F6F8FD !important;
-}
+    .navigation .m-list-item:hover {
+        background-color: none !important;
+        background: #F6F8FD !important;
+    }
 
-.navigation .m-navigation-drawer__content {
-    overflow-y: visible !important;
-    overflow-x: visible !important;
-}
+    .navigation .m-navigation-drawer__content {
+        overflow-y: visible !important;
+        overflow-x: visible !important;
+    }
 
-.navigation .m-icon {
-    font-size: 20px;
-    color: #485585;
-    caret-color: #485585;
-}
+    .navigation .m-icon {
+        font-size: 20px;
+        color: #485585;
+        caret-color: #485585;
+    }
 
-.navigation .m-list-item__icon:first-child {
-    margin-right: 0px !important;
-}
+    .navigation .m-list-item__icon:first-child {
+        margin-right: 0px !important;
+    }
 
-.navigation .m-list-group--active > .m-list-group__header .m-list-item__content {
-    color: #1B2559 !important;
-    font-family: Roboto;
-    font-style: normal;
-    font-weight: bold;
-    font-size: 16px;
-    line-height: 28px;
-}
+    .navigation .m-list-group--active > .m-list-group__header .m-list-item__content {
+        color: #1B2559 !important;
+        font-family: Roboto;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 16px;
+        line-height: 28px;
+    }
 
-.navigation .m-list-group__header .m-list-item__content {
-    color: #485585 !important;
-    font-family: Roboto;
-    font-style: normal;
-    font-weight: 500;
-    font-size: 16px;
-    line-height: 28px;
-}
+    .navigation .m-list-group__header .m-list-item__content {
+        color: #485585 !important;
+        font-family: Roboto;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 28px;
+    }
 
-.navigation .m-list-item--active + .m-border {
-    display: block !important;
-}
+    .navigation .m-list-item--active + .m-border {
+        display: block !important;
+    }
 
-.navigation .m-list-item:before {
-    content: none !important;
-}
+    .navigation .m-list-item:before {
+        content: none !important;
+    }
 
-.navigation .m-ripple__container {
-    color: #A3AED0;
-   /* opacity: 1 !important;*/
-}
+    .navigation .m-ripple__container {
+        color: #A3AED0;
+        /* opacity: 1 !important;*/
+    }
 
-.navigation .m-list-item:hover .m-list-item__title {
-    color: #4318FF !important;
-}
+    .navigation .m-list-item:hover .m-list-item__title {
+        color: #4318FF !important;
+    }
 
 .remove-click-color .m-list-item:before {
     content: none !important;
@@ -643,37 +743,60 @@
     border: none;
 }
 
-/* pagetabs */
+.search {
+    width: 340px;
+}
 
+    .search.m-text-field.m-text-field--solo.m-input--dense > .m-input__control {
+        min-height: 40px;
+    }
+
+/* pagetabs */
 .m-page-tabs .m-slide-group__prev.m-slide-group__prev--disabled {
     flex: none !important;
     min-width: 0px !important;
 }
 
+.label .m-label {
+    /* Caption-说明 */
+    font-family: Roboto !important;
+    font-style: normal !important;
+    font-weight: 500 !important;
+    font-size: 0.75rem !important;
+    line-height: 1.125rem !important;
+    /* default color */
+    color: #A3AED0 !important;
+}
+
+.button-group-active {
+    background: #ECE8FF !important;
+}
 /* pagetabs */
 /*组件样式全局修改end*/
 /*shop*/
 .ml300 {
     margin-left: 300px;
 }
+
 .commodity:hover {
     height: calc(100% + 10px);
 }
-.commodity:hover .content {
-    transition-property: margin-top;
-    transition-duration: 0.5s;
-    box-shadow: 0px 18px 40px rgba(112, 144, 176, 0.12) !important;
-    margin-top: -4px;
-}
+
+    .commodity:hover .content {
+        transition-property: margin-top;
+        transition-duration: 0.5s;
+        box-shadow: 0px 18px 40px rgba(112, 144, 176, 0.12) !important;
+        margin-top: -4px;
+    }
 
 .order:hover {
     background-color: #6946FF !important;
 }
 
-.order:hover .white-order {
-    color: #FFFFFF !important;
-    caret-color: #FFFFFF !important;
-}
+    .order:hover .white-order {
+        color: #FFFFFF !important;
+        caret-color: #FFFFFF !important;
+    }
 
 .favorite:hover {
     background: #F6F8FD !important;
@@ -701,7 +824,7 @@
 }
 
 .m-text-field.m-input--dense:not(.m-text-field--outlined) .m-text-field__prefix, .m-text-field.m-input--dense:not(.m-text-field--outlined) .m-text-field__suffix, .m-text-field.m-input--dense:not(.m-text-field--outlined) input {
-   padding-top:0;
+    padding-top: 0;
 }
 
 .max-height {
@@ -758,6 +881,10 @@
     margin-block-end: 1em;
     margin-inline-start: 0px;
     margin-inline-end: 0px;
+}
+
+.m-tabs-bar {
+    height: 28px;
 }
 
 .pro-nav > .m-tabs-bar {
@@ -941,7 +1068,7 @@ input::-webkit-input-placeholder {
 }
 
 .user .m-data-table-header__icon {
-    margin-top:1px;
+    margin-top: 1px;
 }
 
 .neutral-lighten-icon .m-icon {
@@ -1005,7 +1132,7 @@ tr:hover {
 }
 
 .pagetabs .m-item-group.m-slide-group.m-tabs-bar {
-    margin-top:4px;
+    margin-top: 4px;
 }
 
 .m-page-tabs .m-page_tab {
@@ -1024,7 +1151,7 @@ tr:hover {
 
 .m-page_tab .m-icon {
     color: #A3AED0 !important;
-    font-size:16px !important;
+    font-size: 16px !important;
 }
 
 .m-page_tab_active {
@@ -1036,12 +1163,12 @@ tr:hover {
     line-height: 16px;
     letter-spacing: 0.1px;
     /* text/1-1强调 */
-    color: #1B2559 !important;                                                                                                                                                               
-}
-
-.m-page_tab_active > .m-icon {
     color: #1B2559 !important;
 }
+
+    .m-page_tab_active > .m-icon {
+        color: #1B2559 !important;
+    }
 
 .m-page-tabs > .m-tabs-bar {
     border-bottom-left-radius: 20px !important;
@@ -1066,4 +1193,131 @@ tr:hover {
 .m-app-bar.rounded-b-4 > .m-toolbar__content {
     border-bottom-left-radius: 20px !important;
     border-bottom-right-radius: 20px !important;
+}
+
+.m-input.mx-auto .m-text-field__slot {
+    padding-bottom: 12px;
+}
+
+    .m-input.mx-auto .m-text-field__slot input {
+        text-align: center;
+    }
+
+.m-input.mx-auto .m-input__slot::before {
+    border-color: #E2E7F4 !important;
+}
+
+.m-input.mx-auto .m-text-field__slot input::placeholder {
+    text-align: center;
+    color: #A3AED0 !important;
+    font-family: Roboto !important;
+    font-size: 24px !important;
+    font-style: normal !important;
+    font-weight: 700 !important;
+    line-height: normal !important;
+    letter-spacing: 0em !important;
+}
+
+.m-data-table.table-space-v-4 > .m-data-table__wrapper > table {
+    border-spacing: 0px 16px !important;
+}
+
+.m-data-table.table-space-v-2 > .m-data-table__wrapper > table {
+    border-spacing: 0px 8px !important;
+}
+
+.justify-center.m-input--checkbox > .m-input__control {
+    flex-grow: 0 !important;
+    width: auto !important;
+}
+
+.elevation-tab {
+    background-color: #F0F3FA !important;
+    padding: 3px;
+}
+
+.m-tabs.elevation-tab .m-tab {
+    background-color: #F0F3FA !important;
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 21px;
+    /* identical to box height, or 150% */
+
+    display: flex;
+    align-items: center;
+    text-align: center;
+    /* text/2-2正文 */
+
+    color: #7681AB;
+}
+
+.m-tabs.elevation-tab .m-tab--active {
+    background-color: white !important;
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 16px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    letter-spacing: 0.1px;
+    /* text/1-2强调 */
+
+    color: #323D6F;
+    padding: 4px;
+    background-image: linear-gradient(to bottom, white 0%, white 100%), linear-gradient(to bottom, #F0F3FA 0%, #F0F3FA 100%);
+    background-clip: content-box, padding-box;
+}
+
+.m-item-group.elevation-tab .m-btn.m-btn--has-bg.m-btn--active {
+    background-color: white !important;
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 16px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    letter-spacing: 0.1px;
+    /* text/1-2强调 */
+
+    color: #323D6F;
+}
+
+.elevation-tab .theme--light.m-btn--active:hover::before, .elevation-tab .theme--light.m-btn--active::before {
+    opacity: 0;
+}
+
+.m-item-group.elevation-tab .m-btn.m-btn--has-bg {
+    background-color: #F0F3FA !important;
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 21px;
+    /* identical to box height, or 150% */
+
+    display: flex;
+    align-items: center;
+    text-align: center;
+    /* text/2-2正文 */
+
+    color: #7681AB;
+}
+
+.remover-hover.m-list-item:hover::before {
+    opacity: 0 !important;
+}
+
+
+.m-chip:not(.m-chip--active) {
+    background: #f6f8fd !important;
+}
+
+.max-full-height {
+    max-height: 100% !important;
 }
