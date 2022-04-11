@@ -10,9 +10,6 @@ public abstract class AdminCompontentBase : BDomComponentBase
     public IPopupService PopupService { get; set; } = default!;
 
     [Inject]
-    public Mapper Mapper { get; set; } = default!;
-
-    [Inject]
     public I18n I18n
     {
         get

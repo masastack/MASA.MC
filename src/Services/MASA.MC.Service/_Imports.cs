@@ -1,5 +1,4 @@
-﻿global using AutoMapper;
-global using System.Text.Json;
+﻿global using System.Text.Json;
 global using Dapr.Actors;
 global using Dapr.Actors.Client;
 global using Dapr.Actors.Runtime;
@@ -54,3 +53,5 @@ global using MASA.MC.Infrastructure.EntityFrameworkCore.EntityFrameworkCore.Valu
 global using MASA.MC.Service.Admin.Domain.Consts;
 global using System.Collections.Concurrent;
 global using Microsoft.AspNetCore.Mvc;
+global using Mapster;
+global using MapsterMapper;

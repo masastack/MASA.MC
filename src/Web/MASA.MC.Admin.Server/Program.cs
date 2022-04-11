@@ -15,8 +15,6 @@ builder.Services.AddMasaBlazor(builder =>
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddGlobalForServer();
 builder.Services.AddCaller(Assembly.Load("MASA.MC.Caller"));
-builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-builder.Services.AddSingleton<Mapper>();
 builder.Services.AddSingleton<ChannelCreateUpdateDtoValidator>();
 var app = builder.Build();
 

@@ -1,4 +1,6 @@
-﻿namespace MASA.MC.Admin.Pages.Channels.Modules;
+﻿using Mapster;
+
+namespace MASA.MC.Admin.Pages.Channels.Modules;
 
 public partial class ChannelEditModal : AdminCompontentBase
 {
@@ -18,7 +20,7 @@ public partial class ChannelEditModal : AdminCompontentBase
     public async Task OpenModalAsync(ChannelDto model)
     {
         _entityId = model.Id;
-        _model = Mapper.Map<ChannelCreateUpdateDto>(model);
+        _model = model.Adapt<ChannelCreateUpdateDto>();
         await GetFormDataAsync();
         await InvokeAsync(() =>
         {
@@ -30,7 +32,7 @@ public partial class ChannelEditModal : AdminCompontentBase
     private async Task GetFormDataAsync()
     {
         var dto = await ChannelCaller.GetAsync(_entityId);
-        _model = Mapper.Map<ChannelCreateUpdateDto>(dto);
+        _model = dto.Adapt<ChannelCreateUpdateDto>();
     }
 
     private void HandleCancel()

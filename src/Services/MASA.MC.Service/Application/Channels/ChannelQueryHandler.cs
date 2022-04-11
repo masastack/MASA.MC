@@ -3,12 +3,10 @@
 public class ChannelQueryHandler
 {
     private readonly IChannelRepository _repository;
-    private readonly IMapper _mapper;
 
-    public ChannelQueryHandler(IChannelRepository repository, IMapper mapper)
+    public ChannelQueryHandler(IChannelRepository repository)
     {
         _repository = repository;
-        _mapper = mapper;
     }
 
     [EventHandler]
@@ -17,7 +15,7 @@ public class ChannelQueryHandler
         var entity = await _repository.FindAsync(x=>x.Id==query.ChannelId);
         if (entity == null)
             throw new UserFriendlyException("channel not found");
-        query.Result = _mapper.Map<ChannelDto>(entity);
+        query.Result = entity.Adapt<ChannelDto>();
     }
 
     [EventHandler]
@@ -34,7 +32,7 @@ public class ChannelQueryHandler
                 [nameof(Channel.CreationTime)] = true
             }
         });
-        var dtos = _mapper.Map<List<ChannelDto>>(resultList.Result).ToList();
+        var dtos = resultList.Result.Adapt<List<ChannelDto>>();
         var result = new PaginatedListDto<ChannelDto>(resultList.Total, resultList.TotalPages, dtos);
         query.Result = result;
     }
@@ -45,7 +43,7 @@ public class ChannelQueryHandler
         var entity = await _repository.FindAsync(d => d.Code == query.Code);
         if (entity == null)
             throw new UserFriendlyException("channel not found");
-        query.Result = _mapper.Map<ChannelDto>(entity);
+        query.Result = entity.Adapt<ChannelDto>();
     }
 
     private async Task<Expression<Func<Channel, bool>>> CreateFilteredPredicate(GetChannelInput input)

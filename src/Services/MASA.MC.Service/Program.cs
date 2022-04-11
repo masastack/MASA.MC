@@ -16,8 +16,8 @@ builder.Services.AddAuthentication(options =>
     options.RequireHttpsMetadata = false;
     options.Audience = "";
 });
-//扫描Profile文件
-builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+var config = new TypeAdapterConfig();
+var mapper = new Mapper(config);
 var app = builder.Services
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     .AddEndpointsApiExplorer()

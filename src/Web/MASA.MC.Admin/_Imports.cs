@@ -36,5 +36,5 @@ global using MASA.MC.Infrastructure.ObjectExtending;
 global using MASA.MC.Infrastructure.ObjectExtending.ObjectExtending;
 global using MASA.MC.Admin.Pages.Channels.Modules;
 global using MASA.MC.Infrastructure.DDD.Application.Contracts.Dtos;
-global using AutoMapper;
 global using MASA.MC.Admin.ViewModel.Channels;
+global using Mapster;
