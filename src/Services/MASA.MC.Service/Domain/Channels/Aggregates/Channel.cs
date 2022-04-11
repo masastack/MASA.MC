@@ -1,4 +1,4 @@
-﻿namespace MASA.MC.Service.Admin.Domain.Channels.Aggregates;
+﻿namespace Masa.Mc.Service.Admin.Domain.Channels.Aggregates;
 
 public class Channel : AuditAggregateRoot<Guid, Guid>
 {

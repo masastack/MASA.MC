@@ -1,4 +1,4 @@
-﻿namespace MASA.MC.Service.Admin.Application.Channels.Queries;
+﻿namespace Masa.Mc.Service.Admin.Application.Channels.Queries;
 
 public record GetListChannelQuery(GetChannelInput Input) : Query<PaginatedListDto<ChannelDto>>
 {

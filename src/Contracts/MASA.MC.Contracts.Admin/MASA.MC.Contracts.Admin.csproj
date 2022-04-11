@@ -12,8 +12,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Infrastructure\MASA.MC.Infrastructure.DDD.Application.Contracts\MASA.MC.Infrastructure.DDD.Application.Contracts.csproj" />
-    <ProjectReference Include="..\..\Infrastructure\MASA.MC.Infrastructure.ObjectExtending\MASA.MC.Infrastructure.ObjectExtending.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\Masa.Mc.Infrastructure.DDD.Application.Contracts\Masa.Mc.Infrastructure.Ddd.Application.Contracts.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\Masa.Mc.Infrastructure.ObjectExtending\Masa.Mc.Infrastructure.ObjectExtending.csproj" />
   </ItemGroup>
 
 </Project>

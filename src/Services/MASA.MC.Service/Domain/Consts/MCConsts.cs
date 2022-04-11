@@ -1,4 +1,4 @@
-﻿namespace MASA.MC.Service.Admin.Domain.Consts;
+﻿namespace Masa.Mc.Service.Admin.Domain.Consts;
 
 public static class MCConsts
 {

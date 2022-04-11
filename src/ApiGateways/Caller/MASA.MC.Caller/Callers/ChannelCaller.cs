@@ -1,4 +1,4 @@
-﻿namespace MASA.MC.Caller.Callers;
+﻿namespace Masa.Mc.Caller.Callers;
 
 public class ChannelCaller : HttpClientCallerBase
 {

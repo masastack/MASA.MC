@@ -1,4 +1,4 @@
-﻿namespace MASA.MC.Infrastructure.EntityFrameworkCore.EntityFrameworkCore.ValueConverters;
+﻿namespace Masa.Mc.Infrastructure.EntityFrameworkCore.EntityFrameworkCore.ValueConverters;
 
 public class ExtraPropertiesValueConverter : ValueConverter<ExtraPropertyDictionary, string>
 {

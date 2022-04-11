@@ -1,8 +1,8 @@
-﻿namespace MASA.MC.Service.Admin.Infrastructure.Repositories;
+﻿namespace Masa.Mc.Service.Admin.Infrastructure.Repositories;
 
-public class MessageTemplateRepository : Repository<MCDbContext, MessageTemplate>, IMessageTemplateRepository
+public class MessageTemplateRepository : Repository<McDbContext, MessageTemplate>, IMessageTemplateRepository
 {
-    public MessageTemplateRepository(MCDbContext context, IUnitOfWork unitOfWork)
+    public MessageTemplateRepository(McDbContext context, IUnitOfWork unitOfWork)
         : base(context, unitOfWork)
     {
     }

@@ -1,4 +1,4 @@
-﻿namespace MASA.MC.Service.Admin.Infrastructure.Extensions;
+﻿namespace Masa.Mc.Service.Admin.Infrastructure.Extensions;
 
 /// <summary>
 /// Extension methods for Dictionary.

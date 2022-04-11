@@ -1,4 +1,4 @@
-﻿namespace MASA.MC.Contracts.Admin.Options.Channels;
+﻿namespace Masa.Mc.Contracts.Admin.Options.Channels;
 
 public class SmsChannelOptions
 {

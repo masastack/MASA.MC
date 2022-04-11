@@ -16,7 +16,7 @@ builder.Services.AddAuthentication(options =>
     options.RequireHttpsMetadata = false;
     options.Audience = "";
 });
-TypeAdapterConfig.GlobalSettings.Scan(Assembly.GetExecutingAssembly(), Assembly.Load("MASA.MC.Contracts.Admin"));
+TypeAdapterConfig.GlobalSettings.Scan(Assembly.GetExecutingAssembly(), Assembly.Load("Masa.Mc.Contracts.Admin"));
 var app = builder.Services
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     .AddEndpointsApiExplorer()
@@ -55,10 +55,10 @@ var app = builder.Services
     .AddDomainEventBus(options =>
     {
         options.UseEventBus()
-               .UseUoW<MCDbContext>(dbOptions => dbOptions.UseSqlServer(builder.Configuration["Local:Appsettings:ConnectionStrings:DefaultConnection"]))
+               .UseUoW<McDbContext>(dbOptions => dbOptions.UseSqlServer(builder.Configuration["Local:Appsettings:ConnectionStrings:DefaultConnection"]))
                .UseDaprEventBus<IntegrationEventLogService>()
-               .UseEventLog<MCDbContext>()
-               .UseRepository<MCDbContext>();
+               .UseEventLog<McDbContext>()
+               .UseRepository<McDbContext>();
     })
     .AddServices(builder);
 app.UseMasaExceptionHandling(opt =>

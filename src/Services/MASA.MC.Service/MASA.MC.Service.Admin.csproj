@@ -36,8 +36,8 @@
 	</ItemGroup>
 	
 	<ItemGroup>
-	  <ProjectReference Include="..\..\Contracts\MASA.MC.Contracts.Admin\MASA.MC.Contracts.Admin.csproj" />
-	  <ProjectReference Include="..\..\Infrastructure\MASA.MC.Infrastructure.EntityFrameworkCore\MASA.MC.Infrastructure.EntityFrameworkCore.csproj" />
+	  <ProjectReference Include="..\..\Contracts\Masa.Mc.Contracts.Admin\Masa.Mc.Contracts.Admin.csproj" />
+	  <ProjectReference Include="..\..\Infrastructure\Masa.Mc.Infrastructure.EntityFrameworkCore\Masa.Mc.Infrastructure.EntityFrameworkCore.csproj" />
 	</ItemGroup>
 	
 	<ItemGroup>

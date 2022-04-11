@@ -1,4 +1,4 @@
-﻿namespace MASA.MC.Service.Admin.Domain.MessageTemplates.Events;
+﻿namespace Masa.Mc.Service.Admin.Domain.MessageTemplates.Events;
 
 public record MessageTemplateStatusChangedToApprovedEvent(Guid TemplateId, string Remarks) : Event;
 

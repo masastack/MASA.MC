@@ -1,4 +1,4 @@
-﻿namespace MASA.MC.Service.Admin.Domain.MessageTemplates.Aggregates;
+﻿namespace Masa.Mc.Service.Admin.Domain.MessageTemplates.Aggregates;
 
 public class MessageTemplateItem : Entity<Guid>
 {

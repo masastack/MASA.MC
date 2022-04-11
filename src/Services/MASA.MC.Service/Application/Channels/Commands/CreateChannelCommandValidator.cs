@@ -1,4 +1,4 @@
-﻿namespace MASA.MC.Service.Admin.Application.Channels.Commands;
+﻿namespace Masa.Mc.Service.Admin.Application.Channels.Commands;
 
 public class CreateChannelCommandValidator : AbstractValidator<CreateChannelCommand>
 {

@@ -1,4 +1,4 @@
-﻿namespace MASA.MC.Service.Admin.Application.Channels.Registers
+﻿namespace Masa.Mc.Service.Admin.Application.Channels.Registers
 {
     public class ChannelRegister : IRegister
     {

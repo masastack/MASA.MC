@@ -1,4 +1,4 @@
-﻿namespace MASA.MC.Infrastructure.DDD.Application.Contracts.Dtos;
+﻿namespace Masa.Mc.Infrastructure.DDD.Application.Contracts.Dtos;
 
 public class EntityDto<TKey>
 {

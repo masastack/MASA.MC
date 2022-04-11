@@ -1,4 +1,4 @@
-﻿namespace MASA.MC.Service.Admin.Application.MessageTemplates;
+﻿namespace Masa.Mc.Service.Admin.Application.MessageTemplates;
 
 public class MessageTemplateStatusEventHandler
 {

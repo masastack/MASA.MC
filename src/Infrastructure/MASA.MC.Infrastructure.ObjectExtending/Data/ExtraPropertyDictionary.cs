@@ -1,4 +1,4 @@
-﻿namespace MASA.MC.Infrastructure.ObjectExtending;
+﻿namespace Masa.Mc.Infrastructure.ObjectExtending;
 
 [Serializable]
 public class ExtraPropertyDictionary : ConcurrentDictionary<string, object>

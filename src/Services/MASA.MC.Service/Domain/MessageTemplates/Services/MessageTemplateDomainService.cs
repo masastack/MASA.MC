@@ -1,4 +1,4 @@
-﻿namespace MASA.MC.Service.Admin.Domain.MessageTemplates.Services;
+﻿namespace Masa.Mc.Service.Admin.Domain.MessageTemplates.Services;
 
 public class MessageTemplateDomainService : DomainService
 {

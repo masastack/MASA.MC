@@ -1,4 +1,4 @@
-﻿namespace MASA.MC.Caller;
+﻿namespace Masa.Mc.Caller;
 
 public class Settings
 {

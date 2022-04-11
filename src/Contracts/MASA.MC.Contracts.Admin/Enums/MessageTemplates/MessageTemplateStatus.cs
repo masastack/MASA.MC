@@ -1,4 +1,4 @@
-﻿namespace MASA.MC.Contracts.Admin.Enums.MessageTemplates;
+﻿namespace Masa.Mc.Contracts.Admin.Enums.MessageTemplates;
 
 public enum MessageTemplateStatus
 {

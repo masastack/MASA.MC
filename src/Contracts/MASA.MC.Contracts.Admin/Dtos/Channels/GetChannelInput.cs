@@ -1,4 +1,4 @@
-﻿namespace MASA.MC.Contracts.Admin.Dtos.Channels;
+﻿namespace Masa.Mc.Contracts.Admin.Dtos.Channels;
 
 public class GetChannelInput : PaginatedOptionsDto
 {

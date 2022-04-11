@@ -1,4 +1,4 @@
-﻿namespace MASA.MC.Service.Admin.Application.Channels.Queries;
+﻿namespace Masa.Mc.Service.Admin.Application.Channels.Queries;
 
 public class GetListChannelQueryValidator : AbstractValidator<GetListChannelQuery>
 {

@@ -1,4 +1,4 @@
-﻿namespace MASA.MC.Service.Admin.Domain.MessageTemplates.Aggregates;
+﻿namespace Masa.Mc.Service.Admin.Domain.MessageTemplates.Aggregates;
 public class MessageTemplate : AuditAggregateRoot<Guid, Guid>
 {
     public virtual Guid ChannelId { get; protected set; }

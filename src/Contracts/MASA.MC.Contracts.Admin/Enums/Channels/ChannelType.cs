@@ -1,4 +1,4 @@
-﻿namespace MASA.MC.Contracts.Admin.Enums.Channels;
+﻿namespace Masa.Mc.Contracts.Admin.Enums.Channels;
 
 public enum ChannelType
 {

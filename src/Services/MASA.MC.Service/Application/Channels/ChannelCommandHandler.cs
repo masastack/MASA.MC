@@ -1,4 +1,4 @@
-﻿namespace MASA.MC.Service.Admin.Application.Channels;
+﻿namespace Masa.Mc.Service.Admin.Application.Channels;
 
 public class ChannelCommandHandler
 {

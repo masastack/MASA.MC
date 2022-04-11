@@ -1,4 +1,4 @@
-﻿namespace MASA.MC.Service.Admin.Domain.Channels.Services;
+﻿namespace Masa.Mc.Service.Admin.Domain.Channels.Services;
 
 public class ChannelDomainService : DomainService
 {

@@ -1,4 +1,4 @@
-﻿namespace MASA.MC.Infrastructure.ObjectExtending.ObjectExtending;
+﻿namespace Masa.Mc.Infrastructure.ObjectExtending.ObjectExtending;
 
 public static class ExtensionPropertyHelper
 {

@@ -1,4 +1,4 @@
-﻿namespace MASA.MC.Service.Services;
+﻿namespace Masa.Mc.Service.Services;
 
 public class ChannelService : ServiceBase
 {

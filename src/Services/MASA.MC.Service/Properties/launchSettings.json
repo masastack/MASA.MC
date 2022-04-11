@@ -8,7 +8,7 @@
     }
   },
   "profiles": {
-    "MASA.MC.Services": {
+    "Masa.Mc.Services": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,

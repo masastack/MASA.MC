@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MASA.MC.Infrastructure.ObjectExtending\MASA.MC.Infrastructure.ObjectExtending.csproj" />
+    <ProjectReference Include="..\Masa.Mc.Infrastructure.ObjectExtending\Masa.Mc.Infrastructure.ObjectExtending.csproj" />
   </ItemGroup>
 
 </Project>
