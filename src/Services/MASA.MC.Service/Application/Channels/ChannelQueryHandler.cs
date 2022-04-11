@@ -53,6 +53,8 @@ public class ChannelQueryHandler
         Expression<Func<Channel, bool>> condition = channel => true;
         if (input.Type.HasValue)
             condition = condition.And(channel => channel.Type == input.Type);
+        if (!string.IsNullOrEmpty(input.Filter))
+            condition = condition.And(channel => channel.DisplayName.Contains(input.Filter)|| channel.Code.Contains(input.Filter));
         if (!string.IsNullOrEmpty(input.DisplayName))
             condition = condition.And(channel => channel.DisplayName.Contains(input.DisplayName));
         return await Task.FromResult(condition); ;

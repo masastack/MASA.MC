@@ -2,6 +2,7 @@
 
 public class GetChannelInput : PaginatedOptionsDto
 {
+    public string Filter { get; set; } = string.Empty;
     public ChannelType? Type { get; set; }
     public string DisplayName { get; set; } = string.Empty;
 
@@ -14,15 +15,17 @@ public class GetChannelInput : PaginatedOptionsDto
     {
     }
 
-    public GetChannelInput(ChannelType? type, string displayName, 
+    public GetChannelInput(string filter,ChannelType? type, string displayName, 
        string sorting, int page, int pageSize):base(sorting, page, pageSize)
     {
+        Filter = filter;
         Type = type;
         DisplayName = displayName;
     }
 
     public static ValueTask<GetChannelInput?> BindAsync(HttpContext httpContext, ParameterInfo parameter)
     {
+        var filter = httpContext.Request.Query["filter"];
         Enum.TryParse<ChannelType>(httpContext.Request.Query["type"], out var type);
         var displayName = httpContext.Request.Query["displayName"];
         var sorting = httpContext.Request.Query["sorting"];
@@ -31,6 +34,7 @@ public class GetChannelInput : PaginatedOptionsDto
 
         return ValueTask.FromResult<GetChannelInput?>(
             new GetChannelInput(
+                filter,
                 type,
                 displayName,
                 sorting,

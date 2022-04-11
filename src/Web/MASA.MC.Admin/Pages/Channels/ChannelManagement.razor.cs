@@ -54,7 +54,7 @@ public partial class ChannelManagement : AdminCompontentBase
 
     private async Task HandleClearAsync()
     {
-        _queryParam.DisplayName = string.Empty;
+        _queryParam=new();
         await LoadData();
     }
 }

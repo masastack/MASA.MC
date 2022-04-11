@@ -15,6 +15,7 @@ public class ChannelCaller : HttpClientCallerBase
     {
         var queryArguments = new Dictionary<string, string?>()
         {
+            { "filter", input.Filter.ToString() },
             { "displayName", input.DisplayName.ToString() },
             { "page", input.Page.ToString() },
             { "pageSize", input.PageSize.ToString() }

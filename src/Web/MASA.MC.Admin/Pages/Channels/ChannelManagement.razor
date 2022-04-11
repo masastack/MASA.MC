@@ -5,7 +5,7 @@
 
 <MCard>
     <MCardTitle class="mx-2 py-6">
-        <DefaultTextField @bind-Value="_queryParam.DisplayName" Placeholder="@T("Search")" OnKeyDown="SearchKeyDown" OnClearClick="HandleClearAsync" PrependInnerIcon="mdi-magnify">
+        <DefaultTextField @bind-Value="_queryParam.Filter" Placeholder="@T("Search")" OnKeyDown="SearchKeyDown" OnClearClick="HandleClearAsync" PrependInnerIcon="mdi-magnify">
         </DefaultTextField>
     </MCardTitle>
     <MCardText>
