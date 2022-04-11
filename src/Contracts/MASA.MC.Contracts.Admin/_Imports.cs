@@ -1,4 +1,4 @@
-﻿global using Masa.Mc.Infrastructure.DDD.Application.Contracts.Dtos;
+﻿global using Masa.Mc.Infrastructure.Ddd.Application.Contracts.Dtos;
 global using Masa.Mc.Infrastructure.ObjectExtending;
 global using FluentValidation;
 global using Masa.Mc.Contracts.Admin.Enums.Channels;

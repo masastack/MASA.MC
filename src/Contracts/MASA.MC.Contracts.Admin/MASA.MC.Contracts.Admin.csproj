@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Infrastructure\Masa.Mc.Infrastructure.DDD.Application.Contracts\Masa.Mc.Infrastructure.Ddd.Application.Contracts.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\Masa.Mc.Infrastructure.Ddd.Application.Contracts\Masa.Mc.Infrastructure.Ddd.Application.Contracts.csproj" />
     <ProjectReference Include="..\..\Infrastructure\Masa.Mc.Infrastructure.ObjectExtending\Masa.Mc.Infrastructure.ObjectExtending.csproj" />
   </ItemGroup>
 

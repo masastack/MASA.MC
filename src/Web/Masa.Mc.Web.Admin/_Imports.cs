@@ -35,6 +35,6 @@ global using Masa.Mc.Contracts.Admin.Options.Channels;
 global using Masa.Mc.Infrastructure.ObjectExtending;
 global using Masa.Mc.Infrastructure.ObjectExtending.ObjectExtending;
 global using Masa.Mc.Web.Admin.Pages.Channels.Modules;
-global using Masa.Mc.Infrastructure.DDD.Application.Contracts.Dtos;
+global using Masa.Mc.Infrastructure.Ddd.Application.Contracts.Dtos;
 global using Masa.Mc.Web.Admin.ViewModel.Channels;
 global using Mapster;

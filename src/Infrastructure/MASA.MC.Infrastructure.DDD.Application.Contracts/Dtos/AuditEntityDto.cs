@@ -1,4 +1,4 @@
-﻿namespace Masa.Mc.Infrastructure.DDD.Application.Contracts.Dtos;
+﻿namespace Masa.Mc.Infrastructure.Ddd.Application.Contracts.Dtos;
 
 public class AuditEntityDto<TKey, TUserId>: EntityDto<TKey>
 {

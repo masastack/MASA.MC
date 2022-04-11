@@ -33,7 +33,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastru
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Masa.Mc.Infrastructure.ObjectExtending", "src\Infrastructure\Masa.Mc.Infrastructure.ObjectExtending\Masa.Mc.Infrastructure.ObjectExtending.csproj", "{C47B7220-BDF3-4DFA-93FE-0F6885DB89A4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Masa.Mc.Infrastructure.Ddd.Application.Contracts", "src\Infrastructure\Masa.Mc.Infrastructure.DDD.Application.Contracts\Masa.Mc.Infrastructure.Ddd.Application.Contracts.csproj", "{6CAC62DA-A3AF-4BFE-8E1C-0DB9D0D81CD6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Masa.Mc.Infrastructure.Ddd.Application.Contracts", "src\Infrastructure\Masa.Mc.Infrastructure.Ddd.Application.Contracts\Masa.Mc.Infrastructure.Ddd.Application.Contracts.csproj", "{6CAC62DA-A3AF-4BFE-8E1C-0DB9D0D81CD6}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Masa.Mc.Infrastructure.EntityFrameworkCore", "src\Infrastructure\Masa.Mc.Infrastructure.EntityFrameworkCore\Masa.Mc.Infrastructure.EntityFrameworkCore.csproj", "{FAFDC558-45A7-4FF7-BFCE-015EDF58F3AE}"
 EndProject

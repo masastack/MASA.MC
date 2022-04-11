@@ -28,7 +28,7 @@ global using Masa.Utils.Exceptions.Extensions;
 global using Masa.Mc.Service.Infrastructure;
 global using Masa.Mc.Service.Infrastructure.Middleware;
 global using Masa.Mc.Service.Admin.Infrastructure.EntityFrameworkCore;
-global using Masa.Mc.Infrastructure.DDD.Application.Contracts.Dtos;
+global using Masa.Mc.Infrastructure.Ddd.Application.Contracts.Dtos;
 global using Microsoft.AspNetCore.Authentication.JwtBearer;
 global using Microsoft.EntityFrameworkCore;
 global using Microsoft.OpenApi.Models;
