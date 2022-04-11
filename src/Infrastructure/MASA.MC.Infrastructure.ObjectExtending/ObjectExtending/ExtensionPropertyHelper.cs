@@ -14,7 +14,7 @@ public static class ExtensionPropertyHelper
             }
             else
             {
-                source.Add(property.Name, property.GetValue(obj));
+                source.TryAdd(property.Name, property.GetValue(obj));
             }
         }
         return source;
