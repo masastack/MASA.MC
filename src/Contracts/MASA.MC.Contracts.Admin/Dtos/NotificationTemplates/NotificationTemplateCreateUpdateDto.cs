@@ -1,6 +1,6 @@
-﻿namespace MASA.MC.Contracts.Admin.Dtos.NotificationTemplates;
+﻿namespace MASA.MC.Contracts.Admin.Dtos.MessageTemplates;
 
-public class NotificationTemplateCreateUpdateDto
+public class MessageTemplateCreateUpdateDto
 {
-    public virtual NotificationTemplateStatus Status { get; set; }
+    public virtual MessageTemplateStatus Status { get; set; }
 }

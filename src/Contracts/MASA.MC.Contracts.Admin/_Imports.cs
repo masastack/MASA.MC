@@ -4,4 +4,4 @@ global using FluentValidation;
 global using MASA.MC.Contracts.Admin.Enums.Channels;
 global using Microsoft.AspNetCore.Http;
 global using System.Reflection;
-global using MASA.MC.Contracts.Admin.Enums.NotificationTemplates;
+global using MASA.MC.Contracts.Admin.Enums.MessageTemplates;

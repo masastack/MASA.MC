@@ -1,8 +1,8 @@
-﻿namespace MASA.MC.Contracts.Admin.Dtos.NotificationTemplates;
+﻿namespace MASA.MC.Contracts.Admin.Dtos.MessageTemplates;
 
-public class GetNotificationTemplateInput : PaginatedOptionsDto
+public class GetMessageTemplateInput : PaginatedOptionsDto
 {
-    public GetNotificationTemplateInput(int page, int pageSize)
+    public GetMessageTemplateInput(int page, int pageSize)
     {
         Page = page;
         PageSize = pageSize;

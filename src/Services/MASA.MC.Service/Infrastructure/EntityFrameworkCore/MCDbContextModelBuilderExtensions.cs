@@ -13,22 +13,21 @@ public static class MCDbContextModelBuilderExtensions
             b.Property(c => c.ExtraProperties).HasConversion(new ExtraPropertiesValueConverter());
         });
 
-        builder.Entity<NotificationTemplate>(b =>
+        builder.Entity<MessageTemplate>(b =>
         {
-            b.ToTable(MCConsts.DbTablePrefix + "NotificationTemplates", MCConsts.DbSchema);
+            b.ToTable(MCConsts.DbTablePrefix + "MessageTemplates", MCConsts.DbSchema);
             b.Property(c => c.DisplayName).IsRequired().HasMaxLength(128);
-            b.HasMany(x => x.Items).WithOne().HasForeignKey(x => x.NotificationTemplateId).IsRequired();
+            b.HasMany(x => x.Items).WithOne().HasForeignKey(x => x.MessageTemplateId).IsRequired();
         });
 
-        builder.Entity<NotificationTemplateItem>(b =>
+        builder.Entity<MessageTemplateItem>(b =>
         {
-            b.ToTable(MCConsts.DbTablePrefix + "NotificationTemplateItems", MCConsts.DbSchema);
+            b.ToTable(MCConsts.DbTablePrefix + "MessageTemplateItems", MCConsts.DbSchema);
             b.Property(x => x.Code).IsRequired().HasMaxLength(64);
             b.Property(x => x.DisplayText).IsRequired().HasMaxLength(128);
             b.Property(x => x.Description).HasMaxLength(512);
 
-            b.HasIndex(x => new { x.Code, x.NotificationTemplateId });
-            b.HasKey(x => new { x.Code, x.NotificationTemplateId });
+            b.HasIndex(x => new { x.Code, x.MessageTemplateId });
         });
     }
     

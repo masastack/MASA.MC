@@ -1,5 +1,5 @@
-﻿namespace MASA.MC.Service.Admin.Domain.NotificationTemplates.Repositories;
+﻿namespace MASA.MC.Service.Admin.Domain.MessageTemplates.Repositories;
 
-public interface INotificationTemplateRepository : IRepository<NotificationTemplate>
+public interface IMessageTemplateRepository : IRepository<MessageTemplate>
 {
 }

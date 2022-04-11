@@ -120,7 +120,7 @@ namespace MASA.MC.Service.Admin.Migrations
                     b.ToTable("MCChannels", (string)null);
                 });
 
-            modelBuilder.Entity("MASA.MC.Service.Admin.Domain.NotificationTemplates.Aggregates.NotificationTemplate", b =>
+            modelBuilder.Entity("MASA.MC.Service.Admin.Domain.MessageTemplates.Aggregates.MessageTemplate", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -169,17 +169,19 @@ namespace MASA.MC.Service.Admin.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("MCNotificationTemplates", (string)null);
+                    b.ToTable("MCMessageTemplates", (string)null);
                 });
 
-            modelBuilder.Entity("MASA.MC.Service.Admin.Domain.NotificationTemplates.Aggregates.NotificationTemplateItem", b =>
+            modelBuilder.Entity("MASA.MC.Service.Admin.Domain.MessageTemplates.Aggregates.MessageTemplateItem", b =>
                 {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Code")
+                        .IsRequired()
                         .HasMaxLength(64)
                         .HasColumnType("nvarchar(64)");
-
-                    b.Property<Guid>("NotificationTemplateId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -198,25 +200,28 @@ namespace MASA.MC.Service.Admin.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Code", "NotificationTemplateId");
+                    b.Property<Guid>("MessageTemplateId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.HasIndex("NotificationTemplateId");
+                    b.HasKey("Id");
 
-                    b.HasIndex("Code", "NotificationTemplateId");
+                    b.HasIndex("MessageTemplateId");
 
-                    b.ToTable("MCNotificationTemplateItems", (string)null);
+                    b.HasIndex("Code", "MessageTemplateId");
+
+                    b.ToTable("MCMessageTemplateItems", (string)null);
                 });
 
-            modelBuilder.Entity("MASA.MC.Service.Admin.Domain.NotificationTemplates.Aggregates.NotificationTemplateItem", b =>
+            modelBuilder.Entity("MASA.MC.Service.Admin.Domain.MessageTemplates.Aggregates.MessageTemplateItem", b =>
                 {
-                    b.HasOne("MASA.MC.Service.Admin.Domain.NotificationTemplates.Aggregates.NotificationTemplate", null)
+                    b.HasOne("MASA.MC.Service.Admin.Domain.MessageTemplates.Aggregates.MessageTemplate", null)
                         .WithMany("Items")
-                        .HasForeignKey("NotificationTemplateId")
+                        .HasForeignKey("MessageTemplateId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MASA.MC.Service.Admin.Domain.NotificationTemplates.Aggregates.NotificationTemplate", b =>
+            modelBuilder.Entity("MASA.MC.Service.Admin.Domain.MessageTemplates.Aggregates.MessageTemplate", b =>
                 {
                     b.Navigation("Items");
                 });

@@ -1,6 +1,6 @@
-﻿namespace MASA.MC.Contracts.Admin.Dtos.NotificationTemplates;
+﻿namespace MASA.MC.Contracts.Admin.Dtos.MessageTemplates;
 
-public class NotificationTemplateDto : AuditEntityDto<Guid, Guid>
+public class MessageTemplateDto : AuditEntityDto<Guid, Guid>
 {
 }
 

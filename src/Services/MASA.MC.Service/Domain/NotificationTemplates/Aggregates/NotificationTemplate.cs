@@ -1,25 +1,25 @@
-﻿namespace MASA.MC.Service.Admin.Domain.NotificationTemplates.Aggregates;
-public class NotificationTemplate : AuditAggregateRoot<Guid, Guid>
+﻿namespace MASA.MC.Service.Admin.Domain.MessageTemplates.Aggregates;
+public class MessageTemplate : AuditAggregateRoot<Guid, Guid>
 {
     public virtual Guid ChannelId { get; protected set; }
     public virtual string DisplayName { get; protected set; } = string.Empty;
     public virtual string Content { get; protected set; } = string.Empty;
     public virtual string Example { get; protected set; } = string.Empty;
     public virtual string TemplateId { get; protected set; } = string.Empty;
-    public virtual NotificationTemplateStatus Status { get; protected set; }
+    public virtual MessageTemplateStatus Status { get; protected set; }
     public virtual bool IsStatic { get; protected set; }
-    public virtual ICollection<NotificationTemplateItem> Items { get; protected set; } = new List<NotificationTemplateItem>();
+    public virtual ICollection<MessageTemplateItem> Items { get; protected set; } = new List<MessageTemplateItem>();
 
-    public NotificationTemplate(string displayName,string content,string example) : this(displayName, content, example, new List<NotificationTemplateItem>())
+    public MessageTemplate(string displayName,string content,string example) : this(displayName, content, example, new List<MessageTemplateItem>())
     {
     }
 
-    public NotificationTemplate(
+    public MessageTemplate(
         string displayName,
         string content,
         string example,
-        List<NotificationTemplateItem> items,
-        NotificationTemplateStatus status = NotificationTemplateStatus.Normal,
+        List<MessageTemplateItem> items,
+        MessageTemplateStatus status = MessageTemplateStatus.Normal,
         bool isStatic = false)
     {
         Status = status;
@@ -27,7 +27,7 @@ public class NotificationTemplate : AuditAggregateRoot<Guid, Guid>
 
         SetContent(displayName, content, example);
 
-        Items = items ?? new List<NotificationTemplateItem>();
+        Items = items ?? new List<MessageTemplateItem>();
     }
 
     public void AddOrUpdateItem(string code, string mappingCode, string displayText, string description, bool isStatic = false)
@@ -36,7 +36,7 @@ public class NotificationTemplate : AuditAggregateRoot<Guid, Guid>
 
         if (existingItem == null)
         {
-            Items.Add(new NotificationTemplateItem(Id, code, mappingCode, displayText, description, isStatic));
+            Items.Add(new MessageTemplateItem(Id, code, mappingCode, displayText, description, isStatic));
         }
         else
         {

@@ -1,15 +1,15 @@
-﻿namespace MASA.MC.Service.Admin.Domain.NotificationTemplates.Services;
+﻿namespace MASA.MC.Service.Admin.Domain.MessageTemplates.Services;
 
-public class NotificationTemplateDomainService : DomainService
+public class MessageTemplateDomainService : DomainService
 {
-    private readonly INotificationTemplateRepository _repository;
+    private readonly IMessageTemplateRepository _repository;
 
-    public NotificationTemplateDomainService(IDomainEventBus eventBus, INotificationTemplateRepository repository) : base(eventBus)
+    public MessageTemplateDomainService(IDomainEventBus eventBus, IMessageTemplateRepository repository) : base(eventBus)
     {
         _repository = repository;
     }
 
-    public async Task<NotificationTemplate> DeleteAsync(NotificationTemplate template)
+    public async Task<MessageTemplate> DeleteAsync(MessageTemplate template)
     {
         if (template.IsStatic)
         {

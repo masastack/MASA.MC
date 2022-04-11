@@ -16,8 +16,7 @@ builder.Services.AddAuthentication(options =>
     options.RequireHttpsMetadata = false;
     options.Audience = "";
 });
-var config = new TypeAdapterConfig();
-var mapper = new Mapper(config);
+TypeAdapterConfig.GlobalSettings.Scan(Assembly.GetExecutingAssembly(), Assembly.Load("MASA.MC.Contracts.Admin"));
 var app = builder.Services
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     .AddEndpointsApiExplorer()

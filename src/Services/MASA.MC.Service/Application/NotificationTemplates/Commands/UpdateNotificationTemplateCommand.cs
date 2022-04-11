@@ -1,5 +1,5 @@
-﻿namespace MASA.MC.Service.Admin.Application.NotificationTemplates.Commands;
+﻿namespace MASA.MC.Service.Admin.Application.MessageTemplates.Commands;
 
-public record UpdateNotificationTemplateCommand(Guid NotificationTemplateId, NotificationTemplateCreateUpdateDto Template) : Command
+public record UpdateMessageTemplateCommand(Guid MessageTemplateId, MessageTemplateCreateUpdateDto Template) : Command
 {
 }

@@ -1,6 +1,6 @@
-﻿namespace MASA.MC.Contracts.Admin.Enums.NotificationTemplates;
+﻿namespace MASA.MC.Contracts.Admin.Enums.MessageTemplates;
 
-public enum NotificationTemplateStatus
+public enum MessageTemplateStatus
 {
     Normal,
     WaitAudit,

@@ -1,8 +1,8 @@
-﻿namespace MASA.MC.Service.Admin.Domain.NotificationTemplates.Aggregates;
+﻿namespace MASA.MC.Service.Admin.Domain.MessageTemplates.Aggregates;
 
-public class NotificationTemplateItem : Entity
+public class MessageTemplateItem : Entity<Guid>
 {
-    public virtual Guid NotificationTemplateId { get; protected set; }
+    public virtual Guid MessageTemplateId { get; protected set; }
 
     public virtual string Code { get; protected set; } = string.Empty;
 
@@ -14,25 +14,21 @@ public class NotificationTemplateItem : Entity
 
     public virtual bool IsStatic { get; protected set; }
 
-    public override IEnumerable<(string Name, object Value)> GetKeys()
-    {
-        yield return ("NotificationTemplateId", NotificationTemplateId!);
-        yield return ("Code", Code!);
-    }
+    //public override IEnumerable<(string Name, object Value)> GetKeys()
+    //{
+    //    yield return ("MessageTemplateId", MessageTemplateId!);
+    //    yield return ("Code", Code!);
+    //}
 
-    protected NotificationTemplateItem()
-    {
-    }
-
-    public NotificationTemplateItem(
-        Guid notificationTemplateId,
+    public MessageTemplateItem(
+        Guid messageTemplateId,
         string code,
         string mappingCode,
         string displayText,
         string description,
         bool isStatic)
     {
-        NotificationTemplateId = notificationTemplateId;
+        MessageTemplateId = messageTemplateId;
         Code = code;
         MappingCode = mappingCode;
         IsStatic = isStatic;

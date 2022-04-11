@@ -1,29 +1,29 @@
-﻿namespace MASA.MC.Service.Admin.Application.NotificationTemplates;
+﻿namespace MASA.MC.Service.Admin.Application.MessageTemplates;
 
-public class NotificationTemplateStatusEventHandler
+public class MessageTemplateStatusEventHandler
 {
     private readonly IEventBus _eventBus;
 
-    public NotificationTemplateStatusEventHandler(IEventBus eventBus)
+    public MessageTemplateStatusEventHandler(IEventBus eventBus)
     {
         _eventBus = eventBus;
     }
 
     [EventHandler]
-    public async Task NotificationTemplateStatusChangedToApproved(NotificationTemplateStatusChangedToApprovedEvent integrationEvent)
+    public async Task MessageTemplateStatusChangedToApproved(MessageTemplateStatusChangedToApprovedEvent integrationEvent)
     {
-        await _eventBus.PublishAsync(new UpdateNotificationTemplateCommand(integrationEvent.TemplateId,new NotificationTemplateCreateUpdateDto
+        await _eventBus.PublishAsync(new UpdateMessageTemplateCommand(integrationEvent.TemplateId,new MessageTemplateCreateUpdateDto
         {
-            Status= NotificationTemplateStatus.Approved
+            Status= MessageTemplateStatus.Approved
         }));
     }
 
     [EventHandler]
-    public async Task NotificationTemplateStatusChangedToRefuse(NotificationTemplateStatusChangedToRefuseEvent integrationEvent)
+    public async Task MessageTemplateStatusChangedToRefuse(MessageTemplateStatusChangedToRefuseEvent integrationEvent)
     {
-        await _eventBus.PublishAsync(new UpdateNotificationTemplateCommand(integrationEvent.TemplateId, new NotificationTemplateCreateUpdateDto
+        await _eventBus.PublishAsync(new UpdateMessageTemplateCommand(integrationEvent.TemplateId, new MessageTemplateCreateUpdateDto
         {
-            Status = NotificationTemplateStatus.Refuse
+            Status = MessageTemplateStatus.Refuse
         }));
     }
 }

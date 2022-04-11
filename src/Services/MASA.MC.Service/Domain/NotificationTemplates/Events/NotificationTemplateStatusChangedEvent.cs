@@ -1,6 +1,6 @@
-﻿namespace MASA.MC.Service.Admin.Domain.NotificationTemplates.Events;
+﻿namespace MASA.MC.Service.Admin.Domain.MessageTemplates.Events;
 
-public record NotificationTemplateStatusChangedToApprovedEvent(Guid TemplateId, string Remarks) : Event;
+public record MessageTemplateStatusChangedToApprovedEvent(Guid TemplateId, string Remarks) : Event;
 
-public record NotificationTemplateStatusChangedToRefuseEvent(Guid TemplateId, string Remarks) : Event;
+public record MessageTemplateStatusChangedToRefuseEvent(Guid TemplateId, string Remarks) : Event;
 
