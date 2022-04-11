@@ -12,7 +12,7 @@ public class ChannelQueryHandler
     [EventHandler]
     public async Task GetAsync(GetChannelQuery query)
     {
-        var entity = await _repository.FindAsync(x=>x.Id==query.ChannelId);
+        var entity = await _repository.FindAsync(x => x.Id == query.ChannelId);
         if (entity == null)
             throw new UserFriendlyException("channel not found");
         query.Result = entity.Adapt<ChannelDto>();
@@ -38,7 +38,7 @@ public class ChannelQueryHandler
     }
 
     [EventHandler]
-    public async Task FindByCodeAsync(FindByCodeChannelQuery query)
+    public async Task FindByCodeAsync(FindChannelByCodeQuery query)
     {
         var entity = await _repository.FindAsync(d => d.Code == query.Code);
         if (entity == null)
@@ -52,7 +52,7 @@ public class ChannelQueryHandler
         if (input.Type.HasValue)
             condition = condition.And(channel => channel.Type == input.Type);
         if (!string.IsNullOrEmpty(input.Filter))
-            condition = condition.And(channel => channel.DisplayName.Contains(input.Filter)|| channel.Code.Contains(input.Filter));
+            condition = condition.And(channel => channel.DisplayName.Contains(input.Filter) || channel.Code.Contains(input.Filter));
         if (!string.IsNullOrEmpty(input.DisplayName))
             condition = condition.And(channel => channel.DisplayName.Contains(input.DisplayName));
         return await Task.FromResult(condition); ;

@@ -2,7 +2,7 @@
 <MRow>
     <MCol Md="6">
         <MTextField @bind-Value="_model.UserName"
-                    Label="@T("ChannelMailingOptions:UserName")"
+                    Label="@T("EmailChannelOptions:UserName")"
                     Dense
                     Outlined
                     HideDetails="@("auto")"
@@ -11,7 +11,7 @@
     </MCol>
     <MCol Md="6">
         <MTextField @bind-Value="_model.Password"
-                    Label="@T("ChannelMailingOptions:Password")"
+                    Label="@T("EmailChannelOptions:Password")"
                     Dense
                     Outlined
                     HideDetails="@("auto")"
@@ -22,7 +22,7 @@
 <MRow>
     <MCol Md="6">
         <MTextField @bind-Value="_model.Smtp"
-                    Label="@T("ChannelMailingOptions:Smtp")"
+                    Label="@T("EmailChannelOptions:Smtp")"
                     Dense
                     Outlined
                     HideDetails="@("auto")"
@@ -30,12 +30,12 @@
                     OnChange="HandleChangeAsync"/>
     </MCol>
     <MCol Md="2">
-        <MCheckbox  @bind-Value="_model.SSL" Label="@T("ChannelMailingOptions:SSL")" OnChange="HandleChangeAsync"></MCheckbox >
+        <MCheckbox  @bind-Value="_model.Ssl" Label="@T("EmailChannelOptions:Ssl")" OnChange="HandleChangeAsync"></MCheckbox >
     </MCol>
     <MCol Md="4">
         <MTextField @bind-Value="_model.Port"
                     Type="number"
-                    Label="@T("ChannelMailingOptions:Port")"
+                    Label="@T("EmailChannelOptions:Port")"
                     Dense
                     Outlined
                     HideDetails="@("auto")"

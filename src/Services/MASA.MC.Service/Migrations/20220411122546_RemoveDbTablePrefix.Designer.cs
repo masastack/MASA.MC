@@ -4,6 +4,7 @@ using MASA.MC.Service.Admin.Infrastructure.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MASA.MC.Service.Admin.Migrations
 {
     [DbContext(typeof(MCDbContext))]
-    partial class MCDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220411122546_RemoveDbTablePrefix")]
+    partial class RemoveDbTablePrefix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

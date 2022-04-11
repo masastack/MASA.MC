@@ -1,6 +1,6 @@
 ﻿namespace MASA.MC.Admin.Pages.Channels.Modules;
 
-public partial class ChannelSiteExtraProperties : AdminCompontentBase
+public partial class ChannelEmailExtraProperties : AdminCompontentBase
 {
     [Parameter]
     public ExtraPropertyDictionary Value { get; set; } = new();
@@ -8,13 +8,13 @@ public partial class ChannelSiteExtraProperties : AdminCompontentBase
     [Parameter]
     public EventCallback<ExtraPropertyDictionary> ValueChanged { get; set; }
 
-    private ChannelSiteOptions _model = new();
-    private List<string> _environmentItems = new List<string> {"Staging"};
+    private EmailChannelOptions _model = new();
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            _model = ExtensionPropertyHelper.ExtraPropertyMapToObj<ChannelSiteOptions>(Value);
+            _model = ExtensionPropertyHelper.ExtraPropertyMapToObj<EmailChannelOptions>(Value);
         }
         await base.OnAfterRenderAsync(firstRender);
     }
