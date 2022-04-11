@@ -2,5 +2,4 @@
 
 public record UpdateChannelCommand(Guid ChannelId, ChannelCreateUpdateDto Channel) : Command
 {
-    
 }

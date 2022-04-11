@@ -56,3 +56,6 @@ global using Microsoft.AspNetCore.Mvc;
 global using Mapster;
 global using MapsterMapper;
 global using System.Reflection;
+global using MASA.MC.Contracts.Admin.Dtos.MessageTemplates.Validator;
+global using MASA.MC.Service.Admin.Application.MessageTemplates.Queries;
+global using MASA.MC.Service.Admin.Domain.MessageTemplates.Services;

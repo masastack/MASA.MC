@@ -27,7 +27,7 @@ public class ChannelCaller : HttpClientCallerBase
 
     public async Task<ChannelDto?> GetAsync(Guid id)
     {
-        return await CallerProvider.GetAsync<ChannelDto> ($"{_prefix}/{id}");
+        return await CallerProvider.GetAsync<ChannelDto>($"{_prefix}/{id}");
     }
 
     public async Task CreateAsync(ChannelCreateUpdateDto input)
@@ -42,11 +42,16 @@ public class ChannelCaller : HttpClientCallerBase
 
     public async Task DeleteAsync(Guid id)
     {
-        await CallerProvider.DeleteAsync($"{_prefix}/{id}",null);
+        await CallerProvider.DeleteAsync($"{_prefix}/{id}", null);
     }
 
     public async Task<ChannelDto?> FindByCodeAsync(string code)
     {
         return await CallerProvider.GetAsync<ChannelDto>($"{_prefix}/FindByCode?code={code}");
+    }
+
+    public async Task<List<ChannelDto>> GetListByTypeAsync(ChannelType type)
+    {
+        return await CallerProvider.GetAsync<List<ChannelDto>>($"{_prefix}/GetListByType?type={type}") ?? new();
     }
 }

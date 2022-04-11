@@ -2,9 +2,19 @@
 
 public class GetMessageTemplateInput : PaginatedOptionsDto
 {
-    public GetMessageTemplateInput(int page, int pageSize)
+    public string Filter { get; set; } = string.Empty;
+
+    public GetMessageTemplateInput()
     {
-        Page = page;
-        PageSize = pageSize;
+
+    }
+
+    public GetMessageTemplateInput(int pageSize) : base("", 1, pageSize)
+    {
+    }
+
+    public GetMessageTemplateInput(string filter, string sorting, int page, int pageSize) : base(sorting, page, pageSize)
+    {
+        Filter = filter;
     }
 }

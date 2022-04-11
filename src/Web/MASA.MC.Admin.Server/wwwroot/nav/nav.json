@@ -201,9 +201,34 @@
     ]
   },
   {
-    "Id": 28,
+    "Id": 32,
     "Title": "Permission:ChannelManagement",
-    "Icon": "mdi-calendar-check-outline",
+    "Icon": "mdi-file-outline",
     "Href": "channels/channelManagement"
+  },
+  {
+    "Id": 33,
+    "Title": "Permission:MessageTemplateManagement",
+    "Icon": "mdi-file-outline",
+    "Children": [
+      {
+        "Id": 34,
+        "Title": "Sms",
+        "Icon": "mdi-circle",
+        "Href": "messageTemplates/smsTemplateManagement"
+      },
+      {
+        "Id": 35,
+        "Title": "Emailing",
+        "Icon": "mdi-circle",
+        "Href": "messageTemplates/mailingManagement"
+      },
+      {
+        "Id": 36,
+        "Title": "Site",
+        "Icon": "mdi-circle",
+        "Href": "messageTemplates/siteManagement"
+      }
+    ]
   }
 ]

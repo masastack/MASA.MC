@@ -10,20 +10,20 @@ public class MessageTemplateStatusEventHandler
     }
 
     [EventHandler]
-    public async Task MessageTemplateStatusChangedToApproved(MessageTemplateStatusChangedToApprovedEvent integrationEvent)
+    public async Task MessageTemplateStatusChangedToApproved(MessageTemplateAuditStatusChangedToApprovedEvent integrationEvent)
     {
         await _eventBus.PublishAsync(new UpdateMessageTemplateCommand(integrationEvent.TemplateId,new MessageTemplateCreateUpdateDto
         {
-            Status= MessageTemplateStatus.Approved
+            AuditStatus = MessageTemplateAuditStatus.Adopt
         }));
     }
 
     [EventHandler]
-    public async Task MessageTemplateStatusChangedToRefuse(MessageTemplateStatusChangedToRefuseEvent integrationEvent)
+    public async Task MessageTemplateStatusChangedToRefuse(MessageTemplateAuditStatusChangedToRefuseEvent integrationEvent)
     {
         await _eventBus.PublishAsync(new UpdateMessageTemplateCommand(integrationEvent.TemplateId, new MessageTemplateCreateUpdateDto
         {
-            Status = MessageTemplateStatus.Refuse
+            AuditStatus = MessageTemplateAuditStatus.Fail
         }));
     }
 }

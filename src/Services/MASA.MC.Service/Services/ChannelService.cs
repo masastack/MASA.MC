@@ -10,6 +10,7 @@ public class ChannelService : ServiceBase
         MapGet(GetAsync, "{id}");
         MapGet(GetListAsync, string.Empty);
         MapGet(FindByCodeAsync);
+        MapGet(GetListByTypeAsync);
     }
 
     public async Task<PaginatedListDto<ChannelDto>> GetListAsync(IEventBus eventbus, [FromQuery] string filter,[FromQuery] ChannelType? type, [FromQuery] string displayName="", [FromQuery] string sorting = "", [FromQuery] int page = 1, [FromQuery] int pagesize = 20)
@@ -55,6 +56,13 @@ public class ChannelService : ServiceBase
     public async Task<ChannelDto> FindByCodeAsync(IEventBus eventBus, string code)
     {
         var query = new FindByCodeChannelQuery(code);
+        await eventBus.PublishAsync(query);
+        return query.Result;
+    }
+
+    public async Task<List<ChannelDto>> GetListByTypeAsync(IEventBus eventBus, ChannelType type)
+    {
+        var query = new GetListByTypeQuery(type);
         await eventBus.PublishAsync(query);
         return query.Result;
     }

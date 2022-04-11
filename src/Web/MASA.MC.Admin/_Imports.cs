@@ -38,3 +38,5 @@ global using MASA.MC.Admin.Pages.Channels.Modules;
 global using MASA.MC.Infrastructure.DDD.Application.Contracts.Dtos;
 global using MASA.MC.Admin.ViewModel.Channels;
 global using Mapster;
+global using MASA.MC.Contracts.Admin.Dtos.MessageTemplates;
+global using MASA.MC.Admin.Pages.MessageTemplates.Modules;

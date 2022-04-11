@@ -3,8 +3,5 @@
 public enum MessageTemplateStatus
 {
     Normal,
-    WaitAudit,
-    Approved,
-    Refuse,
     Invalid
 }
