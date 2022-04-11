@@ -39,7 +39,7 @@ public partial class ChannelCreateModal : AdminCompontentBase
 
     private async Task HandleNextStepAsync()
     {
-        if (_model.Type==default)
+        if (_model.Type == default)
         {
             await WarningAsync(T("Description:Channel.Type.Required"));
             return;
@@ -70,5 +70,10 @@ public partial class ChannelCreateModal : AdminCompontentBase
     {
         _step = 1;
         _model = new();
+    }
+
+    private void HandleVisibleChanged(bool val)
+    {
+        if (!val) HandleCancel();
     }
 }

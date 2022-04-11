@@ -83,4 +83,9 @@ public partial class ChannelEditModal : AdminCompontentBase
     {
         _model = new();
     }
+
+    private void HandleVisibleChanged(bool val)
+    {
+        if (!val) HandleCancel();
+    }
 }
