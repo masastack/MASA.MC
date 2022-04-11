@@ -2,7 +2,7 @@
 
 public class ChannelSmsOptions
 {
-    public string AccessKeyId { get; set; }=string.Empty;
+    public string AccessKeyId { get; set; } = string.Empty;
 
     public string AccessKeySecret { get; set; } = string.Empty;
 }

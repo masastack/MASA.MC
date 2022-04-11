@@ -2,5 +2,5 @@
 
 public class ChannelSiteOptions
 {
-    public string Environment { get; set; }=string.Empty;
+    public string Environment { get; set; } = string.Empty;
 }

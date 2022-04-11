@@ -17,7 +17,7 @@
     <MCardActions class="px-4 pb-4">
         <MChip> @T(Channel.Type.ToString()) </MChip>
          <MSpacer/>
-         <span class="text-body2 neutral-lighten-4--text">吴自浩 编辑于 @DateFormatHelper.DateFormatToString(Channel.ModificationTime) </span>
+         <span class="text-body2 neutral-lighten-4--text">吴自浩 编辑于 @Channel.ModificationTime.Humanize() </span>
     </MCardActions>
 </MCard>
 

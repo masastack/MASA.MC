@@ -18,7 +18,6 @@ public class ChannelCommandHandler
     [EventHandler]
     public async Task CreateAsync(CreateChannelCommand createCommand)
     {
-
         var entity = _mapper.Map<Channel>(createCommand.Channel);
         await _domainService.CreateAsync(entity);
     }
@@ -35,7 +34,6 @@ public class ChannelCommandHandler
             throw new UserFriendlyException("code cannot be changed");
         _mapper.Map(createCommand.Channel, entity);
         await _domainService.UpdateAsync(entity);
-
     }
 
     [EventHandler]
@@ -45,6 +43,5 @@ public class ChannelCommandHandler
         if (entity == null)
             throw new UserFriendlyException("channel not found");
         await _domainService.DeleteAsync(entity);
-
     }
 }
