@@ -36,17 +36,13 @@ public class MessageTemplate : AuditAggregateRoot<Guid, Guid>
         MessageTemplateAuditStatus auditStatus = MessageTemplateAuditStatus.WaitAudit,
         bool isStatic = false)
     {
-        ChannelType = channelType;
-        ChannelId = channelId;
-        TemplateId = templateId;
-        IsJump = isJump;
-        JumpUrl = jumpUrl;
-        Sign = sign;
+
+
         Status = status;
         AuditStatus = auditStatus;
         IsStatic = isStatic;
 
-        SetContent(displayName, title, content, example);
+        SetContent(channelType, channelId, displayName, title, content, example, templateId, isJump, jumpUrl, sign);
 
         Items = items ?? new List<MessageTemplateItem>();
     }
@@ -65,12 +61,28 @@ public class MessageTemplate : AuditAggregateRoot<Guid, Guid>
         }
     }
 
-    public void SetContent(string displayName, string title, string content, string example)
+    public void SetContent(
+        ChannelType channelType,
+        Guid channelId, 
+        string displayName, 
+        string title, 
+        string content, 
+        string example, 
+        string templateId,
+        bool isJump,
+        string jumpUrl,
+        string sign)
     {
+        ChannelType = channelType;
+        ChannelId = channelId;
         DisplayName = displayName;
         Title = title;
         Content = content;
         Example = example;
+        TemplateId = templateId;
+        IsJump = isJump;
+        JumpUrl = jumpUrl;
+        Sign = sign;
     }
 
     public void SetChannelType(ChannelType channelType)

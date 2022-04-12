@@ -19,7 +19,6 @@ public class MessageTemplateItem : Entity<Guid>
     //    yield return ("MessageTemplateId", MessageTemplateId!);
     //    yield return ("Code", Code!);
     //}
-
     public MessageTemplateItem(Guid messageTemplateId, string code): this(messageTemplateId, code,"","","",false)
     {
 

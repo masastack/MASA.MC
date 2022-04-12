@@ -20,10 +20,10 @@ public class MessageTemplateCommandHandler
         var entity = new MessageTemplate(dto.ChannelType,
                 dto.ChannelId,
                 dto.DisplayName,
+                dto.Title,
                 dto.Content,
                 dto.Example,
                 dto.TemplateId,
-                dto.Title,
                 dto.IsJump,
                 dto.JumpUrl,
                 dto.Sign,
@@ -44,14 +44,15 @@ public class MessageTemplateCommandHandler
         var dto = updateCommand.MessageTemplate;
         if (entity == null)
             throw new UserFriendlyException("messageTemplate not found");
-        entity.SetContent(dto.DisplayName, dto.Title, dto.Content, dto.Example);
+        entity.SetContent(dto.ChannelType, dto.ChannelId, dto.DisplayName, dto.Title, dto.Content, dto.Example,dto.TemplateId, dto.IsJump, dto.JumpUrl, dto.Sign);
         foreach (var itemDto in dto.Items)
         {
             entity.AddOrUpdateItem(itemDto.Code, itemDto.MappingCode, itemDto.DisplayText, itemDto.Description);
         }
         entity.Items.RemoveAll(item => !dto.Items.Select(dtoItem => dtoItem.Code).Contains(item.Code));
-        updateCommand.MessageTemplate.Adapt(entity);
+        
         await _repository.UpdateAsync(entity);
+        //updateCommand.MessageTemplate.Adapt(entity);
     }
 
     [EventHandler]

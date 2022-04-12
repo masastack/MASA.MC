@@ -35,6 +35,7 @@ public partial class SmsTemplateEditModal : AdminCompontentBase
     {
         var dto = await MessageTemplateCaller.GetAsync(_entityId);
         _model = dto.Adapt<MessageTemplateCreateUpdateDto>();
+        await HandleSelectChannelType(_model.ChannelType);
     }
 
     private void HandleCancel()
