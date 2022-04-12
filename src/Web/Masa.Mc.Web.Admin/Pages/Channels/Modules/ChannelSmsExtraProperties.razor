@@ -1,0 +1,21 @@
+﻿@inherits AdminCompontentBase
+<MRow>
+    <MCol Md="6">
+        <MTextField @bind-Value="_model.AccessKeyId"
+                    Label="@T("SmsChannelOptions:AccessKeyId")"
+                    Dense
+                    Outlined
+                    HideDetails="@("auto")"
+                    TValue="string"
+                    OnChange="HandleChangeAsync"/>
+    </MCol>
+    <MCol Md="6">
+        <MTextField @bind-Value="_model.AccessKeySecret"
+                    Label="@T("SmsChannelOptions:AccessKeySecret")"
+                    Dense
+                    Outlined
+                    HideDetails="@("auto")"
+                    TValue="string"
+                    OnChange="HandleChangeAsync"/>
+    </MCol>
+</MRow>
