@@ -31,5 +31,5 @@ public static class McDbContextModelBuilderExtensions
             b.HasIndex(x => new { x.Code, x.MessageTemplateId });
         });
     }
-    
+
 }

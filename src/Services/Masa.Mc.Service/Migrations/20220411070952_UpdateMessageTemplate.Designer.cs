@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Masa.Mc.Service.Admin.Migrations
 {
-    [DbContext(typeof(MCDbContext))]
+    [DbContext(typeof(McDbContext))]
     [Migration("20220411070952_UpdateMessageTemplate")]
     partial class UpdateMessageTemplate
     {
