@@ -1,0 +1,31 @@
+﻿@inherits AdminCompontentBase
+@page "/channels/channelManagement"
+
+<PageTitle>@T("ChannelManagement")</PageTitle>
+
+<MCard>
+    <MCardTitle class="mx-2 py-6">
+        <DefaultTextField @bind-Value="_queryParam.Filter" Placeholder="@T("Search")" OnKeyDown="SearchKeyDown" OnClearClick="HandleClearAsync" PrependInnerIcon="mdi-magnify">
+        </DefaultTextField>
+    </MCardTitle>
+    <MCardText>
+        <MRow>
+            @foreach (var _entitie in _entities.Result)
+            {
+                <MCol Md="4">
+                    <ChannelCard Channel="_entitie" OnEditClick="async()=>await _editModal.OpenModalAsync(_entitie)" />
+                </MCol>
+            }
+            <MCol Md="4">
+                <MCard Outlined class="d-flex justify-center align-center" Style="border-style: dashed;" Height="230">
+                    <MButton Ripple=false Plain OnClick="()=> _createModal.OpenModalAsync()"><MIcon Left>mdi-plus</MIcon>@T("Permission:CreateChannel")</MButton>
+                </MCard>
+            </MCol>
+        </MRow>
+        <MPagination Class="mt-10" @bind-Value="_queryParam.Page" Length="_entities.TotalPages" OnInput="HandlePaginationChange"></MPagination>
+    </MCardText>
+</MCard>
+
+<ChannelEditModal @ref="_editModal" OnOk="HandleOk"/>
+<ChannelCreateModal @ref="_createModal" OnOk="HandleOk"/>
+

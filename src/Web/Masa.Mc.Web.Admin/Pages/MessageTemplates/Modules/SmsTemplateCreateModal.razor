@@ -1,0 +1,91 @@
+﻿@inherits AdminCompontentBase
+<div @ref="Ref">
+    <SheetDialog Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission:EditChannel")" ContentStyle="padding-right:228px;padding-left:228px;">
+        <MForm Class="mt-6 full-height" Model="_model" EnableValidation>
+            <MRow Justify="@("center")">
+                <MCol Cols="12" Sm="6" Md="3">
+                    <MTextField Class="mx-auto text-h5" style="width:404px;" @bind-Value="_model.DisplayName" Label="@T("DisplayName:MessageTemplateDisplayName")" TValue="string"></MTextField>
+                </MCol>
+            </MRow>
+            <MRow>
+                <MCol Cols="3">
+                    <MSelect Value="@_channelType"
+                             Items="@_channelTypeItems"
+                             Label="@T("DisplayName:ChannelType")"
+                             ItemText="item => item.ToString()"
+                             ItemValue="item => item"
+                             Dense
+                             Outlined
+                             HideDetails="@("auto")"
+                             TItem="ChannelType"
+                             TItemValue="ChannelType"
+                             TValue="ChannelType"
+                             ValueChanged="HandleSelectChannelType">
+                    </MSelect>
+                </MCol>
+                <MCol Cols="3">
+                    <MSelect @bind-Value="_model.ChannelId"
+                             Items="@_channelItems"
+                             Label="@T("DisplayName:Channel")"
+                             ItemText="item => item.DisplayName"
+                             ItemValue="item => item.Id"
+                             Dense
+                             Outlined
+                             HideDetails="@("auto")">
+                    </MSelect>
+                </MCol>
+                <MCol Cols="3">
+                    <MTextField @bind-Value="_model.Sign"
+                                Label="@T("DisplayName:MessageTemplateSign")"
+                                Dense
+                                Outlined
+                                HideDetails="@("auto")" />
+                </MCol>
+                <MCol Cols="3">
+                    <MTextField @bind-Value="_model.TemplateId"
+                                Label="@T("DisplayName:MessageTemplateTemplateId")"
+                                Dense
+                                Outlined
+                                HideDetails="@("auto")" />
+                </MCol>
+            </MRow>
+            <MRow>
+                <MCol Cols="12">
+                    <MTextarea @bind-Value="_model.Content"
+                               Label="@T("DisplayName:MessageTemplateContent")"
+                               Dense
+                               Outlined
+                               HideDetails="@("auto")">
+                    </MTextarea>
+                </MCol>
+            </MRow>
+            <MRow>
+                <MCol Cols="12">
+                    <MTextarea @bind-Value="_model.Example"
+                               Label="@T("DisplayName:MessageTemplateExample")"
+                               Dense
+                               Outlined
+                               HideDetails="@("auto")">
+                    </MTextarea>
+                </MCol>
+            </MRow>
+            <MRow>
+                <MCol Cols="2">
+                    <MCheckbox Class="mt-1" @bind-Value="_model.IsJump" Label="@T("DisplayName:MessageTemplateIsJump")"></MCheckbox>
+                </MCol>
+                <MCol Cols="6">
+                    <MTextField @bind-Value="_model.JumpUrl"
+                                Label="@T("DisplayName:MessageTemplateJumpUrl")"
+                                Dense
+                                Outlined
+                                HideDetails="@("auto")" />
+                </MCol>
+            </MRow>
+            <MessageTemplateItems></MessageTemplateItems>
+            <MCardActions Class="d-flex align-center mb-6">
+                <MSpacer></MSpacer>
+                <MButton Color="rounded-pill primary" Class="small-button" OnClick="async() => await HandleOk(context)">@T("Save")</MButton>
+            </MCardActions>
+        </MForm>
+    </SheetDialog>
+</div>

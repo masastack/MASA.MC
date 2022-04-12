@@ -1,0 +1,14 @@
+﻿@inherits AdminCompontentBase
+
+@if (Type==ChannelType.Emailing)
+{
+    <ChannelEmailingExtraProperties @ref="_emailingExtraPropertiesRef" @bind-Value="Value" />
+}
+else if (Type==ChannelType.Sms)
+{
+    <ChannelSmsExtraProperties @ref="_smsExtraPropertiesRef" @bind-Value="Value" />
+}
+else if (Type==ChannelType.Site)
+{
+    <ChannelSiteExtraProperties @ref="_siteExtraPropertiesRef" @bind-Value="Value" />
+}

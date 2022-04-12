@@ -1,0 +1,19 @@
+﻿@inherits AdminCompontentBase
+
+<MRow>
+    <MCol Md="6">
+        <MSelect @bind-Value="@_model.Environment"
+                 Items="@_environmentItems"
+                 Label="@T("ChannelSiteOptions:Environment")"
+                 ItemText="item => item"
+                 ItemValue="item => item"
+                 Dense
+                 Outlined
+                 HideDetails="@("auto")"
+                 TItem="string"
+                 TItemValue="string"
+                 TValue="string"
+                 OnChange="HandleChangeAsync">
+        </MSelect>
+    </MCol>
+</MRow>
