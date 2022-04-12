@@ -4,49 +4,29 @@ public partial class MessageTemplateItems : AdminCompontentBase
 {
     private List<DataTableHeader<MessageTemplateItemDto>> _headers = new List<DataTableHeader<MessageTemplateItemDto>>
         {
-          new (){Text= "Code",Value= nameof(MessageTemplateItemDto.Code),Sortable=false},
+          new (){ Text= "Code",Value= nameof(MessageTemplateItemDto.Code),Sortable=false},
           new (){ Text= "MappingCode", Value= nameof(MessageTemplateItemDto.MappingCode),Sortable=false},
           new (){ Text= "DisplayText", Value= nameof(MessageTemplateItemDto.DisplayText),Sortable=false},
           new (){ Text= "Actions", Value= "actions",Sortable=false }
         };
 
-    private List<MessageTemplateItemDto> _desserts;
+    [Parameter]
+    public List<MessageTemplateItemDto> Value { get; set; } = new();
+
+    [Parameter]
+    public EventCallback<List<MessageTemplateItemDto>> ValueChanged { get; set; }
 
     private bool _dialog;
     private bool _dialogDelete;
     private MessageTemplateItemDto _editedItem = new MessageTemplateItemDto();
-    private int _editedIndex;
+    private int _editedIndex = -1;
 
     public string FormTitle
     {
         get
         {
-            return _editedIndex == -1 ? "New Item" : "Edit Item";
+            return _editedIndex == -1 ? T("Permission:AddMessageTemplateItem") : T("Permission:EditMessageTemplateItem");
         }
-    }
-
-    protected override void OnInitialized()
-    {
-        Initialize();
-    }
-
-    public void Initialize()
-    {
-        _desserts = new List<MessageTemplateItemDto>
-        {
-           new MessageTemplateItemDto
-           {
-              Code= "name",
-              MappingCode= "field1",
-              DisplayText= "名称",
-            },
-            new MessageTemplateItemDto
-            {
-              Code= "place",
-              MappingCode= "field2",
-              DisplayText= "地点",
-            }
-        };
     }
 
     public void Close()
@@ -56,25 +36,26 @@ public partial class MessageTemplateItems : AdminCompontentBase
         _editedIndex = -1;
     }
 
-    public void Save()
+    public async Task SaveAsync()
     {
         if (_editedIndex > -1)
         {
-            var item = _desserts[_editedIndex];
+            var item = Value[_editedIndex];
             item.Code = _editedItem.Code;
             item.MappingCode = _editedItem.MappingCode;
             item.DisplayText = _editedItem.DisplayText;
         }
         else
         {
-            _desserts.Add(_editedItem);
+            Value.Add(_editedItem);
         }
+        await ValueChanged.InvokeAsync(Value);
         Close();
     }
 
     public void EditItem(MessageTemplateItemDto item)
     {
-        _editedIndex = _desserts.IndexOf(item);
+        _editedIndex = Value.IndexOf(item);
         _editedItem = new MessageTemplateItemDto()
         {
             Code = item.Code,
@@ -86,7 +67,7 @@ public partial class MessageTemplateItems : AdminCompontentBase
 
     public void DeleteItem(MessageTemplateItemDto item)
     {
-        _editedIndex = _desserts.IndexOf(item);
+        _editedIndex = Value.IndexOf(item);
         _editedItem = new MessageTemplateItemDto()
         {
             Code = item.Code,
@@ -96,9 +77,10 @@ public partial class MessageTemplateItems : AdminCompontentBase
         _dialogDelete = true;
     }
 
-    public void DeleteItemConfirm()
+    public async Task DeleteItemConfirmAsync()
     {
-        _desserts.RemoveAt(_editedIndex);
+        Value.RemoveAt(_editedIndex);
+        await ValueChanged.InvokeAsync(Value);
         CloseDelete();
     }
 

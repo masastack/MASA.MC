@@ -1,6 +1,6 @@
 ﻿namespace Masa.Mc.Web.Admin.Pages.MessageTemplates.Modules;
 
-public partial class SmsTemplateCreateModal : AdminCompontentBase
+public partial class SmsTemplateEditModal : AdminCompontentBase
 {
     [Parameter]
     public EventCallback OnOk { get; set; }
@@ -13,23 +13,28 @@ public partial class SmsTemplateCreateModal : AdminCompontentBase
 
     private MForm _form;
     private MessageTemplateCreateUpdateDto _model = new();
+    private Guid _entityId;
     private bool _visible;
     private List<ChannelType> _channelTypeItems = Enum.GetValues(typeof(ChannelType))
         .Cast<ChannelType>().ToList();
     private List<ChannelDto> _channelItems = new();
 
-    public async Task OpenModalAsync(ChannelType? channelType)
+    public async Task OpenModalAsync(MessageTemplateDto model)
     {
-        if (channelType.HasValue)
-        {
-            _model.ChannelType = channelType.Value;
-            await HandleSelectChannelTypeAsync(_model.ChannelType);
-        }
+        _entityId = model.Id;
+        _model = model.Adapt<MessageTemplateCreateUpdateDto>();
+        await GetFormDataAsync();
         await InvokeAsync(() =>
         {
             _visible = true;
             StateHasChanged();
-        }); 
+        });
+    }
+
+    private async Task GetFormDataAsync()
+    {
+        var dto = await MessageTemplateCaller.GetAsync(_entityId);
+        _model = dto.Adapt<MessageTemplateCreateUpdateDto>();
     }
 
     private void HandleCancel()
@@ -45,9 +50,31 @@ public partial class SmsTemplateCreateModal : AdminCompontentBase
             return;
         }
         Loading = true;
-        await MessageTemplateCaller.CreateAsync(_model);
+        await MessageTemplateCaller.UpdateAsync(_entityId,_model);
         Loading = false;
         await SuccessMessageAsync(T("MessageTemplateCreateMessage"));
+        _visible = false;
+        ResetForm();
+        if (OnOk.HasDelegate)
+        {
+            await OnOk.InvokeAsync();
+        }
+    }
+
+    private async Task HandleDelAsync()
+    {
+        await ConfirmAsync(T("DeletionConfirmationMessage"), async args =>
+        {
+            await DeleteAsync();
+        }
+        );
+    }
+    private async Task DeleteAsync()
+    {
+        Loading = true;
+        await MessageTemplateCaller.DeleteAsync(_entityId);
+        Loading = false;
+        await SuccessMessageAsync(T("MessageTemplateDeleteMessage"));
         _visible = false;
         ResetForm();
         if (OnOk.HasDelegate)
@@ -66,7 +93,7 @@ public partial class SmsTemplateCreateModal : AdminCompontentBase
         if (!val) HandleCancel();
     }
 
-    private async Task HandleSelectChannelTypeAsync(ChannelType Type)
+    private async Task HandleSelectChannelType(ChannelType Type)
     {
         _channelItems = await ChannelCaller.GetListByTypeAsync(Type);
     }

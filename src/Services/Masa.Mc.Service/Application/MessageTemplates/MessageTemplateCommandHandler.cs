@@ -17,11 +17,13 @@ public class MessageTemplateCommandHandler
     public async Task CreateAsync(CreateMessageTemplateCommand createCommand)
     {
         var dto = createCommand.MessageTemplate;
-        var entity = new MessageTemplate(dto.ChannelId,
+        var entity = new MessageTemplate(dto.ChannelType,
+                dto.ChannelId,
                 dto.DisplayName,
                 dto.Content,
                 dto.Example,
                 dto.TemplateId,
+                dto.Title,
                 dto.IsJump,
                 dto.JumpUrl,
                 dto.Sign,
@@ -42,7 +44,7 @@ public class MessageTemplateCommandHandler
         var dto = updateCommand.MessageTemplate;
         if (entity == null)
             throw new UserFriendlyException("messageTemplate not found");
-        entity.SetContent(dto.DisplayName, dto.Content,dto.Example);
+        entity.SetContent(dto.DisplayName, dto.Title, dto.Content, dto.Example);
         foreach (var itemDto in dto.Items)
         {
             entity.AddOrUpdateItem(itemDto.Code, itemDto.MappingCode, itemDto.DisplayText, itemDto.Description);

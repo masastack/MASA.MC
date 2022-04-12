@@ -6,9 +6,10 @@ public class MessageTemplateDto : AuditEntityDto<Guid, Guid>
     {
         this.Items = new List<MessageTemplateItemDto>();
     }
-
+    public ChannelType ChannelType { get; set; }
     public Guid ChannelId { get; set; }
     public string DisplayName { get; set; } = string.Empty;
+    public string Title { get; set; } = string.Empty;
     public string Content { get; set; } = string.Empty;
     public string Example { get; set; } = string.Empty;
     public string TemplateId { get; set; } = string.Empty;

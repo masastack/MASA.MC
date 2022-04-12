@@ -59,3 +59,4 @@ global using System.Reflection;
 global using Masa.Mc.Contracts.Admin.Dtos.MessageTemplates.Validator;
 global using Masa.Mc.Service.Admin.Application.MessageTemplates.Queries;
 global using Masa.Mc.Service.Admin.Domain.MessageTemplates.Services;
+global using Masa.Mc.Service.Admin.Domain.Channels.Events;

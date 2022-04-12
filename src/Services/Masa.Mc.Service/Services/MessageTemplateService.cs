@@ -11,9 +11,9 @@ public class MessageTemplateService : ServiceBase
         MapGet(GetListAsync, string.Empty);
     }
 
-    public async Task<PaginatedListDto<MessageTemplateDto>> GetListAsync(IEventBus eventbus, [FromQuery] string filter, [FromQuery] string sorting = "", [FromQuery] int page = 1, [FromQuery] int pagesize = 20)
+    public async Task<PaginatedListDto<MessageTemplateDto>> GetListAsync(IEventBus eventbus, [FromQuery] string filter, [FromQuery] ChannelType? channelType, [FromQuery] Guid? channelId, [FromQuery] MessageTemplateStatus? status, [FromQuery] MessageTemplateAuditStatus? auditStatus, [FromQuery] DateTime? startTime, [FromQuery] DateTime? endTime, [FromQuery] string sorting = "", [FromQuery] int page = 1, [FromQuery] int pagesize = 20)
     {
-        var input = new GetMessageTemplateInput(filter,sorting, page, pagesize);
+        var input = new GetMessageTemplateInput(filter, channelType, channelId, status, auditStatus, startTime, endTime, sorting, page, pagesize);
         var query = new GetListMessageTemplateQuery(input);
         await eventbus.PublishAsync(query);
         return query.Result;

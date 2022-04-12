@@ -40,8 +40,13 @@ public class MessageTemplateQueryHandler
     private async Task<Expression<Func<MessageTemplate, bool>>> CreateFilteredPredicate(GetMessageTemplateInput input)
     {
         Expression<Func<MessageTemplate, bool>> condition = messageTemplate => true;
-        if (!string.IsNullOrEmpty(input.Filter))
-            condition = condition.And(messageTemplate => messageTemplate.DisplayName.Contains(input.Filter));
+        condition = condition.And(!string.IsNullOrEmpty(input.Filter),messageTemplate => messageTemplate.DisplayName.Contains(input.Filter));
+        condition = condition.And(input.ChannelType.HasValue, messageTemplate => messageTemplate.ChannelType == input.ChannelType);
+        condition = condition.And(input.Status.HasValue, messageTemplate => messageTemplate.Status== input.Status);
+        condition = condition.And(input.AuditStatus.HasValue, messageTemplate => messageTemplate.AuditStatus == input.AuditStatus);
+        condition = condition.And(input.ChannelId.HasValue, messageTemplate => messageTemplate.ChannelId == input.ChannelId);
+        condition = condition.And(input.StartTime.HasValue, messageTemplate => messageTemplate.ModificationTime >= input.StartTime);
+        condition = condition.And(input.EndTime.HasValue, messageTemplate => messageTemplate.ModificationTime <= input.EndTime);
         return await Task.FromResult(condition); ;
     }
 }

@@ -5,5 +5,9 @@ public class MessageTemplateCreateUpdateDtoValidator : AbstractValidator<Message
     public MessageTemplateCreateUpdateDtoValidator()
     {
         RuleFor(input => input.DisplayName).NotEmpty();
+        RuleFor(input => input.ChannelType).IsInEnum();
+        RuleFor(input => input.ChannelId).NotEmpty();
+        RuleFor(input => input.Status).IsInEnum();
+        RuleFor(input => input.AuditStatus).IsInEnum();
     }
 }

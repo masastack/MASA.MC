@@ -1,6 +1,6 @@
 ﻿@inherits AdminCompontentBase
 <MDataTable Headers="_headers"
-            Items="_desserts"
+            Items="Value"
             HideDefaultFooter>
     <TopContent>
         <MToolbar Flat>
@@ -9,7 +9,7 @@
             <MButton Ripple=false Plain
                      Class="mb-2"
                      OnClick="()=>_dialog=true">
-               <MIcon Left>mdi-plus</MIcon>
+                <MIcon Left>mdi-plus</MIcon>
             </MButton>
             <MDialog @bind-Value="_dialog"
                      MaxWidth="500">
@@ -52,7 +52,7 @@
                         </MButton>
                         <MButton Color="blue darken-1"
                                  Text
-                                 OnClick="Save">
+                                 OnClick="SaveAsync">
                             Save
                         </MButton>
                     </MCardActions>
@@ -64,7 +64,7 @@
                     <MCardActions>
                         <MSpacer></MSpacer>
                         <MButton Color="blue darken-1" Text OnClick="CloseDelete">Cancel</MButton>
-                        <MButton Color="blue darken-1" Text OnClick="DeleteItemConfirm">OK</MButton>
+                        <MButton Color="blue darken-1" Text OnClick="DeleteItemConfirmAsync">OK</MButton>
                         <MSpacer></MSpacer>
                     </MCardActions>
                 </MCard>
@@ -86,9 +86,10 @@
         }
     </ItemColContent>
     <NoDataContent>
-        <MButton Color="primary"
-                 OnClick="Initialize">
+        未配置变量
+        @*<MButton Color="primary"
+            OnClick="Initialize">
             Reset
-        </MButton>
+            </MButton>*@
     </NoDataContent>
 </MDataTable>

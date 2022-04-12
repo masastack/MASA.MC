@@ -219,15 +219,15 @@
       },
       {
         "Id": 35,
-        "Title": "Emailing",
+        "Title": "Email",
         "Icon": "mdi-circle",
-        "Href": "messageTemplates/mailingManagement"
+        "Href": "messageTemplates/emailTemplateManagement"
       },
       {
         "Id": 36,
-        "Title": "Site",
+        "Title": "WebsiteMessage",
         "Icon": "mdi-circle",
-        "Href": "messageTemplates/siteManagement"
+        "Href": "messageTemplates/websiteMessageTemplateManagement"
       }
     ]
   }

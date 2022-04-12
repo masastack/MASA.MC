@@ -1,8 +1,10 @@
 ﻿namespace Masa.Mc.Service.Admin.Domain.MessageTemplates.Aggregates;
 public class MessageTemplate : AuditAggregateRoot<Guid, Guid>
 {
+    public virtual ChannelType ChannelType { get; protected set; }
     public virtual Guid ChannelId { get; protected set; }
     public virtual string DisplayName { get; protected set; } = string.Empty;
+    public virtual string Title { get; protected set; } = string.Empty;
     public virtual string Content { get; protected set; } = string.Empty;
     public virtual string Example { get; protected set; } = string.Empty;
     public virtual string TemplateId { get; protected set; } = string.Empty;
@@ -14,13 +16,15 @@ public class MessageTemplate : AuditAggregateRoot<Guid, Guid>
     public virtual bool IsStatic { get; protected set; }
     public virtual List<MessageTemplateItem> Items { get; protected set; } = new List<MessageTemplateItem>();
 
-    public MessageTemplate(Guid channelId, string displayName, string content, string example, string templateId, bool isJump, string jumpUrl, string sign) : this(channelId, displayName, content, example, templateId, isJump, jumpUrl, sign, new List<MessageTemplateItem>())
+    public MessageTemplate(ChannelType channelType, Guid channelId, string displayName, string title, string content, string example, string templateId, bool isJump, string jumpUrl, string sign) : this(channelType, channelId, displayName, title, content, example, templateId, isJump, jumpUrl, sign, new List<MessageTemplateItem>())
     {
     }
 
     public MessageTemplate(
+        ChannelType channelType,
         Guid channelId,
         string displayName,
+        string title,
         string content,
         string example,
         string templateId,
@@ -32,6 +36,7 @@ public class MessageTemplate : AuditAggregateRoot<Guid, Guid>
         MessageTemplateAuditStatus auditStatus = MessageTemplateAuditStatus.WaitAudit,
         bool isStatic = false)
     {
+        ChannelType = channelType;
         ChannelId = channelId;
         TemplateId = templateId;
         IsJump = isJump;
@@ -41,7 +46,7 @@ public class MessageTemplate : AuditAggregateRoot<Guid, Guid>
         AuditStatus = auditStatus;
         IsStatic = isStatic;
 
-        SetContent(displayName, content, example);
+        SetContent(displayName, title, content, example);
 
         Items = items ?? new List<MessageTemplateItem>();
     }
@@ -56,14 +61,20 @@ public class MessageTemplate : AuditAggregateRoot<Guid, Guid>
         }
         else
         {
-            existingItem.SetContent(displayText, description);
+            existingItem.SetContent(mappingCode, displayText, description);
         }
     }
 
-    public void SetContent(string displayName, string content, string example)
+    public void SetContent(string displayName, string title, string content, string example)
     {
         DisplayName = displayName;
+        Title = title;
         Content = content;
         Example = example;
+    }
+
+    public void SetChannelType(ChannelType channelType)
+    {
+        ChannelType = channelType;
     }
 }

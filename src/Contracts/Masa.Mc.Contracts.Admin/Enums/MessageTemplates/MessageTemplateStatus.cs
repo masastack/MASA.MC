@@ -2,6 +2,6 @@
 
 public enum MessageTemplateStatus
 {
-    Normal,
+    Normal=1,
     Invalid
 }

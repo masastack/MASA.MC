@@ -1,6 +1,6 @@
 ﻿namespace Masa.Mc.Web.Admin.Pages.MessageTemplates;
 
-public partial class SmsTemplateManagement : AdminCompontentBase
+public partial class EmailTemplateManagement : AdminCompontentBase
 {
     [Inject]
     public MessageTemplateCaller MessageTemplateCaller { get; set; } = default!;
@@ -10,22 +10,18 @@ public partial class SmsTemplateManagement : AdminCompontentBase
 
     public List<DataTableHeader<MessageTemplateDto>> Headers { get; set; } = new();
 
-    private SmsTemplateEditModal _editModal;
-    private SmsTemplateCreateModal _createModal;
-    private GetMessageTemplateInput _queryParam = new() { ChannelType = ChannelType.Sms };
+    private EmailTemplateEditModal _editModal;
+    private EmailTemplateCreateModal _createModal;
+    private GetMessageTemplateInput _queryParam = new() { ChannelType = ChannelType.Email };
     private PaginatedListDto<MessageTemplateDto> _entities = new();
     private List<ChannelDto> _channelItems = new();
-    private List<MessageTemplateStatus> _statusItems = Enum.GetValues(typeof(MessageTemplateStatus))
-        .Cast<MessageTemplateStatus>().ToList();
-    private List<MessageTemplateAuditStatus> _auditStatusItems = Enum.GetValues(typeof(MessageTemplateAuditStatus))
-        .Cast<MessageTemplateAuditStatus>().ToList();
 
     protected override async Task OnInitializedAsync()
     {
         var _prefix = "DisplayName:MessageTemplate";
         Headers = new()
         {
-            new() { Text = T($"{_prefix}{nameof(MessageTemplateDto.TemplateId)}"), Value = nameof(MessageTemplateDto.TemplateId), Sortable = false },
+            new() { Text = T($"{_prefix}{nameof(MessageTemplateDto.Id)}"), Value = nameof(MessageTemplateDto.Id), Sortable = false },
             new() { Text = T($"{_prefix}{nameof(MessageTemplateDto.DisplayName)}"), Value = nameof(MessageTemplateDto.DisplayName), Sortable = false },
             new() { Text = T($"{_prefix}{nameof(MessageTemplateDto.ModificationTime)}"), Value = nameof(MessageTemplateDto.ModificationTime), Sortable = true },
             new() { Text = T($"{_prefix}{nameof(MessageTemplateDto.AuditStatus)}"), Value = nameof(MessageTemplateDto.AuditStatus), Sortable = false },

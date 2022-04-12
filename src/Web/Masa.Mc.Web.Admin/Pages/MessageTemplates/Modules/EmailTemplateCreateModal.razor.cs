@@ -1,6 +1,6 @@
 ﻿namespace Masa.Mc.Web.Admin.Pages.MessageTemplates.Modules;
 
-public partial class SmsTemplateCreateModal : AdminCompontentBase
+public partial class EmailTemplateCreateModal : AdminCompontentBase
 {
     [Parameter]
     public EventCallback OnOk { get; set; }
@@ -29,7 +29,7 @@ public partial class SmsTemplateCreateModal : AdminCompontentBase
         {
             _visible = true;
             StateHasChanged();
-        }); 
+        });
     }
 
     private void HandleCancel()

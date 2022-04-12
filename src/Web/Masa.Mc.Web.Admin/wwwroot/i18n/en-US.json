@@ -28,6 +28,7 @@
   "WebsiteMessageChannelOptions:Environment": "»·¾³",
   "SmsChannelOptions:AccessKeyId": "AccessKeyId",
   "SmsChannelOptions:AccessKeySecret": "AccessKeySecret",
+  "DisplayName:Channel": "Channel",
   "DisplayName:ChannelDisplayName": "Channel display name",
   "DisplayName:ChannelCode": "Channel code",
   "DisplayName:ChannelType": "Channel type",
@@ -42,6 +43,7 @@
   "Permission:EditMessageTemplate": "Edit messageTemplate",
   "DisplayName:MessageTemplateId": "Template id",
   "DisplayName:MessageTemplateDisplayName": "Template theme",
+  "DisplayName:MessageTemplateTitle": "Template title",
   "DisplayName:MessageTemplateContent": "Template content",
   "DisplayName:MessageTemplateExample": "Template example",
   "DisplayName:MessageTemplateSign": "Sign",
@@ -55,5 +57,10 @@
   "DisplayName:MessageTemplateStatus.Invalid": "Invalid",
   "DisplayName:MessageTemplateAuditStatus.WaitAudit": "WaitAudit",
   "DisplayName:MessageTemplateAuditStatus.Adopt": "Adopt",
-  "DisplayName:MessageTemplateAuditStatus.Fail": "Fail"
+  "DisplayName:MessageTemplateAuditStatus.Fail": "Fail",
+  "Permission:AddMessageTemplateItem": "Add variable",
+  "Permission:EditMessageTemplateItem": "Edit variable",
+  "ChannelCreateMessageTemplate": "Create messageTemplate success.",
+  "ChannelEditMessageTemplate": "Edit messageTemplate success.",
+  "ChannelDeleteMessageTemplate": "Delete messageTemplate success."
 }

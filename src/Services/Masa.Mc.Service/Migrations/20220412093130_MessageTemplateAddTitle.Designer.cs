@@ -4,6 +4,7 @@ using Masa.Mc.Service.Admin.Infrastructure.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Masa.Mc.Service.Admin.Migrations
 {
     [DbContext(typeof(McDbContext))]
-    partial class MCDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220412093130_MessageTemplateAddTitle")]
+    partial class MessageTemplateAddTitle
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -131,9 +133,6 @@ namespace Masa.Mc.Service.Admin.Migrations
 
                     b.Property<Guid>("ChannelId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("ChannelType")
-                        .HasColumnType("int");
 
                     b.Property<string>("Content")
                         .IsRequired()

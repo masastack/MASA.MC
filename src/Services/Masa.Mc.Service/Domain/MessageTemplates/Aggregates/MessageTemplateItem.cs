@@ -35,14 +35,14 @@ public class MessageTemplateItem : Entity<Guid>
     {
         MessageTemplateId = messageTemplateId;
         Code = code;
-        MappingCode = mappingCode;
         IsStatic = isStatic;
 
-        SetContent(displayText, description);
+        SetContent(mappingCode,displayText, description);
     }
 
-    public void SetContent(string displayText, string description)
+    public void SetContent(string mappingCode, string displayText, string description)
     {
+        MappingCode = mappingCode;
         DisplayText = displayText;
         Description = description; 
     }

@@ -40,3 +40,4 @@ global using Masa.Mc.Web.Admin.ViewModel.Channels;
 global using Mapster;
 global using Masa.Mc.Contracts.Admin.Dtos.MessageTemplates;
 global using Masa.Mc.Web.Admin.Pages.MessageTemplates.Modules;
+global using Masa.Mc.Contracts.Admin.Enums.MessageTemplates;

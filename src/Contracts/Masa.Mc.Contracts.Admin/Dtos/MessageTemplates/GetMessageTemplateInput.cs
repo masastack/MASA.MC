@@ -3,6 +3,12 @@
 public class GetMessageTemplateInput : PaginatedOptionsDto
 {
     public string Filter { get; set; } = string.Empty;
+    public MessageTemplateStatus? Status { get; set; }
+    public MessageTemplateAuditStatus? AuditStatus { get; set; }
+    public ChannelType? ChannelType { get; set; }
+    public Guid? ChannelId { get; set; }
+    public DateTime? StartTime { get; set; }
+    public DateTime? EndTime { get; set; }
 
     public GetMessageTemplateInput()
     {
@@ -13,8 +19,14 @@ public class GetMessageTemplateInput : PaginatedOptionsDto
     {
     }
 
-    public GetMessageTemplateInput(string filter, string sorting, int page, int pageSize) : base(sorting, page, pageSize)
+    public GetMessageTemplateInput(string filter, ChannelType? channelType, Guid? channelId, MessageTemplateStatus? status, MessageTemplateAuditStatus? auditStatus, DateTime? startTime, DateTime? endTime, string sorting, int page, int pageSize) : base(sorting, page, pageSize)
     {
         Filter = filter;
+        ChannelType = channelType;
+        ChannelId = channelId;
+        Status = status;
+        AuditStatus = auditStatus;
+        StartTime = startTime;
+        EndTime = endTime;
     }
 }
