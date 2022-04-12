@@ -4,6 +4,7 @@ using Masa.Mc.Service.Admin.Infrastructure.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Masa.Mc.Service.Admin.Migrations
 {
     [DbContext(typeof(McDbContext))]
-    partial class MCDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220411122546_RemoveDbTablePrefix")]
+    partial class RemoveDbTablePrefix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -126,9 +128,6 @@ namespace Masa.Mc.Service.Admin.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("AuditStatus")
-                        .HasColumnType("int");
-
                     b.Property<Guid>("ChannelId")
                         .HasColumnType("uniqueidentifier");
 
@@ -154,27 +153,14 @@ namespace Masa.Mc.Service.Admin.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsJump")
-                        .HasColumnType("bit");
-
                     b.Property<bool>("IsStatic")
                         .HasColumnType("bit");
-
-                    b.Property<string>("JumpUrl")
-                        .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
 
                     b.Property<DateTime>("ModificationTime")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid>("Modifier")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Sign")
-                        .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");

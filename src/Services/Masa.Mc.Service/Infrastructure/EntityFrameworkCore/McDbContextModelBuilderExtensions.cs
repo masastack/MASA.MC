@@ -1,6 +1,6 @@
 ﻿namespace Masa.Mc.Service.Admin.Infrastructure.EntityFrameworkCore;
 
-public static class MCDbContextModelBuilderExtensions
+public static class McDbContextModelBuilderExtensions
 {
     public static void ConfigureMC(this ModelBuilder builder)
     {

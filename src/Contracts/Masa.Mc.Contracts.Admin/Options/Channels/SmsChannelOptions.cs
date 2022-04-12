@@ -1,6 +1,6 @@
 ﻿namespace Masa.Mc.Contracts.Admin.Options.Channels;
 
-public class ChannelSmsOptions
+public class SmsChannelOptions
 {
     public string AccessKeyId { get; set; } = string.Empty;
 

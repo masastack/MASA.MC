@@ -21,7 +21,7 @@
 		<PackageReference Include="Masa.Contrib.Ddd.Domain.Repository.EF" Version="0.3.3" />
 		<PackageReference Include="Masa.Contrib.ReadWriteSpliting.Cqrs" Version="0.3.3" />
 		<PackageReference Include="Masa.Contrib.Service.MinimalAPIs" Version="0.3.3" />
-		<PackageReference Include="Masa.Utils.Expressions" Version="0.3.5" />
+		<PackageReference Include="Masa.Utils.Expressions" Version="0.4.0-preview.2" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.1" />
 		<PackageReference Include="Masa.Contrib.Data.UoW.EF" Version="0.3.3" />
 		<PackageReference Include="Masa.Contrib.Dispatcher.IntegrationEvents.Dapr" Version="0.3.3" />
@@ -31,7 +31,6 @@
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.0" />
 		<PackageReference Include="System.Linq.Dynamic.Core" Version="1.2.18" />
 	</ItemGroup>
@@ -39,5 +38,9 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\..\Contracts\Masa.Mc.Contracts.Admin\Masa.Mc.Contracts.Admin.csproj" />
 	  <ProjectReference Include="..\..\Infrastructure\Masa.Mc.Infrastructure.EntityFrameworkCore\Masa.Mc.Infrastructure.EntityFrameworkCore.csproj" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <Folder Include="Application\MessageTemplates\Queries\" />
 	</ItemGroup>
 </Project>

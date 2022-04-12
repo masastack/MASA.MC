@@ -7,7 +7,7 @@ public class ChannelCaller : HttpClientCallerBase
 
     public ChannelCaller(IServiceProvider serviceProvider, IOptions<Settings> settings) : base(serviceProvider)
     {
-        BaseAddress = settings.Value.MCServiceBaseUrl;
+        BaseAddress = settings.Value.McServiceBaseUrl;
         Name = nameof(ChannelCaller);
     }
 

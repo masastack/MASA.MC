@@ -2,8 +2,6 @@
 
 public class AuditEntityDto<TKey, TUserId>: EntityDto<TKey>
 {
-    public bool IsDeleted { get; set; }
-
     public TUserId Creator { get; set; } = default!;
 
     public DateTime CreationTime { get; set; }

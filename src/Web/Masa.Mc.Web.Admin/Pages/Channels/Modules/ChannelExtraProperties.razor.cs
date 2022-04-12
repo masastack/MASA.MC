@@ -21,9 +21,9 @@ public partial class ChannelExtraProperties : AdminCompontentBase
     [Parameter]
     public EventCallback<ExtraPropertyDictionary> ValueChanged { get; set; }
 
-    private ChannelEmailingExtraProperties _emailingExtraPropertiesRef = default!;
+    private ChannelEmailExtraProperties _emailExtraPropertiesRef = default!;
     private ChannelSmsExtraProperties _smsExtraPropertiesRef = default!;
-    private ChannelSiteExtraProperties _siteExtraPropertiesRef = default!;
+    private ChannelWebsiteMessageExtraProperties _websiteMessageExtraPropertiesRef = default!;
 
     protected override void OnInitialized()
     {
@@ -42,9 +42,9 @@ public partial class ChannelExtraProperties : AdminCompontentBase
 
     public async Task UpdateExtraPropertiesAsync()
     {
-        if (Type == ChannelType.Emailing) await _emailingExtraPropertiesRef.HandleChangeAsync();
+        if (Type == ChannelType.Email) await _emailExtraPropertiesRef.HandleChangeAsync();
         if (Type == ChannelType.Sms) await _smsExtraPropertiesRef.HandleChangeAsync();
-        if (Type == ChannelType.Site) await _siteExtraPropertiesRef.HandleChangeAsync();
+        if (Type == ChannelType.WebsiteMessage) await _websiteMessageExtraPropertiesRef.HandleChangeAsync();
         await ValueChanged.InvokeAsync(Value);
     }
 

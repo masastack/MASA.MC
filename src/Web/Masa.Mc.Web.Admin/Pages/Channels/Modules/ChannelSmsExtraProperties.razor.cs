@@ -8,13 +8,13 @@ public partial class ChannelSmsExtraProperties : AdminCompontentBase
     [Parameter]
     public EventCallback<ExtraPropertyDictionary> ValueChanged { get; set; }
 
-    private ChannelSmsOptions _model = new();
+    private SmsChannelOptions _model = new();
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            _model = ExtensionPropertyHelper.ExtraPropertyMapToObj<ChannelSmsOptions>(Value);
+            _model = ExtensionPropertyHelper.ExtraPropertyMapToObj<SmsChannelOptions>(Value);
         }
         await base.OnAfterRenderAsync(firstRender);
     }

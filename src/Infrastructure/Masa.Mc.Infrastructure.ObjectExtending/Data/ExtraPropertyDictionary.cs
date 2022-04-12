@@ -1,7 +1,7 @@
 ﻿namespace Masa.Mc.Infrastructure.ObjectExtending;
 
 [Serializable]
-public class ExtraPropertyDictionary : Dictionary<string, object>
+public class ExtraPropertyDictionary : ConcurrentDictionary<string, object>
 {
     public ExtraPropertyDictionary()
     {

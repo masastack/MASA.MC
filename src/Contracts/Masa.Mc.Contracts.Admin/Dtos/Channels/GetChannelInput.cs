@@ -8,15 +8,14 @@ public class GetChannelInput : PaginatedOptionsDto
 
     public GetChannelInput()
     {
-
     }
 
     public GetChannelInput(int pageSize) : base("", 1, pageSize)
     {
     }
 
-    public GetChannelInput(string filter,ChannelType? type, string displayName, 
-       string sorting, int page, int pageSize):base(sorting, page, pageSize)
+    public GetChannelInput(string filter, ChannelType? type, string displayName,
+       string sorting, int page, int pageSize) : base(sorting, page, pageSize)
     {
         Filter = filter;
         Type = type;

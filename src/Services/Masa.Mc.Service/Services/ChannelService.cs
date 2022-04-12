@@ -55,7 +55,7 @@ public class ChannelService : ServiceBase
 
     public async Task<ChannelDto> FindByCodeAsync(IEventBus eventBus, string code)
     {
-        var query = new FindByCodeChannelQuery(code);
+        var query = new FindChannelByCodeQuery(code);
         await eventBus.PublishAsync(query);
         return query.Result;
     }

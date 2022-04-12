@@ -1,6 +1,6 @@
 ﻿namespace Masa.Mc.Web.Admin.Pages.Channels.Modules;
 
-public partial class ChannelSiteExtraProperties : AdminCompontentBase
+public partial class ChannelWebsiteMessageExtraProperties : AdminCompontentBase
 {
     [Parameter]
     public ExtraPropertyDictionary Value { get; set; } = new();
@@ -8,13 +8,13 @@ public partial class ChannelSiteExtraProperties : AdminCompontentBase
     [Parameter]
     public EventCallback<ExtraPropertyDictionary> ValueChanged { get; set; }
 
-    private ChannelSiteOptions _model = new();
+    private WebsiteMessageChannelOptions _model = new();
     private List<string> _environmentItems = new List<string> {"Staging"};
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            _model = ExtensionPropertyHelper.ExtraPropertyMapToObj<ChannelSiteOptions>(Value);
+            _model = ExtensionPropertyHelper.ExtraPropertyMapToObj<WebsiteMessageChannelOptions>(Value);
         }
         await base.OnAfterRenderAsync(firstRender);
     }

@@ -1,8 +1,8 @@
 ﻿namespace Masa.Mc.Service.Infrastructure.Repositories;
 
-public class ChannelRepository : Repository<MCDbContext, Channel>, IChannelRepository
+public class ChannelRepository : Repository<McDbContext, Channel>, IChannelRepository
 {
-    public ChannelRepository(MCDbContext context, IUnitOfWork unitOfWork)
+    public ChannelRepository(McDbContext context, IUnitOfWork unitOfWork)
         : base(context, unitOfWork)
     {
     }

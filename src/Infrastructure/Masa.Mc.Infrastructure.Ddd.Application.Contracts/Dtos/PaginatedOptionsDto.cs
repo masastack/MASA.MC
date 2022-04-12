@@ -8,10 +8,10 @@ public class PaginatedOptionsDto
 
     public string Sorting { get; set; }
 
-    public PaginatedOptionsDto(string sorting = "", int page=1, int pageSize=20)
+    public PaginatedOptionsDto(string sorting = "", int page = 1, int pageSize = 20)
     {
-        Sorting=sorting;
-        Page= page;
-        PageSize=pageSize;
+        Sorting = sorting;
+        Page = page;
+        PageSize = pageSize;
     }
 }

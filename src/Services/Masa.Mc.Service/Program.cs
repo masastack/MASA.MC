@@ -55,10 +55,10 @@ var app = builder.Services
     .AddDomainEventBus(options =>
     {
         options.UseEventBus()
-               .UseUoW<MCDbContext>(dbOptions => dbOptions.UseSqlServer(builder.Configuration["Local:Appsettings:ConnectionStrings:DefaultConnection"]))
+               .UseUoW<McDbContext>(dbOptions => dbOptions.UseSqlServer(builder.Configuration["Local:Appsettings:ConnectionStrings:DefaultConnection"]))
                .UseDaprEventBus<IntegrationEventLogService>()
-               .UseEventLog<MCDbContext>()
-               .UseRepository<MCDbContext>();
+               .UseEventLog<McDbContext>()
+               .UseRepository<McDbContext>();
     })
     .AddServices(builder);
 app.UseMasaExceptionHandling(opt =>
