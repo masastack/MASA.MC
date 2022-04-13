@@ -51,4 +51,6 @@ public class MessageTemplateService : ServiceBase
         await eventBus.PublishAsync(query);
         return query.Result;
     }
+
+
 }

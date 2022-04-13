@@ -3,10 +3,12 @@
 public class MessageTemplateQueryHandler
 {
     private readonly IMessageTemplateRepository _repository;
+    private readonly ISmsSender _smsSender;
 
-    public MessageTemplateQueryHandler(IMessageTemplateRepository repository)
+    public MessageTemplateQueryHandler(IMessageTemplateRepository repository, ISmsSender smsSender)
     {
         _repository = repository;
+        _smsSender = smsSender;
     }
 
     [EventHandler]
@@ -16,6 +18,10 @@ public class MessageTemplateQueryHandler
         if (entity == null)
             throw new UserFriendlyException("messageTemplate not found");
         query.Result = entity.Adapt<MessageTemplateDto>();
+        //var smsMessage = new SmsMessage("15267799306", "{\"code\":\"1234\"}");
+        //smsMessage.Properties.Add("SignName", "阿里云短信测试");
+        //smsMessage.Properties.Add("TemplateCode", "SMS_154950909");
+        //await _smsSender.SendAsync(smsMessage);
     }
 
     [EventHandler]

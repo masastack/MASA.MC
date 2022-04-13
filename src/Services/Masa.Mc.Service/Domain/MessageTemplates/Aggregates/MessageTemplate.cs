@@ -99,4 +99,10 @@ public class MessageTemplate : AuditAggregateRoot<Guid, Guid>
         AuditTime = DateTime.UtcNow;
         AuditReason = auditReason;
     }
+
+    public void SetInvalid()
+    {
+        InvalidTime = DateTime.UtcNow;
+        Status = MessageTemplateStatus.Invalid;
+    }
 }

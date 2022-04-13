@@ -1,4 +1,8 @@
-﻿var builder = WebApplication.CreateBuilder(args);
+﻿using Masa.Mc.Infrastructure.Sms;
+using Masa.Mc.Infrastructure.Sms.Aliyun;
+
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.Configure<AliyunSmsOptions>(builder.Configuration.GetSection("AliyunSms"));
 builder.AddMasaConfiguration();
 builder.Services.AddDaprClient();
 builder.Services.AddActors(options =>
@@ -16,6 +20,7 @@ builder.Services.AddAuthentication(options =>
     options.RequireHttpsMetadata = false;
     options.Audience = "";
 });
+builder.Services.AddTransient(typeof(ISmsSender), typeof(AliyunSmsSender));
 TypeAdapterConfig.GlobalSettings.Scan(Assembly.GetExecutingAssembly(), Assembly.Load("Masa.Mc.Contracts.Admin"));
 var app = builder.Services
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
