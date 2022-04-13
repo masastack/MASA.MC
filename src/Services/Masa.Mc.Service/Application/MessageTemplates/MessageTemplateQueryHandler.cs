@@ -1,14 +1,18 @@
-﻿namespace Masa.Mc.Service.Admin.Application.MessageTemplates;
+﻿using Masa.Mc.Infrastructure.Common.Helper;
+
+namespace Masa.Mc.Service.Admin.Application.MessageTemplates;
 
 public class MessageTemplateQueryHandler
 {
     private readonly IMessageTemplateRepository _repository;
     private readonly ISmsSender _smsSender;
+    private readonly MessageTemplateDomainService _domainService;
 
-    public MessageTemplateQueryHandler(IMessageTemplateRepository repository, ISmsSender smsSender)
+    public MessageTemplateQueryHandler(IMessageTemplateRepository repository, ISmsSender smsSender, MessageTemplateDomainService domainService)
     {
         _repository = repository;
         _smsSender = smsSender;
+        _domainService = domainService;
     }
 
     [EventHandler]
@@ -18,10 +22,6 @@ public class MessageTemplateQueryHandler
         if (entity == null)
             throw new UserFriendlyException("messageTemplate not found");
         query.Result = entity.Adapt<MessageTemplateDto>();
-        //var smsMessage = new SmsMessage("15267799306", "{\"code\":\"1234\"}");
-        //smsMessage.Properties.Add("SignName", "阿里云短信测试");
-        //smsMessage.Properties.Add("TemplateCode", "SMS_154950909");
-        //await _smsSender.SendAsync(smsMessage);
     }
 
     [EventHandler]
@@ -47,23 +47,17 @@ public class MessageTemplateQueryHandler
     [EventHandler]
     public async Task GetSmsTemplateAsync(GetSmsTemplateQuery query)
     {
+        var smsTemplate = await _smsSender.GetSmsTemplateAsync(query.TemplateCode);
         var dto = new GetSmsTemplateDto
         {
-            DisplayName = "验证码模板",
-            TemplateId = query.TemplateCode,
-            Content = "验证码：{{code}}，请尽快完成验证！",
-            AuditStatus = MessageTemplateAuditStatus.Adopt,
-            AuditReason = "无审批备注",
-            Items = new List<MessageTemplateItemDto> {
-                new MessageTemplateItemDto{
-                    Code="code",
-                    MappingCode="code",
-                    DisplayText="验证码"
-                }
-            }
+            DisplayName = smsTemplate.TemplateName,
+            TemplateId = smsTemplate.TemplateCode,
+            Content = smsTemplate.TemplateContent,
+            AuditStatus = GetAuditStatusBySmsTemplateStatus(smsTemplate.AuditStatus),
+            AuditReason = smsTemplate.Reason
         };
+        dto.Items = ParseTemplateItem(smsTemplate.TemplateContent);
         query.Result = dto;
-        await Task.CompletedTask;
     }
 
     private async Task<Expression<Func<MessageTemplateWithDetail, bool>>> CreateFilteredPredicate(GetMessageTemplateInput input)
@@ -84,5 +78,26 @@ public class MessageTemplateQueryHandler
         var query = await _repository.GetWithDetailQueryAsync()!;
         var condition = await CreateFilteredPredicate(input);
         return query.Where(condition);
+    }
+
+    private MessageTemplateAuditStatus GetAuditStatusBySmsTemplateStatus(int? status)
+    {
+        switch (status)
+        {
+            case 1:
+                return MessageTemplateAuditStatus.Adopt;
+            case 2:
+                return MessageTemplateAuditStatus.Fail;
+            default:
+                return MessageTemplateAuditStatus.WaitAudit;
+        }
+    }
+
+    private List<MessageTemplateItemDto> ParseTemplateItem(string content)
+    {
+        string startstr = "\\${";
+        string endstr = "}";
+        var paramList = UtilHelper.MidStrEx(content, startstr, endstr);
+        return paramList.Select(x => new MessageTemplateItemDto { Code = x, MappingCode = x }).ToList();
     }
 }

@@ -1,8 +1,4 @@
-﻿using Masa.Mc.Infrastructure.Sms;
-using Masa.Mc.Infrastructure.Sms.Aliyun;
-
-var builder = WebApplication.CreateBuilder(args);
-builder.Services.Configure<AliyunSmsOptions>(builder.Configuration.GetSection("AliyunSms"));
+﻿var builder = WebApplication.CreateBuilder(args);
 builder.AddMasaConfiguration();
 builder.Services.AddDaprClient();
 builder.Services.AddActors(options =>
@@ -20,6 +16,7 @@ builder.Services.AddAuthentication(options =>
     options.RequireHttpsMetadata = false;
     options.Audience = "";
 });
+builder.Services.Configure<AliyunSmsOptions>(builder.Configuration.GetSection("Local:Appsettings:AliyunSms").Bind);
 builder.Services.AddTransient(typeof(ISmsSender), typeof(AliyunSmsSender));
 TypeAdapterConfig.GlobalSettings.Scan(Assembly.GetExecutingAssembly(), Assembly.Load("Masa.Mc.Contracts.Admin"));
 var app = builder.Services

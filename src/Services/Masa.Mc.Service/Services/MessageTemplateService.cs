@@ -1,4 +1,7 @@
-﻿namespace Masa.Mc.Service.Admin.Services;
+﻿using Masa.Mc.Infrastructure.Sms.Aliyun;
+using Microsoft.Extensions.Options;
+
+namespace Masa.Mc.Service.Admin.Services;
 
 public class MessageTemplateService : ServiceBase
 {
@@ -51,6 +54,4 @@ public class MessageTemplateService : ServiceBase
         await eventBus.PublishAsync(query);
         return query.Result;
     }
-
-
 }

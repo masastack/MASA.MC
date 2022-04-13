@@ -1,19 +1,12 @@
-using AlibabaCloud.SDK.Dysmsapi20170525.Models;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using AliyunClient = AlibabaCloud.SDK.Dysmsapi20170525.Client;
-using AliyunConfig = AlibabaCloud.OpenApiClient.Models.Config;
-using AliyunSendSmsRequest = AlibabaCloud.SDK.Dysmsapi20170525.Models.SendSmsRequest;
-
 namespace Masa.Mc.Infrastructure.Sms.Aliyun
 {
     public class AliyunSmsSender : ISmsSender
     {
         protected AliyunSmsOptions Options { get; }
 
-        public AliyunSmsSender(AliyunSmsOptions options)
+        public AliyunSmsSender(IOptionsSnapshot<AliyunSmsOptions> options)
         {
-            Options = options;
+            Options = options.Value;
         }
 
         public async Task SendAsync(SmsMessage smsMessage)
@@ -29,6 +22,26 @@ namespace Masa.Mc.Infrastructure.Sms.Aliyun
             });
         }
 
+        public async Task<SmsTemplate> GetSmsTemplateAsync(string templateCode)
+        {
+            var client = CreateClient();
+            QuerySmsTemplateRequest querySmsTemplateRequest = new QuerySmsTemplateRequest()
+            {
+                TemplateCode = templateCode
+            };
+            var response = await client.QuerySmsTemplateAsync(querySmsTemplateRequest);
+            var body = response.Body;
+            return new SmsTemplate(body.Code == "OK", body.Message, JsonSerializer.Serialize(body))
+            {
+                TemplateName = body.TemplateName,
+                TemplateContent = body.TemplateContent,
+                TemplateCode = body.TemplateCode,
+                AuditStatus = body.TemplateStatus,
+                TemplateType = body.TemplateType,
+                Reason = body.Reason
+            };
+        }
+
         protected virtual AliyunClient CreateClient()
         {
             return new(new AliyunConfig
@@ -36,7 +49,7 @@ namespace Masa.Mc.Infrastructure.Sms.Aliyun
                 AccessKeyId = Options.AccessKeyId,
                 AccessKeySecret = Options.AccessKeySecret,
                 Endpoint = Options.EndPoint
-            });
+            }); 
         }
     }
 }

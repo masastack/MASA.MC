@@ -3,4 +3,6 @@
 public interface ISmsSender
 {
     Task SendAsync(SmsMessage smsMessage);
+
+    Task<SmsTemplate> GetSmsTemplateAsync(string templateCode);
 }

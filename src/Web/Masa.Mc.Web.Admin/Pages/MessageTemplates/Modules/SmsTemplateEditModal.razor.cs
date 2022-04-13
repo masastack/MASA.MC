@@ -112,6 +112,8 @@ public partial class SmsTemplateEditModal : AdminCompontentBase
             _model.DisplayName = smsTemplate.DisplayName;
             _model.Content = smsTemplate.Content;
             _model.Items = smsTemplate.Items;
+            _model.AuditStatus = smsTemplate.AuditStatus;
+            _model.AuditReason = smsTemplate.AuditReason;
         }
         Loading = false;
     }

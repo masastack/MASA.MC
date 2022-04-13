@@ -1,4 +1,7 @@
-﻿namespace Masa.Mc.Service.Admin.Domain.MessageTemplates.Services;
+﻿using Masa.Mc.Infrastructure.Common.Helper;
+using System.Text.RegularExpressions;
+
+namespace Masa.Mc.Service.Admin.Domain.MessageTemplates.Services;
 
 public class MessageTemplateDomainService : DomainService
 {
@@ -9,6 +12,18 @@ public class MessageTemplateDomainService : DomainService
         _repository = repository;
     }
 
+    public virtual async Task CreateAsync(MessageTemplate messageTemplate)
+    {
+        ParseTemplateItem(messageTemplate);
+        await _repository.AddAsync(messageTemplate);
+    }
+
+    public virtual async Task UpdateAsync(MessageTemplate messageTemplate)
+    {
+        ParseTemplateItem(messageTemplate);
+        await _repository.UpdateAsync(messageTemplate);
+    }
+
     public async Task<MessageTemplate> DeleteAsync(MessageTemplate template)
     {
         if (template.IsStatic)
@@ -17,5 +32,16 @@ public class MessageTemplateDomainService : DomainService
         }
 
         return await _repository.RemoveAsync(template);
+    }
+
+    public void ParseTemplateItem(MessageTemplate messageTemplate, string startstr="{{", string endstr="}}")
+    {
+        var titleParam = UtilHelper.MidStrEx(messageTemplate.Title, startstr, endstr);
+        var contentParam = UtilHelper.MidStrEx(messageTemplate.Content, startstr, endstr);
+        var paramList = titleParam.Union(contentParam).ToList();
+        foreach (var item in paramList)
+        {
+            messageTemplate.AddOrUpdateItem(item,string.Empty, string.Empty, string.Empty);
+        }
     }
 }

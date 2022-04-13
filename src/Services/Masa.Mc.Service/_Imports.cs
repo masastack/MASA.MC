@@ -63,3 +63,7 @@ global using Masa.Mc.Service.Admin.Domain.Channels.Events;
 global using System.Linq;
 global using System.Linq.Dynamic.Core;
 global using Masa.Mc.Infrastructure.Sms;
+global using Masa.Mc.Infrastructure.Sms.Aliyun;
+global using AliyunClient = AlibabaCloud.SDK.Dysmsapi20170525.Client;
+global using AliyunConfig = AlibabaCloud.OpenApiClient.Models.Config;
+global using Masa.Mc.Service.Admin.Infrastructure.Sms;
