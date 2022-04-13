@@ -34,7 +34,7 @@ public class MessageTemplateQueryHandler
         var queryable = await CreateFilteredDetailQueryAsync(options);
         var totalCount = await queryable.CountAsync();
         var totalPages = (int)Math.Ceiling(totalCount / (decimal)options.PageSize);
-        options.Sorting = "messageTemplate.creationTime desc";
+        if(string.IsNullOrEmpty(options.Sorting)) options.Sorting = "messageTemplate.creationTime desc";
         queryable = queryable.OrderBy(options.Sorting).PageBy(options.Page, options.PageSize);
         var entities = await queryable.ToListAsync();
         var entityDtos = entities.Select(x =>
