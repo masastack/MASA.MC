@@ -19,6 +19,9 @@ public partial class SmsTemplateManagement : AdminCompontentBase
         .Cast<MessageTemplateStatus>().ToList();
     private List<MessageTemplateAuditStatus> _auditStatusItems = Enum.GetValues(typeof(MessageTemplateAuditStatus))
         .Cast<MessageTemplateAuditStatus>().ToList();
+    private bool advanced = true;
+    private DateOnly _date = DateOnly.FromDateTime(DateTime.Now);
+    private bool _datePickersShow;
 
     protected override async Task OnInitializedAsync()
     {
@@ -26,6 +29,7 @@ public partial class SmsTemplateManagement : AdminCompontentBase
         Headers = new()
         {
             new() { Text = T($"{_prefix}{nameof(MessageTemplateDto.TemplateId)}"), Value = nameof(MessageTemplateDto.TemplateId), Sortable = false },
+            new() { Text = T("DisplayName:ChannelDisplayName"), Value = "ChannelDisplayName", Sortable = false },
             new() { Text = T($"{_prefix}{nameof(MessageTemplateDto.DisplayName)}"), Value = nameof(MessageTemplateDto.DisplayName), Sortable = false },
             new() { Text = T($"{_prefix}{nameof(MessageTemplateDto.ModificationTime)}"), Value = nameof(MessageTemplateDto.ModificationTime), Sortable = true },
             new() { Text = T($"{_prefix}{nameof(MessageTemplateDto.AuditStatus)}"), Value = nameof(MessageTemplateDto.AuditStatus), Sortable = false },
@@ -81,5 +85,10 @@ public partial class SmsTemplateManagement : AdminCompontentBase
     {
         _queryParam = new();
         await LoadData();
+    }
+
+    private void ToggleAdvanced()
+    {
+        advanced = !advanced;
     }
 }

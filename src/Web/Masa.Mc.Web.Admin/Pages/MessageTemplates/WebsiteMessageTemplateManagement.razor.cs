@@ -28,7 +28,7 @@ public partial class WebsiteMessageTemplateManagement : AdminCompontentBase
             new() { Text = T($"{_prefix}{nameof(MessageTemplateDto.Status)}"), Value = nameof(MessageTemplateDto.Status), Sortable = false },
             new() { Text = T("Action"), Value = "Action", Sortable = false },
         };
-        _channelItems = await ChannelCaller.GetListByTypeAsync(ChannelType.Sms);
+        _channelItems = await ChannelCaller.GetListByTypeAsync(ChannelType.WebsiteMessage);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)

@@ -2,13 +2,7 @@
 <div @ref="Ref">
     <SheetDialog Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission:CreateMessageTemplate")" ContentStyle="padding-right:228px;padding-left:228px;">
         <div>
-            <MForm Class="mt-6 full-height" Model="_model" EnableValidation @ref="_form">
-
-                <MRow Justify="@("center")">
-                    <MCol Cols="12" Sm="6" Md="3">
-                        <MTextField Class="mx-auto text-h5" style="width:404px;" @bind-Value="_model.DisplayName" Label="@T("DisplayName:MessageTemplateDisplayName")" TValue="string"></MTextField>
-                    </MCol>
-                </MRow>
+            <MForm Class="mt-10 full-height" Model="_model" EnableValidation @ref="_form">
                 <MRow>
                     <MCol Cols="3">
                         <MSelect Value="@_model.ChannelType"
@@ -30,7 +24,11 @@
                                  ItemValue="item => item.Id"
                                  Dense
                                  Outlined
-                                 HideDetails="@("auto")">
+                                 HideDetails="@("auto")"
+                                 TItem="ChannelDto"
+                                 TItemValue="Guid"
+                                 TValue="Guid"
+                                 OnSelectedItemUpdate="HandleChannelChange">
                         </MSelect>
                     </MCol>
                     <MCol Cols="3">
@@ -45,7 +43,17 @@
                                     Label="@T("DisplayName:MessageTemplateTemplateId")"
                                     Dense
                                     Outlined
-                                    HideDetails="@("auto")" />
+                                    HideDetails="@("auto")"
+                                    OnBlur="GetSmsTemplateAsync" />
+                    </MCol>
+                </MRow>
+                <MRow>
+                    <MCol Cols="12">
+                        <MTextField @bind-Value="_model.DisplayName" Label="@T("DisplayName:MessageTemplateDisplayName")" Dense
+                                    Outlined
+                                    Readonly
+                                    Placeholder="请先填写短信模板Id"
+                                    HideDetails="@("auto")"></MTextField>
                     </MCol>
                 </MRow>
                 <MRow>
@@ -54,6 +62,8 @@
                                    Label="@T("DisplayName:MessageTemplateContent")"
                                    Dense
                                    Outlined
+                                   Readonly
+                                   Placeholder="请先填写短信模板Id"
                                    HideDetails="@("auto")">
                         </MTextarea>
                     </MCol>
@@ -66,18 +76,6 @@
                                    Outlined
                                    HideDetails="@("auto")">
                         </MTextarea>
-                    </MCol>
-                </MRow>
-                <MRow>
-                    <MCol Cols="2">
-                        <MCheckbox Class="mt-1" @bind-Value="_model.IsJump" Label="@T("DisplayName:MessageTemplateIsJump")"></MCheckbox>
-                    </MCol>
-                    <MCol Cols="6">
-                        <MTextField @bind-Value="_model.JumpUrl"
-                                    Label="@T("DisplayName:MessageTemplateJumpUrl")"
-                                    Dense
-                                    Outlined
-                                    HideDetails="@("auto")" />
                     </MCol>
                 </MRow>
             </MForm>

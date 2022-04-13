@@ -1,4 +1,5 @@
-﻿namespace Masa.Mc.Service.Admin.Infrastructure.Repositories;
+﻿using System.Linq.Dynamic.Core;
+namespace Masa.Mc.Service.Admin.Infrastructure.Repositories;
 
 public class MessageTemplateRepository : Repository<McDbContext, MessageTemplate>, IMessageTemplateRepository
 {
@@ -23,6 +24,22 @@ public class MessageTemplateRepository : Repository<McDbContext, MessageTemplate
         return include
             ? await (await WithDetailsAsync()).Where(predicate).FirstOrDefaultAsync(cancellationToken)
             : await _context.Set<MessageTemplate>().Where(predicate).FirstOrDefaultAsync(cancellationToken);
+    }
+
+    public async Task<IQueryable<MessageTemplateWithDetail>> GetWithDetailQueryAsync()
+    {
+        var templateSet = await WithDetailsAsync();
+        var channelSet = _context.Set<Channel>();
+        var query = from messageTemplate in templateSet
+                    join channel in channelSet
+                    on messageTemplate.ChannelId equals channel.Id into channelJoined
+                    from channel in channelJoined.DefaultIfEmpty()
+                    select new MessageTemplateWithDetail
+                    {
+                        MessageTemplate = messageTemplate,
+                        Channel = channel
+                    };
+        return query;
     }
 }
 

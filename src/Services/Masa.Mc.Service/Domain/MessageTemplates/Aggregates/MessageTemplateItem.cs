@@ -2,17 +2,17 @@
 
 public class MessageTemplateItem : Entity<Guid>
 {
-    public virtual Guid MessageTemplateId { get; protected set; }
+    public Guid MessageTemplateId { get; protected set; }
 
-    public virtual string Code { get; protected set; } = string.Empty;
+    public string Code { get; protected set; } = string.Empty;
 
-    public virtual string MappingCode { get; protected set; } = string.Empty;
+    public string MappingCode { get; protected set; } = string.Empty;
 
-    public virtual string DisplayText { get; protected set; } = string.Empty;
+    public string DisplayText { get; protected set; } = string.Empty;
 
-    public virtual string Description { get; protected set; } = string.Empty;
+    public string Description { get; protected set; } = string.Empty;
 
-    public virtual bool IsStatic { get; protected set; }
+    public bool IsStatic { get; protected set; }
 
     //public override IEnumerable<(string Name, object Value)> GetKeys()
     //{

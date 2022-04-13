@@ -2,12 +2,12 @@
 
 public class Channel : AuditAggregateRoot<Guid, Guid>
 {
-    public virtual string DisplayName { get; protected set; } = string.Empty;
-    public virtual string Code { get; protected set; } = string.Empty;
-    public virtual ChannelType Type { get; protected set; }
-    public virtual string Description { get; protected set; } = string.Empty;
-    public virtual bool IsStatic { get; protected set; }
-    public virtual ExtraPropertyDictionary ExtraProperties { get; protected set; } = new();
+    public string DisplayName { get; protected set; } = string.Empty;
+    public string Code { get; protected set; } = string.Empty;
+    public ChannelType Type { get; protected set; }
+    public string Description { get; protected set; } = string.Empty;
+    public bool IsStatic { get; protected set; }
+    public ExtraPropertyDictionary ExtraProperties { get; protected set; } = new();
 
     public Channel(string displayName,string code,ChannelType type,string description) : this(displayName, code, type, description, new Dictionary<string, string>())
     {

@@ -5,12 +5,12 @@
     <TopContent>
         <MToolbar Flat>
             <MToolbarTitle>模板变量</MToolbarTitle>
-            <MSpacer></MSpacer>
-            <MButton Ripple=false Plain
-                     Class="mb-2"
-                     OnClick="()=>_dialog=true">
+            @*<MSpacer></MSpacer>
+                <MButton Ripple=false Plain
+                Class="mb-2"
+                OnClick="()=>_dialog=true">
                 <MIcon Left>mdi-plus</MIcon>
-            </MButton>
+                </MButton>*@
             <MDialog @bind-Value="_dialog"
                      MaxWidth="500">
                 <MCard>
@@ -31,6 +31,7 @@
                                       Sm="6"
                                       Md="4">
                                     <MTextField @bind-Value="_editedItem.MappingCode"
+                                                Readonly
                                                 Label="MappingCode"></MTextField>
                                 </MCol>
                                 <MCol Cols="12"
@@ -77,8 +78,8 @@
             <MIcon Small
                Class="mr-2"
                OnClick="()=>EditItem(context.Item)">mdi-pencil</MIcon>
-            <MIcon Small
-               OnClick="()=>DeleteItem(context.Item)">mdi-delete</MIcon>
+            @*<MIcon Small
+                OnClick="()=>DeleteItem(context.Item)">mdi-delete</MIcon>*@
         }
         else
         {
@@ -87,9 +88,5 @@
     </ItemColContent>
     <NoDataContent>
         未配置变量
-        @*<MButton Color="primary"
-            OnClick="Initialize">
-            Reset
-            </MButton>*@
     </NoDataContent>
 </MDataTable>

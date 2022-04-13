@@ -18,6 +18,9 @@ public class MessageTemplateCreateUpdateDto
     public string Sign { get; set; } = string.Empty;
     public MessageTemplateStatus Status { get; set; } = MessageTemplateStatus.Normal;
     public MessageTemplateAuditStatus AuditStatus { get; set; } = MessageTemplateAuditStatus.Adopt;
+    public DateTime? AuditTime { get; set; }
+    public DateTime? InvalidTime { get; set; }
+    public string AuditReason { get; set; } = string.Empty;
     public bool IsStatic { get; set; }
     public List<MessageTemplateItemDto> Items { get; set; }
 }

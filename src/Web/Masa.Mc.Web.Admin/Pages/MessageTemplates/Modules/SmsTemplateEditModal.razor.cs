@@ -98,4 +98,29 @@ public partial class SmsTemplateEditModal : AdminCompontentBase
     {
         _channelItems = await ChannelCaller.GetListByTypeAsync(Type);
     }
+
+    private async Task GetSmsTemplateAsync()
+    {
+        if (_model.ChannelId == default || string.IsNullOrEmpty(_model.TemplateId))
+        {
+            return;
+        }
+        Loading = true;
+        var smsTemplate = await MessageTemplateCaller.GetSmsTemplateAsync(_model.ChannelId, _model.TemplateId);
+        if (smsTemplate != null)
+        {
+            _model.DisplayName = smsTemplate.DisplayName;
+            _model.Content = smsTemplate.Content;
+            _model.Items = smsTemplate.Items;
+        }
+        Loading = false;
+    }
+
+    private void HandleChannelChange()
+    {
+        _model.DisplayName = string.Empty;
+        _model.Content = string.Empty;
+        _model.TemplateId = string.Empty;
+        _model.Items = new();
+    }
 }

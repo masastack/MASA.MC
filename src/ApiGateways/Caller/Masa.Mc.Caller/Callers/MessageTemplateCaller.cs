@@ -53,4 +53,15 @@ public class MessageTemplateCaller : HttpClientCallerBase
     {
         return await CallerProvider.GetAsync<MessageTemplateDto>($"{_prefix}/FindByCode?code={code}");
     }
+
+    public async Task<GetSmsTemplateDto?> GetSmsTemplateAsync(Guid channelId,string templateCode)
+    {
+        var queryArguments = new Dictionary<string, string?>()
+        {
+            { "channelId", channelId.ToString() },
+            { "templateCode", templateCode }
+        };
+        var url = QueryHelpers.AddQueryString($"{_prefix}/GetSmsTemplate", queryArguments);
+        return await CallerProvider.GetAsync<GetSmsTemplateDto>(url);
+    }
 }

@@ -10,14 +10,17 @@
                 <MIcon Size=16 Class="mr-2 neutral-lighten-1--text">mdi-magnify</MIcon>
             </PrependInnerContent>
         </MTextField>
+        <MIcon Class="ml-4" OnClick="ToggleAdvanced">mdi-blinds</MIcon>
         <MButton Color="primary" Class="ml-6 medium-button" OnClick="()=> _createModal.OpenModalAsync(ChannelType.Sms)">
             <MIcon Size=18>mdi-plus</MIcon>
             <span class="ml-2">@T("Add")</span>
         </MButton>
     </MCardTitle>
-    <MRow Class="mx-2 pb-6">
-        <MCol Cols="3">
-            <MSelect @bind-Value="_queryParam.ChannelId"
+    @if (advanced)
+    {
+        <MRow Class="mx-2 pb-6">
+            <MCol Cols="3">
+                <MSelect @bind-Value="_queryParam.ChannelId"
                      Items="@_channelItems"
                      Label="@T("DisplayName:Channel")"
                      ItemText="item => item.DisplayName"
@@ -31,10 +34,10 @@
                      TValue="Guid?"
                      OnClearClick="RefreshAsync"
                      OnSelectedItemUpdate="RefreshAsync">
-            </MSelect>
-        </MCol>
-        <MCol Cols="3">
-            <MSelect @bind-Value="@_queryParam.AuditStatus"
+                </MSelect>
+            </MCol>
+            <MCol Cols="3">
+                <MSelect @bind-Value="@_queryParam.AuditStatus"
                      Items="@_auditStatusItems"
                      Label="@T("DisplayName:MessageTemplateAuditStatus")"
                      ItemText="item => item.ToString()"
@@ -48,10 +51,10 @@
                      TValue="MessageTemplateAuditStatus?"
                      OnClearClick="RefreshAsync"
                      OnSelectedItemUpdate="RefreshAsync">
-            </MSelect>
-        </MCol>
-        <MCol Cols="3">
-            <MSelect @bind-Value="@_queryParam.Status"
+                </MSelect>
+            </MCol>
+            <MCol Cols="3">
+                <MSelect @bind-Value="@_queryParam.Status"
                      Items="@_statusItems"
                      Label="@T("DisplayName:MessageTemplateStatus")"
                      ItemText="item => item.ToString()"
@@ -65,9 +68,10 @@
                      TValue="MessageTemplateStatus?"
                      OnClearClick="RefreshAsync"
                      OnSelectedItemUpdate="RefreshAsync">
-            </MSelect>
-        </MCol>
-    </MRow>
+                </MSelect>
+            </MCol>
+        </MRow>
+    }
     <MCardText>
         <MDataTable Headers="Headers" Items="_entities.Result" TItem="MessageTemplateDto" ItemsPerPage="_queryParam.PageSize" HideDefaultFooter Class="user">
             <HeaderColContent Context="header">
@@ -76,6 +80,9 @@
             <ItemColContent>
                 @switch (context.Header.Value)
                 {
+                    case ("ChannelDisplayName"):
+                        <span class="text-body3">@context.Item.Channel?.DisplayName</span>
+                        break;
                     case (nameof(MessageTemplateDto.ModificationTime)):
                         <span class="text-body3">@context.Item.ModificationTime.ToString("yyyy年MM月dd日 HH:mm:ss")</span>
                         break;
