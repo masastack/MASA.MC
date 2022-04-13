@@ -11,18 +11,14 @@
                 </MRow>
                 <MRow>
                     <MCol Cols="3">
-                        <MSelect Value="@_model.ChannelType"
+                        <MSelect Value="@_channelType"
                                  Items="@_channelTypeItems"
                                  Label="@T("DisplayName:ChannelType")"
                                  ItemText="item => item.ToString()"
                                  ItemValue="item => item"
                                  Dense
                                  Outlined
-                                 HideDetails="@("auto")"
-                                 TItem="ChannelType"
-                                 TItemValue="ChannelType"
-                                 TValue="ChannelType"
-                                 ValueChanged="HandleSelectChannelType">
+                                 HideDetails="@("auto")">
                         </MSelect>
                     </MCol>
                     <MCol Cols="3">

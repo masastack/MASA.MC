@@ -1,7 +1,6 @@
 ﻿namespace Masa.Mc.Service.Admin.Domain.MessageTemplates.Aggregates;
 public class MessageTemplate : AuditAggregateRoot<Guid, Guid>
 {
-    public ChannelType ChannelType { get; protected set; }
     public Guid ChannelId { get; protected set; }
     public string DisplayName { get; protected set; } = string.Empty;
     public string Title { get; protected set; } = string.Empty;
@@ -19,12 +18,11 @@ public class MessageTemplate : AuditAggregateRoot<Guid, Guid>
     public bool IsStatic { get; protected set; }
     public List<MessageTemplateItem> Items { get; protected set; } = new List<MessageTemplateItem>();
 
-    public MessageTemplate(ChannelType channelType, Guid channelId, string displayName, string title, string content, string example, string templateId, bool isJump, string jumpUrl, string sign) : this(channelType, channelId, displayName, title, content, example, templateId, isJump, jumpUrl, sign, new List<MessageTemplateItem>())
+    public MessageTemplate(Guid channelId, string displayName, string title, string content, string example, string templateId, bool isJump, string jumpUrl, string sign) : this(channelId, displayName, title, content, example, templateId, isJump, jumpUrl, sign, new List<MessageTemplateItem>())
     {
     }
 
     public MessageTemplate(
-        ChannelType channelType,
         Guid channelId,
         string displayName,
         string title,
@@ -45,7 +43,7 @@ public class MessageTemplate : AuditAggregateRoot<Guid, Guid>
         AuditStatus = auditStatus;
         IsStatic = isStatic;
 
-        SetContent(channelType, channelId, displayName, title, content, example, templateId, isJump, jumpUrl, sign);
+        SetContent(channelId, displayName, title, content, example, templateId, isJump, jumpUrl, sign);
 
         Items = items ?? new List<MessageTemplateItem>();
     }
@@ -65,7 +63,6 @@ public class MessageTemplate : AuditAggregateRoot<Guid, Guid>
     }
 
     public void SetContent(
-        ChannelType channelType,
         Guid channelId,
         string displayName,
         string title,
@@ -76,7 +73,6 @@ public class MessageTemplate : AuditAggregateRoot<Guid, Guid>
         string jumpUrl,
         string sign)
     {
-        ChannelType = channelType;
         ChannelId = channelId;
         DisplayName = displayName;
         Title = title;
@@ -86,11 +82,6 @@ public class MessageTemplate : AuditAggregateRoot<Guid, Guid>
         IsJump = isJump;
         JumpUrl = jumpUrl;
         Sign = sign;
-    }
-
-    public void SetChannelType(ChannelType channelType)
-    {
-        ChannelType = channelType;
     }
 
     public void SetAuditStatus(MessageTemplateAuditStatus auditStatus, string auditReason = "")

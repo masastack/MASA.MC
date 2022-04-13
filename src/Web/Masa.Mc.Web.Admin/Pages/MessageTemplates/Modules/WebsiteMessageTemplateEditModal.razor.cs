@@ -18,6 +18,7 @@ public partial class WebsiteMessageTemplateEditModal : AdminCompontentBase
     private List<ChannelType> _channelTypeItems = Enum.GetValues(typeof(ChannelType))
         .Cast<ChannelType>().ToList();
     private List<ChannelDto> _channelItems = new();
+    private ChannelType _channelType;
 
     public async Task OpenModalAsync(MessageTemplateDto model)
     {
@@ -35,6 +36,8 @@ public partial class WebsiteMessageTemplateEditModal : AdminCompontentBase
     {
         var dto = await MessageTemplateCaller.GetAsync(_entityId);
         _model = dto.Adapt<MessageTemplateCreateUpdateDto>();
+        _channelType = dto.Channel.Type;
+        await HandleSelectChannelType(_channelType);
     }
 
     private void HandleCancel()

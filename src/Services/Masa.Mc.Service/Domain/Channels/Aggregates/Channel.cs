@@ -32,9 +32,9 @@ public class Channel : AuditAggregateRoot<Guid, Guid>
         }
     }
 
-    public object? GetDataValue(string name)
+    public object GetDataValue(string name)
     {
-        return ExtraProperties?.GetOrDefault(name);
+        return ExtraProperties.GetOrDefault(name);
     }
 
     public void SetDataValue(string name, string value)

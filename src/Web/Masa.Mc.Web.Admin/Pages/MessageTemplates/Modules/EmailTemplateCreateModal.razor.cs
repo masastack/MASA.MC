@@ -17,13 +17,14 @@ public partial class EmailTemplateCreateModal : AdminCompontentBase
     private List<ChannelType> _channelTypeItems = Enum.GetValues(typeof(ChannelType))
         .Cast<ChannelType>().ToList();
     private List<ChannelDto> _channelItems = new();
+    private ChannelType _channelType;
 
     public async Task OpenModalAsync(ChannelType? channelType)
     {
         if (channelType.HasValue)
         {
-            _model.ChannelType = channelType.Value;
-            await HandleSelectChannelTypeAsync(_model.ChannelType);
+            _channelType = channelType.Value;
+            await HandleSelectChannelTypeAsync(_channelType);
         }
         await InvokeAsync(() =>
         {

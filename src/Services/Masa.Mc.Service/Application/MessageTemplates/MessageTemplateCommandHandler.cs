@@ -17,7 +17,7 @@ public class MessageTemplateCommandHandler
     public async Task CreateAsync(CreateMessageTemplateCommand createCommand)
     {
         var dto = createCommand.MessageTemplate;
-        var entity = new MessageTemplate(dto.ChannelType,
+        var entity = new MessageTemplate(
                 dto.ChannelId,
                 dto.DisplayName,
                 dto.Title,
@@ -44,13 +44,13 @@ public class MessageTemplateCommandHandler
         var dto = updateCommand.MessageTemplate;
         if (entity == null)
             throw new UserFriendlyException("messageTemplate not found");
-        entity.SetContent(dto.ChannelType, dto.ChannelId, dto.DisplayName, dto.Title, dto.Content, dto.Example,dto.TemplateId, dto.IsJump, dto.JumpUrl, dto.Sign);
+        entity.SetContent(dto.ChannelId, dto.DisplayName, dto.Title, dto.Content, dto.Example, dto.TemplateId, dto.IsJump, dto.JumpUrl, dto.Sign);
         foreach (var itemDto in dto.Items)
         {
             entity.AddOrUpdateItem(itemDto.Code, itemDto.MappingCode, itemDto.DisplayText, itemDto.Description);
         }
         entity.Items.RemoveAll(item => !dto.Items.Select(dtoItem => dtoItem.Code).Contains(item.Code));
-        
+
         await _domainService.UpdateAsync(entity);
     }
 

@@ -1,27 +1,30 @@
-﻿using Masa.Mc.Infrastructure.Common.Helper;
-
-namespace Masa.Mc.Service.Admin.Application.MessageTemplates;
+﻿namespace Masa.Mc.Service.Admin.Application.MessageTemplates;
 
 public class MessageTemplateQueryHandler
 {
     private readonly IMessageTemplateRepository _repository;
+    private readonly IChannelRepository _channelRepository;
     private readonly ISmsSender _smsSender;
     private readonly MessageTemplateDomainService _domainService;
 
-    public MessageTemplateQueryHandler(IMessageTemplateRepository repository, ISmsSender smsSender, MessageTemplateDomainService domainService)
+    public MessageTemplateQueryHandler(IMessageTemplateRepository repository, IChannelRepository channelRepository, ISmsSender smsSender, MessageTemplateDomainService domainService)
     {
         _repository = repository;
         _smsSender = smsSender;
         _domainService = domainService;
+        _channelRepository = channelRepository;
     }
 
     [EventHandler]
     public async Task GetAsync(GetMessageTemplateQuery query)
     {
-        var entity = await _repository.FindAsync(x => x.Id == query.MessageTemplateId);
+
+        var entity = await (await _repository.GetWithDetailQueryAsync()).FirstOrDefaultAsync(x => x.MessageTemplate.Id == query.MessageTemplateId);
         if (entity == null)
             throw new UserFriendlyException("messageTemplate not found");
-        query.Result = entity.Adapt<MessageTemplateDto>();
+        var dto= entity.MessageTemplate.Adapt<MessageTemplateDto>();
+        dto.Channel = entity.Channel.Adapt<ChannelDto>();
+        query.Result = dto;
     }
 
     [EventHandler]
@@ -47,7 +50,15 @@ public class MessageTemplateQueryHandler
     [EventHandler]
     public async Task GetSmsTemplateAsync(GetSmsTemplateQuery query)
     {
+        var channel = await _channelRepository.FindAsync(x=>x.Id== query.ChannelId);
+        var options = new AliyunSmsOptions {
+            AccessKeyId = channel.GetDataValue(nameof(SmsChannelOptions.AccessKeyId)).ToString(),
+            AccessKeySecret = channel.GetDataValue(nameof(SmsChannelOptions.AccessKeySecret)).ToString()
+        };
+        _smsSender.SetOptions(options);
         var smsTemplate = await _smsSender.GetSmsTemplateAsync(query.TemplateCode);
+        if (smsTemplate==null) 
+            throw new UserFriendlyException("smsTemplate not found");
         var dto = new GetSmsTemplateDto
         {
             DisplayName = smsTemplate.TemplateName,
@@ -64,7 +75,7 @@ public class MessageTemplateQueryHandler
     {
         Expression<Func<MessageTemplateWithDetail, bool>> condition = x => true;
         condition = condition.And(!string.IsNullOrEmpty(input.Filter), x => x.MessageTemplate.DisplayName.Contains(input.Filter));
-        condition = condition.And(input.ChannelType.HasValue, x => x.MessageTemplate.ChannelType == input.ChannelType);
+        condition = condition.And(input.ChannelType.HasValue, x => x.Channel.Type == input.ChannelType);
         condition = condition.And(input.Status.HasValue, x => x.MessageTemplate.Status == input.Status);
         condition = condition.And(input.AuditStatus.HasValue, x => x.MessageTemplate.AuditStatus == input.AuditStatus);
         condition = condition.And(input.ChannelId.HasValue, x => x.MessageTemplate.ChannelId == input.ChannelId);

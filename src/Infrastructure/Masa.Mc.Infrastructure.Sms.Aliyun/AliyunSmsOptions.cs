@@ -6,9 +6,9 @@ namespace Masa.Mc.Infrastructure.Sms.Aliyun
 
         public string AccessKeyId { get; set; }
 
-        public string EndPoint { get; set; }
+        public string EndPoint { get; set; } = "dysmsapi.aliyuncs.com";
 
-        public void Initialize(AliyunSmsOptions options)
+        public void SetOptions(AliyunSmsOptions options)
         {
             AccessKeySecret = options.AccessKeySecret;
             AccessKeyId = options.AccessKeyId;

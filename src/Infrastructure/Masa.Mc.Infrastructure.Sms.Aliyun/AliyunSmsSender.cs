@@ -4,7 +4,7 @@ namespace Masa.Mc.Infrastructure.Sms.Aliyun
     {
         protected AliyunSmsOptions Options { get; }
 
-        public AliyunSmsSender(IOptionsSnapshot<AliyunSmsOptions> options)
+        public AliyunSmsSender(IOptions<AliyunSmsOptions> options)
         {
             Options = options.Value;
         }
@@ -49,7 +49,17 @@ namespace Masa.Mc.Infrastructure.Sms.Aliyun
                 AccessKeyId = Options.AccessKeyId,
                 AccessKeySecret = Options.AccessKeySecret,
                 Endpoint = Options.EndPoint
-            }); 
+            });
+        }
+
+        public void SetOptions(IDictionary<string, object> options)
+        {
+            Options.SetOptions(new AliyunSmsOptions
+            {
+                AccessKeySecret = options["AccessKeySecret"].ToString(),
+                AccessKeyId = options["AccessKeyId"].ToString(),
+                EndPoint = options["EndPoint"].ToString(),
+            });
         }
     }
 }
