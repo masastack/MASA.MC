@@ -52,7 +52,6 @@ public class MessageTemplateCommandHandler
         entity.Items.RemoveAll(item => !dto.Items.Select(dtoItem => dtoItem.Code).Contains(item.Code));
         
         await _repository.UpdateAsync(entity);
-        //updateCommand.MessageTemplate.Adapt(entity);
     }
 
     [EventHandler]

@@ -4,20 +4,59 @@
 <PageTitle>@T("MessageTemplateManagement")</PageTitle>
 
 <MCard>
-    <MCardTitle class="mx-2 py-6">
+    <MCardTitle class="mx-2 pt-6">
         <MTextField @bind-Value="_queryParam.Filter" Clearable Color="primary" Class="rounded-2 search" Placeholder="@T("Search")" HideDetails="@("auto")" Flat Dense Solo BackgroundColor="fill-lighten-1" OnKeyDown="SearchKeyDown" OnClearClick="HandleClearAsync">
             <PrependInnerContent>
                 <MIcon Size=16 Class="mr-2 neutral-lighten-1--text">mdi-magnify</MIcon>
             </PrependInnerContent>
         </MTextField>
+        <MIcon Class="ml-4" OnClick="ToggleAdvanced">mdi-blinds</MIcon>
         <MButton Color="primary" Class="ml-6 medium-button" OnClick="()=> _createModal.OpenModalAsync(ChannelType.Email)">
             <MIcon Size=18>mdi-plus</MIcon>
             <span class="ml-2">@T("Add")</span>
         </MButton>
     </MCardTitle>
-    <MRow Class="mx-2 pb-6">
-        <MCol Cols="3">
-            <MSelect Value="_queryParam.ChannelId"
+    @if (advanced)
+    {
+        <MRow Class="mx-2">
+            <MCol Cols="3">
+                <MMenu @bind-Value="_datePickersShow"
+                   CloseOnContentClick="false"
+                   Transition="scale-transition"
+                   OffsetY
+                   MinWidth="@("auto")">
+                    <ActivatorContent>
+                        <MTextField Value="DateRangeText"
+                                Label="@T("DateRange")"
+                                Readonly
+                                Dense
+                                Outlined
+                                HideDetails="@("auto")"
+                                PrependInnerIcon="mdi-calendar"
+                                @attributes="context.Attrs"></MTextField>
+                    </ActivatorContent>
+                    <ChildContent>
+                        <MDatePicker @bind-Value="_dates"
+                                 Range
+                                 NoTitle
+                                 Scrollable>
+                            <MSpacer></MSpacer>
+                            <MButton Text
+                                 Color="primary"
+                                 OnClick="HandleDatePickersCancel">
+                                Cancel
+                            </MButton>
+                            <MButton Text
+                                 Color="primary"
+                                 OnClick="HandleDatePickersAsync">
+                                OK
+                            </MButton>
+                        </MDatePicker>
+                    </ChildContent>
+                </MMenu>
+            </MCol>
+            <MCol Cols="3">
+                <MSelect Value="_queryParam.ChannelId"
                      Items="@_channelItems"
                      Label="@T("DisplayName:Channel")"
                      ItemText="item => item.DisplayName"
@@ -30,79 +69,83 @@
                      TItemValue="Guid"
                      TValue="Guid?"
                      ValueChanged="async (val)=>{_queryParam.ChannelId=val;await RefreshAsync();}">
-            </MSelect>
-        </MCol>
-        @*<MCol Cols="3">
-            <MSelect @bind-Value="_queryParam.ChannelId"
-                     Items="@_channelItems"
-                     Label="@T("DisplayName:Channel")"
-                     ItemText="item => item.DisplayName"
-                     ItemValue="item => item.Id"
-                     Dense
-                     Outlined
-                     HideDetails="@("auto")">
-            </MSelect>
-        </MCol>
-        <MCol Cols="3">
-            <MSelect @bind-Value="_queryParam.ChannelId"
-                     Items="@_channelItems"
-                     Label="@T("DisplayName:Channel")"
-                     ItemText="item => item.DisplayName"
-                     ItemValue="item => item.Id"
-                     Dense
-                     Outlined
-                     HideDetails="@("auto")">
-            </MSelect>
-        </MCol>*@
-    </MRow>
+                </MSelect>
+            </MCol>
+            @*<MCol Cols="3">
+                <MSelect @bind-Value="_queryParam.ChannelId"
+                Items="@_channelItems"
+                Label="@T("DisplayName:Channel")"
+                ItemText="item => item.DisplayName"
+                ItemValue="item => item.Id"
+                Dense
+                Outlined
+                HideDetails="@("auto")">
+                </MSelect>
+                </MCol>
+                <MCol Cols="3">
+                <MSelect @bind-Value="_queryParam.ChannelId"
+                Items="@_channelItems"
+                Label="@T("DisplayName:Channel")"
+                ItemText="item => item.DisplayName"
+                ItemValue="item => item.Id"
+                Dense
+                Outlined
+                HideDetails="@("auto")">
+                </MSelect>
+                </MCol>*@
+        </MRow>
+    }
     <MCardText>
-    <MDataTable Headers="Headers" Items="_entities.Result" TItem="MessageTemplateDto" ItemsPerPage="_queryParam.PageSize" HideDefaultFooter Class="user">
-        <HeaderColContent Context="header">
-            <span class="text-btn">@header.Text</span>
-        </HeaderColContent>
-        <ItemColContent>
-            @switch (context.Header.Value)
-            {
-                case (nameof(MessageTemplateDto.ModificationTime)):
-                    <span class="text-body3">@context.Item.ModificationTime.ToString("yyyy年MM月dd日 HH:mm:ss")</span>
-                    break;
-                case nameof(MessageTemplateDto.AuditStatus):
-                    string color = string.Empty;
-                    switch (context.Item.AuditStatus)
-                    {
-                        case MessageTemplateAuditStatus.WaitAudit:
-                            color = "orange";
-                            break;
-                        case MessageTemplateAuditStatus.Adopt:
-                            color = "sample-green";
-                            break;
-                        case MessageTemplateAuditStatus.Fail:
-                            color = "error";
-                            break;
-                        default:
-                            break;
-                    }
-                    <MChip Color="@($"{color}-lighten-5")" TextColor="@color" Ripple="false">
-                        <span>@T($"DisplayName:MessageTemplateAuditStatus.{context.Item.AuditStatus.ToString()}")</span>
-                    </MChip>
-                    break;
-                case nameof(MessageTemplateDto.Status):
-                    <MChip Ripple="false">
-                        <span>@T($"DisplayName:MessageTemplateStatus.{context.Item.Status.ToString()}")</span>
-                    </MChip>
-                    break;
-                case "Action":
-                    <MIcon Small Color="neutral-lighten-2" OnClick="async()=>await _editModal.OpenModalAsync(context.Item)">mdi-pencil</MIcon>
-                    break;
-                default:
-                    <span class="text-body3">@context.Value</span>
-                    break;
-            }
-        </ItemColContent>
-        <FooterContent>
-            <MPagination Class="mt-10" @bind-Value="_queryParam.Page" Length="_entities.TotalPages" OnInput="HandlePaginationChange"></MPagination>
-        </FooterContent>
-    </MDataTable>
+        <MDataTable Headers="Headers" Items="_entities.Result" TItem="MessageTemplateDto" ItemsPerPage="_queryParam.PageSize" HideDefaultFooter Class="user">
+            <HeaderColContent Context="header">
+                <span class="text-btn">@header.Text</span>
+            </HeaderColContent>
+            <ItemColContent>
+                @switch (context.Header.Value)
+                {
+                    case ("ChannelDisplayName"):
+                        <span class="text-body3">@context.Item.Channel?.DisplayName</span>
+                        break;
+                    case (nameof(MessageTemplateDto.ModificationTime)):
+                        <span class="text-body3">@context.Item.ModificationTime.ToString("yyyy年MM月dd日 HH:mm:ss")</span>
+                        break;
+                    case nameof(MessageTemplateDto.AuditStatus):
+                        string color = string.Empty;
+                        switch (context.Item.AuditStatus)
+                        {
+                            case MessageTemplateAuditStatus.WaitAudit:
+                                color = "orange";
+                                break;
+                            case MessageTemplateAuditStatus.Adopt:
+                                color = "sample-green";
+                                break;
+                            case MessageTemplateAuditStatus.Fail:
+                                color = "error";
+                                break;
+                            default:
+                                break;
+                        }
+                        <MChip Color="@($"{color}-lighten-5")" TextColor="@color" Ripple="false">
+                            <span>@T($"DisplayName:MessageTemplateAuditStatus.{context.Item.AuditStatus.ToString()}")</span>
+                        </MChip>
+                        break;
+                    case nameof(MessageTemplateDto.Status):
+                        <MChip Ripple="false">
+                            <span>@T($"DisplayName:MessageTemplateStatus.{context.Item.Status.ToString()}")</span>
+                        </MChip>
+                        break;
+                    case "Action":
+                        <MIcon Small Color="neutral-lighten-2" OnClick="async()=>await _editModal.OpenModalAsync(context.Item)">mdi-pencil</MIcon>
+                        break;
+                    default:
+                        <span class="text-body3">@context.Value</span>
+                        break;
+                }
+            </ItemColContent>
+            <FooterContent>
+                <MPagination Class="mt-10" @bind-Value="_queryParam.Page" Length="_entities.TotalPages" OnInput="HandlePaginationChange"></MPagination>
+            </FooterContent>
+        </MDataTable>
     </MCardText>
 </MCard>
 

@@ -68,16 +68,6 @@
                         </MTextarea>
                     </MCol>
                 </MRow>
-                <MRow>
-                    <MCol Cols="12">
-                        <MTextarea @bind-Value="_model.Example"
-                                   Label="@T("DisplayName:MessageTemplateExample")"
-                                   Dense
-                                   Outlined
-                                   HideDetails="@("auto")">
-                        </MTextarea>
-                    </MCol>
-                </MRow>
             </MForm>
             <MessageTemplateItems @bind-Value="_model.Items"></MessageTemplateItems>
             <MCardActions Class="d-flex align-center mb-6">

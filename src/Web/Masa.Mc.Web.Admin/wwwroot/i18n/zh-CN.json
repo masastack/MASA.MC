@@ -48,7 +48,7 @@
   "BasicInformation": "基础信息",
   "DetailInformation": "详细信息",
   "OperationConfirmation": "操作确认",
-
+  "DateRange": "日期范围",
   "Sms": "短信",
   "Email": "邮件",
   "WebsiteMessage": "站内信",
@@ -90,7 +90,7 @@
   "DisplayName:MessageTemplateModificationTime": "最近更新",
   "DisplayName:MessageTemplateStatus": "模板状态",
   "DisplayName:MessageTemplateAuditStatus": "审核状态",
-  "DisplayName:MessageTemplateTemplateId": "外部模板Id",
+  "DisplayName:MessageTemplateTemplateId": "模板ID",
   "DisplayName:MessageTemplateIsJump": "是否跳转",
   "DisplayName:MessageTemplateJumpUrl": "跳转地址",
   "DisplayName:MessageTemplateStatus.Normal": "正常",
@@ -102,5 +102,10 @@
   "Permission:EditMessageTemplateItem": "编辑变量",
   "ChannelCreateMessageTemplate": "创建消息模板成功.",
   "ChannelEditMessageTemplate": "编辑消息模板成功.",
-  "ChannelDeleteMessageTemplate": "删除消息模板成功."
+  "ChannelDeleteMessageTemplate": "删除消息模板成功.",
+
+  "DisplayName:MessageTemplateItem": "模板变量",
+  "DisplayName:MessageTemplateItemCode": "变量",
+  "DisplayName:MessageTemplateItemMappingCode": "映射变量",
+  "DisplayName:MessageTemplateItemDisplayText": "备注"
 }

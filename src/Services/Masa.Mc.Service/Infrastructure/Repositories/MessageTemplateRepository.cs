@@ -1,5 +1,4 @@
-﻿using System.Linq.Dynamic.Core;
-namespace Masa.Mc.Service.Admin.Infrastructure.Repositories;
+﻿namespace Masa.Mc.Service.Admin.Infrastructure.Repositories;
 
 public class MessageTemplateRepository : Repository<McDbContext, MessageTemplate>, IMessageTemplateRepository
 {

@@ -4,7 +4,7 @@
             HideDefaultFooter>
     <TopContent>
         <MToolbar Flat>
-            <MToolbarTitle>模板变量</MToolbarTitle>
+            <MToolbarTitle>@T("DisplayName:MessageTemplateItem")</MToolbarTitle>
             @*<MSpacer></MSpacer>
                 <MButton Ripple=false Plain
                 Class="mb-2"
@@ -25,20 +25,20 @@
                                       Sm="6"
                                       Md="4">
                                     <MTextField @bind-Value="_editedItem.Code"
-                                                Label="Code"></MTextField>
+                                                Label="@T("DisplayName:MessageTemplateItemCode")"></MTextField>
                                 </MCol>
                                 <MCol Cols="12"
                                       Sm="6"
                                       Md="4">
                                     <MTextField @bind-Value="_editedItem.MappingCode"
                                                 Readonly
-                                                Label="MappingCode"></MTextField>
+                                                Label="@T("DisplayName:MessageTemplateItemMappingCode")"></MTextField>
                                 </MCol>
                                 <MCol Cols="12"
                                       Sm="6"
                                       Md="4">
                                     <MTextField @bind-Value="_editedItem.DisplayText"
-                                                Label="DisplayText"></MTextField>
+                                                Label="@T("DisplayName:MessageTemplateItemDisplayText")"></MTextField>
                                 </MCol>
                             </MRow>
                         </MContainer>
@@ -61,7 +61,7 @@
             </MDialog>
             <MDialog @bind-Value="_dialogDelete" MaxWidth="500">
                 <MCard>
-                    <MCardTitle Class="text-h5">Are you sure you want to delete this item?</MCardTitle>
+                    <MCardTitle Class="text-h5">@T("DeletionConfirmationMessage")</MCardTitle>
                     <MCardActions>
                         <MSpacer></MSpacer>
                         <MButton Color="blue darken-1" Text OnClick="CloseDelete">Cancel</MButton>

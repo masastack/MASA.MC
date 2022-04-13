@@ -4,7 +4,7 @@
 <PageTitle>@T("MessageTemplateManagement")</PageTitle>
 
 <MCard>
-    <MCardTitle class="mx-2 py-6">
+    <MCardTitle class="mx-2 pt-6">
         <MTextField @bind-Value="_queryParam.Filter" Clearable Color="primary" Class="rounded-2 search" Placeholder="@T("Search")" HideDetails="@("auto")" Flat Dense Solo BackgroundColor="fill-lighten-1" OnKeyDown="SearchKeyDown" OnClearClick="HandleClearAsync">
             <PrependInnerContent>
                 <MIcon Size=16 Class="mr-2 neutral-lighten-1--text">mdi-magnify</MIcon>
@@ -18,7 +18,43 @@
     </MCardTitle>
     @if (advanced)
     {
-        <MRow Class="mx-2 pb-6">
+        <MRow Class="mx-2">
+            <MCol Cols="3">
+                <MMenu @bind-Value="_datePickersShow"
+                   CloseOnContentClick="false"
+                   Transition="scale-transition"
+                   OffsetY
+                   MinWidth="@("auto")">
+                    <ActivatorContent>
+                        <MTextField Value="DateRangeText"
+                                Label="@T("DateRange")"
+                                Readonly
+                                Dense
+                                Outlined
+                                HideDetails="@("auto")"
+                                PrependInnerIcon="mdi-calendar"
+                                @attributes="context.Attrs"></MTextField>
+                    </ActivatorContent>
+                    <ChildContent>
+                        <MDatePicker @bind-Value="_dates"
+                                 Range
+                                 NoTitle
+                                 Scrollable>
+                            <MSpacer></MSpacer>
+                            <MButton Text
+                                 Color="primary"
+                                 OnClick="HandleDatePickersCancel">
+                                Cancel
+                            </MButton>
+                            <MButton Text
+                                 Color="primary"
+                                 OnClick="HandleDatePickersAsync">
+                                OK
+                            </MButton>
+                        </MDatePicker>
+                    </ChildContent>
+                </MMenu>
+            </MCol>
             <MCol Cols="3">
                 <MSelect @bind-Value="_queryParam.ChannelId"
                      Items="@_channelItems"

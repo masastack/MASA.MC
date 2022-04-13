@@ -8,7 +8,7 @@
 
   "NextStep": "Next step",
   "PreviousStep": "Previous step",
-
+  "DateRange": "Date range",
   "Sms": "Sms",
   "Email": "Email",
   "WebsiteMessage": "WebsiteMessage",
@@ -62,5 +62,10 @@
   "Permission:EditMessageTemplateItem": "Edit variable",
   "ChannelCreateMessageTemplate": "Create messageTemplate success.",
   "ChannelEditMessageTemplate": "Edit messageTemplate success.",
-  "ChannelDeleteMessageTemplate": "Delete messageTemplate success."
+  "ChannelDeleteMessageTemplate": "Delete messageTemplate success.",
+
+  "DisplayName:MessageTemplateItem": "Template variable",
+  "DisplayName:MessageTemplateItemCode": "Variable",
+  "DisplayName:MessageTemplateItemMappingCode": "Mapping variable",
+  "DisplayName:MessageTemplateItemDisplayText": "Remarks"
 }

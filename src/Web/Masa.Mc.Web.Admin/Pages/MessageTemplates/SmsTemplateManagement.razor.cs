@@ -20,8 +20,9 @@ public partial class SmsTemplateManagement : AdminCompontentBase
     private List<MessageTemplateAuditStatus> _auditStatusItems = Enum.GetValues(typeof(MessageTemplateAuditStatus))
         .Cast<MessageTemplateAuditStatus>().ToList();
     private bool advanced = true;
-    private DateOnly _date = DateOnly.FromDateTime(DateTime.Now);
     private bool _datePickersShow;
+    private List<DateOnly> _dates = new List<DateOnly>{};
+    private string DateRangeText => string.Join(" ~ ", _dates.Select(date => date.ToString("yyyy-MM-dd")));
 
     protected override async Task OnInitializedAsync()
     {
@@ -83,12 +84,29 @@ public partial class SmsTemplateManagement : AdminCompontentBase
 
     private async Task HandleClearAsync()
     {
-        _queryParam = new();
+        _queryParam = new() { ChannelType = ChannelType.Sms };
         await LoadData();
     }
 
     private void ToggleAdvanced()
     {
         advanced = !advanced;
+    }
+
+    private async Task HandleDatePickersAsync()
+    {
+        _datePickersShow = false;
+        if (_dates.Count > 0) _queryParam.StartTime = _dates[0].ToDateTime(new TimeOnly(0, 0, 0));
+        if (_dates.Count > 1) _queryParam.EndTime = _dates[1].ToDateTime(new TimeOnly(23, 59, 59));
+        await LoadData();
+    }
+
+    private async Task HandleDatePickersCancel()
+    {
+        _datePickersShow = false;
+        _queryParam.StartTime = null;
+        _queryParam.EndTime = null;
+        _dates = new();
+        await LoadData();
     }
 }

@@ -2,20 +2,13 @@
 
 public partial class MessageTemplateItems : AdminCompontentBase
 {
-    private List<DataTableHeader<MessageTemplateItemDto>> _headers = new List<DataTableHeader<MessageTemplateItemDto>>
-        {
-          new (){ Text= "Code",Value= nameof(MessageTemplateItemDto.Code),Sortable=false},
-          new (){ Text= "MappingCode", Value= nameof(MessageTemplateItemDto.MappingCode),Sortable=false},
-          new (){ Text= "DisplayText", Value= nameof(MessageTemplateItemDto.DisplayText),Sortable=false},
-          new (){ Text= "Actions", Value= "actions",Sortable=false }
-        };
-
     [Parameter]
     public List<MessageTemplateItemDto> Value { get; set; } = new();
 
     [Parameter]
     public EventCallback<List<MessageTemplateItemDto>> ValueChanged { get; set; }
 
+    private List<DataTableHeader<MessageTemplateItemDto>> _headers = new();
     private bool _dialog;
     private bool _dialogDelete;
     private MessageTemplateItemDto _editedItem = new MessageTemplateItemDto();
@@ -27,6 +20,18 @@ public partial class MessageTemplateItems : AdminCompontentBase
         {
             return _editedIndex == -1 ? T("Permission:AddMessageTemplateItem") : T("Permission:EditMessageTemplateItem");
         }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var _prefix = "DisplayName:MessageTemplateItem";
+        _headers = new List<DataTableHeader<MessageTemplateItemDto>>
+        {
+          new (){ Text= T($"{_prefix}{nameof(MessageTemplateItemDto.Code)}"),Value= nameof(MessageTemplateItemDto.Code),Sortable=false},
+          new (){ Text= T($"{_prefix}{nameof(MessageTemplateItemDto.MappingCode)}"), Value= nameof(MessageTemplateItemDto.MappingCode),Sortable=false},
+          new (){ Text= T($"{_prefix}{nameof(MessageTemplateItemDto.DisplayText)}"), Value= nameof(MessageTemplateItemDto.DisplayText),Sortable=false},
+          new (){ Text= "Actions", Value= "actions",Sortable=false }
+        };
     }
 
     public void Close()

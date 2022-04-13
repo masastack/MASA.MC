@@ -15,13 +15,17 @@ public partial class EmailTemplateManagement : AdminCompontentBase
     private GetMessageTemplateInput _queryParam = new() { ChannelType = ChannelType.Email };
     private PaginatedListDto<MessageTemplateDto> _entities = new();
     private List<ChannelDto> _channelItems = new();
+    private bool advanced = true;
+    private bool _datePickersShow;
+    private List<DateOnly> _dates = new List<DateOnly> { };
+    private string DateRangeText => string.Join(" ~ ", _dates.Select(date => date.ToString("yyyy-MM-dd")));
 
     protected override async Task OnInitializedAsync()
     {
         var _prefix = "DisplayName:MessageTemplate";
         Headers = new()
         {
-            new() { Text = T($"{_prefix}{nameof(MessageTemplateDto.Id)}"), Value = nameof(MessageTemplateDto.Id), Sortable = false },
+            new() { Text = T("DisplayName:ChannelDisplayName"), Value = "ChannelDisplayName", Sortable = false },
             new() { Text = T($"{_prefix}{nameof(MessageTemplateDto.DisplayName)}"), Value = nameof(MessageTemplateDto.DisplayName), Sortable = false },
             new() { Text = T($"{_prefix}{nameof(MessageTemplateDto.ModificationTime)}"), Value = nameof(MessageTemplateDto.ModificationTime), Sortable = true },
             new() { Text = T($"{_prefix}{nameof(MessageTemplateDto.AuditStatus)}"), Value = nameof(MessageTemplateDto.AuditStatus), Sortable = false },
@@ -75,7 +79,29 @@ public partial class EmailTemplateManagement : AdminCompontentBase
 
     private async Task HandleClearAsync()
     {
-        _queryParam = new();
+        _queryParam = new() { ChannelType = ChannelType.Email };
+        await LoadData();
+    }
+
+    private void ToggleAdvanced()
+    {
+        advanced = !advanced;
+    }
+
+    private async Task HandleDatePickersAsync()
+    {
+        _datePickersShow = false;
+        if (_dates.Count > 0) _queryParam.StartTime = _dates[0].ToDateTime(new TimeOnly(0, 0, 0));
+        if (_dates.Count > 1) _queryParam.EndTime = _dates[1].ToDateTime(new TimeOnly(23, 59, 59));
+        await LoadData();
+    }
+
+    private async Task HandleDatePickersCancel()
+    {
+        _datePickersShow = false;
+        _queryParam.StartTime = null;
+        _queryParam.EndTime = null;
+        _dates = new();
         await LoadData();
     }
 }
