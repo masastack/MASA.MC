@@ -1,65 +1,57 @@
-namespace Masa.Mc.Infrastructure.Sms.Aliyun
+namespace Masa.Mc.Infrastructure.Sms.Aliyun;
+
+public class AliyunSmsSender : ISmsSender
 {
-    public class AliyunSmsSender : ISmsSender
+    protected AliyunSmsOptions Options { get; }
+
+    public AliyunSmsSender(IOptions<AliyunSmsOptions> options)
     {
-        protected AliyunSmsOptions Options { get; }
+        Options = options.Value;
+    }
 
-        public AliyunSmsSender(IOptions<AliyunSmsOptions> options)
+    public async Task SendAsync(SmsMessage smsMessage)
+    {
+        var client = CreateClient();
+
+        await client.SendSmsAsync(new AliyunSendSmsRequest
         {
-            Options = options.Value;
-        }
+            PhoneNumbers = smsMessage.PhoneNumber,
+            SignName = smsMessage.Properties["SignName"] as string,
+            TemplateCode = smsMessage.Properties["TemplateCode"] as string,
+            TemplateParam = smsMessage.Text
+        });
+    }
 
-        public async Task SendAsync(SmsMessage smsMessage)
+    public async Task<ResponseBase> GetSmsTemplateAsync(string templateCode)
+    {
+        var client = CreateClient();
+        QuerySmsTemplateRequest querySmsTemplateRequest = new QuerySmsTemplateRequest()
         {
-            var client = CreateClient();
+            TemplateCode = templateCode
+        };
+        
+        var response = await client.QuerySmsTemplateAsync(querySmsTemplateRequest);
+        var body = response.Body;
+        return new SmsTemplateResponse(body.Code == "OK", body.Message, response);
+    }
 
-            await client.SendSmsAsync(new AliyunSendSmsRequest
-            {
-                PhoneNumbers = smsMessage.PhoneNumber,
-                SignName = smsMessage.Properties["SignName"] as string,
-                TemplateCode = smsMessage.Properties["TemplateCode"] as string,
-                TemplateParam = smsMessage.Text
-            });
-        }
-
-        public async Task<SmsTemplate> GetSmsTemplateAsync(string templateCode)
+    protected virtual AliyunClient CreateClient()
+    {
+        return new(new AliyunConfig
         {
-            var client = CreateClient();
-            QuerySmsTemplateRequest querySmsTemplateRequest = new QuerySmsTemplateRequest()
-            {
-                TemplateCode = templateCode
-            };
-            var response = await client.QuerySmsTemplateAsync(querySmsTemplateRequest);
-            var body = response.Body;
-            return new SmsTemplate(body.Code == "OK", body.Message, JsonSerializer.Serialize(body))
-            {
-                TemplateName = body.TemplateName,
-                TemplateContent = body.TemplateContent,
-                TemplateCode = body.TemplateCode,
-                AuditStatus = body.TemplateStatus,
-                TemplateType = body.TemplateType,
-                Reason = body.Reason
-            };
-        }
+            AccessKeyId = Options.AccessKeyId,
+            AccessKeySecret = Options.AccessKeySecret,
+            Endpoint = Options.EndPoint
+        });
+    }
 
-        protected virtual AliyunClient CreateClient()
+    public void SetOptions(IDictionary<string, object> options)
+    {
+        Options.SetOptions(new AliyunSmsOptions
         {
-            return new(new AliyunConfig
-            {
-                AccessKeyId = Options.AccessKeyId,
-                AccessKeySecret = Options.AccessKeySecret,
-                Endpoint = Options.EndPoint
-            });
-        }
-
-        public void SetOptions(IDictionary<string, object> options)
-        {
-            Options.SetOptions(new AliyunSmsOptions
-            {
-                AccessKeySecret = options["AccessKeySecret"].ToString(),
-                AccessKeyId = options["AccessKeyId"].ToString(),
-                EndPoint = options["EndPoint"].ToString(),
-            });
-        }
+            AccessKeySecret = options["AccessKeySecret"].ToString(),
+            AccessKeyId = options["AccessKeyId"].ToString(),
+            EndPoint = options["EndPoint"].ToString(),
+        });
     }
 }

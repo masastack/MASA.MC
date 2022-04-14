@@ -51,20 +51,20 @@ public class MessageTemplateQueryHandler
     public async Task GetSmsTemplateAsync(GetSmsTemplateQuery query)
     {
         var channel = await _channelRepository.FindAsync(x=>x.Id== query.ChannelId);
-        var options = new AliyunSmsOptions {
+        var options = new AliyunSmsOptions
+        {
             AccessKeyId = channel.GetDataValue(nameof(SmsChannelOptions.AccessKeyId)).ToString(),
             AccessKeySecret = channel.GetDataValue(nameof(SmsChannelOptions.AccessKeySecret)).ToString()
         };
         _smsSender.SetOptions(options);
-        var smsTemplate = await _smsSender.GetSmsTemplateAsync(query.TemplateCode);
-        if (smsTemplate==null) 
-            throw new UserFriendlyException("smsTemplate not found");
+        var smsTemplateResponse = await _smsSender.GetSmsTemplateAsync(query.TemplateCode) as SmsTemplateResponse;
+        var smsTemplate = smsTemplateResponse.Data.Body;
         var dto = new GetSmsTemplateDto
         {
             DisplayName = smsTemplate.TemplateName,
             TemplateId = smsTemplate.TemplateCode,
             Content = smsTemplate.TemplateContent,
-            AuditStatus = GetAuditStatusBySmsTemplateStatus(smsTemplate.AuditStatus),
+            AuditStatus = GetAuditStatusBySmsTemplateStatus(smsTemplate.TemplateStatus),
             AuditReason = smsTemplate.Reason
         };
         dto.Items = ParseTemplateItem(smsTemplate.TemplateContent);

@@ -1,4 +1,6 @@
-﻿namespace Masa.Mc.Infrastructure.Sms;
+﻿using Masa.Mc.Infrastructure.Sms.Response;
+
+namespace Masa.Mc.Infrastructure.Sms;
 
 public interface ISmsSender
 {
@@ -6,5 +8,5 @@ public interface ISmsSender
 
     Task SendAsync(SmsMessage smsMessage);
 
-    Task<SmsTemplate> GetSmsTemplateAsync(string templateCode);
+    Task<ResponseBase> GetSmsTemplateAsync(string templateCode);
 }

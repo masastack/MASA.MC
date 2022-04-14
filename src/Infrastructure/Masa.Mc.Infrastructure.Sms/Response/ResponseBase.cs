@@ -12,13 +12,10 @@ namespace Masa.Mc.Infrastructure.Sms.Response
 
         public string Message { get; } 
 
-        public string Json { get; set; }
-
-        protected ResponseBase(bool success, string message,string json)
+        protected ResponseBase(bool success, string message)
         {
             Success = success;
             Message = message;
-            Json= json;
         }
     }
 }
