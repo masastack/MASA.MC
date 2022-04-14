@@ -22,7 +22,7 @@ public class MessageTemplateQueryHandler
         var entity = await (await _repository.GetWithDetailQueryAsync()).FirstOrDefaultAsync(x => x.MessageTemplate.Id == query.MessageTemplateId);
         if (entity == null)
             throw new UserFriendlyException("messageTemplate not found");
-        var dto= entity.MessageTemplate.Adapt<MessageTemplateDto>();
+        var dto = entity.MessageTemplate.Adapt<MessageTemplateDto>();
         dto.Channel = entity.Channel.Adapt<ChannelDto>();
         query.Result = dto;
     }
@@ -34,7 +34,7 @@ public class MessageTemplateQueryHandler
         var queryable = await CreateFilteredDetailQueryAsync(options);
         var totalCount = await queryable.CountAsync();
         var totalPages = (int)Math.Ceiling(totalCount / (decimal)options.PageSize);
-        if(string.IsNullOrEmpty(options.Sorting)) options.Sorting = "messageTemplate.creationTime desc";
+        if (string.IsNullOrEmpty(options.Sorting)) options.Sorting = "messageTemplate.creationTime desc";
         queryable = queryable.OrderBy(options.Sorting).PageBy(options.Page, options.PageSize);
         var entities = await queryable.ToListAsync();
         var entityDtos = entities.Select(x =>
@@ -50,7 +50,7 @@ public class MessageTemplateQueryHandler
     [EventHandler]
     public async Task GetSmsTemplateAsync(GetSmsTemplateQuery query)
     {
-        var channel = await _channelRepository.FindAsync(x=>x.Id== query.ChannelId);
+        var channel = await _channelRepository.FindAsync(x => x.Id == query.ChannelId);
         var options = new AliyunSmsOptions
         {
             AccessKeyId = channel.GetDataValue(nameof(SmsChannelOptions.AccessKeyId)).ToString(),

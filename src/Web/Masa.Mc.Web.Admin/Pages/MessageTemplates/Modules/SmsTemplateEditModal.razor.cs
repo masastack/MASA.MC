@@ -53,7 +53,7 @@ public partial class SmsTemplateEditModal : AdminCompontentBase
             return;
         }
         Loading = true;
-        await MessageTemplateCaller.UpdateAsync(_entityId,_model);
+        await MessageTemplateCaller.UpdateAsync(_entityId, _model);
         Loading = false;
         await SuccessMessageAsync(T("MessageTemplateCreateMessage"));
         _visible = false;

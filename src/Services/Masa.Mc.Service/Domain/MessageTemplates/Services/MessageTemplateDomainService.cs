@@ -1,7 +1,4 @@
-﻿using Masa.Mc.Infrastructure.Common.Helper;
-using System.Text.RegularExpressions;
-
-namespace Masa.Mc.Service.Admin.Domain.MessageTemplates.Services;
+﻿namespace Masa.Mc.Service.Admin.Domain.MessageTemplates.Services;
 
 public class MessageTemplateDomainService : DomainService
 {

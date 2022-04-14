@@ -71,28 +71,6 @@
                      ValueChanged="async (val)=>{_queryParam.ChannelId=val;await RefreshAsync();}">
                 </MSelect>
             </MCol>
-            @*<MCol Cols="3">
-                <MSelect @bind-Value="_queryParam.ChannelId"
-                Items="@_channelItems"
-                Label="@T("DisplayName:Channel")"
-                ItemText="item => item.DisplayName"
-                ItemValue="item => item.Id"
-                Dense
-                Outlined
-                HideDetails="@("auto")">
-                </MSelect>
-                </MCol>
-                <MCol Cols="3">
-                <MSelect @bind-Value="_queryParam.ChannelId"
-                Items="@_channelItems"
-                Label="@T("DisplayName:Channel")"
-                ItemText="item => item.DisplayName"
-                ItemValue="item => item.Id"
-                Dense
-                Outlined
-                HideDetails="@("auto")">
-                </MSelect>
-                </MCol>*@
         </MRow>
     }
     <MCardText>

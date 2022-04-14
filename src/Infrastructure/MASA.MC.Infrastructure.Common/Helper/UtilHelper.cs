@@ -1,25 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+﻿namespace Masa.Mc.Infrastructure.Common.Helper;
 
-namespace Masa.Mc.Infrastructure.Common.Helper
+public class UtilHelper
 {
-    public class UtilHelper
+    public static List<string> MidStrEx(string sourse, string startstr, string endstr)
     {
-        public static List<string> MidStrEx(string sourse, string startstr, string endstr)
+        List<string> paramList = new();
+        Regex regex = new Regex("(?<=(" + startstr + "))[.\\s\\S]*?(?=(" + endstr + "))", RegexOptions.Multiline | RegexOptions.Singleline);
+        var match = regex.Matches(sourse);
+        foreach (var item in match)
         {
-            List<string> paramList = new();
-            Regex regex = new Regex("(?<=(" + startstr + "))[.\\s\\S]*?(?=(" + endstr + "))", RegexOptions.Multiline | RegexOptions.Singleline);
-            var match = regex.Matches(sourse);
-            foreach (var item in match)
-            {
-                if (item == null) continue;
-                paramList.Add(item.ToString());
-            }
-            return paramList;
+            if (item == null) continue;
+            paramList.Add(item.ToString());
         }
+        return paramList;
     }
 }

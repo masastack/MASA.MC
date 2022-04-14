@@ -21,7 +21,7 @@ public partial class SmsTemplateManagement : AdminCompontentBase
         .Cast<MessageTemplateAuditStatus>().ToList();
     private bool advanced = true;
     private bool _datePickersShow;
-    private List<DateOnly> _dates = new List<DateOnly>{};
+    private List<DateOnly> _dates = new List<DateOnly> { };
     private string DateRangeText => string.Join(" ~ ", _dates.Select(date => date.ToString("yyyy-MM-dd")));
 
     protected override async Task OnInitializedAsync()

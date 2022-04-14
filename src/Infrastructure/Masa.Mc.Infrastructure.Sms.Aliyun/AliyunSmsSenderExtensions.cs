@@ -1,5 +1,4 @@
-﻿using System;
-namespace Masa.Mc.Infrastructure.Sms.Aliyun;
+﻿namespace Masa.Mc.Infrastructure.Sms.Aliyun;
 
 public static class AliyunSmsSenderExtensions
 {

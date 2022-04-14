@@ -1,7 +1,4 @@
-﻿using Masa.Mc.Infrastructure.Sms.Aliyun;
-using Microsoft.Extensions.Options;
-
-namespace Masa.Mc.Service.Admin.Services;
+﻿namespace Masa.Mc.Service.Admin.Services;
 
 public class MessageTemplateService : ServiceBase
 {

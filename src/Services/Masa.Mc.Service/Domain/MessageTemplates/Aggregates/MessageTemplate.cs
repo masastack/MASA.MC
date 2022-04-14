@@ -37,8 +37,6 @@ public class MessageTemplate : AuditAggregateRoot<Guid, Guid>
         MessageTemplateAuditStatus auditStatus = MessageTemplateAuditStatus.WaitAudit,
         bool isStatic = false)
     {
-
-
         Status = status;
         AuditStatus = auditStatus;
         IsStatic = isStatic;
