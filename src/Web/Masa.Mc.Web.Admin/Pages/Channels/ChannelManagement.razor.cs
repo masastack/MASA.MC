@@ -7,7 +7,7 @@ public partial class ChannelManagement : AdminCompontentBase
 
     private ChannelEditModal _editModal;
     private ChannelCreateModal _createModal;
-    private GetChannelInput _queryParam = new(5);
+    private GetChannelInput _queryParam = new(11);
     private PaginatedListDto<ChannelDto> _entities = new();
 
     protected override async Task OnAfterRenderAsync(bool firstRender)

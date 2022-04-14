@@ -15,10 +15,13 @@ public class MessageTemplate : AuditAggregateRoot<Guid, Guid>
     public DateTime? AuditTime { get; protected set; }
     public DateTime? InvalidTime { get; protected set; }
     public string AuditReason { get; protected set; } = string.Empty;
+    public int TemplateType { get; protected set; }
+    public long DayLimit { get; protected set; }
     public bool IsStatic { get; protected set; }
     public List<MessageTemplateItem> Items { get; protected set; } = new List<MessageTemplateItem>();
 
-    public MessageTemplate(Guid channelId, string displayName, string title, string content, string example, string templateId, bool isJump, string jumpUrl, string sign) : this(channelId, displayName, title, content, example, templateId, isJump, jumpUrl, sign, new List<MessageTemplateItem>())
+    public MessageTemplate(Guid channelId, string displayName, string title, string content, string example, string templateId, bool isJump, string jumpUrl, string sign, int templateType,
+        long dayLimit) : this(channelId, displayName, title, content, example, templateId, isJump, jumpUrl, sign, templateType, dayLimit, new List<MessageTemplateItem>())
     {
     }
 
@@ -32,6 +35,8 @@ public class MessageTemplate : AuditAggregateRoot<Guid, Guid>
         bool isJump,
         string jumpUrl,
         string sign,
+        int templateType,
+        long dayLimit,
         List<MessageTemplateItem> items,
         MessageTemplateStatus status = MessageTemplateStatus.Normal,
         MessageTemplateAuditStatus auditStatus = MessageTemplateAuditStatus.WaitAudit,
@@ -41,7 +46,7 @@ public class MessageTemplate : AuditAggregateRoot<Guid, Guid>
         AuditStatus = auditStatus;
         IsStatic = isStatic;
 
-        SetContent(channelId, displayName, title, content, example, templateId, isJump, jumpUrl, sign);
+        SetContent(channelId, displayName, title, content, example, templateId, isJump, jumpUrl, sign, templateType, dayLimit);
 
         Items = items ?? new List<MessageTemplateItem>();
     }
@@ -69,7 +74,9 @@ public class MessageTemplate : AuditAggregateRoot<Guid, Guid>
         string templateId,
         bool isJump,
         string jumpUrl,
-        string sign)
+        string sign,
+        int templateType,
+        long dayLimit)
     {
         ChannelId = channelId;
         DisplayName = displayName;
@@ -80,6 +87,8 @@ public class MessageTemplate : AuditAggregateRoot<Guid, Guid>
         IsJump = isJump;
         JumpUrl = jumpUrl;
         Sign = sign;
+        TemplateType = templateType;
+        DayLimit = dayLimit;
     }
 
     public void SetAuditStatus(MessageTemplateAuditStatus auditStatus, string auditReason = "")

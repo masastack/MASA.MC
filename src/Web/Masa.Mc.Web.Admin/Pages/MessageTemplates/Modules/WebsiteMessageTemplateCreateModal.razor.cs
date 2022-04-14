@@ -14,8 +14,6 @@ public partial class WebsiteMessageTemplateCreateModal : AdminCompontentBase
     private MForm _form;
     private MessageTemplateCreateUpdateDto _model = new();
     private bool _visible;
-    private List<ChannelType> _channelTypeItems = Enum.GetValues(typeof(ChannelType))
-        .Cast<ChannelType>().ToList();
     private List<ChannelDto> _channelItems = new();
     private ChannelType _channelType;
 

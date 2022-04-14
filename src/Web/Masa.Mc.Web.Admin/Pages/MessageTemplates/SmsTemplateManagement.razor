@@ -74,9 +74,9 @@
             </MCol>
             <MCol Cols="3">
                 <MSelect @bind-Value="@_queryParam.AuditStatus"
-                     Items="@_auditStatusItems"
+                     Items="@(GetEnumList<MessageTemplateAuditStatus>())"
                      Label="@T("DisplayName:MessageTemplateAuditStatus")"
-                     ItemText="item => item.ToString()"
+                     ItemText="item => T(item.ToString())"
                      ItemValue="item => item"
                      Dense
                      Outlined
@@ -91,9 +91,9 @@
             </MCol>
             <MCol Cols="3">
                 <MSelect @bind-Value="@_queryParam.Status"
-                     Items="@_statusItems"
+                     Items="@(GetEnumList<MessageTemplateStatus>())"
                      Label="@T("DisplayName:MessageTemplateStatus")"
-                     ItemText="item => item.ToString()"
+                     ItemText="item => T(item.ToString())"
                      ItemValue="item => item"
                      Dense
                      Outlined
@@ -118,6 +118,9 @@
                 {
                     case ("ChannelDisplayName"):
                         <span class="text-body3">@context.Item.Channel?.DisplayName</span>
+                        break;
+                    case nameof(MessageTemplateDto.TemplateType):
+                        <span>@T(((SmsTemplateType)context.Item.TemplateType).ToString())</span>
                         break;
                     case (nameof(MessageTemplateDto.ModificationTime)):
                         <span class="text-body3">@context.Item.ModificationTime.ToString("yyyy年MM月dd日 HH:mm:ss")</span>

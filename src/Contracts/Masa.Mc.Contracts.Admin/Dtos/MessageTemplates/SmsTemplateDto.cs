@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Masa.Mc.Contracts.Admin.Dtos.MessageTemplates
+﻿namespace Masa.Mc.Contracts.Admin.Dtos.MessageTemplates
 {
-    public class GetSmsTemplateDto
+    public class SmsTemplateDto
     {
         public string DisplayName { get; set; } = string.Empty;
         public string TemplateId { get; set; } = string.Empty;
@@ -14,5 +8,6 @@ namespace Masa.Mc.Contracts.Admin.Dtos.MessageTemplates
         public MessageTemplateAuditStatus AuditStatus { get; set; }
         public string AuditReason { get; set; } = string.Empty;
         public List<MessageTemplateItemDto> Items { get; set; }
+        public int TemplateType { get; set; }
     }
 }

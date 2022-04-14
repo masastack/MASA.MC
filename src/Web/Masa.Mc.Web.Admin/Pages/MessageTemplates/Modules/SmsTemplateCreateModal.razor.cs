@@ -14,8 +14,6 @@ public partial class SmsTemplateCreateModal : AdminCompontentBase
     private MForm _form;
     private MessageTemplateCreateUpdateDto _model = new();
     private bool _visible;
-    private List<ChannelType> _channelTypeItems = Enum.GetValues(typeof(ChannelType))
-        .Cast<ChannelType>().ToList();
     private List<ChannelDto> _channelItems = new();
     private ChannelType _channelType;
 
@@ -87,6 +85,7 @@ public partial class SmsTemplateCreateModal : AdminCompontentBase
             _model.Items = smsTemplate.Items;
             _model.AuditStatus = smsTemplate.AuditStatus;
             _model.AuditReason = smsTemplate.AuditReason;
+            _model.TemplateType = smsTemplate.TemplateType;
         }
         Loading = false;
     }

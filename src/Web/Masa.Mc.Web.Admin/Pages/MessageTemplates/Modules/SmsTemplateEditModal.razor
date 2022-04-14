@@ -4,11 +4,11 @@
         <div>
             <MForm Class="mt-10 full-height" Model="_model" EnableValidation @ref="_form">
                 <MRow>
-                    <MCol Cols="3">
+                    <MCol Cols="2">
                         <MSelect Value="@_channelType"
-                                 Items="@_channelTypeItems"
+                                 Items="@(GetEnumList<ChannelType>())"
                                  Label="@T("DisplayName:ChannelType")"
-                                 ItemText="item => item.ToString()"
+                                 ItemText="item => T(item.ToString())"
                                  ItemValue="item => item"
                                  Dense
                                  Outlined
@@ -16,7 +16,7 @@
                                  HideDetails="@("auto")">
                         </MSelect>
                     </MCol>
-                    <MCol Cols="3">
+                    <MCol Cols="2">
                         <MSelect @bind-Value="_model.ChannelId"
                                  Items="@_channelItems"
                                  Label="@T("DisplayName:Channel")"
@@ -31,14 +31,14 @@
                                  OnSelectedItemUpdate="HandleChannelChange">
                         </MSelect>
                     </MCol>
-                    <MCol Cols="3">
+                    <MCol Cols="2">
                         <MTextField @bind-Value="_model.Sign"
                                     Label="@T("DisplayName:MessageTemplateSign")"
                                     Dense
                                     Outlined
                                     HideDetails="@("auto")" />
                     </MCol>
-                    <MCol Cols="3">
+                    <MCol Cols="2">
                         <MTextField @bind-Value="_model.TemplateId"
                                     Label="@T("DisplayName:MessageTemplateTemplateId")"
                                     Dense
@@ -46,13 +46,25 @@
                                     HideDetails="@("auto")"
                                     OnBlur="GetSmsTemplateAsync" />
                     </MCol>
+                    <MCol Cols="2">
+                        <MSelect Value="@_model.TemplateType"
+                                 Items="@(GetEnumList<SmsTemplateType>())"
+                                 Label="@T("DisplayName:MessageTemplateTemplateType")"
+                                 ItemText="item => T(item.ToString())"
+                                 ItemValue="item => (int)item"
+                                 Dense
+                                 Outlined
+                                 Readonly
+                                 HideDetails="@("auto")">
+                        </MSelect>
+                    </MCol>
                 </MRow>
                 <MRow>
                     <MCol Cols="12">
                         <MTextField @bind-Value="_model.DisplayName" Label="@T("DisplayName:MessageTemplateDisplayName")" Dense
                                     Outlined
                                     Readonly
-                                    Placeholder="请先填写短信模板Id"
+                                    Placeholder="@T("Description:MessageTemplate.TemplateId.Required")"
                                     HideDetails="@("auto")"></MTextField>
                     </MCol>
                 </MRow>
@@ -62,9 +74,24 @@
                                    Label="@T("DisplayName:MessageTemplateContent")"
                                    Dense
                                    Outlined
-                                   Placeholder="请先填写短信模板Id"
+                                   Placeholder="@T("Description:MessageTemplate.TemplateId.Required")"
                                    HideDetails="@("auto")">
                         </MTextarea>
+                    </MCol>
+                </MRow>
+                <MRow>
+                    <MCol Cols="12">
+                        <div class="mt-3 d-flex align-center justify-start">
+                            <span class="text-caption mr-2">此模块每日给同一用户最多发送 </span>
+                            <div style="width:100px;">
+                                <MTextField @bind-Value="_model.DayLimit"
+                                            Type="number"
+                                            Dense
+                                            Outlined
+                                            HideDetails="@("auto")"></MTextField>
+                            </div>
+                            <span class="text-caption ml-2">条 </span>
+                        </div>
                     </MCol>
                 </MRow>
             </MForm>

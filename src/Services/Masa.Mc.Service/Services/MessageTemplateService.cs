@@ -45,7 +45,7 @@ public class MessageTemplateService : ServiceBase
         await eventBus.PublishAsync(command);
     }
 
-    public async Task<GetSmsTemplateDto> GetSmsTemplateAsync(IEventBus eventBus, [FromQuery] Guid channelId, [FromQuery] string templateCode)
+    public async Task<SmsTemplateDto> GetSmsTemplateAsync(IEventBus eventBus, [FromQuery] Guid channelId, [FromQuery] string templateCode)
     {
         var query = new GetSmsTemplateQuery(channelId, templateCode);
         await eventBus.PublishAsync(query);

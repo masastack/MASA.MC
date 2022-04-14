@@ -12,9 +12,9 @@
                 <MRow>
                     <MCol Cols="3">
                         <MSelect Value="@_channelType"
-                                 Items="@_channelTypeItems"
+                                 Items="@(GetEnumList<ChannelType>())"
                                  Label="@T("DisplayName:ChannelType")"
-                                 ItemText="item => item.ToString()"
+                                 ItemText="item => T(item.ToString())"
                                  ItemValue="item => item"
                                  Dense
                                  Outlined
@@ -40,6 +40,16 @@
                 </MRow>
                 <MRow>
                     <MCol Cols="12">
+                        <MTextField @bind-Value="_model.Title"
+                                    Label="@T("DisplayName:MessageTemplateTitle")"
+                                    Dense
+                                    Outlined
+                                    HideDetails="@("auto")">
+                        </MTextField>
+                    </MCol>
+                </MRow>
+                <MRow>
+                    <MCol Cols="12">
                         <MTextarea @bind-Value="_model.Content"
                                    Label="@T("DisplayName:MessageTemplateContent")"
                                    Dense
@@ -58,6 +68,21 @@
                                     Dense
                                     Outlined
                                     HideDetails="@("auto")" />
+                    </MCol>
+                </MRow>
+                <MRow>
+                    <MCol Cols="12">
+                        <div class="mt-3 d-flex align-center justify-start">
+                            <span class="text-caption mr-2">此模块每日给同一用户最多发送 </span>
+                            <div style="width:100px;">
+                                <MTextField @bind-Value="_model.DayLimit"
+                                            Type="number"
+                                            Dense
+                                            Outlined
+                                            HideDetails="@("auto")"></MTextField>
+                            </div>
+                            <span class="text-caption ml-2">条 </span>
+                        </div>
                     </MCol>
                 </MRow>
             </MForm>

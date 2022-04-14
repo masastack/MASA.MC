@@ -5,20 +5,17 @@ public class MessageTemplateQueryHandler
     private readonly IMessageTemplateRepository _repository;
     private readonly IChannelRepository _channelRepository;
     private readonly ISmsSender _smsSender;
-    private readonly MessageTemplateDomainService _domainService;
 
-    public MessageTemplateQueryHandler(IMessageTemplateRepository repository, IChannelRepository channelRepository, ISmsSender smsSender, MessageTemplateDomainService domainService)
+    public MessageTemplateQueryHandler(IMessageTemplateRepository repository, IChannelRepository channelRepository, ISmsSender smsSender)
     {
         _repository = repository;
         _smsSender = smsSender;
-        _domainService = domainService;
         _channelRepository = channelRepository;
     }
 
     [EventHandler]
     public async Task GetAsync(GetMessageTemplateQuery query)
     {
-
         var entity = await (await _repository.GetWithDetailQueryAsync()).FirstOrDefaultAsync(x => x.MessageTemplate.Id == query.MessageTemplateId);
         if (entity == null)
             throw new UserFriendlyException("messageTemplate not found");
@@ -58,13 +55,18 @@ public class MessageTemplateQueryHandler
         };
         _smsSender.SetOptions(options);
         var smsTemplateResponse = await _smsSender.GetSmsTemplateAsync(query.TemplateCode) as SmsTemplateResponse;
+        if (!smsTemplateResponse.Success)
+        {
+            throw new UserFriendlyException(smsTemplateResponse.Message);
+        }
         var smsTemplate = smsTemplateResponse.Data.Body;
-        var dto = new GetSmsTemplateDto
+        var dto = new SmsTemplateDto
         {
             DisplayName = smsTemplate.TemplateName,
             TemplateId = smsTemplate.TemplateCode,
             Content = smsTemplate.TemplateContent,
-            AuditStatus = GetAuditStatusBySmsTemplateStatus(smsTemplate.TemplateStatus),
+            AuditStatus = SmsTemplateStatusMapToAuditStatus(smsTemplate.TemplateStatus),
+            TemplateType = AliyunSmsTemplateTypeMapToTemplateType(smsTemplate.TemplateType),
             AuditReason = smsTemplate.Reason
         };
         dto.Items = ParseTemplateItem(smsTemplate.TemplateContent);
@@ -91,7 +93,7 @@ public class MessageTemplateQueryHandler
         return query.Where(condition);
     }
 
-    private MessageTemplateAuditStatus GetAuditStatusBySmsTemplateStatus(int? status)
+    private MessageTemplateAuditStatus SmsTemplateStatusMapToAuditStatus(int? status)
     {
         switch (status)
         {
@@ -101,6 +103,23 @@ public class MessageTemplateQueryHandler
                 return MessageTemplateAuditStatus.Fail;
             default:
                 return MessageTemplateAuditStatus.WaitAudit;
+        }
+    }
+
+    private int AliyunSmsTemplateTypeMapToTemplateType(int? templateType)
+    {
+        switch (templateType)
+        {
+            case 0:
+                return (int)SmsTemplateType.VerificationCode;
+            case 1:
+                return (int)SmsTemplateType.Notification;
+            case 2:
+                return (int)SmsTemplateType.Promotion;
+            case 3:
+                return (int)SmsTemplateType.International;
+            default:
+                return 0;
         }
     }
 

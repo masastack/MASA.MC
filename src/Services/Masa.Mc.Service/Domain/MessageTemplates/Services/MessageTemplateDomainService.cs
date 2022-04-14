@@ -11,12 +11,14 @@ public class MessageTemplateDomainService : DomainService
 
     public virtual async Task CreateAsync(MessageTemplate messageTemplate)
     {
+        await ValidateTemplateAsync(messageTemplate.TemplateId);
         ParseTemplateItem(messageTemplate);
         await _repository.AddAsync(messageTemplate);
     }
 
     public virtual async Task UpdateAsync(MessageTemplate messageTemplate)
     {
+        await ValidateTemplateAsync(messageTemplate.TemplateId, messageTemplate.Id);
         ParseTemplateItem(messageTemplate);
         await _repository.UpdateAsync(messageTemplate);
     }
@@ -39,6 +41,16 @@ public class MessageTemplateDomainService : DomainService
         foreach (var item in paramList)
         {
             messageTemplate.AddOrUpdateItem(item,string.Empty, string.Empty, string.Empty);
+        }
+    }
+
+    protected async Task ValidateTemplateAsync(string templateId, Guid? expectedId = null)
+    {
+        if (string.IsNullOrEmpty(templateId)) return;
+        var template = await _repository.FindAsync(d => d.TemplateId == templateId);
+        if (template != null && template.Id != expectedId)
+        {
+            throw new UserFriendlyException("Message templateId cannot be repeated");
         }
     }
 }

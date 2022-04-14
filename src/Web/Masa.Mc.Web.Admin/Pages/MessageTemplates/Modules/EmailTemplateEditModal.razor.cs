@@ -15,8 +15,6 @@ public partial class EmailTemplateEditModal : AdminCompontentBase
     private MessageTemplateCreateUpdateDto _model = new();
     private Guid _entityId;
     private bool _visible;
-    private List<ChannelType> _channelTypeItems = Enum.GetValues(typeof(ChannelType))
-        .Cast<ChannelType>().ToList();
     private List<ChannelDto> _channelItems = new();
     private ChannelType _channelType;
 

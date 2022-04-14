@@ -15,10 +15,6 @@ public partial class SmsTemplateManagement : AdminCompontentBase
     private GetMessageTemplateInput _queryParam = new() { ChannelType = ChannelType.Sms };
     private PaginatedListDto<MessageTemplateDto> _entities = new();
     private List<ChannelDto> _channelItems = new();
-    private List<MessageTemplateStatus> _statusItems = Enum.GetValues(typeof(MessageTemplateStatus))
-        .Cast<MessageTemplateStatus>().ToList();
-    private List<MessageTemplateAuditStatus> _auditStatusItems = Enum.GetValues(typeof(MessageTemplateAuditStatus))
-        .Cast<MessageTemplateAuditStatus>().ToList();
     private bool advanced = true;
     private bool _datePickersShow;
     private List<DateOnly> _dates = new List<DateOnly> { };
@@ -30,6 +26,7 @@ public partial class SmsTemplateManagement : AdminCompontentBase
         Headers = new()
         {
             new() { Text = T($"{_prefix}{nameof(MessageTemplateDto.TemplateId)}"), Value = nameof(MessageTemplateDto.TemplateId), Sortable = false },
+            new() { Text = T($"{_prefix}{nameof(MessageTemplateDto.TemplateType)}"), Value = nameof(MessageTemplateDto.TemplateType), Sortable = false },
             new() { Text = T("DisplayName:ChannelDisplayName"), Value = "ChannelDisplayName", Sortable = false },
             new() { Text = T($"{_prefix}{nameof(MessageTemplateDto.DisplayName)}"), Value = nameof(MessageTemplateDto.DisplayName), Sortable = false },
             new() { Text = T($"{_prefix}{nameof(MessageTemplateDto.ModificationTime)}"), Value = nameof(MessageTemplateDto.ModificationTime), Sortable = true },

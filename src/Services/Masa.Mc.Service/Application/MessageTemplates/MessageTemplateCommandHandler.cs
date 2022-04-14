@@ -27,6 +27,8 @@ public class MessageTemplateCommandHandler
                 dto.IsJump,
                 dto.JumpUrl,
                 dto.Sign,
+                dto.TemplateType,
+                dto.DayLimit,
                 new List<MessageTemplateItem>(),
                 dto.Status,
                 dto.AuditStatus);
@@ -44,7 +46,7 @@ public class MessageTemplateCommandHandler
         var dto = updateCommand.MessageTemplate;
         if (entity == null)
             throw new UserFriendlyException("messageTemplate not found");
-        entity.SetContent(dto.ChannelId, dto.DisplayName, dto.Title, dto.Content, dto.Example, dto.TemplateId, dto.IsJump, dto.JumpUrl, dto.Sign);
+        entity.SetContent(dto.ChannelId, dto.DisplayName, dto.Title, dto.Content, dto.Example, dto.TemplateId, dto.IsJump, dto.JumpUrl, dto.Sign, dto.TemplateType, dto.DayLimit);
         foreach (var itemDto in dto.Items)
         {
             entity.AddOrUpdateItem(itemDto.Code, itemDto.MappingCode, itemDto.DisplayText, itemDto.Description);

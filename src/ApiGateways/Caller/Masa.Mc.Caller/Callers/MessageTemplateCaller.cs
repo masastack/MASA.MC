@@ -31,7 +31,7 @@ public class MessageTemplateCaller : HttpClientCallerBase
 
     public async Task<MessageTemplateDto?> GetAsync(Guid id)
     {
-        return await CallerProvider.GetAsync<MessageTemplateDto> ($"{_prefix}/{id}");
+        return await CallerProvider.GetAsync<MessageTemplateDto>($"{_prefix}/{id}");
     }
 
     public async Task CreateAsync(MessageTemplateCreateUpdateDto input)
@@ -46,7 +46,7 @@ public class MessageTemplateCaller : HttpClientCallerBase
 
     public async Task DeleteAsync(Guid id)
     {
-        await CallerProvider.DeleteAsync($"{_prefix}/{id}",null);
+        await CallerProvider.DeleteAsync($"{_prefix}/{id}", null);
     }
 
     public async Task<MessageTemplateDto?> FindByCodeAsync(string code)
@@ -54,7 +54,7 @@ public class MessageTemplateCaller : HttpClientCallerBase
         return await CallerProvider.GetAsync<MessageTemplateDto>($"{_prefix}/FindByCode?code={code}");
     }
 
-    public async Task<GetSmsTemplateDto?> GetSmsTemplateAsync(Guid channelId,string templateCode)
+    public async Task<SmsTemplateDto?> GetSmsTemplateAsync(Guid channelId, string templateCode)
     {
         var queryArguments = new Dictionary<string, string?>()
         {
@@ -62,6 +62,6 @@ public class MessageTemplateCaller : HttpClientCallerBase
             { "templateCode", templateCode }
         };
         var url = QueryHelpers.AddQueryString($"{_prefix}/GetSmsTemplate", queryArguments);
-        return await CallerProvider.GetAsync<GetSmsTemplateDto>(url);
+        return await CallerProvider.GetAsync<SmsTemplateDto>(url);
     }
 }

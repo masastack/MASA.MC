@@ -20,6 +20,8 @@ public class MessageTemplateCreateUpdateDto
     public DateTime? AuditTime { get; set; }
     public DateTime? InvalidTime { get; set; }
     public string AuditReason { get; set; } = string.Empty;
+    public int TemplateType { get; set; }
+    public long DayLimit { get; set; }
     public bool IsStatic { get; set; }
     public List<MessageTemplateItemDto> Items { get; set; }
 }

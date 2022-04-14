@@ -74,4 +74,9 @@ public abstract class AdminCompontentBase : BDomComponentBase
     {
         await PopupService.AlertAsync(message, AlertTypes.Warning);
     }
+
+    public static List<TEnum> GetEnumList<TEnum>() where TEnum : struct, Enum
+    {
+        return EnumHelper.GetEnumList<TEnum>();
+    }
 }
