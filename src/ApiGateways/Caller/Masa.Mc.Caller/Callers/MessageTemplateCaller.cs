@@ -21,6 +21,7 @@ public class MessageTemplateCaller : HttpClientCallerBase
             { "status", input.Status?.ToString() },
             { "startTime", input.StartTime?.ToString() },
             { "endTime", input.EndTime?.ToString() },
+            { "templateType", input.TemplateType.ToString() },
             { "filter", input.Filter.ToString() },
             { "page", input.Page.ToString() },
             { "pageSize", input.PageSize.ToString() }

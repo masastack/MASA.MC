@@ -83,6 +83,7 @@ public class MessageTemplateQueryHandler
         condition = condition.And(input.ChannelId.HasValue, x => x.MessageTemplate.ChannelId == input.ChannelId);
         condition = condition.And(input.StartTime.HasValue, x => x.MessageTemplate.ModificationTime >= input.StartTime);
         condition = condition.And(input.EndTime.HasValue, x => x.MessageTemplate.ModificationTime <= input.EndTime);
+        condition = condition.And(input.TemplateType > 0, x => x.MessageTemplate.TemplateType == input.TemplateType);
         return await Task.FromResult(condition); ;
     }
 

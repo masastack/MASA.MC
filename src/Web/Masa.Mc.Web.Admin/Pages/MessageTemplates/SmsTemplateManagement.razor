@@ -19,7 +19,7 @@
     @if (advanced)
     {
         <MRow Class="mx-2">
-            <MCol Cols="3">
+            <MCol Cols="2">
                 <MMenu @bind-Value="_datePickersShow"
                    CloseOnContentClick="false"
                    Transition="scale-transition"
@@ -55,7 +55,24 @@
                     </ChildContent>
                 </MMenu>
             </MCol>
-            <MCol Cols="3">
+            <MCol Cols="2">
+                <MSelect @bind-Value="@_queryParam.TemplateType"
+                     Items="@(GetEnumList<SmsTemplateType>())"
+                     Label="@T("DisplayName:MessageTemplateTemplateType")"
+                     ItemText="item => T(item.ToString())"
+                     ItemValue="item => (int)item"
+                     Dense
+                     Outlined
+                     Clearable
+                     HideDetails="@("auto")"
+                     TItem="SmsTemplateType"
+                     TItemValue="int"
+                     TValue="int"
+                     OnClearClick="RefreshAsync"
+                     OnSelectedItemUpdate="RefreshAsync">
+                </MSelect>
+            </MCol>
+            <MCol Cols="2">
                 <MSelect @bind-Value="_queryParam.ChannelId"
                      Items="@_channelItems"
                      Label="@T("DisplayName:Channel")"
@@ -72,7 +89,7 @@
                      OnSelectedItemUpdate="RefreshAsync">
                 </MSelect>
             </MCol>
-            <MCol Cols="3">
+            <MCol Cols="2">
                 <MSelect @bind-Value="@_queryParam.AuditStatus"
                      Items="@(GetEnumList<MessageTemplateAuditStatus>())"
                      Label="@T("DisplayName:MessageTemplateAuditStatus")"
@@ -89,7 +106,7 @@
                      OnSelectedItemUpdate="RefreshAsync">
                 </MSelect>
             </MCol>
-            <MCol Cols="3">
+            <MCol Cols="2">
                 <MSelect @bind-Value="@_queryParam.Status"
                      Items="@(GetEnumList<MessageTemplateStatus>())"
                      Label="@T("DisplayName:MessageTemplateStatus")"
