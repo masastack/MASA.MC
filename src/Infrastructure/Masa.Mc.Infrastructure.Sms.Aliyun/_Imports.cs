@@ -6,3 +6,6 @@ global using AlibabaCloud.SDK.Dysmsapi20170525.Models;
 global using Microsoft.Extensions.Options;
 global using Masa.Mc.Infrastructure.Sms.Response;
 global using Masa.Mc.Infrastructure.Sms.Aliyun.Response.SmsTemplate;
+global using Microsoft.Extensions.Configuration;
+global using Microsoft.Extensions.DependencyInjection;
+global using Microsoft.Extensions.DependencyInjection.Extensions;
