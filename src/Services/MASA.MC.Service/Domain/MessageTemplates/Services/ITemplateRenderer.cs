@@ -1,6 +1,5 @@
-﻿namespace Masa.Mc.Service.Admin.Domain.MessageTemplates.Services
+﻿namespace Masa.Mc.Service.Admin.Domain.MessageTemplates.Services;
+
+public interface ITemplateRenderer
 {
-    public interface ITemplateRenderer
-    {
-    }
 }

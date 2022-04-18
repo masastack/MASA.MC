@@ -1,9 +1,8 @@
-﻿namespace Masa.Mc.Contracts.Admin.Enums.MessageTemplates
+﻿namespace Masa.Mc.Contracts.Admin.Enums.MessageTemplates;
+
+public enum MessageTemplateAuditStatus
 {
-    public enum MessageTemplateAuditStatus
-    {
-        WaitAudit=1,
-        Adopt,
-        Fail,
-    }
+    WaitAudit=1,
+    Adopt,
+    Fail,
 }

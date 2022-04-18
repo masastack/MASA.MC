@@ -53,7 +53,7 @@ public partial class WebsiteMessageTemplateEditModal : AdminCompontentBase
         Loading = true;
         await MessageTemplateCaller.UpdateAsync(_entityId, _model);
         Loading = false;
-        await SuccessMessageAsync(T("MessageTemplateCreateMessage"));
+        await SuccessMessageAsync(T("MessageTemplateEditMessage"));
         _visible = false;
         ResetForm();
         if (OnOk.HasDelegate)
