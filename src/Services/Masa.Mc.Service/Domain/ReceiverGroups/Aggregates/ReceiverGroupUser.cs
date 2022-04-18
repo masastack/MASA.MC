@@ -2,11 +2,11 @@
 {
     public class ReceiverGroupUser : Entity<Guid>
     {
-        public Guid GroupId { get; protected set; }
+        public virtual Guid GroupId { get; protected set; }
 
-        public Guid UserId { get; protected set; }
+        public virtual Guid UserId { get; protected set; }
 
-        public ReceiverGroupUser(Guid groupId, Guid userId)
+        protected internal ReceiverGroupUser(Guid groupId, Guid userId)
         {
             GroupId = groupId;
             UserId = userId;

@@ -2,11 +2,11 @@
 
 public class ReceiverGroup : AuditAggregateRoot<Guid, Guid>
 {
-    public string DisplayName { get; protected set; } = string.Empty;
+    public virtual string DisplayName { get; protected set; } = string.Empty;
 
-    public string Description { get; protected set; } = string.Empty;
+    public virtual string Description { get; protected set; } = string.Empty;
 
-    public ICollection<ReceiverGroupUser> Users { get; protected set; }
+    public virtual ICollection<ReceiverGroupUser> Users { get; protected set; }
 
     public ReceiverGroup(string displayName, string description)
     {
