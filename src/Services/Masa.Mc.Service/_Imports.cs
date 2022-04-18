@@ -76,3 +76,4 @@ global using Masa.Mc.Contracts.Admin.Dtos.ReceiverGroups;
 global using Masa.Mc.Service.Admin.Domain.ReceiverGroups.Services;
 global using Masa.Mc.Service.Admin.Application.ReceiverGroups.Commands;
 global using Masa.Mc.Service.Admin.Application.ReceiverGroups.Queries;
+global using Masa.Mc.Contracts.Admin.Enums.ReceiverGroups;
