@@ -6,5 +6,5 @@ public class ReceiverGroupCreateUpdateDto
 
     public string Description { get; set; } = string.Empty;
 
-    public List<ReceiverGroupUserDto> Items { get; set; } = new();
+    public List<Guid> UserIds { get; set; } = new();
 }

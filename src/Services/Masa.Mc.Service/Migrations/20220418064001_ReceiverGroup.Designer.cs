@@ -4,6 +4,7 @@ using Masa.Mc.Service.Admin.Infrastructure.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Masa.Mc.Service.Admin.Migrations
 {
     [DbContext(typeof(McDbContext))]
-    partial class MCDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220418064001_ReceiverGroup")]
+    partial class ReceiverGroup
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -292,10 +294,15 @@ namespace Masa.Mc.Service.Admin.Migrations
                     b.Property<Guid>("GroupId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("ReceiverGroupId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ReceiverGroupId");
 
                     b.HasIndex("GroupId", "UserId");
 
@@ -315,9 +322,7 @@ namespace Masa.Mc.Service.Admin.Migrations
                 {
                     b.HasOne("Masa.Mc.Service.Admin.Domain.ReceiverGroups.Aggregates.ReceiverGroup", null)
                         .WithMany("Users")
-                        .HasForeignKey("GroupId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ReceiverGroupId");
                 });
 
             modelBuilder.Entity("Masa.Mc.Service.Admin.Domain.MessageTemplates.Aggregates.MessageTemplate", b =>

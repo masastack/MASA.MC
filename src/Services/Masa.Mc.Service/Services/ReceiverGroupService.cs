@@ -2,7 +2,7 @@
 
 public class ReceiverGroupService : ServiceBase
 {
-    public ReceiverGroupService(IServiceCollection services) : base(services, "api/channel")
+    public ReceiverGroupService(IServiceCollection services) : base(services, "api/receiver-group")
     {
         MapPost(CreateAsync, string.Empty);
         MapPut(UpdateAsync, "{id}");

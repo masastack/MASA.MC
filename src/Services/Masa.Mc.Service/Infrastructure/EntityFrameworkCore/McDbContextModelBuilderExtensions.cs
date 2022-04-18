@@ -30,6 +30,19 @@ public static class McDbContextModelBuilderExtensions
             b.Property(x => x.Description).HasMaxLength(512);
             b.HasIndex(x => new { x.Code, x.MessageTemplateId });
         });
+
+        builder.Entity<ReceiverGroup>(b =>
+        {
+            b.ToTable(MCConsts.DbTablePrefix + "ReceiverGroups", MCConsts.DbSchema);
+            b.Property(x => x.DisplayName).IsRequired().HasMaxLength(128);
+            b.HasMany(x => x.Users).WithOne().HasForeignKey(x => x.GroupId).IsRequired();
+        });
+
+        builder.Entity<ReceiverGroupUser>(b =>
+        {
+            b.ToTable(MCConsts.DbTablePrefix + "ReceiverGroupUsers", MCConsts.DbSchema);
+            b.HasIndex(x => new { x.GroupId, x.UserId });
+        });
     }
 
 }

@@ -9,7 +9,7 @@ public class ReceiverGroupDomainService : DomainService
         _repository = repository;
     }
 
-    public virtual async Task SetUsersAsync(ReceiverGroup receiverGroup, params Guid[] userIds)
+    public virtual void SetUsers(ReceiverGroup receiverGroup, params Guid[] userIds)
     {
         foreach (var userId in receiverGroup.Users.Select(x => x.UserId).ToArray())
         {
@@ -24,6 +24,23 @@ public class ReceiverGroupDomainService : DomainService
             {
                 receiverGroup.AddUser(userId);
             }
+        }
+    }
+
+    public virtual async Task CreateAsync(ReceiverGroup receiverGroup, params Guid[] userIds)
+    {
+        if (userIds != null)
+        {
+            SetUsers(receiverGroup, userIds);
+        }
+        await _repository.AddAsync(receiverGroup);
+    }
+
+    public virtual async Task UpdateAsync(ReceiverGroup receiverGroup, params Guid[] userIds)
+    {
+        if (userIds != null)
+        {
+            SetUsers(receiverGroup, userIds);
         }
         await _repository.UpdateAsync(receiverGroup);
     }
