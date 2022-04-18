@@ -7,7 +7,7 @@
         public string Content { get; set; } = string.Empty;
         public MessageTemplateAuditStatus AuditStatus { get; set; }
         public string AuditReason { get; set; } = string.Empty;
-        public List<MessageTemplateItemDto> Items { get; set; }
+        public List<MessageTemplateItemDto> Items { get; set; } = new();
         public int TemplateType { get; set; }
     }
 }

@@ -1,6 +1,4 @@
-﻿using Masa.Mc.Infrastructure.Sms.Response;
-
-namespace Masa.Mc.Infrastructure.Sms;
+﻿namespace Masa.Mc.Infrastructure.Sms;
 
 public interface ISmsSender
 {
