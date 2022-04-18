@@ -1,33 +1,28 @@
-﻿namespace Masa.Mc.Infrastructure.Sms.Aliyun;
+﻿using Masa.Mc.Infrastructure.Sms.Aliyun.Services;
+
+namespace Masa.Mc.Infrastructure.Sms.Aliyun;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddAliyunSms(this IServiceCollection services, Action<AliyunSmsOptions> configureOptions)
+    public static IServiceCollection AddAliyunSms(this IServiceCollection services)
     {
-        return services.AddAliyunSms(string.Empty, configureOptions);
-    }
+        services.Configure<AliyunSmsResolveOptions>(options =>
+        {
+            if (!options.Contributors.Exists(x => x.Name == ConfigurationOptionsResolveContributor.ContributorName))
+            {
+                options.Contributors.Add(new ConfigurationOptionsResolveContributor());
+            }
 
-    public static IServiceCollection AddAliyunSms(this IServiceCollection services, string name, Action<AliyunSmsOptions> configureOptions)
-    {
-        services.Configure(name,configureOptions);
+            if (!options.Contributors.Exists(x => x.Name == AsyncLocalOptionsResolveContributor.ContributorName))
+            {
+                options.Contributors.Insert(0, new AsyncLocalOptionsResolveContributor());
+            }
+        });
+        services.TryAddSingleton<IAliyunSmsAsyncLocalAccessor, AliyunSmsAsyncLocalAccessor>();
+        services.TryAddTransient<IAliyunSmsAsyncLocal, AliyunSmsAsyncLocal>();
+        services.TryAddTransient<IAliyunSmsOptionsResolver, AliyunSmsOptionsResolver>();
         services.TryAddSingleton<ISmsSender, AliyunSmsSender>();
-        return services;
-    }
-
-    public static IServiceCollection AddAliyunSms(this IServiceCollection services, AliyunSmsOptions options)
-    {
-        return services.AddAliyunSms(o => o.SetOptions(options));
-    }
-
-    public static IServiceCollection AddAliyunSms(this IServiceCollection services, string name, AliyunSmsOptions options)
-    {
-        return services.AddAliyunSms(name,o => o.SetOptions(options));
-    }
-
-    public static IServiceCollection AddAliyunSms(this IServiceCollection services, IConfiguration configuration)
-    {
-        services.Configure<AliyunSmsOptions>(string.Empty, configuration);
-        services.TryAddSingleton<ISmsSender, AliyunSmsSender>();
+        services.TryAddSingleton<ISmsTemplateService, SmsTemplateService>();
         return services;
     }
 }

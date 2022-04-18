@@ -66,5 +66,7 @@ global using Masa.Mc.Infrastructure.Sms;
 global using Masa.Mc.Infrastructure.Sms.Aliyun;
 global using Masa.Mc.Contracts.Admin.Options.Channels;
 global using Masa.Mc.Infrastructure.Common.Helper;
-global using Masa.Mc.Infrastructure.Sms.Aliyun.Response.SmsTemplate;
 global using Masa.Mc.Infrastructure.Common.Extensions;
+global using Masa.Mc.Infrastructure.Sms.Aliyun.Infrastructure.OptionsResolve.Contributors;
+global using Masa.Mc.Infrastructure.Sms.Services;
+global using Masa.Mc.Infrastructure.Sms.Aliyun.Model.Response.SmsTemplate;

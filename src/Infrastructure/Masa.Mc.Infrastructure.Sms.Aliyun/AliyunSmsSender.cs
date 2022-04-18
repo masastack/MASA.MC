@@ -2,16 +2,16 @@ namespace Masa.Mc.Infrastructure.Sms.Aliyun;
 
 public class AliyunSmsSender : ISmsSender
 {
-    protected AliyunSmsOptions Options { get; }
+    private readonly IAliyunSmsOptionsResolver _aliyunSmsOptionsResolver;
 
-    public AliyunSmsSender(IOptions<AliyunSmsOptions> options)
+    public AliyunSmsSender(IAliyunSmsOptionsResolver aliyunSmsOptionsResolver)
     {
-        Options = options.Value;
+        _aliyunSmsOptionsResolver = aliyunSmsOptionsResolver;
     }
 
     public async Task SendAsync(SmsMessage smsMessage)
     {
-        var client = CreateClient();
+        var client = await CreateClientAsync();
 
         await client.SendSmsAsync(new AliyunSendSmsRequest
         {
@@ -22,36 +22,14 @@ public class AliyunSmsSender : ISmsSender
         });
     }
 
-    public async Task<ResponseBase> GetSmsTemplateAsync(string templateCode)
+    protected async Task<AliyunClient> CreateClientAsync()
     {
-        var client = CreateClient();
-        QuerySmsTemplateRequest querySmsTemplateRequest = new QuerySmsTemplateRequest()
-        {
-            TemplateCode = templateCode
-        };
-        
-        var response = await client.QuerySmsTemplateAsync(querySmsTemplateRequest);
-        var body = response.Body;
-        return new SmsTemplateResponse(body.Code == "OK", body.Message, response);
-    }
-
-    protected virtual AliyunClient CreateClient()
-    {
+        var options = await _aliyunSmsOptionsResolver.ResolveAsync();
         return new(new AliyunConfig
         {
-            AccessKeyId = Options.AccessKeyId,
-            AccessKeySecret = Options.AccessKeySecret,
-            Endpoint = Options.EndPoint
-        });
-    }
-
-    public void SetOptions(IDictionary<string, object> options)
-    {
-        Options.SetOptions(new AliyunSmsOptions
-        {
-            AccessKeySecret = options["AccessKeySecret"].ToString(),
-            AccessKeyId = options["AccessKeyId"].ToString(),
-            EndPoint = options["EndPoint"].ToString(),
+            AccessKeyId = options.AccessKeyId,
+            AccessKeySecret = options.AccessKeySecret,
+            Endpoint = options.EndPoint
         });
     }
 }

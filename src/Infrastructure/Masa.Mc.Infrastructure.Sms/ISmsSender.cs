@@ -2,9 +2,5 @@
 
 public interface ISmsSender
 {
-    void SetOptions(IDictionary<string, object> options);
-
     Task SendAsync(SmsMessage smsMessage);
-
-    Task<ResponseBase> GetSmsTemplateAsync(string templateCode);
 }

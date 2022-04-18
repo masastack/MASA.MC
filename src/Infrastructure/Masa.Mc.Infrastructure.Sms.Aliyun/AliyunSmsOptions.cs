@@ -1,6 +1,6 @@
 namespace Masa.Mc.Infrastructure.Sms.Aliyun;
 
-public class AliyunSmsOptions
+public class AliyunSmsOptions : IAliyunSmsOptions
 {
     public string AccessKeySecret { get; set; }
 
