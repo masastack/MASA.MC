@@ -230,5 +230,11 @@
         "Href": "messageTemplates/websiteMessageTemplateManagement"
       }
     ]
+  },
+  {
+    "Id": 37,
+    "Title": "Permission:ReceiverGroupManagement",
+    "Icon": "mdi-file-outline",
+    "Href": "receiverGroups/receiverGroupManagement"
   }
 ]

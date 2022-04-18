@@ -12,7 +12,7 @@
             return await Task.FromResult(_context.Set<ReceiverGroup>().AsQueryable());
         }
 
-        private async Task<IQueryable<ReceiverGroup>> WithDetailsAsync()
+        public async Task<IQueryable<ReceiverGroup>> WithDetailsAsync()
         {
             var query = await GetQueryableAsync();
             return query.IncludeDetails();

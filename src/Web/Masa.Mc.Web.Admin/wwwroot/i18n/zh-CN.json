@@ -119,5 +119,15 @@
   "DisplayName:MessageTemplateItem": "模板变量",
   "DisplayName:MessageTemplateItemCode": "变量",
   "DisplayName:MessageTemplateItemMappingCode": "映射变量",
-  "DisplayName:MessageTemplateItemDisplayText": "备注"
+  "DisplayName:MessageTemplateItemDisplayText": "备注",
+
+  "Permission:ReceiverGroupManagement": "收件人组管理",
+  "Permission:CreateReceiverGroup": "创建收件人组",
+  "Permission:EditReceiverGroup": "编辑收件人组",
+  "DisplayName:ReceiverGroup": "收件人组",
+  "DisplayName:ReceiverGroupDisplayName": "收件人组名称",
+  "DisplayName:ReceiverGroupDescription": "收件人组备注",
+  "ReceiverGroupCreateMessage": "创建收件人组成功.",
+  "ReceiverGroupEditMessage": "编辑收件人组成功.",
+  "ReceiverGroupDeleteMessage": "删除收件人组成功."
 }

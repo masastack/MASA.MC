@@ -1,0 +1,130 @@
+﻿@inherits AdminCompontentBase
+<div @ref="Ref">
+    <SheetDialog Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission:CreateReceiverGroup")" ContentStyle="padding-right:228px;padding-left:228px;">
+        <MForm Model="_model" EnableValidation>
+            <MRow Justify="@("center")">
+                <MCol Cols="12" Sm="6" Md="3">
+                    <MTextField Class="mx-auto text-h5" @bind-Value="_model.DisplayName" Label="@T("DisplayName:ReceiverGroupDisplayName")" TValue="string"></MTextField>
+                </MCol>
+            </MRow>
+            <MRow class="mx-1 py-2">
+                <MAutocomplete @bind-Value="_userIds"
+                               Items="_stateUserItems"
+                               Color="primary"
+                               Class="rounded-2 search"
+                               Flat
+                               Dense
+                               Solo
+                               BackgroundColor="fill-lighten-1"
+                               Label="请选择用户"
+                               ItemText="r=>r.DisplayName"
+                               ItemValue="r=>r.Id"
+                               Multiple>
+                    <PrependInnerContent>
+                        <MIcon Size=16 Class="mr-2 neutral-lighten-1--text">mdi-magnify</MIcon>
+                    </PrependInnerContent>
+                    <SelectionContent Context="data">
+                        <MChip Close
+                               OnCloseClick="()=>Remove(data.Item)">
+                            <MAvatar Left>
+                                @if (data.Item.Group != "用户")
+                                {
+                                    <MIcon>mdi-account-group</MIcon>
+                                }
+                                else
+                                {
+                                    <MImage Src="@data.Item.Avatar"></MImage>
+                                }
+                            </MAvatar>
+                            @data.Item.DisplayName
+                        </MChip>
+                    </SelectionContent>
+                    <ItemContent Context="data">
+                        @if (data.Item.Group != "用户")
+                        {
+                            <MListItemAvatar>
+                                <MIcon Large>mdi-account-group</MIcon>
+                            </MListItemAvatar>
+                            <MListItemContent>
+                                <MListItemTitle>
+                                    @((MarkupString)data.Item.DisplayName)
+                                </MListItemTitle>
+                                <MListItemSubtitle>
+                                    @((MarkupString)data.Item.Group)
+                                </MListItemSubtitle>
+                            </MListItemContent>
+                        }
+                        else
+                        {
+                            <MListItemAvatar>
+                                <img src="@data.Item.Avatar">
+                            </MListItemAvatar>
+                            <MListItemContent>
+                                <MListItemTitle>
+                                    @((MarkupString)data.Item.DisplayName)
+                                </MListItemTitle>
+                                <MListItemSubtitle>
+                                    @((MarkupString)data.Item.PhoneNumber)|@((MarkupString)data.Item.Email)
+                                </MListItemSubtitle>
+                            </MListItemContent>
+                        }
+                    </ItemContent>
+                </MAutocomplete>
+                <MButton Rounded Outlined Color="indigo" Class="ml-6 medium-button px-6">
+                    <span>添加</span>
+                </MButton>
+                <MButton Color="primary" Class="ml-6 medium-button">
+                    <MIcon Size=18>mdi-plus</MIcon>
+                    <span class="ml-2">外部成员</span>
+                </MButton>
+            </MRow>
+            <MCard Class="mx-auto" Outlined>
+
+                <MList ThreeLine>
+                    <MRow>
+                        @foreach (var item in _stateUserItems)
+                        {
+                            <MCol Md="3">
+                                <MListItem>
+                                    @if (item.Group != "用户")
+                                    {
+                                        <MListItemAvatar>
+                                            <MIcon Large>mdi-account-group</MIcon>
+                                        </MListItemAvatar>
+                                        <MListItemContent>
+                                            <MListItemTitle>@((MarkupString)item.DisplayName)</MListItemTitle>
+                                        </MListItemContent>
+                                    }
+                                    else
+                                    {
+                                        <MListItemAvatar>
+                                            <MImage Src="@item.Avatar"></MImage>
+                                        </MListItemAvatar>
+                                        <MListItemContent>
+                                            <MListItemTitle>@((MarkupString)item.DisplayName)</MListItemTitle>
+                                            <MListItemSubtitle>@((MarkupString)item.PhoneNumber)|@((MarkupString)item.Email)</MListItemSubtitle>
+                                        </MListItemContent>
+                                    }
+                                </MListItem>
+                            </MCol>
+                        }
+                    </MRow>
+
+                </MList>
+            </MCard>
+            <MRow Class="mt-1">
+                <MCol Cols="12">
+                    <MTextarea @bind-Value="_model.Description"
+                               Label="@T("DisplayName:ReceiverGroupDescription")"
+                               Dense
+                               Outlined
+                               HideDetails="@("auto")">
+                    </MTextarea>
+                </MCol>
+            </MRow>
+            <MCardActions Class="d-flex justify-end align-center mb-6">
+                <MButton Color="rounded-pill primary" Class="small-button" OnClick="async() => await HandleOk(context)">@T("Save")</MButton>
+            </MCardActions>
+        </MForm>
+    </SheetDialog>
+</div>

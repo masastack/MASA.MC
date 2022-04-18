@@ -22,18 +22,14 @@ public class ReceiverGroupQueryHandler
     public async Task GetListAsync(GetListReceiverGroupQuery query)
     {
         var options = query.Input;
-        var condition = await CreateFilteredPredicate(options);
-        var resultList = await _repository.GetPaginatedListAsync(condition, new PaginatedOptions
-        {
-            Page = options.Page,
-            PageSize = options.PageSize,
-            Sorting = new Dictionary<string, bool>
-            {
-                [nameof(ReceiverGroup.CreationTime)] = true
-            }
-        });
-        var dtos = resultList.Result.Adapt<List<ReceiverGroupDto>>();
-        var result = new PaginatedListDto<ReceiverGroupDto>(resultList.Total, resultList.TotalPages, dtos);
+        var queryable = await CreateFilteredQueryAsync(options);
+        var totalCount = await queryable.CountAsync();
+        var totalPages = (int)Math.Ceiling(totalCount / (decimal)options.PageSize);
+        if (string.IsNullOrEmpty(options.Sorting)) options.Sorting = "creationTime desc";
+        queryable = queryable.OrderBy(options.Sorting).PageBy(options.Page, options.PageSize);
+        var entities = await queryable.ToListAsync();
+        var entityDtos = entities.Adapt<List<ReceiverGroupDto>>();
+        var result = new PaginatedListDto<ReceiverGroupDto>(totalCount, totalPages, entityDtos);
         query.Result = result;
     }
 
@@ -42,5 +38,12 @@ public class ReceiverGroupQueryHandler
         Expression<Func<ReceiverGroup, bool>> condition = channel => true;
         condition = condition.And(!string.IsNullOrEmpty(input.Filter), channel => channel.DisplayName.Contains(input.Filter));
         return await Task.FromResult(condition); ;
+    }
+
+    private async Task<IQueryable<ReceiverGroup>> CreateFilteredQueryAsync(GetReceiverGroupInput input)
+    {
+        var query = await _repository.WithDetailsAsync()!;
+        var condition = await CreateFilteredPredicate(input);
+        return query.Where(condition);
     }
 }
