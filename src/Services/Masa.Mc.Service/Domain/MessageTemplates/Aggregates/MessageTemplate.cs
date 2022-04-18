@@ -18,7 +18,7 @@ public class MessageTemplate : AuditAggregateRoot<Guid, Guid>
     public int TemplateType { get; protected set; }
     public long DayLimit { get; protected set; }
     public bool IsStatic { get; protected set; }
-    public List<MessageTemplateItem> Items { get; protected set; } = new List<MessageTemplateItem>();
+    public ICollection<MessageTemplateItem> Items { get; protected set; } = new List<MessageTemplateItem>();
 
     public MessageTemplate(Guid channelId, string displayName, string title, string content, string example, string templateId, bool isJump, string jumpUrl, string sign, int templateType,
         long dayLimit) : this(channelId, displayName, title, content, example, templateId, isJump, jumpUrl, sign, templateType, dayLimit, new List<MessageTemplateItem>())
