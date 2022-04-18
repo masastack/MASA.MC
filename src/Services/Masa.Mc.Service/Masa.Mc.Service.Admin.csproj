@@ -42,4 +42,8 @@
 	  <ProjectReference Include="..\..\Infrastructure\Masa.Mc.Infrastructure.Sms.Aliyun\Masa.Mc.Infrastructure.Sms.Aliyun.csproj" />
 	  <ProjectReference Include="..\..\Infrastructure\Masa.Mc.Infrastructure.Sms\Masa.Mc.Infrastructure.Sms.csproj" />
 	</ItemGroup>
+	
+	<ItemGroup>
+	  <Folder Include="Application\ReceiverGroups\Registers\" />
+	</ItemGroup>
 </Project>

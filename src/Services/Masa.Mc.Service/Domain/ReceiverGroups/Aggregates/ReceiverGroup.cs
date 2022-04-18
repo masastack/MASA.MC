@@ -2,11 +2,11 @@
 
 public class ReceiverGroup : AuditAggregateRoot<Guid, Guid>
 {
-    public virtual string DisplayName { get; protected set; } = string.Empty;
+    public string DisplayName { get; protected set; } = string.Empty;
 
-    public virtual string Description { get; protected set; } = string.Empty;
+    public string Description { get; protected set; } = string.Empty;
 
-    public virtual ICollection<ReceiverGroupUser> Users { get; protected set; }
+    public ICollection<ReceiverGroupUser> Users { get; protected set; }
 
     public ReceiverGroup(string displayName, string description)
     {
@@ -17,7 +17,7 @@ public class ReceiverGroup : AuditAggregateRoot<Guid, Guid>
 
     public virtual void AddUser(Guid userId)
     {
-        if (IsInExecutor(userId))
+        if (IsInUser(userId))
         {
             return;
         }
@@ -32,7 +32,7 @@ public class ReceiverGroup : AuditAggregateRoot<Guid, Guid>
 
     public virtual void RemoveUser(Guid userId)
     {
-        if (!IsInExecutor(userId))
+        if (!IsInUser(userId))
         {
             return;
         }
@@ -42,7 +42,7 @@ public class ReceiverGroup : AuditAggregateRoot<Guid, Guid>
         );
     }
 
-    public virtual bool IsInExecutor(Guid userId)
+    public virtual bool IsInUser(Guid userId)
     {
         return Users.Any(
             ou => ou.UserId == userId
