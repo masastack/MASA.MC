@@ -1,24 +1,24 @@
 ﻿namespace Masa.Mc.Service.Admin.Domain.MessageTemplates.Aggregates;
 public class MessageTemplate : AuditAggregateRoot<Guid, Guid>
 {
-    public virtual Guid ChannelId { get; protected set; }
-    public virtual string DisplayName { get; protected set; } = string.Empty;
-    public virtual string Title { get; protected set; } = string.Empty;
-    public virtual string Content { get; protected set; } = string.Empty;
-    public virtual string Example { get; protected set; } = string.Empty;
-    public virtual string TemplateId { get; protected set; } = string.Empty;
-    public virtual bool IsJump { get; protected set; }
-    public virtual string JumpUrl { get; protected set; } = string.Empty;
-    public virtual string Sign { get; protected set; } = string.Empty;
-    public virtual MessageTemplateStatus Status { get; protected set; }
-    public virtual MessageTemplateAuditStatus AuditStatus { get; protected set; }
-    public virtual DateTime? AuditTime { get; protected set; }
-    public virtual DateTime? InvalidTime { get; protected set; }
-    public virtual string AuditReason { get; protected set; } = string.Empty;
-    public virtual int TemplateType { get; protected set; }
-    public virtual long DayLimit { get; protected set; }
+    public Guid ChannelId { get; protected set; }
+    public string DisplayName { get; protected set; } = string.Empty;
+    public string Title { get; protected set; } = string.Empty;
+    public string Content { get; protected set; } = string.Empty;
+    public string Example { get; protected set; } = string.Empty;
+    public string TemplateId { get; protected set; } = string.Empty;
+    public bool IsJump { get; protected set; }
+    public string JumpUrl { get; protected set; } = string.Empty;
+    public string Sign { get; protected set; } = string.Empty;
+    public MessageTemplateStatus Status { get; protected set; }
+    public MessageTemplateAuditStatus AuditStatus { get; protected set; }
+    public DateTime? AuditTime { get; protected set; }
+    public DateTime? InvalidTime { get; protected set; }
+    public string AuditReason { get; protected set; } = string.Empty;
+    public int TemplateType { get; protected set; }
+    public long DayLimit { get; protected set; }
     public virtual bool IsStatic { get; protected set; }
-    public virtual ICollection<MessageTemplateItem> Items { get; protected set; } = new List<MessageTemplateItem>();
+    public ICollection<MessageTemplateItem> Items { get; protected set; } = new List<MessageTemplateItem>();
 
     public MessageTemplate(Guid channelId, string displayName, string title, string content, string example, string templateId, bool isJump, string jumpUrl, string sign, int templateType,
         long dayLimit) : this(channelId, displayName, title, content, example, templateId, isJump, jumpUrl, sign, templateType, dayLimit, new List<MessageTemplateItem>())

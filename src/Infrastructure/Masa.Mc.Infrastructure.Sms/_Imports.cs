@@ -1,1 +1,1 @@
-﻿global using Masa.Mc.Infrastructure.Sms.Response;
+﻿global using Masa.Mc.Infrastructure.Sms.Model.Response;

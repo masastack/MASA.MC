@@ -4,8 +4,11 @@ global using AliyunSendSmsRequest = AlibabaCloud.SDK.Dysmsapi20170525.Models.Sen
 global using System.Text.Json;
 global using AlibabaCloud.SDK.Dysmsapi20170525.Models;
 global using Microsoft.Extensions.Options;
-global using Masa.Mc.Infrastructure.Sms.Response;
-global using Masa.Mc.Infrastructure.Sms.Aliyun.Response.SmsTemplate;
 global using Microsoft.Extensions.Configuration;
 global using Microsoft.Extensions.DependencyInjection;
 global using Microsoft.Extensions.DependencyInjection.Extensions;
+global using Masa.Mc.Infrastructure.Sms.Aliyun.Infrastructure.OptionsResolve;
+global using Masa.Mc.Infrastructure.Sms.Aliyun.Infrastructure.OptionsResolve.Contributors;
+global using Masa.Mc.Infrastructure.Sms.Model.Response;
+global using Masa.Mc.Infrastructure.Sms.Services;
+global using Masa.Mc.Infrastructure.Sms.Aliyun.Model.Response.SmsTemplate;

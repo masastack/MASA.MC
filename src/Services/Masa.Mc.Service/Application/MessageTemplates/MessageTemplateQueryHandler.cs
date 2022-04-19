@@ -4,13 +4,15 @@ public class MessageTemplateQueryHandler
 {
     private readonly IMessageTemplateRepository _repository;
     private readonly IChannelRepository _channelRepository;
-    private readonly ISmsSender _smsSender;
+    private readonly ISmsTemplateService _smsTemplateService;
+    private readonly IAliyunSmsAsyncLocal _aliyunSmsAsyncLocal;
 
-    public MessageTemplateQueryHandler(IMessageTemplateRepository repository, IChannelRepository channelRepository, ISmsSender smsSender)
+    public MessageTemplateQueryHandler(IMessageTemplateRepository repository, IChannelRepository channelRepository, ISmsTemplateService smsTemplateService, IAliyunSmsAsyncLocal aliyunSmsAsyncLocal)
     {
         _repository = repository;
-        _smsSender = smsSender;
+        _smsTemplateService = smsTemplateService;
         _channelRepository = channelRepository;
+        _aliyunSmsAsyncLocal = aliyunSmsAsyncLocal;
     }
 
     [EventHandler]
@@ -53,24 +55,27 @@ public class MessageTemplateQueryHandler
             AccessKeyId = channel.GetDataValue(nameof(SmsChannelOptions.AccessKeyId)).ToString(),
             AccessKeySecret = channel.GetDataValue(nameof(SmsChannelOptions.AccessKeySecret)).ToString()
         };
-        _smsSender.SetOptions(options);
-        var smsTemplateResponse = await _smsSender.GetSmsTemplateAsync(query.TemplateCode) as SmsTemplateResponse;
-        if (!smsTemplateResponse.Success)
+        using (_aliyunSmsAsyncLocal.Change(options))
         {
-            throw new UserFriendlyException(smsTemplateResponse.Message);
+            var smsTemplateResponse = await _smsTemplateService.GetSmsTemplateAsync(query.TemplateCode) as SmsTemplateResponse;
+            if (!smsTemplateResponse.Success)
+            {
+                throw new UserFriendlyException(smsTemplateResponse.Message);
+            }
+            var smsTemplate = smsTemplateResponse.Data.Body;
+            var dto = new SmsTemplateDto
+            {
+                DisplayName = smsTemplate.TemplateName,
+                TemplateId = smsTemplate.TemplateCode,
+                Content = smsTemplate.TemplateContent,
+                AuditStatus = SmsTemplateStatusMapToAuditStatus(smsTemplate.TemplateStatus),
+                TemplateType = AliyunSmsTemplateTypeMapToTemplateType(smsTemplate.TemplateType),
+                AuditReason = smsTemplate.Reason
+            };
+            dto.Items = ParseTemplateItem(smsTemplate.TemplateContent);
+            query.Result = dto;
         }
-        var smsTemplate = smsTemplateResponse.Data.Body;
-        var dto = new SmsTemplateDto
-        {
-            DisplayName = smsTemplate.TemplateName,
-            TemplateId = smsTemplate.TemplateCode,
-            Content = smsTemplate.TemplateContent,
-            AuditStatus = SmsTemplateStatusMapToAuditStatus(smsTemplate.TemplateStatus),
-            TemplateType = AliyunSmsTemplateTypeMapToTemplateType(smsTemplate.TemplateType),
-            AuditReason = smsTemplate.Reason
-        };
-        dto.Items = ParseTemplateItem(smsTemplate.TemplateContent);
-        query.Result = dto;
+
     }
 
     private async Task<Expression<Func<MessageTemplateWithDetail, bool>>> CreateFilteredPredicate(GetMessageTemplateInput input)
