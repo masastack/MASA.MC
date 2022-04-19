@@ -9,30 +9,30 @@ public class ReceiverGroupDomainService : DomainService
         _repository = repository;
     }
 
-    public virtual async Task CreateAsync(ReceiverGroup receiverGroup, Guid[] userIds = null, List<ReceiverGroupItem> items = null)
+    public virtual async Task CreateAsync(ReceiverGroup receiverGroup, List<ReceiverGroupItem> items = null)
     {
-        if (userIds != null)
-        {
-            SetUsers(receiverGroup, userIds);
-        }
         if (items != null)
         {
             SetItems(receiverGroup, items);
         }
         await _repository.AddAsync(receiverGroup);
+        if (items != null)
+        {
+            await EventBus.PublishAsync(new ReceiverGroupItemChangedDomainEvent(receiverGroup.Id));
+        }
     }
 
-    public virtual async Task UpdateAsync(ReceiverGroup receiverGroup, Guid[] userIds = null, List<ReceiverGroupItem> items = null)
+    public virtual async Task UpdateAsync(ReceiverGroup receiverGroup, List<ReceiverGroupItem> items = null)
     {
-        if (userIds != null)
-        {
-            SetUsers(receiverGroup, userIds);
-        }
         if (items != null)
         {
             SetItems(receiverGroup, items);
         }
         await _repository.UpdateAsync(receiverGroup);
+        if (items != null)
+        {
+            await EventBus.PublishAsync(new ReceiverGroupItemChangedDomainEvent(receiverGroup.Id));
+        }
     }
 
     public virtual void SetUsers(ReceiverGroup receiverGroup, params Guid[] userIds)

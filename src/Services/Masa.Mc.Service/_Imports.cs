@@ -79,4 +79,5 @@ global using Masa.Mc.Service.Admin.Application.ReceiverGroups.Commands;
 global using Masa.Mc.Contracts.Admin.Enums.ReceiverGroups;
 global using System.Collections.ObjectModel;
 global using Masa.Mc.Contracts.Admin.Dtos.ReceiverGroups.Validator;
+global using Masa.Mc.Service.Admin.Domain.ReceiverGroups.Events;
 
