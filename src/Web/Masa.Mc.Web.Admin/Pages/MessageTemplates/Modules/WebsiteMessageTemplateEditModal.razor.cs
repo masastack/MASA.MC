@@ -62,6 +62,29 @@ public partial class WebsiteMessageTemplateEditModal : AdminCompontentBase
         }
     }
 
+    private async Task HandleDelAsync()
+    {
+        await ConfirmAsync(T("DeletionConfirmationMessage"), async args =>
+        {
+            await DeleteAsync();
+        }
+        );
+    }
+
+    private async Task DeleteAsync()
+    {
+        Loading = true;
+        await MessageTemplateCaller.DeleteAsync(_entityId);
+        Loading = false;
+        await SuccessMessageAsync(T("MessageTemplateDeleteMessage"));
+        _visible = false;
+        ResetForm();
+        if (OnOk.HasDelegate)
+        {
+            await OnOk.InvokeAsync();
+        }
+    }
+
     private void ResetForm()
     {
         _model = new();

@@ -70,6 +70,7 @@ public partial class SmsTemplateEditModal : AdminCompontentBase
         }
         );
     }
+
     private async Task DeleteAsync()
     {
         Loading = true;
