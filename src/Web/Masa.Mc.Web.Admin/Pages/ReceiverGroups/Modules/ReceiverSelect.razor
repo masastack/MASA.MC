@@ -1,0 +1,120 @@
+﻿@inherits AdminCompontentBase
+<MRow class="mx-1 py-2">
+    <MAutocomplete @bind-Value="_userIds"
+                   Items="_stateUserItems"
+                   Color="primary"
+                   Class="rounded-2 search"
+                   Flat
+                   Dense
+                   Solo
+                   BackgroundColor="fill-lighten-1"
+                   Label="请选择用户"
+                   ItemText="r=>r.DisplayName"
+                   ItemValue="r=>r.Id"
+                   Multiple>
+        <PrependInnerContent>
+            <MIcon Size=16 Class="mr-2 neutral-lighten-1--text">mdi-magnify</MIcon>
+        </PrependInnerContent>
+        <SelectionContent Context="data">
+            <MChip Close
+                   OnCloseClick="()=>Remove(data.Item)">
+                <MAvatar Left>
+                    @if (data.Item.Type != ReceiverGroupItemType.User)
+                    {
+                        <MIcon>mdi-account-group</MIcon>
+                    }
+                    else
+                    {
+                        <MImage Src="@data.Item.Avatar"></MImage>
+                    }
+                </MAvatar>
+                @data.Item.DisplayName
+            </MChip>
+        </SelectionContent>
+        <ItemContent Context="data">
+            @if (data.Item.Type != ReceiverGroupItemType.User)
+            {
+                <MListItemAvatar>
+                    <MIcon Large>mdi-account-group</MIcon>
+                </MListItemAvatar>
+                <MListItemContent>
+                    <MListItemTitle>
+                        @(data.Item.DisplayName)
+                    </MListItemTitle>
+                    <MListItemSubtitle>
+                        @(data.Item.Type)
+                    </MListItemSubtitle>
+                </MListItemContent>
+            }
+            else
+            {
+                <MListItemAvatar>
+                    <img src="@data.Item.Avatar">
+                </MListItemAvatar>
+                <MListItemContent>
+                    <MListItemTitle>
+                        @(data.Item.DisplayName)
+                    </MListItemTitle>
+                    <MListItemSubtitle>
+                        @(data.Item.PhoneNumber)|@(data.Item.Email)
+                    </MListItemSubtitle>
+                </MListItemContent>
+            }
+        </ItemContent>
+    </MAutocomplete>
+    <MButton Rounded Outlined Color="indigo" Class="ml-6 medium-button px-6" OnClick="AddAsync">
+        <span>添加</span>
+    </MButton>
+    <MButton Color="primary" Class="ml-6 medium-button" OnClick="_createModal.OpenModalAsync">
+        <MIcon Size=18>mdi-plus</MIcon>
+        <span class="ml-2">外部成员</span>
+    </MButton>
+</MRow>
+<MCard Class="mx-auto" Outlined Height="470">
+    @if (Value.Count > 0)
+    {
+        <MList ThreeLine>
+            <MRow>
+                @foreach (var item in Value)
+                {
+                    <MCol Md="3">
+                        <MHover>
+                            <MListItem @attributes="context.Attrs" Class="@($"{context.Class} {(context.Hover ? "on-hover" : "")}")">
+                                <MListItemAvatar>
+                                    @if (item.Type != ReceiverGroupItemType.User)
+                                    {
+                                        <MIcon Large>mdi-account-group</MIcon>
+                                    }
+                                    else
+                                    {
+                                        <MImage Src="@item.Avatar"></MImage>
+                                    }
+                                </MListItemAvatar>
+                                <MListItemContent>
+                                    <MListItemTitle>@(item.DisplayName)</MListItemTitle>
+                                    @if (item.Type != ReceiverGroupItemType.User)
+                                    {
+                                        <MListItemSubtitle>@(item.PhoneNumber)|@(item.Email)</MListItemSubtitle>
+                                    }
+                                </MListItemContent>
+                                <MOverlay Absolute Opacity="0.2" Class="justify-end align-start"
+                                  Value="@(context.Hover)">
+                                  <MButton Icon OnClick="()=>RemoveValue(item)">
+                                            <MIcon>mdi-close</MIcon>
+                                        </MButton>
+                                </MOverlay>
+                            </MListItem>
+                        </MHover>
+                    </MCol>
+                }
+            </MRow>
+        </MList>
+    }
+    else
+    {
+        <div class="d-flex align-center justify-center pa-4 text-h4" style="height:100%">
+            请添加/选择成员
+        </div>
+    }
+</MCard>
+<UserCreateModal @ref="_createModal" OnOk="HandleOk"/>

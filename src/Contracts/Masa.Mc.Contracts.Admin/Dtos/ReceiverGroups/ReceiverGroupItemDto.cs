@@ -4,6 +4,8 @@ public class ReceiverGroupItemDto
 {
     public Guid GroupId { get; set; }
 
+    public ReceiverGroupItemType Type { get; set; }
+
     public string DataId { get; set; } = string.Empty;
 
     public string DisplayName { get; set; } = string.Empty;
@@ -13,6 +15,4 @@ public class ReceiverGroupItemDto
     public string PhoneNumber { get; set; } = string.Empty;
 
     public string Email { get; set; } = string.Empty;
-
-    public ReceiverGroupItemType Type { get; set; }
 }

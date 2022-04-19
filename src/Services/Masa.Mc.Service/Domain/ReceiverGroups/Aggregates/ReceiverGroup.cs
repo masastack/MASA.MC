@@ -52,42 +52,23 @@ public class ReceiverGroup : AuditAggregateRoot<Guid, Guid>
         );
     }
 
-    public virtual void AddItem(string dataId, ReceiverGroupItemType type, string displayName, string avatar = "", string phoneNumber = "", string email = "")
+    public virtual void AddOrUpdateItem(string dataId, ReceiverGroupItemType type, string displayName, string avatar = "", string phoneNumber = "", string email = "")
     {
-        if (IsInItem(dataId, type))
-        {
-            return;
-        }
+        var existingItem = Items.SingleOrDefault(item => item.DataId == dataId && item.Type == type);
 
-        Items.Add(
-            new ReceiverGroupItem(
-                Id,
+        if (existingItem == null)
+        {
+            Items.Add(new ReceiverGroupItem(Id,
                 dataId,
                 type,
                 displayName,
                 avatar,
                 phoneNumber,
-                email
-            )
-        );
-    }
-
-    public virtual void RemoveItem(string dataId, ReceiverGroupItemType type)
-    {
-        if (!IsInItem(dataId, type))
-        {
-            return;
+                email));
         }
-
-        Items.RemoveAll(
-            x => x.DataId == dataId && x.Type == type
-        );
-    }
-
-    public virtual bool IsInItem(string dataId, ReceiverGroupItemType type)
-    {
-        return Items.Any(
-            x => x.DataId == dataId && x.Type == type
-        );
+        else
+        {
+            existingItem.SetContent(displayName, avatar, phoneNumber, email);
+        }
     }
 }

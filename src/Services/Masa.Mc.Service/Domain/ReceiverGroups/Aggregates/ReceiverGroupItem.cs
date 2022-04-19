@@ -16,11 +16,17 @@ public class ReceiverGroupItem : Entity<Guid>
 
     public ReceiverGroupItemType Type { get; protected set; }
 
-    protected internal ReceiverGroupItem(Guid groupId, string dataId, ReceiverGroupItemType type, string displayName, string avatar = "", string phoneNumber = "", string email = "")
+    public ReceiverGroupItem(Guid groupId, string dataId, ReceiverGroupItemType type, string displayName, string avatar = "", string phoneNumber = "", string email = "")
     {
         GroupId = groupId;
         DataId = dataId;
         Type = type;
+
+        SetContent(displayName, avatar, phoneNumber, email);
+    }
+
+    public void SetContent(string displayName, string avatar, string phoneNumber, string email)
+    {
         DisplayName = displayName;
         Avatar = avatar;
         PhoneNumber = phoneNumber;

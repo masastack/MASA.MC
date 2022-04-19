@@ -9,6 +9,32 @@ public class ReceiverGroupDomainService : DomainService
         _repository = repository;
     }
 
+    public virtual async Task CreateAsync(ReceiverGroup receiverGroup, Guid[] userIds = null, List<ReceiverGroupItem> items = null)
+    {
+        if (userIds != null)
+        {
+            SetUsers(receiverGroup, userIds);
+        }
+        if (items != null)
+        {
+            SetItems(receiverGroup, items);
+        }
+        await _repository.AddAsync(receiverGroup);
+    }
+
+    public virtual async Task UpdateAsync(ReceiverGroup receiverGroup, Guid[] userIds = null, List<ReceiverGroupItem> items = null)
+    {
+        if (userIds != null)
+        {
+            SetUsers(receiverGroup, userIds);
+        }
+        if (items != null)
+        {
+            SetItems(receiverGroup, items);
+        }
+        await _repository.UpdateAsync(receiverGroup);
+    }
+
     public virtual void SetUsers(ReceiverGroup receiverGroup, params Guid[] userIds)
     {
         foreach (var userId in receiverGroup.Users.Select(x => x.UserId).ToArray())
@@ -27,21 +53,12 @@ public class ReceiverGroupDomainService : DomainService
         }
     }
 
-    public virtual async Task CreateAsync(ReceiverGroup receiverGroup, params Guid[] userIds)
+    public virtual void SetItems(ReceiverGroup receiverGroup, List<ReceiverGroupItem> items)
     {
-        if (userIds != null)
+        foreach (var item in items)
         {
-            SetUsers(receiverGroup, userIds);
+            receiverGroup.AddOrUpdateItem(item.DataId, item.Type, item.DisplayName, item.Avatar, item.PhoneNumber, item.Email);
         }
-        await _repository.AddAsync(receiverGroup);
-    }
-
-    public virtual async Task UpdateAsync(ReceiverGroup receiverGroup, params Guid[] userIds)
-    {
-        if (userIds != null)
-        {
-            SetUsers(receiverGroup, userIds);
-        }
-        await _repository.UpdateAsync(receiverGroup);
+        receiverGroup.Items.RemoveAll(item => !items.Any(x => x.DataId == item.DataId && x.Type == item.Type));
     }
 }

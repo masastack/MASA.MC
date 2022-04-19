@@ -1,14 +1,14 @@
 ﻿namespace Masa.Mc.Web.Admin.Pages.ReceiverGroups.Modules;
 
-public partial class ReceiverGroupCreateModal : AdminCompontentBase
+public partial class UserCreateModal : AdminCompontentBase
 {
     [Parameter]
-    public EventCallback OnOk { get; set; }
+    public EventCallback<UserViewModel> OnOk { get; set; }
 
     [Inject]
     public ReceiverGroupCaller ReceiverGroupCaller { get; set; } = default!;
 
-    private ReceiverGroupCreateUpdateDto _model = new();
+    private UserViewModel _model = new();
     private bool _visible;
 
     public async Task OpenModalAsync()
@@ -26,31 +26,23 @@ public partial class ReceiverGroupCreateModal : AdminCompontentBase
         ResetForm();
     }
 
-    private async Task HandleOk(EditContext context)
+    private async Task HandleOk()
     {
-        if (!context.Validate())
-        {
-            return;
-        }
         Loading = true;
-        await ReceiverGroupCaller.CreateAsync(_model);
+       
         Loading = false;
         await SuccessMessageAsync(T("ReceiverGroupCreateMessage"));
         _visible = false;
-        ResetForm();
+        
         if (OnOk.HasDelegate)
         {
-            await OnOk.InvokeAsync();
+            await OnOk.InvokeAsync(_model);
         }
+        ResetForm();
     }
 
     private void ResetForm()
     {
         _model = new();
-    }
-
-    private void HandleVisibleChanged(bool val)
-    {
-        if (!val) HandleCancel();
     }
 }

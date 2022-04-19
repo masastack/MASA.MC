@@ -8,6 +8,6 @@ public static class ReceiverGroupEfCoreQueryableExtensions
         {
             return queryable;
         }
-        return queryable.Include(x => x.Users);
+        return queryable.Include(x => x.Items).Include(x => x.Users);
     }
 }

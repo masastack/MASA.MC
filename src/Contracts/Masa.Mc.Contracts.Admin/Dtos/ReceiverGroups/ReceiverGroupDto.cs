@@ -7,4 +7,6 @@ public class ReceiverGroupDto : AuditEntityDto<Guid, Guid>
     public string Description { get; set; } = string.Empty;
 
     public List<ReceiverGroupUserDto> Users { get; set; } = new();
+
+    public List<ReceiverGroupItemDto> Items { get; set; } = new();
 }

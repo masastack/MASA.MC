@@ -17,7 +17,9 @@ public class ReceiverGroupCommandHandler
     public async Task CreateAsync(CreateReceiverGroupCommand createCommand)
     {
         var entity = createCommand.ReceiverGroup.Adapt<ReceiverGroup>();
-        await _domainService.CreateAsync(entity, createCommand.ReceiverGroup.UserIds.ToArray());
+        var userIds = createCommand.ReceiverGroup.UserIds.ToArray();
+        var items = createCommand.ReceiverGroup.Items.Adapt<List<ReceiverGroupItem>>();
+        await _domainService.CreateAsync(entity, userIds, items);
     }
 
     [EventHandler]
@@ -27,7 +29,9 @@ public class ReceiverGroupCommandHandler
         if (entity == null)
             throw new UserFriendlyException("receiverGroup not found");
         updateCommand.ReceiverGroup.Adapt(entity);
-        await _domainService.UpdateAsync(entity, updateCommand.ReceiverGroup.UserIds.ToArray());
+        var userIds = updateCommand.ReceiverGroup.UserIds.ToArray();
+        var items = updateCommand.ReceiverGroup.Items.Adapt<List<ReceiverGroupItem>>();
+        await _domainService.UpdateAsync(entity, userIds, items);
     }
 
     [EventHandler]
