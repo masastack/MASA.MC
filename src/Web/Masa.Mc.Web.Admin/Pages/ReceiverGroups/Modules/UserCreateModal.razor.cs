@@ -28,12 +28,13 @@ public partial class UserCreateModal : AdminCompontentBase
 
     private async Task HandleOk()
     {
-        Loading = true;
-       
-        Loading = false;
-        await SuccessMessageAsync(T("ReceiverGroupCreateMessage"));
+        var id = Guid.NewGuid();
+        _model.Id = id;
+        _model.DataId = id.ToString();
+        _model.Type = ReceiverGroupItemType.User;
+        await SuccessMessageAsync(T("ExternalMemberAddMessage"));
         _visible = false;
-        
+
         if (OnOk.HasDelegate)
         {
             await OnOk.InvokeAsync(_model);

@@ -15,7 +15,7 @@
   "Description": "描述说明",
   "Disabled": "禁用",
   "Action": "操作",
-  "Add": "新增",
+  "Add": "添加",
   "Submit": "提交",
   "Save": "保存",
   "Delete": "删除",
@@ -64,6 +64,9 @@
   "Permission:Create": "创建",
   "Permission:Edit": "编辑",
   "Permission:Delete": "删除",
+
+  "ExternalMember": "外部成员",
+
   "Permission:ChannelManagement": "渠道管理",
   "Permission:CreateChannel": "创建渠道",
   "Permission:EditChannel": "编辑渠道",
@@ -129,5 +132,9 @@
   "DisplayName:ReceiverGroupDescription": "收件人组备注",
   "ReceiverGroupCreateMessage": "创建收件人组成功.",
   "ReceiverGroupEditMessage": "编辑收件人组成功.",
-  "ReceiverGroupDeleteMessage": "删除收件人组成功."
+  "ReceiverGroupDeleteMessage": "删除收件人组成功.",
+
+  "Description:ReceiverGroup.SelectUser": "请选择用户",
+  "Description:ReceiverGroup.AddSelectMember": "请添加/选择成员",
+  "ExternalMemberAddMessage": "添加外部用户成功."
 }

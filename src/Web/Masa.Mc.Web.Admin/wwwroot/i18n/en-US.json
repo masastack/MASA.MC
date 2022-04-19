@@ -15,6 +15,9 @@
   "Permission:Create": "Create",
   "Permission:Edit": "Edit",
   "Permission:Delete": "Delete",
+
+  "ExternalMember": "External member",
+
   "Permission:ChannelManagement": "Channel management",
   "Permission:CreateChannel": "Create channel",
   "Permission:EditChannel": "Edit channel",
@@ -70,5 +73,19 @@
   "DisplayName:MessageTemplateItem": "Template variable",
   "DisplayName:MessageTemplateItemCode": "Variable",
   "DisplayName:MessageTemplateItemMappingCode": "Mapping variable",
-  "DisplayName:MessageTemplateItemDisplayText": "Remarks"
+  "DisplayName:MessageTemplateItemDisplayText": "Remarks",
+
+  "Permission:ReceiverGroupManagement": "Receiver group management",
+  "Permission:CreateReceiverGroup": "Create receiver group",
+  "Permission:EditReceiverGroup": "Edit receiver group",
+  "DisplayName:ReceiverGroup": "Receiver group",
+  "DisplayName:ReceiverGroupDisplayName": "Receiver group name",
+  "DisplayName:ReceiverGroupDescription": "Receiver group description",
+  "ReceiverGroupCreateMessage": "Create receiver group success.",
+  "ReceiverGroupEditMessage": "Create receiver group success.",
+  "ReceiverGroupDeleteMessage": "Create receiver group success.",
+
+  "Description:ReceiverGroup.SelectUser": "Please select a user",
+  "Description:ReceiverGroup.AddSelectMember": "Please add / select members",
+  "ExternalMemberAddMessage": "External user added successfully."
 }

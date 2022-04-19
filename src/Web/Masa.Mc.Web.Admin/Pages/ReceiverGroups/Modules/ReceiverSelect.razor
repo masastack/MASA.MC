@@ -8,7 +8,7 @@
                    Dense
                    Solo
                    BackgroundColor="fill-lighten-1"
-                   Label="请选择用户"
+                   Label="@T("Description:ReceiverGroup.SelectUser")"
                    ItemText="r=>r.DisplayName"
                    ItemValue="r=>r.Id"
                    Multiple>
@@ -49,7 +49,7 @@
             else
             {
                 <MListItemAvatar>
-                    <img src="@data.Item.Avatar">
+                   <MImage Src="@data.Item.Avatar"></MImage>
                 </MListItemAvatar>
                 <MListItemContent>
                     <MListItemTitle>
@@ -63,11 +63,11 @@
         </ItemContent>
     </MAutocomplete>
     <MButton Rounded Outlined Color="indigo" Class="ml-6 medium-button px-6" OnClick="AddAsync">
-        <span>添加</span>
+        <span>@T("Add")</span>
     </MButton>
     <MButton Color="primary" Class="ml-6 medium-button" OnClick="_createModal.OpenModalAsync">
         <MIcon Size=18>mdi-plus</MIcon>
-        <span class="ml-2">外部成员</span>
+        <span class="ml-2">@T("ExternalMember")</span>
     </MButton>
 </MRow>
 <MCard Class="mx-auto" Outlined Height="470">
@@ -87,21 +87,30 @@
                                     }
                                     else
                                     {
-                                        <MImage Src="@item.Avatar"></MImage>
+                                        if (string.IsNullOrEmpty(item.Avatar))
+                                        {
+                                            <MAvatar Color="primary" Size="56">
+                                                <span class="white--text">@(string.IsNullOrEmpty(item.DisplayName)?"":item.DisplayName.Substring(0,1))</span>
+                                            </MAvatar>
+                                        }
+                                        else
+                                        {
+                                            <MImage Src="@item.Avatar"></MImage>
+                                        }
                                     }
                                 </MListItemAvatar>
                                 <MListItemContent>
                                     <MListItemTitle>@(item.DisplayName)</MListItemTitle>
-                                    @if (item.Type != ReceiverGroupItemType.User)
+                                    @if (item.Type == ReceiverGroupItemType.User)
                                     {
                                         <MListItemSubtitle>@(item.PhoneNumber)|@(item.Email)</MListItemSubtitle>
                                     }
                                 </MListItemContent>
                                 <MOverlay Absolute Opacity="0.2" Class="justify-end align-start"
                                   Value="@(context.Hover)">
-                                  <MButton Icon OnClick="()=>RemoveValue(item)">
-                                            <MIcon>mdi-close</MIcon>
-                                        </MButton>
+                                    <MButton Icon OnClick="()=>RemoveValue(item)">
+                                        <MIcon>mdi-close</MIcon>
+                                    </MButton>
                                 </MOverlay>
                             </MListItem>
                         </MHover>
@@ -113,8 +122,8 @@
     else
     {
         <div class="d-flex align-center justify-center pa-4 text-h4" style="height:100%">
-            请添加/选择成员
+            @T("Description:ReceiverGroup.AddSelectMember")
         </div>
     }
 </MCard>
-<UserCreateModal @ref="_createModal" OnOk="HandleOk"/>
+<UserCreateModal @ref="_createModal" OnOk="HandleOk" />
