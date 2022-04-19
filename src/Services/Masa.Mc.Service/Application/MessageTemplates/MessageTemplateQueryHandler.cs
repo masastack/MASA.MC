@@ -101,32 +101,24 @@ public class MessageTemplateQueryHandler
 
     private MessageTemplateAuditStatus SmsTemplateStatusMapToAuditStatus(int? status)
     {
-        switch (status)
+        return status switch
         {
-            case 1:
-                return MessageTemplateAuditStatus.Adopt;
-            case 2:
-                return MessageTemplateAuditStatus.Fail;
-            default:
-                return MessageTemplateAuditStatus.WaitAudit;
-        }
+            1 => MessageTemplateAuditStatus.Adopt,
+            2 => MessageTemplateAuditStatus.Fail,
+            _ => MessageTemplateAuditStatus.WaitAudit
+        };
     }
 
     private int AliyunSmsTemplateTypeMapToTemplateType(int? templateType)
     {
-        switch (templateType)
+        return templateType switch
         {
-            case 0:
-                return (int)SmsTemplateType.VerificationCode;
-            case 1:
-                return (int)SmsTemplateType.Notification;
-            case 2:
-                return (int)SmsTemplateType.Promotion;
-            case 3:
-                return (int)SmsTemplateType.International;
-            default:
-                return 0;
-        }
+            0 => (int)SmsTemplateType.VerificationCode,
+            1 => (int)SmsTemplateType.Notification,
+            2 => (int)SmsTemplateType.Promotion,
+            3 => (int)SmsTemplateType.International,
+            _ => 0
+        };
     }
 
     private List<MessageTemplateItemDto> ParseTemplateItem(string content)
