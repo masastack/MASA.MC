@@ -17,21 +17,7 @@ public class MessageTemplateCommandHandler
     public async Task CreateAsync(CreateMessageTemplateCommand createCommand)
     {
         var dto = createCommand.MessageTemplate;
-        var entity = new MessageTemplate(
-                dto.ChannelId,
-                dto.DisplayName,
-                dto.Title,
-                dto.Content,
-                dto.Example,
-                dto.TemplateId,
-                dto.IsJump,
-                dto.JumpUrl,
-                dto.Sign,
-                dto.TemplateType,
-                dto.DayLimit,
-                new List<MessageTemplateItem>(),
-                dto.Status,
-                dto.AuditStatus);
+        var entity = dto.Adapt<MessageTemplate>();
         foreach (var itemDto in dto.Items)
         {
             entity.AddOrUpdateItem(itemDto.Code, itemDto.MappingCode, itemDto.DisplayText, itemDto.Description);
@@ -46,7 +32,7 @@ public class MessageTemplateCommandHandler
         var dto = updateCommand.MessageTemplate;
         if (entity == null)
             throw new UserFriendlyException("messageTemplate not found");
-        entity.SetContent(dto.ChannelId, dto.DisplayName, dto.Title, dto.Content, dto.Example, dto.TemplateId, dto.IsJump, dto.JumpUrl, dto.Sign, dto.TemplateType, dto.DayLimit);
+        dto.Adapt(entity);
         foreach (var itemDto in dto.Items)
         {
             entity.AddOrUpdateItem(itemDto.Code, itemDto.MappingCode, itemDto.DisplayText, itemDto.Description);

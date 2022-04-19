@@ -51,9 +51,32 @@ public partial class EmailTemplateEditModal : AdminCompontentBase
             return;
         }
         Loading = true;
-        await MessageTemplateCaller.UpdateAsync(_entityId,_model);
+        await MessageTemplateCaller.UpdateAsync(_entityId, _model);
         Loading = false;
         await SuccessMessageAsync(T("MessageTemplateEditMessage"));
+        _visible = false;
+        ResetForm();
+        if (OnOk.HasDelegate)
+        {
+            await OnOk.InvokeAsync();
+        }
+    }
+
+    private async Task HandleDelAsync()
+    {
+        await ConfirmAsync(T("DeletionConfirmationMessage"), async args =>
+        {
+            await DeleteAsync();
+        }
+        );
+    }
+
+    private async Task DeleteAsync()
+    {
+        Loading = true;
+        await MessageTemplateCaller.DeleteAsync(_entityId);
+        Loading = false;
+        await SuccessMessageAsync(T("MessageTemplateDeleteMessage"));
         _visible = false;
         ResetForm();
         if (OnOk.HasDelegate)

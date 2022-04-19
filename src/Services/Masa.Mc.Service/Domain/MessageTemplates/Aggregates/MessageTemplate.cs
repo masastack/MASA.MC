@@ -20,11 +20,6 @@ public class MessageTemplate : AuditAggregateRoot<Guid, Guid>
     public virtual bool IsStatic { get; protected set; }
     public ICollection<MessageTemplateItem> Items { get; protected set; } = new List<MessageTemplateItem>();
 
-    public MessageTemplate(Guid channelId, string displayName, string title, string content, string example, string templateId, bool isJump, string jumpUrl, string sign, int templateType,
-        long dayLimit) : this(channelId, displayName, title, content, example, templateId, isJump, jumpUrl, sign, templateType, dayLimit, new List<MessageTemplateItem>())
-    {
-    }
-
     public MessageTemplate(
         Guid channelId,
         string displayName,
@@ -37,27 +32,35 @@ public class MessageTemplate : AuditAggregateRoot<Guid, Guid>
         string sign,
         int templateType,
         long dayLimit,
-        List<MessageTemplateItem> items,
         MessageTemplateStatus status = MessageTemplateStatus.Normal,
         MessageTemplateAuditStatus auditStatus = MessageTemplateAuditStatus.WaitAudit,
+        string auditReason = "",
         bool isStatic = false)
     {
+        ChannelId = channelId;
+        DisplayName = displayName;
+        Example = example;
+        TemplateId = templateId;
+        Sign = sign;
+        TemplateType = templateType;
+        DayLimit = dayLimit;
         Status = status;
-        AuditStatus = auditStatus;
         IsStatic = isStatic;
 
-        SetContent(channelId, displayName, title, content, example, templateId, isJump, jumpUrl, sign, templateType, dayLimit);
+        SetContent(title, content);
+        SetJump(isJump, jumpUrl);
+        SetAuditStatus(auditStatus, auditReason);
 
-        Items = items ?? new List<MessageTemplateItem>();
+        Items = new List<MessageTemplateItem>();
     }
 
-    public virtual void AddOrUpdateItem(string code, string mappingCode, string displayText, string description, bool isStatic = false)
+    public virtual void AddOrUpdateItem(string code, string mappingCode, string displayText, string description)
     {
         var existingItem = Items.SingleOrDefault(item => item.Code == code);
 
         if (existingItem == null)
         {
-            Items.Add(new MessageTemplateItem(Id, code, mappingCode, displayText, description, isStatic));
+            Items.Add(new MessageTemplateItem(Id, code, mappingCode, displayText, description));
         }
         else
         {
@@ -66,41 +69,32 @@ public class MessageTemplate : AuditAggregateRoot<Guid, Guid>
     }
 
     public virtual void SetContent(
-        Guid channelId,
-        string displayName,
         string title,
-        string content,
-        string example,
-        string templateId,
-        bool isJump,
-        string jumpUrl,
-        string sign,
-        int templateType,
-        long dayLimit)
+        string content)
     {
-        ChannelId = channelId;
-        DisplayName = displayName;
         Title = title;
         Content = content;
-        Example = example;
-        TemplateId = templateId;
-        IsJump = isJump;
-        JumpUrl = jumpUrl;
-        Sign = sign;
-        TemplateType = templateType;
-        DayLimit = dayLimit;
     }
 
     public virtual void SetAuditStatus(MessageTemplateAuditStatus auditStatus, string auditReason = "")
     {
         AuditStatus = auditStatus;
-        AuditTime = DateTime.UtcNow;
-        AuditReason = auditReason;
+        if (auditStatus != MessageTemplateAuditStatus.WaitAudit)
+        {
+            AuditTime = DateTime.UtcNow;
+            AuditReason = auditReason;
+        }
     }
 
     public virtual void SetInvalid()
     {
         InvalidTime = DateTime.UtcNow;
         Status = MessageTemplateStatus.Invalid;
+    }
+
+    public virtual void SetJump(bool isJump, string jumpUrl)
+    {
+        IsJump = isJump;
+        JumpUrl = isJump ? jumpUrl : string.Empty;
     }
 }
