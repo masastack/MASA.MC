@@ -1,6 +1,4 @@
-﻿using Masa.Mc.Infrastructure.Sms.Aliyun.Services;
-
-namespace Masa.Mc.Infrastructure.Sms.Aliyun;
+﻿namespace Masa.Mc.Infrastructure.Sms.Aliyun;
 
 public static class ServiceCollectionExtensions
 {
