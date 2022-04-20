@@ -14,6 +14,7 @@ public class ReceiverGroupService : ServiceBase
         var queryArguments = new Dictionary<string, string?>()
         {
             { "filter", input.Filter.ToString() },
+            { "sorting", input.Sorting.ToString() },
             { "page", input.Page.ToString() },
             { "pageSize", input.PageSize.ToString() }
         };

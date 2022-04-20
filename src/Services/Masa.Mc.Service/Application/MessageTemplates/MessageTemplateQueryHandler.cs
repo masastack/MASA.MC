@@ -33,7 +33,7 @@ public class MessageTemplateQueryHandler
         var queryable = await CreateFilteredDetailQueryAsync(options);
         var totalCount = await queryable.CountAsync();
         var totalPages = (int)Math.Ceiling(totalCount / (decimal)options.PageSize);
-        if (string.IsNullOrEmpty(options.Sorting)) options.Sorting = "messageTemplate.creationTime desc";
+        if (string.IsNullOrEmpty(options.Sorting)) options.Sorting = "messageTemplate.modificationTime desc";
         queryable = queryable.OrderBy(options.Sorting).PageBy(options.Page, options.PageSize);
         var entities = await queryable.ToListAsync();
         var entityDtos = entities.Select(x =>
@@ -81,7 +81,7 @@ public class MessageTemplateQueryHandler
     private async Task<Expression<Func<MessageTemplateWithDetail, bool>>> CreateFilteredPredicate(GetMessageTemplateInput input)
     {
         Expression<Func<MessageTemplateWithDetail, bool>> condition = x => true;
-        condition = condition.And(!string.IsNullOrEmpty(input.Filter), x => x.MessageTemplate.DisplayName.Contains(input.Filter));
+        condition = condition.And(!string.IsNullOrEmpty(input.Filter), x => x.MessageTemplate.DisplayName.Contains(input.Filter) || x.MessageTemplate.TemplateId.Contains(input.Filter));
         condition = condition.And(input.ChannelType.HasValue, x => x.Channel.Type == input.ChannelType);
         condition = condition.And(input.Status.HasValue, x => x.MessageTemplate.Status == input.Status);
         condition = condition.And(input.AuditStatus.HasValue, x => x.MessageTemplate.AuditStatus == input.AuditStatus);
@@ -117,7 +117,7 @@ public class MessageTemplateQueryHandler
             1 => (int)SmsTemplateType.Notification,
             2 => (int)SmsTemplateType.Promotion,
             3 => (int)SmsTemplateType.International,
-            _ => 0
+            _ => (int)SmsTemplateType.Other
         };
     }
 

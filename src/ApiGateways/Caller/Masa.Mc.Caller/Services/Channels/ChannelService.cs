@@ -15,6 +15,7 @@ public class ChannelService : ServiceBase
             { "filter", input.Filter.ToString() },
             { "displayName", input.DisplayName.ToString() },
             { "type",input.Type?.ToString()},
+            { "sorting", input.Sorting.ToString() },
             { "page", input.Page.ToString() },
             { "pageSize", input.PageSize.ToString() }
         };

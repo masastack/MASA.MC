@@ -17,6 +17,7 @@ public static class McDbContextModelBuilderExtensions
         {
             b.ToTable(MCConsts.DbTablePrefix + "MessageTemplates", MCConsts.DbSchema);
             b.Property(x => x.DisplayName).IsRequired().HasMaxLength(128);
+            b.Property(x => x.TemplateId).IsRequired().HasMaxLength(128);
             b.Property(x => x.JumpUrl).HasMaxLength(256);
             b.Property(x => x.Sign).HasMaxLength(128);
             b.HasMany(x => x.Items).WithOne().HasForeignKey(x => x.MessageTemplateId).IsRequired();
@@ -29,6 +30,13 @@ public static class McDbContextModelBuilderExtensions
             b.Property(x => x.DisplayText).IsRequired().HasMaxLength(128);
             b.Property(x => x.Description).HasMaxLength(512);
             b.HasIndex(x => new { x.Code, x.MessageTemplateId });
+        });
+
+        builder.Entity<SmsTemplate>(b =>
+        {
+            b.ToTable(MCConsts.DbTablePrefix + "SmsTemplates", MCConsts.DbSchema);
+            b.Property(x => x.TemplateName).IsRequired().HasMaxLength(128);
+            b.Property(x => x.TemplateCode).IsRequired().HasMaxLength(128);
         });
 
         builder.Entity<ReceiverGroup>(b =>

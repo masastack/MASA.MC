@@ -21,6 +21,7 @@ public class MessageTemplateService : ServiceBase
             { "endTime", input.EndTime?.ToString() },
             { "templateType", input.TemplateType.ToString() },
             { "filter", input.Filter.ToString() },
+            { "sorting", input.Sorting.ToString() },
             { "page", input.Page.ToString() },
             { "pageSize", input.PageSize.ToString() }
         };

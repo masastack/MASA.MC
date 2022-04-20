@@ -76,6 +76,7 @@
   "MessageTemplateDeleteMessage": "Delete messageTemplate success.",
   "Description:MessageTemplate.ChannelId.Required": "Please select a channel",
   "Description:MessageTemplate.TemplateId.Required": "Please select templateId",
+  "Description:MessageTemplate.Sign.Required": "Please enter your signature",
   "Description:MessageTemplate.DayLimit.Tips": "This module can send the same user at most every day",
   "DisplayName:MessageTemplateItem": "Template variable",
   "DisplayName:MessageTemplateItemCode": "Variable",

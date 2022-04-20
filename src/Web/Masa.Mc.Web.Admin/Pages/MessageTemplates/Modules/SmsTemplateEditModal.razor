@@ -12,7 +12,7 @@
                                  ItemValue="item => item"
                                  Dense
                                  Outlined
-                                 Readonly
+                                 Disabled
                                  HideDetails="@("auto")">
                         </MSelect>
                     </MCol>
@@ -31,11 +31,14 @@
                                  OnSelectedItemUpdate="HandleChannelChange">
                         </MSelect>
                     </MCol>
+                </MRow>
+                <MRow>
                     <MCol Cols="2">
                         <MTextField @bind-Value="_model.Sign"
                                     Label="@T("DisplayName:MessageTemplateSign")"
                                     Dense
                                     Outlined
+                                    Placeholder="@T("Description:MessageTemplate.Sign.Required")"
                                     HideDetails="@("auto")" />
                     </MCol>
                     <MCol Cols="2">
@@ -46,6 +49,8 @@
                                     HideDetails="@("auto")"
                                     OnBlur="GetSmsTemplateAsync" />
                     </MCol>
+                </MRow>
+                <MRow>
                     <MCol Cols="2">
                         <MSelect Value="@_model.TemplateType"
                                  Items="@(GetEnumList<SmsTemplateType>())"

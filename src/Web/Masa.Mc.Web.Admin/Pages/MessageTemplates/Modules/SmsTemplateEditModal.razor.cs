@@ -92,6 +92,10 @@ public partial class SmsTemplateEditModal : AdminCompontentBase
     private async Task HandleSelectChannelType(ChannelType Type)
     {
         _channelItems = await ChannelService.GetListByTypeAsync(Type);
+        if (_channelItems.Count == 1)
+        {
+            _model.ChannelId = _channelItems[0].Id;
+        }
     }
 
     private async Task GetSmsTemplateAsync()

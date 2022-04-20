@@ -94,7 +94,7 @@
   "ChannelEditMessage": "编辑渠道数据成功.",
   "ChannelDeleteMessage": "删除渠道数据成功.",
 
-  "Permission:MessageTemplateManagement": "消息模板管理",
+  "Permission:MessageTemplateManagement": "消息模板",
   "Permission:CreateMessageTemplate": "创建消息模板",
   "Permission:EditMessageTemplate": "编辑消息模板",
   "DisplayName:MessageTemplateId": "模板ID",
@@ -123,6 +123,7 @@
   "MessageTemplateDeleteMessage": "删除消息模板成功.",
   "Description:MessageTemplate.ChannelId.Required": "请选择渠道",
   "Description:MessageTemplate.TemplateId.Required": "请选择模板Id",
+  "Description:MessageTemplate.Sign.Required": "请输入签名",
   "Description:MessageTemplate.DayLimit.Tips": "此模块每日给同一用户最多发送",
   "DisplayName:MessageTemplateItem": "模板变量",
   "DisplayName:MessageTemplateItemCode": "变量",

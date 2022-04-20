@@ -3,30 +3,28 @@
 public class ChannelDomainService : DomainService
 {
     private readonly IChannelRepository _repository;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public ChannelDomainService(IDomainEventBus eventBus, IChannelRepository repository) : base(eventBus)
+    public ChannelDomainService(IDomainEventBus eventBus, IChannelRepository repository, IUnitOfWork unitOfWork) : base(eventBus)
     {
         _repository = repository;
+        _unitOfWork = unitOfWork;
     }
 
     public virtual async Task CreateAsync(Channel channel)
     {
         await ValidateChannelAsync(channel.Code);
         await _repository.AddAsync(channel);
-        if (channel.Type== ChannelType.Sms)
-        {
-            await EventBus.PublishAsync(new SmsChannelChangedDomainEvent(channel.Id));
-        }
+        //if (channel.Type == ChannelType.Sms)
+        //{
+        //    await EventBus.PublishAsync(new SmsChannelChangedDomainEvent(channel.Id));
+        //}
     }
 
     public virtual async Task UpdateAsync(Channel channel)
     {
         await ValidateChannelAsync(channel.Code, channel.Id);
         await _repository.UpdateAsync(channel);
-        if (channel.Type == ChannelType.Sms)
-        {
-            await EventBus.PublishAsync(new SmsChannelChangedDomainEvent(channel.Id));
-        }
     }
 
     public virtual async Task<Channel> DeleteAsync(Channel channel)
