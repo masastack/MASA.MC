@@ -10,6 +10,11 @@
   "NextStep": "Next step",
   "PreviousStep": "Previous step",
   "DateRange": "Date range",
+  "Total": "Total",
+  "Item": "Item",
+  "All": "All",
+  "RowsPerPage": "Rows per page",
+
   "Sms": "Sms",
   "Email": "Email",
   "WebsiteMessage": "WebsiteMessage",

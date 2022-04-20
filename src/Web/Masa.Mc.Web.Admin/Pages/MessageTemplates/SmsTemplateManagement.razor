@@ -176,7 +176,7 @@
                 }
             </ItemColContent>
             <FooterContent>
-                <MPagination Class="mt-10" @bind-Value="_queryParam.Page" Length="_entities.TotalPages" OnInput="HandlePaginationChange"></MPagination>
+                <Pagination Class="mt-5" @bind-Page="_queryParam.Page" @bind-PageSize="_queryParam.PageSize" Total="_entities.Total" OnChange="HandlePaginationChange" />
             </FooterContent>
         </MDataTable>
     </MCardText>

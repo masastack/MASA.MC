@@ -42,3 +42,4 @@ global using Masa.Mc.Contracts.Admin.Dtos.MessageTemplates;
 global using Masa.Mc.Web.Admin.Pages.MessageTemplates.Modules;
 global using Masa.Mc.Contracts.Admin.Enums.MessageTemplates;
 global using Masa.Mc.Infrastructure.Common.Helper;
+global using Masa.Mc.Web.Admin.Components.Pagination;

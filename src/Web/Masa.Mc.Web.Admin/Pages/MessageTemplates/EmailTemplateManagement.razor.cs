@@ -69,9 +69,10 @@ public partial class EmailTemplateManagement : AdminCompontentBase
         await LoadData();
     }
 
-    private async Task HandlePaginationChange(int page)
+    private async Task HandlePaginationChange(PaginationEventArgs args)
     {
-        _queryParam.Page = page;
+        _queryParam.Page = args.Page;
+        _queryParam.PageSize = args.PageSize;
         await LoadData();
     }
 
