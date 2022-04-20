@@ -80,4 +80,7 @@ global using Masa.Mc.Contracts.Admin.Enums.ReceiverGroups;
 global using System.Collections.ObjectModel;
 global using Masa.Mc.Contracts.Admin.Dtos.ReceiverGroups.Validator;
 global using Masa.Mc.Service.Admin.Domain.ReceiverGroups.Events;
+global using Masa.Contrib.Isolation.UoW.EF;
+global using Masa.Contrib.Isolation.MultiEnvironment;
+global using Masa.Utils.Data.EntityFrameworkCore.SqlServer;
 

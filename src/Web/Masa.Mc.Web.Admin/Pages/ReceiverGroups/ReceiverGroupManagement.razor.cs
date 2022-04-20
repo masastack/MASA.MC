@@ -2,13 +2,12 @@
 
 public partial class ReceiverGroupManagement : AdminCompontentBase
 {
-    [Inject]
-    public ReceiverGroupCaller ReceiverGroupCaller { get; set; } = default!;
-
     private ReceiverGroupEditModal _editModal;
     private ReceiverGroupCreateModal _createModal;
     private GetReceiverGroupInput _queryParam = new(11);
     private PaginatedListDto<ReceiverGroupDto> _entities = new();
+
+    ReceiverGroupService ReceiverGroupService => McCaller.ReceiverGroupService;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -22,7 +21,7 @@ public partial class ReceiverGroupManagement : AdminCompontentBase
     private async Task LoadData()
     {
         Loading = true;
-        _entities = (await ReceiverGroupCaller.GetListAsync(_queryParam));
+        _entities = (await ReceiverGroupService.GetListAsync(_queryParam));
         Loading = false;
         StateHasChanged();
     }

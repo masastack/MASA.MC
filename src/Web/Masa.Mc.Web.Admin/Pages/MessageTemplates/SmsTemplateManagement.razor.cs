@@ -2,12 +2,6 @@
 
 public partial class SmsTemplateManagement : AdminCompontentBase
 {
-    [Inject]
-    public MessageTemplateCaller MessageTemplateCaller { get; set; } = default!;
-
-    [Inject]
-    public ChannelCaller ChannelCaller { get; set; } = default!;
-
     public List<DataTableHeader<MessageTemplateDto>> Headers { get; set; } = new();
 
     private SmsTemplateEditModal _editModal;
@@ -19,6 +13,10 @@ public partial class SmsTemplateManagement : AdminCompontentBase
     private bool _datePickersShow;
     private List<DateOnly> _dates = new List<DateOnly> { };
     private string DateRangeText => string.Join(" ~ ", _dates.Select(date => date.ToString("yyyy-MM-dd")));
+
+    ChannelService ChannelService => McCaller.ChannelService;
+
+    MessageTemplateService MessageTemplateService => McCaller.MessageTemplateService;
 
     protected override async Task OnInitializedAsync()
     {
@@ -34,7 +32,7 @@ public partial class SmsTemplateManagement : AdminCompontentBase
             new() { Text = T($"{_prefix}{nameof(MessageTemplateDto.Status)}"), Value = nameof(MessageTemplateDto.Status), Sortable = false },
             new() { Text = T("Action"), Value = "Action", Sortable = false },
         };
-        _channelItems = await ChannelCaller.GetListByTypeAsync(ChannelType.Sms);
+        _channelItems = await ChannelService.GetListByTypeAsync(ChannelType.Sms);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -49,7 +47,7 @@ public partial class SmsTemplateManagement : AdminCompontentBase
     private async Task LoadData()
     {
         Loading = true;
-        _entities = (await MessageTemplateCaller.GetListAsync(_queryParam));
+        _entities = (await MessageTemplateService.GetListAsync(_queryParam));
         Loading = false;
         StateHasChanged();
     }

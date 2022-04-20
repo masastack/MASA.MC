@@ -5,12 +5,11 @@ public partial class ReceiverGroupEditModal : AdminCompontentBase
     [Parameter]
     public EventCallback OnOk { get; set; }
 
-    [Inject]
-    public ReceiverGroupCaller ReceiverGroupCaller { get; set; } = default!;
-
     private ReceiverGroupCreateUpdateDto _model = new();
     private Guid _entityId;
     private bool _visible;
+
+    ReceiverGroupService ReceiverGroupService => McCaller.ReceiverGroupService;
 
     public async Task OpenModalAsync(ReceiverGroupDto model)
     {
@@ -26,7 +25,7 @@ public partial class ReceiverGroupEditModal : AdminCompontentBase
 
     private async Task GetFormDataAsync()
     {
-        var dto = await ReceiverGroupCaller.GetAsync(_entityId);
+        var dto = await ReceiverGroupService.GetAsync(_entityId);
         _model = dto.Adapt<ReceiverGroupCreateUpdateDto>();
     }
 
@@ -43,7 +42,7 @@ public partial class ReceiverGroupEditModal : AdminCompontentBase
             return;
         }
         Loading = true;
-        await ReceiverGroupCaller.UpdateAsync(_entityId, _model);
+        await ReceiverGroupService.UpdateAsync(_entityId, _model);
         Loading = false;
         _visible = false;
         ResetForm();
@@ -65,7 +64,7 @@ public partial class ReceiverGroupEditModal : AdminCompontentBase
     private async Task DeleteAsync()
     {
         Loading = true;
-        await ReceiverGroupCaller.DeleteAsync(_entityId);
+        await ReceiverGroupService.DeleteAsync(_entityId);
         Loading = false;
         await SuccessMessageAsync(T("ReceiverGroupDeleteMessage"));
         _visible = false;

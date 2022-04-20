@@ -2,13 +2,12 @@
 
 public partial class ChannelManagement : AdminCompontentBase
 {
-    [Inject]
-    public ChannelCaller ChannelCaller { get; set; } = default!;
-
     private ChannelEditModal _editModal;
     private ChannelCreateModal _createModal;
     private GetChannelInput _queryParam = new(11);
     private PaginatedListDto<ChannelDto> _entities = new();
+
+    ChannelService ChannelService => McCaller.ChannelService;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -22,7 +21,7 @@ public partial class ChannelManagement : AdminCompontentBase
     private async Task LoadData()
     {
         Loading = true;
-        _entities = (await ChannelCaller.GetListAsync(_queryParam));
+        _entities = (await ChannelService.GetListAsync(_queryParam));
         Loading = false;
         StateHasChanged();
     }

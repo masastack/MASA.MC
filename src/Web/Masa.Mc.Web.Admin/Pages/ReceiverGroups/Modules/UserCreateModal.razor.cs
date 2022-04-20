@@ -5,11 +5,10 @@ public partial class UserCreateModal : AdminCompontentBase
     [Parameter]
     public EventCallback<UserViewModel> OnOk { get; set; }
 
-    [Inject]
-    public ReceiverGroupCaller ReceiverGroupCaller { get; set; } = default!;
-
     private UserViewModel _model = new();
     private bool _visible;
+
+    ReceiverGroupService ReceiverGroupService => McCaller.ReceiverGroupService;
 
     public async Task OpenModalAsync()
     {

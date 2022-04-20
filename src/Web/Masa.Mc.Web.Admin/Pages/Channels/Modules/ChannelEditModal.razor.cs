@@ -7,15 +7,14 @@ public partial class ChannelEditModal : AdminCompontentBase
     [Parameter]
     public EventCallback OnOk { get; set; }
 
-    [Inject]
-    public ChannelCaller ChannelCaller { get; set; } = default!;
-
     private ChannelCreateUpdateDto _model = new();
     private Guid _entityId;
     private bool _visible;
     private List<ChannelType> channelTypeItems = Enum.GetValues(typeof(ChannelType))
         .Cast<ChannelType>().ToList();
     private ChannelExtraProperties _channelExtraPropertiesRef = default!;
+
+    ChannelService ChannelService => McCaller.ChannelService;
 
     public async Task OpenModalAsync(ChannelDto model)
     {
@@ -31,7 +30,7 @@ public partial class ChannelEditModal : AdminCompontentBase
 
     private async Task GetFormDataAsync()
     {
-        var dto = await ChannelCaller.GetAsync(_entityId);
+        var dto = await ChannelService.GetAsync(_entityId);
         _model = dto.Adapt<ChannelCreateUpdateDto>();
     }
 
@@ -49,7 +48,7 @@ public partial class ChannelEditModal : AdminCompontentBase
             return;
         }
         Loading = true;
-        await ChannelCaller.UpdateAsync(_entityId, _model);
+        await ChannelService.UpdateAsync(_entityId, _model);
         Loading = false;
         _visible = false;
         ResetForm();
@@ -71,7 +70,7 @@ public partial class ChannelEditModal : AdminCompontentBase
     private async Task DeleteAsync()
     {
         Loading = true;
-        await ChannelCaller.DeleteAsync(_entityId);
+        await ChannelService.DeleteAsync(_entityId);
         Loading = false;
         await SuccessMessageAsync(T("ChannelDeleteMessage"));
         _visible = false;

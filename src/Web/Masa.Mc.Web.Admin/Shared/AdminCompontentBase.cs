@@ -5,6 +5,20 @@ public abstract class AdminCompontentBase : BDomComponentBase
     private I18n? _i18n;
     private GlobalConfig? _globalConfig;
     private NavigationManager? _navigationManager;
+    private McCaller? _mcCaller;
+
+    [Inject]
+    public McCaller McCaller
+    {
+        get
+        {
+            return _mcCaller ?? throw new Exception("please Inject McCaller!");
+        }
+        set
+        {
+            _mcCaller = value;
+        }
+    }
 
     [Inject]
     public IPopupService PopupService { get; set; } = default!;
