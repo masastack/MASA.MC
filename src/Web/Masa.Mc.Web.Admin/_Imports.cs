@@ -42,4 +42,8 @@ global using Masa.Mc.Contracts.Admin.Dtos.MessageTemplates;
 global using Masa.Mc.Web.Admin.Pages.MessageTemplates.Modules;
 global using Masa.Mc.Contracts.Admin.Enums.MessageTemplates;
 global using Masa.Mc.Infrastructure.Common.Helper;
+global using Masa.Mc.Contracts.Admin.Dtos.ReceiverGroups;
+global using Masa.Mc.Web.Admin.Pages.ReceiverGroups.Modules;
+global using Masa.Mc.Web.Admin.ViewModel.Users;
+global using Masa.Mc.Contracts.Admin.Enums.ReceiverGroups;
 global using Masa.Mc.Web.Admin.Components.Pagination;

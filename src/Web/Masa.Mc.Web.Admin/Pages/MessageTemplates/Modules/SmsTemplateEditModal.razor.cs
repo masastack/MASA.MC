@@ -64,11 +64,7 @@ public partial class SmsTemplateEditModal : AdminCompontentBase
 
     private async Task HandleDelAsync()
     {
-        await ConfirmAsync(T("DeletionConfirmationMessage"), async args =>
-        {
-            await DeleteAsync();
-        }
-        );
+        await ConfirmAsync(T("DeletionConfirmationMessage"), async args => { await DeleteAsync(); });
     }
 
     private async Task DeleteAsync()

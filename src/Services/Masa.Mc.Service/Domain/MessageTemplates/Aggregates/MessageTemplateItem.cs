@@ -12,12 +12,7 @@ public class MessageTemplateItem : Entity<Guid>
 
     public string Description { get; protected set; } = string.Empty;
 
-    //public override IEnumerable<(string Name, object Value)> GetKeys()
-    //{
-    //    yield return ("MessageTemplateId", MessageTemplateId!);
-    //    yield return ("Code", Code!);
-    //}
-    protected MessageTemplateItem(Guid messageTemplateId, string code): this(messageTemplateId, code,"","","")
+    protected MessageTemplateItem(Guid messageTemplateId, string code) : this(messageTemplateId, code, "", "", "")
     {
 
     }
@@ -32,13 +27,13 @@ public class MessageTemplateItem : Entity<Guid>
         MessageTemplateId = messageTemplateId;
         Code = code;
 
-        SetContent(mappingCode,displayText, description);
+        SetContent(mappingCode, displayText, description);
     }
 
     public void SetContent(string mappingCode, string displayText, string description)
     {
         MappingCode = mappingCode;
         DisplayText = displayText;
-        Description = description; 
+        Description = description;
     }
 }

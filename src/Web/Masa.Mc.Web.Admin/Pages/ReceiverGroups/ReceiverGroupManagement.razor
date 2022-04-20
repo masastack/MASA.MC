@@ -1,0 +1,34 @@
+﻿@inherits AdminCompontentBase
+@page "/receiverGroups/receiverGroupManagement"
+
+<PageTitle>@T("ReceiverGroupManagement")</PageTitle>
+
+<MCard>
+    <MCardTitle class="mx-2 pt-6">
+        <MTextField @bind-Value="_queryParam.Filter" Clearable Color="primary" Class="rounded-2 search" Placeholder="@T("Search")" HideDetails="@("auto")" Flat Dense Solo BackgroundColor="fill-lighten-1" OnKeyDown="SearchKeyDown" OnClearClick="HandleClearAsync">
+            <PrependInnerContent>
+                <MIcon Size=16 Class="mr-2 neutral-lighten-1--text">mdi-magnify</MIcon>
+            </PrependInnerContent>
+        </MTextField>
+    </MCardTitle>
+    <MCardText>
+        <MRow>
+            @foreach (var _entitie in _entities.Result)
+            {
+                <MCol Md="3">
+                    <ReceiverGroupCard Height="170" Model="_entitie" OnEditClick="async()=>await _editModal.OpenModalAsync(_entitie)" />
+                </MCol>
+            }
+            <MCol Md="3">
+                <MCard Outlined class="d-flex justify-center align-center" Style="border-style: dashed;" Height="170">
+                    <MButton Ripple=false Plain OnClick="()=> _createModal.OpenModalAsync()"><MIcon Left>mdi-plus</MIcon>@T("Permission:CreateReceiverGroup")</MButton>
+                </MCard>
+            </MCol>
+        </MRow>
+        <MPagination Class="mt-10" @bind-Value="_queryParam.Page" Length="_entities.TotalPages" OnInput="HandlePaginationChange"></MPagination>
+    </MCardText>
+</MCard>
+
+<ReceiverGroupEditModal @ref="_editModal" OnOk="HandleOk"/>
+<ReceiverGroupCreateModal @ref="_createModal" OnOk="HandleOk"/>
+

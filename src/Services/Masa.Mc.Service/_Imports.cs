@@ -67,6 +67,17 @@ global using Masa.Mc.Infrastructure.Sms.Aliyun;
 global using Masa.Mc.Contracts.Admin.Options.Channels;
 global using Masa.Mc.Infrastructure.Common.Helper;
 global using Masa.Mc.Infrastructure.Common.Extensions;
+global using Masa.Mc.Service.Admin.Domain.ReceiverGroups.Aggregates;
 global using Masa.Mc.Infrastructure.Sms.Aliyun.Infrastructure.OptionsResolve.Contributors;
 global using Masa.Mc.Infrastructure.Sms.Services;
+global using Masa.Mc.Contracts.Admin.Dtos.ReceiverGroups;
+global using Masa.Mc.Service.Admin.Domain.ReceiverGroups.Repositories;
+global using Masa.Mc.Service.Admin.Domain.ReceiverGroups.Services;
 global using Masa.Mc.Infrastructure.Sms.Aliyun.Model.Response.SmsTemplate;
+global using Masa.Mc.Service.Admin.Application.ReceiverGroups.Queries;
+global using Masa.Mc.Service.Admin.Application.ReceiverGroups.Commands;
+global using Masa.Mc.Contracts.Admin.Enums.ReceiverGroups;
+global using System.Collections.ObjectModel;
+global using Masa.Mc.Contracts.Admin.Dtos.ReceiverGroups.Validator;
+global using Masa.Mc.Service.Admin.Domain.ReceiverGroups.Events;
+
