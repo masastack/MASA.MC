@@ -2,7 +2,7 @@
   "$DefaultLanguage": "true",
   "$Text": "中文简体",
   "$DateTimeFormat": "yyyy-MM-dd HH:mm:ss",
-
+  "Unit:Bar": "条",
   "Favorite": "收藏",
   "Source": "来源",
   "Search": "搜索",
@@ -119,6 +119,7 @@
   "MessageTemplateDeleteMessage": "删除消息模板成功.",
   "Description:MessageTemplate.ChannelId.Required": "请选择渠道",
   "Description:MessageTemplate.TemplateId.Required": "请选择模板Id",
+  "Description:MessageTemplate.DayLimit.Tips": "此模块每日给同一用户最多发送",
   "DisplayName:MessageTemplateItem": "模板变量",
   "DisplayName:MessageTemplateItemCode": "变量",
   "DisplayName:MessageTemplateItemMappingCode": "映射变量",

@@ -1,6 +1,7 @@
 {
   "$Text": "English",
   "$DateTimeFormat": "MM/dd/yyyy HH:mm:ss",
+  "Unit:Bar": "Bar",
   "DeletionConfirmationMessage": "Are you sure delete data?",
   "BasicInformation": "Basic Information",
   "DetailInformation": "Detail Information",
@@ -70,6 +71,7 @@
   "MessageTemplateDeleteMessage": "Delete messageTemplate success.",
   "Description:MessageTemplate.ChannelId.Required": "Please select a channel",
   "Description:MessageTemplate.TemplateId.Required": "Please select templateId",
+  "Description:MessageTemplate.DayLimit.Tips": "This module can send the same user at most every day",
   "DisplayName:MessageTemplateItem": "Template variable",
   "DisplayName:MessageTemplateItemCode": "Variable",
   "DisplayName:MessageTemplateItemMappingCode": "Mapping variable",
