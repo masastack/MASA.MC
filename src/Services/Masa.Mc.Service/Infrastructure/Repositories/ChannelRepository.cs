@@ -9,6 +9,6 @@ public class ChannelRepository : Repository<McDbContext, Channel>, IChannelRepos
 
     public async Task<IQueryable<Channel>> GetQueryableAsync()
     {
-        return await Task.FromResult(_context.Set<Channel>().AsQueryable());
+        return await Task.FromResult(Context.Set<Channel>().AsQueryable());
     }
 }

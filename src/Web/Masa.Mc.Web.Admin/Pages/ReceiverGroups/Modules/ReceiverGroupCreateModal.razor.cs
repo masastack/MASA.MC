@@ -5,11 +5,10 @@ public partial class ReceiverGroupCreateModal : AdminCompontentBase
     [Parameter]
     public EventCallback OnOk { get; set; }
 
-    [Inject]
-    public ReceiverGroupCaller ReceiverGroupCaller { get; set; } = default!;
-
     private ReceiverGroupCreateUpdateDto _model = new();
     private bool _visible;
+
+    ReceiverGroupService ReceiverGroupService => McCaller.ReceiverGroupService;
 
     public async Task OpenModalAsync()
     {
@@ -33,7 +32,7 @@ public partial class ReceiverGroupCreateModal : AdminCompontentBase
             return;
         }
         Loading = true;
-        await ReceiverGroupCaller.CreateAsync(_model);
+        await ReceiverGroupService.CreateAsync(_model);
         Loading = false;
         await SuccessMessageAsync(T("ReceiverGroupCreateMessage"));
         _visible = false;

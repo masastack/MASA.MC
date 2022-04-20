@@ -53,13 +53,19 @@ var app = builder.Services
         options.RegisterValidatorsFromAssemblyContaining<Program>();
     })
     .AddTransient(typeof(IMiddleware<>), typeof(ValidatorMiddleware<>))
-    .AddDomainEventBus(options =>
+    .AddDomainEventBus(dispatcherOptions =>
     {
-        options.UseEventBus()
-               .UseUoW<McDbContext>(dbOptions => dbOptions.UseSqlServer(builder.Configuration["Local:Appsettings:ConnectionStrings:DefaultConnection"]))
-               .UseDaprEventBus<IntegrationEventLogService>()
-               .UseEventLog<McDbContext>()
-               .UseRepository<McDbContext>();
+        dispatcherOptions
+        .UseDaprEventBus<IntegrationEventLogService>(options => options.UseEventLog<McDbContext>())
+        .UseEventBus(eventBusBuilder =>
+        {
+            eventBusBuilder.UseMiddleware(typeof(ValidatorMiddleware<>));
+            eventBusBuilder.UseMiddleware(typeof(LogMiddleware<>));
+        })
+        .UseIsolationUoW<McDbContext>(
+            isolationBuilder => isolationBuilder.UseMultiEnvironment("env"),
+            dbOptions => dbOptions.UseSqlServer().UseSoftDelete())
+        .UseRepository<McDbContext>();
     })
     .AddServices(builder);
 app.UseMasaExceptionHandling(opt =>

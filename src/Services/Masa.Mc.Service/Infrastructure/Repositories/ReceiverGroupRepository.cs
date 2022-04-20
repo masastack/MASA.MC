@@ -9,7 +9,7 @@
 
         private async Task<IQueryable<ReceiverGroup>> GetQueryableAsync()
         {
-            return await Task.FromResult(_context.Set<ReceiverGroup>().AsQueryable());
+            return await Task.FromResult(Context.Set<ReceiverGroup>().AsQueryable());
         }
 
         public async Task<IQueryable<ReceiverGroup>> WithDetailsAsync()
@@ -22,7 +22,7 @@
         {
             return include
                 ? await (await WithDetailsAsync()).Where(predicate).FirstOrDefaultAsync(cancellationToken)
-                : await _context.Set<ReceiverGroup>().Where(predicate).FirstOrDefaultAsync(cancellationToken);
+                : await Context.Set<ReceiverGroup>().Where(predicate).FirstOrDefaultAsync(cancellationToken);
         }
     }
 }

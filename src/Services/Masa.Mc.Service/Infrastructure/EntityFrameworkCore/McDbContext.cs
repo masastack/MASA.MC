@@ -1,6 +1,6 @@
 ﻿namespace Masa.Mc.Service.Admin.Infrastructure.EntityFrameworkCore;
 
-public class McDbContext : IntegrationEventLogContext
+public class McDbContext : IsolationDbContext
 {
     public DbSet<Channel> Channels { get; set; } = default!;
     public DbSet<MessageTemplate> MessageTemplates { get; set; } = default!;

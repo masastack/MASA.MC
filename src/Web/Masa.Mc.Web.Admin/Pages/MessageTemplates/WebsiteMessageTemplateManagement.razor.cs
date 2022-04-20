@@ -2,12 +2,6 @@
 
 public partial class WebsiteMessageTemplateManagement : AdminCompontentBase
 {
-    [Inject]
-    public MessageTemplateCaller MessageTemplateCaller { get; set; } = default!;
-
-    [Inject]
-    public ChannelCaller ChannelCaller { get; set; } = default!;
-
     public List<DataTableHeader<MessageTemplateDto>> Headers { get; set; } = new();
 
     private WebsiteMessageTemplateEditModal _editModal;
@@ -20,6 +14,10 @@ public partial class WebsiteMessageTemplateManagement : AdminCompontentBase
     private List<DateOnly> _dates = new List<DateOnly> { };
     private string DateRangeText => string.Join(" ~ ", _dates.Select(date => date.ToString("yyyy-MM-dd")));
 
+    ChannelService ChannelService => McCaller.ChannelService;
+
+    MessageTemplateService MessageTemplateService => McCaller.MessageTemplateService;
+
     protected override async Task OnInitializedAsync()
     {
         var _prefix = "DisplayName:MessageTemplate";
@@ -30,7 +28,7 @@ public partial class WebsiteMessageTemplateManagement : AdminCompontentBase
             new() { Text = T($"{_prefix}{nameof(MessageTemplateDto.ModificationTime)}"), Value = nameof(MessageTemplateDto.ModificationTime), Sortable = true },
             new() { Text = T("Action"), Value = "Action", Sortable = false },
         };
-        _channelItems = await ChannelCaller.GetListByTypeAsync(ChannelType.WebsiteMessage);
+        _channelItems = await ChannelService.GetListByTypeAsync(ChannelType.WebsiteMessage);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -45,7 +43,7 @@ public partial class WebsiteMessageTemplateManagement : AdminCompontentBase
     private async Task LoadData()
     {
         Loading = true;
-        _entities = (await MessageTemplateCaller.GetListAsync(_queryParam));
+        _entities = (await MessageTemplateService.GetListAsync(_queryParam));
         Loading = false;
         StateHasChanged();
     }

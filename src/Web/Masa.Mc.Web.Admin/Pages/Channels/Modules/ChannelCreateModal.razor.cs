@@ -5,9 +5,6 @@ public partial class ChannelCreateModal : AdminCompontentBase
     [Parameter]
     public EventCallback OnOk { get; set; }
 
-    [Inject]
-    public ChannelCaller ChannelCaller { get; set; } = default!;
-
     private ChannelCreateUpdateDto _model = new();
     private bool _visible;
     private List<ChannelType> channelTypeItems = Enum.GetValues(typeof(ChannelType))
@@ -15,6 +12,8 @@ public partial class ChannelCreateModal : AdminCompontentBase
     private ChannelExtraProperties _channelExtraPropertiesRef = default!;
 
     int _step = 1;
+
+    ChannelService ChannelService => McCaller.ChannelService;
 
     public async Task OpenModalAsync()
     {
@@ -55,7 +54,7 @@ public partial class ChannelCreateModal : AdminCompontentBase
             return;
         }
         Loading = true;
-        await ChannelCaller.CreateAsync(_model);
+        await ChannelService.CreateAsync(_model);
         Loading = false;
         await SuccessMessageAsync(T("ChannelCreateMessage"));
         _visible = false;

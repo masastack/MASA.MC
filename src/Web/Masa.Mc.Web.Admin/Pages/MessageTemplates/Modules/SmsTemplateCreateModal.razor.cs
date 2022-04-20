@@ -5,17 +5,15 @@ public partial class SmsTemplateCreateModal : AdminCompontentBase
     [Parameter]
     public EventCallback OnOk { get; set; }
 
-    [Inject]
-    public MessageTemplateCaller MessageTemplateCaller { get; set; } = default!;
-
-    [Inject]
-    public ChannelCaller ChannelCaller { get; set; } = default!;
-
     private MForm _form;
     private MessageTemplateCreateUpdateDto _model = new();
     private bool _visible;
     private List<ChannelDto> _channelItems = new();
     private ChannelType _channelType;
+
+    ChannelService ChannelService => McCaller.ChannelService;
+
+    MessageTemplateService MessageTemplateService => McCaller.MessageTemplateService;
 
     public async Task OpenModalAsync(ChannelType? channelType)
     {
@@ -44,7 +42,7 @@ public partial class SmsTemplateCreateModal : AdminCompontentBase
             return;
         }
         Loading = true;
-        await MessageTemplateCaller.CreateAsync(_model);
+        await MessageTemplateService.CreateAsync(_model);
         Loading = false;
         await SuccessMessageAsync(T("MessageTemplateCreateMessage"));
         _visible = false;
@@ -67,7 +65,7 @@ public partial class SmsTemplateCreateModal : AdminCompontentBase
 
     private async Task HandleSelectChannelTypeAsync(ChannelType Type)
     {
-        _channelItems = await ChannelCaller.GetListByTypeAsync(Type);
+        _channelItems = await ChannelService.GetListByTypeAsync(Type);
     }
 
     private async Task GetSmsTemplateAsync()
@@ -77,7 +75,7 @@ public partial class SmsTemplateCreateModal : AdminCompontentBase
             return;
         }
         Loading = true;
-        var smsTemplate = await MessageTemplateCaller.GetSmsTemplateAsync(_model.ChannelId, _model.TemplateId);
+        var smsTemplate = await MessageTemplateService.GetSmsTemplateAsync(_model.ChannelId, _model.TemplateId);
         if (smsTemplate != null)
         {
             _model.DisplayName = smsTemplate.DisplayName;
