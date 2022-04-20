@@ -4,3 +4,6 @@ global using Microsoft.AspNetCore.WebUtilities;
 global using Microsoft.Extensions.Options;
 global using Masa.Mc.Contracts.Admin.Dtos.Channels;
 global using Masa.Mc.Infrastructure.Ddd.Application.Contracts.Dtos;
+global using Masa.Mc.Contracts.Admin.Dtos.MessageTemplates;
+global using Masa.Mc.Contracts.Admin.Enums.Channels;
+global using Masa.Mc.Contracts.Admin.Dtos.ReceiverGroups;

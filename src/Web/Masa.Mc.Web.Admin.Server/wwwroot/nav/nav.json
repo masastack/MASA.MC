@@ -201,9 +201,40 @@
     ]
   },
   {
-    "Id": 28,
+    "Id": 32,
     "Title": "Permission:ChannelManagement",
-    "Icon": "mdi-calendar-check-outline",
+    "Icon": "mdi-file-outline",
     "Href": "channels/channelManagement"
+  },
+  {
+    "Id": 33,
+    "Title": "Permission:MessageTemplateManagement",
+    "Icon": "mdi-file-outline",
+    "Children": [
+      {
+        "Id": 34,
+        "Title": "Sms",
+        "Icon": "mdi-circle",
+        "Href": "messageTemplates/smsTemplateManagement"
+      },
+      {
+        "Id": 35,
+        "Title": "Email",
+        "Icon": "mdi-circle",
+        "Href": "messageTemplates/emailTemplateManagement"
+      },
+      {
+        "Id": 36,
+        "Title": "WebsiteMessage",
+        "Icon": "mdi-circle",
+        "Href": "messageTemplates/websiteMessageTemplateManagement"
+      }
+    ]
+  },
+  {
+    "Id": 37,
+    "Title": "Permission:ReceiverGroupManagement",
+    "Icon": "mdi-file-outline",
+    "Href": "receiverGroups/receiverGroupManagement"
   }
 ]

@@ -2,43 +2,38 @@
 
 public class MessageTemplateItem : Entity<Guid>
 {
-    public virtual Guid MessageTemplateId { get; protected set; }
+    public Guid MessageTemplateId { get; protected set; }
 
-    public virtual string Code { get; protected set; } = string.Empty;
+    public string Code { get; protected set; } = string.Empty;
 
-    public virtual string MappingCode { get; protected set; } = string.Empty;
+    public string MappingCode { get; protected set; } = string.Empty;
 
-    public virtual string DisplayText { get; protected set; } = string.Empty;
+    public string DisplayText { get; protected set; } = string.Empty;
 
-    public virtual string Description { get; protected set; } = string.Empty;
+    public string Description { get; protected set; } = string.Empty;
 
-    public virtual bool IsStatic { get; protected set; }
+    protected MessageTemplateItem(Guid messageTemplateId, string code) : this(messageTemplateId, code, "", "", "")
+    {
 
-    //public override IEnumerable<(string Name, object Value)> GetKeys()
-    //{
-    //    yield return ("MessageTemplateId", MessageTemplateId!);
-    //    yield return ("Code", Code!);
-    //}
+    }
 
-    public MessageTemplateItem(
+    protected internal MessageTemplateItem(
         Guid messageTemplateId,
         string code,
         string mappingCode,
         string displayText,
-        string description,
-        bool isStatic)
+        string description)
     {
         MessageTemplateId = messageTemplateId;
         Code = code;
-        MappingCode = mappingCode;
-        IsStatic = isStatic;
 
-        SetContent(displayText, description);
+        SetContent(mappingCode, displayText, description);
     }
 
-    public void SetContent(string displayText, string description)
+    public void SetContent(string mappingCode, string displayText, string description)
     {
+        MappingCode = mappingCode;
         DisplayText = displayText;
-        Description = description; 
+        Description = description;
     }
 }

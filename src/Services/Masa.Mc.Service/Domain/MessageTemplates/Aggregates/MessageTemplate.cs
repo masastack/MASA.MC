@@ -1,53 +1,100 @@
 ﻿namespace Masa.Mc.Service.Admin.Domain.MessageTemplates.Aggregates;
 public class MessageTemplate : AuditAggregateRoot<Guid, Guid>
 {
-    public virtual Guid ChannelId { get; protected set; }
-    public virtual string DisplayName { get; protected set; } = string.Empty;
-    public virtual string Content { get; protected set; } = string.Empty;
-    public virtual string Example { get; protected set; } = string.Empty;
-    public virtual string TemplateId { get; protected set; } = string.Empty;
-    public virtual MessageTemplateStatus Status { get; protected set; }
+    public Guid ChannelId { get; protected set; }
+    public string DisplayName { get; protected set; } = string.Empty;
+    public string Title { get; protected set; } = string.Empty;
+    public string Content { get; protected set; } = string.Empty;
+    public string Example { get; protected set; } = string.Empty;
+    public string TemplateId { get; protected set; } = string.Empty;
+    public bool IsJump { get; protected set; }
+    public string JumpUrl { get; protected set; } = string.Empty;
+    public string Sign { get; protected set; } = string.Empty;
+    public MessageTemplateStatus Status { get; protected set; }
+    public MessageTemplateAuditStatus AuditStatus { get; protected set; }
+    public DateTime? AuditTime { get; protected set; }
+    public DateTime? InvalidTime { get; protected set; }
+    public string AuditReason { get; protected set; } = string.Empty;
+    public int TemplateType { get; protected set; }
+    public long DayLimit { get; protected set; }
     public virtual bool IsStatic { get; protected set; }
-    public virtual ICollection<MessageTemplateItem> Items { get; protected set; } = new List<MessageTemplateItem>();
-
-    public MessageTemplate(string displayName,string content,string example) : this(displayName, content, example, new List<MessageTemplateItem>())
-    {
-    }
+    public ICollection<MessageTemplateItem> Items { get; protected set; } = new List<MessageTemplateItem>();
 
     public MessageTemplate(
+        Guid channelId,
         string displayName,
+        string title,
         string content,
         string example,
-        List<MessageTemplateItem> items,
+        string templateId,
+        bool isJump,
+        string jumpUrl,
+        string sign,
+        int templateType,
+        long dayLimit,
         MessageTemplateStatus status = MessageTemplateStatus.Normal,
+        MessageTemplateAuditStatus auditStatus = MessageTemplateAuditStatus.WaitAudit,
+        string auditReason = "",
         bool isStatic = false)
     {
+        ChannelId = channelId;
+        DisplayName = displayName;
+        Example = example;
+        TemplateId = templateId;
+        Sign = sign;
+        TemplateType = templateType;
+        DayLimit = dayLimit;
         Status = status;
         IsStatic = isStatic;
 
-        SetContent(displayName, content, example);
+        SetContent(title, content);
+        SetJump(isJump, jumpUrl);
+        SetAuditStatus(auditStatus, auditReason);
 
-        Items = items ?? new List<MessageTemplateItem>();
+        Items = new List<MessageTemplateItem>();
     }
 
-    public void AddOrUpdateItem(string code, string mappingCode, string displayText, string description, bool isStatic = false)
+    public virtual void AddOrUpdateItem(string code, string mappingCode, string displayText, string description)
     {
         var existingItem = Items.SingleOrDefault(item => item.Code == code);
 
         if (existingItem == null)
         {
-            Items.Add(new MessageTemplateItem(Id, code, mappingCode, displayText, description, isStatic));
+            Items.Add(new MessageTemplateItem(Id, code, mappingCode, displayText, description));
         }
         else
         {
-            existingItem.SetContent(displayText, description);
+            existingItem.SetContent(mappingCode, displayText, description);
         }
     }
 
-    public void SetContent(string displayName, string content, string example)
+    public virtual void SetContent(
+        string title,
+        string content)
     {
-        DisplayName = displayName;
+        Title = title;
         Content = content;
-        Example = example;
+    }
+
+    public virtual void SetAuditStatus(MessageTemplateAuditStatus auditStatus, string auditReason = "")
+    {
+        AuditStatus = auditStatus;
+        if (auditStatus != MessageTemplateAuditStatus.WaitAudit)
+        {
+            AuditTime = DateTime.UtcNow;
+            AuditReason = auditReason;
+        }
+    }
+
+    public virtual void SetInvalid()
+    {
+        InvalidTime = DateTime.UtcNow;
+        Status = MessageTemplateStatus.Invalid;
+    }
+
+    public virtual void SetJump(bool isJump, string jumpUrl)
+    {
+        IsJump = isJump;
+        JumpUrl = isJump ? jumpUrl : string.Empty;
     }
 }

@@ -5,3 +5,7 @@ global using Masa.Mc.Contracts.Admin.Enums.Channels;
 global using Microsoft.AspNetCore.Http;
 global using System.Reflection;
 global using Masa.Mc.Contracts.Admin.Enums.MessageTemplates;
+global using Masa.Mc.Contracts.Admin.Dtos.Channels;
+global using Masa.Mc.Contracts.Admin.Dtos.ReceiverGroups;
+global using Masa.Mc.Contracts.Admin.Dtos.MessageTemplates;
+global using Masa.Mc.Contracts.Admin.Enums.ReceiverGroups;

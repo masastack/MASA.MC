@@ -126,6 +126,16 @@ namespace Masa.Mc.Service.Admin.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("AuditReason")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("AuditStatus")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("AuditTime")
+                        .HasColumnType("datetime2");
+
                     b.Property<Guid>("ChannelId")
                         .HasColumnType("uniqueidentifier");
 
@@ -139,6 +149,9 @@ namespace Masa.Mc.Service.Admin.Migrations
                     b.Property<Guid>("Creator")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<long>("DayLimit")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("DisplayName")
                         .IsRequired()
                         .HasMaxLength(128)
@@ -148,11 +161,22 @@ namespace Masa.Mc.Service.Admin.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("InvalidTime")
+                        .HasColumnType("datetime2");
+
                     b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsJump")
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsStatic")
                         .HasColumnType("bit");
+
+                    b.Property<string>("JumpUrl")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<DateTime>("ModificationTime")
                         .HasColumnType("datetime2");
@@ -160,10 +184,22 @@ namespace Masa.Mc.Service.Admin.Migrations
                     b.Property<Guid>("Modifier")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("Sign")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
                     b.Property<string>("TemplateId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TemplateType")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -193,9 +229,6 @@ namespace Masa.Mc.Service.Admin.Migrations
                         .HasMaxLength(128)
                         .HasColumnType("nvarchar(128)");
 
-                    b.Property<bool>("IsStatic")
-                        .HasColumnType("bit");
-
                     b.Property<string>("MappingCode")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -212,6 +245,99 @@ namespace Masa.Mc.Service.Admin.Migrations
                     b.ToTable("MessageTemplateItems", (string)null);
                 });
 
+            modelBuilder.Entity("Masa.Mc.Service.Admin.Domain.ReceiverGroups.Aggregates.ReceiverGroup", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("Creator")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DisplayName")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("ModificationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("Modifier")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ReceiverGroups", (string)null);
+                });
+
+            modelBuilder.Entity("Masa.Mc.Service.Admin.Domain.ReceiverGroups.Aggregates.ReceiverGroupItem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Avatar")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DataId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DisplayName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("GroupId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GroupId");
+
+                    b.ToTable("ReceiverGroupItems", (string)null);
+                });
+
+            modelBuilder.Entity("Masa.Mc.Service.Admin.Domain.ReceiverGroups.Aggregates.ReceiverGroupUser", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("GroupId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GroupId", "UserId");
+
+                    b.ToTable("ReceiverGroupUsers", (string)null);
+                });
+
             modelBuilder.Entity("Masa.Mc.Service.Admin.Domain.MessageTemplates.Aggregates.MessageTemplateItem", b =>
                 {
                     b.HasOne("Masa.Mc.Service.Admin.Domain.MessageTemplates.Aggregates.MessageTemplate", null)
@@ -221,9 +347,34 @@ namespace Masa.Mc.Service.Admin.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Masa.Mc.Service.Admin.Domain.ReceiverGroups.Aggregates.ReceiverGroupItem", b =>
+                {
+                    b.HasOne("Masa.Mc.Service.Admin.Domain.ReceiverGroups.Aggregates.ReceiverGroup", null)
+                        .WithMany("Items")
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Masa.Mc.Service.Admin.Domain.ReceiverGroups.Aggregates.ReceiverGroupUser", b =>
+                {
+                    b.HasOne("Masa.Mc.Service.Admin.Domain.ReceiverGroups.Aggregates.ReceiverGroup", null)
+                        .WithMany("Users")
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Masa.Mc.Service.Admin.Domain.MessageTemplates.Aggregates.MessageTemplate", b =>
                 {
                     b.Navigation("Items");
+                });
+
+            modelBuilder.Entity("Masa.Mc.Service.Admin.Domain.ReceiverGroups.Aggregates.ReceiverGroup", b =>
+                {
+                    b.Navigation("Items");
+
+                    b.Navigation("Users");
                 });
 #pragma warning restore 612, 618
         }

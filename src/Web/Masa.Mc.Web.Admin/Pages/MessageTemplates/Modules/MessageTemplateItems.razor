@@ -1,0 +1,89 @@
+﻿@inherits AdminCompontentBase
+<MDataTable Headers="_headers"
+            Items="Value"
+            HideDefaultFooter>
+    <TopContent>
+        <MToolbar Flat>
+            <MToolbarTitle>@T("DisplayName:MessageTemplateItem")</MToolbarTitle>
+            @*<MSpacer></MSpacer>
+                <MButton Ripple=false Plain
+                Class="mb-2"
+                OnClick="()=>_dialog=true">
+                <MIcon Left>mdi-plus</MIcon>
+                </MButton>*@
+            <MDialog @bind-Value="_dialog"
+                     MaxWidth="500">
+                <MCard>
+                    <MCardTitle>
+                        <span class="text-h5">@FormTitle</span>
+                    </MCardTitle>
+
+                    <MCardText>
+                        <MContainer>
+                            <MRow>
+                                <MCol Cols="12"
+                                      Sm="6"
+                                      Md="4">
+                                    <MTextField @bind-Value="_editedItem.Code"
+                                                Label="@T("DisplayName:MessageTemplateItemCode")"></MTextField>
+                                </MCol>
+                                <MCol Cols="12"
+                                      Sm="6"
+                                      Md="4">
+                                    <MTextField @bind-Value="_editedItem.MappingCode"
+                                                Readonly
+                                                Label="@T("DisplayName:MessageTemplateItemMappingCode")"></MTextField>
+                                </MCol>
+                                <MCol Cols="12"
+                                      Sm="6"
+                                      Md="4">
+                                    <MTextField @bind-Value="_editedItem.DisplayText"
+                                                Label="@T("DisplayName:MessageTemplateItemDisplayText")"></MTextField>
+                                </MCol>
+                            </MRow>
+                        </MContainer>
+                    </MCardText>
+
+                    <MCardActions>
+                        <MSpacer></MSpacer>
+                        <MButton Color="blue darken-1"
+                                 Text
+                                 OnClick="Close">
+                            Cancel
+                        </MButton>
+                        <MButton Color="blue darken-1"
+                                 Text
+                                 OnClick="SaveAsync">
+                            Save
+                        </MButton>
+                    </MCardActions>
+                </MCard>
+            </MDialog>
+            <MDialog @bind-Value="_dialogDelete" MaxWidth="500">
+                <MCard>
+                    <MCardTitle Class="text-h5">@T("DeletionConfirmationMessage")</MCardTitle>
+                    <MCardActions>
+                        <MSpacer></MSpacer>
+                        <MButton Color="blue darken-1" Text OnClick="CloseDelete">Cancel</MButton>
+                        <MButton Color="blue darken-1" Text OnClick="DeleteItemConfirmAsync">OK</MButton>
+                        <MSpacer></MSpacer>
+                    </MCardActions>
+                </MCard>
+            </MDialog>
+        </MToolbar>
+    </TopContent>
+    <ItemColContent>
+        @if (context.Header.Value == "actions")
+        {
+            <MIcon Small
+               Class="mr-2"
+               OnClick="()=>EditItem(context.Item)">mdi-pencil</MIcon>
+            @*<MIcon Small
+                OnClick="()=>DeleteItem(context.Item)">mdi-delete</MIcon>*@
+        }
+        else
+        {
+            @context.Value
+        }
+    </ItemColContent>
+</MDataTable>

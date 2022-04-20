@@ -46,6 +46,13 @@ public class ChannelQueryHandler
         query.Result = entity.Adapt<ChannelDto>();
     }
 
+    [EventHandler]
+    public async Task GetListByTypeAsync(GetListByTypeQuery query)
+    {
+        var list = await _repository.GetListAsync(d => d.Type == query.Type);
+        query.Result = list.Adapt<List<ChannelDto>>();
+    }
+
     private async Task<Expression<Func<Channel, bool>>> CreateFilteredPredicate(GetChannelInput input)
     {
         Expression<Func<Channel, bool>> condition = channel => true;
