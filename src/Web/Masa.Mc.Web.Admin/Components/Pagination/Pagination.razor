@@ -1,0 +1,93 @@
+﻿@inherits AdminCompontentBase
+
+<div class="mt-5 d-flex">
+    <div class="d-flex">
+        <MSelect Value=PageSize
+                 ValueChanged=PageSizeChanged
+                 Color="primary"
+                 Style="max-width:120px;"
+                 Dense
+                 Outlined
+                 Items="@PageSizeSelect"
+                 ItemText="p => p.ToString()"
+                 ItemValue="p => p"
+                 HideDetails="@("auto")"
+                 Class="rounded-2"
+                 TItem="int"
+                 TItemValue="int"
+                 TValue="int"
+                 OnSelectedItemUpdate="HandleChange">
+        </MSelect>
+        <div class="ml-2 block-center text-caption2">@T("Rows per page")</div>
+        <div class="ml-2 block-center text-caption2">
+            <span>@T("Total")@Total@T("Item")</span>
+        </div>
+    </div>
+    <div class="@Class ml-auto">
+        <MIcon Class="hover-pointer" OnClick=Previous Disabled=PreviousDisabled Size=24>mdi-chevron-left</MIcon>
+        <span class="ma-5 text-caption">@Page/@TotalPage</span>
+        <MIcon Class="hover-pointer" OnClick=Next Disabled=NextDisabled Size=24>mdi-chevron-right</MIcon>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int Page { get; set; }
+
+    [Parameter]
+    public EventCallback<int> PageChanged { get; set; }
+
+    [Parameter]
+    public int PageSize { get; set; }
+
+    [Parameter]
+    public EventCallback<int> PageSizeChanged { get; set; }
+
+    [Parameter]
+    public long Total { get; set; }
+
+    private int TotalPage
+    {
+        get
+        {
+            var totalPage = (int)((Total + PageSize - 1) / PageSize);
+            return totalPage == 0 ? 1 : totalPage;
+        }
+    }
+
+    [Parameter]
+    public List<int> PageSizeSelect { get; set; } = new() { 10, 20, 50, 100 };
+
+    [Parameter]
+    public EventCallback<PaginationEventArgs> OnChange { get; set; }
+
+    bool NextDisabled => Page == TotalPage;
+
+    bool PreviousDisabled => Page == 1;
+
+    async Task Next()
+    {
+        if (NextDisabled is false)
+        {
+            await PageChanged.InvokeAsync(++Page);
+            await HandleChange();
+        }
+    }
+
+    async Task Previous()
+    {
+        if (PreviousDisabled is false)
+        {
+            await PageChanged.InvokeAsync(--Page);
+            await HandleChange();
+        }
+    }
+
+    private async Task HandleChange()
+    {
+        if (OnChange.HasDelegate)
+        {
+            await OnChange.InvokeAsync(new(Page, PageSize));
+        }
+    }
+}
