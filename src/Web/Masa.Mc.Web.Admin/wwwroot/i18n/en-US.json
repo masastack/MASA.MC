@@ -83,6 +83,13 @@
   "DisplayName:MessageTemplateItemMappingCode": "Mapping variable",
   "DisplayName:MessageTemplateItemDisplayText": "Remarks",
 
+  "DisplayName:SmsTemplateType.VerificationCode": "Verification code",
+  "DisplayName:SmsTemplateType.Notification": "Notification",
+  "DisplayName:SmsTemplateType.Promotion": "Promotion",
+  "DisplayName:SmsTemplateType.International": "International",
+  "DisplayName:SmsTemplateType.Digital": "Digital",
+  "DisplayName:SmsTemplateType.Other": "Other",
+
   "Permission:ReceiverGroupManagement": "Receiver group management",
   "Permission:CreateReceiverGroup": "Create receiver group",
   "Permission:EditReceiverGroup": "Edit receiver group",

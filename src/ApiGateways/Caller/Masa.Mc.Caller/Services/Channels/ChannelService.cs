@@ -10,17 +10,7 @@ public class ChannelService : ServiceBase
     }
     public async Task<PaginatedListDto<ChannelDto>> GetListAsync(GetChannelInput input)
     {
-        var queryArguments = new Dictionary<string, string?>()
-        {
-            { "filter", input.Filter.ToString() },
-            { "displayName", input.DisplayName.ToString() },
-            { "type",input.Type?.ToString()},
-            { "sorting", input.Sorting.ToString() },
-            { "page", input.Page.ToString() },
-            { "pageSize", input.PageSize.ToString() }
-        };
-        var url = QueryHelpers.AddQueryString(string.Empty, queryArguments);
-        return await GetAsync<PaginatedListDto<ChannelDto>>(url) ?? new();
+        return await GetAsync<GetChannelInput, PaginatedListDto<ChannelDto>>(string.Empty, input) ?? new();
     }
 
     public async Task<ChannelDto?> GetAsync(Guid id)

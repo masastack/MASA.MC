@@ -65,7 +65,7 @@
                         <MSelect Value="@_model.TemplateType"
                                  Items="@(GetEnumList<SmsTemplateType>())"
                                  Label="@T("DisplayName:MessageTemplateTemplateType")"
-                                 ItemText="item => T(item.ToString())"
+                                 ItemText="@(item => T($"DisplayName:SmsTemplateType.{item.ToString()}"))"
                                  ItemValue="item => (int)item"
                                  Dense
                                  Outlined

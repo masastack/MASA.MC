@@ -11,15 +11,7 @@ public class ReceiverGroupService : ServiceBase
 
     public async Task<PaginatedListDto<ReceiverGroupDto>> GetListAsync(GetReceiverGroupInput input)
     {
-        var queryArguments = new Dictionary<string, string?>()
-        {
-            { "filter", input.Filter.ToString() },
-            { "sorting", input.Sorting.ToString() },
-            { "page", input.Page.ToString() },
-            { "pageSize", input.PageSize.ToString() }
-        };
-        var url = QueryHelpers.AddQueryString(string.Empty, queryArguments);
-        return await GetAsync<PaginatedListDto<ReceiverGroupDto>>(url) ?? new();
+        return await GetAsync<GetReceiverGroupInput, PaginatedListDto<ReceiverGroupDto>>(string.Empty, input) ?? new();
     }
 
     public async Task<ReceiverGroupDto?> GetAsync(Guid id)

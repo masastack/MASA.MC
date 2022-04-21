@@ -62,10 +62,6 @@
   "Fail": "未通过",
   "Normal": "正常",
   "Invalid": "失效",
-  "VerificationCode": "验证码",
-  "Notification": "短信通知",
-  "Promotion": "推广短信",
-  "International": "国际/港澳台消息",
   "Permission:Create": "创建",
   "Permission:Edit": "编辑",
   "Permission:Delete": "删除",
@@ -131,6 +127,13 @@
   "DisplayName:MessageTemplateItemMappingCode": "映射变量",
   "DisplayName:MessageTemplateItemDisplayText": "备注",
 
+  "DisplayName:SmsTemplateType.VerificationCode": "验证码",
+  "DisplayName:SmsTemplateType.Notification": "短信通知",
+  "DisplayName:SmsTemplateType.Promotion": "推广短信",
+  "DisplayName:SmsTemplateType.International": "国际/港澳台消息",
+  "DisplayName:SmsTemplateType.Digital": "数字短信",
+  "DisplayName:SmsTemplateType.Other": "其他",
+
   "Permission:ReceiverGroupManagement": "消息组",
   "Permission:CreateReceiverGroup": "创建消息组",
   "Permission:EditReceiverGroup": "编辑消息组",
@@ -143,5 +146,5 @@
 
   "Description:ReceiverGroup.SelectUser": "请选择用户",
   "Description:ReceiverGroup.AddSelectMember": "请添加/选择成员",
-  "ExternalMemberAddMessage": "添加外部用户成功."
+  "ExternalMemberAddMessage": "添加外部用户成功.",
 }
