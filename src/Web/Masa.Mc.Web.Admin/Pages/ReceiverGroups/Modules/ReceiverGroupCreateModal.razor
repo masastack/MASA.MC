@@ -4,7 +4,7 @@
         <MForm Model="_model" EnableValidation>
             <MRow Justify="@("center")">
                 <MCol Cols="12" Sm="6" Md="3">
-                    <MTextField Class="mx-auto text-h5" @bind-Value="_model.DisplayName" Label="@T("DisplayName:ReceiverGroupDisplayName")" TValue="string"></MTextField>
+                    <MTextField Class="mx-auto" style="width:200px;" @bind-Value="_model.DisplayName" HideDetails="@("auto")" Placeholder="@T("DisplayName:ReceiverGroupDisplayName")"></MTextField>
                 </MCol>
             </MRow>
             <ReceiverSelect @bind-Value="_model.Items"></ReceiverSelect>

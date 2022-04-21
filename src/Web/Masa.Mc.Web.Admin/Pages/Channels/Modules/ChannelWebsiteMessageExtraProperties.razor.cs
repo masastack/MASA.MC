@@ -9,7 +9,7 @@ public partial class ChannelWebsiteMessageExtraProperties : AdminCompontentBase
     public EventCallback<ExtraPropertyDictionary> ValueChanged { get; set; }
 
     private WebsiteMessageChannelOptions _model = new();
-    private List<string> _environmentItems = new List<string> {"Staging"};
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)

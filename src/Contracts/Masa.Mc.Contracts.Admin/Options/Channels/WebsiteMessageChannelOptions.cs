@@ -2,5 +2,4 @@
 
 public class WebsiteMessageChannelOptions
 {
-    public string Environment { get; set; } = string.Empty;
 }

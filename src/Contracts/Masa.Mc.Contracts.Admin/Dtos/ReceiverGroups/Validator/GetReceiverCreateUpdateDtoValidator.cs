@@ -4,6 +4,6 @@ public class ReceiverGroupCreateUpdateDtoValidator : AbstractValidator<ReceiverG
 {
     public ReceiverGroupCreateUpdateDtoValidator()
     {
-        RuleFor(input => input.DisplayName).NotEmpty();
+        RuleFor(input => input.DisplayName).Required().Length(2, 50).ChineseLetterNumber();
     }
 }

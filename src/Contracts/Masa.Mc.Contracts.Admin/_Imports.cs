@@ -9,3 +9,4 @@ global using Masa.Mc.Contracts.Admin.Dtos.Channels;
 global using Masa.Mc.Contracts.Admin.Dtos.ReceiverGroups;
 global using Masa.Mc.Contracts.Admin.Dtos.MessageTemplates;
 global using Masa.Mc.Contracts.Admin.Enums.ReceiverGroups;
+global using Masa.Mc.Infrastructure.Common.Extensions;

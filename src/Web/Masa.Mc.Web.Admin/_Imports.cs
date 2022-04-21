@@ -50,3 +50,5 @@ global using Masa.Mc.Caller;
 global using Masa.Mc.Caller.Services.Channels;
 global using Masa.Mc.Caller.Services.MessageTemplates;
 global using Masa.Mc.Caller.Services.ReceiverGroups;
+global using FluentValidation;
+global using Masa.Mc.Infrastructure.Common.Extensions;

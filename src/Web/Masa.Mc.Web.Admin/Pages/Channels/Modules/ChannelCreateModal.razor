@@ -38,7 +38,7 @@
                     <MStepperContent Class="pt-3" Step="2">
                         <MRow Justify="@("center")">
                             <MCol Cols="12" Sm="6" Md="3">
-                                <MTextField Class="mx-auto text-h5" @bind-Value="_model.DisplayName" Label="@T("DisplayName:ChannelDisplayName")" TValue="string"></MTextField>
+                                <MTextField Class="mx-auto" style="width:200px;" @bind-Value="_model.DisplayName" HideDetails="@("auto")" Placeholder="@T("DisplayName:ChannelDisplayName")"></MTextField>
                             </MCol>
                         </MRow>
                         <MRow>
@@ -50,6 +50,7 @@
                                          ItemValue="item => item"
                                          Dense
                                          Outlined
+                                         Disabled
                                          HideDetails="@("auto")">
                                 </MSelect>
                             </MCol>

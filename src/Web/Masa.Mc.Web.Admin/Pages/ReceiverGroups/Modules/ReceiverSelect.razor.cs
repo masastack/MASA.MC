@@ -41,7 +41,7 @@ public partial class ReceiverSelect : AdminCompontentBase
         {
             if (!Value.Any(x => x.DataId == dto.DataId && x.Type == dto.Type))
             {
-                Value.Add(dto);
+                Value.Insert(0, dto);
             }
         }
         await ValueChanged.InvokeAsync(Value);
