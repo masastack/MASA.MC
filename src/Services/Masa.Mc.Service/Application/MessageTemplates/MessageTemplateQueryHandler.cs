@@ -3,16 +3,10 @@
 public class MessageTemplateQueryHandler
 {
     private readonly IMessageTemplateRepository _repository;
-    private readonly IChannelRepository _channelRepository;
-    private readonly ISmsTemplateService _smsTemplateService;
-    private readonly IAliyunSmsAsyncLocal _aliyunSmsAsyncLocal;
 
-    public MessageTemplateQueryHandler(IMessageTemplateRepository repository, IChannelRepository channelRepository, ISmsTemplateService smsTemplateService, IAliyunSmsAsyncLocal aliyunSmsAsyncLocal)
+    public MessageTemplateQueryHandler(IMessageTemplateRepository repository)
     {
         _repository = repository;
-        _smsTemplateService = smsTemplateService;
-        _channelRepository = channelRepository;
-        _aliyunSmsAsyncLocal = aliyunSmsAsyncLocal;
     }
 
     [EventHandler]
@@ -46,37 +40,6 @@ public class MessageTemplateQueryHandler
         query.Result = result;
     }
 
-    //[EventHandler]
-    //public async Task GetSmsTemplateAsync(GetSmsTemplateQuery query)
-    //{
-    //    var channel = await _channelRepository.FindAsync(x => x.Id == query.ChannelId);
-    //    var options = new AliyunSmsOptions
-    //    {
-    //        AccessKeyId = channel.GetDataValue(nameof(SmsChannelOptions.AccessKeyId)).ToString(),
-    //        AccessKeySecret = channel.GetDataValue(nameof(SmsChannelOptions.AccessKeySecret)).ToString()
-    //    };
-    //    using (_aliyunSmsAsyncLocal.Change(options))
-    //    {
-    //        var smsTemplateResponse = await _smsTemplateService.GetSmsTemplateAsync(query.TemplateCode) as SmsTemplateResponse;
-    //        if (!smsTemplateResponse.Success)
-    //        {
-    //            throw new UserFriendlyException(smsTemplateResponse.Message);
-    //        }
-    //        var smsTemplate = smsTemplateResponse.Data.Body;
-    //        var dto = new SmsTemplateDto
-    //        {
-    //            DisplayName = smsTemplate.TemplateName,
-    //            TemplateId = smsTemplate.TemplateCode,
-    //            Content = smsTemplate.TemplateContent,
-    //            AuditStatus = SmsTemplateStatusMapToAuditStatus(smsTemplate.TemplateStatus),
-    //            TemplateType = AliyunSmsTemplateTypeMapToTemplateType(smsTemplate.TemplateType),
-    //            AuditReason = smsTemplate.Reason
-    //        };
-    //        dto.Items = ParseTemplateItem(smsTemplate.TemplateContent);
-    //        query.Result = dto;
-    //    }
-    //}
-
     private async Task<Expression<Func<MessageTemplateWithDetail, bool>>> CreateFilteredPredicate(GetMessageTemplateInput input)
     {
         Expression<Func<MessageTemplateWithDetail, bool>> condition = x => true;
@@ -96,35 +59,5 @@ public class MessageTemplateQueryHandler
         var query = await _repository.GetWithDetailQueryAsync()!;
         var condition = await CreateFilteredPredicate(input);
         return query.Where(condition);
-    }
-
-    private MessageTemplateAuditStatus SmsTemplateStatusMapToAuditStatus(int? status)
-    {
-        return status switch
-        {
-            1 => MessageTemplateAuditStatus.Adopt,
-            2 => MessageTemplateAuditStatus.Fail,
-            _ => MessageTemplateAuditStatus.WaitAudit
-        };
-    }
-
-    private int AliyunSmsTemplateTypeMapToTemplateType(int? templateType)
-    {
-        return templateType switch
-        {
-            0 => (int)SmsTemplateType.VerificationCode,
-            1 => (int)SmsTemplateType.Notification,
-            2 => (int)SmsTemplateType.Promotion,
-            3 => (int)SmsTemplateType.International,
-            _ => (int)SmsTemplateType.Other
-        };
-    }
-
-    private List<MessageTemplateItemDto> ParseTemplateItem(string content)
-    {
-        string startstr = "\\${";
-        string endstr = "}";
-        var paramList = UtilHelper.MidStrEx(content, startstr, endstr);
-        return paramList.Select(x => new MessageTemplateItemDto { Code = x, MappingCode = x }).ToList();
     }
 }

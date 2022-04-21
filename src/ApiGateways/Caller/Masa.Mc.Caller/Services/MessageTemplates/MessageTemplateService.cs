@@ -53,15 +53,4 @@ public class MessageTemplateService : ServiceBase
     {
         return await GetAsync<MessageTemplateDto>($"FindByCode?code={code}");
     }
-
-    //public async Task<SmsTemplateDto?> GetSmsTemplateAsync(Guid channelId, string templateCode)
-    //{
-    //    var queryArguments = new Dictionary<string, string?>()
-    //    {
-    //        { "channelId", channelId.ToString() },
-    //        { "templateCode", templateCode }
-    //    };
-    //    var url = QueryHelpers.AddQueryString($"GetSmsTemplate", queryArguments);
-    //    return await GetAsync<SmsTemplateDto>(url);
-    //}
 }

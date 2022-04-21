@@ -72,7 +72,7 @@ public partial class SmsTemplateCreateModal : AdminCompontentBase
         if (_channelItems.Count == 1)
         {
             _model.ChannelId = _channelItems[0].Id;
-            await HandleChannelChange();
+            await HandleChannelChangeAsync();
         }
     }
 
@@ -86,27 +86,7 @@ public partial class SmsTemplateCreateModal : AdminCompontentBase
         _model.Items = ParseTemplateItem(smsTemplate.TemplateContent);
     }
 
-    private async Task GetSmsTemplateAsync()
-    {
-        //if (_model.ChannelId == default || string.IsNullOrEmpty(_model.TemplateId))
-        //{
-        //    return;
-        //}
-        //Loading = true;
-        //var smsTemplate = await MessageTemplateService.GetSmsTemplateAsync(_model.ChannelId, _model.TemplateId);
-        //if (smsTemplate != null)
-        //{
-        //    _model.DisplayName = smsTemplate.DisplayName;
-        //    _model.Content = smsTemplate.Content;
-        //    _model.Items = smsTemplate.Items;
-        //    _model.AuditStatus = smsTemplate.AuditStatus;
-        //    _model.AuditReason = smsTemplate.AuditReason;
-        //    _model.TemplateType = smsTemplate.TemplateType;
-        //}
-        //Loading = false;
-    }
-
-    private async Task HandleChannelChange()
+    private async Task HandleChannelChangeAsync()
     {
         _model.DisplayName = string.Empty;
         _model.Content = string.Empty;
@@ -122,5 +102,13 @@ public partial class SmsTemplateCreateModal : AdminCompontentBase
         string endstr = "}";
         var paramList = UtilHelper.MidStrEx(content, startstr, endstr);
         return paramList.Select(x => new MessageTemplateItemDto { Code = x, MappingCode = x }).ToList();
+    }
+
+    private async Task SynchroAsync()
+    {
+        Loading = true;
+        await SmsTemplateService.SynchroAsync(new SmsTemplateSynchroInput(_model.ChannelId));
+        _templateItems = await SmsTemplateService.GetListByChannelIdAsync(_model.ChannelId);
+        Loading = false;
     }
 }

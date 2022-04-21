@@ -4,7 +4,7 @@
         <div>
             <MForm Class="mt-12 full-height" Model="_model" EnableValidation @ref="_form">
                 <MRow>
-                    <MCol Cols="2">
+                    <MCol Cols="3">
                         <MSelect Value="@_channelType"
                                  Items="@(GetEnumList<ChannelType>())"
                                  Label="@T("DisplayName:ChannelType")"
@@ -16,7 +16,7 @@
                                  HideDetails="@("auto")">
                         </MSelect>
                     </MCol>
-                    <MCol Cols="2">
+                    <MCol Cols="3">
                         <MSelect @bind-Value="_model.ChannelId"
                                  Items="@_channelItems"
                                  Label="@T("DisplayName:Channel")"
@@ -28,12 +28,12 @@
                                  TItem="ChannelDto"
                                  TItemValue="Guid"
                                  TValue="Guid"
-                                 OnSelectedItemUpdate="HandleChannelChange">
+                                 OnSelectedItemUpdate="HandleChannelChangeAsync">
                         </MSelect>
                     </MCol>
                 </MRow>
                 <MRow>
-                    <MCol Cols="2">
+                    <MCol Cols="3">
                         <MTextField @bind-Value="_model.Sign"
                                     Label="@T("DisplayName:MessageTemplateSign")"
                                     Dense
@@ -41,10 +41,10 @@
                                     Placeholder="@T("Description:MessageTemplate.Sign.Required")"
                                     HideDetails="@("auto")" />
                     </MCol>
-                    <MCol Cols="2">
+                    <MCol Cols="3">
                         <MAutocomplete Items="_templateItems" @bind-Value="_model.TemplateId"
                                        Label="@T("DisplayName:MessageTemplateTemplateId")"
-                                       ItemText="x=>x.TemplateName"
+                                       ItemText="x=>x.TemplateName+x.TemplateCode"
                                        ItemValue="x=>x.TemplateCode"
                                        Dense
                                        Outlined
@@ -53,15 +53,9 @@
                                        TItemValue="string"
                                        TValue="string"
                                        OnSelectedItemUpdate="HandleTemplateSelected"></MAutocomplete>
-                        @*<MTextField @bind-Value="_model.TemplateId"
-                            Label="@T("DisplayName:MessageTemplateTemplateId")"
-                            Dense
-                            Outlined
-                            HideDetails="@("auto")"
-                            OnBlur="GetSmsTemplateAsync" />*@
                     </MCol>
                     <MCol Cols="2">
-                        <MButton Rounded Outlined Color="indigo" Class="ml-6 medium-button px-6">
+                        <MButton Rounded Outlined Color="indigo" Class="ml-6 medium-button px-6" OnClick="SynchroAsync">
                             <span>@T("Synchro")</span>
                         </MButton>
                     </MCol>

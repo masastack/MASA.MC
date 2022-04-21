@@ -12,7 +12,7 @@ public class SmsTemplateQueryHandler
     [EventHandler]
     public async Task GetListAsync(GetSmsTemplateListByChannelIdQuery query)
     {
-        var resultList = await _repository.GetListAsync(x=>x.ChannelId== query.ChannelId);
+        var resultList = await _repository.GetListAsync(x => x.ChannelId == query.ChannelId);
         var dtos = resultList.Adapt<List<SmsTemplateDto>>();
         query.Result = dtos;
     }
