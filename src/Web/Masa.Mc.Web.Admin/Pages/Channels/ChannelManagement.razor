@@ -16,11 +16,11 @@
             @foreach (var _entitie in _entities.Result)
             {
                 <MCol Md="3">
-                    <ChannelCard Height="170" Channel="_entitie" OnEditClick="async()=>await _editModal.OpenModalAsync(_entitie)" />
+                    <ChannelCard Height="200" Channel="_entitie" OnEditClick="async()=>await _editModal.OpenModalAsync(_entitie)" />
                 </MCol>
             }
             <MCol Md="3">
-                <MCard Outlined class="d-flex justify-center align-center" Style="border-style: dashed;" Height="170">
+                <MCard Outlined class="d-flex justify-center align-center" Style="border-style: dashed;" Height="200">
                     <MButton Ripple=false Plain OnClick="()=> _createModal.OpenModalAsync()"><MIcon Left>mdi-plus</MIcon>@T("Permission:CreateChannel")</MButton>
                 </MCard>
             </MCol>

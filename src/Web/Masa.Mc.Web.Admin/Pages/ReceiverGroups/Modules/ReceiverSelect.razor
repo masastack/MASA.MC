@@ -42,14 +42,14 @@
                         @(data.Item.DisplayName)
                     </MListItemTitle>
                     <MListItemSubtitle>
-                        @(data.Item.Type)
+                        @T(data.Item.Type.ToString())
                     </MListItemSubtitle>
                 </MListItemContent>
             }
             else
             {
                 <MListItemAvatar>
-                   <MImage Src="@data.Item.Avatar"></MImage>
+                    <MImage Src="@data.Item.Avatar"></MImage>
                 </MListItemAvatar>
                 <MListItemContent>
                     <MListItemTitle>

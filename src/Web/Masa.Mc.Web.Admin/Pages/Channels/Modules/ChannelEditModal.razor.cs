@@ -7,6 +7,7 @@ public partial class ChannelEditModal : AdminCompontentBase
     [Parameter]
     public EventCallback OnOk { get; set; }
 
+    private MForm _form;
     private ChannelCreateUpdateDto _model = new();
     private Guid _entityId;
     private bool _visible;
@@ -40,10 +41,10 @@ public partial class ChannelEditModal : AdminCompontentBase
         ResetForm();
     }
 
-    private async Task HandleOk(EditContext context)
+    private async Task HandleOk()
     {
         await _channelExtraPropertiesRef.UpdateExtraPropertiesAsync();
-        if (!context.Validate())
+        if (!await _form.ValidateAsync())
         {
             return;
         }
