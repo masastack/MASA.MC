@@ -21,6 +21,7 @@
   "Delete": "删除",
   "Edit": "编辑",
   "Synchro": "同步",
+  "SynchroTemplate": "同步模板",
   "AddChild": "加子级",
   "DeletionConfirmationMessage": "确定删除数据?",
   "Creator": "创建人",
@@ -146,5 +147,5 @@
 
   "Description:ReceiverGroup.SelectUser": "请选择用户",
   "Description:ReceiverGroup.AddSelectMember": "请添加/选择成员",
-  "ExternalMemberAddMessage": "添加外部用户成功.",
+  "ExternalMemberAddMessage": "添加外部用户成功."
 }

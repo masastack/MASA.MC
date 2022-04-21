@@ -2,9 +2,9 @@
 <div @ref="Ref">
     <SheetDialog Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission:EditMessageTemplate")" ContentStyle="padding-right:228px;padding-left:228px;">
         <div>
-            <MForm Class="mt-10 full-height" Model="_model" EnableValidation @ref="_form">
+            <MForm Class="pt-12 full-height" Model="_model" EnableValidation @ref="_form">
                 <MRow>
-                    <MCol Cols="2">
+                    <MCol Cols="3">
                         <MSelect Value="@_channelType"
                                  Items="@(GetEnumList<ChannelType>())"
                                  Label="@T("DisplayName:ChannelType")"
@@ -16,7 +16,7 @@
                                  HideDetails="@("auto")">
                         </MSelect>
                     </MCol>
-                    <MCol Cols="2">
+                    <MCol Cols="3">
                         <MSelect @bind-Value="_model.ChannelId"
                                  Items="@_channelItems"
                                  Label="@T("DisplayName:Channel")"
@@ -33,7 +33,7 @@
                     </MCol>
                 </MRow>
                 <MRow>
-                    <MCol Cols="2">
+                    <MCol Cols="3">
                         <MTextField @bind-Value="_model.Sign"
                                     Label="@T("DisplayName:MessageTemplateSign")"
                                     Dense
@@ -44,7 +44,7 @@
                     <MCol Cols="3">
                         <MAutocomplete Items="_templateItems" @bind-Value="_model.TemplateId"
                                        Label="@T("DisplayName:MessageTemplateTemplateId")"
-                                       ItemText="x=>x.TemplateName+x.TemplateCode"
+                                       ItemText="@(x=>$"{x.TemplateName}({x.TemplateCode})")"
                                        ItemValue="x=>x.TemplateCode"
                                        Dense
                                        Outlined
@@ -56,7 +56,7 @@
                     </MCol>
                     <MCol Cols="2">
                         <MButton Rounded Outlined Color="indigo" Class="ml-6 medium-button px-6" OnClick="SynchroAsync">
-                            <span>@T("Synchro")</span>
+                            <span>@T("SynchroTemplate")</span>
                         </MButton>
                     </MCol>
                 </MRow>

@@ -62,7 +62,7 @@ public partial class WebsiteMessageTemplateEditModal : AdminCompontentBase
 
     private async Task HandleDelAsync()
     {
-        await ConfirmAsync(T("DeletionConfirmationMessage"), async args => { await DeleteAsync(); });
+        await ConfirmAsync(T("DeletionConfirmationMessage"), DeleteAsync);
     }
 
     private async Task DeleteAsync()

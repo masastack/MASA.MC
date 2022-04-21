@@ -20,6 +20,7 @@ public partial class SmsTemplateCreateModal : AdminCompontentBase
 
     public async Task OpenModalAsync(ChannelType? channelType)
     {
+        _model.ChannelType = ChannelType.Sms;
         if (channelType.HasValue)
         {
             _channelType = channelType.Value;

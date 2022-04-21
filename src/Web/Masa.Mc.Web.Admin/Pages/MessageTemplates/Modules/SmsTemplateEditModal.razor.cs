@@ -21,9 +21,9 @@ public partial class SmsTemplateEditModal : AdminCompontentBase
 
     public async Task OpenModalAsync(MessageTemplateDto model)
     {
+        _model.ChannelType = ChannelType.Sms;
         _entityId = model.Id;
         _model = model.Adapt<MessageTemplateCreateUpdateDto>();
-        _templateItems = await SmsTemplateService.GetListByChannelIdAsync(_model.ChannelId);
         await GetFormDataAsync();
         await InvokeAsync(() =>
         {
@@ -36,6 +36,7 @@ public partial class SmsTemplateEditModal : AdminCompontentBase
     {
         var dto = await MessageTemplateService.GetAsync(_entityId);
         _model = dto.Adapt<MessageTemplateCreateUpdateDto>();
+        _templateItems = await SmsTemplateService.GetListByChannelIdAsync(_model.ChannelId);
         _channelType = dto.Channel.Type;
         await HandleSelectChannelTypeAsync(_channelType);
     }
@@ -66,7 +67,7 @@ public partial class SmsTemplateEditModal : AdminCompontentBase
 
     private async Task HandleDelAsync()
     {
-        await ConfirmAsync(T("DeletionConfirmationMessage"), async args => { await DeleteAsync(); });
+        await ConfirmAsync(T("DeletionConfirmationMessage"), DeleteAsync);
     }
 
     private async Task DeleteAsync()
