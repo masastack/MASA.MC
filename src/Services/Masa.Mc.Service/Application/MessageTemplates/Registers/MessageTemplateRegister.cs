@@ -7,5 +7,6 @@ public class MessageTemplateRegister : IRegister
         config.ForType<MessageTemplate, MessageTemplateDto>().MapToConstructor(true);
         config.ForType<MessageTemplateItemDto, MessageTemplateItem>().MapToConstructor(true);
         config.ForType<MessageTemplateCreateUpdateDto, MessageTemplate>().MapToConstructor(true).Ignore(x => x.Items);
+        config.ForType<SmsTemplate, SmsTemplateDto>().MapToConstructor(true);
     }
 }

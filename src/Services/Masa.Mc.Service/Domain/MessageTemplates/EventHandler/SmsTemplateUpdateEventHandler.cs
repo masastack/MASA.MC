@@ -51,7 +51,6 @@ public class SmsTemplateUpdateEventHandler
             var removeList = smsTemplateList.Where(x => !templateCodeList.Contains(x.TemplateCode)).ToList();
             await _smsTemplateRepository.RemoveRangeAsync(removeList);
         }
-
     }
 
     private SmsTemplateType AliyunSmsTemplateTypeMapToSmsTemplateType(int? templateType)

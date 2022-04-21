@@ -13,20 +13,20 @@ public class SmsTemplate : AuditAggregateRoot<Guid, Guid>
     public SmsTemplate(Guid channelId, string templateCode, string templateName, SmsTemplateType templateType, MessageTemplateAuditStatus auditStatus, string templateContent, string auditReason)
     {
         ChannelId = channelId;
-        TemplateCode = templateCode;
-        TemplateName = templateName;
+        TemplateCode = templateCode ?? string.Empty;
+        TemplateName = templateName ?? string.Empty;
         TemplateType = templateType;
         AuditStatus = auditStatus;
-        TemplateContent = templateContent;
-        AuditReason = auditReason;
+        TemplateContent = templateContent ?? string.Empty;
+        AuditReason = auditReason ?? string.Empty;
     }
 
     public void Update(string templateName, SmsTemplateType templateType, MessageTemplateAuditStatus auditStatus, string templateContent, string auditReason)
     {
-        TemplateName = templateName;
+        TemplateName = templateName ?? string.Empty;
         TemplateType = templateType;
         AuditStatus = auditStatus;
-        TemplateContent = templateContent;
-        AuditReason = auditReason;
+        TemplateContent = templateContent ?? string.Empty;
+        AuditReason = auditReason ?? string.Empty;
     }
 }

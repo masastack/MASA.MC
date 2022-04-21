@@ -100,22 +100,22 @@ public partial class SmsTemplateEditModal : AdminCompontentBase
 
     private async Task GetSmsTemplateAsync()
     {
-        if (_model.ChannelId == default || string.IsNullOrEmpty(_model.TemplateId))
-        {
-            return;
-        }
-        Loading = true;
-        var smsTemplate = await MessageTemplateService.GetSmsTemplateAsync(_model.ChannelId, _model.TemplateId);
-        if (smsTemplate != null)
-        {
-            _model.DisplayName = smsTemplate.DisplayName;
-            _model.Content = smsTemplate.Content;
-            _model.Items = smsTemplate.Items;
-            _model.AuditStatus = smsTemplate.AuditStatus;
-            _model.AuditReason = smsTemplate.AuditReason;
-            _model.TemplateType = smsTemplate.TemplateType;
-        }
-        Loading = false;
+        //if (_model.ChannelId == default || string.IsNullOrEmpty(_model.TemplateId))
+        //{
+        //    return;
+        //}
+        //Loading = true;
+        //var smsTemplate = await MessageTemplateService.GetSmsTemplateAsync(_model.ChannelId, _model.TemplateId);
+        //if (smsTemplate != null)
+        //{
+        //    _model.DisplayName = smsTemplate.DisplayName;
+        //    _model.Content = smsTemplate.Content;
+        //    _model.Items = smsTemplate.Items;
+        //    _model.AuditStatus = smsTemplate.AuditStatus;
+        //    _model.AuditReason = smsTemplate.AuditReason;
+        //    _model.TemplateType = smsTemplate.TemplateType;
+        //}
+        //Loading = false;
     }
 
     private void HandleChannelChange()

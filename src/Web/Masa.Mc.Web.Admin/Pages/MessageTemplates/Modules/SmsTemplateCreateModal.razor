@@ -42,12 +42,28 @@
                                     HideDetails="@("auto")" />
                     </MCol>
                     <MCol Cols="2">
-                        <MTextField @bind-Value="_model.TemplateId"
-                                    Label="@T("DisplayName:MessageTemplateTemplateId")"
-                                    Dense
-                                    Outlined
-                                    HideDetails="@("auto")"
-                                    OnBlur="GetSmsTemplateAsync" />
+                        <MAutocomplete Items="_templateItems" @bind-Value="_model.TemplateId"
+                                       Label="@T("DisplayName:MessageTemplateTemplateId")"
+                                       ItemText="x=>x.TemplateName"
+                                       ItemValue="x=>x.TemplateCode"
+                                       Dense
+                                       Outlined
+                                       HideDetails="@("auto")"
+                                       TItem="SmsTemplateDto"
+                                       TItemValue="string"
+                                       TValue="string"
+                                       OnSelectedItemUpdate="HandleTemplateSelected"></MAutocomplete>
+                        @*<MTextField @bind-Value="_model.TemplateId"
+                            Label="@T("DisplayName:MessageTemplateTemplateId")"
+                            Dense
+                            Outlined
+                            HideDetails="@("auto")"
+                            OnBlur="GetSmsTemplateAsync" />*@
+                    </MCol>
+                    <MCol Cols="2">
+                        <MButton Rounded Outlined Color="indigo" Class="ml-6 medium-button px-6">
+                            <span>@T("Synchro")</span>
+                        </MButton>
                     </MCol>
                 </MRow>
                 <MRow>

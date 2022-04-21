@@ -9,9 +9,12 @@ public partial class SmsTemplateCreateModal : AdminCompontentBase
     private MessageTemplateCreateUpdateDto _model = new();
     private bool _visible;
     private List<ChannelDto> _channelItems = new();
+    private List<SmsTemplateDto> _templateItems = new();
     private ChannelType _channelType;
 
     ChannelService ChannelService => McCaller.ChannelService;
+
+    SmsTemplateService SmsTemplateService => McCaller.SmsTemplateService;
 
     MessageTemplateService MessageTemplateService => McCaller.MessageTemplateService;
 
@@ -69,34 +72,55 @@ public partial class SmsTemplateCreateModal : AdminCompontentBase
         if (_channelItems.Count == 1)
         {
             _model.ChannelId = _channelItems[0].Id;
+            await HandleChannelChange();
         }
+    }
+
+    private void HandleTemplateSelected(SmsTemplateDto smsTemplate)
+    {
+        _model.DisplayName = smsTemplate.TemplateName;
+        _model.Content = smsTemplate.TemplateContent;
+        _model.AuditStatus = smsTemplate.AuditStatus;
+        _model.AuditReason = smsTemplate.AuditReason;
+        _model.TemplateType = (int)smsTemplate.TemplateType;
+        _model.Items = ParseTemplateItem(smsTemplate.TemplateContent);
     }
 
     private async Task GetSmsTemplateAsync()
     {
-        if (_model.ChannelId == default || string.IsNullOrEmpty(_model.TemplateId))
-        {
-            return;
-        }
-        Loading = true;
-        var smsTemplate = await MessageTemplateService.GetSmsTemplateAsync(_model.ChannelId, _model.TemplateId);
-        if (smsTemplate != null)
-        {
-            _model.DisplayName = smsTemplate.DisplayName;
-            _model.Content = smsTemplate.Content;
-            _model.Items = smsTemplate.Items;
-            _model.AuditStatus = smsTemplate.AuditStatus;
-            _model.AuditReason = smsTemplate.AuditReason;
-            _model.TemplateType = smsTemplate.TemplateType;
-        }
-        Loading = false;
+        //if (_model.ChannelId == default || string.IsNullOrEmpty(_model.TemplateId))
+        //{
+        //    return;
+        //}
+        //Loading = true;
+        //var smsTemplate = await MessageTemplateService.GetSmsTemplateAsync(_model.ChannelId, _model.TemplateId);
+        //if (smsTemplate != null)
+        //{
+        //    _model.DisplayName = smsTemplate.DisplayName;
+        //    _model.Content = smsTemplate.Content;
+        //    _model.Items = smsTemplate.Items;
+        //    _model.AuditStatus = smsTemplate.AuditStatus;
+        //    _model.AuditReason = smsTemplate.AuditReason;
+        //    _model.TemplateType = smsTemplate.TemplateType;
+        //}
+        //Loading = false;
     }
 
-    private void HandleChannelChange()
+    private async Task HandleChannelChange()
     {
         _model.DisplayName = string.Empty;
         _model.Content = string.Empty;
         _model.TemplateId = string.Empty;
         _model.Items = new();
+
+        _templateItems = await SmsTemplateService.GetListByChannelIdAsync(_model.ChannelId);
+    }
+
+    private List<MessageTemplateItemDto> ParseTemplateItem(string content)
+    {
+        string startstr = "\\${";
+        string endstr = "}";
+        var paramList = UtilHelper.MidStrEx(content, startstr, endstr);
+        return paramList.Select(x => new MessageTemplateItemDto { Code = x, MappingCode = x }).ToList();
     }
 }

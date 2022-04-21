@@ -15,10 +15,11 @@ public class ChannelDomainService : DomainService
     {
         await ValidateChannelAsync(channel.Code);
         await _repository.AddAsync(channel);
-        //if (channel.Type == ChannelType.Sms)
-        //{
-        //    await EventBus.PublishAsync(new SmsChannelChangedDomainEvent(channel.Id));
-        //}
+        if (channel.Type == ChannelType.Sms)
+        {
+            await _repository.UnitOfWork.SaveChangesAsync();
+            await EventBus.PublishAsync(new SmsChannelChangedDomainEvent(channel.Id));
+        }
     }
 
     public virtual async Task UpdateAsync(Channel channel)

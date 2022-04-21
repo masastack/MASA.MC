@@ -46,37 +46,36 @@ public class MessageTemplateQueryHandler
         query.Result = result;
     }
 
-    [EventHandler]
-    public async Task GetSmsTemplateAsync(GetSmsTemplateQuery query)
-    {
-        var channel = await _channelRepository.FindAsync(x => x.Id == query.ChannelId);
-        var options = new AliyunSmsOptions
-        {
-            AccessKeyId = channel.GetDataValue(nameof(SmsChannelOptions.AccessKeyId)).ToString(),
-            AccessKeySecret = channel.GetDataValue(nameof(SmsChannelOptions.AccessKeySecret)).ToString()
-        };
-        using (_aliyunSmsAsyncLocal.Change(options))
-        {
-            var smsTemplateResponse = await _smsTemplateService.GetSmsTemplateAsync(query.TemplateCode) as SmsTemplateResponse;
-            if (!smsTemplateResponse.Success)
-            {
-                throw new UserFriendlyException(smsTemplateResponse.Message);
-            }
-            var smsTemplate = smsTemplateResponse.Data.Body;
-            var dto = new SmsTemplateDto
-            {
-                DisplayName = smsTemplate.TemplateName,
-                TemplateId = smsTemplate.TemplateCode,
-                Content = smsTemplate.TemplateContent,
-                AuditStatus = SmsTemplateStatusMapToAuditStatus(smsTemplate.TemplateStatus),
-                TemplateType = AliyunSmsTemplateTypeMapToTemplateType(smsTemplate.TemplateType),
-                AuditReason = smsTemplate.Reason
-            };
-            dto.Items = ParseTemplateItem(smsTemplate.TemplateContent);
-            query.Result = dto;
-        }
-
-    }
+    //[EventHandler]
+    //public async Task GetSmsTemplateAsync(GetSmsTemplateQuery query)
+    //{
+    //    var channel = await _channelRepository.FindAsync(x => x.Id == query.ChannelId);
+    //    var options = new AliyunSmsOptions
+    //    {
+    //        AccessKeyId = channel.GetDataValue(nameof(SmsChannelOptions.AccessKeyId)).ToString(),
+    //        AccessKeySecret = channel.GetDataValue(nameof(SmsChannelOptions.AccessKeySecret)).ToString()
+    //    };
+    //    using (_aliyunSmsAsyncLocal.Change(options))
+    //    {
+    //        var smsTemplateResponse = await _smsTemplateService.GetSmsTemplateAsync(query.TemplateCode) as SmsTemplateResponse;
+    //        if (!smsTemplateResponse.Success)
+    //        {
+    //            throw new UserFriendlyException(smsTemplateResponse.Message);
+    //        }
+    //        var smsTemplate = smsTemplateResponse.Data.Body;
+    //        var dto = new SmsTemplateDto
+    //        {
+    //            DisplayName = smsTemplate.TemplateName,
+    //            TemplateId = smsTemplate.TemplateCode,
+    //            Content = smsTemplate.TemplateContent,
+    //            AuditStatus = SmsTemplateStatusMapToAuditStatus(smsTemplate.TemplateStatus),
+    //            TemplateType = AliyunSmsTemplateTypeMapToTemplateType(smsTemplate.TemplateType),
+    //            AuditReason = smsTemplate.Reason
+    //        };
+    //        dto.Items = ParseTemplateItem(smsTemplate.TemplateContent);
+    //        query.Result = dto;
+    //    }
+    //}
 
     private async Task<Expression<Func<MessageTemplateWithDetail, bool>>> CreateFilteredPredicate(GetMessageTemplateInput input)
     {
