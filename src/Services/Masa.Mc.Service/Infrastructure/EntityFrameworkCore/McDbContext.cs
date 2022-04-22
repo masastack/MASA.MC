@@ -24,8 +24,8 @@ public class McDbContext : IsolationDbContext
         builder.Entity<AppChannel>(b =>
         {
             b.ToTable(MCConsts.DbTablePrefix + "Channels", MCConsts.DbSchema);
-            b.Property(x => x.Code).HasColumnName(nameof(Channel.Code));
-            b.Property(x => x.DisplayName).HasColumnName(nameof(Channel.DisplayName));
+            b.Property(x => x.Code).IsRequired().HasMaxLength(64).HasColumnName(nameof(Channel.Code));
+            b.Property(x => x.DisplayName).IsRequired().HasMaxLength(128).HasColumnName(nameof(Channel.DisplayName));
             b.Property(x => x.Type).HasColumnName(nameof(Channel.Type));
             b.HasOne<Channel>().WithOne().HasForeignKey<AppChannel>(x => x.Id);
         });
