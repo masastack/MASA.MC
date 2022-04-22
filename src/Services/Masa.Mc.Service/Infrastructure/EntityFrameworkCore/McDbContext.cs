@@ -21,11 +21,14 @@ public class McDbContext : IsolationDbContext
     {
         base.OnModelCreatingExecuting(builder);
 
-        //builder.Entity<AppChannel>(b =>
-        //{
-        //    b.ToTable(MCConsts.DbTablePrefix + "Channels", MCConsts.DbSchema);
-        //    b.HasOne<Channel>().WithOne().HasForeignKey<AppChannel>(x => x.Id);
-        //});
+        builder.Entity<AppChannel>(b =>
+        {
+            b.ToTable(MCConsts.DbTablePrefix + "Channels", MCConsts.DbSchema);
+            b.Property(x => x.Code).HasColumnName(nameof(Channel.Code));
+            b.Property(x => x.DisplayName).HasColumnName(nameof(Channel.DisplayName));
+            b.Property(x => x.Type).HasColumnName(nameof(Channel.Type));
+            b.HasOne<Channel>().WithOne().HasForeignKey<AppChannel>(x => x.Id);
+        });
 
         builder.ConfigureMC();
     }
