@@ -4,11 +4,13 @@ public static class McDbContextModelBuilderExtensions
 {
     public static void ConfigureMC(this ModelBuilder builder)
     {
+       
         builder.Entity<Channel>(b =>
         {
             b.ToTable(MCConsts.DbTablePrefix + "Channels", MCConsts.DbSchema);
             b.Property(x => x.Code).IsRequired().HasMaxLength(64);
             b.Property(x => x.DisplayName).IsRequired().HasMaxLength(128);
+            b.Property(x => x.Type);
             b.Property(x => x.Description).HasMaxLength(512);
             b.Property(x => x.ExtraProperties).HasConversion(new ExtraPropertiesValueConverter());
         });
@@ -57,6 +59,12 @@ public static class McDbContextModelBuilderExtensions
         {
             b.ToTable(MCConsts.DbTablePrefix + "ReceiverGroupItems", MCConsts.DbSchema);
         });
-    }
 
+        builder.Entity<MessageTask>(b =>
+        {
+            b.ToTable(MCConsts.DbTablePrefix + "MessageTasks", MCConsts.DbSchema);
+            b.Property(x => x.Receivers).HasConversion(new ExtraPropertiesValueConverter());
+            b.Property(x => x.SendingRules).HasConversion(new ExtraPropertiesValueConverter());
+        });
+    }
 }

@@ -10,6 +10,8 @@ public class McDbContext : IsolationDbContext
 
     public DbSet<SmsTemplate> SmsTemplates { get; set; } = default!;
 
+    public DbSet<MessageTask> MessageTasks { get; set; } = default!;
+
     public McDbContext(MasaDbContextOptions<McDbContext> options) : base(options)
     {
 
@@ -18,6 +20,13 @@ public class McDbContext : IsolationDbContext
     protected override void OnModelCreatingExecuting(ModelBuilder builder)
     {
         base.OnModelCreatingExecuting(builder);
+
+        //builder.Entity<AppChannel>(b =>
+        //{
+        //    b.ToTable(MCConsts.DbTablePrefix + "Channels", MCConsts.DbSchema);
+        //    b.HasOne<Channel>().WithOne().HasForeignKey<AppChannel>(x => x.Id);
+        //});
+
         builder.ConfigureMC();
     }
 }
