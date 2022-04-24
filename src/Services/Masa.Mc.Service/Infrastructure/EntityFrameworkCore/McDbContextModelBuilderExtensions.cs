@@ -65,6 +65,14 @@ public static class McDbContextModelBuilderExtensions
             b.ToTable(MCConsts.DbTablePrefix + "MessageTasks", MCConsts.DbSchema);
             b.Property(x => x.Receivers).HasConversion(new ExtraPropertiesValueConverter());
             b.Property(x => x.SendingRules).HasConversion(new ExtraPropertiesValueConverter());
+            b.HasMany(x => x.Historys).WithOne().HasForeignKey(x => x.MessageTaskId).IsRequired();
+        });
+
+        builder.Entity<MessageTaskHistory>(b =>
+        {
+            b.ToTable(MCConsts.DbTablePrefix + "MessageTaskHistorys", MCConsts.DbSchema);
+            b.Property(x => x.Receivers).HasConversion(new ExtraPropertiesValueConverter());
+            b.Property(x => x.SendingRules).HasConversion(new ExtraPropertiesValueConverter());
         });
     }
 }

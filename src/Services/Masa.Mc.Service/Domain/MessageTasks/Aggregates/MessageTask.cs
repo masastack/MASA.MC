@@ -10,9 +10,56 @@ public class MessageTask : AuditAggregateRoot<Guid, Guid>
 
     public Guid EntityId { get; protected set; }
 
+    public bool IsEnabled { get; protected set; }
+
+    public ReceiverType ReceiverType { get; protected set; }
+
+    public DateTime? SendTime { get; protected set; }
+
     public ExtraPropertyDictionary Receivers { get; protected set; } = new();
 
     public ExtraPropertyDictionary SendingRules { get; protected set; } = new();
 
-    public bool IsEnabled { get; protected set; }
+    public ICollection<MessageTaskHistory> Historys { get; protected set; }
+
+    public MessageTask(Guid channelId, MessageEntityType entityType, Guid entityId, bool isEnabled, ReceiverType receiverType, ExtraPropertyDictionary receivers, ExtraPropertyDictionary sendingRules)
+    {
+        ChannelId = channelId;
+        EntityType = entityType;
+        EntityId = entityId;
+        if (isEnabled)
+        {
+            SetEnabled();
+        }
+        else
+        {
+            SetDisable();
+        }
+        SetReceivers(receiverType, receivers);
+        Historys = new Collection<MessageTaskHistory>();
+    }
+
+    public virtual void SetEnabled()
+    {
+        IsEnabled = true;
+    }
+
+    public virtual void SetDisable()
+    {
+        IsEnabled = false;
+    }
+
+    public virtual void AddHistory(ReceiverType receiverType, ExtraPropertyDictionary receivers, ExtraPropertyDictionary sendingRules)
+    {
+        Historys.Add(new MessageTaskHistory(Id, receiverType, receivers, sendingRules));
+        SendTime = DateTime.UtcNow;
+    }
+
+    public virtual void SetReceivers(ReceiverType receiverType, ExtraPropertyDictionary receivers)
+    {
+        if (receiverType == ReceiverType.Assign)
+        {
+            Receivers = receivers;
+        }
+    }
 }
