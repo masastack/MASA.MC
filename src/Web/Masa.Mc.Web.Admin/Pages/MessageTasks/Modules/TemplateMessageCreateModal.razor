@@ -1,0 +1,37 @@
+﻿@inherits AdminCompontentBase
+<div @ref="Ref">
+    <SheetDialog Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission:SendTemplateMessage")" ContentStyle="padding-right:228px;padding-left:228px;">
+        <MForm Class="mt-6 full-height" Model="_model" @ref="_form" EnableValidation>
+            <MRow>
+                <MCol>
+                    <MRow>
+                        <MAutocomplete Items="_templateItems" @bind-Value="_model.EntityId"
+                                       Label="@T("DisplayName:MessageTemplateTemplateId")"
+                                       ItemText="@(x=>string.IsNullOrEmpty(x.TemplateId)?x.DisplayName:$"{x.DisplayName}({x.TemplateId})")"
+                                       ItemValue="x=>x.Id"
+                                       Dense
+                                       Outlined
+                                       HideDetails="@("auto")"
+                                       TItem="MessageTemplateDto"
+                                       TItemValue="Guid"
+                                       TValue="Guid"
+                                       OnSelectedItemUpdate="HandleTemplateSelected"></MAutocomplete>
+                        <MSelect Value="@_messageInfo.Channel?.Type"
+                                 Items="@(GetEnumList<ChannelType>())"
+                                 Label="@T("DisplayName:ChannelType")"
+                                 ItemText="item => T(item.ToString())"
+                                 ItemValue="item => item"
+                                 Dense
+                                 Outlined
+                                 Disabled
+                                 HideDetails="@("auto")">
+                        </MSelect>
+                    </MRow>
+                </MCol>
+                <MCol>
+
+                </MCol>
+            </MRow>
+        </MForm>
+    </SheetDialog>
+</div>

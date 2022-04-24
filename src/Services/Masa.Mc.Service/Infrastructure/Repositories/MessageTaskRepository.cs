@@ -11,4 +11,17 @@ public class MessageTaskRepository : Repository<McDbContext, MessageTask>, IMess
     {
         return await Task.FromResult(Context.Set<MessageTask>().AsQueryable());
     }
+
+    public async Task<IQueryable<MessageTask>> WithDetailsAsync()
+    {
+        var query = await GetQueryableAsync();
+        return query.IncludeDetails();
+    }
+
+    public async Task<MessageTask?> FindAsync(Expression<Func<MessageTask, bool>> predicate, bool include = true, CancellationToken cancellationToken = default(CancellationToken))
+    {
+        return include
+            ? await (await WithDetailsAsync()).Where(predicate).FirstOrDefaultAsync(cancellationToken)
+            : await Context.Set<MessageTask>().Where(predicate).FirstOrDefaultAsync(cancellationToken);
+    }
 }

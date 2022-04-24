@@ -236,5 +236,24 @@
     "Title": "Permission:ReceiverGroupManagement",
     "Icon": "mdi-file-outline",
     "Href": "receiverGroups/receiverGroupManagement"
+  },
+  {
+    "Id": 38,
+    "Title": "Permission:MessageManagement",
+    "Icon": "mdi-file-outline",
+    "Children": [
+      {
+        "Id": 39,
+        "Title": "Permission:SendMessage",
+        "Icon": "mdi-circle",
+        "Href": "messageTasks/sendMessage"
+      },
+      {
+        "Id": 40,
+        "Title": "Permission:MessageRecord",
+        "Icon": "mdi-circle",
+        "Href": "messageTasks/messageRecord"
+      }
+    ]
   }
 ]

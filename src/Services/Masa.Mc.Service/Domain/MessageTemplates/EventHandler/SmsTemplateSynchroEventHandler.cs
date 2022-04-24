@@ -54,8 +54,8 @@ public class SmsTemplateSynchroEventHandler
     {
         return auditStatus switch
         {
-            "AUDITSTATEPASS" => MessageTemplateAuditStatus.Adopt,
-            "AUDITSTATENOT_PASS" => MessageTemplateAuditStatus.Fail,
+            "AUDIT_STATE_PASS" => MessageTemplateAuditStatus.Adopt,
+            "AUDIT_STATE_NOT_PASS" => MessageTemplateAuditStatus.Fail,
             _ => MessageTemplateAuditStatus.WaitAudit
         };
     }

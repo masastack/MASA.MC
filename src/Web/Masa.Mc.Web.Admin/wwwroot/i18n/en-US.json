@@ -102,5 +102,18 @@
 
   "Description:ReceiverGroup.SelectUser": "Please select a user",
   "Description:ReceiverGroup.AddSelectMember": "Please add / select members",
-  "ExternalMemberAddMessage": "External user added successfully."
+  "ExternalMemberAddMessage": "External user added successfully.",
+
+  "Permission:MessageManagement": "Message management",
+  "Permission:SendMessage": "Send message",
+  "Permission:MessageRecord": "Message record",
+  "Permission:SendOrdinaryMessage": "Send ordinary message",
+  "Permission:SendTemplateMessage": "Send template message",
+
+  "DisplayName:MessageEntityType.Ordinary": "Ordinary",
+  "DisplayName:MessageEntityType.Template": "Template",
+
+  "MessageTaskCreateMessage": "Create message task success.",
+  "MessageTaskEditMessage": "Create message task success.",
+  "MessageTaskDeleteMessage": "Create message task success."
 }
