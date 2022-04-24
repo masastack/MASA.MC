@@ -82,4 +82,5 @@ global using Masa.Mc.Service.Admin.Domain.ReceiverGroups.Events;
 global using Masa.Contrib.Isolation.UoW.EF;
 global using Masa.Contrib.Isolation.MultiEnvironment;
 global using Masa.Utils.Data.EntityFrameworkCore.SqlServer;
+global using EntityState = Masa.BuildingBlocks.Data.UoW.EntityState;
 

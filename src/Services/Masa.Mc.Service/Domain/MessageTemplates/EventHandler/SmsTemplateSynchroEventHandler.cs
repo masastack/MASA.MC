@@ -2,23 +2,23 @@
 
 public class SmsTemplateSynchroEventHandler
 {
-    private readonly ISmsTemplateRepository _smsTemplateRepository;
-    private readonly IChannelRepository _channelRepository;
     private readonly IAliyunSmsAsyncLocal _aliyunSmsAsyncLocal;
     private readonly ISmsTemplateService _smsTemplateService;
+    private readonly IServiceProvider _serviceProvider;
 
-    public SmsTemplateSynchroEventHandler(ISmsTemplateRepository smsTemplateRepository, IChannelRepository channelRepository, IAliyunSmsAsyncLocal aliyunSmsAsyncLocal, ISmsTemplateService smsTemplateService)
+    public SmsTemplateSynchroEventHandler(IAliyunSmsAsyncLocal aliyunSmsAsyncLocal, ISmsTemplateService smsTemplateService, IServiceProvider serviceProvider)
     {
-        _smsTemplateRepository = smsTemplateRepository;
-        _channelRepository = channelRepository;
         _aliyunSmsAsyncLocal = aliyunSmsAsyncLocal;
         _smsTemplateService = smsTemplateService;
+        _serviceProvider = serviceProvider;
     }
 
     [EventHandler]
     public async Task HandleEvent(SmsTemplateSynchroDomainEvent @event)
     {
-        var channel = await _channelRepository.FindAsync(x => x.Id == @event.ChannelId);
+        using var scope = _serviceProvider.CreateAsyncScope();
+        using var dbContext = scope.ServiceProvider.GetRequiredService<McDbContext>();
+        var channel = await dbContext.Set<Channel>().FindAsync(@event.ChannelId);
         var options = new AliyunSmsOptions
         {
             AccessKeyId = channel.GetDataValue(nameof(SmsChannelOptions.AccessKeyId)).ToString(),
@@ -32,9 +32,11 @@ public class SmsTemplateSynchroEventHandler
                 throw new UserFriendlyException(aliyunSmsTemplateListResponse.Message);
             }
             var aliyunSmsTemplateList = aliyunSmsTemplateListResponse.Data.Body.SmsTemplateList;
-            await _smsTemplateRepository.RemoveAsync(x => x.ChannelId == channel.Id);
+            var removeList = dbContext.Set<SmsTemplate>().Where(x => x.ChannelId == channel.Id).ToList();
+            dbContext.Set<SmsTemplate>().RemoveRange(removeList);
             var smsTemplateList = aliyunSmsTemplateList.Select(item => new SmsTemplate(channel.Id, item.TemplateCode, item.TemplateName, AliyunSmsTemplateTypeMapToSmsTemplateType(item.TemplateType), AliyunSmsTemplateAuditStatusMapToAuditStatus(item.AuditStatus), item.TemplateContent, item.Reason.RejectInfo));
-            await _smsTemplateRepository.AddRangeAsync(smsTemplateList);
+            await dbContext.Set<SmsTemplate>().AddRangeAsync(smsTemplateList);
+            await dbContext.SaveChangesAsync();
         }
     }
 
@@ -54,8 +56,8 @@ public class SmsTemplateSynchroEventHandler
     {
         return auditStatus switch
         {
-            "AUDITSTATEPASS" => MessageTemplateAuditStatus.Adopt,
-            "AUDITSTATENOT_PASS" => MessageTemplateAuditStatus.Fail,
+            "AUDIT_STATE_PASS" => MessageTemplateAuditStatus.Adopt,
+            "AUDIT_STATE_NOT_PASS" => MessageTemplateAuditStatus.Fail,
             _ => MessageTemplateAuditStatus.WaitAudit
         };
     }
