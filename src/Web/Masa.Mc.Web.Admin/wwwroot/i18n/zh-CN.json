@@ -70,6 +70,7 @@
   "Role": "角色",
   "Organization": "组织架构",
   "ExternalMember": "外部成员",
+  "EditIn": "编辑于",
 
   "Permission:ChannelManagement": "渠道管理",
   "Permission:CreateChannel": "创建渠道",

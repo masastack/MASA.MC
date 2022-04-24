@@ -13,4 +13,6 @@ public class ChannelDto : AuditEntityDto<Guid, Guid>
     public bool IsStatic { get; set; }
 
     public ExtraPropertyDictionary ExtraProperties { get; set; } = new();
+
+    public string ModifierName { get; set; } = string.Empty;
 }

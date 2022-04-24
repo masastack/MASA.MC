@@ -23,7 +23,6 @@ public partial class ChannelExtraProperties : AdminCompontentBase
 
     private ChannelEmailExtraProperties _emailExtraPropertiesRef = default!;
     private ChannelSmsExtraProperties _smsExtraPropertiesRef = default!;
-    private ChannelWebsiteMessageExtraProperties _websiteMessageExtraPropertiesRef = default!;
 
     protected override void OnInitialized()
     {
@@ -44,7 +43,6 @@ public partial class ChannelExtraProperties : AdminCompontentBase
     {
         if (Type == ChannelType.Email) await _emailExtraPropertiesRef.HandleChangeAsync();
         if (Type == ChannelType.Sms) await _smsExtraPropertiesRef.HandleChangeAsync();
-        if (Type == ChannelType.WebsiteMessage) await _websiteMessageExtraPropertiesRef.HandleChangeAsync();
         await ValueChanged.InvokeAsync(Value);
     }
 

@@ -22,10 +22,10 @@ public class SmsTemplateService : ISmsTemplateService
         return new SmsTemplateResponse(body.Code == "OK", body.Message, response);
     }
 
-    public async Task<SmsResponseBase> GetSmsTemplateListAsync(int pageIndex = 1, int pageSize = 50)
+    public async Task<SmsResponseBase> GetSmsTemplateListAsync(int page = 1, int pageSize = 50)
     {
         var client = await CreateClientAsync();
-        QuerySmsTemplateListRequest querySmsTemplateListRequest = new QuerySmsTemplateListRequest() { PageIndex = pageIndex, PageSize = pageSize };
+        QuerySmsTemplateListRequest querySmsTemplateListRequest = new QuerySmsTemplateListRequest() { PageIndex = page, PageSize = pageSize };
         var response = await client.QuerySmsTemplateListAsync(querySmsTemplateListRequest);
         var body = response.Body;
         return new SmsTemplateListResponse(body.Code == "OK", body.Message, response);

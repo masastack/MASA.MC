@@ -93,7 +93,6 @@ public partial class SmsTemplateCreateModal : AdminCompontentBase
         _model.Content = string.Empty;
         _model.TemplateId = string.Empty;
         _model.Items = new();
-
         _templateItems = await SmsTemplateService.GetListByChannelIdAsync(_model.ChannelId);
     }
 
