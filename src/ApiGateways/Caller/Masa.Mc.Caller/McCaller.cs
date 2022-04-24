@@ -7,6 +7,7 @@ public class McCaller : HttpClientCallerBase
     MessageTemplateService? _messageTemplateService;
     ReceiverGroupService? _receiverGroupService;
     SmsTemplateService? _smsTemplateService;
+    MessageTaskService? _messageTaskService;
     #endregion
 
     public ChannelService ChannelService => _channelService ?? (_channelService = new(CallerProvider));
@@ -16,6 +17,8 @@ public class McCaller : HttpClientCallerBase
     public ReceiverGroupService ReceiverGroupService => _receiverGroupService ?? (_receiverGroupService = new(CallerProvider));
 
     public SmsTemplateService SmsTemplateService => _smsTemplateService ?? (_smsTemplateService = new(CallerProvider));
+
+    public MessageTaskService MessageTaskService => _messageTaskService ?? (_messageTaskService = new(CallerProvider));
 
     protected override string BaseAddress { get; set; }
 

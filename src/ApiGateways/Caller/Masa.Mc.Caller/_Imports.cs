@@ -16,3 +16,5 @@ global using Masa.Mc.Caller.Services.Channels;
 global using Masa.Mc.Caller.Services.MessageTemplates;
 global using Masa.Mc.Caller.Services.ReceiverGroups;
 global using System.Reflection;
+global using Masa.Mc.Contracts.Admin.Dtos.MessageTasks;
+global using Masa.Mc.Caller.Services.MessageTasks;

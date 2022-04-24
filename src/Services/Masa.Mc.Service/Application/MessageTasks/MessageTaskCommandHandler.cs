@@ -17,7 +17,7 @@ public class MessageTaskCommandHandler
     public async Task CreateAsync(CreateMessageTaskCommand createCommand)
     {
         var entity = createCommand.MessageTask.Adapt<MessageTask>();
-        await _repository.AddAsync(entity);
+        await _domainService.CreateAsync(entity);
     }
 
     [EventHandler]
@@ -37,5 +37,12 @@ public class MessageTaskCommandHandler
         if (entity == null)
             throw new UserFriendlyException("messageTask not found");
         await _repository.RemoveAsync(entity);
+    }
+
+    [EventHandler]
+    public async Task ExecuteAsync(ExecuteMessageTaskCommand command)
+    {
+        var input = command.input;
+        await _domainService.ExecuteAsync(input.MessageTaskId, input.ReceiverType, input.Receivers, input.SendingRules);
     }
 }

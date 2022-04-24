@@ -24,6 +24,7 @@ public class MessageTaskHistory : AuditEntity<Guid, Guid>
         ReceiverType = receiverType;
         Receivers = receivers;
         SendingRules = sendingRules;
+        Status = MessageTaskHistoryStatus.WaitSend;
     }
 
     public void SetSend()
