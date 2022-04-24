@@ -21,7 +21,7 @@
   "Permission:Create": "Create",
   "Permission:Edit": "Edit",
   "Permission:Delete": "Delete",
-
+  "EditIn": "Edit in",
   "ExternalMember": "External member",
 
   "Permission:ChannelManagement": "Channel management",

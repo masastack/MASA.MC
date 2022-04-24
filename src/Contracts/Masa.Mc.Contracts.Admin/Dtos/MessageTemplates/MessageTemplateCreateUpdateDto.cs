@@ -17,7 +17,6 @@ public class MessageTemplateCreateUpdateDto
     public string TemplateId { get; set; } = string.Empty;
     public bool IsJump { get; set; }
     public string JumpUrl { get; set; } = string.Empty;
-    [MaxLength(10, ErrorMessage = "Name must be less than 10 characters")]
     public string Sign { get; set; } = string.Empty;
     public MessageTemplateStatus Status { get; set; } = MessageTemplateStatus.Normal;
     public MessageTemplateAuditStatus AuditStatus { get; set; } = MessageTemplateAuditStatus.Adopt;
