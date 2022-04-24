@@ -10,9 +10,11 @@ public partial class TemplateMessageCreateModal : AdminCompontentBase
     private bool _visible;
     private List<MessageTemplateDto> _templateItems = new();
     private MessageTemplateDto _messageInfo = new();
+    private List<ChannelDto> _channelItems = new();
 
     MessageTaskService MessageTaskService => McCaller.MessageTaskService;
     MessageTemplateService MessageTemplateService => McCaller.MessageTemplateService;
+    ChannelService ChannelService => McCaller.ChannelService;
 
     protected override async Task OnInitializedAsync()
     {
@@ -64,8 +66,9 @@ public partial class TemplateMessageCreateModal : AdminCompontentBase
         if (!val) HandleCancel();
     }
 
-    private void HandleTemplateSelected(MessageTemplateDto item)
+    private async Task HandleTemplateSelectedAsync(MessageTemplateDto item)
     {
+        if(item.Channel!=null) _channelItems = await ChannelService.GetListByTypeAsync(item.Channel.Type);
         _messageInfo = item;
     }
 }
