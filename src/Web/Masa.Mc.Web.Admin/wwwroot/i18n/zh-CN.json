@@ -18,6 +18,7 @@
   "Add": "添加",
   "Submit": "提交",
   "Save": "保存",
+  "SaveSend": "保存并发送",
   "Delete": "删除",
   "Edit": "编辑",
   "Synchro": "同步",
@@ -160,6 +161,10 @@
 
   "DisplayName:MessageEntityType.Ordinary": "普通消息",
   "DisplayName:MessageEntityType.Template": "模板消息",
+  "DisplayName:MessageTaskReceiver": "收件人",
+  "DisplayName:MessageTaskSendingRule": "发送规则",
+  "DisplayName:ReceiverType.Assign": "指定接收人",
+  "DisplayName:ReceiverType.Broadcast": "广播",
   "MessageTaskCreateMessage": "创建消息组成功.",
   "MessageTaskEditMessage": "编辑消息组成功.",
   "MessageTaskDeleteMessage": "删除消息组成功."

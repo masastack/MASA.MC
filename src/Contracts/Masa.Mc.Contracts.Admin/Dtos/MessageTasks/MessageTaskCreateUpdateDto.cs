@@ -8,9 +8,17 @@ public class MessageTaskCreateUpdateDto
 
     public Guid EntityId { get; set; }
 
-    public ExtraPropertyDictionary Receivers { get; set; } = new();
-
-    public ExtraPropertyDictionary SendingRules { get; set; } = new();
-
     public bool IsEnabled { get; set; }
+
+    public ReceiverType ReceiverType { get; set; }
+
+    public DateTime? SendTime { get; set; }
+
+    //public ExtraPropertyDictionary Receivers { get; set; } = new();
+
+    //public ExtraPropertyDictionary SendingRules { get; set; } = new();
+
+    public List<ReceiverDto> Receivers { get; set; } = new();
+
+    public SendingRuleDto SendingRules { get; set; } = new();
 }
