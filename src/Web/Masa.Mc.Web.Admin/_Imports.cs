@@ -55,3 +55,4 @@ global using Masa.Mc.Infrastructure.Common.Extensions;
 global using Masa.Mc.Contracts.Admin.Dtos.MessageTasks;
 global using Masa.Mc.Caller.Services.MessageTasks;
 global using Masa.Mc.Web.Admin.Pages.MessageTasks.Modules;
+global using Masa.Mc.Contracts.Admin.Enums.MessageTasks;

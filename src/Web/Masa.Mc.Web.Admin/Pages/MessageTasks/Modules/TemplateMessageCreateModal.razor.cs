@@ -6,7 +6,7 @@ public partial class TemplateMessageCreateModal : AdminCompontentBase
     public EventCallback OnOk { get; set; }
 
     private MForm _form;
-    private MessageTaskCreateUpdateDto _model = new();
+    private MessageTaskCreateUpdateDto _model = new() { ReceiverType = ReceiverType.Assign };
     private bool _visible;
     private List<MessageTemplateDto> _templateItems = new();
     private MessageTemplateDto _messageInfo = new();
@@ -58,7 +58,7 @@ public partial class TemplateMessageCreateModal : AdminCompontentBase
 
     private void ResetForm()
     {
-        _model = new();
+        _model = new() { ReceiverType = ReceiverType.Assign };
     }
 
     private void HandleVisibleChanged(bool val)
@@ -68,7 +68,7 @@ public partial class TemplateMessageCreateModal : AdminCompontentBase
 
     private async Task HandleTemplateSelectedAsync(MessageTemplateDto item)
     {
-        if(item.Channel!=null) _channelItems = await ChannelService.GetListByTypeAsync(item.Channel.Type);
+        if (item.Channel != null) _channelItems = await ChannelService.GetListByTypeAsync(item.Channel.Type);
         _messageInfo = item;
     }
 }
