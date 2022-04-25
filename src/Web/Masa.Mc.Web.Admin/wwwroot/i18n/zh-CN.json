@@ -40,7 +40,6 @@
   "Item": "条",
   "All": "全部",
   "RowsPerPage": "每页行数",
-
   "User": "用户",
   "Name": "姓名",
   "Avatr": "头像",
@@ -71,7 +70,6 @@
   "Organization": "组织架构",
   "ExternalMember": "外部成员",
   "EditIn": "编辑于",
-
   "Permission:ChannelManagement": "渠道管理",
   "Permission:CreateChannel": "创建渠道",
   "Permission:EditChannel": "编辑渠道",
@@ -94,7 +92,6 @@
   "ChannelCreateMessage": "创建渠道数据成功.",
   "ChannelEditMessage": "编辑渠道数据成功.",
   "ChannelDeleteMessage": "删除渠道数据成功.",
-
   "Permission:MessageTemplateManagement": "消息模板",
   "Permission:CreateMessageTemplate": "创建消息模板",
   "Permission:EditMessageTemplate": "编辑消息模板",
@@ -130,14 +127,12 @@
   "DisplayName:MessageTemplateItemCode": "变量",
   "DisplayName:MessageTemplateItemMappingCode": "映射变量",
   "DisplayName:MessageTemplateItemDisplayText": "备注",
-
   "DisplayName:SmsTemplateType.VerificationCode": "验证码",
   "DisplayName:SmsTemplateType.Notification": "短信通知",
   "DisplayName:SmsTemplateType.Promotion": "推广短信",
   "DisplayName:SmsTemplateType.International": "国际/港澳台消息",
   "DisplayName:SmsTemplateType.Digital": "数字短信",
   "DisplayName:SmsTemplateType.Other": "其他",
-
   "Permission:ReceiverGroupManagement": "消息组",
   "Permission:CreateReceiverGroup": "创建消息组",
   "Permission:EditReceiverGroup": "编辑消息组",
@@ -147,7 +142,6 @@
   "ReceiverGroupCreateMessage": "创建消息组成功.",
   "ReceiverGroupEditMessage": "编辑消息组成功.",
   "ReceiverGroupDeleteMessage": "删除消息组成功.",
-
   "Description:ReceiverGroup.SelectUser": "请选择用户",
   "Description:ReceiverGroup.AddSelectMember": "请添加/选择成员",
   "ExternalMemberAddMessage": "添加外部用户成功."
