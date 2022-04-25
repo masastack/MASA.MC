@@ -4,6 +4,8 @@ public class MessageTaskDto : AuditEntityDto<Guid, Guid>
 {
     public Guid ChannelId { get; set; }
 
+    public ChannelDto Channel { get; set; }
+
     public MessageEntityType EntityType { get; set; }
 
     public Guid EntityId { get; set; }
@@ -13,4 +15,8 @@ public class MessageTaskDto : AuditEntityDto<Guid, Guid>
     public ExtraPropertyDictionary SendingRules { get; set; } = new();
 
     public bool IsEnabled { get; set; }
+
+    public DateTime? SendTime { get; set; }
+
+    public MessageInfoDto MessageInfo { get; set; }
 }

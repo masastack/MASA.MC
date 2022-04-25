@@ -103,11 +103,19 @@
   "Permission.SendTemplateMessage": "Send template message",
   "DisplayName.MessageEntityType.Ordinary": "Ordinary",
   "DisplayName.MessageEntityType.Template": "Template",
+  "DisplayName.MessageTaskEntityType": "Message type",
+  "DisplayName.MessageTaskSendTime": "Send time",
   "DisplayName.MessageTaskReceiver": "Receiver",
   "DisplayName.MessageTaskSendingRule": "SendingRule",
   "DisplayName.ReceiverType.Assign": "Assign",
   "DisplayName.ReceiverType.Broadcast": "Broadcast",
   "MessageTaskCreateMessage": "Create message task success.",
   "MessageTaskEditMessage": "Create message task success.",
-  "MessageTaskDeleteMessage": "Create message task success."
+  "MessageTaskDeleteMessage": "Create message task success.",
+  "DisplayName.MessageTaskList": "Message task list",
+  "DisplayName.MessageInfoTitle": "Message info title",
+  "DisplayName.MessageInfoContent": "Message info content",
+  "DisplayName.MessageTaskTimeType": "Time type",
+  "DisplayName.MessageTaskTimeType.ModificationTime": "ModificationTime",
+  "DisplayName.MessageTaskTimeType.SendTime": "SendTime"
 }

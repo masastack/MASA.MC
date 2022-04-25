@@ -5,7 +5,9 @@
         public void Register(TypeAdapterConfig config)
         {
             config.ForType<MessageTask, MessageTaskDto>().MapToConstructor(true);
-            config.ForType<MessageTaskCreateUpdateDto, MessageTask>().MapToConstructor(true);
+            config.ForType<MessageTaskCreateUpdateDto, MessageTask>().MapToConstructor(true)
+                .Map(dest => dest.Receivers, src => ExtensionPropertyHelper.ObjMapToExtraProperty(src.Receivers))
+                .Map(dest => dest.SendingRules, src => ExtensionPropertyHelper.ObjMapToExtraProperty(src.SendingRules));
         }
     }
 }

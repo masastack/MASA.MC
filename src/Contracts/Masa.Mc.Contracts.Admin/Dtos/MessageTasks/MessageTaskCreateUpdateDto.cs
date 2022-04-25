@@ -18,7 +18,7 @@ public class MessageTaskCreateUpdateDto
 
     //public ExtraPropertyDictionary SendingRules { get; set; } = new();
 
-    public List<ReceiverDto> Receivers { get; set; } = new();
+    public ReceiverDto Receivers { get; set; } = new();
 
     public SendingRuleDto SendingRules { get; set; } = new();
 }

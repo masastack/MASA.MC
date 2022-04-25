@@ -2,8 +2,6 @@
 
 public class MessageTaskReceiver
 {
-    public Guid GroupId { get; protected set; }
-
     public string DataId { get; protected set; } = string.Empty;
 
     public string DisplayName { get; protected set; } = string.Empty;

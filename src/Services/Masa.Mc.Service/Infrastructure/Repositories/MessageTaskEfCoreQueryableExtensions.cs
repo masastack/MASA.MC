@@ -8,6 +8,6 @@ public static class MessageTaskEfCoreQueryableExtensions
         {
             return queryable;
         }
-        return queryable.Include(x => x.Historys);
+        return queryable.Include(x=>x.Channel).Include(x => x.Historys);
     }
 }

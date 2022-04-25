@@ -6,7 +6,7 @@ public partial class TemplateMessageCreateModal : AdminCompontentBase
     public EventCallback OnOk { get; set; }
 
     private MForm _form;
-    private MessageTaskCreateUpdateDto _model = new() { ReceiverType = ReceiverType.Assign };
+    private MessageTaskCreateUpdateDto _model = new() { ReceiverType = ReceiverType.Assign, EntityType = MessageEntityType.Template };
     private bool _visible;
     private List<MessageTemplateDto> _templateItems = new();
     private MessageTemplateDto _messageInfo = new();
@@ -38,8 +38,9 @@ public partial class TemplateMessageCreateModal : AdminCompontentBase
         ResetForm();
     }
 
-    private async Task HandleOkAsync()
+    private async Task HandleOkAsync(bool IsEnabled)
     {
+        _model.IsEnabled = IsEnabled;
         if (!await _form.ValidateAsync())
         {
             return;
@@ -58,7 +59,7 @@ public partial class TemplateMessageCreateModal : AdminCompontentBase
 
     private void ResetForm()
     {
-        _model = new() { ReceiverType = ReceiverType.Assign };
+        _model = new() { ReceiverType = ReceiverType.Assign, EntityType = MessageEntityType.Template };
     }
 
     private void HandleVisibleChanged(bool val)
@@ -70,5 +71,6 @@ public partial class TemplateMessageCreateModal : AdminCompontentBase
     {
         if (item.Channel != null) _channelItems = await ChannelService.GetListByTypeAsync(item.Channel.Type);
         _messageInfo = item;
+        _model.ChannelId = item.Channel.Id;
     }
 }

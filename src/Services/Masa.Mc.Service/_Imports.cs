@@ -92,3 +92,4 @@ global using Masa.Mc.Service.Admin.Application.MessageTasks.Queries;
 global using Masa.Mc.Service.Admin.Domain.MessageTasks.Services;
 global using Masa.Mc.Service.Admin.Infrastructure.Repositories;
 global using Masa.Mc.Contracts.Admin.Dtos.MessageTasks;
+global using Masa.Mc.Infrastructure.ObjectExtending.ObjectExtending;

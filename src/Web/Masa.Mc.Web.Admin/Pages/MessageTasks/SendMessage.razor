@@ -2,8 +2,13 @@
 @page "/messageTasks/sendMessage"
 <MCard Class="full-height">
     <MCardText Class="full-height" Style="overflow-y:auto;">
-        <MContainer Class="full-height">
-            <MRow Class="full-height" Align="AlignTypes.Center" Justify="JustifyTypes.Center">
+        <MContainer Class="full-height" Style="padding-top:100px">
+            <MRow Align="AlignTypes.End" Justify="JustifyTypes.End">
+                <MButton Rounded Outlined Color="indigo" Class="mr-6 medium-button" OnClick="_listModal.OpenModalAsync">
+                    <span>@T("DisplayName.MessageTaskList")</span>
+                </MButton>
+            </MRow>
+            <MRow Align="AlignTypes.Center" Justify="JustifyTypes.Center" Class="mt-10">
                 <MCol Cols="3">
                     <MCard Outlined Class="d-flex justify-center align-center" Style="border-style: dashed;" Height="500">
                         <MButton Ripple=false Plain OnClick="_ordinaryCreateModal.OpenModalAsync"><MIcon Left>mdi-plus</MIcon>@T("DisplayName.MessageEntityType.Ordinary")</MButton>
@@ -18,5 +23,6 @@
         </MContainer>
     </MCardText>
 </MCard>
-<OrdinaryMessageCreateModal @ref="_ordinaryCreateModal"/>
-<TemplateMessageCreateModal @ref="_templateCreateModal"/>
+<OrdinaryMessageCreateModal @ref="_ordinaryCreateModal" />
+<TemplateMessageCreateModal @ref="_templateCreateModal" />
+<MessageTaskListModal @ref="_listModal" />

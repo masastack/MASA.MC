@@ -3,10 +3,10 @@
 public partial class MessageReceivers : AdminCompontentBase
 {
     [Parameter]
-    public List<ReceiverGroupItemDto> Value { get; set; } = new();
+    public List<ReceiverItemDto> Value { get; set; } = new();
 
     [Parameter]
-    public EventCallback<List<ReceiverGroupItemDto>> ValueChanged { get; set; }
+    public EventCallback<List<ReceiverItemDto>> ValueChanged { get; set; }
 
     private ExternalUserCreateModal _createModal;
     private List<Guid> _userIds = new List<Guid>();
@@ -37,7 +37,7 @@ public partial class MessageReceivers : AdminCompontentBase
     public async Task AddAsync()
     {
         var list = _stateUserItems.Where(x => _userIds.Contains(x.Id)).ToList();
-        var dtos = list.Adapt<List<ReceiverGroupItemDto>>();
+        var dtos = list.Adapt<List<ReceiverItemDto>>();
         foreach (var dto in dtos)
         {
             if (!Value.Any(x => x.DataId == dto.DataId && x.Type == dto.Type))
@@ -48,7 +48,7 @@ public partial class MessageReceivers : AdminCompontentBase
         await ValueChanged.InvokeAsync(Value);
     }
 
-    public async Task RemoveValue(ReceiverGroupItemDto item)
+    public async Task RemoveValue(ReceiverItemDto item)
     {
         Value.RemoveAll(x => x.DataId == item.DataId && x.Type == item.Type);
         await ValueChanged.InvokeAsync(Value);
@@ -57,7 +57,7 @@ public partial class MessageReceivers : AdminCompontentBase
     private async Task HandleOk(UserViewModel user)
     {
         _stateUserItems.Add(user);
-        Value.Add(user.Adapt<ReceiverGroupItemDto>());
+        Value.Add(user.Adapt<ReceiverItemDto>());
         await ValueChanged.InvokeAsync(Value);
     }
 }
