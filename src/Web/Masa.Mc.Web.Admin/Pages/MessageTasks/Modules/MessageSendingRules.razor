@@ -1,7 +1,7 @@
 ﻿@inherits AdminCompontentBase
 <MRow Class="mx-1 mt-2" Justify="JustifyTypes.Start">
     <MCol>
-        <MTextField @bind-Value="sendingRule.Timeout"
+        <MTextField @bind-Value="Value.Timeout"
                     Outlined
                     Height="18"
                     Type="number">
@@ -14,7 +14,7 @@
         </MTextField>
     </MCol>
     <MCol>
-        <MTextField @bind-Value="sendingRule.RetryInterval"
+        <MTextField @bind-Value="Value.RetryInterval"
                     Outlined
                     Type="number">
             <PrependContent>
@@ -26,7 +26,7 @@
         </MTextField>
     </MCol>
     <MCol>
-        <MTextField @bind-Value="sendingRule.RetryCount"
+        <MTextField @bind-Value="Value.RetryCount"
                     Outlined
                     Type="number">
             <PrependContent>
@@ -39,15 +39,15 @@
     </MCol>
 </MRow>
 <MRow Class="mx-1" Justify="JustifyTypes.Start">
-    <MCheckbox @bind-Value="sendingRule.IsSendingInterval"></MCheckbox>
+    <MCheckbox @bind-Value="Value.IsSendingInterval"></MCheckbox>
     <span class="pt-4">每</span>
-    <MTextField @bind-Value="sendingRule.SendingInterval"
+    <MTextField @bind-Value="Value.SendingInterval"
                 Outlined
                 Class="mx-1"
                 Type="number">
     </MTextField>
     <span class="pt-4">秒，发送</span>
-    <MTextField @bind-Value="sendingRule.SendingCount"
+    <MTextField @bind-Value="Value.SendingCount"
                 Outlined
                 Class="mx-1"
                 Type="number">
@@ -55,7 +55,7 @@
     <span class="pt-4">条</span>
 </MRow>
 <MRow Class="mx-1" Justify="JustifyTypes.Start">
-    <MCheckbox Class="mt-1" @bind-Value="sendingRule.IsTiming"></MCheckbox>
+    <MCheckbox Class="mt-1" @bind-Value="Value.IsTiming"></MCheckbox>
     <span class="pt-2">定时发送</span>
     <MMenu @bind-Value="_datePickersShow"
            CloseOnContentClick="false"
@@ -64,7 +64,7 @@
            OffsetY
            MinWidth="@("auto")">
         <ActivatorContent>
-            <MTextField @bind-Value="sendingRule.SendingDate"
+            <MTextField @bind-Value="sendingDate"
                         PrependInnerIcon="mdi-calendar"
                         Dense
                         Outlined
@@ -73,8 +73,8 @@
                         @attributes="context.Attrs"></MTextField>
         </ActivatorContent>
         <ChildContent>
-            <MDatePicker @bind-Value="sendingRule.SendingDate"
-                         OnInput="()=>_datePickersShow=false"></MDatePicker>
+            <MDatePicker @bind-Value="sendingDate"
+                         OnInput="HandleDatePickerInputAsync"></MDatePicker>
         </ChildContent>
     </MMenu>
     <MMenu @bind-Value="_timePickersShow"
@@ -85,7 +85,7 @@
            MaxWidth="290"
            MinWidth="290">
         <ActivatorContent>
-            <MTextField @bind-Value="sendingRule.SendingTime"
+            <MTextField @bind-Value="sendingTime"
                         PrependInnerIcon="mdi-clock-time-four-outline"
                         Dense
                         Outlined
@@ -96,7 +96,8 @@
         <ChildContent>
             @if (_timePickersShow)
             {
-                <MTimePicker @bind-Value="sendingRule.SendingTime"
+                <MTimePicker @bind-Value="sendingTime"
+                          OnChange="HandleTimePickerChangeAsync"
                          FullWidth></MTimePicker>
             }
         </ChildContent>

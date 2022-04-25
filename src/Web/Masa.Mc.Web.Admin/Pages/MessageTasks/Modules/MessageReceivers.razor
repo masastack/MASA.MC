@@ -1,13 +1,13 @@
 ﻿@inherits AdminCompontentBase
 <MRow Class="mx-1 my-2">
     <MButtonGroup Borderless @bind-Value="_type">
-            <MButton Value="@("手动选择")">
-                <span class="hidden-sm-and-down">手动选择</span>
-            </MButton>
-            <MButton Value="@("批量上传")">
-                <span class="hidden-sm-and-down">批量上传</span>
-            </MButton>
-        </MButtonGroup>
+        <MButton Value="@("手动选择")">
+            <span class="hidden-sm-and-down">手动选择</span>
+        </MButton>
+        <MButton Value="@("批量上传")">
+            <span class="hidden-sm-and-down">批量上传</span>
+        </MButton>
+    </MButtonGroup>
 </MRow>
 <MRow Class="mx-1 py-2">
     <MAutocomplete @bind-Value="_userIds"
@@ -81,7 +81,7 @@
     </MButton>
 </MRow>
 <MCard Class="mx-auto" Outlined Height="300">
-    @if (Value.Count > 0)
+    @if (Value != null && Value.Count > 0)
     {
         <MList ThreeLine>
             <MRow>

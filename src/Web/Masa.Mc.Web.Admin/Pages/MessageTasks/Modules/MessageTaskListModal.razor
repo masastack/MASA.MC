@@ -139,7 +139,7 @@
                                 </MChip>
                                 break;
                             case "Action":
-                                <MIcon Small Color="neutral-lighten-2">mdi-pencil</MIcon>
+                                <MIcon Small Color="neutral-lighten-2" OnClick="async()=>await _editModal.OpenModalAsync(context.Item)">mdi-pencil</MIcon>
                                 <MIcon Small Color="neutral-lighten-2">mdi-fan</MIcon>
                                 <MIcon Small Color="neutral-lighten-2">mdi-arrow-right-drop-circle</MIcon>
                                 break;
@@ -156,3 +156,4 @@
         </MCard>
     </SheetDialog>
 </div>
+<TemplateMessageEditModal @ref="_editModal" OnOk="HandleOk" />

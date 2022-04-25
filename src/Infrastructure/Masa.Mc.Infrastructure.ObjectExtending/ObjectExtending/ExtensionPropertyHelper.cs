@@ -32,7 +32,8 @@ public static class ExtensionPropertyHelper
         {
             if (!dic.ContainsKey(field.Name))
                 continue;
-            val = dic[field.Name].ToString();
+            val = dic[field.Name]?.ToString();
+            if (val == null) continue;
             object defaultVal;
             if (field.PropertyType.Name.Equals("String"))
                 defaultVal = "";

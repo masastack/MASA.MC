@@ -5,8 +5,8 @@ public partial class MessageTaskListModal : AdminCompontentBase
     public List<DataTableHeader<MessageTaskDto>> Headers { get; set; } = new();
 
     private bool _visible;
-    private SmsTemplateEditModal _editModal;
-    private GetMessageTaskInput _queryParam = new();
+    private TemplateMessageEditModal _editModal;
+    private GetMessageTaskInput _queryParam = new() { TimeType = MessageTaskTimeType.ModificationTime };
     private PaginatedListDto<MessageTaskDto> _entities = new();
     private List<ChannelDto> _channelItems = new();
     private bool advanced = true;
@@ -23,8 +23,8 @@ public partial class MessageTaskListModal : AdminCompontentBase
         var _prefix = "DisplayName.MessageTask";
         Headers = new()
         {
-            new() { Text = "", Value = "Draft", Sortable = false, Width=50},
-            new() { Text = T("DisplayName.MessageInfoTitle"), Value = "MessageInfoTitle", Sortable = false},
+            new() { Text = "", Value = "Draft", Sortable = false, Width = 50 },
+            new() { Text = T("DisplayName.MessageInfoTitle"), Value = "MessageInfoTitle", Sortable = false },
             new() { Text = T("DisplayName.ChannelDisplayName"), Value = "ChannelDisplayName", Sortable = false },
             new() { Text = T($"{_prefix}{nameof(MessageTaskDto.EntityType)}"), Value = nameof(MessageTaskDto.EntityType), Sortable = false },
             new() { Text = T($"{_prefix}{nameof(MessageTaskDto.SendTime)}"), Value = nameof(MessageTaskDto.SendTime), Sortable = false },
@@ -89,7 +89,7 @@ public partial class MessageTaskListModal : AdminCompontentBase
 
     private async Task HandleClearAsync()
     {
-        _queryParam = new();
+        _queryParam = new() { TimeType = MessageTaskTimeType.ModificationTime };
         await LoadData();
     }
 
@@ -101,12 +101,16 @@ public partial class MessageTaskListModal : AdminCompontentBase
     private async Task HandleDatePickersAsync()
     {
         _datePickersShow = false;
+        if (_dates.Count > 0) _queryParam.StartTime = _dates[0].ToDateTime(new TimeOnly(0, 0, 0));
+        if (_dates.Count > 1) _queryParam.EndTime = _dates[1].ToDateTime(new TimeOnly(23, 59, 59));
         await LoadData();
     }
 
     private async Task HandleDatePickersCancel()
     {
         _datePickersShow = false;
+        _queryParam.StartTime = null;
+        _queryParam.EndTime = null;
         _dates = new();
         await LoadData();
     }

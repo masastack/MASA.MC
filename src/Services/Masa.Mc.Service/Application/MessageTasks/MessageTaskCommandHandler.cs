@@ -5,18 +5,27 @@ public class MessageTaskCommandHandler
     private readonly IMessageTaskRepository _repository;
     private readonly IIntegrationEventBus _integrationEventBus;
     private readonly MessageTaskDomainService _domainService;
+    private readonly IMessageInfoRepository _messageInfoRepository;
 
-    public MessageTaskCommandHandler(IMessageTaskRepository repository, IIntegrationEventBus integrationEventBus, MessageTaskDomainService domainService)
+    public MessageTaskCommandHandler(IMessageTaskRepository repository, IIntegrationEventBus integrationEventBus, MessageTaskDomainService domainService, IMessageInfoRepository messageInfoRepositor)
     {
         _repository = repository;
         _integrationEventBus = integrationEventBus;
         _domainService = domainService;
+        _messageInfoRepository = messageInfoRepositor;
     }
 
     [EventHandler]
     public async Task CreateAsync(CreateMessageTaskCommand createCommand)
     {
-        var entity = createCommand.MessageTask.Adapt<MessageTask>();
+        var dto = createCommand.MessageTask;
+        var entity = dto.Adapt<MessageTask>();
+        if (dto.EntityType == MessageEntityType.Ordinary)
+        {
+            var messageInfo = dto.MessageInfo.Adapt<MessageInfo>();
+            await _messageInfoRepository.AddAsync(messageInfo);
+            entity.SetEntity(MessageEntityType.Ordinary, messageInfo.Id);
+        }
         await _domainService.CreateAsync(entity);
     }
 

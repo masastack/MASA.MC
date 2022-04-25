@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Masa.Mc.Contracts.Admin.Dtos.MessageTemplates;
+﻿namespace Masa.Mc.Contracts.Admin.Dtos.MessageTemplates;
 
 public class MessageTemplateCreateUpdateDto
 {
@@ -27,4 +25,5 @@ public class MessageTemplateCreateUpdateDto
     public long DayLimit { get; set; }
     public bool IsStatic { get; set; }
     public List<MessageTemplateItemDto> Items { get; set; }
+    public MessageInfoCreateUpdateDto MessageInfo { get; set; }
 }

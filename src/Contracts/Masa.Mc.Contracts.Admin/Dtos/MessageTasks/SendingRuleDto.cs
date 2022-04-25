@@ -9,6 +9,8 @@ public class SendingRuleDto
     public long SendingInterval { get; set; }
     public long SendingCount { get; set; }
     public bool IsTiming { get; set; }
-    public DateOnly? SendingDate { get; set; }
-    public TimeOnly? SendingTime { get; set; }
+    //public DateOnly? SendingDate { get; set; }
+    //public TimeOnly? SendingTime { get; set; }
+    public DateTime? SendTime { get; set; }
+
 }

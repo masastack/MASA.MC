@@ -21,4 +21,6 @@ public class MessageTaskCreateUpdateDto
     public ReceiverDto Receivers { get; set; } = new();
 
     public SendingRuleDto SendingRules { get; set; } = new();
+
+    public MessageInfoCreateUpdateDto MessageInfo { get; set; }
 }

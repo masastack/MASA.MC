@@ -101,6 +101,7 @@
   "Permission.MessageRecord": "Message record",
   "Permission.SendOrdinaryMessage": "Send ordinary message",
   "Permission.SendTemplateMessage": "Send template message",
+  "Permission.EditTemplateMessage": "Edit template message",
   "DisplayName.MessageEntityType.Ordinary": "Ordinary",
   "DisplayName.MessageEntityType.Template": "Template",
   "DisplayName.MessageTaskEntityType": "Message type",

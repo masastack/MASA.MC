@@ -22,6 +22,8 @@ public class MessageTask : AuditAggregateRoot<Guid, Guid>
 
     public ICollection<MessageTaskHistory> Historys { get; protected set; }
 
+    public ExtraPropertyDictionary Variables { get; protected set; } = new();
+
     public MessageTask(Guid channelId, MessageEntityType entityType, Guid entityId, bool isEnabled, ReceiverType receiverType, ExtraPropertyDictionary receivers, ExtraPropertyDictionary sendingRules)
     {
         ChannelId = channelId;
@@ -36,6 +38,7 @@ public class MessageTask : AuditAggregateRoot<Guid, Guid>
             SetDisable();
         }
         SetReceivers(receiverType, receivers);
+        SendingRules = sendingRules ?? new();
         Historys = new Collection<MessageTaskHistory>();
     }
 
@@ -57,9 +60,16 @@ public class MessageTask : AuditAggregateRoot<Guid, Guid>
 
     public virtual void SetReceivers(ReceiverType receiverType, ExtraPropertyDictionary receivers)
     {
+        ReceiverType = receiverType;
         if (receiverType == ReceiverType.Assign)
         {
             Receivers = receivers;
         }
+    }
+
+    public virtual void SetEntity(MessageEntityType entityType, Guid entityId)
+    {
+        EntityType = entityType;
+        EntityId = entityId;
     }
 }

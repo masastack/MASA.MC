@@ -33,6 +33,7 @@ public partial class OrdinaryMessageCreateModal : AdminCompontentBase
             return;
         }
         Loading = true;
+        return;
         await MessageTaskService.CreateAsync(_model);
         Loading = false;
         await SuccessMessageAsync(T("MessageTaskCreateMessage"));

@@ -19,11 +19,14 @@ public class GetMessageTaskInput : PaginatedOptionsDto
     {
     }
 
-    public GetMessageTaskInput(string filter, Guid? channelId, MessageEntityType? entityType, bool? isEnabled, string sorting, int page, int pageSize) : base(sorting, page, pageSize)
+    public GetMessageTaskInput(string filter, Guid? channelId, MessageEntityType? entityType, bool? isEnabled, MessageTaskTimeType? timeType, DateTime? startTime, DateTime? endTime, string sorting, int page, int pageSize) : base(sorting, page, pageSize)
     {
         Filter = filter;
         ChannelId = channelId;
         EntityType = entityType;
         IsEnabled = isEnabled;
+        TimeType = timeType;
+        StartTime = startTime;
+        EndTime = endTime;
     }
 }

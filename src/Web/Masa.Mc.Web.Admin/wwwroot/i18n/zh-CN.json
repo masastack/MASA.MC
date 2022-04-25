@@ -152,6 +152,7 @@
   "Permission.MessageRecord": "消息记录",
   "Permission.SendOrdinaryMessage": "发送普通消息",
   "Permission.SendTemplateMessage": "发送模板消息",
+  "Permission.EditTemplateMessage": "编辑模板消息",
   "DisplayName.MessageEntityType": "普通消息",
   "DisplayName.MessageEntityType.Ordinary": "普通消息",
   "DisplayName.MessageEntityType.Template": "模板消息",

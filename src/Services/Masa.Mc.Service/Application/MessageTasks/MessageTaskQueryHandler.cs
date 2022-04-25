@@ -16,7 +16,7 @@ public class MessageTaskQueryHandler
     {
         var entity = await _repository.FindAsync(x => x.Id == query.MessageTaskId);
         if (entity == null)
-            throw new UserFriendlyException("channel not found");
+            throw new UserFriendlyException("messageTask not found");
         query.Result = entity.Adapt<MessageTaskDto>();
     }
 
