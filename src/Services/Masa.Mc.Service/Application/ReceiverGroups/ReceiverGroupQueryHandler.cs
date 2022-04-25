@@ -25,7 +25,7 @@ public class ReceiverGroupQueryHandler
         var queryable = await CreateFilteredQueryAsync(options);
         var totalCount = await queryable.CountAsync();
         var totalPages = (int)Math.Ceiling(totalCount / (decimal)options.PageSize);
-        if (string.IsNullOrEmpty(options.Sorting)) options.Sorting = "creationTime desc";
+        if (string.IsNullOrEmpty(options.Sorting)) options.Sorting = "modificationTime desc";
         queryable = queryable.OrderBy(options.Sorting).PageBy(options.Page, options.PageSize);
         var entities = await queryable.ToListAsync();
         var entityDtos = entities.Adapt<List<ReceiverGroupDto>>();

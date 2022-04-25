@@ -1,7 +1,7 @@
 ﻿@inherits AdminCompontentBase
 <div @ref="Ref">
     <SheetDialog Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission:CreateChannel")" ContentStyle="padding-right:228px;padding-left:228px;">
-        <MForm Model="_model" EnableValidation>
+        <MForm Model="_model" @ref="_form" EnableValidation>
             <MStepper Value="_step" Elevation=0 Class="d-flex flex-column full-height mt-6">
                 <MStepperHeader Class="mx-6" Style="box-shadow:none !important">
                     <MStepperStep Step="1" Complete="_step>1">
@@ -16,17 +16,17 @@
                     <MStepperContent Class="pt-3 full-height" Step="1">
                         <MRow Class="mt-10" Align="AlignTypes.Center" Justify="JustifyTypes.Center">
                             <MCol Md="2">
-                                <MCard Outlined Class="d-flex justify-center align-center" Style="border-style: dashed;" Height="500" Width="150">
+                                <MCard Outlined Class="d-flex justify-center align-center" Style="border-style: dashed;" Height="500">
                                     <MButton Ripple=false Plain OnClick="()=> HandleSelectType(ChannelType.Sms)"><MIcon Left>mdi-plus</MIcon>@T("Sms")</MButton>
                                 </MCard>
                             </MCol>
-                            <MCol Md="2">
-                                <MCard Outlined Class="d-flex justify-center align-center" Style="border-style: dashed;" Height="500" Width="150">
+                            <MCol Md="2" Offset="1">
+                                <MCard Outlined Class="d-flex justify-center align-center" Style="border-style: dashed;" Height="500">
                                     <MButton Ripple=false Plain OnClick="()=>HandleSelectType(ChannelType.Email)"><MIcon Left>mdi-plus</MIcon>@T("Email")</MButton>
                                 </MCard>
                             </MCol>
-                            <MCol Md="2">
-                                <MCard Outlined Class="d-flex justify-center align-center" Style="border-style: dashed;" Height="500" Width="150">
+                            <MCol Md="2" Offset="1">
+                                <MCard Outlined Class="d-flex justify-center align-center" Style="border-style: dashed;" Height="500">
                                     <MButton Ripple=false Plain OnClick="()=>HandleSelectType(ChannelType.WebsiteMessage)"><MIcon Left>mdi-plus</MIcon>@T("WebsiteMessage")</MButton>
                                 </MCard>
                             </MCol>
@@ -38,7 +38,7 @@
                     <MStepperContent Class="pt-3" Step="2">
                         <MRow Justify="@("center")">
                             <MCol Cols="12" Sm="6" Md="3">
-                                <MTextField Class="mx-auto text-h5" @bind-Value="_model.DisplayName" Label="@T("DisplayName:ChannelDisplayName")" TValue="string"></MTextField>
+                                <MTextField Class="mx-auto" style="width:200px;" @bind-Value="_model.DisplayName" HideDetails="@("auto")" Placeholder="@T("DisplayName:ChannelDisplayName")"></MTextField>
                             </MCol>
                         </MRow>
                         <MRow>
@@ -46,10 +46,11 @@
                                 <MSelect @bind-Value="@_model.Type"
                                          Items="@channelTypeItems"
                                          Label="@T("DisplayName:ChannelType")"
-                                         ItemText="item => item.ToString()"
+                                         ItemText="item => T(item.ToString())"
                                          ItemValue="item => item"
                                          Dense
                                          Outlined
+                                         Disabled
                                          HideDetails="@("auto")">
                                 </MSelect>
                             </MCol>
@@ -74,7 +75,7 @@
                         </MRow>
                         <MCardActions Class="d-flex justify-end align-center mb-6">
                             <MButton Class="rounded-pill primary" MinWidth="100" OnClick="()=> _step-- ">@T("PreviousStep")</MButton>
-                            <MButton Color="rounded-pill primary" Class="small-button" OnClick="async() => await HandleOk(context)">@T("Save")</MButton>
+                            <MButton Color="rounded-pill primary" Class="small-button" OnClick="async() => await HandleOkAsync()">@T("Save")</MButton>
                         </MCardActions>
                     </MStepperContent>
                 </MStepperItems>

@@ -5,6 +5,7 @@ public partial class ChannelCreateModal : AdminCompontentBase
     [Parameter]
     public EventCallback OnOk { get; set; }
 
+    private MForm _form;
     private ChannelCreateUpdateDto _model = new();
     private bool _visible;
     private List<ChannelType> channelTypeItems = Enum.GetValues(typeof(ChannelType))
@@ -17,6 +18,7 @@ public partial class ChannelCreateModal : AdminCompontentBase
 
     public async Task OpenModalAsync()
     {
+        _model.Type = ChannelType.Email;
         await InvokeAsync(() =>
         {
             _visible = true;
@@ -46,10 +48,11 @@ public partial class ChannelCreateModal : AdminCompontentBase
         _step++;
     }
 
-    private async Task HandleOk(EditContext context)
+    private async Task HandleOkAsync()
     {
+        
         await _channelExtraPropertiesRef.UpdateExtraPropertiesAsync();
-        if (!context.Validate())
+        if (!await _form.ValidateAsync())
         {
             return;
         }

@@ -11,9 +11,14 @@ public abstract class ServiceBase
         CallerProvider = callerProvider;
     }
 
-    protected async Task<TResponse> GetAsync<TResponse>(string methodName, Dictionary<string, string>? paramters = null)
+    protected async Task<TResponse> GetAsync<TRequest, TResponse>(string methodName, TRequest data) where TRequest : class
     {
-        return await CallerProvider.GetAsync<TResponse>(BuildAdress(methodName), paramters ?? new()) ?? throw new Exception("The service is abnormal, please contact the administrator!");
+        return await CallerProvider.GetAsync<TRequest, TResponse>(BuildAdress(methodName), data) ?? throw new Exception("The service is abnormal, please contact the administrator!");
+    }
+
+    protected async Task<TResponse> GetAsync<TResponse>(string methodName)
+    {
+        return await CallerProvider.GetAsync<TResponse>(BuildAdress(methodName)) ?? throw new Exception("The service is abnormal, please contact the administrator!");
     }
 
     protected async Task PutAsync<TRequest>(string methodName, TRequest data)
@@ -38,11 +43,6 @@ public abstract class ServiceBase
     {
         var response = await CallerProvider.DeleteAsync(BuildAdress(methodName), null);
         await CheckResponse(response);
-    }
-
-    protected async Task<TResponse> SendAsync<TResponse>(string methodName, Dictionary<string, string>? query = null)
-    {
-        return await GetAsync<TResponse>(methodName, query);
     }
 
     string BuildAdress(string methodName)

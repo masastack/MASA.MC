@@ -2,9 +2,9 @@
 <div @ref="Ref">
     <SheetDialog Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission:CreateMessageTemplate")" ContentStyle="padding-right:228px;padding-left:228px;">
         <div>
-            <MForm Class="mt-12 full-height" Model="_model" EnableValidation @ref="_form">
+            <MForm Class="pt-12 full-height" Model="_model" EnableValidation @ref="_form">
                 <MRow>
-                    <MCol Cols="2">
+                    <MCol Cols="3">
                         <MSelect Value="@_channelType"
                                  Items="@(GetEnumList<ChannelType>())"
                                  Label="@T("DisplayName:ChannelType")"
@@ -12,11 +12,11 @@
                                  ItemValue="item => item"
                                  Dense
                                  Outlined
-                                 Readonly
+                                 Disabled
                                  HideDetails="@("auto")">
                         </MSelect>
                     </MCol>
-                    <MCol Cols="2">
+                    <MCol Cols="3">
                         <MSelect @bind-Value="_model.ChannelId"
                                  Items="@_channelItems"
                                  Label="@T("DisplayName:Channel")"
@@ -28,29 +28,44 @@
                                  TItem="ChannelDto"
                                  TItemValue="Guid"
                                  TValue="Guid"
-                                 OnSelectedItemUpdate="HandleChannelChange">
+                                 OnSelectedItemUpdate="HandleChannelChangeAsync">
                         </MSelect>
                     </MCol>
-                    <MCol Cols="2">
+                </MRow>
+                <MRow>
+                    <MCol Cols="3">
                         <MTextField @bind-Value="_model.Sign"
                                     Label="@T("DisplayName:MessageTemplateSign")"
                                     Dense
                                     Outlined
+                                    Placeholder="@T("Description:MessageTemplate.Sign.Required")"
                                     HideDetails="@("auto")" />
                     </MCol>
-                    <MCol Cols="2">
-                        <MTextField @bind-Value="_model.TemplateId"
-                                    Label="@T("DisplayName:MessageTemplateTemplateId")"
-                                    Dense
-                                    Outlined
-                                    HideDetails="@("auto")"
-                                    OnBlur="GetSmsTemplateAsync" />
+                    <MCol Cols="3">
+                        <MAutocomplete Items="_templateItems" @bind-Value="_model.TemplateId"
+                                       Label="@T("DisplayName:MessageTemplateTemplateId")"
+                                       ItemText="@(x=>$"{x.TemplateName}({x.TemplateCode})")"
+                                       ItemValue="x=>x.TemplateCode"
+                                       Dense
+                                       Outlined
+                                       HideDetails="@("auto")"
+                                       TItem="SmsTemplateDto"
+                                       TItemValue="string"
+                                       TValue="string"
+                                       OnSelectedItemUpdate="HandleTemplateSelected"></MAutocomplete>
                     </MCol>
+                    <MCol Cols="2">
+                        <MButton Rounded Outlined Color="indigo" Class="ml-6 medium-button px-6" OnClick="SynchroAsync">
+                            <span>@T("SynchroTemplate")</span>
+                        </MButton>
+                    </MCol>
+                </MRow>
+                <MRow>
                     <MCol Cols="2">
                         <MSelect Value="@_model.TemplateType"
                                  Items="@(GetEnumList<SmsTemplateType>())"
                                  Label="@T("DisplayName:MessageTemplateTemplateType")"
-                                 ItemText="item => T(item.ToString())"
+                                 ItemText="@(item => T($"DisplayName:SmsTemplateType.{item.ToString()}"))"
                                  ItemValue="item => (int)item"
                                  Dense
                                  Outlined
@@ -99,7 +114,7 @@
             <MessageTemplateItems @bind-Value="_model.Items"></MessageTemplateItems>
             <MCardActions Class="d-flex align-center mb-6">
                 <MSpacer></MSpacer>
-                <MButton Color="rounded-pill primary" Class="small-button" OnClick="async() => await HandleOkAsync()">@T("Save")</MButton>
+                <MButton Color="rounded-pill primary" Class="small-button" OnClick="async() => await HandleOkAsync()">@T("Submit")</MButton>
             </MCardActions>
         </div>
     </SheetDialog>

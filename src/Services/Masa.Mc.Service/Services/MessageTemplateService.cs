@@ -9,7 +9,6 @@ public class MessageTemplateService : ServiceBase
         MapDelete(DeleteAsync, "{id}");
         MapGet(GetAsync, "{id}");
         MapGet(GetListAsync, string.Empty);
-        MapGet(GetSmsTemplateAsync);
     }
 
     public async Task<PaginatedListDto<MessageTemplateDto>> GetListAsync(IEventBus eventbus, [FromQuery] ChannelType? channelType, [FromQuery] Guid? channelId, [FromQuery] MessageTemplateStatus? status, [FromQuery] MessageTemplateAuditStatus? auditStatus, [FromQuery] DateTime? startTime, [FromQuery] DateTime? endTime, [FromQuery] int templateType, [FromQuery] string filter = "", [FromQuery] string sorting = "", [FromQuery] int page = 1, [FromQuery] int pagesize = 20)
@@ -43,12 +42,5 @@ public class MessageTemplateService : ServiceBase
     {
         var command = new DeleteMessageTemplateCommand(id);
         await eventBus.PublishAsync(command);
-    }
-
-    public async Task<SmsTemplateDto> GetSmsTemplateAsync(IEventBus eventBus, [FromQuery] Guid channelId, [FromQuery] string templateCode)
-    {
-        var query = new GetSmsTemplateQuery(channelId, templateCode);
-        await eventBus.PublishAsync(query);
-        return query.Result;
     }
 }

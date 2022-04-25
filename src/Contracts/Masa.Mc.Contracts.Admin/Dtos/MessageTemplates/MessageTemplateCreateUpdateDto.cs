@@ -1,4 +1,6 @@
-﻿namespace Masa.Mc.Contracts.Admin.Dtos.MessageTemplates;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Masa.Mc.Contracts.Admin.Dtos.MessageTemplates;
 
 public class MessageTemplateCreateUpdateDto
 {
@@ -7,6 +9,7 @@ public class MessageTemplateCreateUpdateDto
         this.Items = new List<MessageTemplateItemDto>();
     }
     public Guid ChannelId { get; set; }
+    public ChannelType ChannelType { get; set; }
     public string DisplayName { get; set; } = string.Empty;
     public string Title { get; set; } = string.Empty;
     public string Content { get; set; } = string.Empty;

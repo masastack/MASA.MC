@@ -11,21 +11,7 @@ public class MessageTemplateService : ServiceBase
 
     public async Task<PaginatedListDto<MessageTemplateDto>> GetListAsync(GetMessageTemplateInput input)
     {
-        var queryArguments = new Dictionary<string, string?>()
-        {
-            { "channelType", input.ChannelType?.ToString() },
-            { "channelId", input.ChannelId?.ToString() },
-            { "auditStatus", input.AuditStatus?.ToString() },
-            { "status", input.Status?.ToString() },
-            { "startTime", input.StartTime?.ToString() },
-            { "endTime", input.EndTime?.ToString() },
-            { "templateType", input.TemplateType.ToString() },
-            { "filter", input.Filter.ToString() },
-            { "page", input.Page.ToString() },
-            { "pageSize", input.PageSize.ToString() }
-        };
-        var url = QueryHelpers.AddQueryString(string.Empty, queryArguments);
-        return await GetAsync<PaginatedListDto<MessageTemplateDto>>(url) ?? new();
+        return await GetAsync<GetMessageTemplateInput,PaginatedListDto<MessageTemplateDto>>(string.Empty, input) ?? new();
     }
 
     public async Task<MessageTemplateDto?> GetAsync(Guid id)
@@ -51,16 +37,5 @@ public class MessageTemplateService : ServiceBase
     public async Task<MessageTemplateDto?> FindByCodeAsync(string code)
     {
         return await GetAsync<MessageTemplateDto>($"FindByCode?code={code}");
-    }
-
-    public async Task<SmsTemplateDto?> GetSmsTemplateAsync(Guid channelId, string templateCode)
-    {
-        var queryArguments = new Dictionary<string, string?>()
-        {
-            { "channelId", channelId.ToString() },
-            { "templateCode", templateCode }
-        };
-        var url = QueryHelpers.AddQueryString($"GetSmsTemplate", queryArguments);
-        return await GetAsync<SmsTemplateDto>(url);
     }
 }

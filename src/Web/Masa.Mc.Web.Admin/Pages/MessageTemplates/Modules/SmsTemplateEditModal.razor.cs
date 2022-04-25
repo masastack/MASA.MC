@@ -10,14 +10,18 @@ public partial class SmsTemplateEditModal : AdminCompontentBase
     private Guid _entityId;
     private bool _visible;
     private List<ChannelDto> _channelItems = new();
+    private List<SmsTemplateDto> _templateItems = new();
     private ChannelType _channelType;
 
     ChannelService ChannelService => McCaller.ChannelService;
 
     MessageTemplateService MessageTemplateService => McCaller.MessageTemplateService;
 
+    SmsTemplateService SmsTemplateService => McCaller.SmsTemplateService;
+
     public async Task OpenModalAsync(MessageTemplateDto model)
     {
+        _model.ChannelType = ChannelType.Sms;
         _entityId = model.Id;
         _model = model.Adapt<MessageTemplateCreateUpdateDto>();
         await GetFormDataAsync();
@@ -32,8 +36,9 @@ public partial class SmsTemplateEditModal : AdminCompontentBase
     {
         var dto = await MessageTemplateService.GetAsync(_entityId);
         _model = dto.Adapt<MessageTemplateCreateUpdateDto>();
+        _templateItems = await SmsTemplateService.GetListByChannelIdAsync(_model.ChannelId);
         _channelType = dto.Channel.Type;
-        await HandleSelectChannelType(_channelType);
+        await HandleSelectChannelTypeAsync(_channelType);
     }
 
     private void HandleCancel()
@@ -62,7 +67,7 @@ public partial class SmsTemplateEditModal : AdminCompontentBase
 
     private async Task HandleDelAsync()
     {
-        await ConfirmAsync(T("DeletionConfirmationMessage"), async args => { await DeleteAsync(); });
+        await ConfirmAsync(T("DeletionConfirmationMessage"), DeleteAsync);
     }
 
     private async Task DeleteAsync()
@@ -89,36 +94,44 @@ public partial class SmsTemplateEditModal : AdminCompontentBase
         if (!val) HandleCancel();
     }
 
-    private async Task HandleSelectChannelType(ChannelType Type)
+    private async Task HandleSelectChannelTypeAsync(ChannelType Type)
     {
         _channelItems = await ChannelService.GetListByTypeAsync(Type);
     }
 
-    private async Task GetSmsTemplateAsync()
+    private void HandleTemplateSelected(SmsTemplateDto smsTemplate)
     {
-        if (_model.ChannelId == default || string.IsNullOrEmpty(_model.TemplateId))
-        {
-            return;
-        }
-        Loading = true;
-        var smsTemplate = await MessageTemplateService.GetSmsTemplateAsync(_model.ChannelId, _model.TemplateId);
-        if (smsTemplate != null)
-        {
-            _model.DisplayName = smsTemplate.DisplayName;
-            _model.Content = smsTemplate.Content;
-            _model.Items = smsTemplate.Items;
-            _model.AuditStatus = smsTemplate.AuditStatus;
-            _model.AuditReason = smsTemplate.AuditReason;
-            _model.TemplateType = smsTemplate.TemplateType;
-        }
-        Loading = false;
+        _model.DisplayName = smsTemplate.TemplateName;
+        _model.Content = smsTemplate.TemplateContent;
+        _model.AuditStatus = smsTemplate.AuditStatus;
+        _model.AuditReason = smsTemplate.AuditReason;
+        _model.TemplateType = (int)smsTemplate.TemplateType;
+        _model.Items = ParseTemplateItem(smsTemplate.TemplateContent);
     }
 
-    private void HandleChannelChange()
+    private async Task HandleChannelChangeAsync()
     {
         _model.DisplayName = string.Empty;
         _model.Content = string.Empty;
         _model.TemplateId = string.Empty;
         _model.Items = new();
+
+        _templateItems = await SmsTemplateService.GetListByChannelIdAsync(_model.ChannelId);
+    }
+
+    private List<MessageTemplateItemDto> ParseTemplateItem(string content)
+    {
+        string startstr = "\\${";
+        string endstr = "}";
+        var paramList = UtilHelper.MidStrEx(content, startstr, endstr);
+        return paramList.Select(x => new MessageTemplateItemDto { Code = x, MappingCode = x }).ToList();
+    }
+
+    private async Task SynchroAsync()
+    {
+        Loading = true;
+        await SmsTemplateService.SynchroAsync(new SmsTemplateSynchroInput(_model.ChannelId));
+        _templateItems = await SmsTemplateService.GetListByChannelIdAsync(_model.ChannelId);
+        Loading = false;
     }
 }
