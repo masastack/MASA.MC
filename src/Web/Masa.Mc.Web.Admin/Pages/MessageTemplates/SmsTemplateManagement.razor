@@ -13,7 +13,7 @@
         <MIcon Class="ml-4" OnClick="ToggleAdvanced">mdi-filter</MIcon>
         <MButton Color="primary" Class="ml-6 medium-button" OnClick="()=> _createModal.OpenModalAsync(ChannelType.Sms)">
             <MIcon Size=18>mdi-plus</MIcon>
-            <span class="ml-2">@T("Permission:Create")</span>
+            <span class="ml-2">@T("Permission.Create")</span>
         </MButton>
     </MCardTitle>
     @if (advanced)
@@ -58,8 +58,8 @@
             <MCol Cols="2">
                 <MSelect @bind-Value="@_queryParam.TemplateType"
                      Items="@(GetEnumList<SmsTemplateType>())"
-                     Label="@T("DisplayName:MessageTemplateTemplateType")"
-                     ItemText="@(item => T($"DisplayName:SmsTemplateType.{item.ToString()}"))"
+                     Label="@T("DisplayName.MessageTemplateTemplateType")"
+                     ItemText="@(item => T($"DisplayName.SmsTemplateType.{item.ToString()}"))"
                      ItemValue="item => (int)item"
                      Dense
                      Outlined
@@ -75,7 +75,7 @@
             <MCol Cols="2">
                 <MSelect @bind-Value="_queryParam.ChannelId"
                      Items="@_channelItems"
-                     Label="@T("DisplayName:Channel")"
+                     Label="@T("DisplayName.Channel")"
                      ItemText="item => item.DisplayName"
                      ItemValue="item => item.Id"
                      Dense
@@ -92,7 +92,7 @@
             <MCol Cols="2">
                 <MSelect @bind-Value="@_queryParam.AuditStatus"
                      Items="@(GetEnumList<MessageTemplateAuditStatus>())"
-                     Label="@T("DisplayName:MessageTemplateAuditStatus")"
+                     Label="@T("DisplayName.MessageTemplateAuditStatus")"
                      ItemText="item => T(item.ToString())"
                      ItemValue="item => item"
                      Dense
@@ -109,7 +109,7 @@
             <MCol Cols="2">
                 <MSelect @bind-Value="@_queryParam.Status"
                      Items="@(GetEnumList<MessageTemplateStatus>())"
-                     Label="@T("DisplayName:MessageTemplateStatus")"
+                     Label="@T("DisplayName.MessageTemplateStatus")"
                      ItemText="item => T(item.ToString())"
                      ItemValue="item => item"
                      Dense
@@ -137,7 +137,7 @@
                         <span class="text-body3">@context.Item.Channel?.DisplayName</span>
                         break;
                     case nameof(MessageTemplateDto.TemplateType):
-                        <span>@T($"DisplayName:SmsTemplateType.{((SmsTemplateType)context.Item.TemplateType).ToString()}")</span>
+                        <span>@T($"DisplayName.SmsTemplateType.{((SmsTemplateType)context.Item.TemplateType).ToString()}")</span>
                         break;
                     case (nameof(MessageTemplateDto.ModificationTime)):
                         <span class="text-body3">@context.Item.ModificationTime.ToString("yyyy年MM月dd日 HH:mm:ss")</span>
@@ -159,12 +159,12 @@
                                 break;
                         }
                         <MChip Color="@($"{color}-lighten-5")" TextColor="@color" Ripple="false">
-                            <span>@T($"DisplayName:MessageTemplateAuditStatus.{context.Item.AuditStatus.ToString()}")</span>
+                            <span>@T($"DisplayName.MessageTemplateAuditStatus.{context.Item.AuditStatus.ToString()}")</span>
                         </MChip>
                         break;
                     case nameof(MessageTemplateDto.Status):
                         <MChip Ripple="false">
-                            <span>@T($"DisplayName:MessageTemplateStatus.{context.Item.Status.ToString()}")</span>
+                            <span>@T($"DisplayName.MessageTemplateStatus.{context.Item.Status.ToString()}")</span>
                         </MChip>
                         break;
                     case "Action":

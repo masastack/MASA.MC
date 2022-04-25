@@ -1,17 +1,17 @@
 ﻿@inherits AdminCompontentBase
 <div @ref="Ref">
-    <SheetDialog Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission:EditReceiverGroup")" ContentStyle="padding-right:228px;padding-left:228px;">
+    <SheetDialog Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.EditReceiverGroup")" ContentStyle="padding-right:228px;padding-left:228px;">
         <MForm Class="mt-6 full-height" Model="_model" EnableValidation>
             <MRow Justify="@("center")">
                 <MCol Cols="12" Sm="6" Md="3">
-                    <MTextField Class="mx-auto" style="width:200px;" @bind-Value="_model.DisplayName" HideDetails="@("auto")" Placeholder="@T("DisplayName:ReceiverGroupDisplayName")"></MTextField>
+                    <MTextField Class="mx-auto" style="width:200px;" @bind-Value="_model.DisplayName" HideDetails="@("auto")" Placeholder="@T("DisplayName.ReceiverGroupDisplayName")"></MTextField>
                 </MCol>
             </MRow>
             <ReceiverSelect @bind-Value="_model.Items"></ReceiverSelect>
             <MRow>
                 <MCol Cols="12">
                     <MTextarea @bind-Value="_model.Description"
-                               Label="@T("DisplayName:ReceiverGroupDescription")"
+                               Label="@T("DisplayName.ReceiverGroupDescription")"
                                Dense
                                Outlined
                                HideDetails="@("auto")">

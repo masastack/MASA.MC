@@ -42,7 +42,7 @@ public partial class ChannelCreateModal : AdminCompontentBase
     {
         if (_model.Type == default)
         {
-            await WarningAsync(T("Description:Channel.Type.Required"));
+            await WarningAsync(T("Description.Channel.Type.Required"));
             return;
         }
         _step++;

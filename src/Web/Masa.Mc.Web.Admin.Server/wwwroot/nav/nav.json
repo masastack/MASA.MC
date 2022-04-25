@@ -202,13 +202,13 @@
   },
   {
     "Id": 32,
-    "Title": "Permission:ChannelManagement",
+    "Title": "Permission.ChannelManagement",
     "Icon": "mdi-file-outline",
     "Href": "channels/channelManagement"
   },
   {
     "Id": 33,
-    "Title": "Permission:MessageTemplateManagement",
+    "Title": "Permission.MessageTemplateManagement",
     "Icon": "mdi-file-outline",
     "Children": [
       {
@@ -233,7 +233,7 @@
   },
   {
     "Id": 37,
-    "Title": "Permission:ReceiverGroupManagement",
+    "Title": "Permission.ReceiverGroupManagement",
     "Icon": "mdi-file-outline",
     "Href": "receiverGroups/receiverGroupManagement"
   }
