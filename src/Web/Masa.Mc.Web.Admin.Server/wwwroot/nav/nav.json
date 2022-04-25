@@ -239,18 +239,18 @@
   },
   {
     "Id": 38,
-    "Title": "Permission:MessageManagement",
+    "Title": "Permission.MessageManagement",
     "Icon": "mdi-file-outline",
     "Children": [
       {
         "Id": 39,
-        "Title": "Permission:SendMessage",
+        "Title": "Permission.SendMessage",
         "Icon": "mdi-circle",
         "Href": "messageTasks/sendMessage"
       },
       {
         "Id": 40,
-        "Title": "Permission:MessageRecord",
+        "Title": "Permission.MessageRecord",
         "Icon": "mdi-circle",
         "Href": "messageTasks/messageRecord"
       }
