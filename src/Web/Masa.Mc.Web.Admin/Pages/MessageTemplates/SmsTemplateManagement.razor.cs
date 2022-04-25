@@ -20,12 +20,12 @@ public partial class SmsTemplateManagement : AdminCompontentBase
 
     protected override async Task OnInitializedAsync()
     {
-        var _prefix = "DisplayName:MessageTemplate";
+        var _prefix = "DisplayName.MessageTemplate";
         Headers = new()
         {
             new() { Text = T($"{_prefix}{nameof(MessageTemplateDto.TemplateId)}"), Value = nameof(MessageTemplateDto.TemplateId), Sortable = false },
             new() { Text = T($"{_prefix}{nameof(MessageTemplateDto.TemplateType)}"), Value = nameof(MessageTemplateDto.TemplateType), Sortable = false },
-            new() { Text = T("DisplayName:ChannelDisplayName"), Value = "ChannelDisplayName", Sortable = false },
+            new() { Text = T("DisplayName.ChannelDisplayName"), Value = "ChannelDisplayName", Sortable = false },
             new() { Text = T($"{_prefix}{nameof(MessageTemplateDto.DisplayName)}"), Value = nameof(MessageTemplateDto.DisplayName), Sortable = false },
             new() { Text = T($"{_prefix}{nameof(MessageTemplateDto.ModificationTime)}"), Value = nameof(MessageTemplateDto.ModificationTime), Sortable = true },
             new() { Text = T($"{_prefix}{nameof(MessageTemplateDto.AuditStatus)}"), Value = nameof(MessageTemplateDto.AuditStatus), Sortable = false },

@@ -20,10 +20,10 @@ public partial class EmailTemplateManagement : AdminCompontentBase
 
     protected override async Task OnInitializedAsync()
     {
-        var _prefix = "DisplayName:MessageTemplate";
+        var _prefix = "DisplayName.MessageTemplate";
         Headers = new()
         {
-            new() { Text = T("DisplayName:ChannelDisplayName"), Value = "ChannelDisplayName", Sortable = false },
+            new() { Text = T("DisplayName.ChannelDisplayName"), Value = "ChannelDisplayName", Sortable = false },
             new() { Text = T($"{_prefix}{nameof(MessageTemplateDto.DisplayName)}"), Value = nameof(MessageTemplateDto.DisplayName), Sortable = false },
             new() { Text = T($"{_prefix}{nameof(MessageTemplateDto.ModificationTime)}"), Value = nameof(MessageTemplateDto.ModificationTime), Sortable = true },
             new() { Text = T("Action"), Value = "Action", Sortable = false },

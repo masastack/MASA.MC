@@ -1,6 +1,6 @@
 ﻿@inherits AdminCompontentBase
 <div @ref="Ref">
-    <SheetDialog Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission:CreateChannel")" ContentStyle="padding-right:228px;padding-left:228px;">
+    <SheetDialog Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.CreateChannel")" ContentStyle="padding-right:228px;padding-left:228px;">
         <MForm Model="_model" @ref="_form" EnableValidation>
             <MStepper Value="_step" Elevation=0 Class="d-flex flex-column full-height mt-6">
                 <MStepperHeader Class="mx-6" Style="box-shadow:none !important">
@@ -38,14 +38,14 @@
                     <MStepperContent Class="pt-3" Step="2">
                         <MRow Justify="@("center")">
                             <MCol Cols="12" Sm="6" Md="3">
-                                <MTextField Class="mx-auto" style="width:200px;" @bind-Value="_model.DisplayName" HideDetails="@("auto")" Placeholder="@T("DisplayName:ChannelDisplayName")"></MTextField>
+                                <MTextField Class="mx-auto" style="width:200px;" @bind-Value="_model.DisplayName" HideDetails="@("auto")" Placeholder="@T("DisplayName.ChannelDisplayName")"></MTextField>
                             </MCol>
                         </MRow>
                         <MRow>
                             <MCol Cols="6">
                                 <MSelect @bind-Value="@_model.Type"
                                          Items="@channelTypeItems"
-                                         Label="@T("DisplayName:ChannelType")"
+                                         Label="@T("DisplayName.ChannelType")"
                                          ItemText="item => T(item.ToString())"
                                          ItemValue="item => item"
                                          Dense
@@ -56,7 +56,7 @@
                             </MCol>
                             <MCol Cols="6">
                                 <MTextField @bind-Value="_model.Code"
-                                            Label="@T("DisplayName:ChannelCode")"
+                                            Label="@T("DisplayName.ChannelCode")"
                                             Dense
                                             Outlined
                                             HideDetails="@("auto")" />
@@ -66,7 +66,7 @@
                         <MRow>
                             <MCol Cols="12">
                                 <MTextarea @bind-Value="_model.Description"
-                                           Label="@T("DisplayName:ChannelDescription")"
+                                           Label="@T("DisplayName.ChannelDescription")"
                                            Dense
                                            Outlined
                                            HideDetails="@("auto")">

@@ -4,7 +4,7 @@
             HideDefaultFooter>
     <TopContent>
         <MToolbar Flat>
-            <MToolbarTitle>@T("DisplayName:MessageTemplateItem")</MToolbarTitle>
+            <MToolbarTitle>@T("DisplayName.MessageTemplateItem")</MToolbarTitle>
             @*<MSpacer></MSpacer>
                 <MButton Ripple=false Plain
                 Class="mb-2"
@@ -25,20 +25,20 @@
                                       Sm="6"
                                       Md="4">
                                     <MTextField @bind-Value="_editedItem.Code"
-                                                Label="@T("DisplayName:MessageTemplateItemCode")"></MTextField>
+                                                Label="@T("DisplayName.MessageTemplateItemCode")"></MTextField>
                                 </MCol>
                                 <MCol Cols="12"
                                       Sm="6"
                                       Md="4">
                                     <MTextField @bind-Value="_editedItem.MappingCode"
                                                 Readonly
-                                                Label="@T("DisplayName:MessageTemplateItemMappingCode")"></MTextField>
+                                                Label="@T("DisplayName.MessageTemplateItemMappingCode")"></MTextField>
                                 </MCol>
                                 <MCol Cols="12"
                                       Sm="6"
                                       Md="4">
                                     <MTextField @bind-Value="_editedItem.DisplayText"
-                                                Label="@T("DisplayName:MessageTemplateItemDisplayText")"></MTextField>
+                                                Label="@T("DisplayName.MessageTemplateItemDisplayText")"></MTextField>
                                 </MCol>
                             </MRow>
                         </MContainer>

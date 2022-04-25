@@ -18,13 +18,13 @@ public partial class MessageTemplateItems : AdminCompontentBase
     {
         get
         {
-            return _editedIndex == -1 ? T("Permission:AddMessageTemplateItem") : T("Permission:EditMessageTemplateItem");
+            return _editedIndex == -1 ? T("Permission.AddMessageTemplateItem") : T("Permission.EditMessageTemplateItem");
         }
     }
 
     protected override async Task OnInitializedAsync()
     {
-        var _prefix = "DisplayName:MessageTemplateItem";
+        var _prefix = "DisplayName.MessageTemplateItem";
         _headers = new List<DataTableHeader<MessageTemplateItemDto>>
         {
           new (){ Text= T($"{_prefix}{nameof(MessageTemplateItemDto.Code)}"),Value= nameof(MessageTemplateItemDto.Code),Sortable=false},
