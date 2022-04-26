@@ -67,17 +67,16 @@ public class MessageTaskCommandHandler
             case MessageEntityType.Ordinary:
                 if (isAdd)
                 {
-                    var createCommand = new CreateMessageInfoCommand(dto.MessageInfo);
-                    await _eventBus.PublishAsync(createCommand);
+                    var messageInfo = dto.MessageInfo.Adapt<MessageInfo>();
+                    await _messageInfoRepository.AddAsync(messageInfo);
+                    entity.SetEntity(MessageEntityType.Ordinary, messageInfo.Id, messageInfo.Title);
                 }
                 else
                 {
                     var updateCommand = new UpdateMessageInfoCommand(dto.EntityId, dto.MessageInfo);
                     await _eventBus.PublishAsync(updateCommand);
+                    entity.SetEntity(MessageEntityType.Ordinary, dto.EntityId, dto.MessageInfo.Title);
                 }
-                var messageInfo = dto.MessageInfo.Adapt<MessageInfo>();
-                await _messageInfoRepository.AddAsync(messageInfo);
-                entity.SetEntity(MessageEntityType.Ordinary, messageInfo.Id, messageInfo.Title);
                 break;
             case MessageEntityType.Template:
                 var messageTemplate = await _messageTemplateRepository.FindAsync(x => x.Id == dto.EntityId);
