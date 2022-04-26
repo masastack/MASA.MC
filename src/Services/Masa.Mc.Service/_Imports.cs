@@ -94,3 +94,7 @@ global using Masa.Mc.Service.Admin.Infrastructure.Repositories;
 global using Masa.Mc.Infrastructure.ObjectExtending.ObjectExtending;
 global using Masa.Mc.Service.Admin.Domain.MessageInfos.Aggregates;
 global using Masa.Mc.Service.Admin.Domain.MessageInfos.Repositories;
+global using Masa.Mc.Contracts.Admin.Dtos.MessageInfos;
+global using Masa.Mc.Service.Admin.Application.MessageInfos.Queries;
+global using Masa.Mc.Contracts.Admin.Dtos.MessageInfos.Validator;
+global using Masa.Mc.Service.Admin.Application.MessageInfos.Commands;

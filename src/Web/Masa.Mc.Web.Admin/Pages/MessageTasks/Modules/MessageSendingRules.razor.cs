@@ -13,6 +13,20 @@ public partial class MessageSendingRules : AdminCompontentBase
     public DateOnly? sendingDate;
     public TimeOnly? sendingTime;
 
+    protected override void OnParametersSet()
+    {
+        if (Value.SendTime != null)
+        {
+            sendingDate = DateOnly.FromDateTime(Value.SendTime.Value);
+            sendingTime = TimeOnly.FromDateTime(Value.SendTime.Value);
+        }
+        else
+        {
+            sendingDate = null;
+            sendingTime = null;
+        }
+    }
+
     private async void HandleDatePickerInputAsync()
     {
         _datePickersShow = false;
@@ -21,16 +35,16 @@ public partial class MessageSendingRules : AdminCompontentBase
 
     private async void HandleTimePickerChangeAsync()
     {
-       await  FillSendTimeAsync();
+        await FillSendTimeAsync();
     }
 
     private async Task FillSendTimeAsync()
     {
-        if (sendingDate==null)
+        if (sendingDate == null)
         {
             return;
         }
-        Value.SendTime = sendingDate.Value.ToDateTime(sendingTime?? new TimeOnly(0, 0, 0));
+        Value.SendTime = sendingDate.Value.ToDateTime(sendingTime ?? new TimeOnly(0, 0, 0));
         await ValueChanged.InvokeAsync(Value);
     }
 }

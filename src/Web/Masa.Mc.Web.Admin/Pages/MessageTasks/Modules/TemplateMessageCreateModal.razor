@@ -85,20 +85,7 @@
                                 </MCol>
                             </MRow>
                         }
-                        if (_messageInfo.Channel != null && _messageInfo.Channel.Type == ChannelType.Sms)
-                        {
-                            <MRow>
-                                <MCol>
-                                    <MTextField @bind-Value="_messageInfo.Sign"
-                                        Label="@T("DisplayName.MessageTemplateSign")"
-                                        Dense
-                                        Outlined
-                                        Disabled
-                                        HideDetails="@("auto")">
-                                    </MTextField>
-                                </MCol>
-                            </MRow>
-                        }
+                        <MessageVariables @bind-Value="_model.Variables"></MessageVariables>
                     }
                 </MCol>
                 <MCol Class="ml-2">
@@ -109,6 +96,7 @@
                                 Value="@ReceiverType.Assign">
                         </MRadio>
                         <MRadio Label="@T("DisplayName.ReceiverType.Broadcast")"
+                                Disabled="_messageInfo.Channel?.Type!=ChannelType.WebsiteMessage"
                                 Value="@ReceiverType.Broadcast">
                         </MRadio>
                     </MRadioGroup>
@@ -119,6 +107,19 @@
                     }
                     <div class="mt-4">@T("DisplayName.MessageTaskSendingRule")</div>
                     <MInput @bind-Value="_model.SendingRules" />
+                    @if (_messageInfo.Channel != null && _messageInfo.Channel.Type == ChannelType.Sms)
+                    {
+                        <MRow>
+                            <MCol>
+                                <MTextField @bind-Value="_model.Sign"
+                                        Label="@T("DisplayName.MessageTemplateSign")"
+                                        Dense
+                                        Outlined
+                                        HideDetails="@("auto")">
+                                </MTextField>
+                            </MCol>
+                        </MRow>
+                    }
                     <MessageSendingRules Class="mt-2" @bind-Value="_model.SendingRules" />
                 </MCol>
             </MRow>

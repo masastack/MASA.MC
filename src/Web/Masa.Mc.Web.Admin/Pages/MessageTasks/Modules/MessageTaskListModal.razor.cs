@@ -5,7 +5,8 @@ public partial class MessageTaskListModal : AdminCompontentBase
     public List<DataTableHeader<MessageTaskDto>> Headers { get; set; } = new();
 
     private bool _visible;
-    private TemplateMessageEditModal _editModal;
+    private TemplateMessageEditModal _templateEditModal;
+    private OrdinaryMessageEditModal _ordinaryEditModal;
     private GetMessageTaskInput _queryParam = new() { TimeType = MessageTaskTimeType.ModificationTime };
     private PaginatedListDto<MessageTaskDto> _entities = new();
     private List<ChannelDto> _channelItems = new();
@@ -18,13 +19,14 @@ public partial class MessageTaskListModal : AdminCompontentBase
 
     MessageTaskService MessageTaskService => McCaller.MessageTaskService;
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
+        base.OnInitialized();
         var _prefix = "DisplayName.MessageTask";
         Headers = new()
         {
             new() { Text = "", Value = "Draft", Sortable = false, Width = 50 },
-            new() { Text = T("DisplayName.MessageInfoTitle"), Value = "MessageInfoTitle", Sortable = false },
+            new() { Text = T($"{_prefix}{nameof(MessageTaskDto.DisplayName)}"), Value = nameof(MessageTaskDto.DisplayName), Sortable = false },
             new() { Text = T("DisplayName.ChannelDisplayName"), Value = "ChannelDisplayName", Sortable = false },
             new() { Text = T($"{_prefix}{nameof(MessageTaskDto.EntityType)}"), Value = nameof(MessageTaskDto.EntityType), Sortable = false },
             new() { Text = T($"{_prefix}{nameof(MessageTaskDto.SendTime)}"), Value = nameof(MessageTaskDto.SendTime), Sortable = false },
@@ -32,20 +34,11 @@ public partial class MessageTaskListModal : AdminCompontentBase
             new() { Text = T($"IsEnabled"), Value = nameof(MessageTaskDto.IsEnabled), Sortable = false },
             new() { Text = T("Action"), Value = "Action", Sortable = false },
         };
-        _channelItems = (await ChannelService.GetListAsync(new GetChannelInput(99))).Result;
-    }
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            await LoadData();
-        }
-        await base.OnAfterRenderAsync(firstRender);
     }
 
     public async Task OpenModalAsync()
     {
+        await LoadData();
         await InvokeAsync(() =>
         {
             _visible = true;
@@ -57,6 +50,7 @@ public partial class MessageTaskListModal : AdminCompontentBase
     {
         Loading = true;
         _entities = (await MessageTaskService.GetListAsync(_queryParam));
+        _channelItems = (await ChannelService.GetListAsync(new GetChannelInput(99))).Result;
         Loading = false;
         StateHasChanged();
     }
@@ -123,5 +117,17 @@ public partial class MessageTaskListModal : AdminCompontentBase
     private void HandleCancel()
     {
         _visible = false;
+    }
+
+    private async Task HandleEditAsync(MessageTaskDto model)
+    {
+        if (model.EntityType== MessageEntityType.Ordinary)
+        {
+            await _ordinaryEditModal.OpenModalAsync(model);
+        }
+        if (model.EntityType == MessageEntityType.Template)
+        {
+            await _templateEditModal.OpenModalAsync(model);
+        }
     }
 }

@@ -2,17 +2,15 @@
 
 public class MessageTaskDto : AuditEntityDto<Guid, Guid>
 {
+    public string DisplayName { get; set; } = string.Empty;
+
     public Guid ChannelId { get; set; }
 
-    public ChannelDto Channel { get; set; }
+    public ChannelDto Channel { get; set; } = new();
 
     public MessageEntityType EntityType { get; set; }
 
     public Guid EntityId { get; set; }
-
-    //public ExtraPropertyDictionary Receivers { get; set; } = new();
-
-    //public ExtraPropertyDictionary SendingRules { get; set; } = new();
 
     public bool IsEnabled { get; set; }
 
@@ -20,9 +18,13 @@ public class MessageTaskDto : AuditEntityDto<Guid, Guid>
 
     public DateTime? SendTime { get; set; }
 
-    public MessageInfoDto MessageInfo { get; set; }
+    public string Sign { get; set; } = string.Empty;
+
+    public MessageInfoDto MessageInfo { get; set; } = new();
 
     public ReceiverDto Receivers { get; set; } = new();
 
     public SendingRuleDto SendingRules { get; set; } = new();
+
+    public ExtraPropertyDictionary Variables { get; set; } = new();
 }

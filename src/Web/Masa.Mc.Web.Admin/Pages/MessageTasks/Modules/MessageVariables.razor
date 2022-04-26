@@ -1,0 +1,19 @@
+﻿@inherits AdminCompontentBase
+<div class="mt-8">@T("DisplayName.VariableValueTransfer")</div>
+<MContainer>
+    <MRow>
+        @foreach (var item in _items)
+        {
+            <MCol Cols="12"
+              Sm="6">
+                <MTextField @bind-Value="item.Value"
+                        Label="@item.Name"
+                        Dense
+                        Outlined
+                        Clearable
+                        TValue="string"
+                        OnChange="HandleChangeAsync"></MTextField>
+            </MCol>
+        }
+    </MRow>
+</MContainer>

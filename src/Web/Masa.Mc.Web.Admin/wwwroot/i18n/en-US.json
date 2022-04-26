@@ -102,8 +102,10 @@
   "Permission.SendOrdinaryMessage": "Send ordinary message",
   "Permission.SendTemplateMessage": "Send template message",
   "Permission.EditTemplateMessage": "Edit template message",
+  "Permission.EditOrdinaryMessage": "Edit ordinary message",
   "DisplayName.MessageEntityType.Ordinary": "Ordinary",
   "DisplayName.MessageEntityType.Template": "Template",
+  "DisplayName.MessageTaskDisplayName": "Message title",
   "DisplayName.MessageTaskEntityType": "Message type",
   "DisplayName.MessageTaskSendTime": "Send time",
   "DisplayName.MessageTaskReceiver": "Receiver",
@@ -118,5 +120,10 @@
   "DisplayName.MessageInfoContent": "Message info content",
   "DisplayName.MessageTaskTimeType": "Time type",
   "DisplayName.MessageTaskTimeType.ModificationTime": "ModificationTime",
-  "DisplayName.MessageTaskTimeType.SendTime": "SendTime"
+  "DisplayName.MessageTaskTimeType.SendTime": "SendTime",
+  "DisplayName.VariableValueTransfer": "Variable value transfer",
+  "DisplayName.SendingRule.Timeout": "Timeout",
+  "DisplayName.SendingRule.RetryInterval": "RetryInterval",
+  "DisplayName.SendingRule.RetryCount": "RetryCount",
+  "DisplayName.SendingRule.IsTiming": "IsTiming"
 }

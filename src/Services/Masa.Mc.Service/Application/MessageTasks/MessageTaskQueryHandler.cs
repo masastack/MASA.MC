@@ -39,6 +39,7 @@ public class MessageTaskQueryHandler
     private async Task<Expression<Func<MessageTask, bool>>> CreateFilteredPredicate(GetMessageTaskInput input)
     {
         Expression<Func<MessageTask, bool>> condition = x => true;
+        condition = condition.And(!string.IsNullOrEmpty(input.Filter), x => x.DisplayName.Contains(input.Filter));
         condition = condition.And(input.EntityType.HasValue, x => x.EntityType == input.EntityType);
         condition = condition.And(input.ChannelId.HasValue, x => x.ChannelId == input.ChannelId);
         condition = condition.And(input.IsEnabled.HasValue, x => x.IsEnabled == input.IsEnabled);

@@ -2,6 +2,8 @@
 
 public class MessageTaskCreateUpdateDto
 {
+    public string DisplayName { get; set; } = string.Empty;
+
     public Guid ChannelId { get; set; }
 
     public MessageEntityType EntityType { get; set; }
@@ -14,13 +16,13 @@ public class MessageTaskCreateUpdateDto
 
     public DateTime? SendTime { get; set; }
 
-    //public ExtraPropertyDictionary Receivers { get; set; } = new();
-
-    //public ExtraPropertyDictionary SendingRules { get; set; } = new();
+    public string Sign { get; set; } = string.Empty;
 
     public ReceiverDto Receivers { get; set; } = new();
 
     public SendingRuleDto SendingRules { get; set; } = new();
 
-    public MessageInfoCreateUpdateDto MessageInfo { get; set; }
+    public MessageInfoCreateUpdateDto MessageInfo { get; set; } = new();
+
+    public ExtraPropertyDictionary Variables { get; set; } = new(); 
 }

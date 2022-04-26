@@ -12,3 +12,5 @@ global using Masa.Mc.Contracts.Admin.Enums.ReceiverGroups;
 global using Masa.Mc.Infrastructure.Common.Extensions;
 global using Masa.Mc.Contracts.Admin.Enums.MessageTasks;
 global using Masa.Mc.Contracts.Admin.Dtos.MessageTasks;
+global using Masa.Mc.Contracts.Admin.Dtos.MessageInfos.Validator;
+global using Masa.Mc.Contracts.Admin.Dtos.MessageInfos;

@@ -3,16 +3,22 @@
 public class MessageTaskCommandHandler
 {
     private readonly IMessageTaskRepository _repository;
-    private readonly IIntegrationEventBus _integrationEventBus;
     private readonly MessageTaskDomainService _domainService;
     private readonly IMessageInfoRepository _messageInfoRepository;
+    private readonly IMessageTemplateRepository _messageTemplateRepository;
+    private readonly IEventBus _eventBus;
 
-    public MessageTaskCommandHandler(IMessageTaskRepository repository, IIntegrationEventBus integrationEventBus, MessageTaskDomainService domainService, IMessageInfoRepository messageInfoRepositor)
+    public MessageTaskCommandHandler(IMessageTaskRepository repository
+        , MessageTaskDomainService domainService
+        , IMessageInfoRepository messageInfoRepositor
+        , IMessageTemplateRepository messageTemplateRepository
+        , IEventBus eventBus)
     {
         _repository = repository;
-        _integrationEventBus = integrationEventBus;
         _domainService = domainService;
         _messageInfoRepository = messageInfoRepositor;
+        _messageTemplateRepository = messageTemplateRepository;
+        _eventBus = eventBus;
     }
 
     [EventHandler]
@@ -20,12 +26,7 @@ public class MessageTaskCommandHandler
     {
         var dto = createCommand.MessageTask;
         var entity = dto.Adapt<MessageTask>();
-        if (dto.EntityType == MessageEntityType.Ordinary)
-        {
-            var messageInfo = dto.MessageInfo.Adapt<MessageInfo>();
-            await _messageInfoRepository.AddAsync(messageInfo);
-            entity.SetEntity(MessageEntityType.Ordinary, messageInfo.Id);
-        }
+        await HandleEntity(dto, entity, true);
         await _domainService.CreateAsync(entity);
     }
 
@@ -35,7 +36,11 @@ public class MessageTaskCommandHandler
         var entity = await _repository.FindAsync(x => x.Id == updateCommand.MessageTaskId);
         if (entity == null)
             throw new UserFriendlyException("messageTask not found");
-        updateCommand.MessageTask.Adapt(entity);
+        if (entity.SendTime != null)
+            throw new UserFriendlyException("only unexecuted message tasks can be edited");
+        var dto = updateCommand.MessageTask;
+        dto.Adapt(entity);
+        await HandleEntity(dto, entity, false);
         await _repository.UpdateAsync(entity);
     }
 
@@ -53,5 +58,35 @@ public class MessageTaskCommandHandler
     {
         var input = command.input;
         await _domainService.ExecuteAsync(input.MessageTaskId, input.ReceiverType, input.Receivers, input.SendingRules);
+    }
+
+    private async Task HandleEntity(MessageTaskCreateUpdateDto dto, MessageTask entity, bool isAdd)
+    {
+        switch (dto.EntityType)
+        {
+            case MessageEntityType.Ordinary:
+                if (isAdd)
+                {
+                    var createCommand = new CreateMessageInfoCommand(dto.MessageInfo);
+                    await _eventBus.PublishAsync(createCommand);
+                }
+                else
+                {
+                    var updateCommand = new UpdateMessageInfoCommand(dto.EntityId, dto.MessageInfo);
+                    await _eventBus.PublishAsync(updateCommand);
+                }
+                var messageInfo = dto.MessageInfo.Adapt<MessageInfo>();
+                await _messageInfoRepository.AddAsync(messageInfo);
+                entity.SetEntity(MessageEntityType.Ordinary, messageInfo.Id, messageInfo.Title);
+                break;
+            case MessageEntityType.Template:
+                var messageTemplate = await _messageTemplateRepository.FindAsync(x => x.Id == dto.EntityId);
+                if (messageTemplate == null)
+                    throw new UserFriendlyException("messageTemplate not found");
+                entity.SetEntity(MessageEntityType.Template, messageTemplate.Id, string.IsNullOrEmpty(messageTemplate.Title) ? messageTemplate.DisplayName : messageTemplate.Title);
+                break;
+            default:
+                break;
+        }
     }
 }

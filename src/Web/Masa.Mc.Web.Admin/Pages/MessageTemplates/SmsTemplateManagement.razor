@@ -140,7 +140,7 @@
                         <span>@T($"DisplayName.SmsTemplateType.{((SmsTemplateType)context.Item.TemplateType).ToString()}")</span>
                         break;
                     case (nameof(MessageTemplateDto.ModificationTime)):
-                        <span class="text-body3">@context.Item.ModificationTime.ToString("yyyy年MM月dd日 HH:mm:ss")</span>
+                        <span class="text-body3">@context.Item.ModificationTime.ToString(T("$DateTimeFormat"))</span>
                         break;
                     case nameof(MessageTemplateDto.AuditStatus):
                         string color = string.Empty;

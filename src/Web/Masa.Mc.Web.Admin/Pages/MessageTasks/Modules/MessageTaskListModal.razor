@@ -111,15 +111,12 @@
                         @switch (context.Header.Value)
                         {
                             case ("Draft"):
-                                if (!context.Item.IsEnabled)
+                                if (context.Item.SendTime == null)
                                 {
                                     <MChip Ripple="false">
-                                        <span>草稿</span>
+                                        <span>@T("Draft")</span>
                                     </MChip>
                                 }
-                                break;
-                            case ("MessageInfoTitle"):
-                                <span class="text-body3">@context.Item.MessageInfo?.Title</span>
                                 break;
                             case ("ChannelDisplayName"):
                                 <span class="text-body3">@context.Item.Channel?.DisplayName</span>
@@ -128,18 +125,21 @@
                                 <span>@T($"DisplayName.MessageEntityType.{((MessageEntityType)context.Item.EntityType).ToString()}")</span>
                                 break;
                             case (nameof(MessageTaskDto.SendTime)):
-                                <span class="text-body3">@context.Item.SendTime?.ToString("yyyy年MM月dd日 HH:mm:ss")</span>
+                                <span class="text-body3">@context.Item.SendTime?.ToString(T("$DateTimeFormat"))</span>
                                 break;
                             case (nameof(MessageTaskDto.ModificationTime)):
-                                <span class="text-body3">@context.Item.ModificationTime.ToString("yyyy年MM月dd日 HH:mm:ss")</span>
+                                <span class="text-body3">@context.Item.ModificationTime.ToString(T("$DateTimeFormat"))</span>
                                 break;
                             case nameof(MessageTaskDto.IsEnabled):
                                 <MChip Ripple="false">
-                                    <span>@(context.Item.IsEnabled?"启动":"禁用")</span>
+                                    <span>@(context.Item.IsEnabled?T("Initiate"):T("Disable"))</span>
                                 </MChip>
                                 break;
                             case "Action":
-                                <MIcon Small Color="neutral-lighten-2" OnClick="async()=>await _editModal.OpenModalAsync(context.Item)">mdi-pencil</MIcon>
+                                if (context.Item.SendTime == null)
+                                {
+                                    <MIcon Small Color="neutral-lighten-2" OnClick="async()=>await HandleEditAsync(context.Item)">mdi-pencil</MIcon>
+                                }
                                 <MIcon Small Color="neutral-lighten-2">mdi-fan</MIcon>
                                 <MIcon Small Color="neutral-lighten-2">mdi-arrow-right-drop-circle</MIcon>
                                 break;
@@ -156,4 +156,5 @@
         </MCard>
     </SheetDialog>
 </div>
-<TemplateMessageEditModal @ref="_editModal" OnOk="HandleOk" />
+<TemplateMessageEditModal @ref="_templateEditModal" OnOk="HandleOk" />
+<OrdinaryMessageEditModal @ref="_ordinaryEditModal" OnOk="HandleOk" />

@@ -2,6 +2,8 @@
 
 public class MessageTask : AuditAggregateRoot<Guid, Guid>
 {
+    public string DisplayName { get; protected set; } = string.Empty;
+
     public Guid ChannelId { get; protected set; }
 
     public AppChannel Channel { get; protected set; } = default!;
@@ -16,6 +18,8 @@ public class MessageTask : AuditAggregateRoot<Guid, Guid>
 
     public DateTime? SendTime { get; protected set; }
 
+    public string Sign { get; protected set; } = string.Empty;
+
     public ExtraPropertyDictionary Receivers { get; protected set; } = new();
 
     public ExtraPropertyDictionary SendingRules { get; protected set; } = new();
@@ -24,11 +28,13 @@ public class MessageTask : AuditAggregateRoot<Guid, Guid>
 
     public ExtraPropertyDictionary Variables { get; protected set; } = new();
 
-    public MessageTask(Guid channelId, MessageEntityType entityType, Guid entityId, bool isEnabled, ReceiverType receiverType, ExtraPropertyDictionary receivers, ExtraPropertyDictionary sendingRules)
+    public MessageTask(string displayName, Guid channelId, MessageEntityType entityType, Guid entityId, bool isEnabled, string sign, ReceiverType receiverType, ExtraPropertyDictionary receivers, ExtraPropertyDictionary sendingRules)
     {
+        DisplayName = displayName;
         ChannelId = channelId;
         EntityType = entityType;
         EntityId = entityId;
+        Sign = sign;
         if (isEnabled)
         {
             SetEnabled();
@@ -67,9 +73,10 @@ public class MessageTask : AuditAggregateRoot<Guid, Guid>
         }
     }
 
-    public virtual void SetEntity(MessageEntityType entityType, Guid entityId)
+    public virtual void SetEntity(MessageEntityType entityType, Guid entityId, string displayName)
     {
         EntityType = entityType;
         EntityId = entityId;
+        DisplayName = displayName;
     }
 }

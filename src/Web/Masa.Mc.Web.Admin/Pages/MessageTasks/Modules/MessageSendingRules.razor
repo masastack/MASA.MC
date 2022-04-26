@@ -6,10 +6,10 @@
                     Height="18"
                     Type="number">
             <PrependContent>
-                <span style="width:70px">超时时间</span>
+                <span style="width:70px">@T("DisplayName.SendingRule.Timeout")</span>
             </PrependContent>
             <AppendOuterContent>
-                秒
+                @T("Second")
             </AppendOuterContent>
         </MTextField>
     </MCol>
@@ -18,10 +18,10 @@
                     Outlined
                     Type="number">
             <PrependContent>
-                <span style="width:70px">重试间隔</span>
+                <span style="width:70px">@T("DisplayName.SendingRule.RetryInterval")</span>
             </PrependContent>
             <AppendOuterContent>
-                秒
+                @T("Second")
             </AppendOuterContent>
         </MTextField>
     </MCol>
@@ -30,33 +30,33 @@
                     Outlined
                     Type="number">
             <PrependContent>
-                <span style="width:70px">重试次数</span>
+                <span style="width:70px">@T("DisplayName.SendingRule.RetryCount")</span>
             </PrependContent>
             <AppendOuterContent>
-                秒
+                @T("Second")
             </AppendOuterContent>
         </MTextField>
     </MCol>
 </MRow>
 <MRow Class="mx-1" Justify="JustifyTypes.Start">
     <MCheckbox @bind-Value="Value.IsSendingInterval"></MCheckbox>
-    <span class="pt-4">每</span>
+    <span class="pt-4">@T("Each")</span>
     <MTextField @bind-Value="Value.SendingInterval"
                 Outlined
                 Class="mx-1"
                 Type="number">
     </MTextField>
-    <span class="pt-4">秒，发送</span>
+    <span class="pt-4">@T("Second")，@T("Send")</span>
     <MTextField @bind-Value="Value.SendingCount"
                 Outlined
                 Class="mx-1"
                 Type="number">
     </MTextField>
-    <span class="pt-4">条</span>
+    <span class="pt-4">@T("Unit.Bar")</span>
 </MRow>
 <MRow Class="mx-1" Justify="JustifyTypes.Start">
     <MCheckbox Class="mt-1" @bind-Value="Value.IsTiming"></MCheckbox>
-    <span class="pt-2">定时发送</span>
+    <span class="pt-2">@T("DisplayName.SendingRule.IsTiming")</span>
     <MMenu @bind-Value="_datePickersShow"
            CloseOnContentClick="false"
            NudgeRight="40"

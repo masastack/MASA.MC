@@ -1,11 +1,11 @@
 ﻿@inherits AdminCompontentBase
 <MRow Class="mx-1 my-2">
     <MButtonGroup Borderless @bind-Value="_type">
-        <MButton Value="@("手动选择")">
-            <span class="hidden-sm-and-down">手动选择</span>
+        <MButton>
+            <span class="hidden-sm-and-down">@T("ManualSelection")</span>
         </MButton>
-        <MButton Value="@("批量上传")">
-            <span class="hidden-sm-and-down">批量上传</span>
+        <MButton>
+            <span class="hidden-sm-and-down">@T("BatchUpload")</span>
         </MButton>
     </MButtonGroup>
 </MRow>

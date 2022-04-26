@@ -71,6 +71,27 @@ public partial class TemplateMessageCreateModal : AdminCompontentBase
     {
         if (item.Channel != null) _channelItems = await ChannelService.GetListByTypeAsync(item.Channel.Type);
         _messageInfo = item;
-        _model.ChannelId = item.Channel.Id;
+        if (item.Channel != null) _model.ChannelId = item.Channel.Id;
+        _model.Sign = item.Sign;
+        _model.Variables = FillVariables(_messageInfo.Items);
+        HandleChannelTypeChanged();
+    }
+
+    private ExtraPropertyDictionary FillVariables(List<MessageTemplateItemDto> items)
+    {
+        var source = new ExtraPropertyDictionary();
+        foreach (var item in items)
+        {
+            source.TryAdd(item.Code, string.Empty);
+        }
+        return source;
+    }
+
+    private void HandleChannelTypeChanged()
+    {
+        if (_messageInfo.Channel?.Type != ChannelType.WebsiteMessage)
+        {
+            _model.ReceiverType = ReceiverType.Assign;
+        }
     }
 }
