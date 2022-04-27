@@ -36,12 +36,12 @@ public class MessageTaskCommandHandler
         var entity = await _repository.FindAsync(x => x.Id == updateCommand.MessageTaskId);
         if (entity == null)
             throw new UserFriendlyException("messageTask not found");
-        if (entity.SendTime != null)
-            throw new UserFriendlyException("only unexecuted message tasks can be edited");
+        if (!entity.IsDraft)
+            throw new UserFriendlyException("non draft cannot be modified");
         var dto = updateCommand.MessageTask;
         dto.Adapt(entity);
         await HandleEntity(dto, entity, false);
-        await _repository.UpdateAsync(entity);
+        await _domainService.UpdateAsync(entity);
     }
 
     [EventHandler]
@@ -54,10 +54,10 @@ public class MessageTaskCommandHandler
     }
 
     [EventHandler]
-    public async Task ExecuteAsync(ExecuteMessageTaskCommand command)
+    public async Task SendAsync(SendMessageTaskCommand command)
     {
         var input = command.input;
-        await _domainService.ExecuteAsync(input.MessageTaskId, input.ReceiverType, input.Receivers, input.SendingRules);
+        await _domainService.SendAsync(input.Id, input.ReceiverType, ExtensionPropertyHelper.ObjMapToExtraProperty(input.Receivers), ExtensionPropertyHelper.ObjMapToExtraProperty(input.SendingRules), input.SendTime, input.Sign, input.Variables);
     }
 
     private async Task HandleEntity(MessageTaskCreateUpdateDto dto, MessageTask entity, bool isAdd)

@@ -34,9 +34,9 @@ public partial class OrdinaryMessageCreateModal : AdminCompontentBase
         ResetForm();
     }
 
-    private async Task HandleOkAsync(bool IsEnabled)
+    private async Task HandleOkAsync(bool isDraft)
     {
-        _model.IsEnabled = IsEnabled;
+        _model.IsDraft = isDraft;
         if (!await _form.ValidateAsync())
         {
             return;

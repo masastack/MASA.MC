@@ -7,6 +7,7 @@ public partial class MessageTaskListModal : AdminCompontentBase
     private bool _visible;
     private TemplateMessageEditModal _templateEditModal;
     private OrdinaryMessageEditModal _ordinaryEditModal;
+    private MessageTaskSendModal _sendModal;
     private GetMessageTaskInput _queryParam = new() { TimeType = MessageTaskTimeType.ModificationTime };
     private PaginatedListDto<MessageTaskDto> _entities = new();
     private List<ChannelDto> _channelItems = new();
@@ -32,7 +33,7 @@ public partial class MessageTaskListModal : AdminCompontentBase
             new() { Text = T($"{_prefix}{nameof(MessageTaskDto.SendTime)}"), Value = nameof(MessageTaskDto.SendTime), Sortable = false },
             new() { Text = T($"ModificationTime"), Value = nameof(MessageTaskDto.ModificationTime), Sortable = true },
             new() { Text = T($"IsEnabled"), Value = nameof(MessageTaskDto.IsEnabled), Sortable = false },
-            new() { Text = T("Action"), Value = "Action", Sortable = false },
+            new() { Text = T("Action"), Value = "Action", Sortable = false, Align = "left" },
         };
     }
 
@@ -121,7 +122,7 @@ public partial class MessageTaskListModal : AdminCompontentBase
 
     private async Task HandleEditAsync(MessageTaskDto model)
     {
-        if (model.EntityType== MessageEntityType.Ordinary)
+        if (model.EntityType == MessageEntityType.Ordinary)
         {
             await _ordinaryEditModal.OpenModalAsync(model);
         }

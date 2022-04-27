@@ -19,7 +19,7 @@ public partial class TemplateMessageCreateModal : AdminCompontentBase
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        var input = new GetMessageTemplateInput();
+        var input = new GetMessageTemplateInput(999);
         _templateItems = (await MessageTemplateService.GetListAsync(input)).Result;
     }
 
@@ -38,9 +38,9 @@ public partial class TemplateMessageCreateModal : AdminCompontentBase
         ResetForm();
     }
 
-    private async Task HandleOkAsync(bool IsEnabled)
+    private async Task HandleOkAsync(bool isDraft)
     {
-        _model.IsEnabled = IsEnabled;
+        _model.IsDraft = isDraft;
         if (!await _form.ValidateAsync())
         {
             return;

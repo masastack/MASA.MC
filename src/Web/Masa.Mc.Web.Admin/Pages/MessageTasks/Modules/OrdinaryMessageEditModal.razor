@@ -102,16 +102,16 @@
                     }
                     <div class="mt-4">@T("DisplayName.MessageTaskSendingRule")</div>
                     <MInput @bind-Value="_model.SendingRules" />
-                    <MessageSendingRules Class="mt-2" @bind-Value="_model.SendingRules" />
+                    <MessageSendingRules Class="mt-2" @bind-Value="_model.SendingRules" @bind-SendTime="_model.SendTime" />
                 </MCol>
             </MRow>
             <MCardActions Class="d-flex align-center mt-6">
-                <MButton Class="mr-6" Text Color="error">@T("Delete")</MButton>
+                <MButton Class="mr-6" Text Color="error" OnClick="HandleDelAsync">@T("Delete")</MButton>
                 <MSpacer></MSpacer>
-                <MButton Rounded Outlined Color="indigo" Class="ml-6 medium-button px-6" OnClick="async() => await HandleOkAsync(false)">
+                <MButton Rounded Outlined Color="indigo" Class="ml-6 medium-button px-6" OnClick="async() => await HandleOkAsync(true)">
                     <span>@T("Save")</span>
                 </MButton>
-                <MButton Color="rounded-pill primary" Class="small-button" OnClick="async() => await HandleOkAsync(true)">@T("SaveSend")</MButton>
+                <MButton Color="rounded-pill primary" Class="small-button" OnClick="async() => await HandleOkAsync(false)">@T("SaveSend")</MButton>
             </MCardActions>
         </MForm>
     </SheetDialog>

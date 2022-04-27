@@ -12,6 +12,8 @@ public class MessageTask : AuditAggregateRoot<Guid, Guid>
 
     public Guid EntityId { get; protected set; }
 
+    public bool IsDraft { get; protected set; }
+
     public bool IsEnabled { get; protected set; }
 
     public ReceiverType ReceiverType { get; protected set; }
@@ -28,21 +30,14 @@ public class MessageTask : AuditAggregateRoot<Guid, Guid>
 
     public ExtraPropertyDictionary Variables { get; protected set; } = new();
 
-    public MessageTask(string displayName, Guid channelId, MessageEntityType entityType, Guid entityId, bool isEnabled, string sign, ReceiverType receiverType, ExtraPropertyDictionary receivers, ExtraPropertyDictionary sendingRules)
+    public MessageTask(string displayName, Guid channelId, MessageEntityType entityType, Guid entityId, bool isDraft, string sign, ReceiverType receiverType, ExtraPropertyDictionary receivers, ExtraPropertyDictionary sendingRules)
     {
         DisplayName = displayName;
         ChannelId = channelId;
         EntityType = entityType;
         EntityId = entityId;
         Sign = sign;
-        if (isEnabled)
-        {
-            SetEnabled();
-        }
-        else
-        {
-            SetDisable();
-        }
+        SetDraft(isDraft);
         SetReceivers(receiverType, receivers);
         SendingRules = sendingRules ?? new();
         Historys = new Collection<MessageTaskHistory>();
@@ -58,10 +53,10 @@ public class MessageTask : AuditAggregateRoot<Guid, Guid>
         IsEnabled = false;
     }
 
-    public virtual void AddHistory(ReceiverType receiverType, ExtraPropertyDictionary receivers, ExtraPropertyDictionary sendingRules)
+    public virtual void AddHistory(ReceiverType receiverType, ExtraPropertyDictionary receivers, ExtraPropertyDictionary sendingRules, DateTime? sendTime, string sign, ExtraPropertyDictionary variables)
     {
-        Historys.Add(new MessageTaskHistory(Id, receiverType, receivers, sendingRules));
-        SendTime = DateTime.UtcNow;
+        Historys.Add(new MessageTaskHistory(Id, receiverType, receivers, sendingRules, sendTime, sign, variables));
+        //SendTime = DateTime.UtcNow;
     }
 
     public virtual void SetReceivers(ReceiverType receiverType, ExtraPropertyDictionary receivers)
@@ -78,5 +73,23 @@ public class MessageTask : AuditAggregateRoot<Guid, Guid>
         EntityType = entityType;
         EntityId = entityId;
         DisplayName = displayName;
+    }
+
+    public virtual void SetDraft(bool isDraft)
+    {
+        IsDraft = isDraft;
+        if (isDraft)
+        {
+            SetDisable();
+        }
+        else
+        {
+            SetEnabled();
+        }
+    }
+
+    public virtual void SetSendTime()
+    {
+        if (SendTime == null) SendTime = DateTime.UtcNow;
     }
 }

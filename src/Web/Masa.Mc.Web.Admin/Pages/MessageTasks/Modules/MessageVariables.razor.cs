@@ -8,6 +8,10 @@ public partial class MessageVariables : AdminCompontentBase
     [Parameter]
     public EventCallback<ExtraPropertyDictionary> ValueChanged { get; set; }
 
+    [Parameter]
+    public bool ReadOnly { get; set; }
+
+
     private List<ItemDto> _items = new();
 
     protected override void OnParametersSet()

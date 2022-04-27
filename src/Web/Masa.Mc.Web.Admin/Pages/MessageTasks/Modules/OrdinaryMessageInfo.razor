@@ -1,0 +1,59 @@
+﻿@inherits AdminCompontentBase
+<MRow>
+    <MCol>
+        <MTextField Value="@T(MessageTask.Channel.Type.ToString())"
+                    Label="@T("DisplayName.ChannelType")"
+                    Dense
+                    Outlined
+                    Disabled
+                    HideDetails="@("auto")">
+        </MTextField>
+    </MCol>
+</MRow>
+<MRow>
+    <MCol>
+        <MTextField @bind-Value="MessageTask.Channel.DisplayName"
+                    Label="@T("DisplayName.Channel")"
+                    Dense
+                    Outlined
+                    Disabled
+                    HideDetails="@("auto")">
+        </MTextField>
+    </MCol>
+</MRow>
+@if (MessageTask.Channel.Type != ChannelType.Sms)
+{
+    <MRow>
+        <MCol>
+            <MTextField @bind-Value="MessageInfo.Title"
+                    Label="@T("DisplayName.MessageTemplateTitle")"
+                    Dense
+                    Outlined
+                    Disabled
+                    HideDetails="@("auto")">
+            </MTextField>
+        </MCol>
+    </MRow>
+}
+<MRow>
+    <MCol>
+        <MEditor @bind-Value="MessageInfo.Content"
+                 ReadOnly
+                 ContentStyle="height:200px">
+        </MEditor>
+    </MCol>
+</MRow>
+@if (MessageTask.Channel.Type == ChannelType.WebsiteMessage)
+{
+    <MRow>
+        <MCol>
+            <MTextField @bind-Value="MessageInfo.JumpUrl"
+                    Label="@T("DisplayName.MessageTemplateJumpUrl")"
+                    Dense
+                    Outlined
+                    Disabled
+                    HideDetails="@("auto")">
+            </MTextField>
+        </MCol>
+    </MRow>
+}

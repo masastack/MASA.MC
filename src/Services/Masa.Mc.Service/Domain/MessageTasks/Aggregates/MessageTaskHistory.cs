@@ -18,13 +18,20 @@ public class MessageTaskHistory : AuditEntity<Guid, Guid>
 
     public DateTime? WithdrawTime { get; protected set; }
 
-    protected internal MessageTaskHistory(Guid messageTaskId, ReceiverType receiverType, ExtraPropertyDictionary receivers, ExtraPropertyDictionary sendingRules)
+    public string Sign { get; protected set; } = string.Empty;
+
+    public ExtraPropertyDictionary Variables { get; protected set; } = new();
+
+    protected internal MessageTaskHistory(Guid messageTaskId, ReceiverType receiverType, ExtraPropertyDictionary receivers, ExtraPropertyDictionary sendingRules, DateTime? sendTime, string sign, ExtraPropertyDictionary variables)
     {
         MessageTaskId = messageTaskId;
         ReceiverType = receiverType;
         Receivers = receivers;
         SendingRules = sendingRules;
+        SendTime = sendTime;
         Status = MessageTaskHistoryStatus.WaitSend;
+        Sign = sign;
+        Variables = variables;
     }
 
     public void SetSend()

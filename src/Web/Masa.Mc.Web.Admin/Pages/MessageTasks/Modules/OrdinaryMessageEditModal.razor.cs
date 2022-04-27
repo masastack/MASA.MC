@@ -52,9 +52,9 @@ public partial class OrdinaryMessageEditModal : AdminCompontentBase
         ResetForm();
     }
 
-    private async Task HandleOkAsync(bool IsEnabled)
+    private async Task HandleOkAsync(bool isDraft)
     {
-        _model.IsEnabled = IsEnabled;
+        _model.IsDraft = isDraft;
         if (!await _form.ValidateAsync())
         {
             return;
@@ -63,6 +63,25 @@ public partial class OrdinaryMessageEditModal : AdminCompontentBase
         await MessageTaskService.UpdateAsync(_entityId, _model);
         Loading = false;
         await SuccessMessageAsync(T("MessageTaskCreateMessage"));
+        _visible = false;
+        ResetForm();
+        if (OnOk.HasDelegate)
+        {
+            await OnOk.InvokeAsync();
+        }
+    }
+
+    private async Task HandleDelAsync()
+    {
+        await ConfirmAsync(T("DeletionConfirmationMessage"), DeleteAsync);
+    }
+
+    private async Task DeleteAsync()
+    {
+        Loading = true;
+        await MessageTaskService.DeleteAsync(_entityId);
+        Loading = false;
+        await SuccessMessageAsync(T("MessageTaskDeleteMessage"));
         _visible = false;
         ResetForm();
         if (OnOk.HasDelegate)

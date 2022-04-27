@@ -111,7 +111,7 @@
                         @switch (context.Header.Value)
                         {
                             case ("Draft"):
-                                if (context.Item.SendTime == null)
+                                if (context.Item.IsDraft)
                                 {
                                     <MChip Ripple="false">
                                         <span>@T("Draft")</span>
@@ -136,12 +136,12 @@
                                 </MChip>
                                 break;
                             case "Action":
-                                if (context.Item.SendTime == null)
+                                if (context.Item.IsDraft)
                                 {
                                     <MIcon Small Color="neutral-lighten-2" OnClick="async()=>await HandleEditAsync(context.Item)">mdi-pencil</MIcon>
                                 }
-                                <MIcon Small Color="neutral-lighten-2">mdi-fan</MIcon>
-                                <MIcon Small Color="neutral-lighten-2">mdi-arrow-right-drop-circle</MIcon>
+                                <MIcon Class="ml-7" Small Color="neutral-lighten-2">mdi-fan</MIcon>
+                                <MIcon Class="ml-7" Small Color="neutral-lighten-2" OnClick="async()=>await _sendModal.OpenModalAsync(context.Item)">mdi-arrow-right-drop-circle</MIcon>
                                 break;
                             default:
                                 <span class="text-body3">@context.Value</span>
@@ -158,3 +158,4 @@
 </div>
 <TemplateMessageEditModal @ref="_templateEditModal" OnOk="HandleOk" />
 <OrdinaryMessageEditModal @ref="_ordinaryEditModal" OnOk="HandleOk" />
+<MessageTaskSendModal @ref="_sendModal" OnOk="HandleOk" />

@@ -1,0 +1,58 @@
+﻿@inherits AdminCompontentBase
+<div @ref="Ref">
+    <SheetDialog Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.SendMessageTask")" ContentStyle="padding-right:228px;padding-left:228px;padding-top:80px;">
+        <MForm Class="flex-height-auto overflow-y" Model="_model" @ref="_form" EnableValidation>
+            <MRow>
+                <MCol>
+                    @if (_info.EntityType==MessageEntityType.Ordinary)
+                    {
+                        <OrdinaryMessageInfo MessageInfoId="_info.EntityId" MessageTask="_info"></OrdinaryMessageInfo>
+                    }
+                    @if (_info.EntityType==MessageEntityType.Template)
+                    {
+                        <TemplateMessageInfo MessageTemplateId="_info.EntityId" MessageTask="_info"></TemplateMessageInfo>
+                        <MessageVariables @bind-Value="_model.Variables"></MessageVariables>
+                    }
+                </MCol>
+                <MCol Class="ml-2">
+                    <div>@T("DisplayName.MessageTaskReceiver")</div>
+                    <MRadioGroup @bind-Value="_model.ReceiverType"
+                                 Row>
+                        <MRadio Label="@T("DisplayName.ReceiverType.Assign")"
+                                Value="@ReceiverType.Assign">
+                        </MRadio>
+                        <MRadio Label="@T("DisplayName.ReceiverType.Broadcast")"
+                                Disabled="_info.Channel?.Type!=ChannelType.WebsiteMessage"
+                                Value="@ReceiverType.Broadcast">
+                        </MRadio>
+                    </MRadioGroup>
+                    @if (_model.ReceiverType == ReceiverType.Assign)
+                    {
+                        <MInput @bind-Value="_model.Receivers.Items" />
+                        <MessageReceivers Class="mt-2" @bind-Value="_model.Receivers.Items" />
+                    }
+                    <div class="mt-4">@T("DisplayName.MessageTaskSendingRule")</div>
+                    <MInput @bind-Value="_model.SendingRules" />
+                    @if (_info.Channel != null && _info.Channel.Type == ChannelType.Sms)
+                    {
+                        <MRow>
+                            <MCol>
+                                <MTextField @bind-Value="_model.Sign"
+                                        Label="@T("DisplayName.MessageTemplateSign")"
+                                        Dense
+                                        Outlined
+                                        HideDetails="@("auto")">
+                                </MTextField>
+                            </MCol>
+                        </MRow>
+                    }
+                    <MessageSendingRules Class="mt-2" @bind-Value="_model.SendingRules" @bind-SendTime="_model.SendTime" />
+                </MCol>
+            </MRow>
+            <MCardActions Class="d-flex align-center mt-6">
+                <MSpacer></MSpacer>
+                <MButton Color="rounded-pill primary" Class="small-button" OnClick="async() => await HandleOkAsync()">@T("Send")</MButton>
+            </MCardActions>
+        </MForm>
+    </SheetDialog>
+</div>

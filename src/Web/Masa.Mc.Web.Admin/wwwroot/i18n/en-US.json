@@ -103,6 +103,7 @@
   "Permission.SendTemplateMessage": "Send template message",
   "Permission.EditTemplateMessage": "Edit template message",
   "Permission.EditOrdinaryMessage": "Edit ordinary message",
+  "Permission.ExecuteMessageTask": "Execute message task",
   "DisplayName.MessageEntityType.Ordinary": "Ordinary",
   "DisplayName.MessageEntityType.Template": "Template",
   "DisplayName.MessageTaskDisplayName": "Message title",

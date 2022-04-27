@@ -34,8 +34,8 @@ public class MessageTaskService : ServiceBase
         await DeleteAsync($"{id}");
     }
 
-    public async Task ExecuteAsync(ExecuteMessageTaskInput input)
+    public async Task SendAsync(SendMessageTaskInput input)
     {
-        await PostAsync("Execute", input);
+        await PostAsync("Send", input);
     }
 }

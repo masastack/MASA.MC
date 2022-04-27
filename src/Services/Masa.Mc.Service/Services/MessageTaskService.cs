@@ -9,7 +9,7 @@ public class MessageTaskService : ServiceBase
         MapDelete(DeleteAsync, "{id}");
         MapGet(GetAsync, "{id}");
         MapGet(GetListAsync, string.Empty);
-        MapPost(ExecuteAsync);
+        MapPost(SendAsync);
     }
 
     public async Task<PaginatedListDto<MessageTaskDto>> GetListAsync(IEventBus eventbus, [FromQuery] Guid? channelId, [FromQuery] MessageEntityType? entityType, [FromQuery] bool? isEnabled, [FromQuery] MessageTaskTimeType? timeType, [FromQuery] DateTime? startTime, [FromQuery] DateTime? endTime, [FromQuery] string filter = "", [FromQuery] string sorting = "", [FromQuery] int page = 1, [FromQuery] int pagesize = 20)
@@ -45,9 +45,9 @@ public class MessageTaskService : ServiceBase
         await eventBus.PublishAsync(command);
     }
 
-    public async Task ExecuteAsync(IEventBus eventBus, ExecuteMessageTaskInput input)
+    public async Task SendAsync(IEventBus eventBus, SendMessageTaskInput input)
     {
-        var command = new ExecuteMessageTaskCommand(input);
+        var command = new SendMessageTaskCommand(input);
         await eventBus.PublishAsync(command);
     }
 }

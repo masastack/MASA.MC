@@ -12,6 +12,8 @@ public class MessageTaskDto : AuditEntityDto<Guid, Guid>
 
     public Guid EntityId { get; set; }
 
+    public bool IsDraft { get; set; }
+
     public bool IsEnabled { get; set; }
 
     public ReceiverType ReceiverType { get; set; }

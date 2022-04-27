@@ -10,6 +10,8 @@ public class MessageTaskCreateUpdateDto
 
     public Guid EntityId { get; set; }
 
+    public bool IsDraft { get; set; }
+
     public bool IsEnabled { get; set; }
 
     public ReceiverType ReceiverType { get; set; }
@@ -24,5 +26,5 @@ public class MessageTaskCreateUpdateDto
 
     public MessageInfoCreateUpdateDto MessageInfo { get; set; } = new();
 
-    public ExtraPropertyDictionary Variables { get; set; } = new(); 
+    public ExtraPropertyDictionary Variables { get; set; } = new();
 }
