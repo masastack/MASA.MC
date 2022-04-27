@@ -10,6 +10,9 @@
             config.ForType<MessageTaskCreateUpdateDto, MessageTask>().MapToConstructor(true)
                 .Map(dest => dest.Receivers, src => ExtensionPropertyHelper.ObjMapToExtraProperty(src.Receivers))
                 .Map(dest => dest.SendingRules, src => ExtensionPropertyHelper.ObjMapToExtraProperty(src.SendingRules));
+            config.ForType<MessageTaskHistory, MessageTaskHistoryDto>().MapToConstructor(true)
+                .Map(dest => dest.Receivers, src => ExtraPropertyMapObj(src.Receivers))
+                .Map(dest => dest.SendingRules, src => ExtensionPropertyHelper.ExtraPropertyMapToObj<SendingRuleDto>(src.SendingRules));
         }
         private ReceiverDto ExtraPropertyMapObj(ExtraPropertyDictionary dic)
         {

@@ -29,4 +29,6 @@ public class MessageTaskDto : AuditEntityDto<Guid, Guid>
     public SendingRuleDto SendingRules { get; set; } = new();
 
     public ExtraPropertyDictionary Variables { get; set; } = new();
+
+    public List<MessageTaskHistoryDto> Historys { get; set; } = new();
 }

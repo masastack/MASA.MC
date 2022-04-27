@@ -164,6 +164,7 @@
   "Permission.EditTemplateMessage": "编辑模板消息",
   "Permission.EditOrdinaryMessage": "编辑普通消息",
   "Permission.SendMessageTask": "发送任务",
+  "Permission.ViewMessageTask": "查看任务",
   "DisplayName.MessageEntityType": "普通消息",
   "DisplayName.MessageEntityType.Ordinary": "普通消息",
   "DisplayName.MessageEntityType.Template": "模板消息",
@@ -172,6 +173,7 @@
   "DisplayName.MessageTaskSendingRule": "发送规则",
   "DisplayName.MessageTaskEntityType": "消息类型",
   "DisplayName.MessageTaskSendTime": "发送时间",
+  "DisplayName.ReceiverType": "收件人类型",
   "DisplayName.ReceiverType.Assign": "指定接收人",
   "DisplayName.ReceiverType.Broadcast": "广播",
   "MessageTaskCreateMessage": "创建消息任务成功.",
@@ -187,5 +189,11 @@
   "DisplayName.SendingRule.Timeout": "超时时间",
   "DisplayName.SendingRule.RetryInterval": "重试间隔",
   "DisplayName.SendingRule.RetryCount": "重试次数",
-  "DisplayName.SendingRule.IsTiming": "定时发送"
+  "DisplayName.SendingRule.IsTiming": "定时发送",
+  "DisplayName.MessageTaskHistory": "任务历史",
+  "DisplayName.MessageTaskHistoryStatus": "发送历史状态",
+  "DisplayName.MessageTaskHistoryStatus.WaitSend": "待发送",
+  "DisplayName.MessageTaskHistoryStatus.Sending": "发送中",
+  "DisplayName.MessageTaskHistoryStatus.Completed": "发送完成",
+  "DisplayName.MessageTaskHistoryStatus.Withdrawn": "已撤回"
 }

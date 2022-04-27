@@ -1,0 +1,129 @@
+﻿@inherits AdminCompontentBase
+<div @ref="Ref">
+    <SheetDialog Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.ViewMessageTask")" ContentStyle="padding-right:80px;padding-left:80px;padding-top:40px;">
+        <MContainer Class="flex-height-auto overflow-y">
+            <MRow>
+                <MCol Cols="4">
+                    <div>@T("DisplayName.MessageTaskHistory")</div>
+                    <MRow Class="mt-2">
+                        <MCol Cols="7">
+                            <MMenu @bind-Value="_datePickersShow"
+                                   CloseOnContentClick="false"
+                                   Transition="scale-transition"
+                                   OffsetY
+                                   MinWidth="@("auto")">
+                                <ActivatorContent>
+                                    <MTextField Value="DateRangeText"
+                                                Label="@T("DateRange")"
+                                                Readonly
+                                                Dense
+                                                Outlined
+                                                HideDetails="@("auto")"
+                                                PrependInnerIcon="mdi-calendar"
+                                                @attributes="context.Attrs"></MTextField>
+                                </ActivatorContent>
+                                <ChildContent>
+                                    <MDatePicker @bind-Value="_dates"
+                                                 Range
+                                                 NoTitle
+                                                 Scrollable>
+                                        <MSpacer></MSpacer>
+                                        <MButton Text
+                                                 Color="primary"
+                                                 OnClick="HandleDatePickersCancel">
+                                            Cancel
+                                        </MButton>
+                                        <MButton Text
+                                                 Color="primary"
+                                                 OnClick="HandleDatePickersAsync">
+                                            OK
+                                        </MButton>
+                                    </MDatePicker>
+                                </ChildContent>
+                            </MMenu>
+                        </MCol>
+                        <MCol Cols="5">
+                            <MSelect @bind-Value="@_queryParam.Status"
+                                     Items="@(GetEnumList<MessageTaskHistoryStatus>())"
+                                     Label="@T("DisplayName.MessageTaskHistoryStatus")"
+                                     ItemText="@(item => T($"DisplayName.MessageTaskHistoryStatus.{item.ToString()}"))"
+                                     ItemValue="item => item"
+                                     Dense
+                                     Outlined
+                                     Clearable
+                                     HideDetails="@("auto")"
+                                     TItem="MessageTaskHistoryStatus"
+                                     TItemValue="MessageTaskHistoryStatus"
+                                     TValue="MessageTaskHistoryStatus?"
+                                     OnClearClick="Refresh"
+                                     OnSelectedItemUpdate="Refresh">
+                            </MSelect>
+                        </MCol>
+                    </MRow>
+                    <MSimpleTable Class="mt-2">
+                        <tbody>
+                            @foreach (var item in _info.Historys)
+                            {
+                                <tr @key="item.Id" @onclick="()=>HandleItemSelect(item)">
+                                    <td>
+                                        <MChip Ripple="false">
+                                            <span>@T($"DisplayName.MessageTaskHistoryStatus.{((MessageTaskHistoryStatus)item.Status).ToString()}")</span>
+                                        </MChip>
+                                    </td>
+                                    <td>
+                                        <span class="text-body3">@T("DisplayName.MessageTaskSendTime"):@item.SendTime?.ToString(T("$DateTimeFormat"))</span>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </MSimpleTable>
+
+                </MCol>
+                <MCol Cols="8">
+                    <div class="mb-4">@T("DisplayName.MessageInfoContent")</div>
+                    @if (_info.EntityType == MessageEntityType.Ordinary)
+                    {
+                        <OrdinaryMessageInfo MessageInfoId="_info.EntityId" MessageTask="_info"></OrdinaryMessageInfo>
+                    }
+                    @if (_info.EntityType == MessageEntityType.Template)
+                    {
+                        <TemplateMessageInfo MessageTemplateId="_info.EntityId" MessageTask="_info"></TemplateMessageInfo>
+                        <MessageVariables @bind-Value="_historyInfo.Variables"></MessageVariables>
+                    }
+                    <div class="mt-4">@T("DisplayName.MessageTaskReceiver")</div>
+                    <MSelect @bind-Value="@_historyInfo.ReceiverType"
+                             Items="@(GetEnumList<ReceiverType>())"
+                             Label="@T("DisplayName.ReceiverType")"
+                             ItemText="@(item => T($"DisplayName.ReceiverType.{item.ToString()}"))"
+                             ItemValue="item => item"
+                             Dense
+                             Outlined
+                             Disabled
+                             HideDetails="@("auto")">
+                    </MSelect>
+                    <div class="mt-4">@T("DisplayName.MessageTaskSendingRule")</div>
+
+                    @if (!string.IsNullOrEmpty(_historyInfo.Sign))
+                    {
+                        <MRow>
+                            <MCol>
+                                <MTextField @bind-Value="_historyInfo.Sign"
+                                        Label="@T("DisplayName.MessageTemplateSign")"
+                                        Dense
+                                        Outlined
+                                        Disabled
+                                        HideDetails="@("auto")">
+                                </MTextField>
+                            </MCol>
+                        </MRow>
+                    }
+                    <MessageSendingRules ReadOnly Class="mt-2" @bind-Value="_historyInfo.SendingRules" @bind-SendTime="_historyInfo.SendTime" />
+                </MCol>
+            </MRow>
+            <MCardActions Class="d-flex align-center mb-6">
+                <MButton Class="mr-6" Text Color="error" OnClick="HandleDelAsync">@T("Delete")</MButton>
+                <MSpacer></MSpacer>
+            </MCardActions>
+        </MContainer>
+    </SheetDialog>
+</div>

@@ -3,6 +3,7 @@
     <MCol>
         <MTextField @bind-Value="Value.Timeout"
                     Outlined
+                    Disabled="ReadOnly"
                     Height="18"
                     Type="number">
             <PrependContent>
@@ -16,6 +17,7 @@
     <MCol>
         <MTextField @bind-Value="Value.RetryInterval"
                     Outlined
+                    Disabled="ReadOnly"
                     Type="number">
             <PrependContent>
                 <span style="width:70px">@T("DisplayName.SendingRule.RetryInterval")</span>
@@ -28,6 +30,7 @@
     <MCol>
         <MTextField @bind-Value="Value.RetryCount"
                     Outlined
+                    Disabled="ReadOnly"
                     Type="number">
             <PrependContent>
                 <span style="width:70px">@T("DisplayName.SendingRule.RetryCount")</span>
@@ -39,16 +42,18 @@
     </MCol>
 </MRow>
 <MRow Class="mx-1" Justify="JustifyTypes.Start">
-    <MCheckbox @bind-Value="Value.IsSendingInterval"></MCheckbox>
+    <MCheckbox @bind-Value="Value.IsSendingInterval" Disabled="ReadOnly"></MCheckbox>
     <span class="pt-4">@T("Each")</span>
     <MTextField @bind-Value="Value.SendingInterval"
                 Outlined
+                Disabled="ReadOnly"
                 Class="mx-1"
                 Type="number">
     </MTextField>
     <span class="pt-4">@T("Second")，@T("Send")</span>
     <MTextField @bind-Value="Value.SendingCount"
                 Outlined
+                Disabled="ReadOnly"
                 Class="mx-1"
                 Type="number">
     </MTextField>
@@ -68,6 +73,7 @@
                         PrependInnerIcon="mdi-calendar"
                         Dense
                         Outlined
+                        Disabled="ReadOnly"
                         Class="mx-1"
                         HideDetails="@("auto")"
                         @attributes="context.Attrs"></MTextField>
@@ -89,6 +95,7 @@
                         PrependInnerIcon="mdi-clock-time-four-outline"
                         Dense
                         Outlined
+                        Disabled="ReadOnly"
                         Class="mx-1"
                         HideDetails="@("auto")"
                         @attributes="context.Attrs"></MTextField>
@@ -97,7 +104,7 @@
             @if (_timePickersShow)
             {
                 <MTimePicker @bind-Value="sendingTime"
-                          OnChange="HandleTimePickerChangeAsync"
+                         OnChange="HandleTimePickerChangeAsync"
                          FullWidth></MTimePicker>
             }
         </ChildContent>

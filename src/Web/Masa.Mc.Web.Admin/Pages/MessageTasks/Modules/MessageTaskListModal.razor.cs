@@ -5,9 +5,10 @@ public partial class MessageTaskListModal : AdminCompontentBase
     public List<DataTableHeader<MessageTaskDto>> Headers { get; set; } = new();
 
     private bool _visible;
-    private TemplateMessageEditModal _templateEditModal;
-    private OrdinaryMessageEditModal _ordinaryEditModal;
-    private MessageTaskSendModal _sendModal;
+    private TemplateMessageEditModal _templateEditModal = default!;
+    private OrdinaryMessageEditModal _ordinaryEditModal = default!;
+    private MessageTaskSendModal _sendModal = default!;
+    private MessageTaskDetailModal _detailModal = default!;
     private GetMessageTaskInput _queryParam = new() { TimeType = MessageTaskTimeType.ModificationTime };
     private PaginatedListDto<MessageTaskDto> _entities = new();
     private List<ChannelDto> _channelItems = new();

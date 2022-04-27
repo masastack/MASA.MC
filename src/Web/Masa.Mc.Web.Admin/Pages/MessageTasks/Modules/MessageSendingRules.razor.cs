@@ -8,8 +8,8 @@ public partial class MessageSendingRules : AdminCompontentBase
     [Parameter]
     public DateTime? SendTime { get; set; } = new();
 
-    //[Parameter]
-    //public EventCallback<SendingRuleDto> ValueChanged { get; set; }
+    [Parameter]
+    public bool ReadOnly { get; set; }
 
     [Parameter]
     public EventCallback<DateTime?> SendTimeChanged { get; set; }

@@ -103,7 +103,8 @@
   "Permission.SendTemplateMessage": "Send template message",
   "Permission.EditTemplateMessage": "Edit template message",
   "Permission.EditOrdinaryMessage": "Edit ordinary message",
-  "Permission.ExecuteMessageTask": "Execute message task",
+  "Permission.SendMessageTask": "Execute message task",
+  "Permission.ViewMessageTask": "View message task",
   "DisplayName.MessageEntityType.Ordinary": "Ordinary",
   "DisplayName.MessageEntityType.Template": "Template",
   "DisplayName.MessageTaskDisplayName": "Message title",
@@ -111,6 +112,7 @@
   "DisplayName.MessageTaskSendTime": "Send time",
   "DisplayName.MessageTaskReceiver": "Receiver",
   "DisplayName.MessageTaskSendingRule": "SendingRule",
+  "DisplayName.ReceiverType": "Receiver type",
   "DisplayName.ReceiverType.Assign": "Assign",
   "DisplayName.ReceiverType.Broadcast": "Broadcast",
   "MessageTaskCreateMessage": "Create message task success.",
@@ -126,5 +128,11 @@
   "DisplayName.SendingRule.Timeout": "Timeout",
   "DisplayName.SendingRule.RetryInterval": "RetryInterval",
   "DisplayName.SendingRule.RetryCount": "RetryCount",
-  "DisplayName.SendingRule.IsTiming": "IsTiming"
+  "DisplayName.SendingRule.IsTiming": "IsTiming",
+  "DisplayName.MessageTaskHistory": "Message task history",
+  "DisplayName.MessageTaskHistoryStatus": "Message task history status",
+  "DisplayName.MessageTaskHistoryStatus.WaitSend": "WaitSend",
+  "DisplayName.MessageTaskHistoryStatus.Sending": "Sending",
+  "DisplayName.MessageTaskHistoryStatus.Completed": "Completed",
+  "DisplayName.MessageTaskHistoryStatus.Withdrawn": "Withdrawn"
 }
