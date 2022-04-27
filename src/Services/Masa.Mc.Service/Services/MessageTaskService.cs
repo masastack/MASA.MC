@@ -29,14 +29,37 @@ public class MessageTaskService : ServiceBase
 
     public async Task CreateAsync(IEventBus eventBus, [FromBody] MessageTaskCreateUpdateDto input)
     {
-        var command = new CreateMessageTaskCommand(input);
-        await eventBus.PublishAsync(command);
+        switch (input.EntityType)
+        {
+            case MessageEntityType.Ordinary:
+                var ordinaryCommand = new CreateOrdinaryMessageTaskCommand(input);
+                await eventBus.PublishAsync(ordinaryCommand);
+                break;
+            case MessageEntityType.Template:
+                var templateCommand = new CreateTemplateMessageTaskCommand(input);
+                await eventBus.PublishAsync(templateCommand);
+                break;
+            default:
+                throw new UserFriendlyException("unknown message task type");
+        }
+
     }
 
     public async Task UpdateAsync(IEventBus eventBus, Guid id, [FromBody] MessageTaskCreateUpdateDto input)
     {
-        var command = new UpdateMessageTaskCommand(id, input);
-        await eventBus.PublishAsync(command);
+        switch (input.EntityType)
+        {
+            case MessageEntityType.Ordinary:
+                var ordinaryCommand = new UpdateOrdinaryMessageTaskCommand(id, input);
+                await eventBus.PublishAsync(ordinaryCommand);
+                break;
+            case MessageEntityType.Template:
+                var templateCommand = new UpdateTemplateMessageTaskCommand(id, input);
+                await eventBus.PublishAsync(templateCommand);
+                break;
+            default:
+                throw new UserFriendlyException("unknown message task type");
+        }
     }
 
     public async Task DeleteAsync(IEventBus eventBus, Guid id)
