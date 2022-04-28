@@ -134,5 +134,6 @@
   "DisplayName.MessageTaskHistoryStatus.WaitSend": "WaitSend",
   "DisplayName.MessageTaskHistoryStatus.Sending": "Sending",
   "DisplayName.MessageTaskHistoryStatus.Completed": "Completed",
-  "DisplayName.MessageTaskHistoryStatus.Withdrawn": "Withdrawn"
+  "DisplayName.MessageTaskHistoryStatus.Withdrawn": "Withdrawn",
+  "Permission.TestMessageTask": "Test message task"
 }

@@ -50,7 +50,7 @@ public partial class MessageTaskSendModal : AdminCompontentBase
         Loading = true;
         await MessageTaskService.SendAsync(_model);
         Loading = false;
-        await SuccessMessageAsync(T("MessageTaskEditMessage"));
+        await SuccessMessageAsync(T("MessageTaskSendMessage"));
         _visible = false;
         ResetForm();
         if (OnOk.HasDelegate)

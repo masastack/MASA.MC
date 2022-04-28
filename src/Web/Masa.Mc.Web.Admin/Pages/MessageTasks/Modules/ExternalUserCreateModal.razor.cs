@@ -27,7 +27,7 @@ public partial class ExternalUserCreateModal : AdminCompontentBase
     {
         var id = Guid.NewGuid();
         _model.Id = id;
-        _model.DataId = id.ToString();
+        _model.DataId = string.Empty;
         _model.Type = ReceiverGroupItemType.User;
         await SuccessMessageAsync(T("ExternalMemberAddMessage"));
         _visible = false;

@@ -10,6 +10,7 @@ public class MessageTaskService : ServiceBase
         MapGet(GetAsync, "{id}");
         MapGet(GetListAsync, string.Empty);
         MapPost(SendAsync);
+        MapPost(SendTestAsync);
         MapPost(WithdrawnHistoryAsync);
         MapPost(EnabledAsync);
         MapPost(DisableAsync);
@@ -74,6 +75,12 @@ public class MessageTaskService : ServiceBase
     public async Task SendAsync(IEventBus eventBus, SendMessageTaskInput input)
     {
         var command = new SendMessageTaskCommand(input);
+        await eventBus.PublishAsync(command);
+    }
+
+    public async Task SendTestAsync(IEventBus eventBus, SendTestMessageTaskInput input)
+    {
+        var command = new SendTestMessageTaskCommand(input);
         await eventBus.PublishAsync(command);
     }
 

@@ -102,7 +102,7 @@
                     </MRadioGroup>
                     @if (_model.ReceiverType == ReceiverType.Assign)
                     {
-                        <MInput @bind-Value="_model.Receivers.Items" />
+                        <MInput @bind-Value="_model.Receivers" />
                         <MessageReceivers Class="mt-2" @bind-Value="_model.Receivers.Items" Type="@_messageInfo.Channel?.Type" />
                     }
                     <div class="mt-4">@T("DisplayName.MessageTaskSendingRule")</div>

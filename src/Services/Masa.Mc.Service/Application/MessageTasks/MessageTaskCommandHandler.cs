@@ -31,6 +31,20 @@ public class MessageTaskCommandHandler
     }
 
     [EventHandler]
+    public async Task SendTestAsync(SendTestMessageTaskCommand command)
+    {
+        var input = command.input;
+        var entity = await _repository.FindAsync(x => x.Id == input.Id);
+        if (entity == null)
+            throw new UserFriendlyException("messageTask not found");
+        if (entity.Channel.Type == ChannelType.Sms && string.IsNullOrEmpty(entity.Sign))
+            throw new UserFriendlyException("please fill in the signature of the task first");
+        if (entity.Variables.Any(x => string.IsNullOrEmpty(x.Value.ToString())))
+            throw new UserFriendlyException("please fill in the signature template variable of the task first");
+        await _domainService.SendAsync(input.Id, ReceiverType.Assign, ExtensionPropertyHelper.ObjMapToExtraProperty(input.Receivers), new ExtraPropertyDictionary(), DateTime.UtcNow, entity.Sign, entity.Variables);
+    }
+
+    [EventHandler]
     public async Task WithdrawnHistoryAsync(WithdrawnMessageTaskHistoryCommand command)
     {
         var entity = await _repository.FindAsync(x => x.Id == command.Input.MessageTaskId);

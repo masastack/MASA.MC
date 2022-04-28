@@ -180,6 +180,7 @@
   "MessageTaskCreateMessage": "创建消息任务成功.",
   "MessageTaskEditMessage": "编辑消息任务成功.",
   "MessageTaskDeleteMessage": "删除消息任务成功.",
+  "MessageTaskSendMessage": "发送消息任务成功.",
   "DisplayName.MessageTaskList": "消息任务列表",
   "DisplayName.MessageInfoTitle": "消息标题",
   "DisplayName.MessageInfoContent": "消息内容",
@@ -197,5 +198,6 @@
   "DisplayName.MessageTaskHistoryStatus.Sending": "发送中",
   "DisplayName.MessageTaskHistoryStatus.Completed": "发送完成",
   "DisplayName.MessageTaskHistoryStatus.Withdrawn": "已撤回",
-  "MessageTaskHistoryWithdrawnMessage": "撤回消息任务历史成功."
+  "MessageTaskHistoryWithdrawnMessage": "撤回消息任务历史成功.",
+  "Permission.TestMessageTask": "测试消息任务"
 }

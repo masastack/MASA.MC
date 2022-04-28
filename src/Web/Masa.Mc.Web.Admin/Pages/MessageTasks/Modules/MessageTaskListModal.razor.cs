@@ -9,6 +9,7 @@ public partial class MessageTaskListModal : AdminCompontentBase
     private OrdinaryMessageEditModal _ordinaryEditModal = default!;
     private MessageTaskSendModal _sendModal = default!;
     private MessageTaskDetailModal _detailModal = default!;
+    private SendTestMessageModal _sendTestModal = default!;
     private GetMessageTaskInput _queryParam = new() { TimeType = MessageTaskTimeType.ModificationTime };
     private PaginatedListDto<MessageTaskDto> _entities = new();
     private List<ChannelDto> _channelItems = new();

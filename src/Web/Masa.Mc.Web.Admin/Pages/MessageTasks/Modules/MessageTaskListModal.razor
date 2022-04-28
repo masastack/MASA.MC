@@ -144,7 +144,7 @@
                                 {
                                     <MIcon Small Color="neutral-lighten-2" OnClick="async()=>await _detailModal.OpenModalAsync(context.Item)">mdi-eye</MIcon>
                                 }
-                                <MIcon Class="ml-7" Small Color="neutral-lighten-2">mdi-fan</MIcon>
+                                <MIcon Class="ml-7" Small Color="neutral-lighten-2" OnClick="async()=>await _sendTestModal.OpenModalAsync(context.Item.Id,context.Item.Channel?.Type)">mdi-fan</MIcon>
                                 <MIcon Class="ml-7" Small Color="neutral-lighten-2" OnClick="async()=>await _sendModal.OpenModalAsync(context.Item)">mdi-arrow-right-drop-circle</MIcon>
                                 break;
                             default:
@@ -164,3 +164,4 @@
 <OrdinaryMessageEditModal @ref="_ordinaryEditModal" OnOk="HandleOk" />
 <MessageTaskSendModal @ref="_sendModal" OnOk="HandleOk" />
 <MessageTaskDetailModal @ref="_detailModal" OnOk="HandleOk" />
+<SendTestMessageModal @ref="_sendTestModal" OnOk="HandleOk" />

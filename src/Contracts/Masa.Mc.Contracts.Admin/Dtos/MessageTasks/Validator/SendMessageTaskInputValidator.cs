@@ -5,6 +5,6 @@ public class SendMessageTaskInputValidator : AbstractValidator<SendMessageTaskIn
     public SendMessageTaskInputValidator()
     {
         RuleFor(input => input.ReceiverType).IsInEnum();
-        RuleFor(input => input.Receivers.Items).Required().When(x => x.ReceiverType == ReceiverType.Assign);
+        RuleFor(input => input.Receivers).Must(x => x.Items != null && x.Items.Count > 0).When(x => x.ReceiverType == ReceiverType.Assign);
     }
 }

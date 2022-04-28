@@ -1,0 +1,90 @@
+﻿@inherits AdminCompontentBase
+<div @ref="Ref">
+    <PModal @bind-Value="_visible"
+            Persistent
+            Title="@T("Permission.TestMessageTask")"
+            HideCancelAction
+            Width="684"
+            FormModel="_input"
+            OnSave="HandleOkAsync"
+            OnCancel="HandleCancel">
+        <ChildContent>
+            <MAutocomplete @bind-Value="_userIds"
+                           Items="_stateUserItems"
+                           Color="primary"
+                           Class="rounded-2 search"
+                           Style="width:100%"
+                           Flat
+                           Dense
+                           Solo
+                           BackgroundColor="fill-lighten-1"
+                           Label="@T("Description.ReceiverGroup.SelectUser")"
+                           ItemText="r=>r.DisplayName"
+                           ItemValue="r=>r.Id"
+                           TValue="List<Guid>"
+                           TItem="UserViewModel"
+                           TItemValue="Guid"
+                           OnSelectedItemUpdate="HandleUserChange"
+                           Multiple>
+                <PrependInnerContent>
+                    <MIcon Size=16 Class="mr-2 neutral-lighten-1--text">mdi-magnify</MIcon>
+                </PrependInnerContent>
+                <SelectionContent Context="data">
+                    <MChip Close
+                           OnCloseClick="()=>Remove(data.Item)">
+                        <MAvatar Left>
+                            @if (data.Item.Type != ReceiverGroupItemType.User)
+                            {
+                                <MIcon>mdi-account-group</MIcon>
+                            }
+                            else
+                            {
+                                <MImage Src="@data.Item.Avatar"></MImage>
+                            }
+                        </MAvatar>
+                        @data.Item.DisplayName
+                    </MChip>
+                </SelectionContent>
+                <ItemContent Context="data">
+                    @if (data.Item.Type != ReceiverGroupItemType.User)
+                    {
+                        <MListItemAvatar>
+                            <MIcon Large>mdi-account-group</MIcon>
+                        </MListItemAvatar>
+                        <MListItemContent>
+                            <MListItemTitle>
+                                @(data.Item.DisplayName)
+                            </MListItemTitle>
+                            <MListItemSubtitle>
+                                @T(data.Item.Type.ToString())
+                            </MListItemSubtitle>
+                        </MListItemContent>
+                    }
+                    else
+                    {
+                        <MListItemAvatar>
+                            <MImage Src="@data.Item.Avatar"></MImage>
+                        </MListItemAvatar>
+                        <MListItemContent>
+                            <MListItemTitle>
+                                @(data.Item.DisplayName)
+                            </MListItemTitle>
+                            @if (_type == ChannelType.Email)
+                            {
+                                <MListItemSubtitle>@(data.Item.Email)</MListItemSubtitle>
+                            }
+                            else
+                            {
+                                <MListItemSubtitle>@(data.Item.PhoneNumber)</MListItemSubtitle>
+                            }
+                        </MListItemContent>
+                    }
+                </ItemContent>
+            </MAutocomplete>
+            <MInput @bind-Value="_input.Receivers" />
+        </ChildContent>
+        <SaveContent Context="save">
+            <MButton Width=100 Class="rounded-pill" Color="primary" Style="float:right;" OnClick="save.Click">@(T("Send"))</MButton>
+        </SaveContent>
+    </PModal>
+</div>
