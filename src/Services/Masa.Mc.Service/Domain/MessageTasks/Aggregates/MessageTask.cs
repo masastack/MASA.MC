@@ -43,6 +43,17 @@ public class MessageTask : AuditAggregateRoot<Guid, Guid>
         Historys = new Collection<MessageTaskHistory>();
     }
 
+    public virtual void SendTask(ReceiverType receiverType, ExtraPropertyDictionary receivers, ExtraPropertyDictionary sendingRules, DateTime? sendTime, string sign, ExtraPropertyDictionary variables)
+    {
+        SetDraft(false);
+        SetReceivers(receiverType, receivers);
+        SendingRules = sendingRules ?? new();
+        SendTime = sendTime ?? DateTime.UtcNow;
+        Sign = sign;
+        Variables = variables;
+        AddHistory(ReceiverType, Receivers, SendingRules, SendTime, Sign, Variables);
+    }
+
     public virtual void SetEnabled()
     {
         IsEnabled = true;
@@ -56,7 +67,6 @@ public class MessageTask : AuditAggregateRoot<Guid, Guid>
     public virtual void AddHistory(ReceiverType receiverType, ExtraPropertyDictionary receivers, ExtraPropertyDictionary sendingRules, DateTime? sendTime, string sign, ExtraPropertyDictionary variables)
     {
         Historys.Add(new MessageTaskHistory(Id, receiverType, receivers, sendingRules, sendTime, sign, variables));
-        //SendTime = DateTime.UtcNow;
     }
 
     public virtual void SetReceivers(ReceiverType receiverType, ExtraPropertyDictionary receivers)

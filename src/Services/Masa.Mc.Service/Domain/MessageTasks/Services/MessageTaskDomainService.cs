@@ -15,13 +15,11 @@ public class MessageTaskDomainService : DomainService
     {
         if (!messageTask.IsDraft)
         {
-            messageTask.SetSendTime();
-            messageTask.SetEnabled();
-            messageTask.AddHistory(messageTask.ReceiverType, messageTask.Receivers, messageTask.SendingRules, messageTask.SendTime, messageTask.Sign, messageTask.Variables);
+            messageTask.SendTask(messageTask.ReceiverType, messageTask.Receivers, messageTask.SendingRules, messageTask.SendTime, messageTask.Sign, messageTask.Variables);
         }
         else
         {
-            messageTask.SetDisable();
+            messageTask.SetDraft(true);
         }
         await _repository.AddAsync(messageTask);
     }
@@ -30,13 +28,11 @@ public class MessageTaskDomainService : DomainService
     {
         if (!messageTask.IsDraft)
         {
-            messageTask.SetSendTime();
-            messageTask.SetEnabled();
-            messageTask.AddHistory(messageTask.ReceiverType, messageTask.Receivers, messageTask.SendingRules, messageTask.SendTime, messageTask.Sign, messageTask.Variables);
+            messageTask.SendTask(messageTask.ReceiverType, messageTask.Receivers, messageTask.SendingRules, messageTask.SendTime, messageTask.Sign, messageTask.Variables);
         }
         else
         {
-            messageTask.SetDisable();
+            messageTask.SetDraft(true);
         }
         await _repository.UpdateAsync(messageTask);
     }
@@ -46,7 +42,7 @@ public class MessageTaskDomainService : DomainService
         var messageTask = await _repository.FindAsync(x => x.Id == messageTaskId);
         if (messageTask == null)
             throw new UserFriendlyException("messageTask not found");
-        messageTask.AddHistory(receiverType, receivers, sendingRules, sendTime, sign, variables);
+        messageTask.SendTask(receiverType, receivers, sendingRules, sendTime, sign, variables);
         await _repository.UpdateAsync(messageTask);
     }
 }
