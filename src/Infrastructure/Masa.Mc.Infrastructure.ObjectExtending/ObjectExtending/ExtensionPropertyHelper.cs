@@ -1,4 +1,6 @@
-﻿namespace Masa.Mc.Infrastructure.ObjectExtending.ObjectExtending;
+﻿using System.Text.Json;
+
+namespace Masa.Mc.Infrastructure.ObjectExtending.ObjectExtending;
 
 public static class ExtensionPropertyHelper
 {
@@ -58,5 +60,15 @@ public static class ExtensionPropertyHelper
             field.SetValue(entity, obj, null);
         }
         return entity;
+    }
+
+    public static T ConvertToType<T>(ExtraPropertyDictionary dic) where T : class
+    {
+        var extraPropertiesAsJson = JsonSerializer.Serialize(dic);
+        if (string.IsNullOrEmpty(extraPropertiesAsJson) || extraPropertiesAsJson == "{}")
+        {
+            return Activator.CreateInstance<T>();
+        }
+        return JsonSerializer.Deserialize<T>(extraPropertiesAsJson) ?? Activator.CreateInstance<T>();
     }
 }
