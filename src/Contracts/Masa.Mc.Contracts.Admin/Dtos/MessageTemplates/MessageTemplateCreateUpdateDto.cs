@@ -1,4 +1,6 @@
-﻿namespace Masa.Mc.Contracts.Admin.Dtos.MessageTemplates;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Masa.Mc.Contracts.Admin.Dtos.MessageTemplates;
 
 public class MessageTemplateCreateUpdateDto
 {

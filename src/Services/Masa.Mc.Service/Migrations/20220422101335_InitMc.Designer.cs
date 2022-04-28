@@ -12,7 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Masa.Mc.Service.Admin.Migrations
 {
     [DbContext(typeof(McDbContext))]
+<<<<<<<< HEAD:src/Services/Masa.Mc.Service/Migrations/20220422101335_InitMc.Designer.cs
     [Migration("20220422101335_InitMc")]
+========
+    [Migration("20220420121956_InitMc")]
+>>>>>>>> origin/main:src/Services/Masa.Mc.Service/Migrations/20220420121956_InitMc.Designer.cs
     partial class InitMc
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
