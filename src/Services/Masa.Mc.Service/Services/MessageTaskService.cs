@@ -10,6 +10,9 @@ public class MessageTaskService : ServiceBase
         MapGet(GetAsync, "{id}");
         MapGet(GetListAsync, string.Empty);
         MapPost(SendAsync);
+        MapPost(WithdrawnHistoryAsync);
+        MapPost(EnabledAsync);
+        MapPost(DisableAsync);
     }
 
     public async Task<PaginatedListDto<MessageTaskDto>> GetListAsync(IEventBus eventbus, [FromQuery] Guid? channelId, [FromQuery] MessageEntityType? entityType, [FromQuery] bool? isEnabled, [FromQuery] MessageTaskTimeType? timeType, [FromQuery] DateTime? startTime, [FromQuery] DateTime? endTime, [FromQuery] string filter = "", [FromQuery] string sorting = "", [FromQuery] int page = 1, [FromQuery] int pagesize = 20)
@@ -71,6 +74,24 @@ public class MessageTaskService : ServiceBase
     public async Task SendAsync(IEventBus eventBus, SendMessageTaskInput input)
     {
         var command = new SendMessageTaskCommand(input);
+        await eventBus.PublishAsync(command);
+    }
+
+    public async Task WithdrawnHistoryAsync(IEventBus eventBus, WithdrawnMessageTaskHistoryInput input)
+    {
+        var command = new WithdrawnMessageTaskHistoryCommand(input);
+        await eventBus.PublishAsync(command);
+    }
+
+    public async Task EnabledAsync(IEventBus eventBus, EnabledMessageTaskInput input)
+    {
+        var command = new EnabledMessageTaskCommand(input);
+        await eventBus.PublishAsync(command);
+    }
+
+    public async Task DisableAsync(IEventBus eventBus, DisableMessageTaskInput input)
+    {
+        var command = new DisableMessageTaskCommand(input);
         await eventBus.PublishAsync(command);
     }
 }

@@ -45,4 +45,9 @@ public class MessageTaskDomainService : DomainService
         messageTask.SendTask(receiverType, receivers, sendingRules, sendTime, sign, variables);
         await _repository.UpdateAsync(messageTask);
     }
+
+    public virtual async Task WithdrawnAsync()
+    {
+        
+    }
 }

@@ -8,8 +8,6 @@ public partial class ExternalUserCreateModal : AdminCompontentBase
     private UserViewModel _model = new();
     private bool _visible;
 
-    ReceiverGroupService ReceiverGroupService => McCaller.ReceiverGroupService;
-
     public async Task OpenModalAsync()
     {
         await InvokeAsync(() =>

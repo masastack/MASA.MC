@@ -8,6 +8,9 @@ public partial class MessageReceivers : AdminCompontentBase
     [Parameter]
     public EventCallback<List<ReceiverItemDto>> ValueChanged { get; set; }
 
+    [Parameter]
+    public ChannelType? Type { get; set; }
+
     private ExternalUserCreateModal _createModal;
     private List<Guid> _userIds = new List<Guid>();
     private List<UserViewModel> _stateUserItems = new List<UserViewModel>()
@@ -23,7 +26,6 @@ public partial class MessageReceivers : AdminCompontentBase
         new UserViewModel(new Guid("7D91D72A-C272-47E9-AE06-08DA1DE9062B"),ReceiverGroupItemType.User,"7D91D72A-C272-47E9-AE06-08DA1DE9062B","鬼谷子","https://cdn.masastack.com/stack/images/website/masa-blazor/doddgu.png","13312341234","123@163.com"),
         new UserViewModel(new Guid("DD76FB82-6F46-4814-F5A3-08DA21B88B2E"),ReceiverGroupItemType.User,"DD76FB82-6F46-4814-F5A3-08DA21B88B2E","鬼谷子","https://cdn.masastack.com/stack/images/website/masa-blazor/doddgu.png","13312341234","123@163.com"),
     };
-    private StringNumber _type = "手动选择";
 
     public void Remove(UserViewModel item)
     {

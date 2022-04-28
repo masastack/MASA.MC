@@ -4,8 +4,8 @@
         <MContainer Class="flex-height-auto overflow-y">
             <MRow>
                 <MCol Cols="4">
-                    <div>@T("DisplayName.MessageTaskHistory")</div>
-                    <MRow Class="mt-2">
+                    <div class="my-2">@T("DisplayName.MessageTaskHistory")</div>
+                    <MRow>
                         <MCol Cols="7">
                             <MMenu @bind-Value="_datePickersShow"
                                    CloseOnContentClick="false"
@@ -62,7 +62,7 @@
                     </MRow>
                     <MSimpleTable Class="mt-2">
                         <tbody>
-                            @foreach (var item in _info.Historys)
+                            @foreach (var item in _historys)
                             {
                                 <tr @key="item.Id" @onclick="()=>HandleItemSelect(item)">
                                     <td>
@@ -77,10 +77,19 @@
                             }
                         </tbody>
                     </MSimpleTable>
-
+                    <Pagination Class="mt-5" @bind-Page="_queryParam.Page" @bind-PageSize="_queryParam.PageSize" Total="_info.Historys.Count" OnChange="HandlePaginationChange" />
                 </MCol>
                 <MCol Cols="8">
-                    <div class="mb-4">@T("DisplayName.MessageInfoContent")</div>
+                    <MRow Class="my-2 mx-2">
+                        <span>@T("DisplayName.MessageInfoContent")</span>
+                        <MSpacer></MSpacer>
+                        @if (_historyInfo.Status != MessageTaskHistoryStatus.Withdrawn)
+                        {
+                            <MButton Rounded Outlined Color="indigo" Class="ml-6 medium-button px-6" OnClick="WithdrawnHistoryAsync">
+                                <span>@T("Withdraw")</span>
+                            </MButton>
+                        }
+                    </MRow>
                     @if (_info.EntityType == MessageEntityType.Ordinary)
                     {
                         <OrdinaryMessageInfo MessageInfoId="_info.EntityId" MessageTask="_info"></OrdinaryMessageInfo>
@@ -88,9 +97,9 @@
                     @if (_info.EntityType == MessageEntityType.Template)
                     {
                         <TemplateMessageInfo MessageTemplateId="_info.EntityId" MessageTask="_info"></TemplateMessageInfo>
-                        <MessageVariables @bind-Value="_historyInfo.Variables"></MessageVariables>
+                        <MessageVariables @bind-Value="_historyInfo.Variables" ReadOnly></MessageVariables>
                     }
-                    <div class="mt-4">@T("DisplayName.MessageTaskReceiver")</div>
+                    <div class="my-2">@T("DisplayName.MessageTaskReceiver")</div>
                     <MSelect @bind-Value="@_historyInfo.ReceiverType"
                              Items="@(GetEnumList<ReceiverType>())"
                              Label="@T("DisplayName.ReceiverType")"
@@ -101,7 +110,7 @@
                              Disabled
                              HideDetails="@("auto")">
                     </MSelect>
-                    <div class="mt-4">@T("DisplayName.MessageTaskSendingRule")</div>
+                    <div class="my-2">@T("DisplayName.MessageTaskSendingRule")</div>
 
                     @if (!string.IsNullOrEmpty(_historyInfo.Sign))
                     {
@@ -121,6 +130,9 @@
                 </MCol>
             </MRow>
             <MCardActions Class="d-flex align-center mb-6">
+                <MSwitch Class="mt-1" Value="@_info.IsEnabled"
+                         Inset
+                         Label="@(_info.IsEnabled?T("Enable"):T("Disabled"))" ValueChanged="HandleIsEnabledChanged"></MSwitch>
                 <MButton Class="mr-6" Text Color="error" OnClick="HandleDelAsync">@T("Delete")</MButton>
                 <MSpacer></MSpacer>
             </MCardActions>

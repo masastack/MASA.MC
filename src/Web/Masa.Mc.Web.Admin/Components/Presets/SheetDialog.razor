@@ -19,7 +19,7 @@
             }
         </div>
     </MHover>
-    <MSheet Class="@($"m-sheet-dialog-content flex-grow-1 rounded-lg rounded-b-0 {ContentClass}")"
+    <MSheet Class="@($"m-sheet-dialog-content flex-grow-1 rounded-lg rounded-b-0 overflow-auto {ContentClass}")"
             Style="@($"position: absolute;top: 0;left: {Padding}px;right: {Padding}px;top: {HeaderHeight}px;height: calc(100% - {HeaderHeight}px);width: calc(100% - {2*Padding}px); {ContentStyle}")">
         @ChildContent
     </MSheet>

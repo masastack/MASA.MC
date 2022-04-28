@@ -38,4 +38,19 @@ public class MessageTaskService : ServiceBase
     {
         await PostAsync("Send", input);
     }
+
+    public async Task WithdrawnHistoryAsync(WithdrawnMessageTaskHistoryInput input)
+    {
+        await PostAsync("WithdrawnHistory", input);
+    }
+
+    public async Task EnabledAsync(EnabledMessageTaskInput input)
+    {
+        await PostAsync("Enabled", input);
+    }
+
+    public async Task DisableAsync(DisableMessageTaskInput input)
+    {
+        await PostAsync("Disable", input);
+    }
 }

@@ -98,11 +98,6 @@ public class MessageTask : AuditAggregateRoot<Guid, Guid>
         }
     }
 
-    public virtual void SetSendTime()
-    {
-        if (SendTime == null) SendTime = DateTime.UtcNow;
-    }
-
     public virtual void UpdateVariables(ExtraPropertyDictionary variables)
     {
         Variables = variables;

@@ -1,6 +1,6 @@
 ﻿@inherits AdminCompontentBase
 <div @ref="Ref">
-    <SheetDialog Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.EditOrdinaryMessage")" ContentStyle="padding-right:228px;padding-left:228px;padding-top:80px;">
+    <SheetDialog Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.EditOrdinaryMessage")" ContentStyle="padding-right:80px;padding-left:80px;padding-top:40px;">
         <MForm Class="flex-height-auto overflow-y" Model="_model" @ref="_form" EnableValidation>
             <MRow>
                 <MCol>
@@ -98,7 +98,7 @@
                     @if (_model.ReceiverType == ReceiverType.Assign)
                     {
                         <MInput @bind-Value="_model.Receivers.Items" />
-                        <MessageReceivers Class="mt-2" @bind-Value="_model.Receivers.Items" />
+                        <MessageReceivers Class="mt-2" @bind-Value="_model.Receivers.Items" Type="@_channelType" />
                     }
                     <div class="mt-4">@T("DisplayName.MessageTaskSendingRule")</div>
                     <MInput @bind-Value="_model.SendingRules" />

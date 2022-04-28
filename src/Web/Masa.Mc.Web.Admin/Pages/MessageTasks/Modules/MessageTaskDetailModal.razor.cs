@@ -7,8 +7,6 @@ public partial class MessageTaskDetailModal : AdminCompontentBase
 
     private List<DataTableHeader<MessageTaskHistoryDto>> _headers = new();
 
-    private MForm _form = default!;
-    //private SendMessageTaskInput _model = new();
     private MessageTaskDto _info = new();
     private MessageTaskHistoryDto _historyInfo = new();
     private Guid _entityId;
@@ -17,6 +15,7 @@ public partial class MessageTaskDetailModal : AdminCompontentBase
     private bool _datePickersShow;
     private List<DateOnly> _dates = new List<DateOnly> { };
     private string DateRangeText => string.Join(" ~ ", _dates.Select(date => date.ToString("yyyy-MM-dd")));
+    private List<MessageTaskHistoryDto> _historys = new();
 
     MessageTaskService MessageTaskService => McCaller.MessageTaskService;
 
@@ -46,7 +45,7 @@ public partial class MessageTaskDetailModal : AdminCompontentBase
     {
         _info = await MessageTaskService.GetAsync(_entityId) ?? new();
         _historyInfo = _info.Historys[0];
-        //_model = _info.Adapt<SendMessageTaskInput>();
+        LoadData();
     }
 
     private void HandleCancel()
@@ -54,24 +53,6 @@ public partial class MessageTaskDetailModal : AdminCompontentBase
         _visible = false;
         ResetForm();
     }
-
-    //private async Task HandleOkAsync()
-    //{
-    //    if (!await _form.ValidateAsync())
-    //    {
-    //        return;
-    //    }
-    //    Loading = true;
-    //    await MessageTaskService.SendAsync(_model);
-    //    Loading = false;
-    //    await SuccessMessageAsync(T("MessageTaskEditMessage"));
-    //    _visible = false;
-    //    ResetForm();
-    //    if (OnOk.HasDelegate)
-    //    {
-    //        await OnOk.InvokeAsync();
-    //    }
-    //}
 
     private async Task HandleDelAsync()
     {
@@ -94,7 +75,7 @@ public partial class MessageTaskDetailModal : AdminCompontentBase
 
     private void ResetForm()
     {
-        //_model = new();
+
     }
 
     private void HandleVisibleChanged(bool val)
@@ -105,7 +86,7 @@ public partial class MessageTaskDetailModal : AdminCompontentBase
     private void Refresh()
     {
         _queryParam.Page = 1;
-        //await LoadData();
+        LoadData();
     }
 
     private void HandleDatePickersAsync()
@@ -127,11 +108,53 @@ public partial class MessageTaskDetailModal : AdminCompontentBase
 
     private void LoadData()
     {
+        var query = _info.Historys.AsQueryable();
+        if (_queryParam.Status.HasValue) query = query.Where(x => x.Status == _queryParam.Status);
+        if (_queryParam.StartTime.HasValue) query = query.Where(x => x.SendTime >= _queryParam.StartTime);
+        if (_queryParam.EndTime.HasValue) query = query.Where(x => x.SendTime <= _queryParam.EndTime);
+        _historys = query.OrderByDescending(x => x.CreationTime).Skip((_queryParam.Page - 1) * _queryParam.PageSize).Take(_queryParam.PageSize <= 0 ? int.MaxValue : _queryParam.PageSize).ToList();
         StateHasChanged();
     }
 
     private void HandleItemSelect(MessageTaskHistoryDto item)
     {
         _historyInfo = item;
+    }
+
+    private void HandlePaginationChange(PaginationEventArgs args)
+    {
+        _queryParam.Page = args.Page;
+        _queryParam.PageSize = args.PageSize;
+        LoadData();
+    }
+
+    private async Task WithdrawnHistoryAsync()
+    {
+        var input = new WithdrawnMessageTaskHistoryInput
+        {
+            MessageTaskId = _entityId,
+            HistoryId = _historyInfo.Id
+        };
+        await MessageTaskService.WithdrawnHistoryAsync(input);
+        await SuccessMessageAsync(T("MessageTaskHistoryWithdrawnMessage"));
+        await GetFormDataAsync();
+    }
+
+    private async Task HandleIsEnabledChanged(bool IsEnabled)
+    {
+        if (IsEnabled)
+        {
+            await MessageTaskService.EnabledAsync(new EnabledMessageTaskInput { MessageTaskId = _entityId });
+            _info.IsEnabled = true;
+        }
+        else
+        {
+            await MessageTaskService.DisableAsync(new DisableMessageTaskInput { MessageTaskId = _entityId });
+            _info.IsEnabled = false;
+        }
+        if (OnOk.HasDelegate)
+        {
+            await OnOk.InvokeAsync();
+        }
     }
 }

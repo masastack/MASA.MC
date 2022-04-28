@@ -81,6 +81,7 @@
   "Draft": "草稿",
   "Initiate": "启动",
   "Disable": "禁用",
+  "Withdraw": "撤回",
   "Permission.ChannelManagement": "渠道管理",
   "Permission.CreateChannel": "创建渠道",
   "Permission.EditChannel": "编辑渠道",
@@ -195,5 +196,6 @@
   "DisplayName.MessageTaskHistoryStatus.WaitSend": "待发送",
   "DisplayName.MessageTaskHistoryStatus.Sending": "发送中",
   "DisplayName.MessageTaskHistoryStatus.Completed": "发送完成",
-  "DisplayName.MessageTaskHistoryStatus.Withdrawn": "已撤回"
+  "DisplayName.MessageTaskHistoryStatus.Withdrawn": "已撤回",
+  "MessageTaskHistoryWithdrawnMessage": "撤回消息任务历史成功."
 }

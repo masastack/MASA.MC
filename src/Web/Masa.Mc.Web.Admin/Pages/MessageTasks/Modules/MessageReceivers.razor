@@ -1,6 +1,6 @@
 ﻿@inherits AdminCompontentBase
 <MRow Class="mx-1 my-2">
-    <MButtonGroup Borderless @bind-Value="_type">
+    <MButtonGroup Borderless>
         <MButton>
             <span class="hidden-sm-and-down">@T("ManualSelection")</span>
         </MButton>
@@ -65,9 +65,14 @@
                     <MListItemTitle>
                         @(data.Item.DisplayName)
                     </MListItemTitle>
-                    <MListItemSubtitle>
-                        @(data.Item.PhoneNumber)|@(data.Item.Email)
-                    </MListItemSubtitle>
+                    @if (Type == ChannelType.Email)
+                    {
+                        <MListItemSubtitle>@(data.Item.Email)</MListItemSubtitle>
+                    }
+                    else
+                    {
+                        <MListItemSubtitle>@(data.Item.PhoneNumber)</MListItemSubtitle>
+                    }
                 </MListItemContent>
             }
         </ItemContent>
@@ -80,7 +85,7 @@
         <span class="ml-2">@T("ExternalMember")</span>
     </MButton>
 </MRow>
-<MCard Class="mx-auto" Outlined Height="300">
+<MCard Class="mx-auto overflow-y-auto" Outlined Height="300">
     @if (Value != null && Value.Count > 0)
     {
         <MList ThreeLine>
@@ -113,7 +118,14 @@
                                     <MListItemTitle>@(item.DisplayName)</MListItemTitle>
                                     @if (item.Type == MessageTaskReceiverType.User)
                                     {
-                                        <MListItemSubtitle>@(item.PhoneNumber)|@(item.Email)</MListItemSubtitle>
+                                        if (Type == ChannelType.Email)
+                                        {
+                                            <MListItemSubtitle>@(item.Email)</MListItemSubtitle>
+                                        }
+                                        else
+                                        {
+                                            <MListItemSubtitle>@(item.PhoneNumber)</MListItemSubtitle>
+                                        }
                                     }
                                 </MListItemContent>
                                 <MOverlay Absolute Opacity="0.2" Class="justify-end align-start"
