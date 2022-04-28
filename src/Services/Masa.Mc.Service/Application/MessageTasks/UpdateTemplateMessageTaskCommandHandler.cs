@@ -31,6 +31,7 @@ public class UpdateTemplateMessageTaskCommandHandler
         if (!entity.IsDraft)
             throw new UserFriendlyException("non draft cannot be modified");
         updateCommand.MessageTask.Adapt(entity);
+        entity.UpdateVariables(updateCommand.MessageTask.Variables);
         await _domainService.UpdateAsync(entity);
     }
 }

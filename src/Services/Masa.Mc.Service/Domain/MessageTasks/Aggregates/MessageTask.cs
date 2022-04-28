@@ -92,4 +92,9 @@ public class MessageTask : AuditAggregateRoot<Guid, Guid>
     {
         if (SendTime == null) SendTime = DateTime.UtcNow;
     }
+
+    public virtual void UpdateVariables(ExtraPropertyDictionary variables)
+    {
+        Variables = variables;
+    }
 }
