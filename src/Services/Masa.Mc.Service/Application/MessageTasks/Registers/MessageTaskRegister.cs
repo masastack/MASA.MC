@@ -14,6 +14,7 @@
                 .Map(dest => dest.Receivers, src => ExtraPropertyMapObj(src.Receivers))
                 .Map(dest => dest.SendingRules, src => ExtensionPropertyHelper.ExtraPropertyMapToObj<SendingRuleDto>(src.SendingRules));
         }
+
         private ReceiverDto ExtraPropertyMapObj(ExtraPropertyDictionary dic)
         {
             var extraPropertiesAsJson = JsonSerializer.Serialize(dic);

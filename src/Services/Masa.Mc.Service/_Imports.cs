@@ -98,3 +98,4 @@ global using Masa.Mc.Contracts.Admin.Dtos.MessageInfos;
 global using Masa.Mc.Service.Admin.Application.MessageInfos.Queries;
 global using Masa.Mc.Contracts.Admin.Dtos.MessageInfos.Validator;
 global using Masa.Mc.Service.Admin.Application.MessageInfos.Commands;
+global using Magicodes.ExporterAndImporter.Csv;

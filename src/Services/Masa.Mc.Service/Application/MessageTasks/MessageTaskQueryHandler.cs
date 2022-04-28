@@ -4,11 +4,15 @@ public class MessageTaskQueryHandler
 {
     private readonly IMessageTaskRepository _repository;
     private readonly IMessageTemplateRepository _messageTemplateRepository;
+    private readonly ICsvImporter _csvImporter;
 
-    public MessageTaskQueryHandler(IMessageTaskRepository repository, IMessageTemplateRepository messageTemplateRepository)
+    public MessageTaskQueryHandler(IMessageTaskRepository repository
+        , IMessageTemplateRepository messageTemplateRepository
+        , ICsvImporter csvImporter)
     {
         _repository = repository;
         _messageTemplateRepository = messageTemplateRepository;
+        _csvImporter = csvImporter;
     }
 
     [EventHandler]
@@ -31,7 +35,6 @@ public class MessageTaskQueryHandler
         queryable = queryable.OrderBy(options.Sorting).PageBy(options.Page, options.PageSize);
         var entities = await queryable.ToListAsync();
         var entityDtos = entities.Adapt<List<MessageTaskDto>>();
-        await FillMessageInfoAsync(entityDtos);
         var result = new PaginatedListDto<MessageTaskDto>(totalCount, totalPages, entityDtos);
         query.Result = result;
     }
@@ -63,33 +66,10 @@ public class MessageTaskQueryHandler
         return query.Where(condition);
     }
 
-    private async Task FillMessageInfoAsync(List<MessageTaskDto> dtos)
+    [EventHandler]
+    public async Task GenerateImportTemplateAsync(GenerateImportTemplateQuery query)
     {
-        var group = dtos.GroupBy(x => x.EntityType);
-        foreach (var item in group)
-        {
-            var entityIds = item.Select(x => x.EntityId).ToList();
-            switch (item.Key)
-            {
-                case MessageEntityType.Ordinary:
-                    break;
-                case MessageEntityType.Template:
-                    await FillTemplateMessageInfoAsync(dtos, entityIds);
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
-
-    private async Task FillTemplateMessageInfoAsync(List<MessageTaskDto> dtos, List<Guid> entityIds)
-    {
-        var list = await _messageTemplateRepository.GetListAsync(x => entityIds.Contains(x.Id));
-        foreach (var item in dtos)
-        {
-            var info = list.FirstOrDefault(x => x.Id == item.EntityId);
-            if (info == null) continue;
-            item.MessageInfo = new MessageInfoDto(string.IsNullOrEmpty(info.Title) ? info.DisplayName : info.Title, info.Content);
-        }
+        var result = await _csvImporter.GenerateTemplateBytes<ReceiverImportDto>();
+        query.Result = result;
     }
 }

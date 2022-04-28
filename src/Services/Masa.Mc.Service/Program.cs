@@ -17,6 +17,7 @@ builder.Services.AddAuthentication(options =>
     options.Audience = "";
 });
 builder.Services.AddAliyunSms();
+builder.Services.AddSingleton<ICsvImporter, CsvImporter>();
 TypeAdapterConfig.GlobalSettings.Scan(Assembly.GetExecutingAssembly(), Assembly.Load("Masa.Mc.Contracts.Admin"));
 var app = builder.Services
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

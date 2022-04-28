@@ -14,6 +14,7 @@ public class MessageTaskService : ServiceBase
         MapPost(WithdrawnHistoryAsync);
         MapPost(EnabledAsync);
         MapPost(DisableAsync);
+        MapGet(GenerateImportTemplateAsync);
     }
 
     public async Task<PaginatedListDto<MessageTaskDto>> GetListAsync(IEventBus eventbus, [FromQuery] Guid? channelId, [FromQuery] MessageEntityType? entityType, [FromQuery] bool? isEnabled, [FromQuery] MessageTaskTimeType? timeType, [FromQuery] DateTime? startTime, [FromQuery] DateTime? endTime, [FromQuery] string filter = "", [FromQuery] string sorting = "", [FromQuery] int page = 1, [FromQuery] int pagesize = 20)
@@ -100,5 +101,16 @@ public class MessageTaskService : ServiceBase
     {
         var command = new DisableMessageTaskCommand(input);
         await eventBus.PublishAsync(command);
+    }
+
+    public async Task<FileStreamResult> GenerateImportTemplateAsync(IEventBus eventBus)
+    {
+        var query = new GenerateImportTemplateQuery();
+        await eventBus.PublishAsync(query);
+        var memoryStream = new MemoryStream(query.Result);
+        return new FileStreamResult(memoryStream, "text/csv")
+        {
+            FileDownloadName = "ImportTemplate.csv"
+        };
     }
 }

@@ -14,3 +14,4 @@ global using Masa.Mc.Contracts.Admin.Enums.MessageTasks;
 global using Masa.Mc.Contracts.Admin.Dtos.MessageTasks;
 global using Masa.Mc.Contracts.Admin.Dtos.MessageInfos.Validator;
 global using Masa.Mc.Contracts.Admin.Dtos.MessageInfos;
+global using Magicodes.ExporterAndImporter.Core;
