@@ -3,15 +3,12 @@
 public class MessageTaskQueryHandler
 {
     private readonly IMessageTaskRepository _repository;
-    private readonly IMessageTemplateRepository _messageTemplateRepository;
     private readonly ICsvImporter _csvImporter;
 
     public MessageTaskQueryHandler(IMessageTaskRepository repository
-        , IMessageTemplateRepository messageTemplateRepository
         , ICsvImporter csvImporter)
     {
         _repository = repository;
-        _messageTemplateRepository = messageTemplateRepository;
         _csvImporter = csvImporter;
     }
 
