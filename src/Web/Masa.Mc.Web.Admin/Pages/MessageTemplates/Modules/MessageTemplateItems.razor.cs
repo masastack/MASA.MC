@@ -8,6 +8,9 @@ public partial class MessageTemplateItems : AdminCompontentBase
     [Parameter]
     public EventCallback<List<MessageTemplateItemDto>> ValueChanged { get; set; }
 
+    [Parameter]
+    public EventCallback<MessageTemplateItemChangedEventArgs> OnEditChanged { get; set; }
+
     private List<DataTableHeader<MessageTemplateItemDto>> _headers = new();
     private bool _dialog;
     private bool _dialogDelete;
@@ -46,6 +49,10 @@ public partial class MessageTemplateItems : AdminCompontentBase
         if (_editedIndex > -1)
         {
             var item = Value[_editedIndex];
+            if (item.Code != _editedItem.Code && OnEditChanged.HasDelegate)
+            {
+                await OnEditChanged.InvokeAsync(new MessageTemplateItemChangedEventArgs(item.Code, _editedItem.Code));
+            }
             item.Code = _editedItem.Code;
             item.MappingCode = _editedItem.MappingCode;
             item.DisplayText = _editedItem.DisplayText;

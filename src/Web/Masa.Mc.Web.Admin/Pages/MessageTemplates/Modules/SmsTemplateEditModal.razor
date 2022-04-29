@@ -111,7 +111,7 @@
                     </MCol>
                 </MRow>
             </MForm>
-            <MessageTemplateItems @bind-Value="_model.Items"></MessageTemplateItems>
+            <MessageTemplateItems @bind-Value="_model.Items" OnEditChanged="HandleTemplateItemChanged"></MessageTemplateItems>
             <MCardActions Class="d-flex align-center mb-6">
                 <MButton Class="mr-6" Text Color="error" OnClick="HandleDelAsync">@T("Delete")</MButton>
                 <MSpacer></MSpacer>

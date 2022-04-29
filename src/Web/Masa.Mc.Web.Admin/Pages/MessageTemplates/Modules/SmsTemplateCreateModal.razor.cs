@@ -111,4 +111,12 @@ public partial class SmsTemplateCreateModal : AdminCompontentBase
         _templateItems = await SmsTemplateService.GetListByChannelIdAsync(_model.ChannelId);
         Loading = false;
     }
+
+    private void HandleTemplateItemChanged(MessageTemplateItemChangedEventArgs args)
+    {
+        string startstr = "${";
+        string endstr = "}";
+        _model.Title = _model.Title.Replace($"{startstr}{args.OldCode}{endstr}", $"{startstr}{args.NewCode}{endstr}");
+        _model.Content = _model.Content.Replace($"{startstr}{args.OldCode}{endstr}", $"{startstr}{args.NewCode}{endstr}");
+    }
 }

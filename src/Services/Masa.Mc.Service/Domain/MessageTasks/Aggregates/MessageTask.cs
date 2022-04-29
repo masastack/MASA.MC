@@ -1,4 +1,4 @@
-﻿namespace Masa.Mc.Service.Admin.Domain.MessageTasks.Aggregates;
+﻿ namespace Masa.Mc.Service.Admin.Domain.MessageTasks.Aggregates;
 
 public class MessageTask : AuditAggregateRoot<Guid, Guid>
 {
