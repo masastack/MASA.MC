@@ -1,6 +1,6 @@
 ﻿namespace Masa.Mc.Service.Admin.Domain.Channels.Aggregates;
 
-public class Channel : AuditAggregateRoot<Guid, Guid>
+public class Channel : AuditAggregateRoot<Guid, Guid>, ISoftDelete
 {
     public string DisplayName { get; protected set; } = string.Empty;
     public string Code { get; protected set; } = string.Empty;
@@ -8,6 +8,7 @@ public class Channel : AuditAggregateRoot<Guid, Guid>
     public string Description { get; protected set; } = string.Empty;
     public bool IsStatic { get; protected set; }
     public ExtraPropertyDictionary ExtraProperties { get; protected set; } = new();
+    public bool IsDeleted { get; protected set; }
 
     public Channel(string displayName,string code,ChannelType type,string description) : this(displayName, code, type, description, new Dictionary<string, string>())
     {

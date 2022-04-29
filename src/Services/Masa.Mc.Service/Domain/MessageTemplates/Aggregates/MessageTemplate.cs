@@ -1,5 +1,5 @@
 ﻿namespace Masa.Mc.Service.Admin.Domain.MessageTemplates.Aggregates;
-public class MessageTemplate : AuditAggregateRoot<Guid, Guid>
+public class MessageTemplate : AuditAggregateRoot<Guid, Guid>, ISoftDelete
 {
     public Guid ChannelId { get; protected set; }
     public string DisplayName { get; protected set; } = string.Empty;
@@ -19,6 +19,7 @@ public class MessageTemplate : AuditAggregateRoot<Guid, Guid>
     public long DayLimit { get; protected set; }
     public virtual bool IsStatic { get; protected set; }
     public ICollection<MessageTemplateItem> Items { get; protected set; } = new List<MessageTemplateItem>();
+    public bool IsDeleted { get; protected set; }
 
     public MessageTemplate(
         Guid channelId,
