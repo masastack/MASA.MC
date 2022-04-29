@@ -203,13 +203,13 @@
   {
     "Id": 32,
     "Title": "Permission.ChannelManagement",
-    "Icon": "mdi-file-outline",
+    "Icon": "mdi-cellphone",
     "Href": "channels/channelManagement"
   },
   {
     "Id": 33,
     "Title": "Permission.MessageTemplateManagement",
-    "Icon": "mdi-file-outline",
+    "Icon": "mdi-image-filter-none",
     "Children": [
       {
         "Id": 34,
@@ -234,13 +234,13 @@
   {
     "Id": 37,
     "Title": "Permission.ReceiverGroupManagement",
-    "Icon": "mdi-file-outline",
+    "Icon": "mdi-account-group",
     "Href": "receiverGroups/receiverGroupManagement"
   },
   {
     "Id": 38,
     "Title": "Permission.MessageManagement",
-    "Icon": "mdi-file-outline",
+    "Icon": "mdi-animation",
     "Children": [
       {
         "Id": 39,
