@@ -1,0 +1,15 @@
+version: '3.4'
+
+services:
+  masa.mc.service.admin:
+    image: ${DOCKER_REGISTRY-}masamcserviceadmin
+    build:
+      context: .
+      dockerfile: src/Services/Masa.Mc.Service/Dockerfile
+
+  masa.mc.web.admin.server:
+    image: ${DOCKER_REGISTRY-}masamcwebadminserver
+    build:
+      context: .
+      dockerfile: src/Web/Masa.Mc.Web.Admin.Server/Dockerfile
+
