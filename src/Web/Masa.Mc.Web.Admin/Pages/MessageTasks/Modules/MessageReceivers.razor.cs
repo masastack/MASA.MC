@@ -42,7 +42,7 @@ public partial class MessageReceivers : AdminCompontentBase
         var dtos = list.Adapt<List<ReceiverItemDto>>();
         foreach (var dto in dtos)
         {
-            if (!Value.Any(x => x.DataId == dto.DataId && x.Type == dto.Type))
+            if (!Value.Any(x => x.SubjectId == dto.SubjectId && x.Type == dto.Type))
             {
                 Value.Insert(0, dto);
             }
@@ -52,7 +52,7 @@ public partial class MessageReceivers : AdminCompontentBase
 
     public async Task RemoveValue(ReceiverItemDto item)
     {
-        Value.RemoveAll(x => x.DataId == item.DataId && x.Type == item.Type);
+        Value.RemoveAll(x => x.SubjectId == item.SubjectId && x.Type == item.Type);
         await ValueChanged.InvokeAsync(Value);
     }
 

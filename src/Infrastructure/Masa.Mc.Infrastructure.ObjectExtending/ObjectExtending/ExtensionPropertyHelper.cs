@@ -1,6 +1,4 @@
-﻿using System.Text.Json;
-
-namespace Masa.Mc.Infrastructure.ObjectExtending.ObjectExtending;
+﻿namespace Masa.Mc.Infrastructure.ObjectExtending.ObjectExtending;
 
 public static class ExtensionPropertyHelper
 {

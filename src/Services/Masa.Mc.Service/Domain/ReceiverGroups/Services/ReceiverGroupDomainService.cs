@@ -57,8 +57,8 @@ public class ReceiverGroupDomainService : DomainService
     {
         foreach (var item in items)
         {
-            receiverGroup.AddOrUpdateItem(item.DataId, item.Type, item.DisplayName, item.Avatar, item.PhoneNumber, item.Email);
+            receiverGroup.AddOrUpdateItem(item.SubjectId, item.Type, item.DisplayName, item.Avatar, item.PhoneNumber, item.Email);
         }
-        receiverGroup.Items.RemoveAll(item => !items.Any(x => x.DataId == item.DataId && x.Type == item.Type));
+        receiverGroup.Items.RemoveAll(item => !items.Any(x => x.SubjectId == item.SubjectId && x.Type == item.Type));
     }
 }

@@ -16,7 +16,7 @@ public partial class MessageVariables : AdminCompontentBase
 
     protected override void OnParametersSet()
     {
-        _items = Value.Select(x => new ItemDto(x.Key, x.Value == null ? string.Empty : x.Value.ToString())).ToList();
+        _items = Value.Select(x => new ItemDto(x.Key, x.Value?.ToString() ?? string.Empty)).ToList();
     }
 
     public async Task HandleChangeAsync()

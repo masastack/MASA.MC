@@ -4,6 +4,6 @@ public class SendTestMessageTaskInputValidator : AbstractValidator<SendTestMessa
 {
     public SendTestMessageTaskInputValidator()
     {
-        RuleFor(input => input.Receivers).Must(x => x.Items != null && x.Items.Count > 0);
+        RuleFor(input => input.Receivers).Must(x => x.Items.Any());
     }
 }

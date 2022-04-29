@@ -52,14 +52,14 @@ public class ReceiverGroup : AuditAggregateRoot<Guid, Guid>
         );
     }
 
-    public virtual void AddOrUpdateItem(string dataId, ReceiverGroupItemType type, string displayName, string avatar = "", string phoneNumber = "", string email = "")
+    public virtual void AddOrUpdateItem(string subjectId, ReceiverGroupItemType type, string displayName, string avatar = "", string phoneNumber = "", string email = "")
     {
-        var existingItem = Items.SingleOrDefault(item => item.DataId == dataId && item.Type == type);
+        var existingItem = Items.SingleOrDefault(item => item.SubjectId == subjectId && item.Type == type);
 
         if (existingItem == null)
         {
             Items.Add(new ReceiverGroupItem(Id,
-                dataId,
+                subjectId,
                 type,
                 displayName,
                 avatar,

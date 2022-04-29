@@ -2,7 +2,7 @@
 
 public class ReceiverItemDto
 {
-    public string DataId { get; set; } = string.Empty;
+    public string SubjectId { get; set; } = string.Empty;
 
     public string DisplayName { get; set; } = string.Empty;
 

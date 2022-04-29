@@ -4,7 +4,7 @@ public class ReceiverGroupItem : Entity<Guid>
 {
     public Guid GroupId { get; protected set; }
 
-    public string DataId { get; protected set; }
+    public string SubjectId { get; protected set; }
 
     public string DisplayName { get; protected set; } = string.Empty;
 
@@ -16,10 +16,10 @@ public class ReceiverGroupItem : Entity<Guid>
 
     public ReceiverGroupItemType Type { get; protected set; }
 
-    public ReceiverGroupItem(Guid groupId, string dataId, ReceiverGroupItemType type, string displayName, string avatar = "", string phoneNumber = "", string email = "")
+    public ReceiverGroupItem(Guid groupId, string subjectId, ReceiverGroupItemType type, string displayName, string avatar = "", string phoneNumber = "", string email = "")
     {
         GroupId = groupId;
-        DataId = dataId;
+        SubjectId = subjectId;
         Type = type;
 
         SetContent(displayName, avatar, phoneNumber, email);

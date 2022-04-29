@@ -6,7 +6,7 @@ public class ReceiverGroupItemDto
 
     public ReceiverGroupItemType Type { get; set; }
 
-    public string DataId { get; set; } = string.Empty;
+    public string SubjectId { get; set; } = string.Empty;
 
     public string DisplayName { get; set; } = string.Empty;
 
