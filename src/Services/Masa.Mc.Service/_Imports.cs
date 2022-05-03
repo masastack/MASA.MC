@@ -1,4 +1,7 @@
-﻿global using System.Text.Json;
+﻿// Copyright (c) MASA Stack All rights reserved.
+// Licensed under the Apache License. See LICENSE.txt in the project root for license information.
+
+global using System.Text.Json;
 global using Dapr.Actors;
 global using Dapr.Actors.Client;
 global using Dapr.Actors.Runtime;

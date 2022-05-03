@@ -1,4 +1,7 @@
-﻿global using Masa.Mc.Infrastructure.Ddd.Application.Contracts.Dtos;
+﻿// Copyright (c) MASA Stack All rights reserved.
+// Licensed under the Apache License. See LICENSE.txt in the project root for license information.
+
+global using Masa.Mc.Infrastructure.Ddd.Application.Contracts.Dtos;
 global using Masa.Mc.Infrastructure.ObjectExtending;
 global using FluentValidation;
 global using Masa.Mc.Contracts.Admin.Enums.Channels;

@@ -1,4 +1,7 @@
-﻿global using AliyunClient = AlibabaCloud.SDK.Dysmsapi20170525.Client;
+﻿// Copyright (c) MASA Stack All rights reserved.
+// Licensed under the Apache License. See LICENSE.txt in the project root for license information.
+
+global using AliyunClient = AlibabaCloud.SDK.Dysmsapi20170525.Client;
 global using AliyunConfig = AlibabaCloud.OpenApiClient.Models.Config;
 global using AliyunSendSmsRequest = AlibabaCloud.SDK.Dysmsapi20170525.Models.SendSmsRequest;
 global using System.Text.Json;
