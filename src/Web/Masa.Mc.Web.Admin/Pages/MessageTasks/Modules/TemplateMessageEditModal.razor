@@ -1,133 +1,137 @@
 ﻿@inherits AdminCompontentBase
 <div @ref="Ref">
-    <SheetDialog Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.EditTemplateMessage")" ContentStyle="padding-right:80px;padding-left:80px;padding-top:40px;">
-        <MForm Class="flex-height-auto overflow-y" Model="_model" @ref="_form" EnableValidation>
-            <MRow>
-                <MCol>
+    <SheetDialog Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.EditTemplateMessage")">
+        <MForm Model="_model" @ref="_form" EnableValidation>
+            <div class="sheet-dialog full-height flex-column">
+                <div class="mt-6 flex-height-auto overflow-y">
                     <MRow>
                         <MCol>
-                            <MAutocomplete Items="_templateItems" @bind-Value="_model.EntityId"
-                                           Label="@T("DisplayName.MessageTemplateTemplateId")"
-                                           ItemText="@(x=>string.IsNullOrEmpty(x.TemplateId)?x.DisplayName:$"{x.DisplayName}({x.TemplateId})")"
-                                           ItemValue="x=>x.Id"
-                                           Dense
-                                           Outlined
-                                           HideDetails="@("auto")"
-                                           TItem="MessageTemplateDto"
-                                           TItemValue="Guid"
-                                           TValue="Guid"
-                                           OnSelectedItemUpdate="HandleTemplateSelected"></MAutocomplete>
+                            <MRow>
+                                <MCol>
+                                    <MAutocomplete Items="_templateItems" @bind-Value="_model.EntityId"
+                                                   Label="@T("DisplayName.MessageTemplateTemplateId")"
+                                                   ItemText="@(x=>string.IsNullOrEmpty(x.TemplateId)?x.DisplayName:$"{x.DisplayName}({x.TemplateId})")"
+                                                   ItemValue="x=>x.Id"
+                                                   Dense
+                                                   Outlined
+                                                   HideDetails="@("auto")"
+                                                   TItem="MessageTemplateDto"
+                                                   TItemValue="Guid"
+                                                   TValue="Guid"
+                                                   OnSelectedItemUpdate="HandleTemplateSelected"></MAutocomplete>
+                                </MCol>
+                            </MRow>
+                            @if (_model.EntityId != default)
+                            {
+                                <MRow>
+                                    <MCol>
+                                        <MSelect Value="@_messageInfo.Channel?.Type"
+                                             Items="@(GetEnumList<ChannelType>())"
+                                             Label="@T("DisplayName.ChannelType")"
+                                             ItemText="item => T(item.ToString())"
+                                             ItemValue="item => item"
+                                             Dense
+                                             Outlined
+                                             Disabled
+                                             HideDetails="@("auto")">
+                                        </MSelect>
+                                    </MCol>
+                                </MRow>
+                                <MRow>
+                                    <MCol>
+                                        <MTextField Value="@_messageInfo.Channel?.DisplayName"
+                                                Label="@T("DisplayName.Channel")"
+                                                Dense
+                                                Outlined
+                                                Disabled
+                                                HideDetails="@("auto")">
+                                        </MTextField>
+                                    </MCol>
+                                </MRow>
+                                if (_messageInfo.Channel != null && _messageInfo.Channel.Type != ChannelType.Sms)
+                                {
+                                    <MRow>
+                                        <MCol>
+                                            <MTextField @bind-Value="_messageInfo.Title"
+                                                Label="@T("DisplayName.MessageTemplateTitle")"
+                                                Dense
+                                                Outlined
+                                                Disabled
+                                                HideDetails="@("auto")">
+                                            </MTextField>
+                                        </MCol>
+                                    </MRow>
+                                }
+                                <MRow>
+                                    <MCol>
+                                        <MEditor @bind-Value="_messageInfo.Content"
+                                             ContentStyle="height:200px"
+                                             ReadOnly>
+                                        </MEditor>
+                                    </MCol>
+                                </MRow>
+                                if (_messageInfo.Channel != null && _messageInfo.Channel.Type == ChannelType.WebsiteMessage)
+                                {
+                                    <MRow>
+                                        <MCol>
+                                            <MTextField @bind-Value="_messageInfo.JumpUrl"
+                                                Label="@T("DisplayName.MessageTemplateJumpUrl")"
+                                                Dense
+                                                Outlined
+                                                Disabled
+                                                HideDetails="@("auto")">
+                                            </MTextField>
+                                        </MCol>
+                                    </MRow>
+                                }
+                                <MessageVariables @bind-Value="_model.Variables"></MessageVariables>
+                            }
+                        </MCol>
+                        <MCol Class="ml-2">
+                            <div>@T("DisplayName.MessageTaskReceiver")</div>
+                            <MRadioGroup @bind-Value="_model.ReceiverType"
+                                         Row>
+                                <MRadio Label="@T("DisplayName.ReceiverType.Assign")"
+                                        Value="@ReceiverType.Assign">
+                                </MRadio>
+                                <MRadio Label="@T("DisplayName.ReceiverType.Broadcast")"
+                                        Disabled="_messageInfo.Channel?.Type!=ChannelType.WebsiteMessage"
+                                        Value="@ReceiverType.Broadcast">
+                                </MRadio>
+                            </MRadioGroup>
+                            @if (_model.ReceiverType == ReceiverType.Assign)
+                            {
+                                <MInput @bind-Value="_model.Receivers" />
+                                <MessageReceivers Class="mt-2" @bind-Value="_model.Receivers.Items" Type="@_messageInfo.Channel?.Type" />
+                            }
+                            <div class="mt-4">@T("DisplayName.MessageTaskSendingRule")</div>
+                            <MInput @bind-Value="_model.SendingRules" />
+                            @if (_messageInfo.Channel != null && _messageInfo.Channel.Type == ChannelType.Sms)
+                            {
+                                <MRow>
+                                    <MCol>
+                                        <MTextField @bind-Value="_model.Sign"
+                                                Label="@T("DisplayName.MessageTemplateSign")"
+                                                Dense
+                                                Outlined
+                                                HideDetails="@("auto")">
+                                        </MTextField>
+                                    </MCol>
+                                </MRow>
+                            }
+                            <MessageSendingRules Class="mt-2" @bind-Value="_model.SendingRules" @bind-SendTime="_model.SendTime" />
                         </MCol>
                     </MRow>
-                    @if (_model.EntityId != default)
-                    {
-                        <MRow>
-                            <MCol>
-                                <MSelect Value="@_messageInfo.Channel?.Type"
-                                     Items="@(GetEnumList<ChannelType>())"
-                                     Label="@T("DisplayName.ChannelType")"
-                                     ItemText="item => T(item.ToString())"
-                                     ItemValue="item => item"
-                                     Dense
-                                     Outlined
-                                     Disabled
-                                     HideDetails="@("auto")">
-                                </MSelect>
-                            </MCol>
-                        </MRow>
-                        <MRow>
-                            <MCol>
-                                <MTextField Value="@_messageInfo.Channel?.DisplayName"
-                                        Label="@T("DisplayName.Channel")"
-                                        Dense
-                                        Outlined
-                                        Disabled
-                                        HideDetails="@("auto")">
-                                </MTextField>
-                            </MCol>
-                        </MRow>
-                        if (_messageInfo.Channel != null && _messageInfo.Channel.Type != ChannelType.Sms)
-                        {
-                            <MRow>
-                                <MCol>
-                                    <MTextField @bind-Value="_messageInfo.Title"
-                                        Label="@T("DisplayName.MessageTemplateTitle")"
-                                        Dense
-                                        Outlined
-                                        Disabled
-                                        HideDetails="@("auto")">
-                                    </MTextField>
-                                </MCol>
-                            </MRow>
-                        }
-                        <MRow>
-                            <MCol>
-                                <MEditor @bind-Value="_messageInfo.Content"
-                                     ContentStyle="height:200px"
-                                     ReadOnly>
-                                </MEditor>
-                            </MCol>
-                        </MRow>
-                        if (_messageInfo.Channel != null && _messageInfo.Channel.Type == ChannelType.WebsiteMessage)
-                        {
-                            <MRow>
-                                <MCol>
-                                    <MTextField @bind-Value="_messageInfo.JumpUrl"
-                                        Label="@T("DisplayName.MessageTemplateJumpUrl")"
-                                        Dense
-                                        Outlined
-                                        Disabled
-                                        HideDetails="@("auto")">
-                                    </MTextField>
-                                </MCol>
-                            </MRow>
-                        }
-                        <MessageVariables @bind-Value="_model.Variables"></MessageVariables>
-                    }
-                </MCol>
-                <MCol Class="ml-2">
-                    <div>@T("DisplayName.MessageTaskReceiver")</div>
-                    <MRadioGroup @bind-Value="_model.ReceiverType"
-                                 Row>
-                        <MRadio Label="@T("DisplayName.ReceiverType.Assign")"
-                                Value="@ReceiverType.Assign">
-                        </MRadio>
-                        <MRadio Label="@T("DisplayName.ReceiverType.Broadcast")"
-                                Disabled="_messageInfo.Channel?.Type!=ChannelType.WebsiteMessage"
-                                Value="@ReceiverType.Broadcast">
-                        </MRadio>
-                    </MRadioGroup>
-                    @if (_model.ReceiverType == ReceiverType.Assign)
-                    {
-                        <MInput @bind-Value="_model.Receivers" />
-                        <MessageReceivers Class="mt-2" @bind-Value="_model.Receivers.Items" Type="@_messageInfo.Channel?.Type" />
-                    }
-                    <div class="mt-4">@T("DisplayName.MessageTaskSendingRule")</div>
-                    <MInput @bind-Value="_model.SendingRules" />
-                    @if (_messageInfo.Channel != null && _messageInfo.Channel.Type == ChannelType.Sms)
-                    {
-                        <MRow>
-                            <MCol>
-                                <MTextField @bind-Value="_model.Sign"
-                                        Label="@T("DisplayName.MessageTemplateSign")"
-                                        Dense
-                                        Outlined
-                                        HideDetails="@("auto")">
-                                </MTextField>
-                            </MCol>
-                        </MRow>
-                    }
-                    <MessageSendingRules Class="mt-2" @bind-Value="_model.SendingRules" @bind-SendTime="_model.SendTime" />
-                </MCol>
-            </MRow>
-            <MCardActions Class="d-flex align-center mt-6">
-                <MButton Class="mr-6" Text Color="error" OnClick="HandleDelAsync">@T("Delete")</MButton>
-                <MSpacer></MSpacer>
-                <MButton Rounded Outlined Color="indigo" Class="ml-6 medium-button px-6" OnClick="async() => await HandleOkAsync(true)">
-                    <span>@T("Save")</span>
-                </MButton>
-                <MButton Color="rounded-pill primary" Class="small-button" OnClick="async() => await HandleOkAsync(false)">@T("SaveSend")</MButton>
-            </MCardActions>
+                </div>
+                <div Class="d-flex mt-6">
+                    <MButton Class="mr-6" Text Color="error" OnClick="HandleDelAsync">@T("Delete")</MButton>
+                    <MSpacer></MSpacer>
+                    <MButton Rounded Outlined Color="indigo" Class="ml-6 medium-button px-6" OnClick="async() => await HandleOkAsync(true)">
+                        <span>@T("Save")</span>
+                    </MButton>
+                    <MButton Color="primary" Class="small-button ml-6" OnClick="async() => await HandleOkAsync(false)">@T("SaveSend")</MButton>
+                </div>
+            </div>
         </MForm>
     </SheetDialog>
 </div>

@@ -29,7 +29,7 @@ public partial class UserCreateModal : AdminCompontentBase
     {
         var id = Guid.NewGuid();
         _model.Id = id;
-        _model.DataId = id.ToString();
+        _model.SubjectId = id.ToString();
         _model.Type = ReceiverGroupItemType.User;
         await SuccessMessageAsync(T("ExternalMemberAddMessage"));
         _visible = false;

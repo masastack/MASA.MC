@@ -5,7 +5,7 @@ public class UserViewModel
     public Guid Id { get; set; }
     public ReceiverGroupItemType Type { get; set; }
 
-    public string DataId { get; set; } = string.Empty;
+    public string SubjectId { get; set; } = string.Empty;
 
     public string DisplayName { get; set; } = string.Empty;
 
@@ -20,11 +20,11 @@ public class UserViewModel
 
     }
 
-    public UserViewModel(Guid id, ReceiverGroupItemType type, string dataId, string displayName, string avatar, string phoneNumber, string email)
+    public UserViewModel(Guid id, ReceiverGroupItemType type, string subjectId, string displayName, string avatar, string phoneNumber, string email)
     {
         Id = id;
         Type = type;
-        DataId = dataId;
+        SubjectId = subjectId;
         DisplayName = displayName;
         Avatar = avatar;
         PhoneNumber = phoneNumber;
