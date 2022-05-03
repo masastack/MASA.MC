@@ -82,7 +82,7 @@
                     </MCol>
                     <MCol Cols="8">
                         <MRow Class="my-2 mx-2">
-                            <span>@T("DisplayName.MessageInfoContent")</span>
+                            <span class="text-subtitle2">@T("DisplayName.MessageInfoContent")</span>
                             <MSpacer></MSpacer>
                             @if (_historyInfo.Status != MessageTaskHistoryStatus.Withdrawn)
                             {
@@ -100,7 +100,7 @@
                             <TemplateMessageInfo MessageTemplateId="_info.EntityId" MessageTask="_info"></TemplateMessageInfo>
                             <MessageVariables @bind-Value="_historyInfo.Variables" ReadOnly></MessageVariables>
                         }
-                        <div class="my-2">@T("DisplayName.MessageTaskReceiver")</div>
+                        <div class="my-2 text-subtitle2">@T("DisplayName.MessageTaskReceiver")</div>
                         <MSelect @bind-Value="@_historyInfo.ReceiverType"
                                  Items="@(GetEnumList<ReceiverType>())"
                                  Label="@T("DisplayName.ReceiverType")"
@@ -111,7 +111,7 @@
                                  Disabled
                                  HideDetails="@("auto")">
                         </MSelect>
-                        <div class="my-2">@T("DisplayName.MessageTaskSendingRule")</div>
+                        <div class="my-2 text-subtitle2">@T("DisplayName.MessageTaskSendingRule")</div>
 
                         @if (!string.IsNullOrEmpty(_historyInfo.Sign))
                         {

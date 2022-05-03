@@ -16,9 +16,11 @@ public class SmsTemplateSynchroEventHandler
     [EventHandler]
     public async Task HandleEvent(SmsTemplateSynchroDomainEvent @event)
     {
-        using var scope = _serviceProvider.CreateAsyncScope();
-        using var dbContext = scope.ServiceProvider.GetRequiredService<McDbContext>();
-        var channel = await dbContext.Set<Channel>().FindAsync(@event.ChannelId);
+        var unitOfWorkManager = _serviceProvider.GetRequiredService<IUnitOfWorkManager>();
+        await using var unitOfWork = unitOfWorkManager.CreateDbContext();
+        var _smsTemplateRepository = unitOfWork.ServiceProvider.GetRequiredService<ISmsTemplateRepository>();
+        var _channelRepository = unitOfWork.ServiceProvider.GetRequiredService<IChannelRepository>();
+        var channel = await _channelRepository.FindAsync(x => x.Id == @event.ChannelId);
         var options = new AliyunSmsOptions
         {
             AccessKeyId = channel.GetDataValue(nameof(SmsChannelOptions.AccessKeyId)).ToString(),
@@ -32,11 +34,9 @@ public class SmsTemplateSynchroEventHandler
                 throw new UserFriendlyException(aliyunSmsTemplateListResponse.Message);
             }
             var aliyunSmsTemplateList = aliyunSmsTemplateListResponse.Data.Body.SmsTemplateList;
-            var removeList = dbContext.Set<SmsTemplate>().Where(x => x.ChannelId == channel.Id).ToList();
-            dbContext.Set<SmsTemplate>().RemoveRange(removeList);
+            await _smsTemplateRepository.RemoveAsync(x => x.ChannelId == channel.Id);
             var smsTemplateList = aliyunSmsTemplateList.Select(item => new SmsTemplate(channel.Id, item.TemplateCode, item.TemplateName, AliyunSmsTemplateTypeMapToSmsTemplateType(item.TemplateType), AliyunSmsTemplateAuditStatusMapToAuditStatus(item.AuditStatus), item.TemplateContent, item.Reason.RejectInfo));
-            await dbContext.Set<SmsTemplate>().AddRangeAsync(smsTemplateList);
-            await dbContext.SaveChangesAsync();
+            await _smsTemplateRepository.AddRangeAsync(smsTemplateList);
         }
     }
 

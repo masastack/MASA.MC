@@ -8,22 +8,24 @@
                         <div class="full-height flex-column">
                             <div class="d-flex flex-height-auto">
                                 <div class="text-subtitle2">@T("SelectChannelType")</div>
-                                <MRow Class="my-8" Align="AlignTypes.Center" Justify="JustifyTypes.Center">
-                                    <MCol Md="3" Class="full-height">
+                                <MRow Class="my-8">
+                                    <MSpacer></MSpacer>
+                                    <MCol Md="2" Class="full-height">
                                         <MCard Outlined Class="d-flex full-height justify-center align-center" Style="border-style: dashed;">
                                             <MButton Ripple=false Plain OnClick="()=> HandleSelectType(ChannelType.Sms)"><MIcon Left>mdi-plus</MIcon>@T("Sms")</MButton>
                                         </MCard>
                                     </MCol>
-                                    <MCol Md="3" Offset="1" Class="full-height">
+                                    <MCol Md="2" Offset="1" Class="full-height">
                                         <MCard Outlined Class="d-flex full-height justify-center align-center" Style="border-style: dashed;">
                                             <MButton Ripple=false Plain OnClick="()=>HandleSelectType(ChannelType.Email)"><MIcon Left>mdi-plus</MIcon>@T("Email")</MButton>
                                         </MCard>
                                     </MCol>
-                                    <MCol Md="3" Offset="1" Class="full-height">
+                                    <MCol Md="2" Offset="1" Class="full-height">
                                         <MCard Outlined Class="d-flex full-height justify-center align-center" Style="border-style: dashed;">
                                             <MButton Ripple=false Plain OnClick="()=>HandleSelectType(ChannelType.WebsiteMessage)"><MIcon Left>mdi-plus</MIcon>@T("WebsiteMessage")</MButton>
                                         </MCard>
                                     </MCol>
+                                    <MSpacer></MSpacer>
                                 </MRow>
                             </div>
                             <div class="d-flex">

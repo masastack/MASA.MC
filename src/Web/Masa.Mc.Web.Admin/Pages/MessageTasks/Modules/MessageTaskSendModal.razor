@@ -17,7 +17,7 @@
                             }
                         </MCol>
                         <MCol Class="ml-2">
-                            <div>@T("DisplayName.MessageTaskReceiver")</div>
+                            <div class="text-subtitle2">@T("DisplayName.MessageTaskReceiver")</div>
                             <MRadioGroup @bind-Value="_model.ReceiverType"
                                          Row>
                                 <MRadio Label="@T("DisplayName.ReceiverType.Assign")"
@@ -33,7 +33,7 @@
                                 <MInput @bind-Value="_model.Receivers" />
                                 <MessageReceivers Class="mt-2" @bind-Value="_model.Receivers.Items" />
                             }
-                            <div class="mt-4">@T("DisplayName.MessageTaskSendingRule")</div>
+                            <div class="mt-4 text-subtitle2">@T("DisplayName.MessageTaskSendingRule")</div>
                             <MInput @bind-Value="_model.SendingRules" />
                             @if (_info.Channel != null && _info.Channel.Type == ChannelType.Sms)
                             {
