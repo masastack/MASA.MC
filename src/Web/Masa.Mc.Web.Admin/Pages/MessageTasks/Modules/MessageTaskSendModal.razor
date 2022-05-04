@@ -13,10 +13,10 @@
                             @if (_info.EntityType == MessageEntityType.Template)
                             {
                                 <TemplateMessageInfo MessageTemplateId="_info.EntityId" MessageTask="_info"></TemplateMessageInfo>
-                                <MessageVariables @bind-Value="_model.Variables"></MessageVariables>
+                                <MessageVariables Class="mt-4" @bind-Value="_model.Variables"></MessageVariables>
                             }
                         </MCol>
-                        <MCol Class="ml-2">
+                        <MCol>
                             <div class="text-subtitle2">@T("DisplayName.MessageTaskReceiver")</div>
                             <MRadioGroup @bind-Value="_model.ReceiverType"
                                          Row>
@@ -37,7 +37,7 @@
                             <MInput @bind-Value="_model.SendingRules" />
                             @if (_info.Channel != null && _info.Channel.Type == ChannelType.Sms)
                             {
-                                <MRow>
+                                <MRow Class="mt-4">
                                     <MCol>
                                         <MTextField @bind-Value="_model.Sign"
                                                 Label="@T("DisplayName.MessageTemplateSign")"

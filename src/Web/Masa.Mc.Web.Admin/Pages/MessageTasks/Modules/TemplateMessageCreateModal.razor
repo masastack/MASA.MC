@@ -87,10 +87,10 @@
                                         </MCol>
                                     </MRow>
                                 }
-                                <MessageVariables @bind-Value="_model.Variables"></MessageVariables>
+                                <MessageVariables Class="mt-4" @bind-Value="_model.Variables"></MessageVariables>
                             }
                         </MCol>
-                        <MCol Class="ml-2">
+                        <MCol>
                             <div class="text-subtitle2">@T("DisplayName.MessageTaskReceiver")</div>
                             <MRadioGroup @bind-Value="_model.ReceiverType"
                                          Row>
@@ -111,7 +111,7 @@
                             <MInput @bind-Value="_model.SendingRules" />
                             @if (_messageInfo.Channel != null && _messageInfo.Channel.Type == ChannelType.Sms)
                             {
-                                <MRow>
+                                <MRow Class="mt-4">
                                     <MCol>
                                         <MTextField @bind-Value="_model.Sign"
                                                 Label="@T("DisplayName.MessageTemplateSign")"
@@ -122,7 +122,7 @@
                                     </MCol>
                                 </MRow>
                             }
-                            <MessageSendingRules Class="mt-2" @bind-Value="_model.SendingRules" @bind-SendTime="_model.SendTime" />
+                            <MessageSendingRules @bind-Value="_model.SendingRules" @bind-SendTime="_model.SendTime" />
                         </MCol>
                     </MRow>
                 </div>
