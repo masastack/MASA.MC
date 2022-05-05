@@ -102,3 +102,7 @@ global using Masa.Mc.Service.Admin.Application.MessageInfos.Queries;
 global using Masa.Mc.Contracts.Admin.Dtos.MessageInfos.Validator;
 global using Masa.Mc.Service.Admin.Application.MessageInfos.Commands;
 global using Magicodes.ExporterAndImporter.Csv;
+global using Masa.Mc.Infrastructure.Email;
+global using Masa.Mc.Infrastructure.Email.Infrastructure.OptionsResolve.Contributors;
+global using Masa.Mc.Infrastructure.Email.Smtp;
+global using Masa.Mc.Infrastructure.ObjectExtending.Data;

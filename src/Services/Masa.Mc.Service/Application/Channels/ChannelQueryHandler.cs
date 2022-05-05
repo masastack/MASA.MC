@@ -18,7 +18,7 @@ public class ChannelQueryHandler
         var entity = await _repository.FindAsync(x => x.Id == query.ChannelId);
         if (entity == null)
             throw new UserFriendlyException("channel not found");
-        query.Result = entity.Adapt<ChannelDto>();
+        query.Result = entity.Adapt<ChannelDto>();  
     }
 
     [EventHandler]

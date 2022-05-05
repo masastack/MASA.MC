@@ -26,8 +26,8 @@ public class SmsTemplateSynchroEventHandler
         var channel = await _channelRepository.FindAsync(x => x.Id == @event.ChannelId);
         var options = new AliyunSmsOptions
         {
-            AccessKeyId = channel.GetDataValue(nameof(SmsChannelOptions.AccessKeyId)).ToString(),
-            AccessKeySecret = channel.GetDataValue(nameof(SmsChannelOptions.AccessKeySecret)).ToString()
+            AccessKeyId = channel.GetDataValue<string>(nameof(SmsChannelOptions.AccessKeyId)),
+            AccessKeySecret = channel.GetDataValue<string>(nameof(SmsChannelOptions.AccessKeySecret))
         };
         using (_aliyunSmsAsyncLocal.Change(options))
         {

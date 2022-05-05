@@ -3,3 +3,5 @@
 
 global using System.Collections.Concurrent;
 global using System.Text.Json;
+global using Masa.Mc.Infrastructure.Common.Extensions;
+global using Masa.Mc.Infrastructure.Common.Helper;

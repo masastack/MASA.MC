@@ -9,5 +9,5 @@ public class EmailChannelOptions
     public string Password { get; set; } = string.Empty;
     public string Smtp { get; set; } = string.Empty;
     public bool Ssl { get; set; }
-    public int Port { get; set; }
+    public int Port { get; set; } = 25;
 }

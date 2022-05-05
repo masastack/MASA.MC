@@ -48,6 +48,7 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\..\Contracts\Masa.Mc.Contracts.Admin\Masa.Mc.Contracts.Admin.csproj" />
 	  <ProjectReference Include="..\..\Infrastructure\Masa.Mc.Infrastructure.Common\Masa.Mc.Infrastructure.Common.csproj" />
+	  <ProjectReference Include="..\..\Infrastructure\Masa.Mc.Infrastructure.Email\Masa.Mc.Infrastructure.Email.csproj" />
 	  <ProjectReference Include="..\..\Infrastructure\Masa.Mc.Infrastructure.EntityFrameworkCore\Masa.Mc.Infrastructure.EntityFrameworkCore.csproj" />
 	  <ProjectReference Include="..\..\Infrastructure\Masa.Mc.Infrastructure.Sms.Aliyun\Masa.Mc.Infrastructure.Sms.Aliyun.csproj" />
 	  <ProjectReference Include="..\..\Infrastructure\Masa.Mc.Infrastructure.Sms\Masa.Mc.Infrastructure.Sms.csproj" />

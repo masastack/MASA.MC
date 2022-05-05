@@ -38,12 +38,17 @@ public class Channel : AuditAggregateRoot<Guid, Guid>, ISoftDelete
 
     public virtual object GetDataValue(string name)
     {
-        return ExtraProperties.GetOrDefault(name);
+        return ExtraProperties.GetProperty(name);
+    }
+
+    public virtual T GetDataValue<T>(string name)
+    {
+        return ExtraProperties.GetProperty<T>(name);
     }
 
     public virtual void SetDataValue(string name, string value)
     {
-        ExtraProperties[name] = value;
+        ExtraProperties.SetProperty(name, value);
     }
 }
 
