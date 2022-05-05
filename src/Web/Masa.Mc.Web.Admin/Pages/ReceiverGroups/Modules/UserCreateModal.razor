@@ -9,9 +9,9 @@
             OnSave="HandleOk"
             OnCancel="HandleCancel">
         <ChildContent>
-            <MTextField Outlined Label="@T("User.DisplayName")" @bind-Value="_model.DisplayName"></MTextField>
-            <MTextField Outlined Label="@T("PhoneNumber")" @bind-Value="_model.PhoneNumber"></MTextField>
-            <MTextField Outlined Label="@T("Email")" @bind-Value="_model.Email"></MTextField>
+            <MTextField Class="my-4" Outlined Label="@T("User.DisplayName")" @bind-Value="_model.DisplayName"></MTextField>
+            <MTextField Class="my-4" Outlined Label="@T("PhoneNumber")" @bind-Value="_model.PhoneNumber"></MTextField>
+            <MTextField Class="my-4" Outlined Label="@T("Email")" @bind-Value="_model.Email"></MTextField>
         </ChildContent>
         <SaveContent Context="save">
             <MButton OnClick="save.Click" Width=100 Class="rounded-pill" Color="primary" Style="float:right;">@(T("Submit"))</MButton>
