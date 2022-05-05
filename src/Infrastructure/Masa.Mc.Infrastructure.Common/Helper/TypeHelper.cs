@@ -292,31 +292,6 @@ public static class TypeHelper
         return type.FullName ?? type.Name;
     }
 
-    //public static object ConvertFromString<TTargetType>(string value)
-    //{
-    //    return ConvertFromString(typeof(TTargetType), value);
-    //}
-
-    //public static object ConvertFromString(Type targetType, string value)
-    //{
-    //    if (value == null)
-    //    {
-    //        return null;
-    //    }
-
-    //    var converter = TypeDescriptor.GetConverter(targetType);
-
-    //    if (IsFloatingType(targetType))
-    //    {
-    //        using (CultureHelper.Use(CultureInfo.InvariantCulture))
-    //        {
-    //            return converter.ConvertFromString(value.Replace(',', '.'));
-    //        }
-    //    }
-
-    //    return converter.ConvertFromString(value);
-    //}
-
     public static bool IsFloatingType(Type type, bool includeNullable = true)
     {
         if (FloatingTypes.Contains(type))
