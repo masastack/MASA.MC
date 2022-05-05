@@ -4,3 +4,5 @@
 global using Masa.Mc.Infrastructure.ObjectExtending;
 global using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 global using System.Text.Json;
+global using System.Collections.ObjectModel;
+global using Microsoft.EntityFrameworkCore.ChangeTracking;

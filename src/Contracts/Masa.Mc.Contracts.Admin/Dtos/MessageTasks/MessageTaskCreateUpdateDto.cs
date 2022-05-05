@@ -23,7 +23,7 @@ public class MessageTaskCreateUpdateDto
 
     public string Sign { get; set; } = string.Empty;
 
-    public ReceiverDto Receivers { get; set; } = new();
+    public List<MessageTaskReceiverDto> Receivers { get; set; } = new();
 
     public SendingRuleDto SendingRules { get; set; } = new();
 

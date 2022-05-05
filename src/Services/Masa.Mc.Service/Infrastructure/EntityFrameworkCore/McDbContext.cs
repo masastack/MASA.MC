@@ -15,6 +15,8 @@ public class McDbContext : IsolationDbContext
 
     public DbSet<MessageTask> MessageTasks { get; set; } = default!;
 
+    public DbSet<MessageRecord> MessageRecords { get; set; } = default!;
+
     public McDbContext(MasaDbContextOptions<McDbContext> options) : base(options)
     {
 

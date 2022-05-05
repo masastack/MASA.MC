@@ -9,7 +9,7 @@ public class SendMessageTaskInput
     public ReceiverType ReceiverType { get; set; }
     public string Sign { get; set; } = string.Empty;
     public DateTime? SendTime { get; set; }
-    public ReceiverDto Receivers { get; set; } = new();
+    public List<MessageTaskReceiverDto> Receivers { get; set; } = new();
     public SendingRuleDto SendingRules { get; set; } = new();
     public ExtraPropertyDictionary Variables { get; set; } = new();
 }

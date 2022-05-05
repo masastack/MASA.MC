@@ -6,10 +6,10 @@ namespace Masa.Mc.Web.Admin.Pages.MessageTasks.Modules;
 public partial class MessageReceivers : AdminCompontentBase
 {
     [Parameter]
-    public List<ReceiverItemDto> Value { get; set; } = new();
+    public List<MessageTaskReceiverDto> Value { get; set; } = new();
 
     [Parameter]
-    public EventCallback<List<ReceiverItemDto>> ValueChanged { get; set; }
+    public EventCallback<List<MessageTaskReceiverDto>> ValueChanged { get; set; }
 
     [Parameter]
     public ChannelType? Type { get; set; }
@@ -42,7 +42,7 @@ public partial class MessageReceivers : AdminCompontentBase
     public async Task AddAsync()
     {
         var list = _stateUserItems.Where(x => _userIds.Contains(x.Id)).ToList();
-        var dtos = list.Adapt<List<ReceiverItemDto>>();
+        var dtos = list.Adapt<List<MessageTaskReceiverDto>>();
         foreach (var dto in dtos)
         {
             if (!Value.Any(x => x.SubjectId == dto.SubjectId && x.Type == dto.Type))
@@ -53,7 +53,7 @@ public partial class MessageReceivers : AdminCompontentBase
         await ValueChanged.InvokeAsync(Value);
     }
 
-    public async Task RemoveValue(ReceiverItemDto item)
+    public async Task RemoveValue(MessageTaskReceiverDto item)
     {
         Value.RemoveAll(x => x.SubjectId == item.SubjectId && x.Type == item.Type);
         await ValueChanged.InvokeAsync(Value);
@@ -62,7 +62,7 @@ public partial class MessageReceivers : AdminCompontentBase
     private async Task HandleOk(UserViewModel user)
     {
         _stateUserItems.Add(user);
-        Value.Add(user.Adapt<ReceiverItemDto>());
+        Value.Add(user.Adapt<MessageTaskReceiverDto>());
         await ValueChanged.InvokeAsync(Value);
     }
 }

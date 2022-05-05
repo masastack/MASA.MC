@@ -80,7 +80,7 @@ public partial class SendTestMessageModal : AdminCompontentBase
     private void HandleUserChange()
     {
         var items = _stateUserItems.Where(x => _userIds.Contains(x.Id)).ToList();
-        var dtos = items.Adapt<List<ReceiverItemDto>>();
-        _input.Receivers.Items = dtos;
+        var dtos = items.Adapt<List<MessageTaskReceiverDto>>();
+        _input.Receivers = dtos;
     }
 }

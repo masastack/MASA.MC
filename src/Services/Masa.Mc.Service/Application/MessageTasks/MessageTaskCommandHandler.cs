@@ -30,7 +30,8 @@ public class MessageTaskCommandHandler
     public async Task SendAsync(SendMessageTaskCommand command)
     {
         var input = command.input;
-        await _domainService.SendAsync(input.Id, input.ReceiverType, ExtensionPropertyHelper.ObjMapToExtraProperty(input.Receivers), ExtensionPropertyHelper.ObjMapToExtraProperty(input.SendingRules), input.SendTime, input.Sign, input.Variables);
+        var receivers = input.Receivers.Adapt<List<MessageTaskReceiver>>();
+        await _domainService.SendAsync(input.Id, input.ReceiverType, receivers, ExtensionPropertyHelper.ObjMapToExtraProperty(input.SendingRules), input.SendTime, input.Sign, input.Variables);
     }
 
     [EventHandler]
@@ -44,7 +45,8 @@ public class MessageTaskCommandHandler
             throw new UserFriendlyException("please fill in the signature of the task first");
         if (entity.Variables.Any(x => string.IsNullOrEmpty(x.Value.ToString())))
             throw new UserFriendlyException("please fill in the signature template variable of the task first");
-        await _domainService.SendAsync(input.Id, ReceiverType.Assign, ExtensionPropertyHelper.ObjMapToExtraProperty(input.Receivers), new ExtraPropertyDictionary(), DateTime.UtcNow, entity.Sign, entity.Variables);
+        var receivers = input.Receivers.Adapt<List<MessageTaskReceiver>>();
+        await _domainService.SendAsync(input.Id, ReceiverType.Assign, receivers, new ExtraPropertyDictionary(), DateTime.UtcNow, entity.Sign, entity.Variables);
     }
 
     [EventHandler]

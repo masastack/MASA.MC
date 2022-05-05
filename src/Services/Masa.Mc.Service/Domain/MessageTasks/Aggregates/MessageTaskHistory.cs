@@ -11,7 +11,7 @@ public class MessageTaskHistory : AuditEntity<Guid, Guid>
 
     public MessageTaskHistoryStatus Status { get; protected set; }
 
-    public ExtraPropertyDictionary Receivers { get; protected set; } = new();
+    public List<MessageTaskReceiver> Receivers { get; protected set; } = new();
 
     public ExtraPropertyDictionary SendingRules { get; protected set; } = new();
 
@@ -25,7 +25,7 @@ public class MessageTaskHistory : AuditEntity<Guid, Guid>
 
     public ExtraPropertyDictionary Variables { get; protected set; } = new();
 
-    protected internal MessageTaskHistory(Guid messageTaskId, ReceiverType receiverType, ExtraPropertyDictionary receivers, ExtraPropertyDictionary sendingRules, DateTime? sendTime, string sign, ExtraPropertyDictionary variables)
+    protected internal MessageTaskHistory(Guid messageTaskId, ReceiverType receiverType, List<MessageTaskReceiver> receivers, ExtraPropertyDictionary sendingRules, DateTime? sendTime, string sign, ExtraPropertyDictionary variables)
     {
         MessageTaskId = messageTaskId;
         ReceiverType = receiverType;

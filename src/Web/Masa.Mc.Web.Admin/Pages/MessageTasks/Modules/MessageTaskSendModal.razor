@@ -31,7 +31,7 @@
                             @if (_model.ReceiverType == ReceiverType.Assign)
                             {
                                 <MInput @bind-Value="_model.Receivers" />
-                                <MessageReceivers Class="mt-2" @bind-Value="_model.Receivers.Items" />
+                                <MessageReceivers Class="mt-2" @bind-Value="_model.Receivers" />
                             }
                             <div class="mt-4 text-subtitle2">@T("DisplayName.MessageTaskSendingRule")</div>
                             <MInput @bind-Value="_model.SendingRules" />

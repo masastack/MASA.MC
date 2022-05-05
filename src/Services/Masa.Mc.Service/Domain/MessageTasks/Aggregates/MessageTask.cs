@@ -25,7 +25,7 @@ public class MessageTask : AuditAggregateRoot<Guid, Guid>, ISoftDelete
 
     public string Sign { get; protected set; } = string.Empty;
 
-    public ExtraPropertyDictionary Receivers { get; protected set; } = new();
+    public List<MessageTaskReceiver> Receivers { get; protected set; } = new();
 
     public ExtraPropertyDictionary SendingRules { get; protected set; } = new();
 
@@ -35,7 +35,7 @@ public class MessageTask : AuditAggregateRoot<Guid, Guid>, ISoftDelete
 
     public bool IsDeleted { get; protected set; }
 
-    public MessageTask(string displayName, Guid channelId, MessageEntityType entityType, Guid entityId, bool isDraft, string sign, ReceiverType receiverType, ExtraPropertyDictionary receivers, ExtraPropertyDictionary sendingRules)
+    public MessageTask(string displayName, Guid channelId, MessageEntityType entityType, Guid entityId, bool isDraft, string sign, ReceiverType receiverType, List<MessageTaskReceiver> receivers, ExtraPropertyDictionary sendingRules)
     {
         DisplayName = displayName;
         ChannelId = channelId;
@@ -48,7 +48,7 @@ public class MessageTask : AuditAggregateRoot<Guid, Guid>, ISoftDelete
         Historys = new Collection<MessageTaskHistory>();
     }
 
-    public virtual void SendTask(ReceiverType receiverType, ExtraPropertyDictionary receivers, ExtraPropertyDictionary sendingRules, DateTime? sendTime, string sign, ExtraPropertyDictionary variables)
+    public virtual void SendTask(ReceiverType receiverType, List<MessageTaskReceiver> receivers, ExtraPropertyDictionary sendingRules, DateTime? sendTime, string sign, ExtraPropertyDictionary variables)
     {
         SetDraft(false);
         SetReceivers(receiverType, receivers);
@@ -69,12 +69,12 @@ public class MessageTask : AuditAggregateRoot<Guid, Guid>, ISoftDelete
         IsEnabled = false;
     }
 
-    public virtual void AddHistory(ReceiverType receiverType, ExtraPropertyDictionary receivers, ExtraPropertyDictionary sendingRules, DateTime? sendTime, string sign, ExtraPropertyDictionary variables)
+    public virtual void AddHistory(ReceiverType receiverType, List<MessageTaskReceiver> receivers, ExtraPropertyDictionary sendingRules, DateTime? sendTime, string sign, ExtraPropertyDictionary variables)
     {
         Historys.Add(new MessageTaskHistory(Id, receiverType, receivers, sendingRules, sendTime, sign, variables));
     }
 
-    public virtual void SetReceivers(ReceiverType receiverType, ExtraPropertyDictionary receivers)
+    public virtual void SetReceivers(ReceiverType receiverType, List<MessageTaskReceiver> receivers)
     {
         ReceiverType = receiverType;
         if (receiverType == ReceiverType.Assign)

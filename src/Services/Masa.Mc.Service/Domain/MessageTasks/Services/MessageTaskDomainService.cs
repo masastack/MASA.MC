@@ -40,7 +40,7 @@ public class MessageTaskDomainService : DomainService
         await _repository.UpdateAsync(messageTask);
     }
 
-    public virtual async Task SendAsync(Guid messageTaskId, ReceiverType receiverType, ExtraPropertyDictionary receivers, ExtraPropertyDictionary sendingRules, DateTime? sendTime, string sign, ExtraPropertyDictionary variables)
+    public virtual async Task SendAsync(Guid messageTaskId, ReceiverType receiverType, List<MessageTaskReceiver> receivers, ExtraPropertyDictionary sendingRules, DateTime? sendTime, string sign, ExtraPropertyDictionary variables)
     {
         var messageTask = await _repository.FindAsync(x => x.Id == messageTaskId);
         if (messageTask == null)

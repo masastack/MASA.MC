@@ -3,7 +3,7 @@
 
 namespace Masa.Mc.Contracts.Admin.Dtos.MessageTasks;
 
-public class ReceiverItemDto
+public class MessageTaskReceiverDto
 {
     public string SubjectId { get; set; } = string.Empty;
 

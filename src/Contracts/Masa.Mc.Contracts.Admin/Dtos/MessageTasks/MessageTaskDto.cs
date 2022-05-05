@@ -27,7 +27,7 @@ public class MessageTaskDto : AuditEntityDto<Guid, Guid>
 
     public MessageInfoDto MessageInfo { get; set; } = new();
 
-    public ReceiverDto Receivers { get; set; } = new();
+    public List<MessageTaskReceiverDto> Receivers { get; set; } = new();
 
     public SendingRuleDto SendingRules { get; set; } = new();
 
