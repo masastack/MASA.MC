@@ -12,8 +12,8 @@ public class SmsTemplateDomainService : DomainService
         _repository = repository;
     }
 
-    public async Task SynchroAsync(Guid channelId)
+    public async Task SyncAsync(Guid channelId)
     {
-        await EventBus.PublishAsync(new SmsTemplateSynchroDomainEvent(channelId));
+        await EventBus.PublishAsync(new SmsTemplateSyncDomainEvent(channelId));
     }
 }

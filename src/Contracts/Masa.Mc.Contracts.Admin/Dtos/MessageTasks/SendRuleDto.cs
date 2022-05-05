@@ -3,7 +3,7 @@
 
 namespace Masa.Mc.Contracts.Admin.Dtos.MessageTasks;
 
-public class SendingRuleDto
+public class SendRuleDto
 {
     public long Timeout { get; set; }
     public long RetryInterval { get; set; }

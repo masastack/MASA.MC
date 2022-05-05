@@ -12,9 +12,9 @@ public class MessageTaskService : ServiceBase
         BaseUrl = "api/message-task";
     }
 
-    public async Task<PaginatedListDto<MessageTaskDto>> GetListAsync(GetMessageTaskInput input)
+    public async Task<PaginatedListDto<MessageTaskDto>> GetListAsync(GetMessageTaskInputDto inputDto)
     {
-        return await GetAsync<GetMessageTaskInput, PaginatedListDto<MessageTaskDto>>(string.Empty, input) ?? new();
+        return await GetAsync<GetMessageTaskInputDto, PaginatedListDto<MessageTaskDto>>(string.Empty, inputDto) ?? new();
     }
 
     public async Task<MessageTaskDto?> GetAsync(Guid id)
@@ -22,14 +22,14 @@ public class MessageTaskService : ServiceBase
         return await GetAsync<MessageTaskDto>($"{id}");
     }
 
-    public async Task CreateAsync(MessageTaskCreateUpdateDto input)
+    public async Task CreateAsync(MessageTaskCreateUpdateDto inputDto)
     {
-        await PostAsync(string.Empty, input);
+        await PostAsync(string.Empty, inputDto);
     }
 
-    public async Task UpdateAsync(Guid id, MessageTaskCreateUpdateDto input)
+    public async Task UpdateAsync(Guid id, MessageTaskCreateUpdateDto inputDto)
     {
-        await PutAsync($"{id}", input);
+        await PutAsync($"{id}", inputDto);
     }
 
     public async Task DeleteAsync(Guid id)
@@ -37,28 +37,28 @@ public class MessageTaskService : ServiceBase
         await DeleteAsync($"{id}");
     }
 
-    public async Task SendAsync(SendMessageTaskInput input)
+    public async Task SendAsync(SendMessageTaskInputDto inputDto)
     {
-        await PostAsync("Send", input);
+        await PostAsync("Send", inputDto);
     }
 
-    public async Task SendTestAsync(SendTestMessageTaskInput input)
+    public async Task SendTestAsync(SendTestMessageTaskInputDto inputDto)
     {
-        await PostAsync("SendTest", input);
+        await PostAsync("SendTest", inputDto);
     }
 
-    public async Task WithdrawnHistoryAsync(WithdrawnMessageTaskHistoryInput input)
+    public async Task WithdrawnHistoryAsync(WithdrawnMessageTaskHistoryInputDto inputDto)
     {
-        await PostAsync("WithdrawnHistory", input);
+        await PostAsync("WithdrawnHistory", inputDto);
     }
 
-    public async Task EnabledAsync(EnabledMessageTaskInput input)
+    public async Task EnabledAsync(EnabledMessageTaskInputDto inputDto)
     {
-        await PostAsync("Enabled", input);
+        await PostAsync("Enabled", inputDto);
     }
 
-    public async Task DisableAsync(DisableMessageTaskInput input)
+    public async Task DisableAsync(DisableMessageTaskInputDto inputDto)
     {
-        await PostAsync("Disable", input);
+        await PostAsync("Disable", inputDto);
     }
 }

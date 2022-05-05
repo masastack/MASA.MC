@@ -7,20 +7,20 @@ public class Channel : AuditAggregateRoot<Guid, Guid>, ISoftDelete
 {
     public string DisplayName { get; protected set; } = string.Empty;
     public string Code { get; protected set; } = string.Empty;
-    public ChannelType Type { get; protected set; }
+    public ChannelTypes Type { get; protected set; }
     public string Description { get; protected set; } = string.Empty;
     public bool IsStatic { get; protected set; }
     public ExtraPropertyDictionary ExtraProperties { get; protected set; } = new();
     public bool IsDeleted { get; protected set; }
 
-    public Channel(string displayName,string code,ChannelType type,string description) : this(displayName, code, type, description, new Dictionary<string, string>())
+    public Channel(string displayName,string code,ChannelTypes type,string description) : this(displayName, code, type, description, new Dictionary<string, string>())
     {
     }
 
     public Channel(
         string displayName,
         string code,
-        ChannelType type,
+        ChannelTypes type,
         string description,
         Dictionary<string, string> extraProperties,
         bool isStatic = false)

@@ -1,11 +1,10 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
-namespace Masa.Mc.Contracts.Admin.Enums.MessageTemplates;
+namespace Masa.Mc.Contracts.Admin.Enums.MessageTasks;
 
-public enum MessageTemplateAuditStatus
+public enum MessageTaskTimeTypes
 {
-    WaitAudit=1,
-    Adopt,
-    Fail,
+    ModificationTime = 1,
+    SendTime,
 }

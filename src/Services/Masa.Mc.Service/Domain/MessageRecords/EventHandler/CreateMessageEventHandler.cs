@@ -27,7 +27,7 @@ public class CreateMessageEventHandler
         //Auth did not do this temporarily
         var task = await _messageTaskRepository.FindAsync(x => x.Id == @event.MessageTaskId);
         var history = task.Historys.FirstOrDefault(x => x.Id == @event.MessageTaskHistoryId);
-        var userIds = history.Receivers.Where(x => x.Type == MessageTaskReceiverType.User && !string.IsNullOrEmpty(x.SubjectId)).Select(x => new Guid(x.SubjectId));
+        var userIds = history.Receivers.Where(x => x.Type == MessageTaskReceiverTypes.User && !string.IsNullOrEmpty(x.SubjectId)).Select(x => new Guid(x.SubjectId));
         @event.UserIds = userIds;
     }
 
@@ -48,13 +48,13 @@ public class CreateMessageEventHandler
         var channel = await _channelRepository.FindAsync(x => x.Id == @event.ChannelId);
         switch (channel.Type)
         {
-            case ChannelType.Sms:
+            case ChannelTypes.Sms:
                 await _eventBus.PublishAsync(new CreateSmsMessageEvent(@event.ChannelId, @event.MessageTaskId, @event.MessageTaskHistoryId, @event.UserIds));
                 break;
-            case ChannelType.Email:
+            case ChannelTypes.Email:
                 await _eventBus.PublishAsync(new CreateEmailMessageEvent(@event.ChannelId, @event.MessageTaskId, @event.MessageTaskHistoryId, @event.UserIds));
                 break;
-            case ChannelType.WebsiteMessage:
+            case ChannelTypes.WebsiteMessage:
                 await _eventBus.PublishAsync(new CreateWebsiteMessageEvent(@event.ChannelId, @event.MessageTaskId, @event.MessageTaskHistoryId, @event.UserIds));
                 break;
             default:

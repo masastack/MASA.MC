@@ -22,8 +22,8 @@ public partial class TemplateMessageEditModal : AdminCompontentBase
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        var input = new GetMessageTemplateInput();
-        _templateItems = (await MessageTemplateService.GetListAsync(input)).Result;
+        var inputDto = new GetMessageTemplateInputDto();
+        _templateItems = (await MessageTemplateService.GetListAsync(inputDto)).Result;
     }
 
     public async Task OpenModalAsync(MessageTaskDto model)
@@ -120,9 +120,9 @@ public partial class TemplateMessageEditModal : AdminCompontentBase
 
     private void HandleChannelTypeChanged()
     {
-        if (_messageInfo.Channel?.Type != ChannelType.WebsiteMessage)
+        if (_messageInfo.Channel?.Type != ChannelTypes.WebsiteMessage)
         {
-            _model.ReceiverType = ReceiverType.Assign;
+            _model.ReceiverType = ReceiverTypes.Assign;
         }
     }
 }

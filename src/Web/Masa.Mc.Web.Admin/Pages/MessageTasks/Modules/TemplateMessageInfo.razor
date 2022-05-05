@@ -32,7 +32,7 @@
         </MTextField>
     </MCol>
 </MRow>
-@if (MessageTask.Channel != null && MessageTask.Channel.Type != ChannelType.Sms)
+@if (MessageTask.Channel != null && MessageTask.Channel.Type != ChannelTypes.Sms)
 {
     <MRow>
         <MCol>
@@ -54,7 +54,7 @@
         </MEditor>
     </MCol>
 </MRow>
-@if (MessageTask.Channel != null && MessageTask.Channel.Type == ChannelType.WebsiteMessage)
+@if (MessageTask.Channel != null && MessageTask.Channel.Type == ChannelTypes.WebsiteMessage)
 {
     <MRow>
         <MCol>

@@ -9,11 +9,11 @@ namespace Masa.Mc.Service.Admin.Application.MessageTasks.Registers
         {
             config.ForType<MessageTask, MessageTaskDto>().MapToConstructor(true)
                 .Map(dest => dest.Receivers, src => src.Receivers)
-                .Map(dest => dest.SendingRules, src => ExtensionPropertyHelper.ExtraPropertyMapToObj<SendingRuleDto>(src.SendingRules));
+                .Map(dest => dest.SendRules, src => ExtensionPropertyHelper.ExtraPropertyMapToObj<SendRuleDto>(src.SendRules));
             config.ForType<MessageTaskCreateUpdateDto, MessageTask>().MapToConstructor(true)
-                .Map(dest => dest.SendingRules, src => ExtensionPropertyHelper.ObjMapToExtraProperty(src.SendingRules));
+                .Map(dest => dest.SendRules, src => ExtensionPropertyHelper.ObjMapToExtraProperty(src.SendRules));
             config.ForType<MessageTaskHistory, MessageTaskHistoryDto>().MapToConstructor(true)
-                .Map(dest => dest.SendingRules, src => ExtensionPropertyHelper.ExtraPropertyMapToObj<SendingRuleDto>(src.SendingRules));
+                .Map(dest => dest.SendRules, src => ExtensionPropertyHelper.ExtraPropertyMapToObj<SendRuleDto>(src.SendRules));
         }
     }
 }

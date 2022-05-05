@@ -7,13 +7,13 @@ public class MessageTaskHistory : AuditEntity<Guid, Guid>
 {
     public Guid MessageTaskId { get; protected set; }
 
-    public ReceiverType ReceiverType { get; protected set; }
+    public ReceiverTypes ReceiverType { get; protected set; }
 
-    public MessageTaskHistoryStatus Status { get; protected set; }
+    public MessageTaskHistoryStatues Status { get; protected set; }
 
     public List<MessageTaskReceiver> Receivers { get; protected set; } = new();
 
-    public ExtraPropertyDictionary SendingRules { get; protected set; } = new();
+    public ExtraPropertyDictionary SendRules { get; protected set; } = new();
 
     public DateTime? SendTime { get; protected set; }
 
@@ -25,14 +25,14 @@ public class MessageTaskHistory : AuditEntity<Guid, Guid>
 
     public ExtraPropertyDictionary Variables { get; protected set; } = new();
 
-    protected internal MessageTaskHistory(Guid messageTaskId, ReceiverType receiverType, List<MessageTaskReceiver> receivers, ExtraPropertyDictionary sendingRules, DateTime? sendTime, string sign, ExtraPropertyDictionary variables)
+    protected internal MessageTaskHistory(Guid messageTaskId, ReceiverTypes receiverType, List<MessageTaskReceiver> receivers, ExtraPropertyDictionary sendRules, DateTime? sendTime, string sign, ExtraPropertyDictionary variables)
     {
         MessageTaskId = messageTaskId;
         ReceiverType = receiverType;
         Receivers = receivers;
-        SendingRules = sendingRules;
+        SendRules = sendRules;
         SendTime = sendTime;
-        Status = MessageTaskHistoryStatus.WaitSend;
+        Status = MessageTaskHistoryStatues.WaitSend;
         Sign = sign;
         Variables = variables;
     }
@@ -40,18 +40,18 @@ public class MessageTaskHistory : AuditEntity<Guid, Guid>
     public void SetSend()
     {
         SendTime = DateTime.UtcNow;
-        Status = MessageTaskHistoryStatus.Sending;
+        Status = MessageTaskHistoryStatues.Sending;
     }
 
     public void SetComplete()
     {
         CompletionTime = DateTime.UtcNow;
-        Status = MessageTaskHistoryStatus.Completed;
+        Status = MessageTaskHistoryStatues.Completed;
     }
 
     public void SetWithdraw()
     {
         WithdrawTime = DateTime.UtcNow;
-        Status = MessageTaskHistoryStatus.Withdrawn;
+        Status = MessageTaskHistoryStatues.Withdrawn;
     }
 }

@@ -15,5 +15,5 @@ public class MessageTaskReceiver
 
     public string Email { get; set; } = string.Empty;
 
-    public MessageTaskReceiverType Type { get; set; }
+    public MessageTaskReceiverTypes Type { get; set; }
 }

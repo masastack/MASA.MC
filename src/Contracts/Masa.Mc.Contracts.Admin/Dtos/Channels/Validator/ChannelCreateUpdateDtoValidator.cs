@@ -7,9 +7,9 @@ public class ChannelCreateUpdateDtoValidator : AbstractValidator<ChannelCreateUp
 {
     public ChannelCreateUpdateDtoValidator()
     {
-        RuleFor(input => input.DisplayName).Required().Length(2, 50);
-        RuleFor(input => input.Code).Required().Length(2, 50);
-        RuleFor(input => input.Type).IsInEnum();
-        RuleFor(input => input.Description).Length(0, 255);
+        RuleFor(inputDto => inputDto.DisplayName).Required().Length(2, 50);
+        RuleFor(inputDto => inputDto.Code).Required().Length(2, 50);
+        RuleFor(inputDto => inputDto.Type).IsInEnum();
+        RuleFor(inputDto => inputDto.Description).Length(0, 255);
     }
 }

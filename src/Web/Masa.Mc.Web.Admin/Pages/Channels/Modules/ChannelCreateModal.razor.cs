@@ -11,8 +11,8 @@ public partial class ChannelCreateModal : AdminCompontentBase
     private MForm _form;
     private ChannelCreateUpdateDto _model = new();
     private bool _visible;
-    private List<ChannelType> channelTypeItems = Enum.GetValues(typeof(ChannelType))
-        .Cast<ChannelType>().ToList();
+    private List<ChannelTypes> channelTypeItems = Enum.GetValues(typeof(ChannelTypes))
+        .Cast<ChannelTypes>().ToList();
     private ChannelExtraProperties _channelExtraPropertiesRef = default!;
 
     int _step = 1;
@@ -21,7 +21,7 @@ public partial class ChannelCreateModal : AdminCompontentBase
 
     public async Task OpenModalAsync()
     {
-        _model.Type = ChannelType.Email;
+        _model.Type = ChannelTypes.Email;
         await InvokeAsync(() =>
         {
             _visible = true;
@@ -35,7 +35,7 @@ public partial class ChannelCreateModal : AdminCompontentBase
         ResetForm();
     }
 
-    private void HandleSelectType(ChannelType Type)
+    private void HandleSelectType(ChannelTypes Type)
     {
         _model.Type = Type;
         _step++;

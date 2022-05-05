@@ -12,9 +12,9 @@ public class ReceiverGroupService : ServiceBase
         BaseUrl = "api/receiver-group";
     }
 
-    public async Task<PaginatedListDto<ReceiverGroupDto>> GetListAsync(GetReceiverGroupInput input)
+    public async Task<PaginatedListDto<ReceiverGroupDto>> GetListAsync(GetReceiverGroupInputDto inputDto)
     {
-        return await GetAsync<GetReceiverGroupInput, PaginatedListDto<ReceiverGroupDto>>(string.Empty, input) ?? new();
+        return await GetAsync<GetReceiverGroupInputDto, PaginatedListDto<ReceiverGroupDto>>(string.Empty, inputDto) ?? new();
     }
 
     public async Task<ReceiverGroupDto?> GetAsync(Guid id)
@@ -22,14 +22,14 @@ public class ReceiverGroupService : ServiceBase
         return await GetAsync<ReceiverGroupDto>($"{id}");
     }
 
-    public async Task CreateAsync(ReceiverGroupCreateUpdateDto input)
+    public async Task CreateAsync(ReceiverGroupCreateUpdateDto inputDto)
     {
-        await PostAsync(string.Empty, input);
+        await PostAsync(string.Empty, inputDto);
     }
 
-    public async Task UpdateAsync(Guid id, ReceiverGroupCreateUpdateDto input)
+    public async Task UpdateAsync(Guid id, ReceiverGroupCreateUpdateDto inputDto)
     {
-        await PutAsync($"{id}", input);
+        await PutAsync($"{id}", inputDto);
     }
 
     public async Task DeleteAsync(Guid id)

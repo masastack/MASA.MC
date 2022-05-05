@@ -12,7 +12,7 @@
                     <MRow>
                         <MCol Cols="3">
                             <MSelect Value="@_channelType"
-                                     Items="@(GetEnumList<ChannelType>())"
+                                     Items="@(GetEnumList<ChannelTypes>())"
                                      Label="@T("DisplayName.ChannelType")"
                                      ItemText="item => T(item.ToString())"
                                      ItemValue="item => item"

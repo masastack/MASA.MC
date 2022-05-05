@@ -6,7 +6,7 @@ namespace Masa.Mc.Web.Admin.Pages.MessageTasks.Modules;
 public partial class MessageSendingRules : AdminCompontentBase
 {
     [Parameter]
-    public SendingRuleDto Value { get; set; } = new();
+    public SendRuleDto Value { get; set; } = new();
 
     [Parameter]
     public DateTime? SendTime { get; set; } = new();

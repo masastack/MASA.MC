@@ -11,7 +11,7 @@ public class MessageTask : AuditAggregateRoot<Guid, Guid>, ISoftDelete
 
     public AppChannel Channel { get; protected set; } = default!;
 
-    public MessageEntityType EntityType { get; protected set; }
+    public MessageEntityTypes EntityType { get; protected set; }
 
     public Guid EntityId { get; protected set; }
 
@@ -19,7 +19,7 @@ public class MessageTask : AuditAggregateRoot<Guid, Guid>, ISoftDelete
 
     public bool IsEnabled { get; protected set; }
 
-    public ReceiverType ReceiverType { get; protected set; }
+    public ReceiverTypes ReceiverType { get; protected set; }
 
     public DateTime? SendTime { get; protected set; }
 
@@ -27,7 +27,7 @@ public class MessageTask : AuditAggregateRoot<Guid, Guid>, ISoftDelete
 
     public List<MessageTaskReceiver> Receivers { get; protected set; } = new();
 
-    public ExtraPropertyDictionary SendingRules { get; protected set; } = new();
+    public ExtraPropertyDictionary SendRules { get; protected set; } = new();
 
     public ICollection<MessageTaskHistory> Historys { get; protected set; }
 
@@ -35,7 +35,7 @@ public class MessageTask : AuditAggregateRoot<Guid, Guid>, ISoftDelete
 
     public bool IsDeleted { get; protected set; }
 
-    public MessageTask(string displayName, Guid channelId, MessageEntityType entityType, Guid entityId, bool isDraft, string sign, ReceiverType receiverType, List<MessageTaskReceiver> receivers, ExtraPropertyDictionary sendingRules)
+    public MessageTask(string displayName, Guid channelId, MessageEntityTypes entityType, Guid entityId, bool isDraft, string sign, ReceiverTypes receiverType, List<MessageTaskReceiver> receivers, ExtraPropertyDictionary sendRules)
     {
         DisplayName = displayName;
         ChannelId = channelId;
@@ -44,19 +44,19 @@ public class MessageTask : AuditAggregateRoot<Guid, Guid>, ISoftDelete
         Sign = sign;
         SetDraft(isDraft);
         SetReceivers(receiverType, receivers);
-        SendingRules = sendingRules ?? new();
+        SendRules = sendRules ?? new();
         Historys = new Collection<MessageTaskHistory>();
     }
 
-    public virtual void SendTask(ReceiverType receiverType, List<MessageTaskReceiver> receivers, ExtraPropertyDictionary sendingRules, DateTime? sendTime, string sign, ExtraPropertyDictionary variables)
+    public virtual void SendTask(ReceiverTypes receiverType, List<MessageTaskReceiver> receivers, ExtraPropertyDictionary sendRules, DateTime? sendTime, string sign, ExtraPropertyDictionary variables)
     {
         SetDraft(false);
         SetReceivers(receiverType, receivers);
-        SendingRules = sendingRules ?? new();
+        SendRules = sendRules ?? new();
         SendTime = sendTime ?? DateTime.UtcNow;
         Sign = sign;
         Variables = variables;
-        AddHistory(ReceiverType, Receivers, SendingRules, SendTime, Sign, Variables);
+        AddHistory(ReceiverType, Receivers, SendRules, SendTime, Sign, Variables);
     }
 
     public virtual void SetEnabled()
@@ -69,21 +69,21 @@ public class MessageTask : AuditAggregateRoot<Guid, Guid>, ISoftDelete
         IsEnabled = false;
     }
 
-    public virtual void AddHistory(ReceiverType receiverType, List<MessageTaskReceiver> receivers, ExtraPropertyDictionary sendingRules, DateTime? sendTime, string sign, ExtraPropertyDictionary variables)
+    public virtual void AddHistory(ReceiverTypes receiverType, List<MessageTaskReceiver> receivers, ExtraPropertyDictionary sendRules, DateTime? sendTime, string sign, ExtraPropertyDictionary variables)
     {
-        Historys.Add(new MessageTaskHistory(Id, receiverType, receivers, sendingRules, sendTime, sign, variables));
+        Historys.Add(new MessageTaskHistory(Id, receiverType, receivers, sendRules, sendTime, sign, variables));
     }
 
-    public virtual void SetReceivers(ReceiverType receiverType, List<MessageTaskReceiver> receivers)
+    public virtual void SetReceivers(ReceiverTypes receiverType, List<MessageTaskReceiver> receivers)
     {
         ReceiverType = receiverType;
-        if (receiverType == ReceiverType.Assign)
+        if (receiverType == ReceiverTypes.Assign)
         {
             Receivers = receivers;
         }
     }
 
-    public virtual void SetEntity(MessageEntityType entityType, Guid entityId, string displayName)
+    public virtual void SetEntity(MessageEntityTypes entityType, Guid entityId, string displayName)
     {
         EntityType = entityType;
         EntityId = entityId;

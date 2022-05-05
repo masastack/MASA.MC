@@ -18,8 +18,8 @@ public class MessageTemplateDto : AuditEntityDto<Guid, Guid>
     public bool IsJump { get; set; }
     public string JumpUrl { get; set; } = string.Empty;
     public string Sign { get; set; } = string.Empty;
-    public MessageTemplateStatus Status { get; set; }
-    public MessageTemplateAuditStatus AuditStatus { get; set; }
+    public MessageTemplateStatues Status { get; set; }
+    public MessageTemplateAuditStatues AuditStatus { get; set; }
     public DateTime? AuditTime { get; set; }
     public DateTime? InvalidTime { get; set; }
     public string AuditReason { get; set; } = string.Empty;

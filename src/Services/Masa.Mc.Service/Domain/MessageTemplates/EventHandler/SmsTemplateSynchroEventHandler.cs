@@ -3,13 +3,13 @@
 
 namespace Masa.Mc.Service.Admin.Domain.MessageTemplates.EventHandler;
 
-public class SmsTemplateSynchroEventHandler
+public class SmsTemplateSyncEventHandler
 {
     private readonly IAliyunSmsAsyncLocal _aliyunSmsAsyncLocal;
     private readonly ISmsTemplateService _smsTemplateService;
     private readonly IServiceProvider _serviceProvider;
 
-    public SmsTemplateSynchroEventHandler(IAliyunSmsAsyncLocal aliyunSmsAsyncLocal, ISmsTemplateService smsTemplateService, IServiceProvider serviceProvider)
+    public SmsTemplateSyncEventHandler(IAliyunSmsAsyncLocal aliyunSmsAsyncLocal, ISmsTemplateService smsTemplateService, IServiceProvider serviceProvider)
     {
         _aliyunSmsAsyncLocal = aliyunSmsAsyncLocal;
         _smsTemplateService = smsTemplateService;
@@ -17,7 +17,7 @@ public class SmsTemplateSynchroEventHandler
     }
 
     [EventHandler]
-    public async Task HandleEvent(SmsTemplateSynchroDomainEvent @event)
+    public async Task HandleEvent(SmsTemplateSyncDomainEvent @event)
     {
         var unitOfWorkManager = _serviceProvider.GetRequiredService<IUnitOfWorkManager>();
         await using var unitOfWork = unitOfWorkManager.CreateDbContext();
@@ -43,25 +43,25 @@ public class SmsTemplateSynchroEventHandler
         }
     }
 
-    private SmsTemplateType AliyunSmsTemplateTypeMapToSmsTemplateType(int? templateType)
+    private SmsTemplateTypes AliyunSmsTemplateTypeMapToSmsTemplateType(int? templateType)
     {
         return templateType switch
         {
-            2 => SmsTemplateType.VerificationCode,
-            0 => SmsTemplateType.Notification,
-            6 => SmsTemplateType.Promotion,
-            7 => SmsTemplateType.Digital,
-            _ => SmsTemplateType.Other
+            2 => SmsTemplateTypes.VerificationCode,
+            0 => SmsTemplateTypes.Notification,
+            6 => SmsTemplateTypes.Promotion,
+            7 => SmsTemplateTypes.Digital,
+            _ => SmsTemplateTypes.Other
         };
     }
 
-    private MessageTemplateAuditStatus AliyunSmsTemplateAuditStatusMapToAuditStatus(string auditStatus)
+    private MessageTemplateAuditStatues AliyunSmsTemplateAuditStatusMapToAuditStatus(string auditStatus)
     {
         return auditStatus switch
         {
-            "AUDIT_STATE_PASS" => MessageTemplateAuditStatus.Adopt,
-            "AUDIT_STATE_NOT_PASS" => MessageTemplateAuditStatus.Fail,
-            _ => MessageTemplateAuditStatus.WaitAudit
+            "AUDIT_STATE_PASS" => MessageTemplateAuditStatues.Adopt,
+            "AUDIT_STATE_NOT_PASS" => MessageTemplateAuditStatues.Fail,
+            _ => MessageTemplateAuditStatues.WaitAudit
         };
     }
 }

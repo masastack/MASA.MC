@@ -12,13 +12,13 @@ public partial class EmailTemplateCreateModal : AdminCompontentBase
     private MessageTemplateCreateUpdateDto _model = new();
     private bool _visible;
     private List<ChannelDto> _channelItems = new();
-    private ChannelType _channelType;
+    private ChannelTypes _channelType;
 
     ChannelService ChannelService => McCaller.ChannelService;
 
     MessageTemplateService MessageTemplateService => McCaller.MessageTemplateService;
 
-    public async Task OpenModalAsync(ChannelType? channelType)
+    public async Task OpenModalAsync(ChannelTypes? channelType)
     {
         if (channelType.HasValue)
         {
@@ -66,7 +66,7 @@ public partial class EmailTemplateCreateModal : AdminCompontentBase
         if (!val) HandleCancel();
     }
 
-    private async Task HandleSelectChannelTypeAsync(ChannelType Type)
+    private async Task HandleSelectChannelTypeAsync(ChannelTypes Type)
     {
         _channelItems = await ChannelService.GetListByTypeAsync(Type);
         if (_channelItems.Count == 1)

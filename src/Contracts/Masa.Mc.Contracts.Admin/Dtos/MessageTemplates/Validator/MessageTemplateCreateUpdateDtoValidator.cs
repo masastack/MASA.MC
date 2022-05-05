@@ -7,16 +7,16 @@ public class MessageTemplateCreateUpdateDtoValidator : AbstractValidator<Message
 {
     public MessageTemplateCreateUpdateDtoValidator()
     {
-        RuleFor(input => input.DisplayName).Required();
-        RuleFor(input => input.ChannelId).Required();
-        RuleFor(input => input.Status).IsInEnum();
-        RuleFor(input => input.AuditStatus).IsInEnum();
-        RuleFor(input => input.Sign).Required().Length(2, 12).ChineseLetterNumber().When(x => x.ChannelType == ChannelType.Sms);
-        RuleFor(input => input.DayLimit).InclusiveBetween(1, 500);
-        RuleFor(input => input.TemplateId).Required().When(x => x.ChannelType == ChannelType.Sms);
-        RuleFor(input => input.DisplayName).Required().Length(2, 50).ChineseLetterNumber().When(x => x.ChannelType == ChannelType.Email);
-        RuleFor(input => input.Title).Required().Length(2, 255).ChineseLetterNumber().When(x => x.ChannelType == ChannelType.Email || x.ChannelType == ChannelType.WebsiteMessage);
-        RuleFor(input => input.Content).Required();
-        RuleFor(input => input.JumpUrl).Required().When(x=>x.IsJump);
+        RuleFor(inputDto => inputDto.DisplayName).Required();
+        RuleFor(inputDto => inputDto.ChannelId).Required();
+        RuleFor(inputDto => inputDto.Status).IsInEnum();
+        RuleFor(inputDto => inputDto.AuditStatus).IsInEnum();
+        RuleFor(inputDto => inputDto.Sign).Required().Length(2, 12).ChineseLetterNumber().When(x => x.ChannelType == ChannelTypes.Sms);
+        RuleFor(inputDto => inputDto.DayLimit).InclusiveBetween(1, 500);
+        RuleFor(inputDto => inputDto.TemplateId).Required().When(x => x.ChannelType == ChannelTypes.Sms);
+        RuleFor(inputDto => inputDto.DisplayName).Required().Length(2, 50).ChineseLetterNumber().When(x => x.ChannelType == ChannelTypes.Email);
+        RuleFor(inputDto => inputDto.Title).Required().Length(2, 255).ChineseLetterNumber().When(x => x.ChannelType == ChannelTypes.Email || x.ChannelType == ChannelTypes.WebsiteMessage);
+        RuleFor(inputDto => inputDto.Content).Required();
+        RuleFor(inputDto => inputDto.JumpUrl).Required().When(x=>x.IsJump);
     }
 }

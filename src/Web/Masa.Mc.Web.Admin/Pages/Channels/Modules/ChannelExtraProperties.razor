@@ -1,10 +1,10 @@
 ﻿@inherits AdminCompontentBase
 
-@if (Type==ChannelType.Email)
+@if (Type==ChannelTypes.Email)
 {
     <ChannelEmailExtraProperties @ref="_emailExtraPropertiesRef" @bind-Value="Value" />
 }
-else if (Type==ChannelType.Sms)
+else if (Type==ChannelTypes.Sms)
 {
     <ChannelSmsExtraProperties @ref="_smsExtraPropertiesRef" @bind-Value="Value" />
 }

@@ -11,9 +11,9 @@ public class ChannelService : ServiceBase
     {
         BaseUrl = "api/channel";
     }
-    public async Task<PaginatedListDto<ChannelDto>> GetListAsync(GetChannelInput input)
+    public async Task<PaginatedListDto<ChannelDto>> GetListAsync(GetChannelInputDto inputDto)
     {
-        return await GetAsync<GetChannelInput, PaginatedListDto<ChannelDto>>(string.Empty, input) ?? new();
+        return await GetAsync<GetChannelInputDto, PaginatedListDto<ChannelDto>>(string.Empty, inputDto) ?? new();
     }
 
     public async Task<ChannelDto?> GetAsync(Guid id)
@@ -21,14 +21,14 @@ public class ChannelService : ServiceBase
         return await GetAsync<ChannelDto>($"{id}");
     }
 
-    public async Task CreateAsync(ChannelCreateUpdateDto input)
+    public async Task CreateAsync(ChannelCreateUpdateDto inputDto)
     {
-        await PostAsync(string.Empty, input);
+        await PostAsync(string.Empty, inputDto);
     }
 
-    public async Task UpdateAsync(Guid id, ChannelCreateUpdateDto input)
+    public async Task UpdateAsync(Guid id, ChannelCreateUpdateDto inputDto)
     {
-        await PutAsync($"{id}", input);
+        await PutAsync($"{id}", inputDto);
     }
 
     public async Task DeleteAsync(Guid id)
@@ -41,7 +41,7 @@ public class ChannelService : ServiceBase
         return await GetAsync<ChannelDto>($"FindByCode?code={code}");
     }
 
-    public async Task<List<ChannelDto>> GetListByTypeAsync(ChannelType type)
+    public async Task<List<ChannelDto>> GetListByTypeAsync(ChannelTypes type)
     {
         return await GetAsync<List<ChannelDto>>($"GetListByType?type={type}") ?? new();
     }

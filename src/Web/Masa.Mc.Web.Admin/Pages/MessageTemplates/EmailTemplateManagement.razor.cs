@@ -9,7 +9,7 @@ public partial class EmailTemplateManagement : AdminCompontentBase
 
     private EmailTemplateEditModal _editModal;
     private EmailTemplateCreateModal _createModal;
-    private GetMessageTemplateInput _queryParam = new() { ChannelType = ChannelType.Email };
+    private GetMessageTemplateInputDto _queryParam = new() { ChannelType = ChannelTypes.Email };
     private PaginatedListDto<MessageTemplateDto> _entities = new();
     private List<ChannelDto> _channelItems = new();
     private bool advanced = true;
@@ -31,7 +31,7 @@ public partial class EmailTemplateManagement : AdminCompontentBase
             new() { Text = T($"{_prefix}{nameof(MessageTemplateDto.ModificationTime)}"), Value = nameof(MessageTemplateDto.ModificationTime), Sortable = true },
             new() { Text = T("Action"), Value = "Action", Sortable = false },
         };
-        _channelItems = await ChannelService.GetListByTypeAsync(ChannelType.Email);
+        _channelItems = await ChannelService.GetListByTypeAsync(ChannelTypes.Email);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -79,7 +79,7 @@ public partial class EmailTemplateManagement : AdminCompontentBase
 
     private async Task HandleClearAsync()
     {
-        _queryParam = new() { ChannelType = ChannelType.Email };
+        _queryParam = new() { ChannelType = ChannelTypes.Email };
         await LoadData();
     }
 

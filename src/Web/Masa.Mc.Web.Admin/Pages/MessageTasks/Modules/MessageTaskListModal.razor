@@ -15,7 +15,7 @@
                 <MRow Class="mx-2">
                     <MCol Cols="2">
                         <MSelect @bind-Value="@_queryParam.TimeType"
-                             Items="@(GetEnumList<MessageTaskTimeType>())"
+                             Items="@(GetEnumList<MessageTaskTimeTypes>())"
                              Label="@T("DisplayName.MessageTaskTimeType")"
                              ItemText="@(item => T($"DisplayName.MessageTaskTimeType.{item.ToString()}"))"
                              ItemValue="item => item"
@@ -23,9 +23,9 @@
                              Outlined
                              Clearable
                              HideDetails="@("auto")"
-                             TItem="MessageTaskTimeType"
-                             TItemValue="MessageTaskTimeType"
-                             TValue="MessageTaskTimeType?"
+                             TItem="MessageTaskTimeTypes"
+                             TItemValue="MessageTaskTimeTypes"
+                             TValue="MessageTaskTimeTypes?"
                              OnClearClick="RefreshAsync"
                              OnSelectedItemUpdate="RefreshAsync">
                         </MSelect>
@@ -85,7 +85,7 @@
                     </MCol>
                     <MCol Cols="2">
                         <MSelect @bind-Value="@_queryParam.EntityType"
-                             Items="@(GetEnumList<MessageEntityType>())"
+                             Items="@(GetEnumList<MessageEntityTypes>())"
                              Label="@T("DisplayName.MessageTaskEntityType")"
                              ItemText="@(item => T($"DisplayName.MessageEntityType.{item.ToString()}"))"
                              ItemValue="item => item"
@@ -93,9 +93,9 @@
                              Outlined
                              Clearable
                              HideDetails="@("auto")"
-                             TItem="MessageEntityType"
-                             TItemValue="MessageEntityType"
-                             TValue="MessageEntityType?"
+                             TItem="MessageEntityTypes"
+                             TItemValue="MessageEntityTypes"
+                             TValue="MessageEntityTypes?"
                              OnClearClick="RefreshAsync"
                              OnSelectedItemUpdate="RefreshAsync">
                         </MSelect>
@@ -122,7 +122,7 @@
                                 <span class="text-body3">@context.Item.Channel?.DisplayName</span>
                                 break;
                             case nameof(MessageTaskDto.EntityType):
-                                <span>@T($"DisplayName.MessageEntityType.{((MessageEntityType)context.Item.EntityType).ToString()}")</span>
+                                <span>@T($"DisplayName.MessageEntityType.{((MessageEntityTypes)context.Item.EntityType).ToString()}")</span>
                                 break;
                             case (nameof(MessageTaskDto.SendTime)):
                                 <span class="text-body3">@context.Item.SendTime?.ToString(T("$DateTimeFormat"))</span>

@@ -9,16 +9,16 @@
                             <MRow>
                                 <MCol>
                                     <MSelect @bind-Value="@_channelType"
-                                             Items="@(GetEnumList<ChannelType>().Where(x=>x!=ChannelType.Sms).ToList())"
+                                             Items="@(GetEnumList<ChannelTypes>().Where(x=>x!=ChannelTypes.Sms).ToList())"
                                              Label="@T("DisplayName.ChannelType")"
                                              ItemText="item => T(item.ToString())"
                                              ItemValue="item => item"
                                              Dense
                                              Outlined
                                              HideDetails="@("auto")"
-                                             TItem="ChannelType"
-                                             TItemValue="ChannelType"
-                                             TValue="ChannelType"
+                                             TItem="ChannelTypes"
+                                             TItemValue="ChannelTypes"
+                                             TValue="ChannelTypes"
                                              OnSelectedItemUpdate="HandleChannelTypeChangeAsync">
                                     </MSelect>
                                 </MCol>
@@ -36,7 +36,7 @@
                                     </MSelect>
                                 </MCol>
                             </MRow>
-                            @if (_channelType != ChannelType.Sms)
+                            @if (_channelType != ChannelTypes.Sms)
                             {
                                 <MRow>
                                     <MCol>
@@ -57,7 +57,7 @@
                                     <MInput @bind-Value="_model.MessageInfo.Content" />
                                 </MCol>
                             </MRow>
-                            @if (_channelType == ChannelType.WebsiteMessage)
+                            @if (_channelType == ChannelTypes.WebsiteMessage)
                             {
                                 <MRow>
                                     <MCol>
@@ -70,7 +70,7 @@
                                     </MCol>
                                 </MRow>
                             }
-                            @if (_channelType == ChannelType.Sms)
+                            @if (_channelType == ChannelTypes.Sms)
                             {
                                 <MRow>
                                     <MCol>
@@ -89,21 +89,21 @@
                             <MRadioGroup @bind-Value="_model.ReceiverType"
                                          Row>
                                 <MRadio Label="@T("DisplayName.ReceiverType.Assign")"
-                                        Value="@ReceiverType.Assign">
+                                        Value="@ReceiverTypes.Assign">
                                 </MRadio>
                                 <MRadio Label="@T("DisplayName.ReceiverType.Broadcast")"
-                                        Disabled="_channelType!=ChannelType.WebsiteMessage"
-                                        Value="@ReceiverType.Broadcast">
+                                        Disabled="_channelType!=ChannelTypes.WebsiteMessage"
+                                        Value="@ReceiverTypes.Broadcast">
                                 </MRadio>
                             </MRadioGroup>
-                            @if (_model.ReceiverType == ReceiverType.Assign)
+                            @if (_model.ReceiverType == ReceiverTypes.Assign)
                             {
                                 <MInput @bind-Value="_model.Receivers" />
                                 <MessageReceivers Class="mt-2" @bind-Value="_model.Receivers" Type="@_channelType" />
                             }
                             <div class="mt-4 text-subtitle2">@T("DisplayName.MessageTaskSendingRule")</div>
-                            <MInput @bind-Value="_model.SendingRules" />
-                            <MessageSendingRules Class="mt-2" @bind-Value="_model.SendingRules" @bind-SendTime="_model.SendTime" />
+                            <MInput @bind-Value="_model.SendRules" />
+                            <MessageSendingRules Class="mt-2" @bind-Value="_model.SendRules" @bind-SendTime="_model.SendTime" />
                         </MCol>
                     </MRow>
                 </div>

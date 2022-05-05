@@ -3,7 +3,7 @@
 
 namespace Masa.Mc.Contracts.Admin.Enums.Channels;
 
-public enum ChannelType
+public enum ChannelTypes
 {
     Sms = 1,
     Email,

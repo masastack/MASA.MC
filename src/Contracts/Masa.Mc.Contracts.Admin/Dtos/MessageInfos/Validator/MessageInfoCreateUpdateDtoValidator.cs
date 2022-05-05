@@ -7,7 +7,7 @@ public class MessageInfoCreateUpdateDtoValidator : AbstractValidator<MessageInfo
 {
     public MessageInfoCreateUpdateDtoValidator()
     {
-        RuleFor(input => input.Title).Required();
-        RuleFor(input => input.Content).Required();
+        RuleFor(inputDto => inputDto.Title).Required();
+        RuleFor(inputDto => inputDto.Content).Required();
     }
 }

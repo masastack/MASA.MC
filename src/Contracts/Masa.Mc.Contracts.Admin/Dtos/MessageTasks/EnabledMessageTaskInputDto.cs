@@ -1,10 +1,9 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
-namespace Masa.Mc.Contracts.Admin.Enums.MessageTemplates;
+namespace Masa.Mc.Contracts.Admin.Dtos.MessageTasks;
 
-public enum MessageTemplateStatus
+public class EnabledMessageTaskInputDto
 {
-    Normal=1,
-    Invalid
+    public Guid MessageTaskId { get; set; }
 }

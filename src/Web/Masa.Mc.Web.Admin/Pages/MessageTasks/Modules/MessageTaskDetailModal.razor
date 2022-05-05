@@ -45,7 +45,7 @@
                             </MCol>
                             <MCol Cols="5">
                                 <MSelect @bind-Value="@_queryParam.Status"
-                                         Items="@(GetEnumList<MessageTaskHistoryStatus>())"
+                                         Items="@(GetEnumList<MessageTaskHistoryStatues>())"
                                          Label="@T("DisplayName.MessageTaskHistoryStatus")"
                                          ItemText="@(item => T($"DisplayName.MessageTaskHistoryStatus.{item.ToString()}"))"
                                          ItemValue="item => item"
@@ -53,9 +53,9 @@
                                          Outlined
                                          Clearable
                                          HideDetails="@("auto")"
-                                         TItem="MessageTaskHistoryStatus"
-                                         TItemValue="MessageTaskHistoryStatus"
-                                         TValue="MessageTaskHistoryStatus?"
+                                         TItem="MessageTaskHistoryStatues"
+                                         TItemValue="MessageTaskHistoryStatues"
+                                         TValue="MessageTaskHistoryStatues?"
                                          OnClearClick="Refresh"
                                          OnSelectedItemUpdate="Refresh">
                                 </MSelect>
@@ -68,7 +68,7 @@
                                     <tr @key="item.Id" @onclick="()=>HandleItemSelect(item)">
                                         <td>
                                             <MChip Ripple="false">
-                                                <span>@T($"DisplayName.MessageTaskHistoryStatus.{((MessageTaskHistoryStatus)item.Status).ToString()}")</span>
+                                                <span>@T($"DisplayName.MessageTaskHistoryStatus.{((MessageTaskHistoryStatues)item.Status).ToString()}")</span>
                                             </MChip>
                                         </td>
                                         <td>
@@ -84,25 +84,25 @@
                         <MRow Class="mx-2 mt-2">
                             <div class="text-subtitle2">@T("DisplayName.MessageInfoContent")</div>
                             <MSpacer></MSpacer>
-                            @if (_historyInfo.Status != MessageTaskHistoryStatus.Withdrawn)
+                            @if (_historyInfo.Status != MessageTaskHistoryStatues.Withdrawn)
                             {
                                 <MButton Rounded Outlined Color="indigo" Class="ml-6 medium-button px-6" OnClick="WithdrawnHistoryAsync">
                                     <span>@T("Withdraw")</span>
                                 </MButton>
                             }
                         </MRow>
-                        @if (_info.EntityType == MessageEntityType.Ordinary)
+                        @if (_info.EntityType == MessageEntityTypes.Ordinary)
                         {
                             <OrdinaryMessageInfo MessageInfoId="_info.EntityId" MessageTask="_info"></OrdinaryMessageInfo>
                         }
-                        @if (_info.EntityType == MessageEntityType.Template)
+                        @if (_info.EntityType == MessageEntityTypes.Template)
                         {
                             <TemplateMessageInfo MessageTemplateId="_info.EntityId" MessageTask="_info"></TemplateMessageInfo>
                             <MessageVariables Class="mt-4" @bind-Value="_historyInfo.Variables" ReadOnly></MessageVariables>
                         }
                         <div class="my-2 text-subtitle2">@T("DisplayName.MessageTaskReceiver")</div>
                         <MSelect @bind-Value="@_historyInfo.ReceiverType"
-                                 Items="@(GetEnumList<ReceiverType>())"
+                                 Items="@(GetEnumList<ReceiverTypes>())"
                                  Label="@T("DisplayName.ReceiverType")"
                                  ItemText="@(item => T($"DisplayName.ReceiverType.{item.ToString()}"))"
                                  ItemValue="item => item"
@@ -127,7 +127,7 @@
                                 </MCol>
                             </MRow>
                         }
-                        <MessageSendingRules ReadOnly Class="mt-2" @bind-Value="_historyInfo.SendingRules" @bind-SendTime="_historyInfo.SendTime" />
+                        <MessageSendingRules ReadOnly Class="mt-2" @bind-Value="_historyInfo.SendRules" @bind-SendTime="_historyInfo.SendTime" />
                     </MCol>
                 </MRow>
             </div>

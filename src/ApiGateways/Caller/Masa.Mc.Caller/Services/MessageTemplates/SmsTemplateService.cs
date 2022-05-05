@@ -17,8 +17,8 @@ public class SmsTemplateService : ServiceBase
         return await GetAsync<List<SmsTemplateDto>>($"GetListByChannelId?channelId={channelId}") ?? new();
     }
 
-    public async Task SynchroAsync(SmsTemplateSynchroInput input)
+    public async Task SyncAsync(SmsTemplateSyncInputDto inputDto)
     {
-        await PostAsync("Synchro", input);
+        await PostAsync("Sync", inputDto);
     }
 }

@@ -11,7 +11,7 @@
             </PrependInnerContent>
         </MTextField>
         <MIcon Class="ml-4" OnClick="ToggleAdvanced">mdi-filter</MIcon>
-        <MButton Color="primary" Class="ml-6 medium-button" OnClick="()=> _createModal.OpenModalAsync(ChannelType.Email)">
+        <MButton Color="primary" Class="ml-6 medium-button" OnClick="()=> _createModal.OpenModalAsync(ChannelTypes.Email)">
             <MIcon Size=18>mdi-plus</MIcon>
             <span class="ml-2">@T("Permission.Create")</span>
         </MButton>
@@ -91,13 +91,13 @@
                         string color = string.Empty;
                         switch (context.Item.AuditStatus)
                         {
-                            case MessageTemplateAuditStatus.WaitAudit:
+                            case MessageTemplateAuditStatues.WaitAudit:
                                 color = "orange";
                                 break;
-                            case MessageTemplateAuditStatus.Adopt:
+                            case MessageTemplateAuditStatues.Adopt:
                                 color = "sample-green";
                                 break;
-                            case MessageTemplateAuditStatus.Fail:
+                            case MessageTemplateAuditStatues.Fail:
                                 color = "error";
                                 break;
                             default:

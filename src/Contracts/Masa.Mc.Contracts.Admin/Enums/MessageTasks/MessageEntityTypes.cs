@@ -1,12 +1,10 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
-namespace Masa.Mc.Contracts.Admin.Enums.ReceiverGroups;
+namespace Masa.Mc.Contracts.Admin.Enums.MessageTasks;
 
-public enum ReceiverGroupItemType
+public enum MessageEntityTypes
 {
-    User = 1,
-    Team = 2,
-    Role = 3,
-    Organization = 4
+    Ordinary = 1,
+    Template
 }

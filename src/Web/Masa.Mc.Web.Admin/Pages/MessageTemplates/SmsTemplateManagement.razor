@@ -11,7 +11,7 @@
             </PrependInnerContent>
         </MTextField>
         <MIcon Class="ml-4" OnClick="ToggleAdvanced">mdi-filter</MIcon>
-        <MButton Color="primary" Class="ml-6 medium-button" OnClick="()=> _createModal.OpenModalAsync(ChannelType.Sms)">
+        <MButton Color="primary" Class="ml-6 medium-button" OnClick="()=> _createModal.OpenModalAsync(ChannelTypes.Sms)">
             <MIcon Size=18>mdi-plus</MIcon>
             <span class="ml-2">@T("Permission.Create")</span>
         </MButton>
@@ -57,7 +57,7 @@
             </MCol>
             <MCol Cols="2">
                 <MSelect @bind-Value="@_queryParam.TemplateType"
-                     Items="@(GetEnumList<SmsTemplateType>())"
+                     Items="@(GetEnumList<SmsTemplateTypes>())"
                      Label="@T("DisplayName.MessageTemplateTemplateType")"
                      ItemText="@(item => T($"DisplayName.SmsTemplateType.{item.ToString()}"))"
                      ItemValue="item => (int)item"
@@ -65,7 +65,7 @@
                      Outlined
                      Clearable
                      HideDetails="@("auto")"
-                     TItem="SmsTemplateType"
+                     TItem="SmsTemplateTypes"
                      TItemValue="int"
                      TValue="int"
                      OnClearClick="RefreshAsync"
@@ -91,7 +91,7 @@
             </MCol>
             <MCol Cols="2">
                 <MSelect @bind-Value="@_queryParam.AuditStatus"
-                     Items="@(GetEnumList<MessageTemplateAuditStatus>())"
+                     Items="@(GetEnumList<MessageTemplateAuditStatues>())"
                      Label="@T("DisplayName.MessageTemplateAuditStatus")"
                      ItemText="item => T(item.ToString())"
                      ItemValue="item => item"
@@ -99,16 +99,16 @@
                      Outlined
                      Clearable
                      HideDetails="@("auto")"
-                     TItem="MessageTemplateAuditStatus"
-                     TItemValue="MessageTemplateAuditStatus"
-                     TValue="MessageTemplateAuditStatus?"
+                     TItem="MessageTemplateAuditStatues"
+                     TItemValue="MessageTemplateAuditStatues"
+                     TValue="MessageTemplateAuditStatues?"
                      OnClearClick="RefreshAsync"
                      OnSelectedItemUpdate="RefreshAsync">
                 </MSelect>
             </MCol>
             <MCol Cols="2">
                 <MSelect @bind-Value="@_queryParam.Status"
-                     Items="@(GetEnumList<MessageTemplateStatus>())"
+                     Items="@(GetEnumList<MessageTemplateStatues>())"
                      Label="@T("DisplayName.MessageTemplateStatus")"
                      ItemText="item => T(item.ToString())"
                      ItemValue="item => item"
@@ -116,9 +116,9 @@
                      Outlined
                      Clearable
                      HideDetails="@("auto")"
-                     TItem="MessageTemplateStatus"
-                     TItemValue="MessageTemplateStatus"
-                     TValue="MessageTemplateStatus?"
+                     TItem="MessageTemplateStatues"
+                     TItemValue="MessageTemplateStatues"
+                     TValue="MessageTemplateStatues?"
                      OnClearClick="RefreshAsync"
                      OnSelectedItemUpdate="RefreshAsync">
                 </MSelect>
@@ -137,7 +137,7 @@
                         <span class="text-body3">@context.Item.Channel?.DisplayName</span>
                         break;
                     case nameof(MessageTemplateDto.TemplateType):
-                        <span>@T($"DisplayName.SmsTemplateType.{((SmsTemplateType)context.Item.TemplateType).ToString()}")</span>
+                        <span>@T($"DisplayName.SmsTemplateType.{((SmsTemplateTypes)context.Item.TemplateType).ToString()}")</span>
                         break;
                     case (nameof(MessageTemplateDto.ModificationTime)):
                         <span class="text-body3">@context.Item.ModificationTime.ToString(T("$DateTimeFormat"))</span>
@@ -146,13 +146,13 @@
                         string color = string.Empty;
                         switch (context.Item.AuditStatus)
                         {
-                            case MessageTemplateAuditStatus.WaitAudit:
+                            case MessageTemplateAuditStatues.WaitAudit:
                                 color = "orange";
                                 break;
-                            case MessageTemplateAuditStatus.Adopt:
+                            case MessageTemplateAuditStatues.Adopt:
                                 color = "sample-green";
                                 break;
-                            case MessageTemplateAuditStatus.Fail:
+                            case MessageTemplateAuditStatues.Fail:
                                 color = "error";
                                 break;
                             default:

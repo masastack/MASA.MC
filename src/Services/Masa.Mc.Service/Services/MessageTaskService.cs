@@ -20,10 +20,10 @@ public class MessageTaskService : ServiceBase
         MapGet(GenerateImportTemplateAsync);
     }
 
-    public async Task<PaginatedListDto<MessageTaskDto>> GetListAsync(IEventBus eventbus, [FromQuery] Guid? channelId, [FromQuery] MessageEntityType? entityType, [FromQuery] bool? isEnabled, [FromQuery] MessageTaskTimeType? timeType, [FromQuery] DateTime? startTime, [FromQuery] DateTime? endTime, [FromQuery] string filter = "", [FromQuery] string sorting = "", [FromQuery] int page = 1, [FromQuery] int pagesize = 20)
+    public async Task<PaginatedListDto<MessageTaskDto>> GetListAsync(IEventBus eventbus, [FromQuery] Guid? channelId, [FromQuery] MessageEntityTypes? entityType, [FromQuery] bool? isEnabled, [FromQuery] MessageTaskTimeTypes? timeType, [FromQuery] DateTime? startTime, [FromQuery] DateTime? endTime, [FromQuery] string filter = "", [FromQuery] string sorting = "", [FromQuery] int page = 1, [FromQuery] int pagesize = 20)
     {
-        var input = new GetMessageTaskInput(filter, channelId, entityType, isEnabled, timeType, startTime, endTime, sorting, page, pagesize);
-        var query = new GetListMessageTaskQuery(input);
+        var inputDto = new GetMessageTaskInputDto(filter, channelId, entityType, isEnabled, timeType, startTime, endTime, sorting, page, pagesize);
+        var query = new GetListMessageTaskQuery(inputDto);
         await eventbus.PublishAsync(query);
         return query.Result;
     }
@@ -35,16 +35,16 @@ public class MessageTaskService : ServiceBase
         return query.Result;
     }
 
-    public async Task CreateAsync(IEventBus eventBus, [FromBody] MessageTaskCreateUpdateDto input)
+    public async Task CreateAsync(IEventBus eventBus, [FromBody] MessageTaskCreateUpdateDto inputDto)
     {
-        switch (input.EntityType)
+        switch (inputDto.EntityType)
         {
-            case MessageEntityType.Ordinary:
-                var ordinaryCommand = new CreateOrdinaryMessageTaskCommand(input);
+            case MessageEntityTypes.Ordinary:
+                var ordinaryCommand = new CreateOrdinaryMessageTaskCommand(inputDto);
                 await eventBus.PublishAsync(ordinaryCommand);
                 break;
-            case MessageEntityType.Template:
-                var templateCommand = new CreateTemplateMessageTaskCommand(input);
+            case MessageEntityTypes.Template:
+                var templateCommand = new CreateTemplateMessageTaskCommand(inputDto);
                 await eventBus.PublishAsync(templateCommand);
                 break;
             default:
@@ -53,16 +53,16 @@ public class MessageTaskService : ServiceBase
 
     }
 
-    public async Task UpdateAsync(IEventBus eventBus, Guid id, [FromBody] MessageTaskCreateUpdateDto input)
+    public async Task UpdateAsync(IEventBus eventBus, Guid id, [FromBody] MessageTaskCreateUpdateDto inputDto)
     {
-        switch (input.EntityType)
+        switch (inputDto.EntityType)
         {
-            case MessageEntityType.Ordinary:
-                var ordinaryCommand = new UpdateOrdinaryMessageTaskCommand(id, input);
+            case MessageEntityTypes.Ordinary:
+                var ordinaryCommand = new UpdateOrdinaryMessageTaskCommand(id, inputDto);
                 await eventBus.PublishAsync(ordinaryCommand);
                 break;
-            case MessageEntityType.Template:
-                var templateCommand = new UpdateTemplateMessageTaskCommand(id, input);
+            case MessageEntityTypes.Template:
+                var templateCommand = new UpdateTemplateMessageTaskCommand(id, inputDto);
                 await eventBus.PublishAsync(templateCommand);
                 break;
             default:
@@ -76,33 +76,33 @@ public class MessageTaskService : ServiceBase
         await eventBus.PublishAsync(command);
     }
 
-    public async Task SendAsync(IEventBus eventBus, SendMessageTaskInput input)
+    public async Task SendAsync(IEventBus eventBus, SendMessageTaskInputDto inputDto)
     {
-        var command = new SendMessageTaskCommand(input);
+        var command = new SendMessageTaskCommand(inputDto);
         await eventBus.PublishAsync(command);
     }
 
-    public async Task SendTestAsync(IEventBus eventBus, SendTestMessageTaskInput input)
+    public async Task SendTestAsync(IEventBus eventBus, SendTestMessageTaskInputDto inputDto)
     {
-        var command = new SendTestMessageTaskCommand(input);
+        var command = new SendTestMessageTaskCommand(inputDto);
         await eventBus.PublishAsync(command);
     }
 
-    public async Task WithdrawnHistoryAsync(IEventBus eventBus, WithdrawnMessageTaskHistoryInput input)
+    public async Task WithdrawnHistoryAsync(IEventBus eventBus, WithdrawnMessageTaskHistoryInputDto inputDto)
     {
-        var command = new WithdrawnMessageTaskHistoryCommand(input);
+        var command = new WithdrawnMessageTaskHistoryCommand(inputDto);
         await eventBus.PublishAsync(command);
     }
 
-    public async Task EnabledAsync(IEventBus eventBus, EnabledMessageTaskInput input)
+    public async Task EnabledAsync(IEventBus eventBus, EnabledMessageTaskInputDto inputDto)
     {
-        var command = new EnabledMessageTaskCommand(input);
+        var command = new EnabledMessageTaskCommand(inputDto);
         await eventBus.PublishAsync(command);
     }
 
-    public async Task DisableAsync(IEventBus eventBus, DisableMessageTaskInput input)
+    public async Task DisableAsync(IEventBus eventBus, DisableMessageTaskInputDto inputDto)
     {
-        var command = new DisableMessageTaskCommand(input);
+        var command = new DisableMessageTaskCommand(inputDto);
         await eventBus.PublishAsync(command);
     }
 

@@ -13,7 +13,7 @@ public partial class MessageTaskListModal : AdminCompontentBase
     private MessageTaskSendModal _sendModal = default!;
     private MessageTaskDetailModal _detailModal = default!;
     private SendTestMessageModal _sendTestModal = default!;
-    private GetMessageTaskInput _queryParam = new() { TimeType = MessageTaskTimeType.ModificationTime };
+    private GetMessageTaskInputDto _queryParam = new() { TimeType = MessageTaskTimeTypes.ModificationTime };
     private PaginatedListDto<MessageTaskDto> _entities = new();
     private List<ChannelDto> _channelItems = new();
     private bool advanced = true;
@@ -56,7 +56,7 @@ public partial class MessageTaskListModal : AdminCompontentBase
     {
         Loading = true;
         _entities = (await MessageTaskService.GetListAsync(_queryParam));
-        _channelItems = (await ChannelService.GetListAsync(new GetChannelInput(99))).Result;
+        _channelItems = (await ChannelService.GetListAsync(new GetChannelInputDto(99))).Result;
         Loading = false;
         StateHasChanged();
     }
@@ -89,7 +89,7 @@ public partial class MessageTaskListModal : AdminCompontentBase
 
     private async Task HandleClearAsync()
     {
-        _queryParam = new() { TimeType = MessageTaskTimeType.ModificationTime };
+        _queryParam = new() { TimeType = MessageTaskTimeTypes.ModificationTime };
         await LoadData();
     }
 
@@ -127,11 +127,11 @@ public partial class MessageTaskListModal : AdminCompontentBase
 
     private async Task HandleEditAsync(MessageTaskDto model)
     {
-        if (model.EntityType == MessageEntityType.Ordinary)
+        if (model.EntityType == MessageEntityTypes.Ordinary)
         {
             await _ordinaryEditModal.OpenModalAsync(model);
         }
-        if (model.EntityType == MessageEntityType.Template)
+        if (model.EntityType == MessageEntityTypes.Template)
         {
             await _templateEditModal.OpenModalAsync(model);
         }

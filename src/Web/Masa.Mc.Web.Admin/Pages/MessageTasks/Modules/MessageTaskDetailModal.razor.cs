@@ -14,7 +14,7 @@ public partial class MessageTaskDetailModal : AdminCompontentBase
     private MessageTaskHistoryDto _historyInfo = new();
     private Guid _entityId;
     private bool _visible;
-    private GetMessageTaskHistoryInput _queryParam = new();
+    private GetMessageTaskHistoryInputDto _queryParam = new();
     private bool _datePickersShow;
     private List<DateOnly> _dates = new List<DateOnly> { };
     private string DateRangeText => string.Join(" ~ ", _dates.Select(date => date.ToString("yyyy-MM-dd")));
@@ -133,12 +133,12 @@ public partial class MessageTaskDetailModal : AdminCompontentBase
 
     private async Task WithdrawnHistoryAsync()
     {
-        var input = new WithdrawnMessageTaskHistoryInput
+        var inputDto = new WithdrawnMessageTaskHistoryInputDto
         {
             MessageTaskId = _entityId,
             HistoryId = _historyInfo.Id
         };
-        await MessageTaskService.WithdrawnHistoryAsync(input);
+        await MessageTaskService.WithdrawnHistoryAsync(inputDto);
         await SuccessMessageAsync(T("MessageTaskHistoryWithdrawnMessage"));
         await GetFormDataAsync();
     }
@@ -147,12 +147,12 @@ public partial class MessageTaskDetailModal : AdminCompontentBase
     {
         if (IsEnabled)
         {
-            await MessageTaskService.EnabledAsync(new EnabledMessageTaskInput { MessageTaskId = _entityId });
+            await MessageTaskService.EnabledAsync(new EnabledMessageTaskInputDto { MessageTaskId = _entityId });
             _info.IsEnabled = true;
         }
         else
         {
-            await MessageTaskService.DisableAsync(new DisableMessageTaskInput { MessageTaskId = _entityId });
+            await MessageTaskService.DisableAsync(new DisableMessageTaskInputDto { MessageTaskId = _entityId });
             _info.IsEnabled = false;
         }
         if (OnOk.HasDelegate)

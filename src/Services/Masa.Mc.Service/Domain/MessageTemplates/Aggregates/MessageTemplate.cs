@@ -13,8 +13,8 @@ public class MessageTemplate : AuditAggregateRoot<Guid, Guid>, ISoftDelete
     public bool IsJump { get; protected set; }
     public string JumpUrl { get; protected set; } = string.Empty;
     public string Sign { get; protected set; } = string.Empty;
-    public MessageTemplateStatus Status { get; protected set; }
-    public MessageTemplateAuditStatus AuditStatus { get; protected set; }
+    public MessageTemplateStatues Status { get; protected set; }
+    public MessageTemplateAuditStatues AuditStatus { get; protected set; }
     public DateTime? AuditTime { get; protected set; }
     public DateTime? InvalidTime { get; protected set; }
     public string AuditReason { get; protected set; } = string.Empty;
@@ -36,8 +36,8 @@ public class MessageTemplate : AuditAggregateRoot<Guid, Guid>, ISoftDelete
         string sign,
         int templateType,
         long dayLimit,
-        MessageTemplateStatus status = MessageTemplateStatus.Normal,
-        MessageTemplateAuditStatus auditStatus = MessageTemplateAuditStatus.WaitAudit,
+        MessageTemplateStatues status = MessageTemplateStatues.Normal,
+        MessageTemplateAuditStatues auditStatus = MessageTemplateAuditStatues.WaitAudit,
         string auditReason = "",
         bool isStatic = false)
     {
@@ -80,10 +80,10 @@ public class MessageTemplate : AuditAggregateRoot<Guid, Guid>, ISoftDelete
         Content = content;
     }
 
-    public virtual void SetAuditStatus(MessageTemplateAuditStatus auditStatus, string auditReason = "")
+    public virtual void SetAuditStatus(MessageTemplateAuditStatues auditStatus, string auditReason = "")
     {
         AuditStatus = auditStatus;
-        if (auditStatus != MessageTemplateAuditStatus.WaitAudit)
+        if (auditStatus != MessageTemplateAuditStatues.WaitAudit)
         {
             AuditTime = DateTime.UtcNow;
             AuditReason = auditReason;
@@ -93,7 +93,7 @@ public class MessageTemplate : AuditAggregateRoot<Guid, Guid>, ISoftDelete
     public virtual void SetInvalid()
     {
         InvalidTime = DateTime.UtcNow;
-        Status = MessageTemplateStatus.Invalid;
+        Status = MessageTemplateStatues.Invalid;
     }
 
     public virtual void SetJump(bool isJump, string jumpUrl)

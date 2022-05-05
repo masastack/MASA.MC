@@ -3,21 +3,21 @@
 
 namespace Masa.Mc.Contracts.Admin.Dtos.Channels;
 
-public class GetChannelInput : PaginatedOptionsDto
+public class GetChannelInputDto : PaginatedOptionsDto
 {
     public string Filter { get; set; } = string.Empty;
-    public ChannelType? Type { get; set; }
+    public ChannelTypes? Type { get; set; }
     public string DisplayName { get; set; } = string.Empty;
 
-    public GetChannelInput()
+    public GetChannelInputDto()
     {
     }
 
-    public GetChannelInput(int pageSize) : base("", 1, pageSize)
+    public GetChannelInputDto(int pageSize) : base("", 1, pageSize)
     {
     }
 
-    public GetChannelInput(string filter, ChannelType? type, string displayName,
+    public GetChannelInputDto(string filter, ChannelTypes? type, string displayName,
        string sorting, int page, int pageSize) : base(sorting, page, pageSize)
     {
         Filter = filter;
@@ -25,17 +25,17 @@ public class GetChannelInput : PaginatedOptionsDto
         DisplayName = displayName;
     }
 
-    public static ValueTask<GetChannelInput?> BindAsync(HttpContext httpContext, ParameterInfo parameter)
+    public static ValueTask<GetChannelInputDto?> BindAsync(HttpContext httpContext, ParameterInfo parameter)
     {
         var filter = httpContext.Request.Query["filter"];
-        Enum.TryParse<ChannelType>(httpContext.Request.Query["type"], out var type);
+        Enum.TryParse<ChannelTypes>(httpContext.Request.Query["type"], out var type);
         var displayName = httpContext.Request.Query["displayName"];
         var sorting = httpContext.Request.Query["sorting"];
         int.TryParse(httpContext.Request.Query["page"], out var page);
         int.TryParse(httpContext.Request.Query["pageSize"], out var pageSize);
 
-        return ValueTask.FromResult<GetChannelInput?>(
-            new GetChannelInput(
+        return ValueTask.FromResult<GetChannelInputDto?>(
+            new GetChannelInputDto(
                 filter,
                 type,
                 displayName,

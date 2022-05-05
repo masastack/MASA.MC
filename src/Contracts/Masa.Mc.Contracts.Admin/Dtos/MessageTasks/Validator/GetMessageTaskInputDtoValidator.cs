@@ -3,10 +3,10 @@
 
 namespace Masa.Mc.Contracts.Admin.Dtos.MessageTasks.Validator;
 
-public class GetMessageTaskInputValidator : AbstractValidator<GetMessageTaskInput>
+public class GetMessageTaskInputDtoValidator : AbstractValidator<GetMessageTaskInputDto>
 {
-    public GetMessageTaskInputValidator()
+    public GetMessageTaskInputDtoValidator()
     {
-        RuleFor(input => input.EntityType).IsInEnum();
+        RuleFor(inputDto => inputDto.EntityType).IsInEnum();
     }
 }

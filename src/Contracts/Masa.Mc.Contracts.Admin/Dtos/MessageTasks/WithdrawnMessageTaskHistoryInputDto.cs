@@ -3,7 +3,8 @@
 
 namespace Masa.Mc.Contracts.Admin.Dtos.MessageTasks;
 
-public class DisableMessageTaskInput
+public class WithdrawnMessageTaskHistoryInputDto
 {
     public Guid MessageTaskId { get; set; }
+    public Guid HistoryId { get; set; }
 }

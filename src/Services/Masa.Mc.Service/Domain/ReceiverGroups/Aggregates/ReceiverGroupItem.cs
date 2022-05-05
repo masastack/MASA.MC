@@ -17,9 +17,9 @@ public class ReceiverGroupItem : Entity<Guid>
 
     public string Email { get; protected set; } = string.Empty;
 
-    public ReceiverGroupItemType Type { get; protected set; }
+    public ReceiverGroupItemTypes Type { get; protected set; }
 
-    public ReceiverGroupItem(Guid groupId, string subjectId, ReceiverGroupItemType type, string displayName, string avatar = "", string phoneNumber = "", string email = "")
+    public ReceiverGroupItem(Guid groupId, string subjectId, ReceiverGroupItemTypes type, string displayName, string avatar = "", string phoneNumber = "", string email = "")
     {
         GroupId = groupId;
         SubjectId = subjectId;

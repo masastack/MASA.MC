@@ -8,7 +8,7 @@ public class SmsTemplateService : ServiceBase
     public SmsTemplateService(IServiceCollection services) : base(services, "api/sms-template")
     {
         MapGet(GetListByChannelIdAsync);
-        MapPost(SynchroAsync);
+        MapPost(SyncAsync);
     }
 
     public async Task<List<SmsTemplateDto>> GetListByChannelIdAsync(IEventBus eventbus, Guid channelId)
@@ -18,9 +18,9 @@ public class SmsTemplateService : ServiceBase
         return query.Result;
     }
 
-    public async Task SynchroAsync(IEventBus eventbus, SmsTemplateSynchroInput input)
+    public async Task SyncAsync(IEventBus eventbus, SmsTemplateSyncInputDto inputDto)
     {
-        var command = new SynchroSmsTemplateCommand(input.ChannelId);
+        var command = new SyncSmsTemplateCommand(inputDto.ChannelId);
         await eventbus.PublishAsync(command); 
     }
 }

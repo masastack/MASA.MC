@@ -14,7 +14,7 @@ public partial class SmsTemplateEditModal : AdminCompontentBase
     private bool _visible;
     private List<ChannelDto> _channelItems = new();
     private List<SmsTemplateDto> _templateItems = new();
-    private ChannelType _channelType;
+    private ChannelTypes _channelType;
 
     ChannelService ChannelService => McCaller.ChannelService;
 
@@ -24,7 +24,7 @@ public partial class SmsTemplateEditModal : AdminCompontentBase
 
     public async Task OpenModalAsync(MessageTemplateDto model)
     {
-        _model.ChannelType = ChannelType.Sms;
+        _model.ChannelType = ChannelTypes.Sms;
         _entityId = model.Id;
         _model = model.Adapt<MessageTemplateCreateUpdateDto>();
         await GetFormDataAsync();
@@ -97,7 +97,7 @@ public partial class SmsTemplateEditModal : AdminCompontentBase
         if (!val) HandleCancel();
     }
 
-    private async Task HandleSelectChannelTypeAsync(ChannelType Type)
+    private async Task HandleSelectChannelTypeAsync(ChannelTypes Type)
     {
         _channelItems = await ChannelService.GetListByTypeAsync(Type);
     }
@@ -130,10 +130,10 @@ public partial class SmsTemplateEditModal : AdminCompontentBase
         return paramList.Select(x => new MessageTemplateItemDto { Code = x, MappingCode = x }).ToList();
     }
 
-    private async Task SynchroAsync()
+    private async Task SyncAsync()
     {
         Loading = true;
-        await SmsTemplateService.SynchroAsync(new SmsTemplateSynchroInput(_model.ChannelId));
+        await SmsTemplateService.SyncAsync(new SmsTemplateSyncInputDto(_model.ChannelId));
         _templateItems = await SmsTemplateService.GetListByChannelIdAsync(_model.ChannelId);
         Loading = false;
     }

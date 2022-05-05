@@ -16,8 +16,8 @@ public class ReceiverGroupService : ServiceBase
 
     public async Task<PaginatedListDto<ReceiverGroupDto>> GetListAsync(IEventBus eventbus, [FromQuery] string filter = "", [FromQuery] string sorting = "", [FromQuery] int page = 1, [FromQuery] int pagesize = 20)
     {
-        var input = new GetReceiverGroupInput(filter, sorting, page, pagesize);
-        var query = new GetListReceiverGroupQuery(input);
+        var inputDto = new GetReceiverGroupInputDto(filter, sorting, page, pagesize);
+        var query = new GetListReceiverGroupQuery(inputDto);
         await eventbus.PublishAsync(query);
         return query.Result;
     }
@@ -29,15 +29,15 @@ public class ReceiverGroupService : ServiceBase
         return query.Result;
     }
 
-    public async Task CreateAsync(IEventBus eventBus, [FromBody] ReceiverGroupCreateUpdateDto input)
+    public async Task CreateAsync(IEventBus eventBus, [FromBody] ReceiverGroupCreateUpdateDto inputDto)
     {
-        var command = new CreateReceiverGroupCommand(input);
+        var command = new CreateReceiverGroupCommand(inputDto);
         await eventBus.PublishAsync(command);
     }
 
-    public async Task UpdateAsync(IEventBus eventBus, Guid id, [FromBody] ReceiverGroupCreateUpdateDto input)
+    public async Task UpdateAsync(IEventBus eventBus, Guid id, [FromBody] ReceiverGroupCreateUpdateDto inputDto)
     {
-        var command = new UpdateReceiverGroupCommand(id, input);
+        var command = new UpdateReceiverGroupCommand(id, inputDto);
         await eventBus.PublishAsync(command);
     }
 

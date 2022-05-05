@@ -18,13 +18,13 @@ public class ChannelDomainService : DomainService
     {
         await ValidateChannelAsync(channel.Code);
         await _repository.AddAsync(channel);
-        if (channel.Type == ChannelType.Sms)
+        if (channel.Type == ChannelTypes.Sms)
         {
             await _repository.UnitOfWork.SaveChangesAsync();
             var channelId = channel.Id;
             Task.Run(async () =>
             {
-                await EventBus.PublishAsync(new SmsTemplateSynchroDomainEvent(channelId));
+                await EventBus.PublishAsync(new SmsTemplateSyncDomainEvent(channelId));
             });
         }
     }

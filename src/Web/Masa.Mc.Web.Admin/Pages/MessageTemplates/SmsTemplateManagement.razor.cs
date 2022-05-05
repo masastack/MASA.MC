@@ -9,7 +9,7 @@ public partial class SmsTemplateManagement : AdminCompontentBase
 
     private SmsTemplateEditModal _editModal;
     private SmsTemplateCreateModal _createModal;
-    private GetMessageTemplateInput _queryParam = new() { ChannelType = ChannelType.Sms };
+    private GetMessageTemplateInputDto _queryParam = new() { ChannelType = ChannelTypes.Sms };
     private PaginatedListDto<MessageTemplateDto> _entities = new();
     private List<ChannelDto> _channelItems = new();
     private bool advanced = true;
@@ -35,7 +35,7 @@ public partial class SmsTemplateManagement : AdminCompontentBase
             new() { Text = T($"{_prefix}{nameof(MessageTemplateDto.Status)}"), Value = nameof(MessageTemplateDto.Status), Sortable = false },
             new() { Text = T("Action"), Value = "Action", Sortable = false },
         };
-        _channelItems = await ChannelService.GetListByTypeAsync(ChannelType.Sms);
+        _channelItems = await ChannelService.GetListByTypeAsync(ChannelTypes.Sms);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -83,7 +83,7 @@ public partial class SmsTemplateManagement : AdminCompontentBase
 
     private async Task HandleClearAsync()
     {
-        _queryParam = new() { ChannelType = ChannelType.Sms };
+        _queryParam = new() { ChannelType = ChannelTypes.Sms };
         await LoadData();
     }
 

@@ -16,7 +16,7 @@ public class MessageTemplateAuditStatusChangedEventHandler
     public async Task MessageTemplateStatusChangedToApproved(MessageTemplateAuditStatusChangedToApprovedDomainEvent @event)
     {
         var entity = await _repository.FindAsync(x => x.Id == @event.TemplateId);
-        entity.SetAuditStatus(MessageTemplateAuditStatus.Adopt, @event.Remarks);
+        entity.SetAuditStatus(MessageTemplateAuditStatues.Adopt, @event.Remarks);
         await _repository.UpdateAsync(entity);
     }
 
@@ -24,7 +24,7 @@ public class MessageTemplateAuditStatusChangedEventHandler
     public async Task MessageTemplateStatusChangedToRefuse(MessageTemplateAuditStatusChangedToRefuseDomainEvent @event)
     {
         var entity = await _repository.FindAsync(x => x.Id == @event.TemplateId);
-        entity.SetAuditStatus(MessageTemplateAuditStatus.Fail, @event.Remarks);
+        entity.SetAuditStatus(MessageTemplateAuditStatues.Fail, @event.Remarks);
         await _repository.UpdateAsync(entity);
     }
 }

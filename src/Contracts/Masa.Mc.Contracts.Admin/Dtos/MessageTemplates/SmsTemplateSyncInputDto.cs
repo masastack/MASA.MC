@@ -3,11 +3,11 @@
 
 namespace Masa.Mc.Contracts.Admin.Dtos.MessageTemplates;
 
-public class SmsTemplateSynchroInput
+public class SmsTemplateSyncInputDto
 {
     public Guid ChannelId { get; set; }
 
-    public SmsTemplateSynchroInput(Guid channelId)
+    public SmsTemplateSyncInputDto(Guid channelId)
     {
         ChannelId = channelId;
     }

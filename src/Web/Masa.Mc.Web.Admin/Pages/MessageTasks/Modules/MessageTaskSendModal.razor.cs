@@ -9,7 +9,7 @@ public partial class MessageTaskSendModal : AdminCompontentBase
     public EventCallback OnOk { get; set; }
 
     private MForm _form = default!;
-    private SendMessageTaskInput _model = new();
+    private SendMessageTaskInputDto _model = new();
     private MessageTaskDto _info = new();
     private Guid _entityId;
     private bool _visible;
@@ -35,7 +35,7 @@ public partial class MessageTaskSendModal : AdminCompontentBase
     private async Task GetFormDataAsync()
     {
         _info = await MessageTaskService.GetAsync(_entityId) ?? new();
-        _model = _info.Adapt<SendMessageTaskInput>();
+        _model = _info.Adapt<SendMessageTaskInputDto>();
     }
 
     private void HandleCancel()

@@ -3,10 +3,10 @@
 
 namespace Masa.Mc.Contracts.Admin.Dtos.Channels.Validator;
 
-public class GetChannelInputValidator : AbstractValidator<GetChannelInput>
+public class GetChannelInputDtoValidator : AbstractValidator<GetChannelInputDto>
 {
-    public GetChannelInputValidator()
+    public GetChannelInputDtoValidator()
     {
-        RuleFor(input => input.Type).IsInEnum();
+        RuleFor(inputDto => inputDto.Type).IsInEnum();
     }
 }

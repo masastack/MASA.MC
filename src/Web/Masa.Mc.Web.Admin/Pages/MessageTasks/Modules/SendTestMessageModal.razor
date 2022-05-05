@@ -33,7 +33,7 @@
                     <MChip Close
                            OnCloseClick="()=>Remove(data.Item)">
                         <MAvatar Left>
-                            @if (data.Item.Type != ReceiverGroupItemType.User)
+                            @if (data.Item.Type != ReceiverGroupItemTypes.User)
                             {
                                 <MIcon>mdi-account-group</MIcon>
                             }
@@ -46,7 +46,7 @@
                     </MChip>
                 </SelectionContent>
                 <ItemContent Context="data">
-                    @if (data.Item.Type != ReceiverGroupItemType.User)
+                    @if (data.Item.Type != ReceiverGroupItemTypes.User)
                     {
                         <MListItemAvatar>
                             <MIcon Large>mdi-account-group</MIcon>
@@ -69,7 +69,7 @@
                             <MListItemTitle>
                                 @(data.Item.DisplayName)
                             </MListItemTitle>
-                            @if (_type == ChannelType.Email)
+                            @if (_type == ChannelTypes.Email)
                             {
                                 <MListItemSubtitle>@(data.Item.Email)</MListItemSubtitle>
                             }

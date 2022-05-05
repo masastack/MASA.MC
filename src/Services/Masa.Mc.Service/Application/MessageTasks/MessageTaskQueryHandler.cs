@@ -39,30 +39,30 @@ public class MessageTaskQueryHandler
         query.Result = result;
     }
 
-    private async Task<Expression<Func<MessageTask, bool>>> CreateFilteredPredicate(GetMessageTaskInput input)
+    private async Task<Expression<Func<MessageTask, bool>>> CreateFilteredPredicate(GetMessageTaskInputDto inputDto)
     {
         Expression<Func<MessageTask, bool>> condition = x => true;
-        condition = condition.And(!string.IsNullOrEmpty(input.Filter), x => x.DisplayName.Contains(input.Filter));
-        condition = condition.And(input.EntityType.HasValue, x => x.EntityType == input.EntityType);
-        condition = condition.And(input.ChannelId.HasValue, x => x.ChannelId == input.ChannelId);
-        condition = condition.And(input.IsEnabled.HasValue, x => x.IsEnabled == input.IsEnabled);
-        if (input.TimeType == MessageTaskTimeType.ModificationTime)
+        condition = condition.And(!string.IsNullOrEmpty(inputDto.Filter), x => x.DisplayName.Contains(inputDto.Filter));
+        condition = condition.And(inputDto.EntityType.HasValue, x => x.EntityType == inputDto.EntityType);
+        condition = condition.And(inputDto.ChannelId.HasValue, x => x.ChannelId == inputDto.ChannelId);
+        condition = condition.And(inputDto.IsEnabled.HasValue, x => x.IsEnabled == inputDto.IsEnabled);
+        if (inputDto.TimeType == MessageTaskTimeTypes.ModificationTime)
         {
-            condition = condition.And(input.StartTime.HasValue, x => x.ModificationTime >= input.StartTime);
-            condition = condition.And(input.EndTime.HasValue, x => x.ModificationTime <= input.EndTime);
+            condition = condition.And(inputDto.StartTime.HasValue, x => x.ModificationTime >= inputDto.StartTime);
+            condition = condition.And(inputDto.EndTime.HasValue, x => x.ModificationTime <= inputDto.EndTime);
         }
-        if (input.TimeType == MessageTaskTimeType.SendTime)
+        if (inputDto.TimeType == MessageTaskTimeTypes.SendTime)
         {
-            condition = condition.And(input.StartTime.HasValue, x => x.SendTime >= input.StartTime);
-            condition = condition.And(input.EndTime.HasValue, x => x.SendTime <= input.EndTime);
+            condition = condition.And(inputDto.StartTime.HasValue, x => x.SendTime >= inputDto.StartTime);
+            condition = condition.And(inputDto.EndTime.HasValue, x => x.SendTime <= inputDto.EndTime);
         }
         return await Task.FromResult(condition); ;
     }
 
-    private async Task<IQueryable<MessageTask>> CreateFilteredQueryAsync(GetMessageTaskInput input)
+    private async Task<IQueryable<MessageTask>> CreateFilteredQueryAsync(GetMessageTaskInputDto inputDto)
     {
         var query = await _repository.WithDetailsAsync()!;
-        var condition = await CreateFilteredPredicate(input);
+        var condition = await CreateFilteredPredicate(inputDto);
         return query.Where(condition);
     }
 

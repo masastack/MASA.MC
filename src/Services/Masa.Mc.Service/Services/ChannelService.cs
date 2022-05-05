@@ -16,17 +16,17 @@ public class ChannelService : ServiceBase
         MapGet(GetListByTypeAsync);
     }
 
-    public async Task<PaginatedListDto<ChannelDto>> GetListAsync(IEventBus eventbus, [FromQuery] ChannelType? type, [FromQuery] string displayName = "", [FromQuery] string filter = "", [FromQuery] string sorting = "", [FromQuery] int page = 1, [FromQuery] int pagesize = 20)
+    public async Task<PaginatedListDto<ChannelDto>> GetListAsync(IEventBus eventbus, [FromQuery] ChannelTypes? type, [FromQuery] string displayName = "", [FromQuery] string filter = "", [FromQuery] string sorting = "", [FromQuery] int page = 1, [FromQuery] int pagesize = 20)
     {
-        var input = new GetChannelInput(filter, type, displayName, sorting, page, pagesize);
-        var query = new GetListChannelQuery(input);
+        var inputDto = new GetChannelInputDto(filter, type, displayName, sorting, page, pagesize);
+        var query = new GetListChannelQuery(inputDto);
         await eventbus.PublishAsync(query);
         return query.Result;
     }
 
-    //public async Task<PaginatedListDto<ChannelDto>> GetListAsync([FromServices] IEventBus eventBus, GetChannelInput input)
+    //public async Task<PaginatedListDto<ChannelDto>> GetListAsync([FromServices] IEventBus eventBus, GetChannelInput inputDto)
     //{
-    //    var query = new GetListChannelQuery(input);
+    //    var query = new GetListChannelQuery(inputDto);
     //    await eventBus.PublishAsync(query);
     //    return query.Result;
     //}
@@ -38,15 +38,15 @@ public class ChannelService : ServiceBase
         return query.Result;
     }
 
-    public async Task CreateAsync(IEventBus eventBus, [FromBody] ChannelCreateUpdateDto input)
+    public async Task CreateAsync(IEventBus eventBus, [FromBody] ChannelCreateUpdateDto inputDto)
     {
-        var command = new CreateChannelCommand(input);
+        var command = new CreateChannelCommand(inputDto);
         await eventBus.PublishAsync(command);
     }
 
-    public async Task UpdateAsync(IEventBus eventBus, Guid id, [FromBody] ChannelCreateUpdateDto input)
+    public async Task UpdateAsync(IEventBus eventBus, Guid id, [FromBody] ChannelCreateUpdateDto inputDto)
     {
-        var command = new UpdateChannelCommand(id, input);
+        var command = new UpdateChannelCommand(id, inputDto);
         await eventBus.PublishAsync(command);
     }
 
@@ -63,7 +63,7 @@ public class ChannelService : ServiceBase
         return query.Result;
     }
 
-    public async Task<List<ChannelDto>> GetListByTypeAsync(IEventBus eventBus, ChannelType type)
+    public async Task<List<ChannelDto>> GetListByTypeAsync(IEventBus eventBus, ChannelTypes type)
     {
         var query = new GetListByTypeQuery(type);
         await eventBus.PublishAsync(query);

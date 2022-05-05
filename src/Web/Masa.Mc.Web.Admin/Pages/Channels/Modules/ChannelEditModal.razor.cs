@@ -14,8 +14,8 @@ public partial class ChannelEditModal : AdminCompontentBase
     private ChannelCreateUpdateDto _model = new();
     private Guid _entityId;
     private bool _visible;
-    private List<ChannelType> channelTypeItems = Enum.GetValues(typeof(ChannelType))
-        .Cast<ChannelType>().ToList();
+    private List<ChannelTypes> channelTypeItems = Enum.GetValues(typeof(ChannelTypes))
+        .Cast<ChannelTypes>().ToList();
     private ChannelExtraProperties _channelExtraPropertiesRef = default!;
 
     ChannelService ChannelService => McCaller.ChannelService;

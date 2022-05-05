@@ -9,7 +9,7 @@ public class ChannelCreateUpdateDto
 
     public string Code { get; set; } = string.Empty;
 
-    public ChannelType Type { get; set; }
+    public ChannelTypes Type { get; set; }
 
     public string Description { get; set; } = string.Empty;
 

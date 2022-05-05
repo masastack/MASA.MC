@@ -12,9 +12,9 @@ public class MessageTemplateService : ServiceBase
         BaseUrl = "api/message-template";
     }
 
-    public async Task<PaginatedListDto<MessageTemplateDto>> GetListAsync(GetMessageTemplateInput input)
+    public async Task<PaginatedListDto<MessageTemplateDto>> GetListAsync(GetMessageTemplateInputDto inputDto)
     {
-        return await GetAsync<GetMessageTemplateInput,PaginatedListDto<MessageTemplateDto>>(string.Empty, input) ?? new();
+        return await GetAsync<GetMessageTemplateInputDto,PaginatedListDto<MessageTemplateDto>>(string.Empty, inputDto) ?? new();
     }
 
     public async Task<MessageTemplateDto?> GetAsync(Guid id)
@@ -22,14 +22,14 @@ public class MessageTemplateService : ServiceBase
         return await GetAsync<MessageTemplateDto>($"{id}");
     }
 
-    public async Task CreateAsync(MessageTemplateCreateUpdateDto input)
+    public async Task CreateAsync(MessageTemplateCreateUpdateDto inputDto)
     {
-        await PostAsync(string.Empty, input);
+        await PostAsync(string.Empty, inputDto);
     }
 
-    public async Task UpdateAsync(Guid id, MessageTemplateCreateUpdateDto input)
+    public async Task UpdateAsync(Guid id, MessageTemplateCreateUpdateDto inputDto)
     {
-        await PutAsync($"{id}", input);
+        await PutAsync($"{id}", inputDto);
     }
 
     public async Task DeleteAsync(Guid id)

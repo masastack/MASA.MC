@@ -7,7 +7,7 @@ public class ReceiverGroupItemDto
 {
     public Guid GroupId { get; set; }
 
-    public ReceiverGroupItemType Type { get; set; }
+    public ReceiverGroupItemTypes Type { get; set; }
 
     public string SubjectId { get; set; } = string.Empty;
 

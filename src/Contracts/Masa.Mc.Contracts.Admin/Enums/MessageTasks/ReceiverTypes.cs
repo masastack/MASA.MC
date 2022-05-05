@@ -3,11 +3,8 @@
 
 namespace Masa.Mc.Contracts.Admin.Enums.MessageTasks;
 
-public enum MessageTaskReceiverType
+public enum ReceiverTypes
 {
-    User = 1,
-    Team = 2,
-    Role = 3,
-    Organization = 4,
-    Group = 5
+    Assign = 1,
+    Broadcast
 }

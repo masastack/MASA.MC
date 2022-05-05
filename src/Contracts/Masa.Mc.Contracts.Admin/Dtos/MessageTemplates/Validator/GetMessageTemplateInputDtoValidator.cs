@@ -3,9 +3,9 @@
 
 namespace Masa.Mc.Contracts.Admin.Dtos.MessageTemplates.Validator;
 
-public class GetMessageTemplateInputValidator : AbstractValidator<GetMessageTemplateInput>
+public class GetMessageTemplateInputDtoValidator : AbstractValidator<GetMessageTemplateInputDto>
 {
-    public GetMessageTemplateInputValidator()
+    public GetMessageTemplateInputDtoValidator()
     {
         
     }

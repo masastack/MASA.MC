@@ -9,7 +9,7 @@ public partial class TemplateMessageCreateModal : AdminCompontentBase
     public EventCallback OnOk { get; set; }
 
     private MForm _form;
-    private MessageTaskCreateUpdateDto _model = new() { ReceiverType = ReceiverType.Assign, EntityType = MessageEntityType.Template };
+    private MessageTaskCreateUpdateDto _model = new() { ReceiverType = ReceiverTypes.Assign, EntityType = MessageEntityTypes.Template };
     private bool _visible;
     private List<MessageTemplateDto> _templateItems = new();
     private MessageTemplateDto _messageInfo = new();
@@ -22,8 +22,8 @@ public partial class TemplateMessageCreateModal : AdminCompontentBase
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        var input = new GetMessageTemplateInput(999);
-        _templateItems = (await MessageTemplateService.GetListAsync(input)).Result;
+        var inputDto = new GetMessageTemplateInputDto(999);
+        _templateItems = (await MessageTemplateService.GetListAsync(inputDto)).Result;
     }
 
     public async Task OpenModalAsync()
@@ -62,7 +62,7 @@ public partial class TemplateMessageCreateModal : AdminCompontentBase
 
     private void ResetForm()
     {
-        _model = new() { ReceiverType = ReceiverType.Assign, EntityType = MessageEntityType.Template };
+        _model = new() { ReceiverType = ReceiverTypes.Assign, EntityType = MessageEntityTypes.Template };
     }
 
     private void HandleVisibleChanged(bool val)
@@ -92,9 +92,9 @@ public partial class TemplateMessageCreateModal : AdminCompontentBase
 
     private void HandleChannelTypeChanged()
     {
-        if (_messageInfo.Channel?.Type != ChannelType.WebsiteMessage)
+        if (_messageInfo.Channel?.Type != ChannelTypes.WebsiteMessage)
         {
-            _model.ReceiverType = ReceiverType.Assign;
+            _model.ReceiverType = ReceiverTypes.Assign;
         }
     }
 }

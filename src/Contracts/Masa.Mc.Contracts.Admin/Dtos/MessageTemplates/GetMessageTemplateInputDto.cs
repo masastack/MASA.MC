@@ -3,27 +3,27 @@
 
 namespace Masa.Mc.Contracts.Admin.Dtos.MessageTemplates;
 
-public class GetMessageTemplateInput : PaginatedOptionsDto
+public class GetMessageTemplateInputDto : PaginatedOptionsDto
 {
     public string Filter { get; set; } = string.Empty;
-    public MessageTemplateStatus? Status { get; set; }
-    public MessageTemplateAuditStatus? AuditStatus { get; set; }
-    public ChannelType? ChannelType { get; set; }
+    public MessageTemplateStatues? Status { get; set; }
+    public MessageTemplateAuditStatues? AuditStatus { get; set; }
+    public ChannelTypes? ChannelType { get; set; }
     public Guid? ChannelId { get; set; }
     public DateTime? StartTime { get; set; }
     public DateTime? EndTime { get; set; }
     public int TemplateType { get; set; }
 
-    public GetMessageTemplateInput()
+    public GetMessageTemplateInputDto()
     {
 
     }
 
-    public GetMessageTemplateInput(int pageSize) : base("", 1, pageSize)
+    public GetMessageTemplateInputDto(int pageSize) : base("", 1, pageSize)
     {
     }
 
-    public GetMessageTemplateInput(string filter, ChannelType? channelType, Guid? channelId, MessageTemplateStatus? status, MessageTemplateAuditStatus? auditStatus, DateTime? startTime, DateTime? endTime, int templateType, string sorting, int page, int pageSize) : base(sorting, page, pageSize)
+    public GetMessageTemplateInputDto(string filter, ChannelTypes? channelType, Guid? channelId, MessageTemplateStatues? status, MessageTemplateAuditStatues? auditStatus, DateTime? startTime, DateTime? endTime, int templateType, string sorting, int page, int pageSize) : base(sorting, page, pageSize)
     {
         Filter = filter;
         ChannelType = channelType;

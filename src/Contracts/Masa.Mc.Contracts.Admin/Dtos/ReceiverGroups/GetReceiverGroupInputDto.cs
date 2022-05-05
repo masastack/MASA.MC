@@ -3,20 +3,20 @@
 
 namespace Masa.Mc.Contracts.Admin.Dtos.ReceiverGroups;
 
-public class GetReceiverGroupInput : PaginatedOptionsDto
+public class GetReceiverGroupInputDto : PaginatedOptionsDto
 {
     public string Filter { get; set; } = string.Empty;
 
-    public GetReceiverGroupInput()
+    public GetReceiverGroupInputDto()
     {
 
     }
 
-    public GetReceiverGroupInput(int pageSize) : base("", 1, pageSize)
+    public GetReceiverGroupInputDto(int pageSize) : base("", 1, pageSize)
     {
     }
 
-    public GetReceiverGroupInput(string filter, string sorting, int page, int pageSize) : base(sorting, page, pageSize)
+    public GetReceiverGroupInputDto(string filter, string sorting, int page, int pageSize) : base(sorting, page, pageSize)
     {
         Filter = filter;
     }

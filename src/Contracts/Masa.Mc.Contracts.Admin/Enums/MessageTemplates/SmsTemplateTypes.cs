@@ -3,7 +3,7 @@
 
 namespace Masa.Mc.Contracts.Admin.Enums.MessageTemplates;
 
-public enum SmsTemplateType
+public enum SmsTemplateTypes
 {
     VerificationCode = 1,
     Notification = 2,

@@ -7,5 +7,5 @@ public class AppChannel : Entity<Guid>
 {
     public string DisplayName { get; protected set; } = string.Empty;
     public string Code { get; protected set; } = string.Empty;
-    public ChannelType Type { get; protected set; }
+    public ChannelTypes Type { get; protected set; }
 }

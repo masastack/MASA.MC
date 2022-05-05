@@ -9,10 +9,10 @@ public partial class OrdinaryMessageCreateModal : AdminCompontentBase
     public EventCallback OnOk { get; set; }
 
     private MForm _form;
-    private MessageTaskCreateUpdateDto _model = new() { ReceiverType = ReceiverType.Assign, EntityType = MessageEntityType.Ordinary };
+    private MessageTaskCreateUpdateDto _model = new() { ReceiverType = ReceiverTypes.Assign, EntityType = MessageEntityTypes.Ordinary };
     private bool _visible;
     private List<ChannelDto> _channelItems = new();
-    private ChannelType _channelType;
+    private ChannelTypes _channelType;
 
     MessageTaskService MessageTaskService => McCaller.MessageTaskService;
     ChannelService ChannelService => McCaller.ChannelService;
@@ -58,7 +58,7 @@ public partial class OrdinaryMessageCreateModal : AdminCompontentBase
 
     private void ResetForm()
     {
-        _model = new() { ReceiverType = ReceiverType.Assign, EntityType = MessageEntityType.Ordinary };
+        _model = new() { ReceiverType = ReceiverTypes.Assign, EntityType = MessageEntityTypes.Ordinary };
     }
 
     private void HandleVisibleChanged(bool val)
@@ -69,9 +69,9 @@ public partial class OrdinaryMessageCreateModal : AdminCompontentBase
     private async Task HandleChannelTypeChangeAsync()
     {
         _channelItems = await ChannelService.GetListByTypeAsync(_channelType);
-        if (_channelType != ChannelType.WebsiteMessage)
+        if (_channelType != ChannelTypes.WebsiteMessage)
         {
-            _model.ReceiverType = ReceiverType.Assign;
+            _model.ReceiverType = ReceiverTypes.Assign;
         }
     }
 }

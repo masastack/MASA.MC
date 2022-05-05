@@ -29,24 +29,24 @@ public class MessageTaskCommandHandler
     [EventHandler]
     public async Task SendAsync(SendMessageTaskCommand command)
     {
-        var input = command.input;
-        var receivers = input.Receivers.Adapt<List<MessageTaskReceiver>>();
-        await _domainService.SendAsync(input.Id, input.ReceiverType, receivers, ExtensionPropertyHelper.ObjMapToExtraProperty(input.SendingRules), input.SendTime, input.Sign, input.Variables);
+        var inputDto = command.inputDto;
+        var receivers = inputDto.Receivers.Adapt<List<MessageTaskReceiver>>();
+        await _domainService.SendAsync(inputDto.Id, inputDto.ReceiverType, receivers, ExtensionPropertyHelper.ObjMapToExtraProperty(inputDto.SendRules), inputDto.SendTime, inputDto.Sign, inputDto.Variables);
     }
 
     [EventHandler]
     public async Task SendTestAsync(SendTestMessageTaskCommand command)
     {
-        var input = command.input;
-        var entity = await _repository.FindAsync(x => x.Id == input.Id);
+        var inputDto = command.inputDto;
+        var entity = await _repository.FindAsync(x => x.Id == inputDto.Id);
         if (entity == null)
             throw new UserFriendlyException("messageTask not found");
-        if (entity.Channel.Type == ChannelType.Sms && string.IsNullOrEmpty(entity.Sign))
+        if (entity.Channel.Type == ChannelTypes.Sms && string.IsNullOrEmpty(entity.Sign))
             throw new UserFriendlyException("please fill in the signature of the task first");
         if (entity.Variables.Any(x => string.IsNullOrEmpty(x.Value.ToString())))
             throw new UserFriendlyException("please fill in the signature template variable of the task first");
-        var receivers = input.Receivers.Adapt<List<MessageTaskReceiver>>();
-        await _domainService.SendAsync(input.Id, ReceiverType.Assign, receivers, new ExtraPropertyDictionary(), DateTime.UtcNow, entity.Sign, entity.Variables);
+        var receivers = inputDto.Receivers.Adapt<List<MessageTaskReceiver>>();
+        await _domainService.SendAsync(inputDto.Id, ReceiverTypes.Assign, receivers, new ExtraPropertyDictionary(), DateTime.UtcNow, entity.Sign, entity.Variables);
     }
 
     [EventHandler]
@@ -58,7 +58,7 @@ public class MessageTaskCommandHandler
         var history = entity.Historys.FirstOrDefault(x => x.Id == command.Input.HistoryId);
         if (history == null)
             throw new UserFriendlyException("history not found");
-        if (history.Status == MessageTaskHistoryStatus.Withdrawn)
+        if (history.Status == MessageTaskHistoryStatues.Withdrawn)
             throw new UserFriendlyException("withdrawn");
         history.SetWithdraw();
         await _repository.UpdateAsync(entity);
@@ -80,7 +80,7 @@ public class MessageTaskCommandHandler
         var entity = await _repository.FindAsync(x => x.Id == command.Input.MessageTaskId);
         if (entity == null)
             throw new UserFriendlyException("messageTask not found");
-        if (entity.Historys.Any(x => x.Status == MessageTaskHistoryStatus.Sending))
+        if (entity.Historys.Any(x => x.Status == MessageTaskHistoryStatues.Sending))
             throw new UserFriendlyException("the task has a sending task history and cannot be disabled.");
         entity.SetDisable();
         await _repository.UpdateAsync(entity);

@@ -13,7 +13,7 @@ public partial class WebsiteMessageTemplateEditModal : AdminCompontentBase
     private Guid _entityId;
     private bool _visible;
     private List<ChannelDto> _channelItems = new();
-    private ChannelType _channelType;
+    private ChannelTypes _channelType;
 
     ChannelService ChannelService => McCaller.ChannelService;
 
@@ -92,7 +92,7 @@ public partial class WebsiteMessageTemplateEditModal : AdminCompontentBase
         if (!val) HandleCancel();
     }
 
-    private async Task HandleSelectChannelType(ChannelType Type)
+    private async Task HandleSelectChannelType(ChannelTypes Type)
     {
         _channelItems = await ChannelService.GetListByTypeAsync(Type);
     }

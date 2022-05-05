@@ -51,7 +51,7 @@ public class MessageTemplateCommandHandler
         var entity = await _repository.FindAsync(x => x.Id == createCommand.MessageTemplateId);
         if (entity == null)
             throw new UserFriendlyException("messageTemplate not found");
-        if (await _messageTaskRepository.FindAsync(x => x.EntityType == MessageEntityType.Template && x.EntityId == createCommand.MessageTemplateId, false) != null)
+        if (await _messageTaskRepository.FindAsync(x => x.EntityType == MessageEntityTypes.Template && x.EntityId == createCommand.MessageTemplateId, false) != null)
         {
             throw new UserFriendlyException("There are message tasks in use and cannot be deleted");
         }

@@ -18,7 +18,7 @@ public class MessageTaskDomainService : DomainService
     {
         if (!messageTask.IsDraft)
         {
-            messageTask.SendTask(messageTask.ReceiverType, messageTask.Receivers, messageTask.SendingRules, messageTask.SendTime, messageTask.Sign, messageTask.Variables);
+            messageTask.SendTask(messageTask.ReceiverType, messageTask.Receivers, messageTask.SendRules, messageTask.SendTime, messageTask.Sign, messageTask.Variables);
         }
         else
         {
@@ -31,7 +31,7 @@ public class MessageTaskDomainService : DomainService
     {
         if (!messageTask.IsDraft)
         {
-            messageTask.SendTask(messageTask.ReceiverType, messageTask.Receivers, messageTask.SendingRules, messageTask.SendTime, messageTask.Sign, messageTask.Variables);
+            messageTask.SendTask(messageTask.ReceiverType, messageTask.Receivers, messageTask.SendRules, messageTask.SendTime, messageTask.Sign, messageTask.Variables);
         }
         else
         {
@@ -40,12 +40,12 @@ public class MessageTaskDomainService : DomainService
         await _repository.UpdateAsync(messageTask);
     }
 
-    public virtual async Task SendAsync(Guid messageTaskId, ReceiverType receiverType, List<MessageTaskReceiver> receivers, ExtraPropertyDictionary sendingRules, DateTime? sendTime, string sign, ExtraPropertyDictionary variables)
+    public virtual async Task SendAsync(Guid messageTaskId, ReceiverTypes receiverType, List<MessageTaskReceiver> receivers, ExtraPropertyDictionary sendRules, DateTime? sendTime, string sign, ExtraPropertyDictionary variables)
     {
         var messageTask = await _repository.FindAsync(x => x.Id == messageTaskId);
         if (messageTask == null)
             throw new UserFriendlyException("messageTask not found");
-        messageTask.SendTask(receiverType, receivers, sendingRules, sendTime, sign, variables);
+        messageTask.SendTask(receiverType, receivers, sendRules, sendTime, sign, variables);
         await _repository.UpdateAsync(messageTask);
     }
 }

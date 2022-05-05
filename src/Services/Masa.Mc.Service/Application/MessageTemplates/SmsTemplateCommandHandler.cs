@@ -17,8 +17,8 @@ public class SmsTemplateCommandHandler
     }
 
     [EventHandler]
-    public async Task SynchroAsync(SynchroSmsTemplateCommand command)
+    public async Task SyncAsync(SyncSmsTemplateCommand command)
     {
-        await _domainService.SynchroAsync(command.ChannelId);
+        await _domainService.SyncAsync(command.ChannelId);
     }
 }

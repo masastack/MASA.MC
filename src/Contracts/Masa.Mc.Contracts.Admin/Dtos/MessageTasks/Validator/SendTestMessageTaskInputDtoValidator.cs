@@ -3,10 +3,10 @@
 
 namespace Masa.Mc.Contracts.Admin.Dtos.MessageTasks.Validator;
 
-public class SendTestMessageTaskInputValidator : AbstractValidator<SendTestMessageTaskInput>
+public class SendTestMessageTaskInputDtoValidator : AbstractValidator<SendTestMessageTaskInputDto>
 {
-    public SendTestMessageTaskInputValidator()
+    public SendTestMessageTaskInputDtoValidator()
     {
-        RuleFor(input => input.Receivers).Required();
+        RuleFor(inputDto => inputDto.Receivers).Required();
     }
 }

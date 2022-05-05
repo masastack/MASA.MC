@@ -7,13 +7,13 @@ public class MessageTaskHistoryDto : AuditEntityDto<Guid, Guid>
 {
     public Guid MessageTaskId { get; set; }
 
-    public ReceiverType ReceiverType { get; set; }
+    public ReceiverTypes ReceiverType { get; set; }
 
-    public MessageTaskHistoryStatus Status { get; set; }
+    public MessageTaskHistoryStatues Status { get; set; }
 
     public List<MessageTaskReceiverDto> Receivers { get; set; } = new();
 
-    public SendingRuleDto SendingRules { get; set; } = new();
+    public SendRuleDto SendRules { get; set; } = new();
 
     public DateTime? SendTime { get; set; }
 

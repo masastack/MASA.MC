@@ -8,7 +8,7 @@
                     <MRow>
                         <MCol Cols="3">
                             <MSelect Value="@_channelType"
-                                     Items="@(GetEnumList<ChannelType>())"
+                                     Items="@(GetEnumList<ChannelTypes>())"
                                      Label="@T("DisplayName.ChannelType")"
                                      ItemText="item => T(item.ToString())"
                                      ItemValue="item => item"
@@ -58,15 +58,15 @@
                                            OnSelectedItemUpdate="HandleTemplateSelected"></MAutocomplete>
                         </MCol>
                         <MCol Cols="2">
-                            <MButton Rounded Outlined Color="indigo" Class="ml-6 medium-button px-6" OnClick="SynchroAsync">
-                                <span>@T("SynchroTemplate")</span>
+                            <MButton Rounded Outlined Color="indigo" Class="ml-6 medium-button px-6" OnClick="SyncAsync">
+                                <span>@T("SyncTemplate")</span>
                             </MButton>
                         </MCol>
                     </MRow>
                     <MRow>
                         <MCol Cols="2">
                             <MSelect Value="@_model.TemplateType"
-                                     Items="@(GetEnumList<SmsTemplateType>())"
+                                     Items="@(GetEnumList<SmsTemplateTypes>())"
                                      Label="@T("DisplayName.MessageTemplateTemplateType")"
                                      ItemText="@(item => T($"DisplayName.SmsTemplateType.{item.ToString()}"))"
                                      ItemValue="item => (int)item"

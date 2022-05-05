@@ -26,7 +26,7 @@
                                 <MRow>
                                     <MCol>
                                         <MSelect Value="@_messageInfo.Channel?.Type"
-                                             Items="@(GetEnumList<ChannelType>())"
+                                             Items="@(GetEnumList<ChannelTypes>())"
                                              Label="@T("DisplayName.ChannelType")"
                                              ItemText="item => T(item.ToString())"
                                              ItemValue="item => item"
@@ -48,7 +48,7 @@
                                         </MTextField>
                                     </MCol>
                                 </MRow>
-                                if (_messageInfo.Channel != null && _messageInfo.Channel.Type != ChannelType.Sms)
+                                if (_messageInfo.Channel != null && _messageInfo.Channel.Type != ChannelTypes.Sms)
                                 {
                                     <MRow>
                                         <MCol>
@@ -70,7 +70,7 @@
                                         </MEditor>
                                     </MCol>
                                 </MRow>
-                                if (_messageInfo.Channel != null && _messageInfo.Channel.Type == ChannelType.WebsiteMessage)
+                                if (_messageInfo.Channel != null && _messageInfo.Channel.Type == ChannelTypes.WebsiteMessage)
                                 {
                                     <MRow>
                                         <MCol>
@@ -92,21 +92,21 @@
                             <MRadioGroup @bind-Value="_model.ReceiverType"
                                          Row>
                                 <MRadio Label="@T("DisplayName.ReceiverType.Assign")"
-                                        Value="@ReceiverType.Assign">
+                                        Value="@ReceiverTypes.Assign">
                                 </MRadio>
                                 <MRadio Label="@T("DisplayName.ReceiverType.Broadcast")"
-                                        Disabled="_messageInfo.Channel?.Type!=ChannelType.WebsiteMessage"
-                                        Value="@ReceiverType.Broadcast">
+                                        Disabled="_messageInfo.Channel?.Type!=ChannelTypes.WebsiteMessage"
+                                        Value="@ReceiverTypes.Broadcast">
                                 </MRadio>
                             </MRadioGroup>
-                            @if (_model.ReceiverType == ReceiverType.Assign)
+                            @if (_model.ReceiverType == ReceiverTypes.Assign)
                             {
                                 <MInput @bind-Value="_model.Receivers" />
                                 <MessageReceivers Class="mt-2" @bind-Value="_model.Receivers" Type="@_messageInfo.Channel?.Type" />
                             }
                             <div class="mt-4 text-subtitle2">@T("DisplayName.MessageTaskSendingRule")</div>
-                            <MInput @bind-Value="_model.SendingRules" />
-                            @if (_messageInfo.Channel != null && _messageInfo.Channel.Type == ChannelType.Sms)
+                            <MInput @bind-Value="_model.SendRules" />
+                            @if (_messageInfo.Channel != null && _messageInfo.Channel.Type == ChannelTypes.Sms)
                             {
                                 <MRow Class="mt-4">
                                     <MCol>
@@ -119,7 +119,7 @@
                                     </MCol>
                                 </MRow>
                             }
-                            <MessageSendingRules Class="mt-2" @bind-Value="_model.SendingRules" @bind-SendTime="_model.SendTime" />
+                            <MessageSendingRules Class="mt-2" @bind-Value="_model.SendRules" @bind-SendTime="_model.SendTime" />
                         </MCol>
                     </MRow>
                 </div>

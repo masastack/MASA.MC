@@ -1,9 +1,12 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
-namespace Masa.Mc.Service.Admin.Domain.MessageTemplates.Events;
+namespace Masa.Mc.Contracts.Admin.Enums.MessageTasks;
 
-public record SmsTemplateSyncDomainEvent(Guid ChannelId) : DomainEvent
+public enum MessageTaskHistoryStatues
 {
-
+    WaitSend = 1,
+    Sending,
+    Completed,
+    Withdrawn
 }

@@ -29,7 +29,7 @@
             <MChip Close
                    OnCloseClick="()=>Remove(data.Item)">
                 <MAvatar Left>
-                    @if (data.Item.Type != ReceiverGroupItemType.User)
+                    @if (data.Item.Type != ReceiverGroupItemTypes.User)
                     {
                         <MIcon>mdi-account-group</MIcon>
                     }
@@ -42,7 +42,7 @@
             </MChip>
         </SelectionContent>
         <ItemContent Context="data">
-            @if (data.Item.Type != ReceiverGroupItemType.User)
+            @if (data.Item.Type != ReceiverGroupItemTypes.User)
             {
                 <MListItemAvatar>
                     <MIcon Large>mdi-account-group</MIcon>
@@ -65,7 +65,7 @@
                     <MListItemTitle>
                         @(data.Item.DisplayName)
                     </MListItemTitle>
-                    @if (Type == ChannelType.Email)
+                    @if (Type == ChannelTypes.Email)
                     {
                         <MListItemSubtitle>@(data.Item.Email)</MListItemSubtitle>
                     }
@@ -96,7 +96,7 @@
                         <MHover>
                             <MListItem @attributes="context.Attrs" Class="@($"{context.Class} {(context.Hover ? "on-hover" : "")}")">
                                 <MListItemAvatar>
-                                    @if (item.Type != MessageTaskReceiverType.User)
+                                    @if (item.Type != MessageTaskReceiverTypes.User)
                                     {
                                         <MIcon Large>mdi-account-group</MIcon>
                                     }
@@ -116,9 +116,9 @@
                                 </MListItemAvatar>
                                 <MListItemContent>
                                     <MListItemTitle>@(item.DisplayName)</MListItemTitle>
-                                    @if (item.Type == MessageTaskReceiverType.User)
+                                    @if (item.Type == MessageTaskReceiverTypes.User)
                                     {
-                                        if (Type == ChannelType.Email)
+                                        if (Type == ChannelTypes.Email)
                                         {
                                             <MListItemSubtitle>@(item.Email)</MListItemSubtitle>
                                         }

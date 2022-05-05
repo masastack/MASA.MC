@@ -7,11 +7,11 @@ public class MessageTaskCreateUpdateDtoValidator : AbstractValidator<MessageTask
 {
     public MessageTaskCreateUpdateDtoValidator()
     {
-        RuleFor(input => input.ChannelId).Required();
-        RuleFor(input => input.EntityId).Required().When(x => x.EntityType == MessageEntityType.Template);
-        RuleFor(input => input.EntityType).IsInEnum();
-        RuleFor(input => input.ReceiverType).IsInEnum();
-        RuleFor(input => input.Receivers).Required().When(x => x.ReceiverType == ReceiverType.Assign);
-        RuleFor(input => input.MessageInfo).SetValidator(new MessageInfoCreateUpdateDtoValidator()).When(x => x.EntityType == MessageEntityType.Ordinary);
+        RuleFor(inputDto => inputDto.ChannelId).Required();
+        RuleFor(inputDto => inputDto.EntityId).Required().When(x => x.EntityType == MessageEntityTypes.Template);
+        RuleFor(inputDto => inputDto.EntityType).IsInEnum();
+        RuleFor(inputDto => inputDto.ReceiverType).IsInEnum();
+        RuleFor(inputDto => inputDto.Receivers).Required().When(x => x.ReceiverType == ReceiverTypes.Assign);
+        RuleFor(inputDto => inputDto.MessageInfo).SetValidator(new MessageInfoCreateUpdateDtoValidator()).When(x => x.EntityType == MessageEntityTypes.Ordinary);
     }
 }
