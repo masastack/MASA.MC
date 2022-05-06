@@ -49,13 +49,22 @@ public class CreateMessageEventHandler
         switch (channel.Type)
         {
             case ChannelTypes.Sms:
-                await _eventBus.PublishAsync(new CreateSmsMessageEvent(@event.ChannelId, @event.MessageTaskId, @event.MessageTaskHistoryId, @event.UserIds));
+                var smsTask = Task.Run(async () =>
+                {
+                    await _eventBus.PublishAsync(new SendSmsMessageEvent(@event.MessageTaskHistoryId));
+                });
                 break;
             case ChannelTypes.Email:
-                await _eventBus.PublishAsync(new CreateEmailMessageEvent(@event.ChannelId, @event.MessageTaskId, @event.MessageTaskHistoryId, @event.UserIds));
+                var emailTask = Task.Run(async () =>
+                {
+                    await _eventBus.PublishAsync(new SendEmailMessageEvent(@event.MessageTaskHistoryId));
+                });
                 break;
             case ChannelTypes.WebsiteMessage:
-                await _eventBus.PublishAsync(new CreateWebsiteMessageEvent(@event.ChannelId, @event.MessageTaskId, @event.MessageTaskHistoryId, @event.UserIds));
+                var websiteMessageTask = Task.Run(async () =>
+               {
+                   await _eventBus.PublishAsync(new SendWebsiteMessageEvent(@event.MessageTaskHistoryId));
+               });
                 break;
             default:
                 break;
