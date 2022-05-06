@@ -5,8 +5,8 @@ namespace Masa.Mc.Infrastructure.Sms.Aliyun.Infrastructure.OptionsResolve.Contri
 
 public class ConfigurationOptionsResolveContributor : IAliyunSmsOptionsResolveContributor
 {
-    public const string ContributorName = "Configuration";
-    public string Name => ContributorName;
+    public const string CONTRIBUTOR_NAME = "Configuration";
+    public string Name => CONTRIBUTOR_NAME;
 
     public Task ResolveAsync(AliyunSmsOptionsResolveContext context)
     {

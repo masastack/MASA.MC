@@ -132,5 +132,15 @@ dotnet_style_qualification_for_method = false:suggestion
 #prefer properties not to be prefaced with this. or Me. in Visual Basic
 dotnet_style_qualification_for_property = false:suggestion
 
+# Use Upper Case for constant fields
+dotnet_naming_style.upper_case_style.capitalization = all_upper
+dotnet_naming_style.upper_case_style.word_separator = _
+dotnet_naming_rule.constant_fields_should_be_upper_case.severity = warning
+dotnet_naming_rule.constant_fields_should_be_upper_case.symbols  = constant_fields
+dotnet_naming_rule.constant_fields_should_be_upper_case.style    = upper_case_style
+dotnet_naming_symbols.constant_fields.applicable_kinds            = field
+dotnet_naming_symbols.constant_fields.applicable_accessibilities  = *
+dotnet_naming_symbols.constant_fields.required_modifiers          = const
+
 # License Header
 file_header_template = Copyright (c) MASA Stack All rights reserved.\nLicensed under the Apache License. See LICENSE.txt in the project root for license information.

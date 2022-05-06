@@ -5,9 +5,9 @@ namespace Masa.Mc.Infrastructure.Email.Infrastructure.OptionsResolve.Contributor
 
 public class AsyncLocalOptionsResolveContributor : IEmailOptionsResolveContributor
 {
-    public const string ContributorName = "AsyncLocal";
+    public const string CONTRIBUTOR_NAME = "AsyncLocal";
 
-    public string Name => ContributorName;
+    public string Name => CONTRIBUTOR_NAME;
 
     public Task ResolveAsync(EmailOptionsResolveContext context)
     {

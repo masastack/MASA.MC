@@ -290,16 +290,11 @@ public static class StringExtensions
     /// <param name="useCurrentCulture">set true to use current culture. Otherwise, invariant culture will be used.</param>
     public static string ToKebabCase(this string str, bool useCurrentCulture = false)
     {
-        if (string.IsNullOrWhiteSpace(str))
+        if (string.IsNullOrEmpty(str))
         {
             return str;
         }
-
-        str = str.ToCamelCase();
-
-        return useCurrentCulture
-            ? Regex.Replace(str, "[a-z][A-Z]", m => m.Value[0] + "-" + char.ToLower(m.Value[1]))
-            : Regex.Replace(str, "[a-z][A-Z]", m => m.Value[0] + "-" + char.ToLowerInvariant(m.Value[1]));
+        return Regex.Replace(str, @"(\B[A-Z])", "-$1").ToLower();
     }
 
     /// <summary>

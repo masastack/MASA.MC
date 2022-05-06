@@ -19,22 +19,22 @@ public partial class MessageSendingRules : AdminCompontentBase
 
     private bool _datePickersShow;
     private bool _timePickersShow;
-    public DateOnly? sendingDate;
-    public TimeOnly? sendingTime;
-    public bool _isTiming;
+    private DateOnly? _sendingDate;
+    private TimeOnly? _sendingTime;
+    private bool _isTiming;
 
     protected override void OnParametersSet()
     {
         if (SendTime != null)
         {
-            sendingDate = DateOnly.FromDateTime(SendTime.Value);
-            sendingTime = TimeOnly.FromDateTime(SendTime.Value);
+            _sendingDate = DateOnly.FromDateTime(SendTime.Value);
+            _sendingTime = TimeOnly.FromDateTime(SendTime.Value);
             _isTiming = true;
         }
         else
         {
-            sendingDate = null;
-            sendingTime = null;
+            _sendingDate = null;
+            _sendingTime = null;
         }
     }
 
@@ -51,11 +51,11 @@ public partial class MessageSendingRules : AdminCompontentBase
 
     private async Task FillSendTimeAsync()
     {
-        if (sendingDate == null)
+        if (_sendingDate == null)
         {
             return;
         }
-        SendTime = _isTiming ? sendingDate.Value.ToDateTime(sendingTime ?? new TimeOnly(0, 0, 0)) : null;
+        SendTime = _isTiming ? _sendingDate.Value.ToDateTime(_sendingTime ?? new TimeOnly(0, 0, 0)) : null;
         await SendTimeChanged.InvokeAsync(SendTime);
     }
 }

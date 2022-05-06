@@ -69,7 +69,7 @@
            OffsetY
            MinWidth="@("auto")">
         <ActivatorContent>
-            <MTextField @bind-Value="sendingDate"
+            <MTextField @bind-Value="_sendingDate"
                         PrependInnerIcon="mdi-calendar"
                         Dense
                         Outlined
@@ -79,7 +79,7 @@
                         @attributes="context.Attrs"></MTextField>
         </ActivatorContent>
         <ChildContent>
-            <MDatePicker @bind-Value="sendingDate"
+            <MDatePicker @bind-Value="_sendingDate"
                          OnInput="HandleDatePickerInputAsync"></MDatePicker>
         </ChildContent>
     </MMenu>
@@ -91,7 +91,7 @@
            MaxWidth="290"
            MinWidth="290">
         <ActivatorContent>
-            <MTextField @bind-Value="sendingTime"
+            <MTextField @bind-Value="_sendingTime"
                         PrependInnerIcon="mdi-clock-time-four-outline"
                         Dense
                         Outlined
@@ -103,7 +103,7 @@
         <ChildContent>
             @if (_timePickersShow)
             {
-                <MTimePicker @bind-Value="sendingTime"
+                <MTimePicker @bind-Value="_sendingTime"
                          OnChange="HandleTimePickerChangeAsync"
                          FullWidth></MTimePicker>
             }

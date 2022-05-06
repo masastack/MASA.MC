@@ -5,8 +5,8 @@ namespace Masa.Mc.Infrastructure.Email.Infrastructure.OptionsResolve.Contributor
 
 public class ConfigurationOptionsResolveContributor : IEmailOptionsResolveContributor
 {
-    public const string ContributorName = "Configuration";
-    public string Name => ContributorName;
+    public const string CONTRIBUTOR_NAME = "Configuration";
+    public string Name => CONTRIBUTOR_NAME;
 
     public Task ResolveAsync(EmailOptionsResolveContext context)
     {

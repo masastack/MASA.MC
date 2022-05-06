@@ -5,9 +5,9 @@ namespace Masa.Mc.Infrastructure.Sms.Aliyun.Infrastructure.OptionsResolve.Contri
 
 public class AsyncLocalOptionsResolveContributor : IAliyunSmsOptionsResolveContributor
 {
-    public const string ContributorName = "AsyncLocal";
+    public const string CONTRIBUTOR_NAME = "AsyncLocal";
 
-    public string Name => ContributorName;
+    public string Name => CONTRIBUTOR_NAME;
 
     public Task ResolveAsync(AliyunSmsOptionsResolveContext context)
     {

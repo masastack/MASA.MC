@@ -9,12 +9,12 @@ public static class ServiceCollectionExtensions
     {
         services.Configure<AliyunSmsResolveOptions>(options =>
         {
-            if (!options.Contributors.Exists(x => x.Name == ConfigurationOptionsResolveContributor.ContributorName))
+            if (!options.Contributors.Exists(x => x.Name == ConfigurationOptionsResolveContributor.CONTRIBUTOR_NAME))
             {
                 options.Contributors.Add(new ConfigurationOptionsResolveContributor());
             }
 
-            if (!options.Contributors.Exists(x => x.Name == AsyncLocalOptionsResolveContributor.ContributorName))
+            if (!options.Contributors.Exists(x => x.Name == AsyncLocalOptionsResolveContributor.CONTRIBUTOR_NAME))
             {
                 options.Contributors.Insert(0, new AsyncLocalOptionsResolveContributor());
             }

@@ -5,4 +5,16 @@ namespace Masa.Mc.Service.Admin.Domain.MessageRecords.EventHandler;
 
 public class SendEmailMessageEventHandler
 {
+    private readonly IMessageRecordRepository _messageRecordRepository;
+
+    public SendEmailMessageEventHandler(IMessageRecordRepository messageRecordRepository)
+    {
+        _messageRecordRepository = messageRecordRepository;
+    }
+
+    [EventHandler]
+    public async Task HandleEventAsync(SendEmailMessageEvent @event)
+    {
+        var messageRecords = await _messageRecordRepository.GetListAsync(x => x.MessageTaskHistoryId == @event.MessageTaskHistoryId);
+    }
 }
