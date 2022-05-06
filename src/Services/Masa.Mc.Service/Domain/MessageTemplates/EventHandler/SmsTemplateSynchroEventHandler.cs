@@ -55,13 +55,13 @@ public class SmsTemplateSyncEventHandler
         };
     }
 
-    private MessageTemplateAuditStatues AliyunSmsTemplateAuditStatusMapToAuditStatus(string auditStatus)
+    private MessageTemplateAuditStatuses AliyunSmsTemplateAuditStatusMapToAuditStatus(string auditStatus)
     {
         return auditStatus switch
         {
-            "AUDIT_STATE_PASS" => MessageTemplateAuditStatues.Adopt,
-            "AUDIT_STATE_NOT_PASS" => MessageTemplateAuditStatues.Fail,
-            _ => MessageTemplateAuditStatues.WaitAudit
+            "AUDIT_STATE_PASS" => MessageTemplateAuditStatuses.Adopt,
+            "AUDIT_STATE_NOT_PASS" => MessageTemplateAuditStatuses.Fail,
+            _ => MessageTemplateAuditStatuses.WaitAudit
         };
     }
 }

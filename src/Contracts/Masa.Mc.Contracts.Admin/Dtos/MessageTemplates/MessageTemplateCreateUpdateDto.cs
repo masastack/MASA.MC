@@ -21,13 +21,13 @@ public class MessageTemplateCreateUpdateDto
     public bool IsJump { get; set; }
     public string JumpUrl { get; set; } = string.Empty;
     public string Sign { get; set; } = string.Empty;
-    public MessageTemplateStatues Status { get; set; } = MessageTemplateStatues.Normal;
-    public MessageTemplateAuditStatues AuditStatus { get; set; } = MessageTemplateAuditStatues.Adopt;
+    public MessageTemplateStatuses Status { get; set; } = MessageTemplateStatuses.Normal;
+    public MessageTemplateAuditStatuses AuditStatus { get; set; } = MessageTemplateAuditStatuses.Adopt;
     public DateTime? AuditTime { get; set; }
     public DateTime? InvalidTime { get; set; }
     public string AuditReason { get; set; } = string.Empty;
     public int TemplateType { get; set; }
-    public long DayLimit { get; set; }
+    public long PerDayLimit { get; set; }
     public bool IsStatic { get; set; }
     public List<MessageTemplateItemDto> Items { get; set; }
     public MessageInfoCreateUpdateDto MessageInfo { get; set; }

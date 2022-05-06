@@ -45,7 +45,7 @@
                             </MCol>
                             <MCol Cols="5">
                                 <MSelect @bind-Value="@_queryParam.Status"
-                                         Items="@(GetEnumList<MessageTaskHistoryStatues>())"
+                                         Items="@(GetEnumList<MessageTaskHistoryStatuses>())"
                                          Label="@T("DisplayName.MessageTaskHistoryStatus")"
                                          ItemText="@(item => T($"DisplayName.MessageTaskHistoryStatus.{item.ToString()}"))"
                                          ItemValue="item => item"
@@ -53,9 +53,9 @@
                                          Outlined
                                          Clearable
                                          HideDetails="@("auto")"
-                                         TItem="MessageTaskHistoryStatues"
-                                         TItemValue="MessageTaskHistoryStatues"
-                                         TValue="MessageTaskHistoryStatues?"
+                                         TItem="MessageTaskHistoryStatuses"
+                                         TItemValue="MessageTaskHistoryStatuses"
+                                         TValue="MessageTaskHistoryStatuses?"
                                          OnClearClick="Refresh"
                                          OnSelectedItemUpdate="Refresh">
                                 </MSelect>
@@ -68,7 +68,7 @@
                                     <tr @key="item.Id" @onclick="()=>HandleItemSelect(item)">
                                         <td>
                                             <MChip Ripple="false">
-                                                <span>@T($"DisplayName.MessageTaskHistoryStatus.{((MessageTaskHistoryStatues)item.Status).ToString()}")</span>
+                                                <span>@T($"DisplayName.MessageTaskHistoryStatus.{((MessageTaskHistoryStatuses)item.Status).ToString()}")</span>
                                             </MChip>
                                         </td>
                                         <td>
@@ -84,7 +84,7 @@
                         <MRow Class="mx-2 mt-2">
                             <div class="text-subtitle2">@T("DisplayName.MessageInfoContent")</div>
                             <MSpacer></MSpacer>
-                            @if (_historyInfo.Status != MessageTaskHistoryStatues.Withdrawn)
+                            @if (_historyInfo.Status != MessageTaskHistoryStatuses.Withdrawn)
                             {
                                 <MButton Rounded Outlined Color="indigo" Class="ml-6 medium-button px-6" OnClick="WithdrawnHistoryAsync">
                                     <span>@T("Withdraw")</span>

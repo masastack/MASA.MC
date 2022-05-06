@@ -1,12 +1,11 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
-namespace Masa.Mc.Contracts.Admin.Enums.MessageTasks;
+namespace Masa.Mc.Contracts.Admin.Enums.MessageTemplates;
 
-public enum MessageTaskHistoryStatues
+public enum MessageTemplateAuditStatuses
 {
-    WaitSend = 1,
-    Sending,
-    Completed,
-    Withdrawn
+    WaitAudit=1,
+    Adopt,
+    Fail,
 }

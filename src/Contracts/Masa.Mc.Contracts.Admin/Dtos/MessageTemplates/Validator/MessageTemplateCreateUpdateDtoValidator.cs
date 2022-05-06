@@ -12,7 +12,7 @@ public class MessageTemplateCreateUpdateDtoValidator : AbstractValidator<Message
         RuleFor(inputDto => inputDto.Status).IsInEnum();
         RuleFor(inputDto => inputDto.AuditStatus).IsInEnum();
         RuleFor(inputDto => inputDto.Sign).Required().Length(2, 12).ChineseLetterNumber().When(x => x.ChannelType == ChannelTypes.Sms);
-        RuleFor(inputDto => inputDto.DayLimit).InclusiveBetween(1, 500);
+        RuleFor(inputDto => inputDto.PerDayLimit).InclusiveBetween(1, 500);
         RuleFor(inputDto => inputDto.TemplateId).Required().When(x => x.ChannelType == ChannelTypes.Sms);
         RuleFor(inputDto => inputDto.DisplayName).Required().Length(2, 50).ChineseLetterNumber().When(x => x.ChannelType == ChannelTypes.Email);
         RuleFor(inputDto => inputDto.Title).Required().Length(2, 255).ChineseLetterNumber().When(x => x.ChannelType == ChannelTypes.Email || x.ChannelType == ChannelTypes.WebsiteMessage);

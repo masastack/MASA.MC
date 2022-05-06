@@ -58,7 +58,7 @@ public class MessageTaskCommandHandler
         var history = entity.Historys.FirstOrDefault(x => x.Id == command.Input.HistoryId);
         if (history == null)
             throw new UserFriendlyException("history not found");
-        if (history.Status == MessageTaskHistoryStatues.Withdrawn)
+        if (history.Status == MessageTaskHistoryStatuses.Withdrawn)
             throw new UserFriendlyException("withdrawn");
         history.SetWithdraw();
         await _repository.UpdateAsync(entity);
@@ -80,7 +80,7 @@ public class MessageTaskCommandHandler
         var entity = await _repository.FindAsync(x => x.Id == command.Input.MessageTaskId);
         if (entity == null)
             throw new UserFriendlyException("messageTask not found");
-        if (entity.Historys.Any(x => x.Status == MessageTaskHistoryStatues.Sending))
+        if (entity.Historys.Any(x => x.Status == MessageTaskHistoryStatuses.Sending))
             throw new UserFriendlyException("the task has a sending task history and cannot be disabled.");
         entity.SetDisable();
         await _repository.UpdateAsync(entity);

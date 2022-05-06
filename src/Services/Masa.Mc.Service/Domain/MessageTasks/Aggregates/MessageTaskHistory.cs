@@ -9,7 +9,7 @@ public class MessageTaskHistory : AuditEntity<Guid, Guid>
 
     public ReceiverTypes ReceiverType { get; protected set; }
 
-    public MessageTaskHistoryStatues Status { get; protected set; }
+    public MessageTaskHistoryStatuses Status { get; protected set; }
 
     public List<MessageTaskReceiver> Receivers { get; protected set; } = new();
 
@@ -32,7 +32,7 @@ public class MessageTaskHistory : AuditEntity<Guid, Guid>
         Receivers = receivers;
         SendRules = sendRules;
         SendTime = sendTime;
-        Status = MessageTaskHistoryStatues.WaitSend;
+        Status = MessageTaskHistoryStatuses.WaitSend;
         Sign = sign;
         Variables = variables;
     }
@@ -40,18 +40,18 @@ public class MessageTaskHistory : AuditEntity<Guid, Guid>
     public void SetSend()
     {
         SendTime = DateTime.UtcNow;
-        Status = MessageTaskHistoryStatues.Sending;
+        Status = MessageTaskHistoryStatuses.Sending;
     }
 
     public void SetComplete()
     {
         CompletionTime = DateTime.UtcNow;
-        Status = MessageTaskHistoryStatues.Completed;
+        Status = MessageTaskHistoryStatuses.Completed;
     }
 
     public void SetWithdraw()
     {
         WithdrawTime = DateTime.UtcNow;
-        Status = MessageTaskHistoryStatues.Withdrawn;
+        Status = MessageTaskHistoryStatuses.Withdrawn;
     }
 }

@@ -6,14 +6,14 @@ namespace Masa.Mc.Infrastructure.Common.Helper;
 public static class TypeHelper
 {
     private static readonly HashSet<Type> FloatingTypes = new HashSet<Type>
-        {
+    {
             typeof(float),
             typeof(double),
             typeof(decimal)
-        };
+    };
 
     private static readonly HashSet<Type> NonNullablePrimitiveTypes = new HashSet<Type>
-        {
+    {
             typeof(byte),
             typeof(short),
             typeof(int),
@@ -29,7 +29,7 @@ public static class TypeHelper
             typeof(DateTimeOffset),
             typeof(TimeSpan),
             typeof(Guid)
-        };
+    };
 
     public static bool IsNonNullablePrimitiveType(Type type)
     {

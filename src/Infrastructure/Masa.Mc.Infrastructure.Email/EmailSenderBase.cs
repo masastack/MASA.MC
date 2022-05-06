@@ -55,19 +55,8 @@ public abstract class EmailSenderBase : IEmailSender
                 );
         }
 
-        if (mail.HeadersEncoding == null)
-        {
-            mail.HeadersEncoding = Encoding.UTF8;
-        }
-
-        if (mail.SubjectEncoding == null)
-        {
-            mail.SubjectEncoding = Encoding.UTF8;
-        }
-
-        if (mail.BodyEncoding == null)
-        {
-            mail.BodyEncoding = Encoding.UTF8;
-        }
+        mail.HeadersEncoding = mail.HeadersEncoding ?? Encoding.UTF8;
+        mail.SubjectEncoding = mail.SubjectEncoding ?? Encoding.UTF8;
+        mail.BodyEncoding = mail.BodyEncoding ?? Encoding.UTF8;
     }
 }

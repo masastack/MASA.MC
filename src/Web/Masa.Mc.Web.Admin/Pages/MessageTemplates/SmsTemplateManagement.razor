@@ -91,7 +91,7 @@
             </MCol>
             <MCol Cols="2">
                 <MSelect @bind-Value="@_queryParam.AuditStatus"
-                     Items="@(GetEnumList<MessageTemplateAuditStatues>())"
+                     Items="@(GetEnumList<MessageTemplateAuditStatuses>())"
                      Label="@T("DisplayName.MessageTemplateAuditStatus")"
                      ItemText="item => T(item.ToString())"
                      ItemValue="item => item"
@@ -99,16 +99,16 @@
                      Outlined
                      Clearable
                      HideDetails="@("auto")"
-                     TItem="MessageTemplateAuditStatues"
-                     TItemValue="MessageTemplateAuditStatues"
-                     TValue="MessageTemplateAuditStatues?"
+                     TItem="MessageTemplateAuditStatuses"
+                     TItemValue="MessageTemplateAuditStatuses"
+                     TValue="MessageTemplateAuditStatuses?"
                      OnClearClick="RefreshAsync"
                      OnSelectedItemUpdate="RefreshAsync">
                 </MSelect>
             </MCol>
             <MCol Cols="2">
                 <MSelect @bind-Value="@_queryParam.Status"
-                     Items="@(GetEnumList<MessageTemplateStatues>())"
+                     Items="@(GetEnumList<MessageTemplateStatuses>())"
                      Label="@T("DisplayName.MessageTemplateStatus")"
                      ItemText="item => T(item.ToString())"
                      ItemValue="item => item"
@@ -116,9 +116,9 @@
                      Outlined
                      Clearable
                      HideDetails="@("auto")"
-                     TItem="MessageTemplateStatues"
-                     TItemValue="MessageTemplateStatues"
-                     TValue="MessageTemplateStatues?"
+                     TItem="MessageTemplateStatuses"
+                     TItemValue="MessageTemplateStatuses"
+                     TValue="MessageTemplateStatuses?"
                      OnClearClick="RefreshAsync"
                      OnSelectedItemUpdate="RefreshAsync">
                 </MSelect>
@@ -146,13 +146,13 @@
                         string color = string.Empty;
                         switch (context.Item.AuditStatus)
                         {
-                            case MessageTemplateAuditStatues.WaitAudit:
+                            case MessageTemplateAuditStatuses.WaitAudit:
                                 color = "orange";
                                 break;
-                            case MessageTemplateAuditStatues.Adopt:
+                            case MessageTemplateAuditStatuses.Adopt:
                                 color = "sample-green";
                                 break;
-                            case MessageTemplateAuditStatues.Fail:
+                            case MessageTemplateAuditStatuses.Fail:
                                 color = "error";
                                 break;
                             default:

@@ -50,7 +50,6 @@ global using Masa.Mc.Service.Admin.Application.MessageTemplates.Commands;
 global using Masa.Mc.Service.Admin.Domain.MessageTemplates.Events;
 global using Masa.Mc.Contracts.Admin.Enums.Channels;
 global using Masa.Mc.Infrastructure.ObjectExtending;
-global using Masa.Mc.Service.Admin.Infrastructure.Extensions;
 global using Masa.Mc.Service.Admin.Domain.MessageTemplates.Repositories;
 global using Masa.Mc.Infrastructure.EntityFrameworkCore.EntityFrameworkCore.ValueConverters;
 global using Masa.Mc.Service.Admin.Domain.Consts;

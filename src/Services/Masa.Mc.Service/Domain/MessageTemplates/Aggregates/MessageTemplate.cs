@@ -13,13 +13,13 @@ public class MessageTemplate : AuditAggregateRoot<Guid, Guid>, ISoftDelete
     public bool IsJump { get; protected set; }
     public string JumpUrl { get; protected set; } = string.Empty;
     public string Sign { get; protected set; } = string.Empty;
-    public MessageTemplateStatues Status { get; protected set; }
-    public MessageTemplateAuditStatues AuditStatus { get; protected set; }
+    public MessageTemplateStatuses Status { get; protected set; }
+    public MessageTemplateAuditStatuses AuditStatus { get; protected set; }
     public DateTime? AuditTime { get; protected set; }
     public DateTime? InvalidTime { get; protected set; }
     public string AuditReason { get; protected set; } = string.Empty;
     public int TemplateType { get; protected set; }
-    public long DayLimit { get; protected set; }
+    public long PerDayLimit { get; protected set; }
     public virtual bool IsStatic { get; protected set; }
     public ICollection<MessageTemplateItem> Items { get; protected set; } = new List<MessageTemplateItem>();
     public bool IsDeleted { get; protected set; }
@@ -35,9 +35,9 @@ public class MessageTemplate : AuditAggregateRoot<Guid, Guid>, ISoftDelete
         string jumpUrl,
         string sign,
         int templateType,
-        long dayLimit,
-        MessageTemplateStatues status = MessageTemplateStatues.Normal,
-        MessageTemplateAuditStatues auditStatus = MessageTemplateAuditStatues.WaitAudit,
+        long perDayLimit,
+        MessageTemplateStatuses status = MessageTemplateStatuses.Normal,
+        MessageTemplateAuditStatuses auditStatus = MessageTemplateAuditStatuses.WaitAudit,
         string auditReason = "",
         bool isStatic = false)
     {
@@ -47,7 +47,7 @@ public class MessageTemplate : AuditAggregateRoot<Guid, Guid>, ISoftDelete
         TemplateId = templateId;
         Sign = sign;
         TemplateType = templateType;
-        DayLimit = dayLimit;
+        PerDayLimit = perDayLimit;
         Status = status;
         IsStatic = isStatic;
 
@@ -80,10 +80,10 @@ public class MessageTemplate : AuditAggregateRoot<Guid, Guid>, ISoftDelete
         Content = content;
     }
 
-    public virtual void SetAuditStatus(MessageTemplateAuditStatues auditStatus, string auditReason = "")
+    public virtual void SetAuditStatus(MessageTemplateAuditStatuses auditStatus, string auditReason = "")
     {
         AuditStatus = auditStatus;
-        if (auditStatus != MessageTemplateAuditStatues.WaitAudit)
+        if (auditStatus != MessageTemplateAuditStatuses.WaitAudit)
         {
             AuditTime = DateTime.UtcNow;
             AuditReason = auditReason;
@@ -93,7 +93,7 @@ public class MessageTemplate : AuditAggregateRoot<Guid, Guid>, ISoftDelete
     public virtual void SetInvalid()
     {
         InvalidTime = DateTime.UtcNow;
-        Status = MessageTemplateStatues.Invalid;
+        Status = MessageTemplateStatuses.Invalid;
     }
 
     public virtual void SetJump(bool isJump, string jumpUrl)

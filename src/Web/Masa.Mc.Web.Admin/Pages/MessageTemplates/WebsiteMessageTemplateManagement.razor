@@ -91,13 +91,13 @@
                         string color = string.Empty;
                         switch (context.Item.AuditStatus)
                         {
-                            case MessageTemplateAuditStatues.WaitAudit:
+                            case MessageTemplateAuditStatuses.WaitAudit:
                                 color = "orange";
                                 break;
-                            case MessageTemplateAuditStatues.Adopt:
+                            case MessageTemplateAuditStatuses.Adopt:
                                 color = "sample-green";
                                 break;
-                            case MessageTemplateAuditStatues.Fail:
+                            case MessageTemplateAuditStatuses.Fail:
                                 color = "error";
                                 break;
                             default:

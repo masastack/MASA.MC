@@ -6,8 +6,8 @@ namespace Masa.Mc.Contracts.Admin.Dtos.MessageTemplates;
 public class GetMessageTemplateInputDto : PaginatedOptionsDto
 {
     public string Filter { get; set; } = string.Empty;
-    public MessageTemplateStatues? Status { get; set; }
-    public MessageTemplateAuditStatues? AuditStatus { get; set; }
+    public MessageTemplateStatuses? Status { get; set; }
+    public MessageTemplateAuditStatuses? AuditStatus { get; set; }
     public ChannelTypes? ChannelType { get; set; }
     public Guid? ChannelId { get; set; }
     public DateTime? StartTime { get; set; }
@@ -23,7 +23,7 @@ public class GetMessageTemplateInputDto : PaginatedOptionsDto
     {
     }
 
-    public GetMessageTemplateInputDto(string filter, ChannelTypes? channelType, Guid? channelId, MessageTemplateStatues? status, MessageTemplateAuditStatues? auditStatus, DateTime? startTime, DateTime? endTime, int templateType, string sorting, int page, int pageSize) : base(sorting, page, pageSize)
+    public GetMessageTemplateInputDto(string filter, ChannelTypes? channelType, Guid? channelId, MessageTemplateStatuses? status, MessageTemplateAuditStatuses? auditStatus, DateTime? startTime, DateTime? endTime, int templateType, string sorting, int page, int pageSize) : base(sorting, page, pageSize)
     {
         Filter = filter;
         ChannelType = channelType;

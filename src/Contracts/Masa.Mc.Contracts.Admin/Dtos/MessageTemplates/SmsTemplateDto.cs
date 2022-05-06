@@ -9,7 +9,7 @@ public class SmsTemplateDto
     public string TemplateCode { get; set; } = string.Empty;
     public string TemplateName { get; set; } = string.Empty;
     public SmsTemplateTypes TemplateType { get; set; }
-    public MessageTemplateAuditStatues AuditStatus { get; set; }
+    public MessageTemplateAuditStatuses AuditStatus { get; set; }
     public string TemplateContent { get; set; } = string.Empty;
     public string AuditReason { get; set; } = string.Empty;
 }
