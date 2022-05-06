@@ -9,7 +9,7 @@ public class ReceiverGroupRegister : IRegister
     {
         config.ForType<ReceiverGroup, ReceiverGroupDto>().MapToConstructor(true);
         config.ForType<ReceiverGroupUserDto, ReceiverGroupUser>().MapToConstructor(true);
-        config.ForType<ReceiverGroupCreateUpdateDto, ReceiverGroup>().MapToConstructor(true).Ignore(x => x.Items);
+        config.ForType<ReceiverGroupUpsertDto, ReceiverGroup>().MapToConstructor(true).Ignore(x => x.Items);
         config.ForType<ReceiverGroupItemDto, ReceiverGroupItem>().MapToConstructor(true);
     }
 }

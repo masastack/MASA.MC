@@ -3,15 +3,15 @@
 
 namespace Masa.Mc.Contracts.Admin.Dtos.MessageTasks.Validator;
 
-public class MessageTaskCreateUpdateDtoValidator : AbstractValidator<MessageTaskCreateUpdateDto>
+public class MessageTaskUpsertDtoValidator : AbstractValidator<MessageTaskUpsertDto>
 {
-    public MessageTaskCreateUpdateDtoValidator()
+    public MessageTaskUpsertDtoValidator()
     {
         RuleFor(inputDto => inputDto.ChannelId).Required();
         RuleFor(inputDto => inputDto.EntityId).Required().When(x => x.EntityType == MessageEntityTypes.Template);
         RuleFor(inputDto => inputDto.EntityType).IsInEnum();
         RuleFor(inputDto => inputDto.ReceiverType).IsInEnum();
         RuleFor(inputDto => inputDto.Receivers).Required().When(x => x.ReceiverType == ReceiverTypes.Assign);
-        RuleFor(inputDto => inputDto.MessageInfo).SetValidator(new MessageInfoCreateUpdateDtoValidator()).When(x => x.EntityType == MessageEntityTypes.Ordinary);
+        RuleFor(inputDto => inputDto.MessageInfo).SetValidator(new MessageInfoUpsertDtoValidator()).When(x => x.EntityType == MessageEntityTypes.Ordinary);
     }
 }

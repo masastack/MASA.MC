@@ -3,6 +3,6 @@
 
 namespace Masa.Mc.Service.Admin.Application.MessageInfos.Commands;
 
-public record UpdateMessageInfoCommand(Guid MessageInfoId, MessageInfoCreateUpdateDto MessageInfo) : Command
+public record UpdateMessageInfoCommand(Guid MessageInfoId, MessageInfoUpsertDto MessageInfo) : Command
 {
 }

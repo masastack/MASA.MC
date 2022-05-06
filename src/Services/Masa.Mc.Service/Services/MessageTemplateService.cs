@@ -29,13 +29,13 @@ public class MessageTemplateService : ServiceBase
         return query.Result;
     }
 
-    public async Task CreateAsync(IEventBus eventBus, [FromBody] MessageTemplateCreateUpdateDto inputDto)
+    public async Task CreateAsync(IEventBus eventBus, [FromBody] MessageTemplateUpsertDto inputDto)
     {
         var command = new CreateMessageTemplateCommand(inputDto);
         await eventBus.PublishAsync(command);
     }
 
-    public async Task UpdateAsync(IEventBus eventBus, Guid id, [FromBody] MessageTemplateCreateUpdateDto inputDto)
+    public async Task UpdateAsync(IEventBus eventBus, Guid id, [FromBody] MessageTemplateUpsertDto inputDto)
     {
         var command = new UpdateMessageTemplateCommand(id, inputDto);
         await eventBus.PublishAsync(command);

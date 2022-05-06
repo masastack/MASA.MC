@@ -8,7 +8,7 @@ namespace Masa.Mc.Service.Admin.Application.Channels.Registers
         public void Register(TypeAdapterConfig config)
         {
             config.ForType<Channel, ChannelDto>().MapToConstructor(true);
-            config.ForType<ChannelCreateUpdateDto, Channel>().MapToConstructor(true);
+            config.ForType<ChannelUpsertDto, Channel>().MapToConstructor(true);
         }
     }
 }

@@ -1,7 +1,4 @@
-﻿// Copyright (c) MASA Stack All rights reserved.
-// Licensed under the Apache License. See LICENSE.txt in the project root for license information.
-
-global using BlazorComponent;
+﻿global using BlazorComponent;
 global using BlazorComponent.I18n;
 global using Masa.Blazor;
 global using Masa.Mc.Web.Admin.Data.App.ECommerce;
@@ -33,6 +30,7 @@ global using System.Reflection;
 global using System.Text.Json;
 global using Masa.Mc.Contracts.Admin.Dtos.Channels;
 global using Masa.Mc.Contracts.Admin.Enums.Channels;
+global using Masa.Mc.ApiGateways.Caller.Callers;
 global using Masa.Mc.Contracts.Admin.Options.Channels;
 global using Masa.Mc.Infrastructure.ObjectExtending;
 global using Masa.Mc.Infrastructure.ObjectExtending.ObjectExtending;
@@ -42,23 +40,3 @@ global using Masa.Mc.Web.Admin.ViewModel.Channels;
 global using Mapster;
 global using Masa.Mc.Contracts.Admin.Dtos.MessageTemplates;
 global using Masa.Mc.Web.Admin.Pages.MessageTemplates.Modules;
-global using Masa.Mc.Contracts.Admin.Enums.MessageTemplates;
-global using Masa.Mc.Infrastructure.Common.Helper;
-global using Masa.Mc.Contracts.Admin.Dtos.ReceiverGroups;
-global using Masa.Mc.Web.Admin.Pages.ReceiverGroups.Modules;
-global using Masa.Mc.Web.Admin.ViewModel.Users;
-global using Masa.Mc.Contracts.Admin.Enums.ReceiverGroups;
-global using Masa.Mc.Web.Admin.Components.Pagination;
-global using Masa.Mc.ApiGateways.Caller;
-global using Masa.Mc.ApiGateways.Caller.Services.Channels;
-global using Masa.Mc.ApiGateways.Caller.Services.MessageTemplates;
-global using Masa.Mc.ApiGateways.Caller.Services.ReceiverGroups;
-global using FluentValidation;
-global using Masa.Mc.Infrastructure.Common.Extensions;
-global using Masa.Mc.Contracts.Admin.Dtos.MessageTasks;
-global using Masa.Mc.ApiGateways.Caller.Services.MessageTasks;
-global using Masa.Mc.Web.Admin.Pages.MessageTasks.Modules;
-global using Masa.Mc.Contracts.Admin.Enums.MessageTasks;
-global using Masa.Mc.Contracts.Admin.Dtos;
-global using Masa.Mc.ApiGateways.Caller.Services.MessageInfos;
-global using Masa.Mc.Contracts.Admin.Dtos.MessageInfos;

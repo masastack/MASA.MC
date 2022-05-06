@@ -1,7 +1,7 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
-namespace Masa.Mc.Caller.Services.Channels;
+namespace Masa.Mc.ApiGateways.Caller.Services.Channels;
 
 public class ChannelService : ServiceBase
 {
@@ -21,12 +21,12 @@ public class ChannelService : ServiceBase
         return await GetAsync<ChannelDto>($"{id}");
     }
 
-    public async Task CreateAsync(ChannelCreateUpdateDto inputDto)
+    public async Task CreateAsync(ChannelUpsertDto inputDto)
     {
         await PostAsync(string.Empty, inputDto);
     }
 
-    public async Task UpdateAsync(Guid id, ChannelCreateUpdateDto inputDto)
+    public async Task UpdateAsync(Guid id, ChannelUpsertDto inputDto)
     {
         await PutAsync($"{id}", inputDto);
     }

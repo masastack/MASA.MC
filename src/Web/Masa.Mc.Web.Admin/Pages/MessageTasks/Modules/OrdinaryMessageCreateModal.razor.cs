@@ -9,7 +9,7 @@ public partial class OrdinaryMessageCreateModal : AdminCompontentBase
     public EventCallback OnOk { get; set; }
 
     private MForm _form;
-    private MessageTaskCreateUpdateDto _model = new() { ReceiverType = ReceiverTypes.Assign, EntityType = MessageEntityTypes.Ordinary };
+    private MessageTaskUpsertDto _model = new() { ReceiverType = ReceiverTypes.Assign, EntityType = MessageEntityTypes.Ordinary };
     private bool _visible;
     private List<ChannelDto> _channelItems = new();
     private ChannelTypes _channelType;

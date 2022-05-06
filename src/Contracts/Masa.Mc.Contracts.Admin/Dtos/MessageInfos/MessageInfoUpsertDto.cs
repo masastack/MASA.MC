@@ -3,7 +3,7 @@
 
 namespace Masa.Mc.Contracts.Admin.Dtos.MessageTasks;
 
-public class MessageInfoCreateUpdateDto
+public class MessageInfoUpsertDto
 {
     public string Title { get; set; } = string.Empty;
     public string Content { get; set; } = string.Empty;

@@ -8,7 +8,7 @@ public partial class ReceiverGroupCreateModal : AdminCompontentBase
     [Parameter]
     public EventCallback OnOk { get; set; }
 
-    private ReceiverGroupCreateUpdateDto _model = new();
+    private ReceiverGroupUpsertDto _model = new();
     private bool _visible;
 
     ReceiverGroupService ReceiverGroupService => McCaller.ReceiverGroupService;

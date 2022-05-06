@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\ApiGateways\Caller\Masa.Mc.Caller\Masa.Mc.Caller.csproj" />
+    <ProjectReference Include="..\..\ApiGateways\Caller\Masa.Mc.ApiGateways.Caller\Masa.Mc.ApiGateways.Caller.csproj" />
     <ProjectReference Include="..\..\Infrastructure\Masa.Mc.Infrastructure.Common\Masa.Mc.Infrastructure.Common.csproj" />
   </ItemGroup>
 

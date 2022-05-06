@@ -3,6 +3,6 @@
 
 namespace Masa.Mc.Service.Admin.Application.MessageTemplates.Commands;
 
-public record CreateMessageTemplateCommand(MessageTemplateCreateUpdateDto MessageTemplate) : Command
+public record CreateMessageTemplateCommand(MessageTemplateUpsertDto MessageTemplate) : Command
 {
 }

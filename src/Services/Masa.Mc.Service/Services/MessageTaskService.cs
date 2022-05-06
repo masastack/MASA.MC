@@ -1,4 +1,4 @@
-﻿// Copyright (c) MASA Stack All rights reserved.
+﻿ // Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
 namespace Masa.Mc.Service.Admin.Services;
@@ -35,7 +35,7 @@ public class MessageTaskService : ServiceBase
         return query.Result;
     }
 
-    public async Task CreateAsync(IEventBus eventBus, [FromBody] MessageTaskCreateUpdateDto inputDto)
+    public async Task CreateAsync(IEventBus eventBus, [FromBody] MessageTaskUpsertDto inputDto)
     {
         switch (inputDto.EntityType)
         {
@@ -53,7 +53,7 @@ public class MessageTaskService : ServiceBase
 
     }
 
-    public async Task UpdateAsync(IEventBus eventBus, Guid id, [FromBody] MessageTaskCreateUpdateDto inputDto)
+    public async Task UpdateAsync(IEventBus eventBus, Guid id, [FromBody] MessageTaskUpsertDto inputDto)
     {
         switch (inputDto.EntityType)
         {

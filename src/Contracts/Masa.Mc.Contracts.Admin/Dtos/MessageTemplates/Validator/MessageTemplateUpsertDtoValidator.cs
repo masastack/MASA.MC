@@ -3,9 +3,9 @@
 
 namespace Masa.Mc.Contracts.Admin.Dtos.MessageTemplates.Validator;
 
-public class MessageTemplateCreateUpdateDtoValidator : AbstractValidator<MessageTemplateCreateUpdateDto>
+public class MessageTemplateUpsertDtoValidator : AbstractValidator<MessageTemplateUpsertDto>
 {
-    public MessageTemplateCreateUpdateDtoValidator()
+    public MessageTemplateUpsertDtoValidator()
     {
         RuleFor(inputDto => inputDto.DisplayName).Required();
         RuleFor(inputDto => inputDto.ChannelId).Required();

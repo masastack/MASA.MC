@@ -3,9 +3,9 @@
 
 namespace Masa.Mc.Contracts.Admin.Dtos.MessageInfos.Validator;
 
-public class MessageInfoCreateUpdateDtoValidator : AbstractValidator<MessageInfoCreateUpdateDto>
+public class MessageInfoUpsertDtoValidator : AbstractValidator<MessageInfoUpsertDto>
 {
-    public MessageInfoCreateUpdateDtoValidator()
+    public MessageInfoUpsertDtoValidator()
     {
         RuleFor(inputDto => inputDto.Title).Required();
         RuleFor(inputDto => inputDto.Content).Required();

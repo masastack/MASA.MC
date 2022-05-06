@@ -3,7 +3,7 @@
 
 namespace Masa.Mc.Contracts.Admin.Dtos.MessageTasks;
 
-public class MessageTaskCreateUpdateDto
+public class MessageTaskUpsertDto
 {
     public string DisplayName { get; set; } = string.Empty;
 
@@ -27,7 +27,7 @@ public class MessageTaskCreateUpdateDto
 
     public SendRuleDto SendRules { get; set; } = new();
 
-    public MessageInfoCreateUpdateDto MessageInfo { get; set; } = new();
+    public MessageInfoUpsertDto MessageInfo { get; set; } = new();
 
     public ExtraPropertyDictionary Variables { get; set; } = new();
 }

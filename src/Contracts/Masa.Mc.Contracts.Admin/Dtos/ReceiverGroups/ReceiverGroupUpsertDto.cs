@@ -3,7 +3,7 @@
 
 namespace Masa.Mc.Contracts.Admin.Dtos.MessageTemplates;
 
-public class ReceiverGroupCreateUpdateDto
+public class ReceiverGroupUpsertDto
 {
     public string DisplayName { get; set; } = string.Empty;
 

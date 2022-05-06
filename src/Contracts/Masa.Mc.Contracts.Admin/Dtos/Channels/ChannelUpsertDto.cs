@@ -3,7 +3,7 @@
 
 namespace Masa.Mc.Contracts.Admin.Dtos.Channels;
 
-public class ChannelCreateUpdateDto
+public class ChannelUpsertDto
 {
     public string DisplayName { get; set; } = string.Empty;
 

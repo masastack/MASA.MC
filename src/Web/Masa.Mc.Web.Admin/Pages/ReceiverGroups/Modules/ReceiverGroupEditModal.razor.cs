@@ -8,7 +8,7 @@ public partial class ReceiverGroupEditModal : AdminCompontentBase
     [Parameter]
     public EventCallback OnOk { get; set; }
 
-    private ReceiverGroupCreateUpdateDto _model = new();
+    private ReceiverGroupUpsertDto _model = new();
     private Guid _entityId;
     private bool _visible;
 
@@ -17,7 +17,7 @@ public partial class ReceiverGroupEditModal : AdminCompontentBase
     public async Task OpenModalAsync(ReceiverGroupDto model)
     {
         _entityId = model.Id;
-        _model = model.Adapt<ReceiverGroupCreateUpdateDto>();
+        _model = model.Adapt<ReceiverGroupUpsertDto>();
         await GetFormDataAsync();
         await InvokeAsync(() =>
         {
@@ -29,7 +29,7 @@ public partial class ReceiverGroupEditModal : AdminCompontentBase
     private async Task GetFormDataAsync()
     {
         var dto = await ReceiverGroupService.GetAsync(_entityId);
-        _model = dto.Adapt<ReceiverGroupCreateUpdateDto>();
+        _model = dto.Adapt<ReceiverGroupUpsertDto>();
     }
 
     private void HandleCancel()

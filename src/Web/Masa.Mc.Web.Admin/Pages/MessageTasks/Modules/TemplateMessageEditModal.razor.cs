@@ -9,7 +9,7 @@ public partial class TemplateMessageEditModal : AdminCompontentBase
     public EventCallback OnOk { get; set; }
 
     private MForm _form;
-    private MessageTaskCreateUpdateDto _model = new();
+    private MessageTaskUpsertDto _model = new();
     private Guid _entityId;
     private bool _visible;
     private List<MessageTemplateDto> _templateItems = new();
@@ -29,7 +29,7 @@ public partial class TemplateMessageEditModal : AdminCompontentBase
     public async Task OpenModalAsync(MessageTaskDto model)
     {
         _entityId = model.Id;
-        _model = model.Adapt<MessageTaskCreateUpdateDto>();
+        _model = model.Adapt<MessageTaskUpsertDto>();
         await GetFormDataAsync();
         await InvokeAsync(() =>
         {
@@ -41,7 +41,7 @@ public partial class TemplateMessageEditModal : AdminCompontentBase
     private async Task GetFormDataAsync()
     {
         var dto = await MessageTaskService.GetAsync(_entityId);
-        _model = dto.Adapt<MessageTaskCreateUpdateDto>();
+        _model = dto.Adapt<MessageTaskUpsertDto>();
         _messageInfo = await MessageTemplateService.GetAsync(_model.EntityId) ?? new();
     }
 

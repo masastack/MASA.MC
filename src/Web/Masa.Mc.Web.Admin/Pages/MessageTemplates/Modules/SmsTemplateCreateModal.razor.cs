@@ -9,7 +9,7 @@ public partial class SmsTemplateCreateModal : AdminCompontentBase
     public EventCallback OnOk { get; set; }
 
     private MForm _form;
-    private MessageTemplateCreateUpdateDto _model = new();
+    private MessageTemplateUpsertDto _model = new();
     private bool _visible;
     private List<ChannelDto> _channelItems = new();
     private List<SmsTemplateDto> _templateItems = new();

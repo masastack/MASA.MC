@@ -9,7 +9,7 @@ public partial class SmsTemplateEditModal : AdminCompontentBase
     public EventCallback OnOk { get; set; }
 
     private MForm _form;
-    private MessageTemplateCreateUpdateDto _model = new();
+    private MessageTemplateUpsertDto _model = new();
     private Guid _entityId;
     private bool _visible;
     private List<ChannelDto> _channelItems = new();
@@ -26,7 +26,7 @@ public partial class SmsTemplateEditModal : AdminCompontentBase
     {
         _model.ChannelType = ChannelTypes.Sms;
         _entityId = model.Id;
-        _model = model.Adapt<MessageTemplateCreateUpdateDto>();
+        _model = model.Adapt<MessageTemplateUpsertDto>();
         await GetFormDataAsync();
         await InvokeAsync(() =>
         {
@@ -38,7 +38,7 @@ public partial class SmsTemplateEditModal : AdminCompontentBase
     private async Task GetFormDataAsync()
     {
         var dto = await MessageTemplateService.GetAsync(_entityId);
-        _model = dto.Adapt<MessageTemplateCreateUpdateDto>();
+        _model = dto.Adapt<MessageTemplateUpsertDto>();
         _templateItems = await SmsTemplateService.GetListByChannelIdAsync(_model.ChannelId);
         _channelType = dto.Channel.Type;
         await HandleSelectChannelTypeAsync(_channelType);

@@ -1,7 +1,7 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
-namespace Masa.Mc.Caller.Services.MessageTasks;
+namespace Masa.Mc.ApiGateways.Caller.Services.MessageTasks;
 
 public class MessageTaskService : ServiceBase
 {
@@ -22,12 +22,12 @@ public class MessageTaskService : ServiceBase
         return await GetAsync<MessageTaskDto>($"{id}");
     }
 
-    public async Task CreateAsync(MessageTaskCreateUpdateDto inputDto)
+    public async Task CreateAsync(MessageTaskUpsertDto inputDto)
     {
         await PostAsync(string.Empty, inputDto);
     }
 
-    public async Task UpdateAsync(Guid id, MessageTaskCreateUpdateDto inputDto)
+    public async Task UpdateAsync(Guid id, MessageTaskUpsertDto inputDto)
     {
         await PutAsync($"{id}", inputDto);
     }

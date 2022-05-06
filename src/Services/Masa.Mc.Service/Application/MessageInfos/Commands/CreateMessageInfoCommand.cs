@@ -3,6 +3,6 @@
 
 namespace Masa.Mc.Service.Admin.Application.MessageInfos.Commands;
 
-public record CreateMessageInfoCommand(MessageInfoCreateUpdateDto MessageInfo) : Command
+public record CreateMessageInfoCommand(MessageInfoUpsertDto MessageInfo) : Command
 {
 }

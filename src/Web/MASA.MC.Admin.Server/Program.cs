@@ -1,7 +1,5 @@
-// Copyright (c) MASA Stack All rights reserved.
-// Licensed under the Apache License. See LICENSE.txt in the project root for license information.
-
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.Configure<Settings>(builder.Configuration);
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
@@ -16,8 +14,8 @@ builder.Services.AddMasaBlazor(builder =>
 });
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddGlobalForServer();
-builder.Services.AddAuthApiGateways(option => option.McServiceBaseAddress = builder.Configuration["McServiceBaseAddress"]);
-builder.Services.AddSingleton<ChannelUpsertDtoValidator>();
+builder.Services.AddCaller(Assembly.Load("Masa.Mc.ApiGateways.Caller"));
+builder.Services.AddSingleton<ChannelCreateUpdateDtoValidator>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

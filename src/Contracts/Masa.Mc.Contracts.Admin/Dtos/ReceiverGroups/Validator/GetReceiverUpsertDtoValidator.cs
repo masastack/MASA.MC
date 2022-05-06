@@ -3,9 +3,9 @@
 
 namespace Masa.Mc.Contracts.Admin.Dtos.ReceiverGroups.Validator;
 
-public class ReceiverGroupCreateUpdateDtoValidator : AbstractValidator<ReceiverGroupCreateUpdateDto>
+public class ReceiverGroupUpsertDtoValidator : AbstractValidator<ReceiverGroupUpsertDto>
 {
-    public ReceiverGroupCreateUpdateDtoValidator()
+    public ReceiverGroupUpsertDtoValidator()
     {
         RuleFor(inputDto => inputDto.DisplayName).Required().Length(2, 50).ChineseLetterNumber();
     }

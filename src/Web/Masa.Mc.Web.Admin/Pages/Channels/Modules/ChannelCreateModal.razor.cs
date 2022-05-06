@@ -9,7 +9,7 @@ public partial class ChannelCreateModal : AdminCompontentBase
     public EventCallback OnOk { get; set; }
 
     private MForm _form;
-    private ChannelCreateUpdateDto _model = new();
+    private ChannelUpsertDto _model = new();
     private bool _visible;
     private List<ChannelTypes> channelTypeItems = Enum.GetValues(typeof(ChannelTypes))
         .Cast<ChannelTypes>().ToList();

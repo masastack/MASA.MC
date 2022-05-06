@@ -5,9 +5,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Masa.Mc.Contracts.Admin.Dtos.MessageTemplates;
 
-public class MessageTemplateCreateUpdateDto
+public class MessageTemplateUpsertDto
 {
-    public MessageTemplateCreateUpdateDto()
+    public MessageTemplateUpsertDto()
     {
         this.Items = new List<MessageTemplateItemDto>();
     }
@@ -30,5 +30,5 @@ public class MessageTemplateCreateUpdateDto
     public long PerDayLimit { get; set; }
     public bool IsStatic { get; set; }
     public List<MessageTemplateItemDto> Items { get; set; }
-    public MessageInfoCreateUpdateDto MessageInfo { get; set; }
+    public MessageInfoUpsertDto MessageInfo { get; set; }
 }

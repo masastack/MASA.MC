@@ -9,7 +9,7 @@ public partial class OrdinaryMessageEditModal : AdminCompontentBase
     public EventCallback OnOk { get; set; }
 
     private MForm _form;
-    private MessageTaskCreateUpdateDto _model = new() { ReceiverType = ReceiverTypes.Assign, EntityType = MessageEntityTypes.Ordinary };
+    private MessageTaskUpsertDto _model = new() { ReceiverType = ReceiverTypes.Assign, EntityType = MessageEntityTypes.Ordinary };
     private Guid _entityId;
     private bool _visible;
     private List<ChannelDto> _channelItems = new();
@@ -27,7 +27,7 @@ public partial class OrdinaryMessageEditModal : AdminCompontentBase
     public async Task OpenModalAsync(MessageTaskDto model)
     {
         _entityId = model.Id;
-        _model = model.Adapt<MessageTaskCreateUpdateDto>();
+        _model = model.Adapt<MessageTaskUpsertDto>();
         await GetFormDataAsync();
         await InvokeAsync(() =>
         {
@@ -42,10 +42,10 @@ public partial class OrdinaryMessageEditModal : AdminCompontentBase
         if (dto != null)
         {
              _channelType = dto.Channel.Type;
-            _model = dto.Adapt<MessageTaskCreateUpdateDto>();
+            _model = dto.Adapt<MessageTaskUpsertDto>();
             _channelItems = await ChannelService.GetListByTypeAsync(_channelType);
             var messageInfo = await MessageInfoService.GetAsync(_model.EntityId);
-            if (messageInfo != null) _model.MessageInfo = messageInfo.Adapt<MessageInfoCreateUpdateDto>();
+            if (messageInfo != null) _model.MessageInfo = messageInfo.Adapt<MessageInfoUpsertDto>();
         }
     }
 

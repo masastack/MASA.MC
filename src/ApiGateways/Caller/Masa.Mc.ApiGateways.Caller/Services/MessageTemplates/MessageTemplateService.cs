@@ -1,7 +1,7 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
-namespace Masa.Mc.Caller.Services.MessageTemplates;
+namespace Masa.Mc.ApiGateways.Caller.Services.MessageTemplates;
 
 public class MessageTemplateService : ServiceBase
 {
@@ -22,12 +22,12 @@ public class MessageTemplateService : ServiceBase
         return await GetAsync<MessageTemplateDto>($"{id}");
     }
 
-    public async Task CreateAsync(MessageTemplateCreateUpdateDto inputDto)
+    public async Task CreateAsync(MessageTemplateUpsertDto inputDto)
     {
         await PostAsync(string.Empty, inputDto);
     }
 
-    public async Task UpdateAsync(Guid id, MessageTemplateCreateUpdateDto inputDto)
+    public async Task UpdateAsync(Guid id, MessageTemplateUpsertDto inputDto)
     {
         await PutAsync($"{id}", inputDto);
     }

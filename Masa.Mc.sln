@@ -23,7 +23,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Masa.Mc.Web.Admin", "src\We
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ApiGateways", "ApiGateways", "{32774681-0D67-48A6-A379-D57015094F85}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Masa.Mc.Caller", "src\ApiGateways\Caller\Masa.Mc.Caller\Masa.Mc.Caller.csproj", "{40685EC0-64DF-4742-B8F6-602AFAEFC0EA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Masa.Mc.ApiGateways.Caller", "src\ApiGateways\Caller\Masa.Mc.ApiGateways.Caller\Masa.Mc.ApiGateways.Caller.csproj", "{40685EC0-64DF-4742-B8F6-602AFAEFC0EA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Contracts", "Contracts", "{88AD0A79-5286-4C1C-8A58-AAC9E6870CCD}"
 EndProject
@@ -54,9 +54,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Masa.Mc.Infrastructure.Email", "src\Infrastructure\Masa.Mc.Infrastructure.Email\Masa.Mc.Infrastructure.Email.csproj", "{C816B922-18A4-4F6A-9A7A-4D0E7F2AE129}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Masa.Mc.Infrastructure.Email", "src\Infrastructure\Masa.Mc.Infrastructure.Email\Masa.Mc.Infrastructure.Email.csproj", "{C816B922-18A4-4F6A-9A7A-4D0E7F2AE129}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Masa.Mc.Infrastructure.SignalR", "src\Infrastructure\Masa.Mc.Infrastructure.SignalR\Masa.Mc.Infrastructure.SignalR.csproj", "{E71E792D-4812-4A7E-AB78-7DB4B7FB4D3D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Masa.Mc.Infrastructure.SignalR", "src\Infrastructure\Masa.Mc.Infrastructure.SignalR\Masa.Mc.Infrastructure.SignalR.csproj", "{E71E792D-4812-4A7E-AB78-7DB4B7FB4D3D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

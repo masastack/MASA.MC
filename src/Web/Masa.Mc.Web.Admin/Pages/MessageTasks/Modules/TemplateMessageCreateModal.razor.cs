@@ -9,7 +9,7 @@ public partial class TemplateMessageCreateModal : AdminCompontentBase
     public EventCallback OnOk { get; set; }
 
     private MForm _form;
-    private MessageTaskCreateUpdateDto _model = new() { ReceiverType = ReceiverTypes.Assign, EntityType = MessageEntityTypes.Template };
+    private MessageTaskUpsertDto _model = new() { ReceiverType = ReceiverTypes.Assign, EntityType = MessageEntityTypes.Template };
     private bool _visible;
     private List<MessageTemplateDto> _templateItems = new();
     private MessageTemplateDto _messageInfo = new();

@@ -10,7 +10,7 @@ WORKDIR /src
 COPY ["src/Web/Masa.Mc.Web.Admin.Server/Masa.Mc.Web.Admin.Server.csproj", "src/Web/Masa.Mc.Web.Admin.Server/"]
 COPY ["src/Web/Masa.Mc.Web.Admin/Masa.Mc.Web.Admin.csproj", "src/Web/Masa.Mc.Web.Admin/"]
 COPY ["src/Infrastructure/Masa.Mc.Infrastructure.Common/Masa.Mc.Infrastructure.Common.csproj", "src/Infrastructure/Masa.Mc.Infrastructure.Common/"]
-COPY ["src/ApiGateways/Caller/Masa.Mc.Caller/Masa.Mc.Caller.csproj", "src/ApiGateways/Caller/Masa.Mc.Caller/"]
+COPY ["src/ApiGateways/Caller/Masa.Mc.ApiGateways.Caller/Masa.Mc.ApiGateways.Caller.csproj", "src/ApiGateways/Caller/Masa.Mc.ApiGateways.Caller/"]
 COPY ["src/Contracts/Masa.Mc.Contracts.Admin/Masa.Mc.Contracts.Admin.csproj", "src/Contracts/Masa.Mc.Contracts.Admin/"]
 COPY ["src/Infrastructure/Masa.Mc.Infrastructure.ObjectExtending/Masa.Mc.Infrastructure.ObjectExtending.csproj", "src/Infrastructure/Masa.Mc.Infrastructure.ObjectExtending/"]
 COPY ["src/Infrastructure/Masa.Mc.Infrastructure.Ddd.Application.Contracts/Masa.Mc.Infrastructure.Ddd.Application.Contracts.csproj", "src/Infrastructure/Masa.Mc.Infrastructure.Ddd.Application.Contracts/"]

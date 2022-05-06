@@ -38,13 +38,13 @@ public class ChannelService : ServiceBase
         return query.Result;
     }
 
-    public async Task CreateAsync(IEventBus eventBus, [FromBody] ChannelCreateUpdateDto inputDto)
+    public async Task CreateAsync(IEventBus eventBus, [FromBody] ChannelUpsertDto inputDto)
     {
         var command = new CreateChannelCommand(inputDto);
         await eventBus.PublishAsync(command);
     }
 
-    public async Task UpdateAsync(IEventBus eventBus, Guid id, [FromBody] ChannelCreateUpdateDto inputDto)
+    public async Task UpdateAsync(IEventBus eventBus, Guid id, [FromBody] ChannelUpsertDto inputDto)
     {
         var command = new UpdateChannelCommand(id, inputDto);
         await eventBus.PublishAsync(command);

@@ -9,7 +9,7 @@ public partial class EmailTemplateEditModal : AdminCompontentBase
     public EventCallback OnOk { get; set; }
 
     private MForm _form;
-    private MessageTemplateCreateUpdateDto _model = new();
+    private MessageTemplateUpsertDto _model = new();
     private Guid _entityId;
     private bool _visible;
     private List<ChannelDto> _channelItems = new();
@@ -22,7 +22,7 @@ public partial class EmailTemplateEditModal : AdminCompontentBase
     public async Task OpenModalAsync(MessageTemplateDto model)
     {
         _entityId = model.Id;
-        _model = model.Adapt<MessageTemplateCreateUpdateDto>();
+        _model = model.Adapt<MessageTemplateUpsertDto>();
         await GetFormDataAsync();
         await InvokeAsync(() =>
         {
@@ -34,7 +34,7 @@ public partial class EmailTemplateEditModal : AdminCompontentBase
     private async Task GetFormDataAsync()
     {
         var dto = await MessageTemplateService.GetAsync(_entityId);
-        _model = dto.Adapt<MessageTemplateCreateUpdateDto>();
+        _model = dto.Adapt<MessageTemplateUpsertDto>();
         _channelType = dto.Channel.Type;
         await HandleSelectChannelType(_channelType);
     }
