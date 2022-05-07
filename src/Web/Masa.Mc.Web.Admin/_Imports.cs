@@ -62,3 +62,5 @@ global using Masa.Mc.Contracts.Admin.Enums.MessageTasks;
 global using Masa.Mc.Contracts.Admin.Dtos;
 global using Masa.Mc.ApiGateways.Caller.Services.MessageInfos;
 global using Masa.Mc.Contracts.Admin.Dtos.MessageInfos;
+global using Masa.Mc.ApiGateways.Caller.Services.MessageRecords;
+global using Masa.Mc.Contracts.Admin.Dtos.MessageRecords;

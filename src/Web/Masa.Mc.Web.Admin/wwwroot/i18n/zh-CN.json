@@ -199,5 +199,12 @@
   "DisplayName.MessageTaskHistoryStatus.Completed": "发送完成",
   "DisplayName.MessageTaskHistoryStatus.Withdrawn": "已撤回",
   "MessageTaskHistoryWithdrawnMessage": "撤回消息任务历史成功.",
-  "Permission.TestMessageTask": "测试消息任务"
+  "Permission.TestMessageTask": "测试消息任务",
+  "DisplayName.MessageRecordCompletionTime": "发送时间",
+  "DisplayName.MessageRecordSuccess": "发送状态",
+  "DisplayName.MessageRecordFailureReason": "失败原因",
+  "DisplayName.MessageRecordSuccess.True": "发送成功",
+  "DisplayName.MessageRecordSuccess.False": "发送失败",
+  "DisplayName.MessageRecordTimeTypes": "时间类型",
+  "DisplayName.MessageRecordTimeTypes.SendTime": "发送时间"
 }

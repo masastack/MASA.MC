@@ -6,6 +6,7 @@ namespace Masa.Mc.Contracts.Admin.Dtos.MessageRecords;
 public class GetMessageRecordInputDto : PaginatedOptionsDto
 {
     public string Filter { get; set; } = string.Empty;
+    public Guid? ChannelId { get; set; }
     public bool? Success { get; set; }
     public MessageRecordTimeTypes? TimeType { get; set; }
     public DateTime? StartTime { get; set; }
@@ -19,10 +20,11 @@ public class GetMessageRecordInputDto : PaginatedOptionsDto
     {
     }
 
-    public GetMessageRecordInputDto(string filter, bool? success, MessageRecordTimeTypes? timeType,
+    public GetMessageRecordInputDto(string filter, Guid? channelId, bool? success, MessageRecordTimeTypes? timeType,
        DateTime? startTime, DateTime? endTime, string sorting, int page, int pageSize) : base(sorting, page, pageSize)
     {
         Filter = filter;
+        ChannelId = channelId;
         Success = success;
         TimeType = timeType;
         StartTime = startTime;

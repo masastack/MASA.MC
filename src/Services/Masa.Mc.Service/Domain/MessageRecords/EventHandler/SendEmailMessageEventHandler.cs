@@ -40,8 +40,8 @@ public class SendEmailMessageEventHandler
             {
                 var messageRecord = new MessageRecord(item.UserId, channel.Id, taskHistory.MessageTaskId, taskHistory.Id, item.Variables);
                 SetUserInfo(messageRecord, item);
-                messageRecord.SetDataValue(nameof(MessageTemplate.Title), eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.Title)));
                 TemplateRenderer(eto.MessageData, taskHistory.Variables);
+                messageRecord.SetDataValue(nameof(MessageTemplate.Title), eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.Title)));
                 try
                 {
                     await _emailSender.SendAsync(

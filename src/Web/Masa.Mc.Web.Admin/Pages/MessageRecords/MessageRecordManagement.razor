@@ -1,0 +1,142 @@
+﻿@inherits AdminCompontentBase
+@page "/messageRecords/messageRecordManagement"
+
+<PageTitle>@T("MessageRecordManagement")</PageTitle>
+
+<MCard>
+    <MCardTitle class="mx-2 pt-6">
+        <MTextField @bind-Value="_queryParam.Filter" Clearable Color="primary" Class="rounded-2 search" Placeholder="@T("Search")" HideDetails="@("auto")" Flat Dense Solo BackgroundColor="fill-lighten-1" OnKeyDown="SearchKeyDown" OnClearClick="HandleClearAsync">
+            <PrependInnerContent>
+                <MIcon Size=16 Class="mr-2 neutral-lighten-1--text">mdi-magnify</MIcon>
+            </PrependInnerContent>
+        </MTextField>
+        <MIcon Class="ml-4" OnClick="ToggleAdvanced">mdi-filter</MIcon>
+    </MCardTitle>
+    @if (advanced)
+    {
+        <MRow Class="mx-2">
+            <MCol Cols="2">
+                        <MSelect @bind-Value="@_queryParam.TimeType"
+                             Items="@(GetEnumList<MessageRecordTimeTypes>())"
+                             Label="@T("DisplayName.MessageRecordTimeTypes")"
+                             ItemText="@(item => T($"DisplayName.MessageRecordTimeTypes.{item.ToString()}"))"
+                             ItemValue="item => item"
+                             Dense
+                             Outlined
+                             Clearable
+                             HideDetails="@("auto")"
+                             TItem="MessageRecordTimeTypes"
+                             TItemValue="MessageRecordTimeTypes"
+                             TValue="MessageRecordTimeTypes?"
+                             OnClearClick="RefreshAsync"
+                             OnSelectedItemUpdate="RefreshAsync">
+                        </MSelect>
+                    </MCol>
+                    <MCol Cols="2">
+                        <MMenu @bind-Value="_datePickersShow"
+                           CloseOnContentClick="false"
+                           Transition="scale-transition"
+                           OffsetY
+                           MinWidth="@("auto")">
+                            <ActivatorContent>
+                                <MTextField Value="DateRangeText"
+                                        Label="@T("DateRange")"
+                                        Readonly
+                                        Dense
+                                        Outlined
+                                        HideDetails="@("auto")"
+                                        PrependInnerIcon="mdi-calendar"
+                                        @attributes="context.Attrs"></MTextField>
+                            </ActivatorContent>
+                            <ChildContent>
+                                <MDatePicker @bind-Value="_dates"
+                                         Range
+                                         NoTitle
+                                         Scrollable>
+                                    <MSpacer></MSpacer>
+                                    <MButton Text
+                                         Color="primary"
+                                         OnClick="HandleDatePickersCancel">
+                                        Cancel
+                                    </MButton>
+                                    <MButton Text
+                                         Color="primary"
+                                         OnClick="HandleDatePickersAsync">
+                                        OK
+                                    </MButton>
+                                </MDatePicker>
+                            </ChildContent>
+                        </MMenu>
+                    </MCol>
+            <MCol Cols="2">
+                <MSelect @bind-Value="_queryParam.ChannelId"
+                     Items="@_channelItems"
+                     Label="@T("DisplayName.Channel")"
+                     ItemText="item => item.DisplayName"
+                     ItemValue="item => item.Id"
+                     Dense
+                     Outlined
+                     Clearable
+                     HideDetails="@("auto")"
+                     TItem="ChannelDto"
+                     TItemValue="Guid"
+                     TValue="Guid?"
+                     OnClearClick="RefreshAsync"
+                     OnSelectedItemUpdate="RefreshAsync">
+                </MSelect>
+            </MCol>
+        </MRow>
+    }
+    <MCardText>
+        <MDataTable Headers="Headers" Items="_entities.Result" TItem="MessageRecordDto" ItemsPerPage="_queryParam.PageSize" HideDefaultFooter Class="user">
+            <HeaderColContent Context="header">
+                <span class="text-btn">@header.Text</span>
+            </HeaderColContent>
+            <ItemColContent>
+                @switch (context.Header.Value)
+                {
+                    case ("Receiver"):
+                        <div class="d-flex my-1">
+                            <MAvatar>
+                                <MImage Src="https://cdn.masastack.com/stack/images/website/masa-blazor/jack.png"></MImage>
+                            </MAvatar>
+                            <div class="ml-2">
+                                <div class="text-body3 neutral-lighten-1--text">@(context.Item.ExtraProperties.GetProperty<string>("DisplayName"))</div>
+                                <div class="text-body3 neutral-lighten-1--text">@(context.Item.ExtraProperties.GetProperty<string>("PhoneNumber")) | @(context.Item.ExtraProperties.GetProperty<string>("Email"))</div>
+                            </div>
+                        </div>
+                        break;
+                    case ("ChannelDisplayName"):
+                        <span class="text-body3">@context.Item.Channel?.DisplayName</span>
+                        break;
+                    case ("MessageInfoTitle"):
+                        <span class="text-body3">@(context.Item.ExtraProperties.GetProperty<string>("Title"))</span>
+                        break;
+                    case (nameof(MessageRecordDto.CompletionTime)):
+                        <span class="text-body3">@context.Item.CompletionTime?.ToString(T("$DateTimeFormat"))</span>
+                        break;
+                    case nameof(MessageRecordDto.Success):
+                        if (context.Item.Success == true)
+                        {
+                            <span>@T("DisplayName.MessageRecordSuccess.True")</span>
+                        }
+                        if (context.Item.Success == false)
+                        {
+                            <span>@T("DisplayName.MessageRecordSuccess.False")</span>
+                        }
+                        break;
+                    case "Action":
+                        <MIcon Small Color="neutral-lighten-2">mdi-eye</MIcon>
+                        break;
+                    default:
+                        <span class="text-body3">@context.Value</span>
+                        break;
+                }
+            </ItemColContent>
+            <FooterContent>
+                <Pagination Class="mt-5" @bind-Page="_queryParam.Page" @bind-PageSize="_queryParam.PageSize" Total="_entities.Total" OnChange="HandlePaginationChange" />
+            </FooterContent>
+        </MDataTable>
+    </MCardText>
+</MCard>
+

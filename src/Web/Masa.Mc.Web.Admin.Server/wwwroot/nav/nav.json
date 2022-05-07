@@ -51,7 +51,7 @@
         "Id": 9,
         "Title": "Permission.MessageRecord",
         "Icon": "mdi-circle",
-        "Href": "messageTasks/messageRecord"
+        "Href": "messageRecords/messageRecordManagement"
       }
     ]
   }

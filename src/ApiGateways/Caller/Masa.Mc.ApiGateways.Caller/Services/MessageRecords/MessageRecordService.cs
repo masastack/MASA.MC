@@ -9,7 +9,7 @@ public class MessageRecordService : ServiceBase
 
     internal MessageRecordService(ICallerProvider callerProvider) : base(callerProvider)
     {
-        BaseUrl = "api/message-task";
+        BaseUrl = "api/message-record";
     }
 
     public async Task<PaginatedListDto<MessageRecordDto>> GetListAsync(GetMessageRecordInputDto inputDto)
