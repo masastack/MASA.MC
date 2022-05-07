@@ -7,8 +7,8 @@ stages:
 
 variables:
   ALI_REGISTRY: registry.cn-hangzhou.aliyuncs.com
-  IMAGE_MC_SERVICE_DEV: $ALI_REGISTRY/masa/masa-mc-service:$CI_COMMIT_TAG
-  IMAGE_MC_SERVICE: $ALI_REGISTRY/masa/masa-mc-service:dev-$CI_PIPELINE_ID
+  IMAGE_MC_SERVICE: $ALI_REGISTRY/masa/masa-mc-service:$CI_COMMIT_TAG
+  IMAGE_MC_SERVICE_DEV: $ALI_REGISTRY/masa/masa-mc-service:dev-$CI_PIPELINE_ID
   IMAGE_MC_WEB_ADMIN_SERVER: $ALI_REGISTRY/masa/masa-mc-web-admin-server:$CI_COMMIT_TAG
   IMAGE_MC_WEB_ADMIN_SERVER_DEV: $ALI_REGISTRY/masa/masa-mc-web-admin-server:dev-$CI_PIPELINE_ID
   DOCKER_MC_SERVICE_PATH: ./src/Services/Masa.Mc.Service/Dockerfile
