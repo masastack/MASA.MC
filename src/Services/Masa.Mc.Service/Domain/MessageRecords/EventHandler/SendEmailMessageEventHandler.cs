@@ -39,7 +39,8 @@ public class SendEmailMessageEventHandler
             foreach (var item in taskHistory.ReceiverUsers)
             {
                 var messageRecord = new MessageRecord(item.UserId, channel.Id, taskHistory.MessageTaskId, taskHistory.Id, item.Variables);
-                messageRecord.SetDataValue(nameof(item.Email), item.Email);
+                SetUserInfo(messageRecord, item);
+                messageRecord.SetDataValue(nameof(MessageTemplate.Title), eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.Title)));
                 TemplateRenderer(eto.MessageData, taskHistory.Variables);
                 try
                 {
@@ -64,5 +65,12 @@ public class SendEmailMessageEventHandler
     {
         messageData.SetDataValue(nameof(MessageTemplate.Title), await _templateRenderer.RenderAsync(messageData.GetDataValue<string>(nameof(MessageTemplate.Title)), Variables));
         messageData.SetDataValue(nameof(MessageTemplate.Content), await _templateRenderer.RenderAsync(messageData.GetDataValue<string>(nameof(MessageTemplate.Content)), Variables));
+    }
+
+    private void SetUserInfo(MessageRecord messageRecord, MessageReceiverUser item)
+    {
+        messageRecord.SetDataValue(nameof(item.DisplayName), item.DisplayName);
+        messageRecord.SetDataValue(nameof(item.Email), item.Email);
+        messageRecord.SetDataValue(nameof(item.PhoneNumber), item.PhoneNumber);
     }
 }

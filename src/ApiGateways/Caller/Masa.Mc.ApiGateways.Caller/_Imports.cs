@@ -23,3 +23,5 @@ global using Masa.Mc.Contracts.Admin.Dtos.MessageTasks;
 global using Masa.Mc.ApiGateways.Caller.Services.MessageTasks;
 global using Masa.Mc.Contracts.Admin.Dtos.MessageInfos;
 global using Masa.Mc.ApiGateways.Caller.Services.MessageInfos;
+global using Masa.Mc.Contracts.Admin.Dtos.MessageRecords;
+global using Masa.Mc.ApiGateways.Caller.Services.MessageRecords;

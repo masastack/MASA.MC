@@ -111,3 +111,6 @@ global using Masa.Mc.Service.Admin.Domain.MessageRecords.Events;
 global using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 global using Masa.Mc.Service.Admin.Infrastructure.EntityFrameworkCore.ValueConverters;
 global using Microsoft.EntityFrameworkCore.ChangeTracking;
+global using Masa.Mc.Contracts.Admin.Dtos.MessageRecords;
+global using Masa.Mc.Service.Admin.Application.MessageRecords.Queries;
+global using Masa.Mc.Contracts.Admin.Enums.MessageRecords;

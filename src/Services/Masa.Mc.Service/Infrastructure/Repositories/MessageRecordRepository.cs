@@ -9,4 +9,22 @@ public class MessageRecordRepository : Repository<McDbContext, MessageRecord>, I
     : base(context, unitOfWork)
     {
     }
+
+    public async Task<IQueryable<MessageRecord>> GetQueryableAsync()
+    {
+        return await Task.FromResult(Context.Set<MessageRecord>().AsQueryable());
+    }
+
+    public async Task<IQueryable<MessageRecord>> WithDetailsAsync()
+    {
+        var query = await GetQueryableAsync();
+        return query.IncludeDetails();
+    }
+
+    public async Task<MessageRecord?> FindAsync(Expression<Func<MessageRecord, bool>> predicate, bool include = true, CancellationToken cancellationToken = default(CancellationToken))
+    {
+        return include
+            ? await (await WithDetailsAsync()).Where(predicate).FirstOrDefaultAsync(cancellationToken)
+            : await Context.Set<MessageRecord>().Where(predicate).FirstOrDefaultAsync(cancellationToken);
+    }
 }
