@@ -8,7 +8,7 @@ public class UserViewModel
     public Guid Id { get; set; }
     public ReceiverGroupItemTypes Type { get; set; }
 
-    public string SubjectId { get; set; } = string.Empty;
+    public Guid SubjectId { get; set; }
 
     public string DisplayName { get; set; } = string.Empty;
 
@@ -27,7 +27,7 @@ public class UserViewModel
     {
         Id = id;
         Type = type;
-        SubjectId = subjectId;
+        SubjectId = new Guid(subjectId);
         DisplayName = displayName;
         Avatar = avatar;
         PhoneNumber = phoneNumber;

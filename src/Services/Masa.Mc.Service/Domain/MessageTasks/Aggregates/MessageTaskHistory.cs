@@ -3,6 +3,9 @@
 
 namespace Masa.Mc.Service.Admin.Domain.MessageTasks.Aggregates;
 
+/// <summary>
+/// Subsequently, it is intended to be a single aggregation root
+/// </summary>
 public class MessageTaskHistory : AuditEntity<Guid, Guid>
 {
     public Guid MessageTaskId { get; protected set; }
@@ -24,6 +27,8 @@ public class MessageTaskHistory : AuditEntity<Guid, Guid>
     public string Sign { get; protected set; } = string.Empty;
 
     public ExtraPropertyDictionary Variables { get; protected set; } = new();
+
+    public ICollection<MessageReceiverUser> ReceiverUsers { get; protected set; } = new Collection<MessageReceiverUser>();
 
     protected internal MessageTaskHistory(Guid messageTaskId, ReceiverTypes receiverType, List<MessageTaskReceiver> receivers, ExtraPropertyDictionary sendRules, DateTime? sendTime, string sign, ExtraPropertyDictionary variables)
     {
@@ -53,5 +58,10 @@ public class MessageTaskHistory : AuditEntity<Guid, Guid>
     {
         WithdrawTime = DateTime.UtcNow;
         Status = MessageTaskHistoryStatuses.Withdrawn;
+    }
+
+    public void SetReceiverUsers(ICollection<MessageReceiverUser> receiverUsers)
+    {
+        ReceiverUsers = receiverUsers;
     }
 }

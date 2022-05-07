@@ -55,7 +55,7 @@ public class ReceiverGroup : AuditAggregateRoot<Guid, Guid>
         );
     }
 
-    public virtual void AddOrUpdateItem(string subjectId, ReceiverGroupItemTypes type, string displayName, string avatar = "", string phoneNumber = "", string email = "")
+    public virtual void AddOrUpdateItem(Guid subjectId, ReceiverGroupItemTypes type, string displayName, string avatar = "", string phoneNumber = "", string email = "")
     {
         var existingItem = Items.SingleOrDefault(item => item.SubjectId == subjectId && item.Type == type);
 

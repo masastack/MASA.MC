@@ -3,68 +3,55 @@
 
 namespace Masa.Mc.Service.Admin.Domain.MessageRecords.EventHandler;
 
+//did not finish
 public class CreateMessageEventHandler
 {
-    private readonly IChannelRepository _channelRepository;
     private readonly IDomainEventBus _eventBus;
-    private readonly IMessageTaskRepository _messageTaskRepository;
-    private readonly IMessageRecordRepository _messageRecordRepository;
-
-    public CreateMessageEventHandler(IChannelRepository channelRepository
-        , IDomainEventBus eventBus
-        , IMessageTaskRepository messageTaskRepository
-        , IMessageRecordRepository messageRecordRepository)
+    private readonly IServiceProvider _serviceProvider;
+    public CreateMessageEventHandler(
+        IDomainEventBus eventBus
+        , IServiceProvider serviceProvider)
     {
-        _channelRepository = channelRepository;
         _eventBus = eventBus;
-        _messageTaskRepository = messageTaskRepository;
-        _messageRecordRepository = messageRecordRepository;
+        _serviceProvider = serviceProvider;
     }
 
     [EventHandler(1)]
-    public async Task CheckUsersAsync(CreateMessageEvent @event)
+    public async Task CheckReceiverUsersAsync(CreateMessageEvent eto)
     {
         //Auth did not do this temporarily
-        var task = await _messageTaskRepository.FindAsync(x => x.Id == @event.MessageTaskId);
-        var history = task.Historys.FirstOrDefault(x => x.Id == @event.MessageTaskHistoryId);
-        var userIds = history.Receivers.Where(x => x.Type == MessageTaskReceiverTypes.User && !string.IsNullOrEmpty(x.SubjectId)).Select(x => new Guid(x.SubjectId));
-        @event.UserIds = userIds;
+        var taskHistory = eto.MessageTaskHistory;
+        var receiverUsers = taskHistory.Receivers.Where(x => x.Type == MessageTaskReceiverTypes.User)
+            .Select(x => new MessageReceiverUser
+            {
+                UserId = x.SubjectId,
+                DisplayName = x.DisplayName,
+                PhoneNumber = x.PhoneNumber,
+                Email = x.Email,
+                Variables = taskHistory.Variables,
+            })
+            .ToList();
+        eto.MessageTaskHistory.SetReceiverUsers(receiverUsers);
+        await Task.CompletedTask;
     }
 
     [EventHandler(2)]
-    public async Task CreateMessagesAsync(CreateMessageEvent @event)
+    public async Task SendMessagesAsync(CreateMessageEvent eto)
     {
-        var list = new List<MessageRecord>();
-        foreach (var item in @event.UserIds)
-        {
-            list.Add(new MessageRecord(item, @event.ChannelId, @event.MessageTaskId, @event.MessageTaskHistoryId));
-        }
-        await _messageRecordRepository.AddRangeAsync(list);
-    }
-
-    [EventHandler(3)]
-    public async Task SendMessagesAsync(CreateMessageEvent @event)
-    {
-        var channel = await _channelRepository.FindAsync(x => x.Id == @event.ChannelId);
+        var unitOfWorkManager = _serviceProvider.GetRequiredService<IUnitOfWorkManager>();
+        await using var unitOfWork = unitOfWorkManager.CreateDbContext();
+        var _channelRepository = unitOfWork.ServiceProvider.GetRequiredService<IChannelRepository>();
+        var channel = await _channelRepository.FindAsync(x => x.Id == eto.ChannelId);
         switch (channel.Type)
         {
             case ChannelTypes.Sms:
-                var smsTask = Task.Run(async () =>
-                {
-                    await _eventBus.PublishAsync(new SendSmsMessageEvent(@event.MessageTaskHistoryId));
-                });
+                await _eventBus.PublishAsync(new SendSmsMessageEvent(eto.ChannelId, eto.MessageData, eto.MessageTaskHistory));
                 break;
             case ChannelTypes.Email:
-                var emailTask = Task.Run(async () =>
-                {
-                    await _eventBus.PublishAsync(new SendEmailMessageEvent(@event.MessageTaskHistoryId));
-                });
+                await _eventBus.PublishAsync(new SendEmailMessageEvent(eto.ChannelId, eto.MessageData, eto.MessageTaskHistory));
                 break;
             case ChannelTypes.WebsiteMessage:
-                var websiteMessageTask = Task.Run(async () =>
-               {
-                   await _eventBus.PublishAsync(new SendWebsiteMessageEvent(@event.MessageTaskHistoryId));
-               });
+                await _eventBus.PublishAsync(new SendWebsiteMessageEvent(eto.ChannelId, eto.MessageData, eto.MessageTaskHistory));
                 break;
             default:
                 break;

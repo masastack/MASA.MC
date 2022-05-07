@@ -5,11 +5,10 @@ namespace Masa.Mc.Service.Admin.Domain.MessageTemplates.Services;
 
 public class SmsTemplateDomainService : DomainService
 {
-    private readonly IMessageTemplateRepository _repository;
 
-    public SmsTemplateDomainService(IDomainEventBus eventBus, IMessageTemplateRepository repository) : base(eventBus)
+    public SmsTemplateDomainService(IDomainEventBus eventBus) : base(eventBus)
     {
-        _repository = repository;
+
     }
 
     public async Task SyncAsync(Guid channelId)

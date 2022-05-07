@@ -61,6 +61,9 @@ public static class McDbContextModelBuilderExtensions
         builder.Entity<ReceiverGroupItem>(b =>
         {
             b.ToTable(MCConsts.DbTablePrefix + "ReceiverGroupItems", MCConsts.DbSchema);
+            b.Property(x => x.DisplayName).IsRequired().HasMaxLength(128);
+            b.Property(x => x.PhoneNumber).HasMaxLength(128);
+            b.Property(x => x.Email).HasMaxLength(128);
         });
 
         builder.Entity<MessageTask>(b =>
@@ -93,6 +96,16 @@ public static class McDbContextModelBuilderExtensions
         {
             b.ToTable(MCConsts.DbTablePrefix + "MessageRecords", MCConsts.DbSchema);
             b.Property(x => x.ExtraProperties).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
+            b.Property(x => x.Variables).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
+        });
+
+        builder.Entity<MessageReceiverUser>(b =>
+        {
+            b.ToTable(MCConsts.DbTablePrefix + "MessageReceiverUsers", MCConsts.DbSchema);
+            b.Property(x => x.DisplayName).IsRequired().HasMaxLength(128);
+            b.Property(x => x.PhoneNumber).HasMaxLength(128);
+            b.Property(x => x.Email).HasMaxLength(128);
+            b.Property(x => x.Variables).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
         });
     }
 }

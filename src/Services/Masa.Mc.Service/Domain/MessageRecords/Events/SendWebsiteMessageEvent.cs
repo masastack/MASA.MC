@@ -3,7 +3,11 @@
 
 namespace Masa.Mc.Service.Admin.Domain.MessageRecords.Events;
 
-public record SendWebsiteMessageEvent(Guid MessageTaskHistoryId) : DomainEvent
+public record SendWebsiteMessageEvent : SendMessageEvent
 {
+    public SendWebsiteMessageEvent(Guid channelId, MessageData messageData, MessageTaskHistory messageTaskHistory)
+        : base(channelId, messageData, messageTaskHistory)
+    {
 
+    }
 }

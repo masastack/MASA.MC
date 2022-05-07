@@ -16,12 +16,15 @@ public class MessageRecord : AuditAggregateRoot<Guid, Guid>, ISoftDelete
     public bool IsDeleted { get; protected set; }
     public ExtraPropertyDictionary ExtraProperties { get; protected set; } = new();
 
-    public MessageRecord(Guid userId, Guid channelId, Guid messageTaskId, Guid messageTaskHistoryId)
+    public ExtraPropertyDictionary Variables { get; protected set; } = new();
+
+    public MessageRecord(Guid userId, Guid channelId, Guid messageTaskId, Guid messageTaskHistoryId, ExtraPropertyDictionary variables)
     {
         UserId = userId;
         ChannelId = channelId;
         MessageTaskId = messageTaskId;
         MessageTaskHistoryId = messageTaskHistoryId;
+        Variables = variables;
     }
 
     public void SetResult(bool success, string failureReason)
@@ -29,5 +32,15 @@ public class MessageRecord : AuditAggregateRoot<Guid, Guid>, ISoftDelete
         CompletionTime = DateTime.UtcNow;
         Success = success;
         FailureReason = failureReason;
+    }
+
+    public virtual T GetDataValue<T>(string name)
+    {
+        return ExtraProperties.GetProperty<T>(name);
+    }
+
+    public virtual void SetDataValue(string name, string value)
+    {
+        ExtraProperties.SetProperty(name, value);
     }
 }

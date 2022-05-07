@@ -5,4 +5,5 @@ namespace Masa.Mc.Service.Admin.Domain.MessageTemplates.Services;
 
 public interface ITemplateRenderer
 {
+    Task<string> RenderAsync(string context, ExtraPropertyDictionary model, string startstr = "{{", string endstr = "}}");
 }

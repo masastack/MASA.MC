@@ -5,7 +5,7 @@ namespace Masa.Mc.Service.Admin.Domain.MessageTasks.Aggregates;
 
 public class MessageTaskReceiver
 {
-    public string SubjectId { get; set; } = string.Empty;
+    public Guid SubjectId { get; set; }
 
     public string DisplayName { get; set; } = string.Empty;
 
@@ -16,4 +16,6 @@ public class MessageTaskReceiver
     public string Email { get; set; } = string.Empty;
 
     public MessageTaskReceiverTypes Type { get; set; }
+
+    public ExtraPropertyDictionary Variables { get; set; } = new();
 }

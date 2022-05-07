@@ -1,6 +1,8 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
+using static AlibabaCloud.SDK.Dysmsapi20170525.Models.QuerySmsTemplateListResponseBody;
+
 namespace Masa.Mc.Service.Admin.Domain.MessageTemplates.EventHandler;
 
 public class SmsTemplateSyncEventHandler
@@ -19,11 +21,9 @@ public class SmsTemplateSyncEventHandler
     [EventHandler]
     public async Task HandleEvent(SmsTemplateSyncDomainEvent @event)
     {
-        var unitOfWorkManager = _serviceProvider.GetRequiredService<IUnitOfWorkManager>();
-        await using var unitOfWork = unitOfWorkManager.CreateDbContext();
-        var _smsTemplateRepository = unitOfWork.ServiceProvider.GetRequiredService<ISmsTemplateRepository>();
-        var _channelRepository = unitOfWork.ServiceProvider.GetRequiredService<IChannelRepository>();
-        var channel = await _channelRepository.FindAsync(x => x.Id == @event.ChannelId);
+        using var scope = _serviceProvider.CreateAsyncScope();
+        using var dbContext = scope.ServiceProvider.GetRequiredService<McDbContext>();
+        var channel = await dbContext.Set<Channel>().FindAsync(@event.ChannelId);
         var options = new AliyunSmsOptions
         {
             AccessKeyId = channel.GetDataValue<string>(nameof(SmsChannelOptions.AccessKeyId)),
@@ -37,9 +37,11 @@ public class SmsTemplateSyncEventHandler
                 throw new UserFriendlyException(aliyunSmsTemplateListResponse.Message);
             }
             var aliyunSmsTemplateList = aliyunSmsTemplateListResponse.Data.Body.SmsTemplateList;
-            await _smsTemplateRepository.RemoveAsync(x => x.ChannelId == channel.Id);
+            var removeList = dbContext.Set<SmsTemplate>().Where(x => x.ChannelId == channel.Id).ToList();
+            dbContext.Set<SmsTemplate>().RemoveRange(removeList);
             var smsTemplateList = aliyunSmsTemplateList.Select(item => new SmsTemplate(channel.Id, item.TemplateCode, item.TemplateName, AliyunSmsTemplateTypeMapToSmsTemplateType(item.TemplateType), AliyunSmsTemplateAuditStatusMapToAuditStatus(item.AuditStatus), item.TemplateContent, item.Reason.RejectInfo));
-            await _smsTemplateRepository.AddRangeAsync(smsTemplateList);
+            await dbContext.Set<SmsTemplate>().AddRangeAsync(smsTemplateList);
+            await dbContext.SaveChangesAsync();
         }
     }
 

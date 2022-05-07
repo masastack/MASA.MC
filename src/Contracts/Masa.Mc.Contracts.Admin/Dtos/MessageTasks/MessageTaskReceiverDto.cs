@@ -5,7 +5,7 @@ namespace Masa.Mc.Contracts.Admin.Dtos.MessageTasks;
 
 public class MessageTaskReceiverDto
 {
-    public string SubjectId { get; set; } = string.Empty;
+    public Guid SubjectId { get; set; }
 
     public string DisplayName { get; set; } = string.Empty;
 
