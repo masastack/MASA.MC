@@ -11,7 +11,7 @@ public class MessageRecord : AuditAggregateRoot<Guid, Guid>, ISoftDelete
     public Guid MessageTaskId { get; protected set; }
     public Guid MessageTaskHistoryId { get; protected set; }
     public bool? Success { get; protected set; }
-    public DateTime? CompletionTime { get; protected set; }
+    public DateTime? SendTime { get; protected set; }
     public string FailureReason { get; protected set; } = string.Empty;
     public bool IsDeleted { get; protected set; }
     public ExtraPropertyDictionary ExtraProperties { get; protected set; } = new();
@@ -29,7 +29,7 @@ public class MessageRecord : AuditAggregateRoot<Guid, Guid>, ISoftDelete
 
     public void SetResult(bool success, string failureReason)
     {
-        CompletionTime = DateTime.UtcNow;
+        SendTime = DateTime.UtcNow;
         Success = success;
         FailureReason = failureReason;
     }

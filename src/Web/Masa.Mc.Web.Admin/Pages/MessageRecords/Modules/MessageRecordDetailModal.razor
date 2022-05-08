@@ -1,0 +1,66 @@
+﻿@inherits AdminCompontentBase
+<div @ref="Ref">
+    <SheetDialog Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.ViewMessageTask")">
+        <div class="sheet-dialog full-height flex-column">
+            <div class="mt-4 flex-height-auto overflow-y">
+                <MRow>
+                    <MCol>
+                        <div class="d-flex my-1 justify-center">
+                            <MAvatar>
+                                <MImage Src="https://cdn.masastack.com/stack/images/website/masa-blazor/jack.png"></MImage>
+                            </MAvatar>
+                            <div class="ml-4">
+                                <div class="text-body3 neutral-lighten-1--text">@(_messageRecord.ExtraProperties.GetProperty<string>("DisplayName"))</div>
+                                <div class="text-body3 neutral-lighten-1--text">@(_messageRecord.ExtraProperties.GetProperty<string>("PhoneNumber")) | @(_messageRecord.ExtraProperties.GetProperty<string>("Email"))</div>
+                            </div>
+                        </div>
+                        <MRow Justify="@("space-between")" Class="px-1">
+                            <MCol Md="4">@T("DisplayName.MessageRecordSendTime")：@_messageRecord.SendTime?.ToString(T("$DateTimeFormat"))</MCol>
+                            <MCol Md="4">@T("DisplayName.MessageRecordReceiptTime")：</MCol>
+                        </MRow>
+                        <MRow Justify="@("space-between")" Class="px-1">
+                            <MCol Md="4">
+                                @if (_messageRecord.Success == true)
+                                {
+                                    <span>@T("DisplayName.MessageRecordSuccess.True")</span>
+                                }
+                                @if (_messageRecord.Success == false)
+                                {
+                                    <span>@T("DisplayName.MessageRecordSuccess.False")</span>
+                                }
+                            </MCol>
+                            <MCol Md="4">@T("DisplayName.MessageRecordFailureReason")：@_messageRecord.FailureReason</MCol>
+                        </MRow>
+                        @if (_messageTask.EntityType == MessageEntityTypes.Ordinary)
+                        {
+                            <OrdinaryMessageInfo MessageInfoId="_messageTask.EntityId" MessageTask="_messageTask"></OrdinaryMessageInfo>
+                        }
+                        @if (_messageTask.EntityType == MessageEntityTypes.Template)
+                        {
+                            <TemplateMessageInfo MessageTemplateId="_messageTask.EntityId" MessageTask="_messageTask"></TemplateMessageInfo>
+                            <MessageVariables Class="mt-4" @bind-Value="_messageTaskHistory.Variables" ReadOnly></MessageVariables>
+                        }
+                    </MCol>
+                    <MCol>
+                        <div class="my-2 text-subtitle2">@T("DisplayName.MessageTaskSendingRule")</div>
+                        @if (!string.IsNullOrEmpty(_messageTaskHistory.Sign))
+                        {
+                            <MRow Class="mt-4">
+                                <MCol>
+                                    <MTextField @bind-Value="_messageTaskHistory.Sign"
+                                            Label="@T("DisplayName.MessageTemplateSign")"
+                                            Dense
+                                            Outlined
+                                            Disabled
+                                            HideDetails="@("auto")">
+                                    </MTextField>
+                                </MCol>
+                            </MRow>
+                        }
+                        <MessageSendingRules ReadOnly Class="mt-2" @bind-Value="_messageTaskHistory.SendRules" @bind-SendTime="_messageTaskHistory.SendTime" />
+                    </MCol>
+                </MRow>
+            </div>
+        </div>
+    </SheetDialog>
+</div>

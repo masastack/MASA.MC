@@ -112,8 +112,8 @@
                     case ("MessageInfoTitle"):
                         <span class="text-body3">@(context.Item.ExtraProperties.GetProperty<string>("Title"))</span>
                         break;
-                    case (nameof(MessageRecordDto.CompletionTime)):
-                        <span class="text-body3">@context.Item.CompletionTime?.ToString(T("$DateTimeFormat"))</span>
+                    case (nameof(MessageRecordDto.SendTime)):
+                        <span class="text-body3">@context.Item.SendTime?.ToString(T("$DateTimeFormat"))</span>
                         break;
                     case nameof(MessageRecordDto.Success):
                         if (context.Item.Success == true)
@@ -126,7 +126,7 @@
                         }
                         break;
                     case "Action":
-                        <MIcon Small Color="neutral-lighten-2">mdi-eye</MIcon>
+                        <MIcon Small Color="neutral-lighten-2" OnClick="async()=>await _detailModal.OpenModalAsync(context.Item)">mdi-eye</MIcon>
                         break;
                     default:
                         <span class="text-body3">@context.Value</span>
@@ -139,4 +139,6 @@
         </MDataTable>
     </MCardText>
 </MCard>
+
+<MessageRecordDetailModal @ref="_detailModal" OnOk="HandleOk" />
 

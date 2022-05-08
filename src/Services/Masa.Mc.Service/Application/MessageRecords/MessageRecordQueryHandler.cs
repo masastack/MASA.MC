@@ -43,8 +43,8 @@ public class MessageRecordQueryHandler
         condition = condition.And(inputDto.Success.HasValue, x => x.Success == inputDto.Success);
         if (inputDto.TimeType == MessageRecordTimeTypes.SendTime)
         {
-            condition = condition.And(inputDto.StartTime.HasValue, x => x.CompletionTime >= inputDto.StartTime);
-            condition = condition.And(inputDto.EndTime.HasValue, x => x.CompletionTime <= inputDto.EndTime);
+            condition = condition.And(inputDto.StartTime.HasValue, x => x.SendTime >= inputDto.StartTime);
+            condition = condition.And(inputDto.EndTime.HasValue, x => x.SendTime <= inputDto.EndTime);
         }
         return await Task.FromResult(condition); ;
     }
