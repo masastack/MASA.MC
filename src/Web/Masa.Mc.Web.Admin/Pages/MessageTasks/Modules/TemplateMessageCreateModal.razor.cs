@@ -22,7 +22,7 @@ public partial class TemplateMessageCreateModal : AdminCompontentBase
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        var inputDto = new GetMessageTemplateInputDto(999);
+        var inputDto = new GetMessageTemplateInputDto(999) { AuditStatus = MessageTemplateAuditStatuses.Adopt };
         _templateItems = (await MessageTemplateService.GetListAsync(inputDto)).Result;
     }
 

@@ -42,8 +42,15 @@ public class SendSmsMessageEventHandler
                 smsMessage.Properties.Add("TemplateCode", eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.TemplateId)));
                 try
                 {
-                    await _smsSender.SendAsync(smsMessage);
-                    messageRecord.SetResult(true, string.Empty);
+                    var response = await _smsSender.SendAsync(smsMessage) as SmsSendResponse;
+                    if (response.Success)
+                    {
+                        messageRecord.SetResult(true, string.Empty);
+                    }
+                    else
+                    {
+                        messageRecord.SetResult(false, response.Message);
+                    }
                 }
                 catch (Exception ex)
                 {

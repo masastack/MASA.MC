@@ -16,3 +16,4 @@ global using Masa.Mc.Infrastructure.Sms.Model.Response;
 global using Masa.Mc.Infrastructure.Sms.Services;
 global using Masa.Mc.Infrastructure.Sms.Aliyun.Model.Response.SmsTemplate;
 global using Masa.Mc.Infrastructure.Sms.Aliyun.Services;
+global using Masa.Mc.Infrastructure.Sms.Aliyun.Model.Response.SendSms;

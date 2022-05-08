@@ -15,11 +15,11 @@
                             </div>
                         </div>
                         <MRow Justify="@("space-between")" Class="px-1">
-                            <MCol Md="4">@T("DisplayName.MessageRecordSendTime")：@_messageRecord.SendTime?.ToString(T("$DateTimeFormat"))</MCol>
-                            <MCol Md="4">@T("DisplayName.MessageRecordReceiptTime")：</MCol>
+                            <MCol Md="5">@T("DisplayName.MessageRecordSendTime")：@_messageRecord.SendTime?.ToString(T("$DateTimeFormat"))</MCol>
+                            <MCol Md="5">@T("DisplayName.MessageRecordReceiptTime")：</MCol>
                         </MRow>
                         <MRow Justify="@("space-between")" Class="px-1">
-                            <MCol Md="4">
+                            <MCol Md="5">
                                 @if (_messageRecord.Success == true)
                                 {
                                     <span>@T("DisplayName.MessageRecordSuccess.True")</span>
@@ -29,7 +29,7 @@
                                     <span>@T("DisplayName.MessageRecordSuccess.False")</span>
                                 }
                             </MCol>
-                            <MCol Md="4">@T("DisplayName.MessageRecordFailureReason")：@_messageRecord.FailureReason</MCol>
+                            <MCol Md="5">@T("DisplayName.MessageRecordFailureReason")：@_messageRecord.FailureReason</MCol>
                         </MRow>
                         @if (_messageTask.EntityType == MessageEntityTypes.Ordinary)
                         {
