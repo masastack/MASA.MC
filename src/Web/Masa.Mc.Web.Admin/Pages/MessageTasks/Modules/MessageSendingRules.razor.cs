@@ -9,27 +9,23 @@ public partial class MessageSendingRules : AdminCompontentBase
     public SendRuleDto Value { get; set; } = new();
 
     [Parameter]
-    public DateTime? SendTime { get; set; } = new();
+    public EventCallback<SendRuleDto?> ValueChanged { get; set; }
 
     [Parameter]
     public bool ReadOnly { get; set; }
-
-    [Parameter]
-    public EventCallback<DateTime?> SendTimeChanged { get; set; }
 
     private bool _datePickersShow;
     private bool _timePickersShow;
     private DateOnly? _sendingDate;
     private TimeOnly? _sendingTime;
-    private bool _isTiming;
 
     protected override void OnParametersSet()
     {
-        if (SendTime != null)
+        if (Value.SendTime != null)
         {
-            _sendingDate = DateOnly.FromDateTime(SendTime.Value);
-            _sendingTime = TimeOnly.FromDateTime(SendTime.Value);
-            _isTiming = true;
+            _sendingDate = DateOnly.FromDateTime(Value.SendTime.Value);
+            _sendingTime = TimeOnly.FromDateTime(Value.SendTime.Value);
+            Value.IsTiming = true;
         }
         else
         {
@@ -55,7 +51,7 @@ public partial class MessageSendingRules : AdminCompontentBase
         {
             return;
         }
-        SendTime = _isTiming ? _sendingDate.Value.ToDateTime(_sendingTime ?? new TimeOnly(0, 0, 0)) : null;
-        await SendTimeChanged.InvokeAsync(SendTime);
+        Value.SendTime = Value.IsTiming ? _sendingDate.Value.ToDateTime(_sendingTime ?? new TimeOnly(0, 0, 0)) : null;
+        await ValueChanged.InvokeAsync(Value);
     }
 }

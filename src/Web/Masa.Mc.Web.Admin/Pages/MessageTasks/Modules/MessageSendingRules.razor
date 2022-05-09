@@ -60,7 +60,7 @@
     <span class="pt-4">@T("Unit.Bar")</span>
 </MRow>
 <MRow Class="mx-1 mt-6" Justify="JustifyTypes.Start">
-    <MCheckbox Class="mt-1" @bind-Value="_isTiming" Disabled="ReadOnly"></MCheckbox>
+    <MCheckbox Class="mt-1" @bind-Value="Value.IsTiming" Disabled="ReadOnly"></MCheckbox>
     <span class="pt-2">@T("DisplayName.SendingRule.IsTiming")</span>
     <MMenu @bind-Value="_datePickersShow"
            CloseOnContentClick="false"

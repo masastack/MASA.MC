@@ -65,7 +65,7 @@
                             <tbody>
                                 @foreach (var item in _historys.Result)
                                 {
-                                    <tr @key="item.Id" @onclick="()=>HandleItemSelect(item)">
+                                    <tr @key="item.Id" @onclick="()=>HandleItemSelect(item)" class="@(_historyInfo.Id==item.Id?"m-data-table__selected":string.Empty)">
                                         <td>
                                             <MChip Ripple="false">
                                                 <span>@T($"DisplayName.MessageTaskHistoryStatus.{((MessageTaskHistoryStatuses)item.Status).ToString()}")</span>

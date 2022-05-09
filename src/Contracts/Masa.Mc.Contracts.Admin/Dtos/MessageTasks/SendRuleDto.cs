@@ -11,4 +11,6 @@ public class SendRuleDto
     public bool IsSendingInterval { get; set; }
     public long SendingInterval { get; set; }
     public long SendingCount { get; set; }
+    public bool IsTiming { get; set; }
+    public DateTime? SendTime { get; set; }
 }
