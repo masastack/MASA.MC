@@ -12,7 +12,7 @@ public class MessageRecordService : ServiceBase
     }
 
     public async Task<PaginatedListDto<MessageRecordDto>> GetListAsync(IEventBus eventbus, Guid? channelId, [FromQuery] bool? success, [FromQuery] MessageRecordTimeTypes? timeType,
-       [FromQuery] DateTime? startTime, [FromQuery] DateTime? endTime, [FromQuery] string filter = "", [FromQuery] string sorting = "", [FromQuery] int page = 1, [FromQuery] int pagesize = 20)
+       [FromQuery] DateTime? startTime, [FromQuery] DateTime? endTime, [FromQuery] string filter = "", [FromQuery] string sorting = "", [FromQuery] int page = 1, [FromQuery] int pagesize = 10)
     {
         var inputDto = new GetMessageRecordInputDto(filter, channelId, success, timeType, startTime, endTime, sorting, page, pagesize);
         var query = new GetListMessageRecordQuery(inputDto);
