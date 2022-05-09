@@ -57,6 +57,8 @@ public class SendEmailMessageEventHandler
                 }
                 await dbContext.Set<MessageRecord>().AddAsync(messageRecord);
             }
+            taskHistory = await dbContext.Set<MessageTaskHistory>().FindAsync(taskHistory.Id);
+            taskHistory.SetComplete();
             await dbContext.SaveChangesAsync();
         }
     }

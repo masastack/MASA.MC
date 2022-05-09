@@ -47,11 +47,6 @@ public class MessageTaskService : ServiceBase
         await PostAsync("SendTest", inputDto);
     }
 
-    public async Task WithdrawnHistoryAsync(WithdrawnMessageTaskHistoryInputDto inputDto)
-    {
-        await PostAsync("WithdrawnHistory", inputDto);
-    }
-
     public async Task EnabledAsync(EnabledMessageTaskInputDto inputDto)
     {
         await PostAsync("Enabled", inputDto);

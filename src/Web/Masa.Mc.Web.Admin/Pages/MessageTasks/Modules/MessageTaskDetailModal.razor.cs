@@ -18,9 +18,10 @@ public partial class MessageTaskDetailModal : AdminCompontentBase
     private bool _datePickersShow;
     private List<DateOnly> _dates = new List<DateOnly> { };
     private string DateRangeText => string.Join(" ~ ", _dates.Select(date => date.ToString("yyyy-MM-dd")));
-    private List<MessageTaskHistoryDto> _historys = new();
+    private PaginatedListDto<MessageTaskHistoryDto> _historys = new();
 
     MessageTaskService MessageTaskService => McCaller.MessageTaskService;
+    MessageTaskHistoryService MessageTaskHistoryService => McCaller.MessageTaskHistoryService;
 
     protected override async Task OnInitializedAsync()
     {
@@ -36,6 +37,7 @@ public partial class MessageTaskDetailModal : AdminCompontentBase
     public async Task OpenModalAsync(MessageTaskDto model)
     {
         _entityId = model.Id;
+        _queryParam.MessageTaskId = _entityId;
         await GetFormDataAsync();
         await InvokeAsync(() =>
         {
@@ -47,8 +49,8 @@ public partial class MessageTaskDetailModal : AdminCompontentBase
     private async Task GetFormDataAsync()
     {
         _info = await MessageTaskService.GetAsync(_entityId) ?? new();
-        _historyInfo = _info.Historys[0];
-        LoadData();
+        await LoadData();
+        if (_historys.Result.Any()) _historyInfo = _historys.Result[0];
     }
 
     private void HandleCancel()
@@ -86,36 +88,35 @@ public partial class MessageTaskDetailModal : AdminCompontentBase
         if (!val) HandleCancel();
     }
 
-    private void Refresh()
+    private async Task Refresh()
     {
         _queryParam.Page = 1;
-        LoadData();
+        await LoadData();
     }
 
-    private void HandleDatePickersAsync()
+    private async Task HandleDatePickersAsync()
     {
         _datePickersShow = false;
         if (_dates.Count > 0) _queryParam.StartTime = _dates[0].ToDateTime(new TimeOnly(0, 0, 0));
         if (_dates.Count > 1) _queryParam.EndTime = _dates[1].ToDateTime(new TimeOnly(23, 59, 59));
-        LoadData();
+        await LoadData();
     }
 
-    private void HandleDatePickersCancel()
+    private async Task HandleDatePickersCancel()
     {
         _datePickersShow = false;
         _queryParam.StartTime = null;
         _queryParam.EndTime = null;
         _dates = new();
-        LoadData();
+        await LoadData();
     }
 
-    private void LoadData()
+    private async Task LoadData()
     {
-        var query = _info.Historys.AsQueryable();
-        if (_queryParam.Status.HasValue) query = query.Where(x => x.Status == _queryParam.Status);
-        if (_queryParam.StartTime.HasValue) query = query.Where(x => x.SendTime >= _queryParam.StartTime);
-        if (_queryParam.EndTime.HasValue) query = query.Where(x => x.SendTime <= _queryParam.EndTime);
-        _historys = query.OrderByDescending(x => x.CreationTime).Skip((_queryParam.Page - 1) * _queryParam.PageSize).Take(_queryParam.PageSize <= 0 ? int.MaxValue : _queryParam.PageSize).ToList();
+        StateHasChanged();
+        Loading = true;
+        _historys = (await MessageTaskHistoryService.GetListAsync(_queryParam));
+        Loading = false;
         StateHasChanged();
     }
 
@@ -124,21 +125,20 @@ public partial class MessageTaskDetailModal : AdminCompontentBase
         _historyInfo = item;
     }
 
-    private void HandlePaginationChange(PaginationEventArgs args)
+    private async Task HandlePaginationChange(PaginationEventArgs args)
     {
         _queryParam.Page = args.Page;
         _queryParam.PageSize = args.PageSize;
-        LoadData();
+        await LoadData();
     }
 
     private async Task WithdrawnHistoryAsync()
     {
         var inputDto = new WithdrawnMessageTaskHistoryInputDto
         {
-            MessageTaskId = _entityId,
             HistoryId = _historyInfo.Id
         };
-        await MessageTaskService.WithdrawnHistoryAsync(inputDto);
+        await MessageTaskHistoryService.WithdrawnAsync(inputDto);
         await SuccessMessageAsync(T("MessageTaskHistoryWithdrawnMessage"));
         await GetFormDataAsync();
     }

@@ -19,6 +19,7 @@ public class CreateOrdinaryMessageTaskCommandHandler
     {
         var messageInfo = createCommand.MessageTask.MessageInfo.Adapt<MessageInfo>();
         await _messageInfoRepository.AddAsync(messageInfo);
+        await _messageInfoRepository.UnitOfWork.SaveChangesAsync();
         createCommand.MessageTask.EntityId = messageInfo.Id;
         createCommand.MessageTask.DisplayName = messageInfo.Title;
     }

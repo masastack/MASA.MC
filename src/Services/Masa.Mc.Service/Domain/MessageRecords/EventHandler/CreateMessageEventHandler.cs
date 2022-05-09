@@ -32,6 +32,7 @@ public class CreateMessageEventHandler
             })
             .ToList();
         eto.MessageTaskHistory.SetReceiverUsers(receiverUsers);
+        eto.MessageTaskHistory.SetSending();
         await Task.CompletedTask;
     }
 

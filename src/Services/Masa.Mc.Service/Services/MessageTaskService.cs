@@ -14,7 +14,6 @@ public class MessageTaskService : ServiceBase
         MapGet(GetListAsync, string.Empty);
         MapPost(SendAsync);
         MapPost(SendTestAsync);
-        MapPost(WithdrawnHistoryAsync);
         MapPost(EnabledAsync);
         MapPost(DisableAsync);
         MapGet(GenerateImportTemplateAsync);
@@ -85,12 +84,6 @@ public class MessageTaskService : ServiceBase
     public async Task SendTestAsync(IEventBus eventBus, SendTestMessageTaskInputDto inputDto)
     {
         var command = new SendTestMessageTaskCommand(inputDto);
-        await eventBus.PublishAsync(command);
-    }
-
-    public async Task WithdrawnHistoryAsync(IEventBus eventBus, WithdrawnMessageTaskHistoryInputDto inputDto)
-    {
-        var command = new WithdrawnMessageTaskHistoryCommand(inputDto);
         await eventBus.PublishAsync(command);
     }
 

@@ -63,7 +63,7 @@
                         </MRow>
                         <MSimpleTable Class="mt-2">
                             <tbody>
-                                @foreach (var item in _historys)
+                                @foreach (var item in _historys.Result)
                                 {
                                     <tr @key="item.Id" @onclick="()=>HandleItemSelect(item)">
                                         <td>
@@ -78,7 +78,7 @@
                                 }
                             </tbody>
                         </MSimpleTable>
-                        <Pagination Class="mt-5" @bind-Page="_queryParam.Page" @bind-PageSize="_queryParam.PageSize" Total="_info.Historys.Count" OnChange="HandlePaginationChange" />
+                        <Pagination Class="mt-5" @bind-Page="_queryParam.Page" @bind-PageSize="_queryParam.PageSize" Total="_historys.Total" OnChange="HandlePaginationChange" />
                     </MCol>
                     <MCol Cols="8">
                         <MRow Class="mx-2 mt-2">

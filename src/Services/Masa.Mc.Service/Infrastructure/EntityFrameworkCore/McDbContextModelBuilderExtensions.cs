@@ -74,7 +74,7 @@ public static class McDbContextModelBuilderExtensions
             b.Property(x => x.Receivers).HasConversion(new ReceiversValueConverter()).Metadata.SetValueComparer(new ReceiversValueComparer());
             b.Property(x => x.SendRules).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
             b.Property(x => x.Variables).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
-            b.HasMany(x => x.Historys).WithOne().HasForeignKey(x => x.MessageTaskId).IsRequired();
+            //b.HasMany(x => x.Historys).WithOne().HasForeignKey(x => x.MessageTaskId).IsRequired();
         });
 
         builder.Entity<MessageTaskHistory>(b =>

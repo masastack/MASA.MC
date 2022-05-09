@@ -11,6 +11,6 @@ public static class MessageTaskHistoryEfCoreQueryableExtensions
         {
             return queryable;
         }
-        return queryable.Include(x=>x.ReceiverUsers);
+        return queryable.Include(x => x.MessageTask).Include(x=>x.ReceiverUsers);
     }
 }

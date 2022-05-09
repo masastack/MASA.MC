@@ -7,6 +7,8 @@ public class MessageTaskHistoryDto : AuditEntityDto<Guid, Guid>
 {
     public Guid MessageTaskId { get; set; }
 
+    public MessageTaskDto MessageTask { get; set; } = new();
+
     public ReceiverTypes ReceiverType { get; set; }
 
     public MessageTaskHistoryStatuses Status { get; set; }

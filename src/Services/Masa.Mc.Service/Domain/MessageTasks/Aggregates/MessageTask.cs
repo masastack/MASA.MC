@@ -29,8 +29,6 @@ public class MessageTask : AuditAggregateRoot<Guid, Guid>, ISoftDelete
 
     public ExtraPropertyDictionary SendRules { get; protected set; } = new();
 
-    public ICollection<MessageTaskHistory> Historys { get; protected set; }
-
     public ExtraPropertyDictionary Variables { get; protected set; } = new();
 
     public bool IsDeleted { get; protected set; }
@@ -45,7 +43,6 @@ public class MessageTask : AuditAggregateRoot<Guid, Guid>, ISoftDelete
         SetDraft(isDraft);
         SetReceivers(receiverType, receivers);
         SendRules = sendRules ?? new();
-        Historys = new Collection<MessageTaskHistory>();
     }
 
     public virtual void SendTask(ReceiverTypes receiverType, List<MessageTaskReceiver> receivers, ExtraPropertyDictionary sendRules, DateTime? sendTime, string sign, ExtraPropertyDictionary variables)
@@ -56,7 +53,6 @@ public class MessageTask : AuditAggregateRoot<Guid, Guid>, ISoftDelete
         SendTime = sendTime ?? DateTime.UtcNow;
         Sign = sign;
         Variables = variables;
-        AddHistory(ReceiverType, Receivers, SendRules, SendTime, Sign, Variables);
     }
 
     public virtual void SetEnabled()
@@ -67,11 +63,6 @@ public class MessageTask : AuditAggregateRoot<Guid, Guid>, ISoftDelete
     public virtual void SetDisable()
     {
         IsEnabled = false;
-    }
-
-    public virtual void AddHistory(ReceiverTypes receiverType, List<MessageTaskReceiver> receivers, ExtraPropertyDictionary sendRules, DateTime? sendTime, string sign, ExtraPropertyDictionary variables)
-    {
-        Historys.Add(new MessageTaskHistory(Id, receiverType, receivers, sendRules, sendTime, sign, variables));
     }
 
     public virtual void SetReceivers(ReceiverTypes receiverType, List<MessageTaskReceiver> receivers)

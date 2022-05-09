@@ -6,12 +6,15 @@ namespace Masa.Mc.Service.Admin.Application.MessageTasks;
 public class MessageTaskCommandHandler
 {
     private readonly IMessageTaskRepository _repository;
+    private readonly IMessageTaskHistoryRepository _messageTaskHistoryRepository;
     private readonly MessageTaskDomainService _domainService;
 
     public MessageTaskCommandHandler(IMessageTaskRepository repository
+        , IMessageTaskHistoryRepository messageTaskHistoryRepository
         , MessageTaskDomainService domainService)
     {
         _repository = repository;
+        _messageTaskHistoryRepository = messageTaskHistoryRepository;
         _domainService = domainService;
     }
 
@@ -50,21 +53,6 @@ public class MessageTaskCommandHandler
     }
 
     [EventHandler]
-    public async Task WithdrawnHistoryAsync(WithdrawnMessageTaskHistoryCommand command)
-    {
-        var entity = await _repository.FindAsync(x => x.Id == command.Input.MessageTaskId);
-        if (entity == null)
-            throw new UserFriendlyException("messageTask not found");
-        var history = entity.Historys.FirstOrDefault(x => x.Id == command.Input.HistoryId);
-        if (history == null)
-            throw new UserFriendlyException("history not found");
-        if (history.Status == MessageTaskHistoryStatuses.Withdrawn)
-            throw new UserFriendlyException("withdrawn");
-        history.SetWithdraw();
-        await _repository.UpdateAsync(entity);
-    }
-
-    [EventHandler]
     public async Task EnabledAsync(EnabledMessageTaskCommand command)
     {
         var entity = await _repository.FindAsync(x => x.Id == command.Input.MessageTaskId);
@@ -80,7 +68,7 @@ public class MessageTaskCommandHandler
         var entity = await _repository.FindAsync(x => x.Id == command.Input.MessageTaskId);
         if (entity == null)
             throw new UserFriendlyException("messageTask not found");
-        if (entity.Historys.Any(x => x.Status == MessageTaskHistoryStatuses.Sending))
+        if (await _messageTaskHistoryRepository.FindAsync(x => x.MessageTaskId == command.Input.MessageTaskId && x.Status == MessageTaskHistoryStatuses.Sending) != null)
             throw new UserFriendlyException("the task has a sending task history and cannot be disabled.");
         entity.SetDisable();
         await _repository.UpdateAsync(entity);

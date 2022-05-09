@@ -6,27 +6,18 @@ namespace Masa.Mc.Service.Admin.Domain.MessageTasks.Services;
 public class MessageTaskDomainService : DomainService
 {
     private readonly IMessageTaskRepository _repository;
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IMessageInfoRepository _messageInfoRepository;
-    private readonly IMessageTemplateRepository _messageTemplateRepository;
 
     public MessageTaskDomainService(IDomainEventBus eventBus
-        , IMessageTaskRepository repository
-        , IUnitOfWork unitOfWork
-        , IMessageInfoRepository messageInfoRepository
-        , IMessageTemplateRepository messageTemplateRepository) : base(eventBus)
+        , IMessageTaskRepository repository) : base(eventBus)
     {
         _repository = repository;
-        _unitOfWork = unitOfWork;
-        _messageInfoRepository = messageInfoRepository;
-        _messageTemplateRepository = messageTemplateRepository;
     }
 
     public virtual async Task CreateAsync(MessageTask messageTask)
     {
         if (!messageTask.IsDraft)
         {
-            messageTask.SendTask(messageTask.ReceiverType, messageTask.Receivers, messageTask.SendRules, messageTask.SendTime, messageTask.Sign, messageTask.Variables);
+            messageTask.SetDraft(false);
         }
         else
         {
@@ -35,7 +26,8 @@ public class MessageTaskDomainService : DomainService
         await _repository.AddAsync(messageTask);
         if (!messageTask.IsDraft)
         {
-            await PublishMessageAsync(messageTask);
+            await _repository.UnitOfWork.SaveChangesAsync();
+            await SendTask(messageTask, messageTask.ReceiverType, messageTask.Receivers, messageTask.SendRules, messageTask.SendTime, messageTask.Sign, messageTask.Variables);
         }
     }
 
@@ -43,7 +35,7 @@ public class MessageTaskDomainService : DomainService
     {
         if (!messageTask.IsDraft)
         {
-            messageTask.SendTask(messageTask.ReceiverType, messageTask.Receivers, messageTask.SendRules, messageTask.SendTime, messageTask.Sign, messageTask.Variables);
+            messageTask.SetDraft(false);
         }
         else
         {
@@ -52,7 +44,8 @@ public class MessageTaskDomainService : DomainService
         await _repository.UpdateAsync(messageTask);
         if (!messageTask.IsDraft)
         {
-            await PublishMessageAsync(messageTask);
+            await _repository.UnitOfWork.SaveChangesAsync();
+            await SendTask(messageTask, messageTask.ReceiverType, messageTask.Receivers, messageTask.SendRules, messageTask.SendTime, messageTask.Sign, messageTask.Variables);
         }
     }
 
@@ -61,34 +54,13 @@ public class MessageTaskDomainService : DomainService
         var messageTask = await _repository.FindAsync(x => x.Id == messageTaskId);
         if (messageTask == null)
             throw new UserFriendlyException("messageTask not found");
-        messageTask.SendTask(receiverType, receivers, sendRules, sendTime, sign, variables);
+        await SendTask(messageTask, receiverType, receivers, sendRules, sendTime, sign, variables);
         await _repository.UpdateAsync(messageTask);
-        await PublishMessageAsync(messageTask);
     }
 
-    private async Task PublishMessageAsync(MessageTask messageTask)
+    private async Task SendTask(MessageTask messageTask, ReceiverTypes receiverType, List<MessageTaskReceiver> receivers, ExtraPropertyDictionary sendRules, DateTime? sendTime, string sign, ExtraPropertyDictionary variables)
     {
-        var messageData = await GetMessageDataAsync(messageTask.EntityType, messageTask.EntityId);
-        Task.Run(async () =>
-        {
-            await EventBus.PublishAsync(new CreateMessageEvent(messageTask.ChannelId, messageData, messageTask.Historys.LastOrDefault()));
-        });
+        messageTask.SendTask(receiverType, receivers, sendRules, sendTime, sign, variables);
+        await EventBus.PublishAsync(new AddMessageTaskHistoryEvent(messageTask, receiverType, receivers, sendRules, sendTime, sign, variables));
     }
-
-    private async Task<MessageData> GetMessageDataAsync(MessageEntityTypes entityType, Guid entityId)
-    {
-        if (entityType == MessageEntityTypes.Ordinary)
-        {
-            var messageInfo = await _messageInfoRepository.FindAsync(x => x.Id == entityId);
-            return new MessageData { ExtraProperties = ExtensionPropertyHelper.ObjMapToExtraProperty(messageInfo) };
-        }
-        if (entityType == MessageEntityTypes.Template)
-        {
-            var messageTemplate = await _messageTemplateRepository.FindAsync(x => x.Id == entityId);
-            var messageData = new MessageData { ExtraProperties = ExtensionPropertyHelper.ObjMapToExtraProperty(messageTemplate) };
-            return messageData;
-        }
-        return new MessageData();
-    }
-
 }
