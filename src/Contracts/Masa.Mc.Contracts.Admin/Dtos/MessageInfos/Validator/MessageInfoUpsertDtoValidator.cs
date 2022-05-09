@@ -7,7 +7,7 @@ public class MessageInfoUpsertDtoValidator : AbstractValidator<MessageInfoUpsert
 {
     public MessageInfoUpsertDtoValidator()
     {
-        RuleFor(inputDto => inputDto.Title).Required();
-        RuleFor(inputDto => inputDto.Content).Required();
+        RuleFor(dto => dto.Title).Required();
+        RuleFor(dto => dto.Content).Required();
     }
 }
