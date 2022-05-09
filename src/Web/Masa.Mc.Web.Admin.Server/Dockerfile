@@ -1,28 +1,14 @@
-#See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
-
-FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
-WORKDIR /app
-EXPOSE 80
-EXPOSE 443
-
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+FROM registry.cn-hangzhou.aliyuncs.com/masa/dotnet_sdk:6.0.100 AS publish
 WORKDIR /src
-COPY ["src/Web/Masa.Mc.Web.Admin.Server/Masa.Mc.Web.Admin.Server.csproj", "src/Web/Masa.Mc.Web.Admin.Server/"]
-COPY ["src/Web/Masa.Mc.Web.Admin/Masa.Mc.Web.Admin.csproj", "src/Web/Masa.Mc.Web.Admin/"]
-COPY ["src/Infrastructure/Masa.Mc.Infrastructure.Common/Masa.Mc.Infrastructure.Common.csproj", "src/Infrastructure/Masa.Mc.Infrastructure.Common/"]
-COPY ["src/ApiGateways/Caller/Masa.Mc.ApiGateways.Caller/Masa.Mc.ApiGateways.Caller.csproj", "src/ApiGateways/Caller/Masa.Mc.ApiGateways.Caller/"]
-COPY ["src/Contracts/Masa.Mc.Contracts.Admin/Masa.Mc.Contracts.Admin.csproj", "src/Contracts/Masa.Mc.Contracts.Admin/"]
-COPY ["src/Infrastructure/Masa.Mc.Infrastructure.ObjectExtending/Masa.Mc.Infrastructure.ObjectExtending.csproj", "src/Infrastructure/Masa.Mc.Infrastructure.ObjectExtending/"]
-COPY ["src/Infrastructure/Masa.Mc.Infrastructure.Ddd.Application.Contracts/Masa.Mc.Infrastructure.Ddd.Application.Contracts.csproj", "src/Infrastructure/Masa.Mc.Infrastructure.Ddd.Application.Contracts/"]
-RUN dotnet restore "src/Web/Masa.Mc.Web.Admin.Server/Masa.Mc.Web.Admin.Server.csproj"
 COPY . .
-WORKDIR "/src/src/Web/Masa.Mc.Web.Admin.Server"
-RUN dotnet build "Masa.Mc.Web.Admin.Server.csproj" -c Release -o /app/build
+ENV CSPROJ="src/Web/Masa.Mc.Web.Admin.Server/Masa.Mc.Web.Admin.Server.csproj"
+RUN dotnet restore $CSPROJ && dotnet publish $CSPROJ -c Release -o /app/publish
 
-FROM build AS publish
-RUN dotnet publish "Masa.Mc.Web.Admin.Server.csproj" -c Release -o /app/publish
 
-FROM base AS final
+FROM registry.cn-hangzhou.aliyuncs.com/masa/dotnet_aspnet:6.0.0
 WORKDIR /app
 COPY --from=publish /app/publish .
+ENV ASPNETCORE_URLS=http://0.0.0.0:80
+EXPOSE 80
+EXPOSE 443
 ENTRYPOINT ["dotnet", "Masa.Mc.Web.Admin.Server.dll"]
