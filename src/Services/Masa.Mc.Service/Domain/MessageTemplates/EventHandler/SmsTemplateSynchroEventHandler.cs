@@ -1,8 +1,6 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
-using static AlibabaCloud.SDK.Dysmsapi20170525.Models.QuerySmsTemplateListResponseBody;
-
 namespace Masa.Mc.Service.Admin.Domain.MessageTemplates.EventHandler;
 
 public class SmsTemplateSyncEventHandler
