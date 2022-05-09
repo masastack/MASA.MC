@@ -135,5 +135,13 @@
   "DisplayName.MessageTaskHistoryStatus.Sending": "Sending",
   "DisplayName.MessageTaskHistoryStatus.Completed": "Completed",
   "DisplayName.MessageTaskHistoryStatus.Withdrawn": "Withdrawn",
-  "Permission.TestMessageTask": "Test message task"
+  "Permission.TestMessageTask": "Test message task",
+  "DisplayName.MessageRecordSendTime": "Send time",
+  "DisplayName.MessageRecordReceiptTime": "Receipt time",
+  "DisplayName.MessageRecordSuccess": "Send status",
+  "DisplayName.MessageRecordFailureReason": "Failure reason",
+  "DisplayName.MessageRecordSuccess.True": "Sent successfully",
+  "DisplayName.MessageRecordSuccess.False": "Fail in send",
+  "DisplayName.MessageRecordTimeTypes": "Time type",
+  "DisplayName.MessageRecordTimeTypes.SendTime": "Send time"
 }
