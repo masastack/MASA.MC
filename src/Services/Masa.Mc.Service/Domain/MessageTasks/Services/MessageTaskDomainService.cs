@@ -17,7 +17,7 @@ public class MessageTaskDomainService : DomainService
     {
         if (!messageTask.IsDraft)
         {
-            messageTask.SetDraft(false);
+            messageTask.SendTask(messageTask.ReceiverType, messageTask.Receivers, messageTask.SendRules, messageTask.SendTime, messageTask.Sign, messageTask.Variables);
         }
         else
         {
@@ -27,7 +27,7 @@ public class MessageTaskDomainService : DomainService
         if (!messageTask.IsDraft)
         {
             await _repository.UnitOfWork.SaveChangesAsync();
-            await SendTask(messageTask, messageTask.ReceiverType, messageTask.Receivers, messageTask.SendRules, messageTask.SendTime, messageTask.Sign, messageTask.Variables);
+            await EventBus.PublishAsync(new AddMessageTaskHistoryEvent(messageTask, messageTask.ReceiverType, messageTask.Receivers, messageTask.SendRules, messageTask.SendTime, messageTask.Sign, messageTask.Variables));
         }
     }
 
@@ -35,7 +35,7 @@ public class MessageTaskDomainService : DomainService
     {
         if (!messageTask.IsDraft)
         {
-            messageTask.SetDraft(false);
+            messageTask.SendTask(messageTask.ReceiverType, messageTask.Receivers, messageTask.SendRules, messageTask.SendTime, messageTask.Sign, messageTask.Variables);
         }
         else
         {
@@ -45,7 +45,7 @@ public class MessageTaskDomainService : DomainService
         if (!messageTask.IsDraft)
         {
             await _repository.UnitOfWork.SaveChangesAsync();
-            await SendTask(messageTask, messageTask.ReceiverType, messageTask.Receivers, messageTask.SendRules, messageTask.SendTime, messageTask.Sign, messageTask.Variables);
+            await EventBus.PublishAsync(new AddMessageTaskHistoryEvent(messageTask, messageTask.ReceiverType, messageTask.Receivers, messageTask.SendRules, messageTask.SendTime, messageTask.Sign, messageTask.Variables));
         }
     }
 
@@ -54,13 +54,8 @@ public class MessageTaskDomainService : DomainService
         var messageTask = await _repository.FindAsync(x => x.Id == messageTaskId);
         if (messageTask == null)
             throw new UserFriendlyException("messageTask not found");
-        await SendTask(messageTask, receiverType, receivers, sendRules, sendTime, sign, variables);
-        await _repository.UpdateAsync(messageTask);
-    }
-
-    private async Task SendTask(MessageTask messageTask, ReceiverTypes receiverType, List<MessageTaskReceiver> receivers, ExtraPropertyDictionary sendRules, DateTime? sendTime, string sign, ExtraPropertyDictionary variables)
-    {
         messageTask.SendTask(receiverType, receivers, sendRules, sendTime, sign, variables);
+        await _repository.UpdateAsync(messageTask);
         await EventBus.PublishAsync(new AddMessageTaskHistoryEvent(messageTask, receiverType, receivers, sendRules, sendTime, sign, variables));
     }
 }
