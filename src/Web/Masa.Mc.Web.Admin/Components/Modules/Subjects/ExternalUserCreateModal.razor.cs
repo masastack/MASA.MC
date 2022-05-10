@@ -1,15 +1,17 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
-namespace Masa.Mc.Web.Admin.Pages.MessageTasks.Modules;
+namespace Masa.Mc.Web.Admin.Components.Modules.Subjects;
 
 public partial class ExternalUserCreateModal : AdminCompontentBase
 {
     [Parameter]
-    public EventCallback<UserViewModel> OnOk { get; set; }
+    public EventCallback<SubjectDto> OnOk { get; set; }
 
-    private UserViewModel _model = new();
+    private CreateExternalUserDto _model = new();
     private bool _visible;
+
+    ReceiverGroupService ReceiverGroupService => McCaller.ReceiverGroupService;
 
     public async Task OpenModalAsync()
     {
@@ -28,16 +30,20 @@ public partial class ExternalUserCreateModal : AdminCompontentBase
 
     private async Task HandleOk()
     {
-        var id = Guid.NewGuid();
-        _model.Id = id;
-        _model.SubjectId = Guid.Empty;
-        _model.Type = ReceiverGroupItemTypes.User;
+        var subject = new SubjectDto
+        {
+            SubjectId = Guid.NewGuid(),
+            DisplayName = _model.DisplayName,
+            PhoneNumber = _model.PhoneNumber,
+            Email = _model.Email,
+            Type = ReceiverGroupItemTypes.User
+        };
         await SuccessMessageAsync(T("ExternalMemberAddMessage"));
         _visible = false;
 
         if (OnOk.HasDelegate)
         {
-            await OnOk.InvokeAsync(_model);
+            await OnOk.InvokeAsync(subject);
         }
         ResetForm();
     }

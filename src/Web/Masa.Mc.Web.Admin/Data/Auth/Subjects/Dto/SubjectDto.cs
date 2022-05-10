@@ -1,11 +1,12 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
-namespace Masa.Mc.Web.Admin.ViewModel.Users;
+namespace Masa.Mc.Web.Admin.Data.Auth.Subjects.Dto;
 
-public class UserViewModel
+public class SubjectDto
 {
     public Guid Id { get; set; }
+
     public ReceiverGroupItemTypes Type { get; set; }
 
     public Guid SubjectId { get; set; }
@@ -18,12 +19,12 @@ public class UserViewModel
 
     public string Email { get; set; } = string.Empty;
 
-    public UserViewModel()
+    public SubjectDto()
     {
 
     }
 
-    public UserViewModel(Guid id, ReceiverGroupItemTypes type, string subjectId, string displayName, string avatar, string phoneNumber, string email)
+    public SubjectDto(Guid id, ReceiverGroupItemTypes type, string subjectId, string displayName, string avatar, string phoneNumber, string email)
     {
         Id = id;
         Type = type;

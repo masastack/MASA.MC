@@ -21,7 +21,7 @@ public partial class ChannelCreateModal : AdminCompontentBase
 
     public async Task OpenModalAsync()
     {
-        _model.Type = ChannelTypes.Email;
+        _model.Type = ChannelTypes.Sms;
         await InvokeAsync(() =>
         {
             _visible = true;

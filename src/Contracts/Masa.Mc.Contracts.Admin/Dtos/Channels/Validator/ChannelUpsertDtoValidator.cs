@@ -11,5 +11,10 @@ public class ChannelUpsertDtoValidator : AbstractValidator<ChannelUpsertDto>
         RuleFor(inputDto => inputDto.Code).Required().Length(2, 50);
         RuleFor(inputDto => inputDto.Type).IsInEnum();
         RuleFor(inputDto => inputDto.Description).Length(0, 255);
+        RuleFor(inputDto => inputDto.ExtraProperties).Must(x => !string.IsNullOrEmpty(x.GetProperty<string>(nameof(SmsChannelOptions.AccessKeyId)))).When(x => x.Type == ChannelTypes.Sms).WithMessage("Please enter accessKeyId");
+        RuleFor(inputDto => inputDto.ExtraProperties).Must(x => !string.IsNullOrEmpty(x.GetProperty<string>(nameof(SmsChannelOptions.AccessKeySecret)))).When(x => x.Type == ChannelTypes.Sms).WithMessage("Please enter accessKeySecret");
+        RuleFor(inputDto => inputDto.ExtraProperties).Must(x => !string.IsNullOrEmpty(x.GetProperty<string>(nameof(EmailChannelOptions.UserName)))).When(x => x.Type == ChannelTypes.Email).WithMessage("Please enter email account");
+        RuleFor(inputDto => inputDto.ExtraProperties).Must(x => !string.IsNullOrEmpty(x.GetProperty<string>(nameof(EmailChannelOptions.Password)))).When(x => x.Type == ChannelTypes.Email).WithMessage("Please enter email password");
+        RuleFor(inputDto => inputDto.ExtraProperties).Must(x => !string.IsNullOrEmpty(x.GetProperty<string>(nameof(EmailChannelOptions.Smtp)))).When(x => x.Type == ChannelTypes.Email).WithMessage("Please enter smtp");
     }
 }
