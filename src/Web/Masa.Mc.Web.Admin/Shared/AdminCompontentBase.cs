@@ -88,8 +88,37 @@ public abstract class AdminCompontentBase : BDomComponentBase
         await PopupService.AlertAsync(message, AlertTypes.Warning);
     }
 
+    public async Task ErrorMessageAsync(string message)
+    {
+        await PopupService.AlertAsync(alert =>
+        {
+            alert.Top = true;
+            alert.Type = AlertTypes.Error;
+            alert.Content = message;
+        });
+    }
+
     public static List<TEnum> GetEnumList<TEnum>() where TEnum : struct, Enum
     {
         return EnumHelper.GetEnumList<TEnum>();
+    }
+
+    protected async Task HandleErrorAsync(Exception exception)
+    {
+        await InvokeAsync(async () =>
+        {
+            await ErrorMessageAsync(exception.Message);
+            Loading = false;
+            StateHasChanged();
+        });
+    }
+
+    public List<KeyValuePair<string, bool>> GetBooleanMap()
+    {
+        return new()
+        {
+            new(T("Enable"), true),
+            new(T("Disabled"), false)
+        };
     }
 }

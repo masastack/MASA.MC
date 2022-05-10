@@ -85,6 +85,10 @@
                      OnSelectedItemUpdate="RefreshAsync">
                 </MSelect>
             </MCol>
+            <MCol Cols="2">
+                <BooleanSelect @bind-Value="_queryParam.Success" Items="_successItems" Placeholder="@T("DisplayName.MessageRecordSuccess")" OnClearClick="RefreshAsync"
+                     OnSelectedItemUpdate="RefreshAsync" />
+            </MCol>
         </MRow>
     }
     <MCardText>

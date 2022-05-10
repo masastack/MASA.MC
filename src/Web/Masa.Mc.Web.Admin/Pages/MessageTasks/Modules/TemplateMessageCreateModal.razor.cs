@@ -43,20 +43,27 @@ public partial class TemplateMessageCreateModal : AdminCompontentBase
 
     private async Task HandleOkAsync(bool isDraft)
     {
-        _model.IsDraft = isDraft;
-        if (!await _form.ValidateAsync())
+        try
         {
-            return;
+            _model.IsDraft = isDraft;
+            if (!await _form.ValidateAsync())
+            {
+                return;
+            }
+            Loading = true;
+            await MessageTaskService.CreateAsync(_model);
+            Loading = false;
+            await SuccessMessageAsync(T("MessageTaskCreateMessage"));
+            _visible = false;
+            ResetForm();
+            if (OnOk.HasDelegate)
+            {
+                await OnOk.InvokeAsync();
+            }
         }
-        Loading = true;
-        await MessageTaskService.CreateAsync(_model);
-        Loading = false;
-        await SuccessMessageAsync(T("MessageTaskCreateMessage"));
-        _visible = false;
-        ResetForm();
-        if (OnOk.HasDelegate)
+        catch (Exception ex)
         {
-            await OnOk.InvokeAsync();
+            await HandleErrorAsync(ex);
         }
     }
 

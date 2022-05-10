@@ -22,6 +22,7 @@ public class UpdateOrdinaryMessageTaskCommandHandler
         var dto = updateCommand.MessageTask;
         var updateMessageInfoCommand = new UpdateMessageInfoCommand(dto.EntityId, dto.MessageInfo);
         await _eventBus.PublishAsync(updateMessageInfoCommand);
+        updateCommand.MessageTask.DisplayName = dto.MessageInfo.Title;
     }
 
     [EventHandler(2)]

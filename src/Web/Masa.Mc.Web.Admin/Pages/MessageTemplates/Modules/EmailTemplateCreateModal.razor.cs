@@ -40,19 +40,26 @@ public partial class EmailTemplateCreateModal : AdminCompontentBase
 
     private async Task HandleOkAsync()
     {
-        if (!await _form.ValidateAsync())
+        try
         {
-            return;
+            if (!await _form.ValidateAsync())
+            {
+                return;
+            }
+            Loading = true;
+            await MessageTemplateService.CreateAsync(_model);
+            Loading = false;
+            await SuccessMessageAsync(T("MessageTemplateCreateMessage"));
+            _visible = false;
+            ResetForm();
+            if (OnOk.HasDelegate)
+            {
+                await OnOk.InvokeAsync();
+            }
         }
-        Loading = true;
-        await MessageTemplateService.CreateAsync(_model);
-        Loading = false;
-        await SuccessMessageAsync(T("MessageTemplateCreateMessage"));
-        _visible = false;
-        ResetForm();
-        if (OnOk.HasDelegate)
+        catch (Exception ex)
         {
-            await OnOk.InvokeAsync();
+            await HandleErrorAsync(ex);
         }
     }
 

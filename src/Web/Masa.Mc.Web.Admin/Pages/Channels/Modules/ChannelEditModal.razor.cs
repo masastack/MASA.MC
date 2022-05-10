@@ -46,20 +46,27 @@ public partial class ChannelEditModal : AdminCompontentBase
 
     private async Task HandleOk()
     {
-        await _channelExtraPropertiesRef.UpdateExtraPropertiesAsync();
-        if (!await _form.ValidateAsync())
+        try
         {
-            return;
+            await _channelExtraPropertiesRef.UpdateExtraPropertiesAsync();
+            if (!await _form.ValidateAsync())
+            {
+                return;
+            }
+            Loading = true;
+            await ChannelService.UpdateAsync(_entityId, _model);
+            Loading = false;
+            _visible = false;
+            ResetForm();
+            await SuccessMessageAsync(T("ChannelEditMessage"));
+            if (OnOk.HasDelegate)
+            {
+                await OnOk.InvokeAsync();
+            }
         }
-        Loading = true;
-        await ChannelService.UpdateAsync(_entityId, _model);
-        Loading = false;
-        _visible = false;
-        ResetForm();
-        await SuccessMessageAsync(T("ChannelEditMessage"));
-        if (OnOk.HasDelegate)
+        catch (Exception ex)
         {
-            await OnOk.InvokeAsync();
+            await HandleErrorAsync(ex);
         }
     }
 

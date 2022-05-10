@@ -53,21 +53,27 @@ public partial class ChannelCreateModal : AdminCompontentBase
 
     private async Task HandleOkAsync()
     {
-        
-        await _channelExtraPropertiesRef.UpdateExtraPropertiesAsync();
-        if (!await _form.ValidateAsync())
+        try
         {
-            return;
+            await _channelExtraPropertiesRef.UpdateExtraPropertiesAsync();
+            if (!await _form.ValidateAsync())
+            {
+                return;
+            }
+            Loading = true;
+            await ChannelService.CreateAsync(_model);
+            Loading = false;
+            await SuccessMessageAsync(T("ChannelCreateMessage"));
+            _visible = false;
+            ResetForm();
+            if (OnOk.HasDelegate)
+            {
+                await OnOk.InvokeAsync();
+            }
         }
-        Loading = true;
-        await ChannelService.CreateAsync(_model);
-        Loading = false;
-        await SuccessMessageAsync(T("ChannelCreateMessage"));
-        _visible = false;
-        ResetForm();
-        if (OnOk.HasDelegate)
+        catch (Exception ex)
         {
-            await OnOk.InvokeAsync();
+            await HandleErrorAsync(ex);
         }
     }
 

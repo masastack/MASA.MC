@@ -52,19 +52,26 @@ public partial class SmsTemplateEditModal : AdminCompontentBase
 
     private async Task HandleOkAsync()
     {
-        if (!await _form.ValidateAsync())
+        try
         {
-            return;
+            if (!await _form.ValidateAsync())
+            {
+                return;
+            }
+            Loading = true;
+            await MessageTemplateService.UpdateAsync(_entityId, _model);
+            Loading = false;
+            await SuccessMessageAsync(T("MessageTemplateEditMessage"));
+            _visible = false;
+            ResetForm();
+            if (OnOk.HasDelegate)
+            {
+                await OnOk.InvokeAsync();
+            }
         }
-        Loading = true;
-        await MessageTemplateService.UpdateAsync(_entityId, _model);
-        Loading = false;
-        await SuccessMessageAsync(T("MessageTemplateEditMessage"));
-        _visible = false;
-        ResetForm();
-        if (OnOk.HasDelegate)
+        catch (Exception ex)
         {
-            await OnOk.InvokeAsync();
+            await HandleErrorAsync(ex);
         }
     }
 
