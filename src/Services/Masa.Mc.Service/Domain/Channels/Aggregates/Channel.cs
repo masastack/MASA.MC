@@ -1,22 +1,26 @@
-﻿namespace Masa.Mc.Service.Admin.Domain.Channels.Aggregates;
+﻿// Copyright (c) MASA Stack All rights reserved.
+// Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
-public class Channel : AuditAggregateRoot<Guid, Guid>
+namespace Masa.Mc.Service.Admin.Domain.Channels.Aggregates;
+
+public class Channel : AuditAggregateRoot<Guid, Guid>, ISoftDelete
 {
     public string DisplayName { get; protected set; } = string.Empty;
     public string Code { get; protected set; } = string.Empty;
-    public ChannelType Type { get; protected set; }
+    public ChannelTypes Type { get; protected set; }
     public string Description { get; protected set; } = string.Empty;
     public bool IsStatic { get; protected set; }
     public ExtraPropertyDictionary ExtraProperties { get; protected set; } = new();
+    public bool IsDeleted { get; protected set; }
 
-    public Channel(string displayName,string code,ChannelType type,string description) : this(displayName, code, type, description, new Dictionary<string, string>())
+    public Channel(string displayName,string code,ChannelTypes type,string description) : this(displayName, code, type, description, new Dictionary<string, string>())
     {
     }
 
     public Channel(
         string displayName,
         string code,
-        ChannelType type,
+        ChannelTypes type,
         string description,
         Dictionary<string, string> extraProperties,
         bool isStatic = false)
@@ -34,12 +38,17 @@ public class Channel : AuditAggregateRoot<Guid, Guid>
 
     public virtual object GetDataValue(string name)
     {
-        return ExtraProperties.GetOrDefault(name);
+        return ExtraProperties.GetProperty(name);
+    }
+
+    public virtual T GetDataValue<T>(string name)
+    {
+        return ExtraProperties.GetProperty<T>(name);
     }
 
     public virtual void SetDataValue(string name, string value)
     {
-        ExtraProperties[name] = value;
+        ExtraProperties.SetProperty(name, value);
     }
 }
 

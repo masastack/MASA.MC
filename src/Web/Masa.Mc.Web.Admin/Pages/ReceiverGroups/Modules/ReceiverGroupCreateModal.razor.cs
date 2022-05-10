@@ -1,11 +1,14 @@
-﻿namespace Masa.Mc.Web.Admin.Pages.ReceiverGroups.Modules;
+﻿// Copyright (c) MASA Stack All rights reserved.
+// Licensed under the Apache License. See LICENSE.txt in the project root for license information.
+
+namespace Masa.Mc.Web.Admin.Pages.ReceiverGroups.Modules;
 
 public partial class ReceiverGroupCreateModal : AdminCompontentBase
 {
     [Parameter]
     public EventCallback OnOk { get; set; }
 
-    private ReceiverGroupCreateUpdateDto _model = new();
+    private ReceiverGroupUpsertDto _model = new();
     private bool _visible;
 
     ReceiverGroupService ReceiverGroupService => McCaller.ReceiverGroupService;

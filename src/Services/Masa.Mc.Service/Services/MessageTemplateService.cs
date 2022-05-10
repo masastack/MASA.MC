@@ -1,4 +1,7 @@
-﻿namespace Masa.Mc.Service.Admin.Services;
+﻿// Copyright (c) MASA Stack All rights reserved.
+// Licensed under the Apache License. See LICENSE.txt in the project root for license information.
+
+namespace Masa.Mc.Service.Admin.Services;
 
 public class MessageTemplateService : ServiceBase
 {
@@ -11,10 +14,10 @@ public class MessageTemplateService : ServiceBase
         MapGet(GetListAsync, string.Empty);
     }
 
-    public async Task<PaginatedListDto<MessageTemplateDto>> GetListAsync(IEventBus eventbus, [FromQuery] ChannelType? channelType, [FromQuery] Guid? channelId, [FromQuery] MessageTemplateStatus? status, [FromQuery] MessageTemplateAuditStatus? auditStatus, [FromQuery] DateTime? startTime, [FromQuery] DateTime? endTime, [FromQuery] int templateType, [FromQuery] string filter = "", [FromQuery] string sorting = "", [FromQuery] int page = 1, [FromQuery] int pagesize = 20)
+    public async Task<PaginatedListDto<MessageTemplateDto>> GetListAsync(IEventBus eventbus, [FromQuery] ChannelTypes? channelType, [FromQuery] Guid? channelId, [FromQuery] MessageTemplateStatuses? status, [FromQuery] MessageTemplateAuditStatuses? auditStatus, [FromQuery] DateTime? startTime, [FromQuery] DateTime? endTime, [FromQuery] int templateType, [FromQuery] string filter = "", [FromQuery] string sorting = "", [FromQuery] int page = 1, [FromQuery] int pagesize = 10)
     {
-        var input = new GetMessageTemplateInput(filter, channelType, channelId, status, auditStatus, startTime, endTime, templateType, sorting, page, pagesize);
-        var query = new GetListMessageTemplateQuery(input);
+        var inputDto = new GetMessageTemplateInputDto(filter, channelType, channelId, status, auditStatus, startTime, endTime, templateType, sorting, page, pagesize);
+        var query = new GetListMessageTemplateQuery(inputDto);
         await eventbus.PublishAsync(query);
         return query.Result;
     }
@@ -26,15 +29,15 @@ public class MessageTemplateService : ServiceBase
         return query.Result;
     }
 
-    public async Task CreateAsync(IEventBus eventBus, [FromBody] MessageTemplateCreateUpdateDto input)
+    public async Task CreateAsync(IEventBus eventBus, [FromBody] MessageTemplateUpsertDto inputDto)
     {
-        var command = new CreateMessageTemplateCommand(input);
+        var command = new CreateMessageTemplateCommand(inputDto);
         await eventBus.PublishAsync(command);
     }
 
-    public async Task UpdateAsync(IEventBus eventBus, Guid id, [FromBody] MessageTemplateCreateUpdateDto input)
+    public async Task UpdateAsync(IEventBus eventBus, Guid id, [FromBody] MessageTemplateUpsertDto inputDto)
     {
-        var command = new UpdateMessageTemplateCommand(id, input);
+        var command = new UpdateMessageTemplateCommand(id, inputDto);
         await eventBus.PublishAsync(command);
     }
 

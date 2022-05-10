@@ -1,4 +1,7 @@
-﻿var builder = WebApplication.CreateBuilder(args);
+﻿// Copyright (c) MASA Stack All rights reserved.
+// Licensed under the Apache License. See LICENSE.txt in the project root for license information.
+
+var builder = WebApplication.CreateBuilder(args);
 builder.AddMasaConfiguration();
 builder.Services.AddDaprClient();
 builder.Services.AddActors(options =>
@@ -17,6 +20,9 @@ builder.Services.AddAuthentication(options =>
     options.Audience = "";
 });
 builder.Services.AddAliyunSms();
+builder.Services.AddEmail();
+builder.Services.AddSingleton<ICsvImporter, CsvImporter>();
+builder.Services.AddSingleton<ITemplateRenderer, TextTemplateRenderer>();
 TypeAdapterConfig.GlobalSettings.Scan(Assembly.GetExecutingAssembly(), Assembly.Load("Masa.Mc.Contracts.Admin"));
 var app = builder.Services
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

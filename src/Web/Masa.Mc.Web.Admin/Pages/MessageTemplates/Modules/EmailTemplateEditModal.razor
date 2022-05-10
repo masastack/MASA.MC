@@ -1,79 +1,80 @@
 ﻿@inherits AdminCompontentBase
 <div @ref="Ref">
-    <SheetDialog Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission:EditMessageTemplate")" ContentStyle="padding-right:228px;padding-left:228px;">
-        <div>
-            <MForm Class="mt-6 full-height" Model="_model" EnableValidation @ref="_form">
-
-                <MRow Justify="@("center")">
-                    <MCol Cols="12" Sm="6" Md="3">
-                        <MTextField Class="mx-auto" style="width:200px;" @bind-Value="_model.DisplayName" HideDetails="@("auto")" Placeholder="@T("DisplayName:MessageTemplateDisplayName")"></MTextField>
-                    </MCol>
-                </MRow>
-                <MRow>
-                    <MCol Cols="3">
-                        <MSelect Value="@_channelType"
-                                 Items="@(GetEnumList<ChannelType>())"
-                                 Label="@T("DisplayName:ChannelType")"
-                                 ItemText="item => T(item.ToString())"
-                                 ItemValue="item => item"
-                                 Dense
-                                 Outlined
-                                 Disabled
-                                 HideDetails="@("auto")">
-                        </MSelect>
-                    </MCol>
-                    <MCol Cols="3">
-                        <MSelect @bind-Value="_model.ChannelId"
-                                 Items="@_channelItems"
-                                 Label="@T("DisplayName:Channel")"
-                                 ItemText="item => item.DisplayName"
-                                 ItemValue="item => item.Id"
-                                 Dense
-                                 Outlined
-                                 Disabled
-                                 HideDetails="@("auto")">
-                        </MSelect>
-                    </MCol>
-                </MRow>
-                <MRow>
-                    <MCol Cols="12">
-                        <MTextField @bind-Value="_model.Title"
-                                    Label="@T("DisplayName:MessageTemplateTitle")"
-                                    Dense
-                                    Outlined
-                                    HideDetails="@("auto")">
-                        </MTextField>
-                    </MCol>
-                </MRow>
-                <MRow>
-                    <MCol Cols="12">
-                        <MEditor @bind-Value="_model.Content"
-                                 ContentStyle="height:200px"
-                                 Placeholder="@T("DisplayName:MessageTemplateContent")">
-                        </MEditor>
-                    </MCol>
-                </MRow>
-                <MRow>
-                    <MCol Cols="12">
-                        <div class="mt-3 d-flex align-center justify-start">
-                            <span class="text-caption mr-2">@T("Description:MessageTemplate.DayLimit.Tips") </span>
-                            <div style="width:100px;">
-                                <MTextField @bind-Value="_model.DayLimit"
-                                            Type="number"
-                                            Dense
-                                            Outlined
-                                            HideDetails="@("auto")"></MTextField>
+    <SheetDialog Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.EditMessageTemplate")">
+        <MForm Model="_model" EnableValidation @ref="_form">
+            <div class="sheet-dialog full-height flex-column">
+                <div class="mt-6 flex-height-auto overflow-y">
+                    <MRow Justify="@("center")">
+                        <MCol Cols="12" Sm="6" Md="3">
+                            <MTextField Class="mx-auto" style="width:200px;" @bind-Value="_model.DisplayName" HideDetails="@("auto")" Placeholder="@T("DisplayName.MessageTemplateDisplayName")"></MTextField>
+                        </MCol>
+                    </MRow>
+                    <MRow>
+                        <MCol Cols="3">
+                            <MSelect Value="@_channelType"
+                                     Items="@(GetEnumList<ChannelTypes>())"
+                                     Label="@T("DisplayName.ChannelType")"
+                                     ItemText="item => T(item.ToString())"
+                                     ItemValue="item => item"
+                                     Dense
+                                     Outlined
+                                     Disabled
+                                     HideDetails="@("auto")">
+                            </MSelect>
+                        </MCol>
+                        <MCol Cols="3">
+                            <MSelect @bind-Value="_model.ChannelId"
+                                     Items="@_channelItems"
+                                     Label="@T("DisplayName.Channel")"
+                                     ItemText="item => item.DisplayName"
+                                     ItemValue="item => item.Id"
+                                     Dense
+                                     Outlined
+                                     Disabled
+                                     HideDetails="@("auto")">
+                            </MSelect>
+                        </MCol>
+                    </MRow>
+                    <MRow>
+                        <MCol Cols="12">
+                            <MTextField @bind-Value="_model.Title"
+                                        Label="@T("DisplayName.MessageTemplateTitle")"
+                                        Dense
+                                        Outlined
+                                        HideDetails="@("auto")">
+                            </MTextField>
+                        </MCol>
+                    </MRow>
+                    <MRow>
+                        <MCol Cols="12">
+                            <MEditor @bind-Value="_model.Content"
+                                     ContentStyle="height:200px"
+                                     Placeholder="@T("DisplayName.MessageTemplateContent")">
+                            </MEditor>
+                        </MCol>
+                    </MRow>
+                    <MRow>
+                        <MCol Cols="12">
+                            <div class="mt-3 d-flex align-center justify-start">
+                                <span class="text-caption mr-2">@T("Description.MessageTemplate.PerDayLimit.Tips") </span>
+                                <div style="width:100px;">
+                                    <MTextField @bind-Value="_model.PerDayLimit"
+                                                Type="number"
+                                                Dense
+                                                Outlined
+                                                HideDetails="@("auto")"></MTextField>
+                                </div>
+                                <span class="text-caption ml-2">@T("Unit.Bar") </span>
                             </div>
-                            <span class="text-caption ml-2">@T("Unit:Bar") </span>
-                        </div>
-                    </MCol>
-                </MRow>
-            </MForm>
-            <MCardActions Class="d-flex align-center mb-6">
-                <MButton Class="mr-6" Text Color="error" OnClick="HandleDelAsync">@T("Delete")</MButton>
-                <MSpacer></MSpacer>
-                <MButton Color="rounded-pill primary" Class="small-button" OnClick="async() => await HandleOk()">@T("Save")</MButton>
-            </MCardActions>
-        </div>
+                        </MCol>
+                    </MRow>
+                </div>
+                <div Class="d-flex mt-6">
+                    <MButton Class="mr-6" Text Color="error" OnClick="HandleDelAsync">@T("Delete")</MButton>
+                    <MSpacer></MSpacer>
+                    <MButton Color="rounded-pill primary" Class="small-button" OnClick="async() => await HandleOk()">@T("Save")</MButton>
+                </div>
+            </div>
+        </MForm>
     </SheetDialog>
 </div>

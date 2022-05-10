@@ -1,5 +1,8 @@
-﻿namespace Masa.Mc.Service.Admin.Domain.MessageTemplates.Aggregates;
-public class MessageTemplate : AuditAggregateRoot<Guid, Guid>
+﻿// Copyright (c) MASA Stack All rights reserved.
+// Licensed under the Apache License. See LICENSE.txt in the project root for license information.
+
+namespace Masa.Mc.Service.Admin.Domain.MessageTemplates.Aggregates;
+public class MessageTemplate : AuditAggregateRoot<Guid, Guid>, ISoftDelete
 {
     public Guid ChannelId { get; protected set; }
     public string DisplayName { get; protected set; } = string.Empty;
@@ -10,15 +13,16 @@ public class MessageTemplate : AuditAggregateRoot<Guid, Guid>
     public bool IsJump { get; protected set; }
     public string JumpUrl { get; protected set; } = string.Empty;
     public string Sign { get; protected set; } = string.Empty;
-    public MessageTemplateStatus Status { get; protected set; }
-    public MessageTemplateAuditStatus AuditStatus { get; protected set; }
+    public MessageTemplateStatuses Status { get; protected set; }
+    public MessageTemplateAuditStatuses AuditStatus { get; protected set; }
     public DateTime? AuditTime { get; protected set; }
     public DateTime? InvalidTime { get; protected set; }
     public string AuditReason { get; protected set; } = string.Empty;
     public int TemplateType { get; protected set; }
-    public long DayLimit { get; protected set; }
+    public long PerDayLimit { get; protected set; }
     public virtual bool IsStatic { get; protected set; }
     public ICollection<MessageTemplateItem> Items { get; protected set; } = new List<MessageTemplateItem>();
+    public bool IsDeleted { get; protected set; }
 
     public MessageTemplate(
         Guid channelId,
@@ -31,9 +35,9 @@ public class MessageTemplate : AuditAggregateRoot<Guid, Guid>
         string jumpUrl,
         string sign,
         int templateType,
-        long dayLimit,
-        MessageTemplateStatus status = MessageTemplateStatus.Normal,
-        MessageTemplateAuditStatus auditStatus = MessageTemplateAuditStatus.WaitAudit,
+        long perDayLimit,
+        MessageTemplateStatuses status = MessageTemplateStatuses.Normal,
+        MessageTemplateAuditStatuses auditStatus = MessageTemplateAuditStatuses.WaitAudit,
         string auditReason = "",
         bool isStatic = false)
     {
@@ -43,7 +47,7 @@ public class MessageTemplate : AuditAggregateRoot<Guid, Guid>
         TemplateId = templateId;
         Sign = sign;
         TemplateType = templateType;
-        DayLimit = dayLimit;
+        PerDayLimit = perDayLimit;
         Status = status;
         IsStatic = isStatic;
 
@@ -76,10 +80,10 @@ public class MessageTemplate : AuditAggregateRoot<Guid, Guid>
         Content = content;
     }
 
-    public virtual void SetAuditStatus(MessageTemplateAuditStatus auditStatus, string auditReason = "")
+    public virtual void SetAuditStatus(MessageTemplateAuditStatuses auditStatus, string auditReason = "")
     {
         AuditStatus = auditStatus;
-        if (auditStatus != MessageTemplateAuditStatus.WaitAudit)
+        if (auditStatus != MessageTemplateAuditStatuses.WaitAudit)
         {
             AuditTime = DateTime.UtcNow;
             AuditReason = auditReason;
@@ -89,7 +93,7 @@ public class MessageTemplate : AuditAggregateRoot<Guid, Guid>
     public virtual void SetInvalid()
     {
         InvalidTime = DateTime.UtcNow;
-        Status = MessageTemplateStatus.Invalid;
+        Status = MessageTemplateStatuses.Invalid;
     }
 
     public virtual void SetJump(bool isJump, string jumpUrl)

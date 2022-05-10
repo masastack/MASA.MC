@@ -1,4 +1,7 @@
-﻿namespace Masa.Mc.Infrastructure.ObjectExtending.ObjectExtending;
+﻿// Copyright (c) MASA Stack All rights reserved.
+// Licensed under the Apache License. See LICENSE.txt in the project root for license information.
+
+namespace Masa.Mc.Infrastructure.ObjectExtending.ObjectExtending;
 
 public static class ExtensionPropertyHelper
 {
@@ -32,7 +35,8 @@ public static class ExtensionPropertyHelper
         {
             if (!dic.ContainsKey(field.Name))
                 continue;
-            val = dic[field.Name].ToString();
+            val = dic[field.Name]?.ToString();
+            if (val == null) continue;
             object defaultVal;
             if (field.PropertyType.Name.Equals("String"))
                 defaultVal = "";
@@ -57,5 +61,15 @@ public static class ExtensionPropertyHelper
             field.SetValue(entity, obj, null);
         }
         return entity;
+    }
+
+    public static T ConvertToType<T>(ExtraPropertyDictionary dic) where T : class
+    {
+        var extraPropertiesAsJson = JsonSerializer.Serialize(dic);
+        if (string.IsNullOrEmpty(extraPropertiesAsJson) || extraPropertiesAsJson == "{}")
+        {
+            return Activator.CreateInstance<T>();
+        }
+        return JsonSerializer.Deserialize<T>(extraPropertiesAsJson) ?? Activator.CreateInstance<T>();
     }
 }

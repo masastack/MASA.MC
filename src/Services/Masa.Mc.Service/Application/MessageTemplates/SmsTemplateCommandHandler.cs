@@ -1,4 +1,7 @@
-﻿namespace Masa.Mc.Service.Admin.Application.MessageTemplates;
+﻿// Copyright (c) MASA Stack All rights reserved.
+// Licensed under the Apache License. See LICENSE.txt in the project root for license information.
+
+namespace Masa.Mc.Service.Admin.Application.MessageTemplates;
 
 public class SmsTemplateCommandHandler
 {
@@ -14,8 +17,8 @@ public class SmsTemplateCommandHandler
     }
 
     [EventHandler]
-    public async Task SynchroAsync(SynchroSmsTemplateCommand command)
+    public async Task SyncAsync(SyncSmsTemplateCommand command)
     {
-        await _domainService.SynchroAsync(command.ChannelId);
+        await _domainService.SyncAsync(command.ChannelId);
     }
 }

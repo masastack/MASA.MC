@@ -1,4 +1,7 @@
-﻿namespace Masa.Mc.Contracts.Admin.Dtos.Channels;
+﻿// Copyright (c) MASA Stack All rights reserved.
+// Licensed under the Apache License. See LICENSE.txt in the project root for license information.
+
+namespace Masa.Mc.Contracts.Admin.Dtos.Channels;
 
 public class ChannelDto : AuditEntityDto<Guid, Guid>
 {
@@ -6,7 +9,7 @@ public class ChannelDto : AuditEntityDto<Guid, Guid>
 
     public string Code { get; set; } = string.Empty;
 
-    public ChannelType Type { get; set; }
+    public ChannelTypes Type { get; set; }
 
     public string Description { get; set; } = string.Empty;
 

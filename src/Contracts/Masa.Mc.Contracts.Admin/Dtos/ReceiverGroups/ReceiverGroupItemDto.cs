@@ -1,12 +1,15 @@
-﻿namespace Masa.Mc.Contracts.Admin.Dtos.ReceiverGroups;
+﻿// Copyright (c) MASA Stack All rights reserved.
+// Licensed under the Apache License. See LICENSE.txt in the project root for license information.
+
+namespace Masa.Mc.Contracts.Admin.Dtos.ReceiverGroups;
 
 public class ReceiverGroupItemDto
 {
     public Guid GroupId { get; set; }
 
-    public ReceiverGroupItemType Type { get; set; }
+    public ReceiverGroupItemTypes Type { get; set; }
 
-    public string DataId { get; set; } = string.Empty;
+    public Guid SubjectId { get; set; }
 
     public string DisplayName { get; set; } = string.Empty;
 

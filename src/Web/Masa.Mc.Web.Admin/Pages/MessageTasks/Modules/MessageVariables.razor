@@ -1,0 +1,22 @@
+﻿@inherits AdminCompontentBase
+<div class="@CssProvider.GetClass()" style="@CssProvider.GetStyle()" id="@Id" @ref="Ref" @attributes="Attributes">
+    <div class="text-subtitle2">@T("DisplayName.VariableValueTransfer")</div>
+    <MContainer>
+        <MRow>
+            @foreach (var item in _items)
+            {
+                <MCol Cols="12"
+                  Sm="6">
+                    <MTextField @bind-Value="item.Value"
+                            Label="@item.Name"
+                            Dense
+                            Outlined
+                            Disabled="ReadOnly"
+                            Clearable="!ReadOnly"
+                            TValue="string"
+                            OnChange="HandleChangeAsync"></MTextField>
+                </MCol>
+            }
+        </MRow>
+    </MContainer>
+</div>

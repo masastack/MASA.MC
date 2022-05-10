@@ -1,10 +1,13 @@
-﻿namespace Masa.Mc.Web.Admin.Pages.Channels;
+﻿// Copyright (c) MASA Stack All rights reserved.
+// Licensed under the Apache License. See LICENSE.txt in the project root for license information.
+
+namespace Masa.Mc.Web.Admin.Pages.Channels;
 
 public partial class ChannelManagement : AdminCompontentBase
 {
     private ChannelEditModal _editModal;
     private ChannelCreateModal _createModal;
-    private GetChannelInput _queryParam = new(11);
+    private GetChannelInputDto _queryParam = new(15);
     private PaginatedListDto<ChannelDto> _entities = new();
 
     ChannelService ChannelService => McCaller.ChannelService;
@@ -45,15 +48,16 @@ public partial class ChannelManagement : AdminCompontentBase
         await LoadData();
     }
 
-    private async Task HandlePaginationChange(int page)
+    private async Task HandlePaginationChange(PaginationEventArgs args)
     {
-        _queryParam.Page = page;
+        _queryParam.Page = args.Page;
+        _queryParam.PageSize = args.PageSize;
         await LoadData();
     }
 
     private async Task HandleClearAsync()
     {
-        _queryParam=new();
+        _queryParam=new(15);
         await LoadData();
     }
 }

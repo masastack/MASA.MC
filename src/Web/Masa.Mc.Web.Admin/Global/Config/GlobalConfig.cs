@@ -1,4 +1,7 @@
-﻿using Masa.Mc.Web.Admin.Shared;
+﻿// Copyright (c) MASA Stack All rights reserved.
+// Licensed under the Apache License. See LICENSE.txt in the project root for license information.
+
+using Masa.Mc.Web.Admin.Shared;
 
 namespace Masa.Mc.Web.Admin.Global
 {
@@ -123,11 +126,6 @@ namespace Masa.Mc.Web.Admin.Global
             OnConfirmChanged?.Invoke(title, message, confirmFunc);
         }
 
-        public void OpenMessage(string message, MessageType messageType, int timeOut = 2)
-        {
-            OnMessageChanged?.Invoke(message, messageType, timeOut);
-        }
-
         #endregion
 
         public GlobalConfig(CookieStorage cookieStorage, I18nConfig i18nConfig, IHttpContextAccessor httpContextAccessor)
@@ -141,14 +139,12 @@ namespace Masa.Mc.Web.Admin.Global
 
         public delegate void GlobalConfigChanged();
         public delegate void LoadingChanged(bool Loading);
-        public delegate void MessageChanged(string message, MessageType messageType, int timeOut);
         public delegate void ConfirmChanged(string title, string message, EventCallback<bool> confirmFunc);
 
         public event GlobalConfigChanged? OnPageModeChanged;
         public event GlobalConfigChanged? OnCurrentNavChanged;
         public event LoadingChanged? OnLoadingChanged;
         public event ConfirmChanged? OnConfirmChanged;
-        public event MessageChanged? OnMessageChanged;
 
         #endregion
 

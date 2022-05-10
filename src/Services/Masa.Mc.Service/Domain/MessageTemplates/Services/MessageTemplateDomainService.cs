@@ -1,4 +1,7 @@
-﻿namespace Masa.Mc.Service.Admin.Domain.MessageTemplates.Services;
+﻿// Copyright (c) MASA Stack All rights reserved.
+// Licensed under the Apache License. See LICENSE.txt in the project root for license information.
+
+namespace Masa.Mc.Service.Admin.Domain.MessageTemplates.Services;
 
 public class MessageTemplateDomainService : DomainService
 {
@@ -12,14 +15,14 @@ public class MessageTemplateDomainService : DomainService
     public virtual async Task CreateAsync(MessageTemplate messageTemplate)
     {
         await ValidateTemplateAsync(messageTemplate.TemplateId);
-        ParseTemplateItem(messageTemplate);
+        if(!messageTemplate.Items.Any()) ParseTemplateItem(messageTemplate);
         await _repository.AddAsync(messageTemplate);
     }
 
     public virtual async Task UpdateAsync(MessageTemplate messageTemplate)
     {
         await ValidateTemplateAsync(messageTemplate.TemplateId, messageTemplate.Id);
-        ParseTemplateItem(messageTemplate);
+        if (!messageTemplate.Items.Any()) ParseTemplateItem(messageTemplate);
         await _repository.UpdateAsync(messageTemplate);
     }
 

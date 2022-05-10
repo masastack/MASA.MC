@@ -1,4 +1,7 @@
-﻿namespace Masa.Mc.Service.Admin.Application.Channels;
+﻿// Copyright (c) MASA Stack All rights reserved.
+// Licensed under the Apache License. See LICENSE.txt in the project root for license information.
+
+namespace Masa.Mc.Service.Admin.Application.Channels;
 
 public class ChannelQueryHandler
 {
@@ -15,7 +18,7 @@ public class ChannelQueryHandler
         var entity = await _repository.FindAsync(x => x.Id == query.ChannelId);
         if (entity == null)
             throw new UserFriendlyException("channel not found");
-        query.Result = entity.Adapt<ChannelDto>();
+        query.Result = entity.Adapt<ChannelDto>();  
     }
 
     [EventHandler]
@@ -53,12 +56,12 @@ public class ChannelQueryHandler
         query.Result = list.Adapt<List<ChannelDto>>();
     }
 
-    private async Task<Expression<Func<Channel, bool>>> CreateFilteredPredicate(GetChannelInput input)
+    private async Task<Expression<Func<Channel, bool>>> CreateFilteredPredicate(GetChannelInputDto inputDto)
     {
         Expression<Func<Channel, bool>> condition = channel => true;
-        condition = condition.And(input.Type.HasValue, channel => channel.Type == input.Type);
-        condition = condition.And(!string.IsNullOrEmpty(input.Filter), channel => channel.DisplayName.Contains(input.Filter) || channel.Code.Contains(input.Filter));
-        condition = condition.And(!string.IsNullOrEmpty(input.DisplayName), channel => channel.DisplayName.Contains(input.DisplayName));
+        condition = condition.And(inputDto.Type.HasValue, channel => channel.Type == inputDto.Type);
+        condition = condition.And(!string.IsNullOrEmpty(inputDto.Filter), channel => channel.DisplayName.Contains(inputDto.Filter) || channel.Code.Contains(inputDto.Filter));
+        condition = condition.And(!string.IsNullOrEmpty(inputDto.DisplayName), channel => channel.DisplayName.Contains(inputDto.DisplayName));
         return await Task.FromResult(condition); ;
     }
 }

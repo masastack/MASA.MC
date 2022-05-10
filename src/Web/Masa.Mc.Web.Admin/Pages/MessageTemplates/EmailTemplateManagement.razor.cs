@@ -1,4 +1,7 @@
-﻿namespace Masa.Mc.Web.Admin.Pages.MessageTemplates;
+﻿// Copyright (c) MASA Stack All rights reserved.
+// Licensed under the Apache License. See LICENSE.txt in the project root for license information.
+
+namespace Masa.Mc.Web.Admin.Pages.MessageTemplates;
 
 public partial class EmailTemplateManagement : AdminCompontentBase
 {
@@ -6,7 +9,7 @@ public partial class EmailTemplateManagement : AdminCompontentBase
 
     private EmailTemplateEditModal _editModal;
     private EmailTemplateCreateModal _createModal;
-    private GetMessageTemplateInput _queryParam = new() { ChannelType = ChannelType.Email };
+    private GetMessageTemplateInputDto _queryParam = new() { ChannelType = ChannelTypes.Email };
     private PaginatedListDto<MessageTemplateDto> _entities = new();
     private List<ChannelDto> _channelItems = new();
     private bool advanced = true;
@@ -20,15 +23,15 @@ public partial class EmailTemplateManagement : AdminCompontentBase
 
     protected override async Task OnInitializedAsync()
     {
-        var _prefix = "DisplayName:MessageTemplate";
+        var _prefix = "DisplayName.MessageTemplate";
         Headers = new()
         {
-            new() { Text = T("DisplayName:ChannelDisplayName"), Value = "ChannelDisplayName", Sortable = false },
+            new() { Text = T("DisplayName.ChannelDisplayName"), Value = "ChannelDisplayName", Sortable = false },
             new() { Text = T($"{_prefix}{nameof(MessageTemplateDto.DisplayName)}"), Value = nameof(MessageTemplateDto.DisplayName), Sortable = false },
             new() { Text = T($"{_prefix}{nameof(MessageTemplateDto.ModificationTime)}"), Value = nameof(MessageTemplateDto.ModificationTime), Sortable = true },
             new() { Text = T("Action"), Value = "Action", Sortable = false },
         };
-        _channelItems = await ChannelService.GetListByTypeAsync(ChannelType.Email);
+        _channelItems = await ChannelService.GetListByTypeAsync(ChannelTypes.Email);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -76,7 +79,7 @@ public partial class EmailTemplateManagement : AdminCompontentBase
 
     private async Task HandleClearAsync()
     {
-        _queryParam = new() { ChannelType = ChannelType.Email };
+        _queryParam = new() { ChannelType = ChannelTypes.Email };
         await LoadData();
     }
 

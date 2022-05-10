@@ -1,10 +1,13 @@
-﻿namespace Masa.Mc.Web.Admin.Pages.ReceiverGroups;
+﻿// Copyright (c) MASA Stack All rights reserved.
+// Licensed under the Apache License. See LICENSE.txt in the project root for license information.
+
+namespace Masa.Mc.Web.Admin.Pages.ReceiverGroups;
 
 public partial class ReceiverGroupManagement : AdminCompontentBase
 {
     private ReceiverGroupEditModal _editModal;
     private ReceiverGroupCreateModal _createModal;
-    private GetReceiverGroupInput _queryParam = new(15);
+    private GetReceiverGroupInputDto _queryParam = new(15);
     private PaginatedListDto<ReceiverGroupDto> _entities = new();
 
     ReceiverGroupService ReceiverGroupService => McCaller.ReceiverGroupService;
@@ -45,9 +48,10 @@ public partial class ReceiverGroupManagement : AdminCompontentBase
         await LoadData();
     }
 
-    private async Task HandlePaginationChange(int page)
+    private async Task HandlePaginationChange(PaginationEventArgs args)
     {
-        _queryParam.Page = page;
+        _queryParam.Page = args.Page;
+        _queryParam.PageSize = args.PageSize;
         await LoadData();
     }
 

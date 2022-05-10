@@ -1,4 +1,7 @@
-﻿namespace Masa.Mc.Web.Admin.Pages.MessageTemplates.Modules;
+﻿// Copyright (c) MASA Stack All rights reserved.
+// Licensed under the Apache License. See LICENSE.txt in the project root for license information.
+
+namespace Masa.Mc.Web.Admin.Pages.MessageTemplates.Modules;
 
 public partial class MessageTemplateItems : AdminCompontentBase
 {
@@ -7,6 +10,9 @@ public partial class MessageTemplateItems : AdminCompontentBase
 
     [Parameter]
     public EventCallback<List<MessageTemplateItemDto>> ValueChanged { get; set; }
+
+    [Parameter]
+    public EventCallback<MessageTemplateItemChangedEventArgs> OnEditChanged { get; set; }
 
     private List<DataTableHeader<MessageTemplateItemDto>> _headers = new();
     private bool _dialog;
@@ -18,13 +24,13 @@ public partial class MessageTemplateItems : AdminCompontentBase
     {
         get
         {
-            return _editedIndex == -1 ? T("Permission:AddMessageTemplateItem") : T("Permission:EditMessageTemplateItem");
+            return _editedIndex == -1 ? T("Permission.AddMessageTemplateItem") : T("Permission.EditMessageTemplateItem");
         }
     }
 
     protected override async Task OnInitializedAsync()
     {
-        var _prefix = "DisplayName:MessageTemplateItem";
+        var _prefix = "DisplayName.MessageTemplateItem";
         _headers = new List<DataTableHeader<MessageTemplateItemDto>>
         {
           new (){ Text= T($"{_prefix}{nameof(MessageTemplateItemDto.Code)}"),Value= nameof(MessageTemplateItemDto.Code),Sortable=false},
@@ -46,6 +52,10 @@ public partial class MessageTemplateItems : AdminCompontentBase
         if (_editedIndex > -1)
         {
             var item = Value[_editedIndex];
+            if (item.Code != _editedItem.Code && OnEditChanged.HasDelegate)
+            {
+                await OnEditChanged.InvokeAsync(new MessageTemplateItemChangedEventArgs(item.Code, _editedItem.Code));
+            }
             item.Code = _editedItem.Code;
             item.MappingCode = _editedItem.MappingCode;
             item.DisplayText = _editedItem.DisplayText;

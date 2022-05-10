@@ -1,4 +1,7 @@
-﻿namespace Masa.Mc.Web.Admin.Pages.MessageTemplates.Modules;
+﻿// Copyright (c) MASA Stack All rights reserved.
+// Licensed under the Apache License. See LICENSE.txt in the project root for license information.
+
+namespace Masa.Mc.Web.Admin.Pages.MessageTemplates.Modules;
 
 public partial class WebsiteMessageTemplateCreateModal : AdminCompontentBase
 {
@@ -6,16 +9,16 @@ public partial class WebsiteMessageTemplateCreateModal : AdminCompontentBase
     public EventCallback OnOk { get; set; }
 
     private MForm _form;
-    private MessageTemplateCreateUpdateDto _model = new();
+    private MessageTemplateUpsertDto _model = new();
     private bool _visible;
     private List<ChannelDto> _channelItems = new();
-    private ChannelType _channelType;
+    private ChannelTypes _channelType;
 
     ChannelService ChannelService => McCaller.ChannelService;
 
     MessageTemplateService MessageTemplateService => McCaller.MessageTemplateService;
 
-    public async Task OpenModalAsync(ChannelType? channelType)
+    public async Task OpenModalAsync(ChannelTypes? channelType)
     {
         if (channelType.HasValue)
         {
@@ -63,7 +66,7 @@ public partial class WebsiteMessageTemplateCreateModal : AdminCompontentBase
         if (!val) HandleCancel();
     }
 
-    private async Task HandleSelectChannelTypeAsync(ChannelType Type)
+    private async Task HandleSelectChannelTypeAsync(ChannelTypes Type)
     {
         _channelItems = await ChannelService.GetListByTypeAsync(Type);
     }

@@ -1,4 +1,7 @@
-﻿namespace Masa.Mc.Web.Admin.Pages.MessageTemplates.Modules;
+﻿// Copyright (c) MASA Stack All rights reserved.
+// Licensed under the Apache License. See LICENSE.txt in the project root for license information.
+
+namespace Masa.Mc.Web.Admin.Pages.MessageTemplates.Modules;
 
 public partial class SmsTemplateCreateModal : AdminCompontentBase
 {
@@ -6,11 +9,11 @@ public partial class SmsTemplateCreateModal : AdminCompontentBase
     public EventCallback OnOk { get; set; }
 
     private MForm _form;
-    private MessageTemplateCreateUpdateDto _model = new();
+    private MessageTemplateUpsertDto _model = new();
     private bool _visible;
     private List<ChannelDto> _channelItems = new();
     private List<SmsTemplateDto> _templateItems = new();
-    private ChannelType _channelType;
+    private ChannelTypes _channelType;
 
     ChannelService ChannelService => McCaller.ChannelService;
 
@@ -18,9 +21,9 @@ public partial class SmsTemplateCreateModal : AdminCompontentBase
 
     MessageTemplateService MessageTemplateService => McCaller.MessageTemplateService;
 
-    public async Task OpenModalAsync(ChannelType? channelType)
+    public async Task OpenModalAsync(ChannelTypes? channelType)
     {
-        _model.ChannelType = ChannelType.Sms;
+        _model.ChannelType = ChannelTypes.Sms;
         if (channelType.HasValue)
         {
             _channelType = channelType.Value;
@@ -67,7 +70,7 @@ public partial class SmsTemplateCreateModal : AdminCompontentBase
         if (!val) HandleCancel();
     }
 
-    private async Task HandleSelectChannelTypeAsync(ChannelType Type)
+    private async Task HandleSelectChannelTypeAsync(ChannelTypes Type)
     {
         _channelItems = await ChannelService.GetListByTypeAsync(Type);
         if (_channelItems.Count == 1)
@@ -104,11 +107,19 @@ public partial class SmsTemplateCreateModal : AdminCompontentBase
         return paramList.Select(x => new MessageTemplateItemDto { Code = x, MappingCode = x }).ToList();
     }
 
-    private async Task SynchroAsync()
+    private async Task SyncAsync()
     {
         Loading = true;
-        await SmsTemplateService.SynchroAsync(new SmsTemplateSynchroInput(_model.ChannelId));
+        await SmsTemplateService.SyncAsync(new SmsTemplateSyncInputDto(_model.ChannelId));
         _templateItems = await SmsTemplateService.GetListByChannelIdAsync(_model.ChannelId);
         Loading = false;
+    }
+
+    private void HandleTemplateItemChanged(MessageTemplateItemChangedEventArgs args)
+    {
+        string startstr = "${";
+        string endstr = "}";
+        _model.Title = _model.Title.Replace($"{startstr}{args.OldCode}{endstr}", $"{startstr}{args.NewCode}{endstr}");
+        _model.Content = _model.Content.Replace($"{startstr}{args.OldCode}{endstr}", $"{startstr}{args.NewCode}{endstr}");
     }
 }

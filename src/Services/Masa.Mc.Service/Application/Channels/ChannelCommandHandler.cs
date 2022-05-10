@@ -1,15 +1,18 @@
-﻿namespace Masa.Mc.Service.Admin.Application.Channels;
+﻿// Copyright (c) MASA Stack All rights reserved.
+// Licensed under the Apache License. See LICENSE.txt in the project root for license information.
+
+namespace Masa.Mc.Service.Admin.Application.Channels;
 
 public class ChannelCommandHandler
 {
     private readonly IChannelRepository _repository;
-    private readonly IIntegrationEventBus _integrationEventBus;
+    private readonly IMessageTaskRepository _messageTaskRepository;
     private readonly ChannelDomainService _domainService;
 
-    public ChannelCommandHandler(IChannelRepository repository, IIntegrationEventBus integrationEventBus, ChannelDomainService domainService)
+    public ChannelCommandHandler(IChannelRepository repository, IMessageTaskRepository messageTaskRepository, ChannelDomainService domainService)
     {
         _repository = repository;
-        _integrationEventBus = integrationEventBus;
+        _messageTaskRepository = messageTaskRepository;
         _domainService = domainService;
     }
 
@@ -40,6 +43,10 @@ public class ChannelCommandHandler
         var entity = await _repository.FindAsync(x => x.Id == createCommand.ChannelId);
         if (entity == null)
             throw new UserFriendlyException("channel not found");
+        if (await _messageTaskRepository.FindAsync(x => x.ChannelId == createCommand.ChannelId, false) != null)
+        {
+            throw new UserFriendlyException("There are message tasks in use and cannot be deleted");
+        }
         await _domainService.DeleteAsync(entity);
     }
 }

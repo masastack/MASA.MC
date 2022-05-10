@@ -1,4 +1,7 @@
-﻿namespace Masa.Mc.Service.Admin.Application.MessageTemplates;
+﻿// Copyright (c) MASA Stack All rights reserved.
+// Licensed under the Apache License. See LICENSE.txt in the project root for license information.
+
+namespace Masa.Mc.Service.Admin.Application.MessageTemplates;
 
 public class MessageTemplateQueryHandler
 {
@@ -40,24 +43,24 @@ public class MessageTemplateQueryHandler
         query.Result = result;
     }
 
-    private async Task<Expression<Func<MessageTemplateWithDetail, bool>>> CreateFilteredPredicate(GetMessageTemplateInput input)
+    private async Task<Expression<Func<MessageTemplateWithDetail, bool>>> CreateFilteredPredicate(GetMessageTemplateInputDto inputDto)
     {
         Expression<Func<MessageTemplateWithDetail, bool>> condition = x => true;
-        condition = condition.And(!string.IsNullOrEmpty(input.Filter), x => x.MessageTemplate.DisplayName.Contains(input.Filter) || x.MessageTemplate.TemplateId.Contains(input.Filter));
-        condition = condition.And(input.ChannelType.HasValue, x => x.Channel.Type == input.ChannelType);
-        condition = condition.And(input.Status.HasValue, x => x.MessageTemplate.Status == input.Status);
-        condition = condition.And(input.AuditStatus.HasValue, x => x.MessageTemplate.AuditStatus == input.AuditStatus);
-        condition = condition.And(input.ChannelId.HasValue, x => x.MessageTemplate.ChannelId == input.ChannelId);
-        condition = condition.And(input.StartTime.HasValue, x => x.MessageTemplate.ModificationTime >= input.StartTime);
-        condition = condition.And(input.EndTime.HasValue, x => x.MessageTemplate.ModificationTime <= input.EndTime);
-        condition = condition.And(input.TemplateType > 0, x => x.MessageTemplate.TemplateType == input.TemplateType);
+        condition = condition.And(!string.IsNullOrEmpty(inputDto.Filter), x => x.MessageTemplate.DisplayName.Contains(inputDto.Filter) || x.MessageTemplate.TemplateId.Contains(inputDto.Filter));
+        condition = condition.And(inputDto.ChannelType.HasValue, x => x.Channel.Type == inputDto.ChannelType);
+        condition = condition.And(inputDto.Status.HasValue, x => x.MessageTemplate.Status == inputDto.Status);
+        condition = condition.And(inputDto.AuditStatus.HasValue, x => x.MessageTemplate.AuditStatus == inputDto.AuditStatus);
+        condition = condition.And(inputDto.ChannelId.HasValue, x => x.MessageTemplate.ChannelId == inputDto.ChannelId);
+        condition = condition.And(inputDto.StartTime.HasValue, x => x.MessageTemplate.ModificationTime >= inputDto.StartTime);
+        condition = condition.And(inputDto.EndTime.HasValue, x => x.MessageTemplate.ModificationTime <= inputDto.EndTime);
+        condition = condition.And(inputDto.TemplateType > 0, x => x.MessageTemplate.TemplateType == inputDto.TemplateType);
         return await Task.FromResult(condition); ;
     }
 
-    private async Task<IQueryable<MessageTemplateWithDetail>> CreateFilteredDetailQueryAsync(GetMessageTemplateInput input)
+    private async Task<IQueryable<MessageTemplateWithDetail>> CreateFilteredDetailQueryAsync(GetMessageTemplateInputDto inputDto)
     {
         var query = await _repository.GetWithDetailQueryAsync()!;
-        var condition = await CreateFilteredPredicate(input);
+        var condition = await CreateFilteredPredicate(inputDto);
         return query.Where(condition);
     }
 }

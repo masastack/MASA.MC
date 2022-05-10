@@ -8,7 +8,7 @@
                    Dense
                    Solo
                    BackgroundColor="fill-lighten-1"
-                   Label="@T("Description:ReceiverGroup.SelectUser")"
+                   Label="@T("Description.ReceiverGroup.SelectUser")"
                    ItemText="r=>r.DisplayName"
                    ItemValue="r=>r.Id"
                    Multiple>
@@ -19,7 +19,7 @@
             <MChip Close
                    OnCloseClick="()=>Remove(data.Item)">
                 <MAvatar Left>
-                    @if (data.Item.Type != ReceiverGroupItemType.User)
+                    @if (data.Item.Type != ReceiverGroupItemTypes.User)
                     {
                         <MIcon>mdi-account-group</MIcon>
                     }
@@ -32,7 +32,7 @@
             </MChip>
         </SelectionContent>
         <ItemContent Context="data">
-            @if (data.Item.Type != ReceiverGroupItemType.User)
+            @if (data.Item.Type != ReceiverGroupItemTypes.User)
             {
                 <MListItemAvatar>
                     <MIcon Large>mdi-account-group</MIcon>
@@ -70,7 +70,7 @@
         <span class="ml-2">@T("ExternalMember")</span>
     </MButton>
 </MRow>
-<MCard Class="mx-auto" Outlined Height="470">
+<MCard Class="mx-auto overflow-y-auto" Outlined Height="470">
     @if (Value.Count > 0)
     {
         <MList ThreeLine>
@@ -81,7 +81,7 @@
                         <MHover>
                             <MListItem @attributes="context.Attrs" Class="@($"{context.Class} {(context.Hover ? "on-hover" : "")}")">
                                 <MListItemAvatar>
-                                    @if (item.Type != ReceiverGroupItemType.User)
+                                    @if (item.Type != ReceiverGroupItemTypes.User)
                                     {
                                         <MIcon Large>mdi-account-group</MIcon>
                                     }
@@ -101,7 +101,7 @@
                                 </MListItemAvatar>
                                 <MListItemContent>
                                     <MListItemTitle>@(item.DisplayName)</MListItemTitle>
-                                    @if (item.Type == ReceiverGroupItemType.User)
+                                    @if (item.Type == ReceiverGroupItemTypes.User)
                                     {
                                         <MListItemSubtitle>@(item.PhoneNumber)|@(item.Email)</MListItemSubtitle>
                                     }
@@ -122,7 +122,7 @@
     else
     {
         <div class="d-flex align-center justify-center pa-4 text-h4" style="height:100%">
-            @T("Description:ReceiverGroup.AddSelectMember")
+            @T("Description.ReceiverGroup.AddSelectMember")
         </div>
     }
 </MCard>

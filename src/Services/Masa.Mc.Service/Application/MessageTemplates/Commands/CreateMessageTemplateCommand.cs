@@ -1,5 +1,8 @@
-﻿namespace Masa.Mc.Service.Admin.Application.MessageTemplates.Commands;
+﻿// Copyright (c) MASA Stack All rights reserved.
+// Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
-public record CreateMessageTemplateCommand(MessageTemplateCreateUpdateDto MessageTemplate) : Command
+namespace Masa.Mc.Service.Admin.Application.MessageTemplates.Commands;
+
+public record CreateMessageTemplateCommand(MessageTemplateUpsertDto MessageTemplate) : Command
 {
 }

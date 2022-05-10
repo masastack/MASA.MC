@@ -1,4 +1,7 @@
-﻿namespace Masa.Mc.Web.Admin.Pages.MessageTemplates.Modules;
+﻿// Copyright (c) MASA Stack All rights reserved.
+// Licensed under the Apache License. See LICENSE.txt in the project root for license information.
+
+namespace Masa.Mc.Web.Admin.Pages.MessageTemplates.Modules;
 
 public partial class WebsiteMessageTemplateEditModal : AdminCompontentBase
 {
@@ -6,11 +9,11 @@ public partial class WebsiteMessageTemplateEditModal : AdminCompontentBase
     public EventCallback OnOk { get; set; }
 
     private MForm _form;
-    private MessageTemplateCreateUpdateDto _model = new();
+    private MessageTemplateUpsertDto _model = new();
     private Guid _entityId;
     private bool _visible;
     private List<ChannelDto> _channelItems = new();
-    private ChannelType _channelType;
+    private ChannelTypes _channelType;
 
     ChannelService ChannelService => McCaller.ChannelService;
 
@@ -19,7 +22,7 @@ public partial class WebsiteMessageTemplateEditModal : AdminCompontentBase
     public async Task OpenModalAsync(MessageTemplateDto model)
     {
         _entityId = model.Id;
-        _model = model.Adapt<MessageTemplateCreateUpdateDto>();
+        _model = model.Adapt<MessageTemplateUpsertDto>();
         await GetFormDataAsync();
         await InvokeAsync(() =>
         {
@@ -31,7 +34,7 @@ public partial class WebsiteMessageTemplateEditModal : AdminCompontentBase
     private async Task GetFormDataAsync()
     {
         var dto = await MessageTemplateService.GetAsync(_entityId);
-        _model = dto.Adapt<MessageTemplateCreateUpdateDto>();
+        _model = dto.Adapt<MessageTemplateUpsertDto>();
         _channelType = dto.Channel.Type;
         await HandleSelectChannelType(_channelType);
     }
@@ -89,7 +92,7 @@ public partial class WebsiteMessageTemplateEditModal : AdminCompontentBase
         if (!val) HandleCancel();
     }
 
-    private async Task HandleSelectChannelType(ChannelType Type)
+    private async Task HandleSelectChannelType(ChannelTypes Type)
     {
         _channelItems = await ChannelService.GetListByTypeAsync(Type);
     }

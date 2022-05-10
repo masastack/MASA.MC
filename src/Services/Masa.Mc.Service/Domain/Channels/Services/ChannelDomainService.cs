@@ -1,4 +1,7 @@
-﻿namespace Masa.Mc.Service.Admin.Domain.Channels.Services;
+﻿// Copyright (c) MASA Stack All rights reserved.
+// Licensed under the Apache License. See LICENSE.txt in the project root for license information.
+
+namespace Masa.Mc.Service.Admin.Domain.Channels.Services;
 
 public class ChannelDomainService : DomainService
 {
@@ -15,13 +18,13 @@ public class ChannelDomainService : DomainService
     {
         await ValidateChannelAsync(channel.Code);
         await _repository.AddAsync(channel);
-        if (channel.Type == ChannelType.Sms)
+        if (channel.Type == ChannelTypes.Sms)
         {
             await _repository.UnitOfWork.SaveChangesAsync();
             var channelId = channel.Id;
             Task.Run(async () =>
             {
-                await EventBus.PublishAsync(new SmsTemplateSynchroDomainEvent(channelId));
+                await EventBus.PublishAsync(new SmsTemplateSyncDomainEvent(channelId));
             });
         }
     }

@@ -1,9 +1,12 @@
-﻿namespace Masa.Mc.Web.Admin.Pages.Channels.Modules;
+﻿// Copyright (c) MASA Stack All rights reserved.
+// Licensed under the Apache License. See LICENSE.txt in the project root for license information.
+
+namespace Masa.Mc.Web.Admin.Pages.Channels.Modules;
 
 public partial class ChannelExtraProperties : AdminCompontentBase
 {
     [Parameter]
-    public ChannelType Type { get; set; }
+    public ChannelTypes Type { get; set; }
 
     [Parameter]
     public ExtraPropertyDictionary Value
@@ -41,8 +44,8 @@ public partial class ChannelExtraProperties : AdminCompontentBase
 
     public async Task UpdateExtraPropertiesAsync()
     {
-        if (Type == ChannelType.Email) await _emailExtraPropertiesRef.HandleChangeAsync();
-        if (Type == ChannelType.Sms) await _smsExtraPropertiesRef.HandleChangeAsync();
+        if (Type == ChannelTypes.Email) await _emailExtraPropertiesRef.HandleChangeAsync();
+        if (Type == ChannelTypes.Sms) await _smsExtraPropertiesRef.HandleChangeAsync();
         await ValueChanged.InvokeAsync(Value);
     }
 

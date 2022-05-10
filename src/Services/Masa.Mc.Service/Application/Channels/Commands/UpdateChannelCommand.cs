@@ -1,5 +1,8 @@
-﻿namespace Masa.Mc.Service.Admin.Application.Channels.Commands;
+﻿// Copyright (c) MASA Stack All rights reserved.
+// Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
-public record UpdateChannelCommand(Guid ChannelId, ChannelCreateUpdateDto Channel) : Command
+namespace Masa.Mc.Service.Admin.Application.Channels.Commands;
+
+public record UpdateChannelCommand(Guid ChannelId, ChannelUpsertDto Channel) : Command
 {
 }

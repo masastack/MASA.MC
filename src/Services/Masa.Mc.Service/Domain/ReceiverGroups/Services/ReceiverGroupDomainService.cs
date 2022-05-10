@@ -1,4 +1,7 @@
-﻿namespace Masa.Mc.Service.Admin.Domain.ReceiverGroups.Services;
+﻿// Copyright (c) MASA Stack All rights reserved.
+// Licensed under the Apache License. See LICENSE.txt in the project root for license information.
+
+namespace Masa.Mc.Service.Admin.Domain.ReceiverGroups.Services;
 
 public class ReceiverGroupDomainService : DomainService
 {
@@ -57,8 +60,8 @@ public class ReceiverGroupDomainService : DomainService
     {
         foreach (var item in items)
         {
-            receiverGroup.AddOrUpdateItem(item.DataId, item.Type, item.DisplayName, item.Avatar, item.PhoneNumber, item.Email);
+            receiverGroup.AddOrUpdateItem(item.SubjectId, item.Type, item.DisplayName, item.Avatar, item.PhoneNumber, item.Email);
         }
-        receiverGroup.Items.RemoveAll(item => !items.Any(x => x.DataId == item.DataId && x.Type == item.Type));
+        receiverGroup.Items.RemoveAll(item => !items.Any(x => x.SubjectId == item.SubjectId && x.Type == item.Type));
     }
 }

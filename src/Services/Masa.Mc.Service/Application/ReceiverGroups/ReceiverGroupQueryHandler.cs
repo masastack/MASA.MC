@@ -1,4 +1,7 @@
-﻿namespace Masa.Mc.Service.Admin.Application.ReceiverGroups;
+﻿// Copyright (c) MASA Stack All rights reserved.
+// Licensed under the Apache License. See LICENSE.txt in the project root for license information.
+
+namespace Masa.Mc.Service.Admin.Application.ReceiverGroups;
 
 public class ReceiverGroupQueryHandler
 {
@@ -33,17 +36,17 @@ public class ReceiverGroupQueryHandler
         query.Result = result;
     }
 
-    private async Task<Expression<Func<ReceiverGroup, bool>>> CreateFilteredPredicate(GetReceiverGroupInput input)
+    private async Task<Expression<Func<ReceiverGroup, bool>>> CreateFilteredPredicate(GetReceiverGroupInputDto inputDto)
     {
         Expression<Func<ReceiverGroup, bool>> condition = channel => true;
-        condition = condition.And(!string.IsNullOrEmpty(input.Filter), channel => channel.DisplayName.Contains(input.Filter));
+        condition = condition.And(!string.IsNullOrEmpty(inputDto.Filter), channel => channel.DisplayName.Contains(inputDto.Filter));
         return await Task.FromResult(condition); ;
     }
 
-    private async Task<IQueryable<ReceiverGroup>> CreateFilteredQueryAsync(GetReceiverGroupInput input)
+    private async Task<IQueryable<ReceiverGroup>> CreateFilteredQueryAsync(GetReceiverGroupInputDto inputDto)
     {
         var query = await _repository.WithDetailsAsync()!;
-        var condition = await CreateFilteredPredicate(input);
+        var condition = await CreateFilteredPredicate(inputDto);
         return query.Where(condition);
     }
 }

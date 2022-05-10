@@ -11,9 +11,9 @@
             </PrependInnerContent>
         </MTextField>
         <MIcon Class="ml-4" OnClick="ToggleAdvanced">mdi-filter</MIcon>
-        <MButton Color="primary" Class="ml-6 medium-button" OnClick="()=> _createModal.OpenModalAsync(ChannelType.Email)">
+        <MButton Color="primary" Class="ml-6 medium-button" OnClick="()=> _createModal.OpenModalAsync(ChannelTypes.Email)">
             <MIcon Size=18>mdi-plus</MIcon>
-            <span class="ml-2">@T("Permission:Create")</span>
+            <span class="ml-2">@T("Permission.Create")</span>
         </MButton>
     </MCardTitle>
     @if (advanced)
@@ -58,7 +58,7 @@
             <MCol Cols="3">
                 <MSelect Value="_queryParam.ChannelId"
                      Items="@_channelItems"
-                     Label="@T("DisplayName:Channel")"
+                     Label="@T("DisplayName.Channel")"
                      ItemText="item => item.DisplayName"
                      ItemValue="item => item.Id"
                      Dense
@@ -85,31 +85,31 @@
                         <span class="text-body3">@context.Item.Channel?.DisplayName</span>
                         break;
                     case (nameof(MessageTemplateDto.ModificationTime)):
-                        <span class="text-body3">@context.Item.ModificationTime.ToString("yyyy年MM月dd日 HH:mm:ss")</span>
+                        <span class="text-body3">@context.Item.ModificationTime.ToString(T("$DateTimeFormat"))</span>
                         break;
                     case nameof(MessageTemplateDto.AuditStatus):
                         string color = string.Empty;
                         switch (context.Item.AuditStatus)
                         {
-                            case MessageTemplateAuditStatus.WaitAudit:
+                            case MessageTemplateAuditStatuses.WaitAudit:
                                 color = "orange";
                                 break;
-                            case MessageTemplateAuditStatus.Adopt:
+                            case MessageTemplateAuditStatuses.Adopt:
                                 color = "sample-green";
                                 break;
-                            case MessageTemplateAuditStatus.Fail:
+                            case MessageTemplateAuditStatuses.Fail:
                                 color = "error";
                                 break;
                             default:
                                 break;
                         }
                         <MChip Color="@($"{color}-lighten-5")" TextColor="@color" Ripple="false">
-                            <span>@T($"DisplayName:MessageTemplateAuditStatus.{context.Item.AuditStatus.ToString()}")</span>
+                            <span>@T($"DisplayName.MessageTemplateAuditStatus.{context.Item.AuditStatus.ToString()}")</span>
                         </MChip>
                         break;
                     case nameof(MessageTemplateDto.Status):
                         <MChip Ripple="false">
-                            <span>@T($"DisplayName:MessageTemplateStatus.{context.Item.Status.ToString()}")</span>
+                            <span>@T($"DisplayName.MessageTemplateStatus.{context.Item.Status.ToString()}")</span>
                         </MChip>
                         break;
                     case "Action":

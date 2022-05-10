@@ -1,11 +1,14 @@
-﻿namespace Masa.Mc.Service.Admin.Services;
+﻿// Copyright (c) MASA Stack All rights reserved.
+// Licensed under the Apache License. See LICENSE.txt in the project root for license information.
+
+namespace Masa.Mc.Service.Admin.Services;
 
 public class SmsTemplateService : ServiceBase
 {
     public SmsTemplateService(IServiceCollection services) : base(services, "api/sms-template")
     {
         MapGet(GetListByChannelIdAsync);
-        MapPost(SynchroAsync);
+        MapPost(SyncAsync);
     }
 
     public async Task<List<SmsTemplateDto>> GetListByChannelIdAsync(IEventBus eventbus, Guid channelId)
@@ -15,9 +18,9 @@ public class SmsTemplateService : ServiceBase
         return query.Result;
     }
 
-    public async Task SynchroAsync(IEventBus eventbus, SmsTemplateSynchroInput input)
+    public async Task SyncAsync(IEventBus eventbus, SmsTemplateSyncInputDto inputDto)
     {
-        var command = new SynchroSmsTemplateCommand(input.ChannelId);
+        var command = new SyncSmsTemplateCommand(inputDto.ChannelId);
         await eventbus.PublishAsync(command); 
     }
 }

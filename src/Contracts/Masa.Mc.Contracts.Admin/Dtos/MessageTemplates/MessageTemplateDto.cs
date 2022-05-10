@@ -1,4 +1,7 @@
-﻿namespace Masa.Mc.Contracts.Admin.Dtos.MessageTemplates;
+﻿// Copyright (c) MASA Stack All rights reserved.
+// Licensed under the Apache License. See LICENSE.txt in the project root for license information.
+
+namespace Masa.Mc.Contracts.Admin.Dtos.MessageTemplates;
 
 public class MessageTemplateDto : AuditEntityDto<Guid, Guid>
 {
@@ -15,13 +18,13 @@ public class MessageTemplateDto : AuditEntityDto<Guid, Guid>
     public bool IsJump { get; set; }
     public string JumpUrl { get; set; } = string.Empty;
     public string Sign { get; set; } = string.Empty;
-    public MessageTemplateStatus Status { get; set; }
-    public MessageTemplateAuditStatus AuditStatus { get; set; }
+    public MessageTemplateStatuses Status { get; set; }
+    public MessageTemplateAuditStatuses AuditStatus { get; set; }
     public DateTime? AuditTime { get; set; }
     public DateTime? InvalidTime { get; set; }
     public string AuditReason { get; set; } = string.Empty;
     public int TemplateType { get; set; }
-    public long DayLimit { get; set; }
+    public long PerDayLimit { get; set; }
     public bool IsStatic { get; set; }
     public List<MessageTemplateItemDto> Items { get; set; }
     public ChannelDto Channel { get; set; }

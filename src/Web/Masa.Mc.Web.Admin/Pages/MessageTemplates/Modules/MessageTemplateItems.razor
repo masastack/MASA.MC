@@ -4,7 +4,7 @@
             HideDefaultFooter>
     <TopContent>
         <MToolbar Flat>
-            <MToolbarTitle>@T("DisplayName:MessageTemplateItem")</MToolbarTitle>
+            <MToolbarTitle  Class="text-subtitle-2">@T("DisplayName.MessageTemplateItem")</MToolbarTitle>
             @*<MSpacer></MSpacer>
                 <MButton Ripple=false Plain
                 Class="mb-2"
@@ -15,7 +15,7 @@
                      MaxWidth="500">
                 <MCard>
                     <MCardTitle>
-                        <span class="text-h5">@FormTitle</span>
+                        <span class="text-h6">@FormTitle</span>
                     </MCardTitle>
 
                     <MCardText>
@@ -25,20 +25,20 @@
                                       Sm="6"
                                       Md="4">
                                     <MTextField @bind-Value="_editedItem.Code"
-                                                Label="@T("DisplayName:MessageTemplateItemCode")"></MTextField>
+                                                Label="@T("DisplayName.MessageTemplateItemCode")"></MTextField>
                                 </MCol>
                                 <MCol Cols="12"
                                       Sm="6"
                                       Md="4">
                                     <MTextField @bind-Value="_editedItem.MappingCode"
                                                 Readonly
-                                                Label="@T("DisplayName:MessageTemplateItemMappingCode")"></MTextField>
+                                                Label="@T("DisplayName.MessageTemplateItemMappingCode")"></MTextField>
                                 </MCol>
                                 <MCol Cols="12"
                                       Sm="6"
                                       Md="4">
                                     <MTextField @bind-Value="_editedItem.DisplayText"
-                                                Label="@T("DisplayName:MessageTemplateItemDisplayText")"></MTextField>
+                                                Label="@T("DisplayName.MessageTemplateItemDisplayText")"></MTextField>
                                 </MCol>
                             </MRow>
                         </MContainer>
@@ -61,7 +61,7 @@
             </MDialog>
             <MDialog @bind-Value="_dialogDelete" MaxWidth="500">
                 <MCard>
-                    <MCardTitle Class="text-h5">@T("DeletionConfirmationMessage")</MCardTitle>
+                    <MCardTitle Class="text-subtitle-2">@T("DeletionConfirmationMessage")</MCardTitle>
                     <MCardActions>
                         <MSpacer></MSpacer>
                         <MButton Color="blue darken-1" Text OnClick="CloseDelete">Cancel</MButton>

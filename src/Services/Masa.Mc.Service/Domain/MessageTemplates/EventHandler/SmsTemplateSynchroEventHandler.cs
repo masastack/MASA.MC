@@ -1,12 +1,15 @@
-﻿namespace Masa.Mc.Service.Admin.Domain.MessageTemplates.EventHandler;
+﻿// Copyright (c) MASA Stack All rights reserved.
+// Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
-public class SmsTemplateSynchroEventHandler
+namespace Masa.Mc.Service.Admin.Domain.MessageTemplates.EventHandler;
+
+public class SmsTemplateSyncEventHandler
 {
     private readonly IAliyunSmsAsyncLocal _aliyunSmsAsyncLocal;
     private readonly ISmsTemplateService _smsTemplateService;
     private readonly IServiceProvider _serviceProvider;
 
-    public SmsTemplateSynchroEventHandler(IAliyunSmsAsyncLocal aliyunSmsAsyncLocal, ISmsTemplateService smsTemplateService, IServiceProvider serviceProvider)
+    public SmsTemplateSyncEventHandler(IAliyunSmsAsyncLocal aliyunSmsAsyncLocal, ISmsTemplateService smsTemplateService, IServiceProvider serviceProvider)
     {
         _aliyunSmsAsyncLocal = aliyunSmsAsyncLocal;
         _smsTemplateService = smsTemplateService;
@@ -14,15 +17,15 @@ public class SmsTemplateSynchroEventHandler
     }
 
     [EventHandler]
-    public async Task HandleEvent(SmsTemplateSynchroDomainEvent @event)
+    public async Task HandleEvent(SmsTemplateSyncDomainEvent @event)
     {
         using var scope = _serviceProvider.CreateAsyncScope();
         using var dbContext = scope.ServiceProvider.GetRequiredService<McDbContext>();
         var channel = await dbContext.Set<Channel>().FindAsync(@event.ChannelId);
         var options = new AliyunSmsOptions
         {
-            AccessKeyId = channel.GetDataValue(nameof(SmsChannelOptions.AccessKeyId)).ToString(),
-            AccessKeySecret = channel.GetDataValue(nameof(SmsChannelOptions.AccessKeySecret)).ToString()
+            AccessKeyId = channel.GetDataValue<string>(nameof(SmsChannelOptions.AccessKeyId)),
+            AccessKeySecret = channel.GetDataValue<string>(nameof(SmsChannelOptions.AccessKeySecret))
         };
         using (_aliyunSmsAsyncLocal.Change(options))
         {
@@ -40,25 +43,25 @@ public class SmsTemplateSynchroEventHandler
         }
     }
 
-    private SmsTemplateType AliyunSmsTemplateTypeMapToSmsTemplateType(int? templateType)
+    private SmsTemplateTypes AliyunSmsTemplateTypeMapToSmsTemplateType(int? templateType)
     {
         return templateType switch
         {
-            2 => SmsTemplateType.VerificationCode,
-            0 => SmsTemplateType.Notification,
-            6 => SmsTemplateType.Promotion,
-            7 => SmsTemplateType.Digital,
-            _ => SmsTemplateType.Other
+            2 => SmsTemplateTypes.VerificationCode,
+            0 => SmsTemplateTypes.Notification,
+            6 => SmsTemplateTypes.Promotion,
+            7 => SmsTemplateTypes.Digital,
+            _ => SmsTemplateTypes.Other
         };
     }
 
-    private MessageTemplateAuditStatus AliyunSmsTemplateAuditStatusMapToAuditStatus(string auditStatus)
+    private MessageTemplateAuditStatuses AliyunSmsTemplateAuditStatusMapToAuditStatus(string auditStatus)
     {
         return auditStatus switch
         {
-            "AUDIT_STATE_PASS" => MessageTemplateAuditStatus.Adopt,
-            "AUDIT_STATE_NOT_PASS" => MessageTemplateAuditStatus.Fail,
-            _ => MessageTemplateAuditStatus.WaitAudit
+            "AUDIT_STATE_PASS" => MessageTemplateAuditStatuses.Adopt,
+            "AUDIT_STATE_NOT_PASS" => MessageTemplateAuditStatuses.Fail,
+            _ => MessageTemplateAuditStatuses.WaitAudit
         };
     }
 }

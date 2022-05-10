@@ -1,4 +1,7 @@
-﻿namespace Masa.Mc.Web.Admin.Pages.MessageTemplates.Modules;
+﻿// Copyright (c) MASA Stack All rights reserved.
+// Licensed under the Apache License. See LICENSE.txt in the project root for license information.
+
+namespace Masa.Mc.Web.Admin.Pages.MessageTemplates.Modules;
 
 public partial class SmsTemplateEditModal : AdminCompontentBase
 {
@@ -6,12 +9,12 @@ public partial class SmsTemplateEditModal : AdminCompontentBase
     public EventCallback OnOk { get; set; }
 
     private MForm _form;
-    private MessageTemplateCreateUpdateDto _model = new();
+    private MessageTemplateUpsertDto _model = new();
     private Guid _entityId;
     private bool _visible;
     private List<ChannelDto> _channelItems = new();
     private List<SmsTemplateDto> _templateItems = new();
-    private ChannelType _channelType;
+    private ChannelTypes _channelType;
 
     ChannelService ChannelService => McCaller.ChannelService;
 
@@ -21,9 +24,9 @@ public partial class SmsTemplateEditModal : AdminCompontentBase
 
     public async Task OpenModalAsync(MessageTemplateDto model)
     {
-        _model.ChannelType = ChannelType.Sms;
+        _model.ChannelType = ChannelTypes.Sms;
         _entityId = model.Id;
-        _model = model.Adapt<MessageTemplateCreateUpdateDto>();
+        _model = model.Adapt<MessageTemplateUpsertDto>();
         await GetFormDataAsync();
         await InvokeAsync(() =>
         {
@@ -35,7 +38,7 @@ public partial class SmsTemplateEditModal : AdminCompontentBase
     private async Task GetFormDataAsync()
     {
         var dto = await MessageTemplateService.GetAsync(_entityId);
-        _model = dto.Adapt<MessageTemplateCreateUpdateDto>();
+        _model = dto.Adapt<MessageTemplateUpsertDto>();
         _templateItems = await SmsTemplateService.GetListByChannelIdAsync(_model.ChannelId);
         _channelType = dto.Channel.Type;
         await HandleSelectChannelTypeAsync(_channelType);
@@ -94,7 +97,7 @@ public partial class SmsTemplateEditModal : AdminCompontentBase
         if (!val) HandleCancel();
     }
 
-    private async Task HandleSelectChannelTypeAsync(ChannelType Type)
+    private async Task HandleSelectChannelTypeAsync(ChannelTypes Type)
     {
         _channelItems = await ChannelService.GetListByTypeAsync(Type);
     }
@@ -127,11 +130,19 @@ public partial class SmsTemplateEditModal : AdminCompontentBase
         return paramList.Select(x => new MessageTemplateItemDto { Code = x, MappingCode = x }).ToList();
     }
 
-    private async Task SynchroAsync()
+    private async Task SyncAsync()
     {
         Loading = true;
-        await SmsTemplateService.SynchroAsync(new SmsTemplateSynchroInput(_model.ChannelId));
+        await SmsTemplateService.SyncAsync(new SmsTemplateSyncInputDto(_model.ChannelId));
         _templateItems = await SmsTemplateService.GetListByChannelIdAsync(_model.ChannelId);
         Loading = false;
+    }
+
+    private void HandleTemplateItemChanged(MessageTemplateItemChangedEventArgs args)
+    {
+        string startstr = "${"; 
+        string endstr = "}";
+        _model.Title = _model.Title.Replace($"{startstr}{args.OldCode}{endstr}", $"{startstr}{args.NewCode}{endstr}");
+        _model.Content = _model.Content.Replace($"{startstr}{args.OldCode}{endstr}", $"{startstr}{args.NewCode}{endstr}");
     }
 }

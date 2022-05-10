@@ -1,0 +1,70 @@
+﻿@inherits AdminCompontentBase
+<MRow>
+    <MCol>
+        <MTextField Value="@MessageTemplate.DisplayName"
+                    Label="@T("DisplayName.MessageTemplateTemplateId")"
+                    Dense
+                    Outlined
+                    Disabled
+                    HideDetails="@("auto")">
+        </MTextField>
+    </MCol>
+</MRow>
+<MRow>
+    <MCol>
+        <MTextField Value="@T(MessageTask.Channel.Type.ToString())"
+                    Label="@T("DisplayName.ChannelType")"
+                    Dense
+                    Outlined
+                    Disabled
+                    HideDetails="@("auto")">
+        </MTextField>
+    </MCol>
+</MRow>
+<MRow>
+    <MCol>
+        <MTextField @bind-Value="MessageTask.Channel.DisplayName"
+                    Label="@T("DisplayName.Channel")"
+                    Dense
+                    Outlined
+                    Disabled
+                    HideDetails="@("auto")">
+        </MTextField>
+    </MCol>
+</MRow>
+@if (MessageTask.Channel != null && MessageTask.Channel.Type != ChannelTypes.Sms)
+{
+    <MRow>
+        <MCol>
+            <MTextField @bind-Value="MessageTemplate.Title"
+                    Label="@T("DisplayName.MessageTemplateTitle")"
+                    Dense
+                    Outlined
+                    Disabled
+                    HideDetails="@("auto")">
+            </MTextField>
+        </MCol>
+    </MRow>
+}
+<MRow>
+    <MCol>
+        <MEditor @bind-Value="MessageTemplate.Content"
+                 ReadOnly
+                 ContentStyle="height:200px">
+        </MEditor>
+    </MCol>
+</MRow>
+@if (MessageTask.Channel != null && MessageTask.Channel.Type == ChannelTypes.WebsiteMessage)
+{
+    <MRow>
+        <MCol>
+            <MTextField @bind-Value="MessageTemplate.JumpUrl"
+                    Label="@T("DisplayName.MessageTemplateJumpUrl")"
+                    Dense
+                    Outlined
+                    Disabled
+                    HideDetails="@("auto")">
+            </MTextField>
+        </MCol>
+    </MRow>
+}

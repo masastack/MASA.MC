@@ -1,4 +1,7 @@
-﻿global using System.Text.Json;
+﻿// Copyright (c) MASA Stack All rights reserved.
+// Licensed under the Apache License. See LICENSE.txt in the project root for license information.
+
+global using System.Text.Json;
 global using Dapr.Actors;
 global using Dapr.Actors.Client;
 global using Dapr.Actors.Runtime;
@@ -47,7 +50,6 @@ global using Masa.Mc.Service.Admin.Application.MessageTemplates.Commands;
 global using Masa.Mc.Service.Admin.Domain.MessageTemplates.Events;
 global using Masa.Mc.Contracts.Admin.Enums.Channels;
 global using Masa.Mc.Infrastructure.ObjectExtending;
-global using Masa.Mc.Service.Admin.Infrastructure.Extensions;
 global using Masa.Mc.Service.Admin.Domain.MessageTemplates.Repositories;
 global using Masa.Mc.Infrastructure.EntityFrameworkCore.EntityFrameworkCore.ValueConverters;
 global using Masa.Mc.Service.Admin.Domain.Consts;
@@ -82,5 +84,35 @@ global using Masa.Mc.Service.Admin.Domain.ReceiverGroups.Events;
 global using Masa.Contrib.Isolation.UoW.EF;
 global using Masa.Contrib.Isolation.MultiEnvironment;
 global using Masa.Utils.Data.EntityFrameworkCore.SqlServer;
-global using EntityState = Masa.BuildingBlocks.Data.UoW.EntityState;
-
+global using Masa.Mc.Contracts.Admin.Enums.MessageTasks;
+global using Masa.Mc.Service.Admin.Domain.MessageTasks.Aggregates;
+global using Masa.Mc.Contracts.Admin.Dtos.MessageTasks;
+global using Masa.Mc.Service.Admin.Domain.MessageTasks.Repositories;
+global using Masa.Mc.Contracts.Admin.Dtos.MessageTasks.Validator;
+global using Masa.Mc.Service.Admin.Application.MessageTasks.Commands;
+global using Masa.Mc.Service.Admin.Application.MessageTasks.Queries;
+global using Masa.Mc.Service.Admin.Domain.MessageTasks.Services;
+global using Masa.Mc.Service.Admin.Infrastructure.Repositories;
+global using Masa.Mc.Infrastructure.ObjectExtending.ObjectExtending;
+global using Masa.Mc.Service.Admin.Domain.MessageInfos.Aggregates;
+global using Masa.Mc.Service.Admin.Domain.MessageInfos.Repositories;
+global using Masa.Mc.Contracts.Admin.Dtos.MessageInfos;
+global using Masa.Mc.Service.Admin.Application.MessageInfos.Queries;
+global using Masa.Mc.Contracts.Admin.Dtos.MessageInfos.Validator;
+global using Masa.Mc.Service.Admin.Application.MessageInfos.Commands;
+global using Magicodes.ExporterAndImporter.Csv;
+global using Masa.Mc.Infrastructure.Email;
+global using Masa.Mc.Infrastructure.Email.Infrastructure.OptionsResolve.Contributors;
+global using Masa.Mc.Infrastructure.Email.Smtp;
+global using Masa.Mc.Infrastructure.ObjectExtending.Data;
+global using Masa.Mc.Service.Admin.Domain.MessageRecords.Aggregates;
+global using Masa.Mc.Service.Admin.Domain.MessageRecords.Repositories;
+global using Masa.Mc.Service.Admin.Domain.MessageRecords.Events;
+global using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+global using Masa.Mc.Service.Admin.Infrastructure.EntityFrameworkCore.ValueConverters;
+global using Microsoft.EntityFrameworkCore.ChangeTracking;
+global using Masa.Mc.Contracts.Admin.Dtos.MessageRecords;
+global using Masa.Mc.Service.Admin.Application.MessageRecords.Queries;
+global using Masa.Mc.Contracts.Admin.Enums.MessageRecords;
+global using Masa.Mc.Infrastructure.Sms.Aliyun.Model.Response.SendSms;
+global using Masa.Mc.Service.Admin.Domain.MessageTasks.Events;

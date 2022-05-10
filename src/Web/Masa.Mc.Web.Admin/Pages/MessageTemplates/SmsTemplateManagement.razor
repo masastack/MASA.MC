@@ -11,9 +11,9 @@
             </PrependInnerContent>
         </MTextField>
         <MIcon Class="ml-4" OnClick="ToggleAdvanced">mdi-filter</MIcon>
-        <MButton Color="primary" Class="ml-6 medium-button" OnClick="()=> _createModal.OpenModalAsync(ChannelType.Sms)">
+        <MButton Color="primary" Class="ml-6 medium-button" OnClick="()=> _createModal.OpenModalAsync(ChannelTypes.Sms)">
             <MIcon Size=18>mdi-plus</MIcon>
-            <span class="ml-2">@T("Permission:Create")</span>
+            <span class="ml-2">@T("Permission.Create")</span>
         </MButton>
     </MCardTitle>
     @if (advanced)
@@ -57,15 +57,15 @@
             </MCol>
             <MCol Cols="2">
                 <MSelect @bind-Value="@_queryParam.TemplateType"
-                     Items="@(GetEnumList<SmsTemplateType>())"
-                     Label="@T("DisplayName:MessageTemplateTemplateType")"
-                     ItemText="@(item => T($"DisplayName:SmsTemplateType.{item.ToString()}"))"
+                     Items="@(GetEnumList<SmsTemplateTypes>())"
+                     Label="@T("DisplayName.MessageTemplateTemplateType")"
+                     ItemText="@(item => T($"DisplayName.SmsTemplateType.{item.ToString()}"))"
                      ItemValue="item => (int)item"
                      Dense
                      Outlined
                      Clearable
                      HideDetails="@("auto")"
-                     TItem="SmsTemplateType"
+                     TItem="SmsTemplateTypes"
                      TItemValue="int"
                      TValue="int"
                      OnClearClick="RefreshAsync"
@@ -75,7 +75,7 @@
             <MCol Cols="2">
                 <MSelect @bind-Value="_queryParam.ChannelId"
                      Items="@_channelItems"
-                     Label="@T("DisplayName:Channel")"
+                     Label="@T("DisplayName.Channel")"
                      ItemText="item => item.DisplayName"
                      ItemValue="item => item.Id"
                      Dense
@@ -91,34 +91,34 @@
             </MCol>
             <MCol Cols="2">
                 <MSelect @bind-Value="@_queryParam.AuditStatus"
-                     Items="@(GetEnumList<MessageTemplateAuditStatus>())"
-                     Label="@T("DisplayName:MessageTemplateAuditStatus")"
+                     Items="@(GetEnumList<MessageTemplateAuditStatuses>())"
+                     Label="@T("DisplayName.MessageTemplateAuditStatus")"
                      ItemText="item => T(item.ToString())"
                      ItemValue="item => item"
                      Dense
                      Outlined
                      Clearable
                      HideDetails="@("auto")"
-                     TItem="MessageTemplateAuditStatus"
-                     TItemValue="MessageTemplateAuditStatus"
-                     TValue="MessageTemplateAuditStatus?"
+                     TItem="MessageTemplateAuditStatuses"
+                     TItemValue="MessageTemplateAuditStatuses"
+                     TValue="MessageTemplateAuditStatuses?"
                      OnClearClick="RefreshAsync"
                      OnSelectedItemUpdate="RefreshAsync">
                 </MSelect>
             </MCol>
             <MCol Cols="2">
                 <MSelect @bind-Value="@_queryParam.Status"
-                     Items="@(GetEnumList<MessageTemplateStatus>())"
-                     Label="@T("DisplayName:MessageTemplateStatus")"
+                     Items="@(GetEnumList<MessageTemplateStatuses>())"
+                     Label="@T("DisplayName.MessageTemplateStatus")"
                      ItemText="item => T(item.ToString())"
                      ItemValue="item => item"
                      Dense
                      Outlined
                      Clearable
                      HideDetails="@("auto")"
-                     TItem="MessageTemplateStatus"
-                     TItemValue="MessageTemplateStatus"
-                     TValue="MessageTemplateStatus?"
+                     TItem="MessageTemplateStatuses"
+                     TItemValue="MessageTemplateStatuses"
+                     TValue="MessageTemplateStatuses?"
                      OnClearClick="RefreshAsync"
                      OnSelectedItemUpdate="RefreshAsync">
                 </MSelect>
@@ -137,34 +137,34 @@
                         <span class="text-body3">@context.Item.Channel?.DisplayName</span>
                         break;
                     case nameof(MessageTemplateDto.TemplateType):
-                        <span>@T($"DisplayName:SmsTemplateType.{((SmsTemplateType)context.Item.TemplateType).ToString()}")</span>
+                        <span>@T($"DisplayName.SmsTemplateType.{((SmsTemplateTypes)context.Item.TemplateType).ToString()}")</span>
                         break;
                     case (nameof(MessageTemplateDto.ModificationTime)):
-                        <span class="text-body3">@context.Item.ModificationTime.ToString("yyyy年MM月dd日 HH:mm:ss")</span>
+                        <span class="text-body3">@context.Item.ModificationTime.ToString(T("$DateTimeFormat"))</span>
                         break;
                     case nameof(MessageTemplateDto.AuditStatus):
                         string color = string.Empty;
                         switch (context.Item.AuditStatus)
                         {
-                            case MessageTemplateAuditStatus.WaitAudit:
+                            case MessageTemplateAuditStatuses.WaitAudit:
                                 color = "orange";
                                 break;
-                            case MessageTemplateAuditStatus.Adopt:
+                            case MessageTemplateAuditStatuses.Adopt:
                                 color = "sample-green";
                                 break;
-                            case MessageTemplateAuditStatus.Fail:
+                            case MessageTemplateAuditStatuses.Fail:
                                 color = "error";
                                 break;
                             default:
                                 break;
                         }
                         <MChip Color="@($"{color}-lighten-5")" TextColor="@color" Ripple="false">
-                            <span>@T($"DisplayName:MessageTemplateAuditStatus.{context.Item.AuditStatus.ToString()}")</span>
+                            <span>@T($"DisplayName.MessageTemplateAuditStatus.{context.Item.AuditStatus.ToString()}")</span>
                         </MChip>
                         break;
                     case nameof(MessageTemplateDto.Status):
                         <MChip Ripple="false">
-                            <span>@T($"DisplayName:MessageTemplateStatus.{context.Item.Status.ToString()}")</span>
+                            <span>@T($"DisplayName.MessageTemplateStatus.{context.Item.Status.ToString()}")</span>
                         </MChip>
                         break;
                     case "Action":

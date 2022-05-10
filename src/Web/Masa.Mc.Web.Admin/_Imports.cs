@@ -1,4 +1,7 @@
-﻿global using BlazorComponent;
+﻿// Copyright (c) MASA Stack All rights reserved.
+// Licensed under the Apache License. See LICENSE.txt in the project root for license information.
+
+global using BlazorComponent;
 global using BlazorComponent.I18n;
 global using Masa.Blazor;
 global using Masa.Mc.Web.Admin.Data.App.ECommerce;
@@ -46,9 +49,19 @@ global using Masa.Mc.Web.Admin.Pages.ReceiverGroups.Modules;
 global using Masa.Mc.Web.Admin.ViewModel.Users;
 global using Masa.Mc.Contracts.Admin.Enums.ReceiverGroups;
 global using Masa.Mc.Web.Admin.Components.Pagination;
-global using Masa.Mc.Caller;
-global using Masa.Mc.Caller.Services.Channels;
-global using Masa.Mc.Caller.Services.MessageTemplates;
-global using Masa.Mc.Caller.Services.ReceiverGroups;
+global using Masa.Mc.ApiGateways.Caller;
+global using Masa.Mc.ApiGateways.Caller.Services.Channels;
+global using Masa.Mc.ApiGateways.Caller.Services.MessageTemplates;
+global using Masa.Mc.ApiGateways.Caller.Services.ReceiverGroups;
 global using FluentValidation;
 global using Masa.Mc.Infrastructure.Common.Extensions;
+global using Masa.Mc.Contracts.Admin.Dtos.MessageTasks;
+global using Masa.Mc.ApiGateways.Caller.Services.MessageTasks;
+global using Masa.Mc.Web.Admin.Pages.MessageTasks.Modules;
+global using Masa.Mc.Contracts.Admin.Enums.MessageTasks;
+global using Masa.Mc.Contracts.Admin.Dtos;
+global using Masa.Mc.ApiGateways.Caller.Services.MessageInfos;
+global using Masa.Mc.Contracts.Admin.Dtos.MessageInfos;
+global using Masa.Mc.ApiGateways.Caller.Services.MessageRecords;
+global using Masa.Mc.Contracts.Admin.Dtos.MessageRecords;
+global using Masa.Mc.Web.Admin.Pages.MessageRecords.Modules;

@@ -1,10 +1,13 @@
-﻿namespace Masa.Mc.Service.Admin.Domain.ReceiverGroups.Aggregates;
+﻿// Copyright (c) MASA Stack All rights reserved.
+// Licensed under the Apache License. See LICENSE.txt in the project root for license information.
+
+namespace Masa.Mc.Service.Admin.Domain.ReceiverGroups.Aggregates;
 
 public class ReceiverGroupItem : Entity<Guid>
 {
     public Guid GroupId { get; protected set; }
 
-    public string DataId { get; protected set; }
+    public Guid SubjectId { get; protected set; }
 
     public string DisplayName { get; protected set; } = string.Empty;
 
@@ -14,12 +17,12 @@ public class ReceiverGroupItem : Entity<Guid>
 
     public string Email { get; protected set; } = string.Empty;
 
-    public ReceiverGroupItemType Type { get; protected set; }
+    public ReceiverGroupItemTypes Type { get; protected set; }
 
-    public ReceiverGroupItem(Guid groupId, string dataId, ReceiverGroupItemType type, string displayName, string avatar = "", string phoneNumber = "", string email = "")
+    public ReceiverGroupItem(Guid groupId, Guid subjectId, ReceiverGroupItemTypes type, string displayName, string avatar = "", string phoneNumber = "", string email = "")
     {
         GroupId = groupId;
-        DataId = dataId;
+        SubjectId = subjectId;
         Type = type;
 
         SetContent(displayName, avatar, phoneNumber, email);

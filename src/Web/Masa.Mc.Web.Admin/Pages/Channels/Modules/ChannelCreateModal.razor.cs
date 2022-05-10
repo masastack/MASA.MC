@@ -1,4 +1,7 @@
-﻿namespace Masa.Mc.Web.Admin.Pages.Channels.Modules;
+﻿// Copyright (c) MASA Stack All rights reserved.
+// Licensed under the Apache License. See LICENSE.txt in the project root for license information.
+
+namespace Masa.Mc.Web.Admin.Pages.Channels.Modules;
 
 public partial class ChannelCreateModal : AdminCompontentBase
 {
@@ -6,10 +9,10 @@ public partial class ChannelCreateModal : AdminCompontentBase
     public EventCallback OnOk { get; set; }
 
     private MForm _form;
-    private ChannelCreateUpdateDto _model = new();
+    private ChannelUpsertDto _model = new();
     private bool _visible;
-    private List<ChannelType> channelTypeItems = Enum.GetValues(typeof(ChannelType))
-        .Cast<ChannelType>().ToList();
+    private List<ChannelTypes> channelTypeItems = Enum.GetValues(typeof(ChannelTypes))
+        .Cast<ChannelTypes>().ToList();
     private ChannelExtraProperties _channelExtraPropertiesRef = default!;
 
     int _step = 1;
@@ -18,7 +21,7 @@ public partial class ChannelCreateModal : AdminCompontentBase
 
     public async Task OpenModalAsync()
     {
-        _model.Type = ChannelType.Email;
+        _model.Type = ChannelTypes.Email;
         await InvokeAsync(() =>
         {
             _visible = true;
@@ -32,7 +35,7 @@ public partial class ChannelCreateModal : AdminCompontentBase
         ResetForm();
     }
 
-    private void HandleSelectType(ChannelType Type)
+    private void HandleSelectType(ChannelTypes Type)
     {
         _model.Type = Type;
         _step++;
@@ -42,7 +45,7 @@ public partial class ChannelCreateModal : AdminCompontentBase
     {
         if (_model.Type == default)
         {
-            await WarningAsync(T("Description:Channel.Type.Required"));
+            await WarningAsync(T("Description.Channel.Type.Required"));
             return;
         }
         _step++;

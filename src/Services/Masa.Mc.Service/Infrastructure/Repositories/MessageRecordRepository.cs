@@ -1,0 +1,30 @@
+﻿// Copyright (c) MASA Stack All rights reserved.
+// Licensed under the Apache License. See LICENSE.txt in the project root for license information.
+
+namespace Masa.Mc.Service.Admin.Infrastructure.Repositories;
+
+public class MessageRecordRepository : Repository<McDbContext, MessageRecord>, IMessageRecordRepository
+{
+    public MessageRecordRepository(McDbContext context, IUnitOfWork unitOfWork)
+    : base(context, unitOfWork)
+    {
+    }
+
+    public async Task<IQueryable<MessageRecord>> GetQueryableAsync()
+    {
+        return await Task.FromResult(Context.Set<MessageRecord>().AsQueryable());
+    }
+
+    public async Task<IQueryable<MessageRecord>> WithDetailsAsync()
+    {
+        var query = await GetQueryableAsync();
+        return query.IncludeDetails();
+    }
+
+    public async Task<MessageRecord?> FindAsync(Expression<Func<MessageRecord, bool>> predicate, bool include = true, CancellationToken cancellationToken = default(CancellationToken))
+    {
+        return include
+            ? await (await WithDetailsAsync()).Where(predicate).FirstOrDefaultAsync(cancellationToken)
+            : await Context.Set<MessageRecord>().Where(predicate).FirstOrDefaultAsync(cancellationToken);
+    }
+}
