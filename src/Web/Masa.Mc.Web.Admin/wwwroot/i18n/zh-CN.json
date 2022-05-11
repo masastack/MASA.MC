@@ -97,7 +97,7 @@
   "SmsChannelOptions.AccessKeySecret": "AccessKeySecret",
   "DisplayName.Channel": "渠道",
   "DisplayName.ChannelDisplayName": "渠道名称",
-  "DisplayName.ChannelCode": "渠道编码",
+  "DisplayName.ChannelCode": "渠道ID",
   "DisplayName.ChannelType": "渠道类型",
   "DisplayName.ChannelDescription": "渠道备注",
   "Description.Channel.Type.Required": "请选择渠道类型",
