@@ -131,6 +131,7 @@
   "DisplayName.SendingRule.RetryCount": "RetryCount",
   "DisplayName.SendingRule.IsTiming": "IsTiming",
   "DisplayName.MessageTaskHistory": "Message task history",
+  "DisplayName.MessageTaskHistoryTaskHistoryNo": "Task history no",
   "DisplayName.MessageTaskHistoryStatus": "Message task history status",
   "DisplayName.MessageTaskHistoryStatus.WaitSend": "WaitSend",
   "DisplayName.MessageTaskHistoryStatus.Sending": "Sending",

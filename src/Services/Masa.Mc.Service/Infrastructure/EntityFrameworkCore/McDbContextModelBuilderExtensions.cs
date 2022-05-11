@@ -7,7 +7,7 @@ public static class McDbContextModelBuilderExtensions
 {
     public static void ConfigureMC(this ModelBuilder builder)
     {
-       
+
         builder.Entity<Channel>(b =>
         {
             b.ToTable(MCConsts.DbTablePrefix + "Channels", MCConsts.DbSchema);
@@ -69,19 +69,17 @@ public static class McDbContextModelBuilderExtensions
         builder.Entity<MessageTask>(b =>
         {
             b.ToTable(MCConsts.DbTablePrefix + "MessageTasks", MCConsts.DbSchema);
-            b.Property(x => x.EntityType).HasColumnName(nameof(MessageTask.EntityType));
-            b.Property(x => x.EntityId).HasColumnName(nameof(MessageTask.EntityId));
             b.Property(x => x.DisplayName).IsRequired().HasMaxLength(128);
-            b.Property(x => x.Sign).HasMaxLength(128); 
+            b.Property(x => x.Sign).HasMaxLength(128);
             b.Property(x => x.Receivers).HasConversion(new ReceiversValueConverter()).Metadata.SetValueComparer(new ReceiversValueComparer());
             b.Property(x => x.SendRules).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
             b.Property(x => x.Variables).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
-            //b.HasMany(x => x.Historys).WithOne().HasForeignKey(x => x.MessageTaskId).IsRequired();
         });
 
         builder.Entity<MessageTaskHistory>(b =>
         {
             b.ToTable(MCConsts.DbTablePrefix + "MessageTaskHistorys", MCConsts.DbSchema);
+            b.Property(x => x.TaskHistoryNo).HasMaxLength(128);
             b.Property(x => x.Receivers).HasConversion(new ReceiversValueConverter()).Metadata.SetValueComparer(new ReceiversValueComparer());
             b.Property(x => x.SendRules).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
             b.Property(x => x.Variables).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
@@ -99,6 +97,7 @@ public static class McDbContextModelBuilderExtensions
             b.ToTable(MCConsts.DbTablePrefix + "MessageRecords", MCConsts.DbSchema);
             b.Property(x => x.ExtraProperties).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
             b.Property(x => x.Variables).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
+            b.Ignore(x => x.MessageTask);
         });
 
         builder.Entity<MessageReceiverUser>(b =>

@@ -23,7 +23,8 @@ public class AddMessageTaskHistoryEventHandler
     [EventHandler]
     public async Task HandleEventAsync(AddMessageTaskHistoryEvent eto)
     {
-        var history = new MessageTaskHistory(eto.MessageTask.Id, eto.ReceiverType, eto.Receivers, eto.SendRules, eto.SendTime, eto.Sign, eto.Variables);
+        var taskHistoryNo = $"SJ{UtilConvert.GetGuidToNumber()}";
+        var history = new MessageTaskHistory(eto.MessageTask.Id, taskHistoryNo, eto.ReceiverType, eto.Receivers, eto.SendRules, eto.SendTime, eto.Sign, eto.Variables);
         await _repository.AddAsync(history);
         await PublishMessageAsync(eto.MessageTask, history);
     }

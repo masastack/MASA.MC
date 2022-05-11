@@ -4,6 +4,7 @@ using Masa.Mc.Service.Admin.Infrastructure.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Masa.Mc.Service.Admin.Migrations
 {
     [DbContext(typeof(McDbContext))]
-    partial class McDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220511093338_RemoveAppMessageTaskHistory")]
+    partial class RemoveAppMessageTaskHistory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -226,9 +228,6 @@ namespace Masa.Mc.Service.Admin.Migrations
                         .HasColumnType("bit");
 
                     b.Property<Guid>("MessageTaskHistoryId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("MessageTaskId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("ModificationTime")

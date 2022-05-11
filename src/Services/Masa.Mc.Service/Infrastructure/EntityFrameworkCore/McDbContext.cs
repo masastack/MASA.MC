@@ -35,14 +35,6 @@ public class McDbContext : IsolationDbContext
             b.HasOne<Channel>().WithOne().HasForeignKey<AppChannel>(x => x.Id);
         });
 
-        builder.Entity<AppMessageTask>(b =>
-        {
-            b.ToTable(MCConsts.DbTablePrefix + "MessageTasks", MCConsts.DbSchema);
-            b.Property(x => x.EntityType).HasColumnName(nameof(MessageTask.EntityType));
-            b.Property(x => x.EntityId).HasColumnName(nameof(MessageTask.EntityId));
-            b.HasOne<MessageTask>().WithOne().HasForeignKey<AppMessageTask>(x => x.Id);
-        });
-
         builder.ConfigureMC();
     }
 }

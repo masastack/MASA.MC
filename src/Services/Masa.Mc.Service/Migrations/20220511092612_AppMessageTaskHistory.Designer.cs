@@ -4,6 +4,7 @@ using Masa.Mc.Service.Admin.Infrastructure.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Masa.Mc.Service.Admin.Migrations
 {
     [DbContext(typeof(McDbContext))]
-    partial class McDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220511092612_AppMessageTaskHistory")]
+    partial class AppMessageTaskHistory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -228,9 +230,6 @@ namespace Masa.Mc.Service.Admin.Migrations
                     b.Property<Guid>("MessageTaskHistoryId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("MessageTaskId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<DateTime>("ModificationTime")
                         .HasColumnType("datetime2");
 
@@ -255,6 +254,46 @@ namespace Masa.Mc.Service.Admin.Migrations
                     b.HasIndex("ChannelId");
 
                     b.ToTable("MessageRecords", (string)null);
+                });
+
+            modelBuilder.Entity("Masa.Mc.Service.Admin.Domain.MessageTasks.Aggregates.AppMessageTask", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("EntityId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("EntityType")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AppMessageTask");
+                });
+
+            modelBuilder.Entity("Masa.Mc.Service.Admin.Domain.MessageTasks.Aggregates.AppMessageTaskHistory", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("MessageTaskId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("AppMessageTaskHistory_MessageTaskId");
+
+                    b.Property<string>("TaskHistoryNo")
+                        .IsRequired()
+                        .ValueGeneratedOnUpdateSometimes()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)")
+                        .HasColumnName("TaskHistoryNo");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MessageTaskId");
+
+                    b.ToTable("MessageTaskHistorys", (string)null);
                 });
 
             modelBuilder.Entity("Masa.Mc.Service.Admin.Domain.MessageTasks.Aggregates.MessageReceiverUser", b =>
@@ -316,10 +355,12 @@ namespace Masa.Mc.Service.Admin.Migrations
                         .HasColumnType("nvarchar(128)");
 
                     b.Property<Guid>("EntityId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("EntityId");
 
                     b.Property<int>("EntityType")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("EntityType");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -416,8 +457,10 @@ namespace Masa.Mc.Service.Admin.Migrations
 
                     b.Property<string>("TaskHistoryNo")
                         .IsRequired()
+                        .ValueGeneratedOnUpdateSometimes()
                         .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(128)")
+                        .HasColumnName("TaskHistoryNo");
 
                     b.Property<string>("Variables")
                         .IsRequired()
@@ -719,6 +762,23 @@ namespace Masa.Mc.Service.Admin.Migrations
                         .IsRequired();
 
                     b.Navigation("Channel");
+                });
+
+            modelBuilder.Entity("Masa.Mc.Service.Admin.Domain.MessageTasks.Aggregates.AppMessageTaskHistory", b =>
+                {
+                    b.HasOne("Masa.Mc.Service.Admin.Domain.MessageTasks.Aggregates.MessageTaskHistory", null)
+                        .WithOne()
+                        .HasForeignKey("Masa.Mc.Service.Admin.Domain.MessageTasks.Aggregates.AppMessageTaskHistory", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Masa.Mc.Service.Admin.Domain.MessageTasks.Aggregates.AppMessageTask", "MessageTask")
+                        .WithMany()
+                        .HasForeignKey("MessageTaskId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("MessageTask");
                 });
 
             modelBuilder.Entity("Masa.Mc.Service.Admin.Domain.MessageTasks.Aggregates.MessageReceiverUser", b =>

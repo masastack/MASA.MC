@@ -4,6 +4,7 @@ using Masa.Mc.Service.Admin.Infrastructure.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Masa.Mc.Service.Admin.Migrations
 {
     [DbContext(typeof(McDbContext))]
-    partial class McDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220511091617_AppMessageTaskTaskHistoryNo")]
+    partial class AppMessageTaskTaskHistoryNo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -228,9 +230,6 @@ namespace Masa.Mc.Service.Admin.Migrations
                     b.Property<Guid>("MessageTaskHistoryId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("MessageTaskId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<DateTime>("ModificationTime")
                         .HasColumnType("datetime2");
 
@@ -316,10 +315,12 @@ namespace Masa.Mc.Service.Admin.Migrations
                         .HasColumnType("nvarchar(128)");
 
                     b.Property<Guid>("EntityId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("EntityId");
 
                     b.Property<int>("EntityType")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("EntityType");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -417,7 +418,8 @@ namespace Masa.Mc.Service.Admin.Migrations
                     b.Property<string>("TaskHistoryNo")
                         .IsRequired()
                         .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(128)")
+                        .HasColumnName("TaskHistoryNo");
 
                     b.Property<string>("Variables")
                         .IsRequired()

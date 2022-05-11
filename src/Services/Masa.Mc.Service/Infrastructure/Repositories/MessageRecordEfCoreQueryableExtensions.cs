@@ -13,9 +13,4 @@ public static class MessageRecordEfCoreQueryableExtensions
         }
         return queryable.Include(x=>x.Channel);
     }
-
-    public static IQueryable<MessageRecord> IncludeMessageTask(this IQueryable<MessageRecord> queryable)
-    {
-        return queryable.Include(x => x.MessageTask);
-    }
 }
