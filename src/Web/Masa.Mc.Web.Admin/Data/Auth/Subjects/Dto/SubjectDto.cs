@@ -7,7 +7,7 @@ public class SubjectDto
 {
     public Guid Id { get; set; }
 
-    public ReceiverGroupItemTypes Type { get; set; }
+    public MessageTaskReceiverTypes Type { get; set; }
 
     public Guid SubjectId { get; set; }
 
@@ -24,7 +24,7 @@ public class SubjectDto
 
     }
 
-    public SubjectDto(Guid id, ReceiverGroupItemTypes type, string subjectId, string displayName, string avatar, string phoneNumber, string email)
+    public SubjectDto(Guid id, MessageTaskReceiverTypes type, string subjectId, string displayName, string avatar, string phoneNumber, string email)
     {
         Id = id;
         Type = type;

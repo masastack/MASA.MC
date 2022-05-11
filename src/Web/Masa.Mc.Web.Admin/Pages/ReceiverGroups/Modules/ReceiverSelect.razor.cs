@@ -14,8 +14,13 @@ public partial class ReceiverSelect : AdminCompontentBase
     private ExternalUserCreateModal _createModal;
     private List<Guid> _userIds = new List<Guid>();
     private List<SubjectDto> _items = new();
-    private List<SubjectDto> _stateUserItems = SubjectService.GetList();
     private bool _loading;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        _items = SubjectService.GetList();
+    }
 
     public void Remove(SubjectDto item)
     {
@@ -51,18 +56,6 @@ public partial class ReceiverSelect : AdminCompontentBase
         _items.Add(user);
         Value.Add(user.Adapt<ReceiverGroupItemDto>());
         await ValueChanged.InvokeAsync(Value);
-    }
-
-    private void QuerySelections(string v)
-    {
-        if (string.IsNullOrWhiteSpace(v))
-        {
-            return;
-        }
-        _loading = true;
-        _items = _stateUserItems.Where(x => x.DisplayName.Contains(v) || x.PhoneNumber.Contains(v) || x.Email.Contains(v)).ToList();
-        _loading = false;
-        StateHasChanged();
     }
 
     public bool CustomFilter(SubjectDto item, string queryText, string text)

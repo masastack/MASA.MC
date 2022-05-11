@@ -1,5 +1,5 @@
 ﻿@inherits AdminCompontentBase
-<MRow class="mx-1 py-2">
+<MRow Class="mx-1 py-2">
     <MAutocomplete @bind-Value="_userIds"
                    Loading="_loading"
                    Items="_items"
@@ -14,8 +14,7 @@
                    Label="@T("Description.ReceiverGroup.SelectUser")"
                    ItemText="r=>r.DisplayName"
                    ItemValue="r=>r.Id"
-                   Multiple
-                   OnSearchInputUpdate="QuerySelections">
+                   Multiple>
         <PrependInnerContent>
             <MIcon Size=16 Class="mr-2 neutral-lighten-1--text">mdi-magnify</MIcon>
         </PrependInnerContent>
@@ -23,20 +22,29 @@
             <MChip Close
                    OnCloseClick="()=>Remove(data.Item)">
                 <MAvatar Left>
-                    @if (data.Item.Type != ReceiverGroupItemTypes.User)
+                    @if (data.Item.Type != MessageTaskReceiverTypes.User)
                     {
                         <MIcon>mdi-account-group</MIcon>
                     }
                     else
                     {
-                        <MImage Src="@data.Item.Avatar"></MImage>
+                        if (string.IsNullOrEmpty(data.Item.Avatar))
+                        {
+                            <MAvatar Color="primary" Size="56">
+                                <span class="white--text">@(string.IsNullOrEmpty(data.Item.DisplayName)?"":data.Item.DisplayName.Substring(0,1))</span>
+                            </MAvatar>
+                        }
+                        else
+                        {
+                            <MImage Src="@data.Item.Avatar"></MImage>
+                        }
                     }
                 </MAvatar>
                 @data.Item.DisplayName
             </MChip>
         </SelectionContent>
         <ItemContent Context="data">
-            @if (data.Item.Type != ReceiverGroupItemTypes.User)
+            @if (data.Item.Type != MessageTaskReceiverTypes.User)
             {
                 <MListItemAvatar>
                     <MIcon Large>mdi-account-group</MIcon>
@@ -53,7 +61,16 @@
             else
             {
                 <MListItemAvatar>
+                    @if (string.IsNullOrEmpty(data.Item.Avatar))
+                    {
+                    <MAvatar Color="primary" Size="56">
+                        <span class="white--text">@(string.IsNullOrEmpty(data.Item.DisplayName)?"":data.Item.DisplayName.Substring(0,1))</span>
+                    </MAvatar>
+                    }
+                    else
+                    {
                     <MImage Src="@data.Item.Avatar"></MImage>
+                    }
                 </MListItemAvatar>
                 <MListItemContent>
                     <MListItemTitle>
@@ -91,7 +108,7 @@
                                     }
                                     else
                                     {
-                                        if (string.IsNullOrEmpty(item.Avatar))
+                                        @if (string.IsNullOrEmpty(item.Avatar))
                                         {
                                             <MAvatar Color="primary" Size="56">
                                                 <span class="white--text">@(string.IsNullOrEmpty(item.DisplayName)?"":item.DisplayName.Substring(0,1))</span>

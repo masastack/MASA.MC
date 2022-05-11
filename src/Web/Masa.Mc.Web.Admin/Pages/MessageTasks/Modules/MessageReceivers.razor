@@ -23,8 +23,7 @@
                    Label="@T("Description.ReceiverGroup.SelectUser")"
                    ItemText="r=>r.DisplayName"
                    ItemValue="r=>r.Id"
-                   Multiple
-                   OnSearchInputUpdate="QuerySelections">
+                   Multiple>
         <PrependInnerContent>
             <MIcon Size=16 Class="mr-2 neutral-lighten-1--text">mdi-magnify</MIcon>
         </PrependInnerContent>
@@ -32,7 +31,7 @@
             <MChip Close
                    OnCloseClick="()=>Remove(data.Item)">
                 <MAvatar Left>
-                    @if (data.Item.Type != ReceiverGroupItemTypes.User)
+                    @if (data.Item.Type != MessageTaskReceiverTypes.User)
                     {
                         <MIcon>mdi-account-group</MIcon>
                     }
@@ -45,7 +44,7 @@
             </MChip>
         </SelectionContent>
         <ItemContent Context="data">
-            @if (data.Item.Type != ReceiverGroupItemTypes.User)
+            @if (data.Item.Type != MessageTaskReceiverTypes.User)
             {
                 <MListItemAvatar>
                     <MIcon Large>mdi-account-group</MIcon>

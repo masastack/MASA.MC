@@ -30,13 +30,15 @@ public partial class ExternalUserCreateModal : AdminCompontentBase
 
     private async Task HandleOk()
     {
+        var id = Guid.NewGuid();
         var subject = new SubjectDto
         {
-            SubjectId = Guid.NewGuid(),
+            Id = id,
+            SubjectId = id,
             DisplayName = _model.DisplayName,
             PhoneNumber = _model.PhoneNumber,
             Email = _model.Email,
-            Type = ReceiverGroupItemTypes.User
+            Type = MessageTaskReceiverTypes.User
         };
         await SuccessMessageAsync(T("ExternalMemberAddMessage"));
         _visible = false;

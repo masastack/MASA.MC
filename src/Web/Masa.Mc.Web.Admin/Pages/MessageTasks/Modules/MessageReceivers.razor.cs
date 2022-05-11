@@ -17,8 +17,24 @@ public partial class MessageReceivers : AdminCompontentBase
     private ExternalUserCreateModal _createModal;
     private List<Guid> _userIds = new List<Guid>();
     private List<SubjectDto> _items = new();
-    private List<SubjectDto> _stateUserItems = SubjectService.GetList();
     private bool _loading;
+    private GetReceiverGroupInputDto _queryParam = new(99);
+
+    ReceiverGroupService ReceiverGroupService => McCaller.ReceiverGroupService;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        var subjects = SubjectService.GetList();
+        var receiverGroups = (await ReceiverGroupService.GetListAsync(_queryParam)).Result.Select(x => new SubjectDto
+        {
+            Id = x.Id,
+            Type = MessageTaskReceiverTypes.Group,
+            SubjectId = x.Id,
+            DisplayName = x.DisplayName
+        });
+        _items = receiverGroups.Concat(subjects).ToList();
+    }
 
     public void Remove(SubjectDto item)
     {
@@ -31,7 +47,7 @@ public partial class MessageReceivers : AdminCompontentBase
 
     public async Task AddAsync()
     {
-        var list = _stateUserItems.Where(x => _userIds.Contains(x.Id)).ToList();
+        var list = _items.Where(x => _userIds.Contains(x.Id)).ToList();
         var dtos = list.Adapt<List<MessageTaskReceiverDto>>();
         foreach (var dto in dtos)
         {
@@ -51,20 +67,9 @@ public partial class MessageReceivers : AdminCompontentBase
 
     private async Task HandleOk(SubjectDto user)
     {
-        _stateUserItems.Add(user);
+        _items.Add(user);
         Value.Add(user.Adapt<MessageTaskReceiverDto>());
         await ValueChanged.InvokeAsync(Value);
-    }
-
-    private void QuerySelections(string v)
-    {
-        if (string.IsNullOrEmpty(v))
-        {
-            return;
-        }
-        _loading = true;
-        _items = _stateUserItems.Where(x => x.DisplayName.Contains(v) || x.PhoneNumber.Contains(v) || x.Email.Contains(v)).ToList();
-        _loading = false;
     }
 
     public bool CustomFilter(SubjectDto item, string queryText, string text)
