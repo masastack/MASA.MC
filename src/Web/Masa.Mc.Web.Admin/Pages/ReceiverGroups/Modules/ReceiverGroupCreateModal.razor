@@ -9,7 +9,7 @@
                             <MTextField Class="mx-auto" style="width:200px;" @bind-Value="_model.DisplayName" HideDetails="@("auto")" Placeholder="@T("DisplayName.ReceiverGroupDisplayName")"></MTextField>
                         </MCol>
                     </MRow>
-                    <ExternalUserCreateModal @bind-Value="_model.Items"></ExternalUserCreateModal>
+                    <ReceiverSelect @bind-Value="_model.Items"></ReceiverSelect>
                     <MRow Class="mt-1">
                         <MCol Cols="12">
                             <MTextarea @bind-Value="_model.Description"

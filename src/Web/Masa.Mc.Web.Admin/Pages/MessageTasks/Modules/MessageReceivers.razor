@@ -11,7 +11,9 @@
 </MRow>
 <MRow Class="mx-1 py-2">
     <MAutocomplete @bind-Value="_userIds"
-                   Items="_stateUserItems"
+                   Loading="_loading"
+                   Items="_items"
+                   Filter="CustomFilter"
                    Color="primary"
                    Class="rounded-2 search"
                    Flat
@@ -21,7 +23,8 @@
                    Label="@T("Description.ReceiverGroup.SelectUser")"
                    ItemText="r=>r.DisplayName"
                    ItemValue="r=>r.Id"
-                   Multiple>
+                   Multiple
+                   OnSearchInputUpdate="QuerySelections">
         <PrependInnerContent>
             <MIcon Size=16 Class="mr-2 neutral-lighten-1--text">mdi-magnify</MIcon>
         </PrependInnerContent>
