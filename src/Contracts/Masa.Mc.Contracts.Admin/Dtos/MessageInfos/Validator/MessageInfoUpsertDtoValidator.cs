@@ -9,5 +9,6 @@ public class MessageInfoUpsertDtoValidator : AbstractValidator<MessageInfoUpsert
     {
         RuleFor(dto => dto.Title).Required().Length(2, 255);
         RuleFor(dto => dto.Content).Required();
+        RuleFor(dto => dto.JumpUrl).Url();
     }
 }
