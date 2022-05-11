@@ -46,6 +46,7 @@
   "Permission.MessageTemplateManagement": "Channel messageTemplate",
   "Permission.CreateMessageTemplate": "Create messageTemplate",
   "Permission.EditMessageTemplate": "Edit messageTemplate",
+  "DisplayName.MessageTemplate": "Message template",
   "DisplayName.MessageTemplateId": "Template id",
   "DisplayName.MessageTemplateTemplateType": "Template type",
   "DisplayName.MessageTemplateDisplayName": "Template theme",

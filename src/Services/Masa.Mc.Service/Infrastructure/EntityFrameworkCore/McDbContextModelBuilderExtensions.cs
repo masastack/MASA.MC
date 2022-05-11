@@ -69,6 +69,8 @@ public static class McDbContextModelBuilderExtensions
         builder.Entity<MessageTask>(b =>
         {
             b.ToTable(MCConsts.DbTablePrefix + "MessageTasks", MCConsts.DbSchema);
+            b.Property(x => x.EntityType).HasColumnName(nameof(MessageTask.EntityType));
+            b.Property(x => x.EntityId).HasColumnName(nameof(MessageTask.EntityId));
             b.Property(x => x.DisplayName).IsRequired().HasMaxLength(128);
             b.Property(x => x.Sign).HasMaxLength(128); 
             b.Property(x => x.Receivers).HasConversion(new ReceiversValueConverter()).Metadata.SetValueComparer(new ReceiversValueComparer());

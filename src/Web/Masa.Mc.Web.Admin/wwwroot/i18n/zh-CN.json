@@ -107,6 +107,7 @@
   "Permission.MessageTemplateManagement": "消息模板",
   "Permission.CreateMessageTemplate": "创建消息模板",
   "Permission.EditMessageTemplate": "编辑消息模板",
+  "DisplayName.MessageTemplate": "消息模板",
   "DisplayName.MessageTemplateId": "模板ID",
   "DisplayName.MessageTemplateTemplateType": "模板类型",
   "DisplayName.MessageTemplateDisplayName": "模板名称",
@@ -207,5 +208,6 @@
   "DisplayName.MessageRecordSuccess.True": "发送成功",
   "DisplayName.MessageRecordSuccess.False": "发送失败",
   "DisplayName.MessageRecordTimeTypes": "时间类型",
-  "DisplayName.MessageRecordTimeTypes.SendTime": "发送时间"
+  "DisplayName.MessageRecordTimeTypes.SendTime": "发送时间",
+  "DisplayName.MessageRecordUserId": "收件人"
 }

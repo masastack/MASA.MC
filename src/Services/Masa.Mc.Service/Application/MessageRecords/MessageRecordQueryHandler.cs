@@ -41,17 +41,20 @@ public class MessageRecordQueryHandler
         Expression<Func<MessageRecord, bool>> condition = x => true;
         condition = condition.And(inputDto.ChannelId.HasValue, x => x.ChannelId == inputDto.ChannelId);
         condition = condition.And(inputDto.Success.HasValue, x => x.Success == inputDto.Success);
+        condition = condition.And(inputDto.UserId.HasValue, x => x.UserId == inputDto.UserId);
         if (inputDto.TimeType == MessageRecordTimeTypes.SendTime)
         {
             condition = condition.And(inputDto.StartTime.HasValue, x => x.SendTime >= inputDto.StartTime);
             condition = condition.And(inputDto.EndTime.HasValue, x => x.SendTime <= inputDto.EndTime);
         }
+        condition = condition.And(inputDto.MessageTemplateId.HasValue, x => x.MessageTask.EntityId == inputDto.MessageTemplateId && x.MessageTask.EntityType == MessageEntityTypes.Template);
         return await Task.FromResult(condition); ;
     }
 
     private async Task<IQueryable<MessageRecord>> CreateFilteredQueryAsync(GetMessageRecordInputDto inputDto)
     {
         var query = await _repository.WithDetailsAsync()!;
+        if (inputDto.MessageTemplateId.HasValue) query = query.IncludeMessageTask();
         var condition = await CreateFilteredPredicate(inputDto);
         return query.Where(condition);
     }
