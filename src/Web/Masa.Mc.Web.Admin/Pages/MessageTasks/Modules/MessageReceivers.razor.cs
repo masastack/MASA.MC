@@ -26,12 +26,12 @@ public partial class MessageReceivers : AdminCompontentBase
     {
         await base.OnInitializedAsync();
         var subjects = SubjectService.GetList();
-        var receiverGroups = (await ReceiverGroupService.GetListAsync(_queryParam)).Result.Select(x => new SubjectDto
+        var receiverGroups = (await ReceiverGroupService.GetListAsync(_queryParam)).Result.Select(r => new SubjectDto
         {
-            Id = x.Id,
+            Id = r.Id,
             Type = MessageTaskReceiverTypes.Group,
-            SubjectId = x.Id,
-            DisplayName = x.DisplayName
+            SubjectId = r.Id,
+            DisplayName = r.DisplayName
         });
         _items = receiverGroups.Concat(subjects).ToList();
     }

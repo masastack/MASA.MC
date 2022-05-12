@@ -39,7 +39,7 @@ public class ReceiverGroupQueryHandler
     private async Task<Expression<Func<ReceiverGroup, bool>>> CreateFilteredPredicate(GetReceiverGroupInputDto inputDto)
     {
         Expression<Func<ReceiverGroup, bool>> condition = channel => true;
-        condition = condition.And(!string.IsNullOrEmpty(inputDto.Filter), x => x.DisplayName.Contains(inputDto.Filter));
+        condition = condition.And(!string.IsNullOrEmpty(inputDto.Filter), r => r.DisplayName.Contains(inputDto.Filter));
         return await Task.FromResult(condition); ;
     }
 

@@ -39,13 +39,13 @@ public class MessageRecordQueryHandler
     private async Task<Expression<Func<MessageRecord, bool>>> CreateFilteredPredicate(GetMessageRecordInputDto inputDto)
     {
         Expression<Func<MessageRecord, bool>> condition = x => true;
-        condition = condition.And(inputDto.ChannelId.HasValue, x => x.ChannelId == inputDto.ChannelId);
-        condition = condition.And(inputDto.Success.HasValue, x => x.Success == inputDto.Success);
-        condition = condition.And(inputDto.UserId.HasValue, x => x.UserId == inputDto.UserId);
+        condition = condition.And(inputDto.ChannelId.HasValue, m => m.ChannelId == inputDto.ChannelId);
+        condition = condition.And(inputDto.Success.HasValue, m => m.Success == inputDto.Success);
+        condition = condition.And(inputDto.UserId.HasValue, m => m.UserId == inputDto.UserId);
         if (inputDto.TimeType == MessageRecordTimeTypes.SendTime)
         {
-            condition = condition.And(inputDto.StartTime.HasValue, x => x.SendTime >= inputDto.StartTime);
-            condition = condition.And(inputDto.EndTime.HasValue, x => x.SendTime <= inputDto.EndTime);
+            condition = condition.And(inputDto.StartTime.HasValue, m => m.SendTime >= inputDto.StartTime);
+            condition = condition.And(inputDto.EndTime.HasValue, m => m.SendTime <= inputDto.EndTime);
         }
         return await Task.FromResult(condition); ;
     }
