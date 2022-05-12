@@ -19,6 +19,7 @@ public class CreateMessageEventHandler
         var unitOfWorkManager = _serviceProvider.GetRequiredService<IUnitOfWorkManager>();
         await using var unitOfWork = unitOfWorkManager.CreateDbContext();
         var _messageTaskHistoryRepository = unitOfWork.ServiceProvider.GetRequiredService<IMessageTaskHistoryRepository>();
+        var _receiverGroupRepository = unitOfWork.ServiceProvider.GetRequiredService<IReceiverGroupRepository>();
         var taskHistory = await _messageTaskHistoryRepository.FindAsync(x => x.Id == eto.MessageTaskHistoryId);
         var receiverUsers = taskHistory.Receivers.Where(x => x.Type == MessageTaskReceiverTypes.User)
             .Select(x => new MessageReceiverUser
@@ -30,6 +31,23 @@ public class CreateMessageEventHandler
                 Variables = taskHistory.Variables,
             })
             .ToList();
+        var receiverGroupIds = taskHistory.Receivers.Where(x => x.Type == MessageTaskReceiverTypes.Group).Select(x => x.SubjectId).Distinct();
+        foreach (var receiverGroupId in receiverGroupIds)
+        {
+            var receiverGroup = await _receiverGroupRepository.FindAsync(x => x.Id == receiverGroupId);
+            if (receiverGroup == null) continue;
+            var receiverGroupUsers = receiverGroup.Items.Where(x => x.Type == ReceiverGroupItemTypes.User)
+            .Select(x => new MessageReceiverUser
+            {
+                UserId = x.SubjectId,
+                DisplayName = x.DisplayName,
+                PhoneNumber = x.PhoneNumber,
+                Email = x.Email,
+                Variables = taskHistory.Variables,
+            })
+            .ToList();
+            receiverUsers.AddRange(receiverGroupUsers);
+        }
         taskHistory.SetReceiverUsers(receiverUsers);
         taskHistory.SetSending();
         await SendMessagesAsync(unitOfWork.ServiceProvider, eto.ChannelId, eto.MessageData, taskHistory);
