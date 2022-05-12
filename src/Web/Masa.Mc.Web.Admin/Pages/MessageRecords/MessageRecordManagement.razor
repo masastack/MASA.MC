@@ -93,6 +93,10 @@
                 <BooleanSelect @bind-Value="_queryParam.Success" Items="_successItems" Placeholder="@T("DisplayName.MessageRecordSuccess")" OnClearClick="RefreshAsync"
                            OnSelectedItemUpdate="RefreshAsync" />
             </MCol>
+            <MCol Cols="2">
+                <MessageTaskHistorySelect @bind-Value="_queryParam.MessageTaskHistoryId" Placeholder="@T("DisplayName.MessageTaskHistory")" OnClearClick="RefreshAsync"
+                           OnSelectedItemUpdate="RefreshAsync" />
+            </MCol>
         </MRow>
     }
     <MCardText>

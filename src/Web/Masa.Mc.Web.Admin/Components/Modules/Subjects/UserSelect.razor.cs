@@ -15,7 +15,7 @@ public partial class UserSelect : AdminCompontentBase
     public string Placeholder { get; set; } = "";
 
     [Parameter]
-    public string Label { get; set; } = string.Empty;
+    public string Label { get; set; }
 
     [Parameter]
     public EventCallback<MouseEventArgs> OnClearClick { get; set; }

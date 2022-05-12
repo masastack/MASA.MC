@@ -38,7 +38,9 @@ public class MessageTaskHistoryQueryHandler
 
     private async Task<Expression<Func<MessageTaskHistory, bool>>> CreateFilteredPredicate(GetMessageTaskHistoryInputDto inputDto)
     {
-        Expression<Func<MessageTaskHistory, bool>> condition = x => x.MessageTaskId == inputDto.MessageTaskId;
+        Expression<Func<MessageTaskHistory, bool>> condition = x => true;
+        condition = condition.And(!string.IsNullOrEmpty(inputDto.Filter), x => x.TaskHistoryNo.Contains(inputDto.Filter));
+        condition = condition.And(inputDto.MessageTaskId.HasValue, x => x.MessageTaskId == inputDto.MessageTaskId);
         condition = condition.And(inputDto.Status.HasValue, x => x.Status == inputDto.Status);
         condition = condition.And(inputDto.StartTime.HasValue, x => x.SendTime >= inputDto.StartTime);
         condition = condition.And(inputDto.EndTime.HasValue, x => x.SendTime <= inputDto.EndTime);
