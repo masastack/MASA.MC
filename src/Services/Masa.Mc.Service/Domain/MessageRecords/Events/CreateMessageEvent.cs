@@ -26,7 +26,7 @@ namespace Masa.Mc.Service.Admin.Domain.MessageRecords.Events;
 //        UserIds = new List<Guid> { userId };
 //    }
 //}
-public record CreateMessageEvent(Guid ChannelId, MessageData MessageData, MessageTaskHistory MessageTaskHistory) : DomainEvent
+public record CreateMessageEvent(Guid ChannelId, MessageData MessageData, Guid MessageTaskHistoryId) : DomainEvent
 {
 
 }

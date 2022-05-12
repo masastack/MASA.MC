@@ -27,16 +27,15 @@ public class AddMessageTaskHistoryEventHandler
         var history = new MessageTaskHistory(eto.MessageTask.Id, taskHistoryNo, eto.ReceiverType, eto.Receivers, eto.SendRules, eto.SendTime, eto.Sign, eto.Variables);
         await _repository.AddAsync(history);
         await _repository.UnitOfWork.SaveChangesAsync();
+        await _repository.UnitOfWork.CommitAsync();
         await PublishMessageAsync(eto.MessageTask, history);
     }
 
     private async Task PublishMessageAsync(MessageTask messageTask, MessageTaskHistory messageTaskHistory)
     {
         var messageData = await GetMessageDataAsync(messageTask.EntityType, messageTask.EntityId);
-        Task.Run(async () =>
-        {
-            await _eventBus.PublishAsync(new CreateMessageEvent(messageTask.ChannelId, messageData, messageTaskHistory));
-        });
+        messageData.SetDataValue(nameof(MessageTemplate.Sign), messageTaskHistory.Sign);
+        _eventBus.PublishAsync(new CreateMessageEvent(messageTask.ChannelId, messageData, messageTaskHistory.Id));
     }
 
     private async Task<MessageData> GetMessageDataAsync(MessageEntityTypes entityType, Guid entityId)

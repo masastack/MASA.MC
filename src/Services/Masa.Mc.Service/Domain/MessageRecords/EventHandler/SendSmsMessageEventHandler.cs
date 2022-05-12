@@ -21,9 +21,12 @@ public class SendSmsMessageEventHandler
     [EventHandler]
     public async Task HandleEventAsync(SendSmsMessageEvent eto)
     {
-        using var scope = _serviceProvider.CreateAsyncScope();
-        using var dbContext = scope.ServiceProvider.GetRequiredService<McDbContext>();
-        var channel = await dbContext.Set<Channel>().FindAsync(eto.ChannelId);
+        var unitOfWorkManager = _serviceProvider.GetRequiredService<IUnitOfWorkManager>();
+        await using var unitOfWork = unitOfWorkManager.CreateDbContext();
+        var _channelRepository = unitOfWork.ServiceProvider.GetRequiredService<IChannelRepository>();
+        var _messageRecordRepository = unitOfWork.ServiceProvider.GetRequiredService<IMessageRecordRepository>();
+        var _messageTaskHistoryRepository = unitOfWork.ServiceProvider.GetRequiredService<IMessageTaskHistoryRepository>();
+        var channel = await _channelRepository.FindAsync(x => x.Id == eto.ChannelId);
         var options = new AliyunSmsOptions
         {
             AccessKeyId = channel.GetDataValue<string>(nameof(SmsChannelOptions.AccessKeyId)),
@@ -56,11 +59,12 @@ public class SendSmsMessageEventHandler
                 {
                     messageRecord.SetResult(false, ex.Message);
                 }
-                await dbContext.Set<MessageRecord>().AddAsync(messageRecord);
+                await _messageRecordRepository.AddAsync(messageRecord);
             }
-            taskHistory = await dbContext.Set<MessageTaskHistory>().FindAsync(taskHistory.Id);
             taskHistory.SetComplete();
-            await dbContext.SaveChangesAsync();
+            await _messageTaskHistoryRepository.UpdateAsync(taskHistory);
+            await unitOfWork.SaveChangesAsync();
+            await unitOfWork.CommitAsync();
         }
     }
 

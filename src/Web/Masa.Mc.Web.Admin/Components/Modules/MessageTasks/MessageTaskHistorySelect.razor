@@ -1,0 +1,21 @@
+﻿@inherits AdminCompontentBase
+
+<MAutocomplete TItem="MessageTaskHistoryDto"
+               TValue="Guid?"
+               TItemValue="Guid"
+               Value="Value"
+               ValueChanged=ValueChanged
+               Items="Items"
+               Loading="_isLoading"
+               OnSearchInputUpdate="UpdateSearchInputAsync"
+               HideDetails="@("auto")"
+               Outlined
+               Clearable
+               HideNoData
+               HideSelected
+               ItemText="r=>r.TaskHistoryNo"
+               ItemValue="r=>r.Id"
+               Label="@Label"
+               Placeholder="@Placeholder"
+               OnClearClick="OnClearClick"
+               OnSelectedItemUpdate="OnSelectedItemUpdate" />
