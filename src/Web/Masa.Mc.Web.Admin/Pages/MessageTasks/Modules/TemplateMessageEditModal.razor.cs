@@ -53,27 +53,20 @@ public partial class TemplateMessageEditModal : AdminCompontentBase
 
     private async Task HandleOkAsync(bool isDraft)
     {
-        try
+        _model.IsDraft = isDraft;
+        if (!await _form.ValidateAsync())
         {
-            _model.IsDraft = isDraft;
-            if (!await _form.ValidateAsync())
-            {
-                return;
-            }
-            Loading = true;
-            await MessageTaskService.UpdateAsync(_entityId, _model);
-            Loading = false;
-            await SuccessMessageAsync(T("MessageTaskEditMessage"));
-            _visible = false;
-            ResetForm();
-            if (OnOk.HasDelegate)
-            {
-                await OnOk.InvokeAsync();
-            }
+            return;
         }
-        catch (Exception ex)
+        Loading = true;
+        await MessageTaskService.UpdateAsync(_entityId, _model);
+        Loading = false;
+        await SuccessMessageAsync(T("MessageTaskEditMessage"));
+        _visible = false;
+        ResetForm();
+        if (OnOk.HasDelegate)
         {
-            await HandleErrorAsync(ex);
+            await OnOk.InvokeAsync();
         }
     }
 

@@ -46,26 +46,19 @@ public partial class MessageTaskSendModal : AdminCompontentBase
 
     private async Task HandleOkAsync()
     {
-        try
+        if (!await _form.ValidateAsync())
         {
-            if (!await _form.ValidateAsync())
-            {
-                return;
-            }
-            Loading = true;
-            await MessageTaskService.SendAsync(_model);
-            Loading = false;
-            await SuccessMessageAsync(T("MessageTaskSendMessage"));
-            _visible = false;
-            ResetForm();
-            if (OnOk.HasDelegate)
-            {
-                await OnOk.InvokeAsync();
-            }
+            return;
         }
-        catch (Exception ex)
+        Loading = true;
+        await MessageTaskService.SendAsync(_model);
+        Loading = false;
+        await SuccessMessageAsync(T("MessageTaskSendMessage"));
+        _visible = false;
+        ResetForm();
+        if (OnOk.HasDelegate)
         {
-            await HandleErrorAsync(ex);
+            await OnOk.InvokeAsync();
         }
     }
 

@@ -35,24 +35,17 @@ public partial class SendTestMessageModal : AdminCompontentBase
 
     private async Task HandleOkAsync()
     {
-        try
-        {
-            Loading = true;
-            await MessageTaskService.SendTestAsync(_input);
-            Loading = false;
-            await SuccessMessageAsync(T("MessageTaskSendMessage"));
-            _visible = false;
+        Loading = true;
+        await MessageTaskService.SendTestAsync(_input);
+        Loading = false;
+        await SuccessMessageAsync(T("MessageTaskSendMessage"));
+        _visible = false;
 
-            if (OnOk.HasDelegate)
-            {
-                await OnOk.InvokeAsync();
-            }
-            ResetForm();
-        }
-        catch (Exception ex)
+        if (OnOk.HasDelegate)
         {
-            await HandleErrorAsync(ex);
+            await OnOk.InvokeAsync();
         }
+        ResetForm();
     }
 
     private void ResetForm()

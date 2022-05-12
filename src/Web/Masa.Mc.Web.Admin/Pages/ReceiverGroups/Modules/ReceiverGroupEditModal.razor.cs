@@ -40,26 +40,19 @@ public partial class ReceiverGroupEditModal : AdminCompontentBase
 
     private async Task HandleOk(EditContext context)
     {
-        try
+        if (!context.Validate())
         {
-            if (!context.Validate())
-            {
-                return;
-            }
-            Loading = true;
-            await ReceiverGroupService.UpdateAsync(_entityId, _model);
-            Loading = false;
-            _visible = false;
-            ResetForm();
-            await SuccessMessageAsync(T("ReceiverGroupEditMessage"));
-            if (OnOk.HasDelegate)
-            {
-                await OnOk.InvokeAsync();
-            }
+            return;
         }
-        catch (Exception ex)
+        Loading = true;
+        await ReceiverGroupService.UpdateAsync(_entityId, _model);
+        Loading = false;
+        _visible = false;
+        ResetForm();
+        await SuccessMessageAsync(T("ReceiverGroupEditMessage"));
+        if (OnOk.HasDelegate)
         {
-            await HandleErrorAsync(ex);
+            await OnOk.InvokeAsync();
         }
     }
 

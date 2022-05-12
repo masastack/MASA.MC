@@ -30,26 +30,19 @@ public partial class ReceiverGroupCreateModal : AdminCompontentBase
 
     private async Task HandleOk(EditContext context)
     {
-        try
+        if (!context.Validate())
         {
-            if (!context.Validate())
-            {
-                return;
-            }
-            Loading = true;
-            await ReceiverGroupService.CreateAsync(_model);
-            Loading = false;
-            await SuccessMessageAsync(T("ReceiverGroupCreateMessage"));
-            _visible = false;
-            ResetForm();
-            if (OnOk.HasDelegate)
-            {
-                await OnOk.InvokeAsync();
-            }
+            return;
         }
-        catch (Exception ex)
+        Loading = true;
+        await ReceiverGroupService.CreateAsync(_model);
+        Loading = false;
+        await SuccessMessageAsync(T("ReceiverGroupCreateMessage"));
+        _visible = false;
+        ResetForm();
+        if (OnOk.HasDelegate)
         {
-            await HandleErrorAsync(ex);
+            await OnOk.InvokeAsync();
         }
     }
 

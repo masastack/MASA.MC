@@ -56,6 +56,7 @@ public class MessageTaskDomainService : DomainService
             throw new UserFriendlyException("messageTask not found");
         messageTask.SendTask(receiverType, receivers, sendRules, sendTime, sign, variables);
         await _repository.UpdateAsync(messageTask);
+        await _repository.UnitOfWork.SaveChangesAsync();
         await EventBus.PublishAsync(new AddMessageTaskHistoryEvent(messageTask, receiverType, receivers, sendRules, sendTime, sign, variables));
     }
 }

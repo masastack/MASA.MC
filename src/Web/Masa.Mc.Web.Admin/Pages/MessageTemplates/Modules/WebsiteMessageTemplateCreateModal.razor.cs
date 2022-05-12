@@ -40,26 +40,19 @@ public partial class WebsiteMessageTemplateCreateModal : AdminCompontentBase
 
     private async Task HandleOkAsync()
     {
-        try
+        if (!await _form.ValidateAsync())
         {
-            if (!await _form.ValidateAsync())
-            {
-                return;
-            }
-            Loading = true;
-            await MessageTemplateService.CreateAsync(_model);
-            Loading = false;
-            await SuccessMessageAsync(T("MessageTemplateCreateMessage"));
-            _visible = false;
-            ResetForm();
-            if (OnOk.HasDelegate)
-            {
-                await OnOk.InvokeAsync();
-            }
+            return;
         }
-        catch (Exception ex)
+        Loading = true;
+        await MessageTemplateService.CreateAsync(_model);
+        Loading = false;
+        await SuccessMessageAsync(T("MessageTemplateCreateMessage"));
+        _visible = false;
+        ResetForm();
+        if (OnOk.HasDelegate)
         {
-            await HandleErrorAsync(ex);
+            await OnOk.InvokeAsync();
         }
     }
 
