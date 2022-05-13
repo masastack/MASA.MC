@@ -7,25 +7,29 @@ public class SendEmailMessageEventHandler
 {
     private readonly IEmailAsyncLocal _emailAsyncLocal;
     private readonly IEmailSender _emailSender;
-    private readonly IServiceProvider _serviceProvider;
     private readonly ITemplateRenderer _templateRenderer;
+    private readonly IChannelRepository _channelRepository;
+    private readonly IMessageRecordRepository _messageRecordRepository;
+    private readonly IMessageTaskHistoryRepository _messageTaskHistoryRepository;
 
-    public SendEmailMessageEventHandler(IEmailAsyncLocal emailAsyncLocal, IEmailSender emailSender, IServiceProvider serviceProvider, ITemplateRenderer templateRenderer)
+    public SendEmailMessageEventHandler(IEmailAsyncLocal emailAsyncLocal
+        , IEmailSender emailSender
+        , ITemplateRenderer templateRenderer
+        , IChannelRepository channelRepository
+        , IMessageRecordRepository messageRecordRepository
+        , IMessageTaskHistoryRepository messageTaskHistoryRepository)
     {
         _emailAsyncLocal = emailAsyncLocal;
         _emailSender = emailSender;
-        _serviceProvider = serviceProvider;
         _templateRenderer = templateRenderer;
+        _channelRepository = channelRepository;
+        _messageRecordRepository = messageRecordRepository;
+        _messageTaskHistoryRepository = messageTaskHistoryRepository;
     }
 
     [EventHandler]
     public async Task HandleEventAsync(SendEmailMessageEvent eto)
     {
-        var unitOfWorkManager = _serviceProvider.GetRequiredService<IUnitOfWorkManager>();
-        await using var unitOfWork = unitOfWorkManager.CreateDbContext();
-        var _channelRepository = unitOfWork.ServiceProvider.GetRequiredService<IChannelRepository>();
-        var _messageRecordRepository = unitOfWork.ServiceProvider.GetRequiredService<IMessageRecordRepository>();
-        var _messageTaskHistoryRepository = unitOfWork.ServiceProvider.GetRequiredService<IMessageTaskHistoryRepository>();
         var channel = await _channelRepository.FindAsync(x => x.Id == eto.ChannelId);
         var options = new SmtpEmailOptions
         {
@@ -62,8 +66,6 @@ public class SendEmailMessageEventHandler
             }
             taskHistory.SetComplete();
             await _messageTaskHistoryRepository.UpdateAsync(taskHistory);
-            await unitOfWork.SaveChangesAsync();
-            await unitOfWork.CommitAsync();
         }
     }
 

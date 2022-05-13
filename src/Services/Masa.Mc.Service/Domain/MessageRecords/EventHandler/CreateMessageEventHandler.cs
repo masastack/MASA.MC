@@ -6,20 +6,25 @@ namespace Masa.Mc.Service.Admin.Domain.MessageRecords.EventHandler;
 //did not finish
 public class CreateMessageEventHandler
 {
-    private readonly IServiceProvider _serviceProvider;
-    public CreateMessageEventHandler(IServiceProvider serviceProvider)
+    private readonly IChannelRepository _channelRepository;
+    private readonly IMessageTaskHistoryRepository _messageTaskHistoryRepository;
+    private readonly IReceiverGroupRepository _receiverGroupRepository;
+    private readonly IDomainEventBus _eventBus;
+    public CreateMessageEventHandler(IChannelRepository channelRepository
+        , IMessageTaskHistoryRepository messageTaskHistoryRepository
+        , IReceiverGroupRepository receiverGroupRepository
+        , IDomainEventBus eventBus)
     {
-        _serviceProvider = serviceProvider;
+        _channelRepository = channelRepository;
+        _messageTaskHistoryRepository = messageTaskHistoryRepository;
+        _receiverGroupRepository = receiverGroupRepository;
+        _eventBus = eventBus;
     }
 
     [EventHandler(1)]
     public async Task CheckReceiverUsersAsync(CreateMessageEvent eto)
     {
         //Auth did not do this temporarily
-        var unitOfWorkManager = _serviceProvider.GetRequiredService<IUnitOfWorkManager>();
-        await using var unitOfWork = unitOfWorkManager.CreateDbContext();
-        var _messageTaskHistoryRepository = unitOfWork.ServiceProvider.GetRequiredService<IMessageTaskHistoryRepository>();
-        var _receiverGroupRepository = unitOfWork.ServiceProvider.GetRequiredService<IReceiverGroupRepository>();
         var taskHistory = await _messageTaskHistoryRepository.FindAsync(x => x.Id == eto.MessageTaskHistoryId);
         var receiverUsers = taskHistory.Receivers.Where(x => x.Type == MessageTaskReceiverTypes.User)
             .Select(x => new MessageReceiverUser
@@ -50,16 +55,11 @@ public class CreateMessageEventHandler
         }
         taskHistory.SetReceiverUsers(receiverUsers);
         taskHistory.SetSending();
-        await SendMessagesAsync(unitOfWork.ServiceProvider, eto.ChannelId, eto.MessageData, taskHistory);
+        await SendMessagesAsync(eto.ChannelId, eto.MessageData, taskHistory);
     }
 
-    private async Task SendMessagesAsync(IServiceProvider serviceProvider, Guid channelId, MessageData messageData, MessageTaskHistory messageTaskHistory)
+    private async Task SendMessagesAsync(Guid channelId, MessageData messageData, MessageTaskHistory messageTaskHistory)
     {
-        var unitOfWork = serviceProvider.GetService<IUnitOfWork>();
-        if (unitOfWork != null)
-            unitOfWork.UseTransaction = false;
-        var _channelRepository = serviceProvider.GetRequiredService<IChannelRepository>();
-        var _eventBus = serviceProvider.GetRequiredService<IDomainEventBus>();
         var channel = await _channelRepository.FindAsync(x => x.Id == channelId);
         switch (channel.Type)
         {

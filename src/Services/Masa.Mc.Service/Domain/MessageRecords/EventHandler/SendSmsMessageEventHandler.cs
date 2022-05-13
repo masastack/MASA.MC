@@ -7,25 +7,26 @@ public class SendSmsMessageEventHandler
 {
     private readonly IAliyunSmsAsyncLocal _aliyunSmsAsyncLocal;
     private readonly ISmsSender _smsSender;
-    private readonly IServiceProvider _serviceProvider;
-    private readonly ITemplateRenderer _templateRenderer;
+    private readonly IChannelRepository _channelRepository;
+    private readonly IMessageRecordRepository _messageRecordRepository;
+    private readonly IMessageTaskHistoryRepository _messageTaskHistoryRepository;
 
-    public SendSmsMessageEventHandler(IAliyunSmsAsyncLocal aliyunSmsAsyncLocal, ISmsSender smsSender, IServiceProvider serviceProvider, ITemplateRenderer templateRenderer)
+    public SendSmsMessageEventHandler(IAliyunSmsAsyncLocal aliyunSmsAsyncLocal
+        , ISmsSender smsSender
+        , IChannelRepository channelRepository
+        , IMessageRecordRepository messageRecordRepository
+        , IMessageTaskHistoryRepository messageTaskHistoryRepository)
     {
         _aliyunSmsAsyncLocal = aliyunSmsAsyncLocal;
         _smsSender = smsSender;
-        _serviceProvider = serviceProvider;
-        _templateRenderer = templateRenderer;
+        _channelRepository = channelRepository;
+        _messageRecordRepository = messageRecordRepository;
+        _messageTaskHistoryRepository = messageTaskHistoryRepository;
     }
 
     [EventHandler]
     public async Task HandleEventAsync(SendSmsMessageEvent eto)
     {
-        var unitOfWorkManager = _serviceProvider.GetRequiredService<IUnitOfWorkManager>();
-        await using var unitOfWork = unitOfWorkManager.CreateDbContext();
-        var _channelRepository = unitOfWork.ServiceProvider.GetRequiredService<IChannelRepository>();
-        var _messageRecordRepository = unitOfWork.ServiceProvider.GetRequiredService<IMessageRecordRepository>();
-        var _messageTaskHistoryRepository = unitOfWork.ServiceProvider.GetRequiredService<IMessageTaskHistoryRepository>();
         var channel = await _channelRepository.FindAsync(x => x.Id == eto.ChannelId);
         var options = new AliyunSmsOptions
         {
@@ -63,8 +64,6 @@ public class SendSmsMessageEventHandler
             }
             taskHistory.SetComplete();
             await _messageTaskHistoryRepository.UpdateAsync(taskHistory);
-            await unitOfWork.SaveChangesAsync();
-            await unitOfWork.CommitAsync();
         }
     }
 

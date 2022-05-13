@@ -7,22 +7,23 @@ public class SmsTemplateSyncEventHandler
 {
     private readonly IAliyunSmsAsyncLocal _aliyunSmsAsyncLocal;
     private readonly ISmsTemplateService _smsTemplateService;
-    private readonly IServiceProvider _serviceProvider;
+    private readonly IChannelRepository _channelRepository;
+    private readonly ISmsTemplateRepository _smsTemplateRepository;
 
-    public SmsTemplateSyncEventHandler(IAliyunSmsAsyncLocal aliyunSmsAsyncLocal, ISmsTemplateService smsTemplateService, IServiceProvider serviceProvider)
+    public SmsTemplateSyncEventHandler(IAliyunSmsAsyncLocal aliyunSmsAsyncLocal
+        , ISmsTemplateService smsTemplateService
+        , IChannelRepository channelRepository
+        , ISmsTemplateRepository smsTemplateRepository)
     {
         _aliyunSmsAsyncLocal = aliyunSmsAsyncLocal;
         _smsTemplateService = smsTemplateService;
-        _serviceProvider = serviceProvider;
+        _channelRepository = channelRepository;
+        _smsTemplateRepository = smsTemplateRepository;
     }
 
     [EventHandler]
     public async Task HandleEvent(SmsTemplateSyncDomainEvent @event)
     {
-        var unitOfWorkManager = _serviceProvider.GetRequiredService<IUnitOfWorkManager>();
-        await using var unitOfWork = unitOfWorkManager.CreateDbContext();
-        var _channelRepository = unitOfWork.ServiceProvider.GetRequiredService<IChannelRepository>();
-        var _smsTemplateRepository = unitOfWork.ServiceProvider.GetRequiredService<ISmsTemplateRepository>();
         var channel = await _channelRepository.FindAsync(x => x.Id == @event.ChannelId);
         var options = new AliyunSmsOptions
         {
@@ -41,8 +42,6 @@ public class SmsTemplateSyncEventHandler
             await _smsTemplateRepository.RemoveRangeAsync(removeList);
             var smsTemplateList = aliyunSmsTemplateList.Select(item => new SmsTemplate(channel.Id, item.TemplateCode, item.TemplateName, AliyunSmsTemplateTypeMapToSmsTemplateType(item.TemplateType), AliyunSmsTemplateAuditStatusMapToAuditStatus(item.AuditStatus), item.TemplateContent, item.Reason.RejectInfo));
             await _smsTemplateRepository.AddRangeAsync(smsTemplateList);
-            await unitOfWork.SaveChangesAsync();
-            await unitOfWork.CommitAsync();
         }
     }
 

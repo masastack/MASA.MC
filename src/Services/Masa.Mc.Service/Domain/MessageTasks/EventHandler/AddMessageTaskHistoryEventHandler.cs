@@ -8,16 +8,16 @@ public class AddMessageTaskHistoryEventHandler
     private readonly IMessageTaskHistoryRepository _repository;
     private readonly IMessageInfoRepository _messageInfoRepository;
     private readonly IMessageTemplateRepository _messageTemplateRepository;
-    private readonly IDomainEventBus _eventBus;
+    private readonly IServiceProvider _serviceProvider;
     public AddMessageTaskHistoryEventHandler(IMessageTaskHistoryRepository repository
         , IMessageInfoRepository messageInfoRepository
         , IMessageTemplateRepository messageTemplateRepository
-        , IDomainEventBus eventBus)
+        , IServiceProvider serviceProvider)
     {
         _repository = repository;
         _messageInfoRepository = messageInfoRepository;
         _messageTemplateRepository = messageTemplateRepository;
-        _eventBus = eventBus;
+        _serviceProvider = serviceProvider;
     }
 
     [EventHandler]
@@ -27,6 +27,7 @@ public class AddMessageTaskHistoryEventHandler
         var history = new MessageTaskHistory(eto.MessageTask.Id, taskHistoryNo, eto.ReceiverType, eto.Receivers, eto.SendRules, eto.SendTime, eto.Sign, eto.Variables);
         await _repository.AddAsync(history);
         await _repository.UnitOfWork.SaveChangesAsync();
+        await _repository.UnitOfWork.CommitAsync();
         await PublishMessageAsync(eto.MessageTask, history);
     }
 
@@ -34,8 +35,13 @@ public class AddMessageTaskHistoryEventHandler
     {
         var messageData = await GetMessageDataAsync(messageTask.EntityType, messageTask.EntityId);
         messageData.SetDataValue(nameof(MessageTemplate.Sign), messageTaskHistory.Sign);
-        Task.Run(async () => {
-            _eventBus.PublishAsync(new CreateMessageEvent(messageTask.ChannelId, messageData, messageTaskHistory.Id));
+        Task.Run(async () =>
+        {
+            using (var scope = _serviceProvider.CreateAsyncScope())
+            {
+                var eventBus = scope.ServiceProvider.GetRequiredService<IDomainEventBus>();
+                await eventBus.PublishAsync(new CreateMessageEvent(messageTask.ChannelId, messageData, messageTaskHistory.Id));
+            }
         });
     }
 
