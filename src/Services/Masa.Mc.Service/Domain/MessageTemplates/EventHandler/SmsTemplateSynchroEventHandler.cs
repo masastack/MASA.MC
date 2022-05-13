@@ -23,7 +23,7 @@ public class SmsTemplateSyncEventHandler
         await using var unitOfWork = unitOfWorkManager.CreateDbContext();
         var _channelRepository = unitOfWork.ServiceProvider.GetRequiredService<IChannelRepository>();
         var _smsTemplateRepository = unitOfWork.ServiceProvider.GetRequiredService<ISmsTemplateRepository>();
-        var channel = await _channelRepository.FindAsync(x=>x.Id==@event.ChannelId);
+        var channel = await _channelRepository.FindAsync(x => x.Id == @event.ChannelId);
         var options = new AliyunSmsOptions
         {
             AccessKeyId = channel.GetDataValue<string>(nameof(SmsChannelOptions.AccessKeyId)),
