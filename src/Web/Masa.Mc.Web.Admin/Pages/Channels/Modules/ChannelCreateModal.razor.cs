@@ -54,7 +54,7 @@ public partial class ChannelCreateModal : AdminCompontentBase
     private async Task HandleOkAsync()
     {
         await _channelExtraPropertiesRef.UpdateExtraPropertiesAsync();
-        if (!await _form.ValidateAsync())
+        if (!await _form.ValidateAsync() || !await _channelExtraPropertiesRef.ValidateAsync())
         {
             return;
         }
