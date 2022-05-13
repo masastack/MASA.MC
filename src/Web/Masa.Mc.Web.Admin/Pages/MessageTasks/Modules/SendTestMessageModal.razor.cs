@@ -65,7 +65,15 @@ public partial class SendTestMessageModal : AdminCompontentBase
     private void HandleUserChange()
     {
         var items = _stateUserItems.Where(x => _userIds.Contains(x.Id)).ToList();
-        var dtos = items.Adapt<List<MessageTaskReceiverDto>>();
+        var dtos = items.Select(x => new MessageTaskReceiverDto
+        {
+            SubjectId = x.Id,
+            DisplayName = x.DisplayName,
+            Avatar = x.Avatar,
+            PhoneNumber = x.PhoneNumber,
+            Email = x.Email,
+            Type = MessageTaskReceiverTypes.User
+        }).ToList();
         _input.Receivers = dtos;
     }
 }
