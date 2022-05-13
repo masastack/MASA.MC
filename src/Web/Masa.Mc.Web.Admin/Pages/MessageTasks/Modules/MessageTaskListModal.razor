@@ -100,6 +100,10 @@
                              OnSelectedItemUpdate="RefreshAsync">
                         </MSelect>
                     </MCol>
+                    <MCol Cols="2">
+                        <BooleanSelect @bind-Value="_queryParam.IsEnabled" Placeholder="@T("IsEnabled")" OnClearClick="RefreshAsync"
+                                   OnSelectedItemUpdate="RefreshAsync" />
+                    </MCol>
                 </MRow>
             }
             <MCardText>

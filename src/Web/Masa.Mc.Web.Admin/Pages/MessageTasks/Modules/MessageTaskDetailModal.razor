@@ -87,7 +87,7 @@
                         <MRow Class="mx-2 mt-2">
                             <div class="text-subtitle2">@T("DisplayName.MessageInfoContent")</div>
                             <MSpacer></MSpacer>
-                            @if (_historyInfo.Status != MessageTaskHistoryStatuses.Withdrawn)
+                            @if (_info.Channel?.Type == ChannelTypes.WebsiteMessage && _historyInfo.Status != MessageTaskHistoryStatuses.Withdrawn)
                             {
                                 <MButton Rounded Outlined Color="indigo" Class="ml-6 medium-button px-6" OnClick="WithdrawnHistoryAsync">
                                     <span>@T("Withdraw")</span>

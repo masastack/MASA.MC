@@ -54,6 +54,7 @@ public partial class TemplateMessageEditModal : AdminCompontentBase
     private async Task HandleOkAsync(bool isDraft)
     {
         _model.IsDraft = isDraft;
+        _model.ChannelType = _messageInfo.Channel?.Type;
         if (!await _form.ValidateAsync())
         {
             return;

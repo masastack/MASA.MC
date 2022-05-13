@@ -54,6 +54,8 @@ public class MessageTaskDomainService : DomainService
         var messageTask = await _repository.FindAsync(x => x.Id == messageTaskId);
         if (messageTask == null)
             throw new UserFriendlyException("messageTask not found");
+        if (!messageTask.IsEnabled)
+            throw new UserFriendlyException("cannot send when disabled");
         messageTask.SendTask(receiverType, receivers, sendRules, sendTime, sign, variables);
         await _repository.UpdateAsync(messageTask);
         await _repository.UnitOfWork.SaveChangesAsync();
