@@ -65,6 +65,9 @@ public abstract class AdminCompontentBase : BDomComponentBase
         }
     }
 
+    [Inject]
+    public McApiOptions McApiOptions { get; set; } = default!;
+
     public bool Loading
     {
         get => GlobalConfig.Loading;

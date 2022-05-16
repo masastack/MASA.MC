@@ -1,92 +1,22 @@
 ﻿@inherits AdminCompontentBase
 <MRow Class="mx-1 my-2">
-    <MButtonGroup Borderless>
-        <MButton>
-            <span class="hidden-sm-and-down">@T("ManualSelection")</span>
-        </MButton>
-        <MButton>
-            <span class="hidden-sm-and-down">@T("BatchUpload")</span>
-        </MButton>
+    <MButtonGroup Dense Mandatory Borderless @bind-Value="_pageTab" Class="rounded-lg elevation-tab">
+        @foreach (var title in new List<string> { T("ManualSelection"), T("BatchUpload") })
+        {
+            <MButton Ripple=false Value="title" Class="rounded-lg" MinWidth=100>
+                @T(title)
+            </MButton>
+        }
     </MButtonGroup>
 </MRow>
-<MRow Class="mx-1 py-2">
-    <MAutocomplete @bind-Value="_userIds"
-                   Loading="_loading"
-                   Items="_items"
-                   Filter="CustomFilter"
-                   Color="primary"
-                   Class="rounded-2 search"
-                   Flat
-                   Dense
-                   Solo
-                   BackgroundColor="fill-lighten-1"
-                   Label="@T("Description.ReceiverGroup.SelectUser")"
-                   ItemText="r=>r.DisplayName"
-                   ItemValue="r=>r.Id"
-                   Multiple>
-        <PrependInnerContent>
-            <MIcon Size=16 Class="mr-2 neutral-lighten-1--text">mdi-magnify</MIcon>
-        </PrependInnerContent>
-        <SelectionContent Context="data">
-            <MChip Close
-                   OnCloseClick="()=>Remove(data.Item)">
-                <MAvatar Left>
-                    @if (data.Item.Type != MessageTaskReceiverTypes.User)
-                    {
-                        <MIcon>mdi-account-group</MIcon>
-                    }
-                    else
-                    {
-                        <MImage Src="@data.Item.Avatar"></MImage>
-                    }
-                </MAvatar>
-                @data.Item.DisplayName
-            </MChip>
-        </SelectionContent>
-        <ItemContent Context="data">
-            @if (data.Item.Type != MessageTaskReceiverTypes.User)
-            {
-                <MListItemAvatar>
-                    <MIcon Large>mdi-account-group</MIcon>
-                </MListItemAvatar>
-                <MListItemContent>
-                    <MListItemTitle>
-                        @(data.Item.DisplayName)
-                    </MListItemTitle>
-                    <MListItemSubtitle>
-                        @T(data.Item.Type.ToString())
-                    </MListItemSubtitle>
-                </MListItemContent>
-            }
-            else
-            {
-                <MListItemAvatar>
-                    <MImage Src="@data.Item.Avatar"></MImage>
-                </MListItemAvatar>
-                <MListItemContent>
-                    <MListItemTitle>
-                        @(data.Item.DisplayName)
-                    </MListItemTitle>
-                    @if (Type == ChannelTypes.Email)
-                    {
-                        <MListItemSubtitle>@(data.Item.Email)</MListItemSubtitle>
-                    }
-                    else
-                    {
-                        <MListItemSubtitle>@(data.Item.PhoneNumber)</MListItemSubtitle>
-                    }
-                </MListItemContent>
-            }
-        </ItemContent>
-    </MAutocomplete>
-    <MButton Rounded Outlined Color="indigo" Class="ml-6 medium-button px-6" OnClick="AddAsync">
-        <span>@T("Add")</span>
-    </MButton>
-    <MButton Color="primary" Class="ml-6 medium-button" OnClick="_createModal.OpenModalAsync">
-        <MIcon Size=18>mdi-plus</MIcon>
-        <span class="ml-2">@T("ExternalMember")</span>
-    </MButton>
-</MRow>
+@if (_pageTab == @T("ManualSelection"))
+{
+    <MessageReceiversSelect Type="@Type" OnAdd="HandleAddAsync" />
+}
+@if (_pageTab == @T("BatchUpload"))
+{
+    <MessageReceiversImport OnAdd="HandleAddAsync" />
+}
 <MCard Class="mx-auto overflow-y-auto" Outlined Height="300">
     @if (Value != null && Value.Count > 0)
     {
@@ -150,4 +80,3 @@
         </div>
     }
 </MCard>
-<ExternalUserCreateModal @ref="_createModal" OnOk="HandleOk" />

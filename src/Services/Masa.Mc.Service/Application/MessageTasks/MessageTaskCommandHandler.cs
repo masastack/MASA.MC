@@ -8,14 +8,17 @@ public class MessageTaskCommandHandler
     private readonly IMessageTaskRepository _repository;
     private readonly IMessageTaskHistoryRepository _messageTaskHistoryRepository;
     private readonly MessageTaskDomainService _domainService;
+    private readonly IExcelImporter _importer;
 
     public MessageTaskCommandHandler(IMessageTaskRepository repository
         , IMessageTaskHistoryRepository messageTaskHistoryRepository
-        , MessageTaskDomainService domainService)
+        , MessageTaskDomainService domainService
+        , IExcelImporter importer)
     {
         _repository = repository;
         _messageTaskHistoryRepository = messageTaskHistoryRepository;
         _domainService = domainService;
+        _importer = importer;
     }
 
     [EventHandler]
@@ -72,5 +75,22 @@ public class MessageTaskCommandHandler
             throw new UserFriendlyException("the task has a sending task history and cannot be disabled.");
         entity.SetDisable();
         await _repository.UpdateAsync(entity);
+    }
+
+    [EventHandler]
+    public async Task ImportReceiversAsync(ImportReceiversCommand command)
+    {
+        var file = command.File;
+        var stream = new MemoryStream(file.FileContent);
+        var import = await _importer.Import<ReceiverImportDto>(stream);
+        var importDtos = import.Data.ToList();
+        var receivers = importDtos.Select(x => new MessageTaskReceiverDto
+        {
+            DisplayName = x.DisplayName,
+            PhoneNumber = x.PhoneNumber,
+            Email = x.Email,
+            Type = MessageTaskReceiverTypes.User
+        }).ToList();
+        command.Result = receivers;
     }
 }

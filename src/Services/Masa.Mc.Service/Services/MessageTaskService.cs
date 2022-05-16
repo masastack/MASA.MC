@@ -17,6 +17,7 @@ public class MessageTaskService : ServiceBase
         MapPost(EnabledAsync);
         MapPost(DisableAsync);
         MapGet(GenerateReceiverImportTemplateAsync);
+        MapPost(ImportReceiversAsync);
     }
 
     public async Task<PaginatedListDto<MessageTaskDto>> GetListAsync(IEventBus eventbus, [FromQuery] Guid? channelId, [FromQuery] MessageEntityTypes? entityType, [FromQuery] bool? isEnabled, [FromQuery] MessageTaskTimeTypes? timeType, [FromQuery] DateTime? startTime, [FromQuery] DateTime? endTime, [FromQuery] string filter = "", [FromQuery] string sorting = "", [FromQuery] int page = 1, [FromQuery] int pagesize = 10)
@@ -99,14 +100,19 @@ public class MessageTaskService : ServiceBase
         await eventBus.PublishAsync(command);
     }
 
-    public async Task<IActionResult> GenerateReceiverImportTemplateAsync(IEventBus eventBus)
+    public async Task<IResult> GenerateReceiverImportTemplateAsync(IEventBus eventBus)
     {
         var query = new GenerateReceiverImportTemplateQuery();
         await eventBus.PublishAsync(query);
         var memoryStream = new MemoryStream(query.Result);
-        return new FileStreamResult(memoryStream, "text/csv")
-        {
-            FileDownloadName = "ReceiverImportTemplate.csv"
-        };
+        //return Results.Stream(memoryStream, "text/csv", "ReceiverImportTemplate.csv");
+        return Results.Stream(memoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "ReceiverImportTemplate.xlsx");
+    }
+
+    public async Task<List<MessageTaskReceiverDto>> ImportReceiversAsync(IEventBus eventBus, UploadFileDto file)
+    {
+        var command = new ImportReceiversCommand(file);
+        await eventBus.PublishAsync(command);
+        return command.Result;
     }
 }

@@ -6,13 +6,13 @@ namespace Masa.Mc.Service.Admin.Application.MessageTasks;
 public class MessageTaskQueryHandler
 {
     private readonly IMessageTaskRepository _repository;
-    private readonly ICsvImporter _csvImporter;
+    private readonly IExcelImporter _importer;
 
     public MessageTaskQueryHandler(IMessageTaskRepository repository
-        , ICsvImporter csvImporter)
+        , IExcelImporter importer)
     {
         _repository = repository;
-        _csvImporter = csvImporter;
+        _importer = importer;
     }
 
     [EventHandler]
@@ -69,7 +69,7 @@ public class MessageTaskQueryHandler
     [EventHandler]
     public async Task GenerateImportTemplateAsync(GenerateReceiverImportTemplateQuery query)
     {
-        var result = await _csvImporter.GenerateTemplateBytes<ReceiverImportDto>();
+        var result = await _importer.GenerateTemplateBytes<ReceiverImportDto>();
         query.Result = result;
     }
 }
