@@ -16,58 +16,58 @@
     {
         <MRow Class="mx-2">
             <MCol Cols="2">
-                        <MSelect @bind-Value="@_queryParam.TimeType"
-                             Items="@(GetEnumList<MessageRecordTimeTypes>())"
-                             Label="@T("DisplayName.MessageRecordTimeTypes")"
-                             ItemText="@(item => T($"DisplayName.MessageRecordTimeTypes.{item.ToString()}"))"
-                             ItemValue="item => item"
-                             Dense
-                             Outlined
-                             Clearable
-                             HideDetails="@("auto")"
-                             TItem="MessageRecordTimeTypes"
-                             TItemValue="MessageRecordTimeTypes"
-                             TValue="MessageRecordTimeTypes?"
-                             OnClearClick="RefreshAsync"
-                             OnSelectedItemUpdate="RefreshAsync">
-                        </MSelect>
-                    </MCol>
-                    <MCol Cols="2">
-                        <MMenu @bind-Value="_datePickersShow"
-                           CloseOnContentClick="false"
-                           Transition="scale-transition"
-                           OffsetY
-                           MinWidth="@("auto")">
-                            <ActivatorContent>
-                                <MTextField Value="DateRangeText"
-                                        Label="@T("DateRange")"
-                                        Readonly
-                                        Dense
-                                        Outlined
-                                        HideDetails="@("auto")"
-                                        PrependInnerIcon="mdi-calendar"
-                                        @attributes="context.Attrs"></MTextField>
-                            </ActivatorContent>
-                            <ChildContent>
-                                <MDatePicker @bind-Value="_dates"
-                                         Range
-                                         NoTitle
-                                         Scrollable>
-                                    <MSpacer></MSpacer>
-                                    <MButton Text
-                                         Color="primary"
-                                         OnClick="HandleDatePickersCancel">
-                                        Cancel
-                                    </MButton>
-                                    <MButton Text
-                                         Color="primary"
-                                         OnClick="HandleDatePickersAsync">
-                                        OK
-                                    </MButton>
-                                </MDatePicker>
-                            </ChildContent>
-                        </MMenu>
-                    </MCol>
+                <MSelect @bind-Value="@_queryParam.TimeType"
+                     Items="@(GetEnumList<MessageRecordTimeTypes>())"
+                     Label="@T("DisplayName.MessageRecordTimeTypes")"
+                     ItemText="@(item => T($"DisplayName.MessageRecordTimeTypes.{item.ToString()}"))"
+                     ItemValue="item => item"
+                     Dense
+                     Outlined
+                     Clearable
+                     HideDetails="@("auto")"
+                     TItem="MessageRecordTimeTypes"
+                     TItemValue="MessageRecordTimeTypes"
+                     TValue="MessageRecordTimeTypes?"
+                     OnClearClick="RefreshAsync"
+                     OnSelectedItemUpdate="RefreshAsync">
+                </MSelect>
+            </MCol>
+            <MCol Cols="2">
+                <MMenu @bind-Value="_datePickersShow"
+                   CloseOnContentClick="false"
+                   Transition="scale-transition"
+                   OffsetY
+                   MinWidth="@("auto")">
+                    <ActivatorContent>
+                        <MTextField Value="DateRangeText"
+                                Label="@T("DateRange")"
+                                Readonly
+                                Dense
+                                Outlined
+                                HideDetails="@("auto")"
+                                PrependInnerIcon="mdi-calendar"
+                                @attributes="context.Attrs"></MTextField>
+                    </ActivatorContent>
+                    <ChildContent>
+                        <MDatePicker @bind-Value="_dates"
+                                 Range
+                                 NoTitle
+                                 Scrollable>
+                            <MSpacer></MSpacer>
+                            <MButton Text
+                                 Color="primary"
+                                 OnClick="HandleDatePickersCancel">
+                                Cancel
+                            </MButton>
+                            <MButton Text
+                                 Color="primary"
+                                 OnClick="HandleDatePickersAsync">
+                                OK
+                            </MButton>
+                        </MDatePicker>
+                    </ChildContent>
+                </MMenu>
+            </MCol>
             <MCol Cols="2">
                 <MSelect @bind-Value="_queryParam.ChannelId"
                      Items="@_channelItems"
@@ -84,6 +84,18 @@
                      OnClearClick="RefreshAsync"
                      OnSelectedItemUpdate="RefreshAsync">
                 </MSelect>
+            </MCol>
+            <MCol Cols="2">
+                <UserSelect @bind-Value="_queryParam.UserId" Placeholder="@T("DisplayName.MessageRecordUserId")" OnClearClick="RefreshAsync"
+                        OnSelectedItemUpdate="RefreshAsync" />
+            </MCol>
+            <MCol Cols="2">
+                <BooleanSelect @bind-Value="_queryParam.Success" Items="_successItems" Placeholder="@T("DisplayName.MessageRecordSuccess")" OnClearClick="RefreshAsync"
+                           OnSelectedItemUpdate="RefreshAsync" />
+            </MCol>
+            <MCol Cols="2">
+                <MessageTaskHistorySelect @bind-Value="_queryParam.MessageTaskHistoryId" Placeholder="@T("DisplayName.MessageTaskHistory")" OnClearClick="RefreshAsync"
+                           OnSelectedItemUpdate="RefreshAsync" />
             </MCol>
         </MRow>
     }

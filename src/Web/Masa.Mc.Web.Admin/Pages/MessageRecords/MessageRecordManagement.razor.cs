@@ -16,6 +16,8 @@ public partial class MessageRecordManagement : AdminCompontentBase
     private List<DateOnly> _dates = new List<DateOnly> { };
     private string DateRangeText => string.Join(" ~ ", _dates.Select(date => date.ToString("yyyy-MM-dd")));
 
+    private List<KeyValuePair<string, bool>> _successItems { get; set; } = new();
+
     ChannelService ChannelService => McCaller.ChannelService;
 
     MessageRecordService MessageRecordService => McCaller.MessageRecordService;
@@ -34,6 +36,11 @@ public partial class MessageRecordManagement : AdminCompontentBase
             new() { Text = T("Action"), Value = "Action", Sortable = false },
         };
         _channelItems = (await ChannelService.GetListAsync(new GetChannelInputDto(99))).Result;
+        _successItems = new()
+        {
+            new(T("DisplayName.MessageRecordSuccess.True"), true),
+            new(T("DisplayName.MessageRecordSuccess.False"), false)
+        };
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)

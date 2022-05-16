@@ -1,43 +1,45 @@
 ﻿@inherits AdminCompontentBase
-<MRow>
-    <MCol>
-        <MTextField @bind-Value="_model.UserName"
-                    Label="@T("EmailChannelOptions.UserName")"
-                    Dense
-                    Outlined
-                    HideDetails="@("auto")"
-                    TValue="string"
-                    OnChange="HandleChangeAsync" />
-    </MCol>
-    <MCol>
-        <MTextField @bind-Value="_model.Password"
-                    Label="@T("EmailChannelOptions.Password")"
-                    Dense
-                    Outlined
-                    HideDetails="@("auto")"
-                    TValue="string"
-                    OnChange="HandleChangeAsync" />
-    </MCol>
-</MRow>
-<MRow>
-    <MCol Cols="6">
-        <MTextField @bind-Value="_model.Smtp"
-                    Label="@T("EmailChannelOptions.Smtp")"
-                    Dense
-                    Outlined
-                    HideDetails="@("auto")"
-                    TValue="string"
-                    OnChange="HandleChangeAsync" />
-    </MCol>
-    <MCol>
-        <MCheckbox Class="mt-1 float-left mr-2" @bind-Value="_model.Ssl" Label="@T("EmailChannelOptions.Ssl")" OnChange="HandleChangeAsync"></MCheckbox>
-        <MTextField @bind-Value="_model.Port"
-                    Type="number"
-                    Label="@T("EmailChannelOptions.Port")"
-                    Dense
-                    Outlined
-                    HideDetails="@("auto")"
-                    TValue="int"
-                    OnChange="HandleChangeAsync" />
-    </MCol>
-</MRow>
+<MForm Model="_model" @ref="Form" EnableValidation>
+    <MRow>
+        <MCol>
+            <MTextField @bind-Value="_model.UserName"
+                        Label="@T("EmailChannelOptions.UserName")"
+                        Dense
+                        Outlined
+                        HideDetails="@("auto")"
+                        TValue="string"
+                        OnChange="HandleChangeAsync" />
+        </MCol>
+        <MCol>
+            <MTextField @bind-Value="_model.Password"
+                        Label="@T("EmailChannelOptions.Password")"
+                        Dense
+                        Outlined
+                        HideDetails="@("auto")"
+                        TValue="string"
+                        OnChange="HandleChangeAsync" />
+        </MCol>
+    </MRow>
+    <MRow>
+        <MCol Cols="6">
+            <MTextField @bind-Value="_model.Smtp"
+                        Label="@T("EmailChannelOptions.Smtp")"
+                        Dense
+                        Outlined
+                        HideDetails="@("auto")"
+                        TValue="string"
+                        OnChange="HandleChangeAsync" />
+        </MCol>
+        <MCol>
+            <MCheckbox Class="mt-1 float-left mr-2" @bind-Value="_model.Ssl" Label="@T("EmailChannelOptions.Ssl")" OnChange="HandleChangeAsync"></MCheckbox>
+            <MTextField @bind-Value="_model.Port"
+                        Type="number"
+                        Label="@T("EmailChannelOptions.Port")"
+                        Dense
+                        Outlined
+                        HideDetails="@("auto")"
+                        TValue="int"
+                        OnChange="HandleChangeAsync" />
+        </MCol>
+    </MRow>
+</MForm>

@@ -49,4 +49,16 @@ public partial class ChannelExtraProperties : AdminCompontentBase
         await ValueChanged.InvokeAsync(Value);
     }
 
+    public async Task<bool> ValidateAsync()
+    {
+        if (Type == ChannelTypes.Email)
+        {
+            return await _emailExtraPropertiesRef.Form.ValidateAsync();
+        }
+        if (Type == ChannelTypes.Sms)
+        {
+            return await _smsExtraPropertiesRef.Form.ValidateAsync();
+        }
+        return true;
+    }
 }

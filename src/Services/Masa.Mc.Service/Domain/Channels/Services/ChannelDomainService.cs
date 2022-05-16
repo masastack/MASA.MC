@@ -6,12 +6,10 @@ namespace Masa.Mc.Service.Admin.Domain.Channels.Services;
 public class ChannelDomainService : DomainService
 {
     private readonly IChannelRepository _repository;
-    private readonly IUnitOfWork _unitOfWork;
 
-    public ChannelDomainService(IDomainEventBus eventBus, IChannelRepository repository, IUnitOfWork unitOfWork) : base(eventBus)
+    public ChannelDomainService(IDomainEventBus eventBus, IChannelRepository repository) : base(eventBus)
     {
         _repository = repository;
-        _unitOfWork = unitOfWork;
     }
 
     public virtual async Task CreateAsync(Channel channel)
@@ -22,10 +20,7 @@ public class ChannelDomainService : DomainService
         {
             await _repository.UnitOfWork.SaveChangesAsync();
             var channelId = channel.Id;
-            Task.Run(async () =>
-            {
-                await EventBus.PublishAsync(new SmsTemplateSyncDomainEvent(channelId));
-            });
+            await EventBus.PublishAsync(new SmsTemplateSyncDomainEvent(channelId));
         }
     }
 

@@ -11,6 +11,8 @@ public partial class ChannelSmsExtraProperties : AdminCompontentBase
     [Parameter]
     public EventCallback<ExtraPropertyDictionary> ValueChanged { get; set; }
 
+    public MForm Form { get; set; }
+
     private SmsChannelOptions _model = new();
 
     protected override async Task OnAfterRenderAsync(bool firstRender)

@@ -7,23 +7,30 @@ public class SendEmailMessageEventHandler
 {
     private readonly IEmailAsyncLocal _emailAsyncLocal;
     private readonly IEmailSender _emailSender;
-    private readonly IServiceProvider _serviceProvider;
     private readonly ITemplateRenderer _templateRenderer;
+    private readonly IChannelRepository _channelRepository;
+    private readonly IMessageRecordRepository _messageRecordRepository;
+    private readonly IMessageTaskHistoryRepository _messageTaskHistoryRepository;
 
-    public SendEmailMessageEventHandler(IEmailAsyncLocal emailAsyncLocal, IEmailSender emailSender, IServiceProvider serviceProvider, ITemplateRenderer templateRenderer)
+    public SendEmailMessageEventHandler(IEmailAsyncLocal emailAsyncLocal
+        , IEmailSender emailSender
+        , ITemplateRenderer templateRenderer
+        , IChannelRepository channelRepository
+        , IMessageRecordRepository messageRecordRepository
+        , IMessageTaskHistoryRepository messageTaskHistoryRepository)
     {
         _emailAsyncLocal = emailAsyncLocal;
         _emailSender = emailSender;
-        _serviceProvider = serviceProvider;
         _templateRenderer = templateRenderer;
+        _channelRepository = channelRepository;
+        _messageRecordRepository = messageRecordRepository;
+        _messageTaskHistoryRepository = messageTaskHistoryRepository;
     }
 
     [EventHandler]
     public async Task HandleEventAsync(SendEmailMessageEvent eto)
     {
-        using var scope = _serviceProvider.CreateAsyncScope();
-        using var dbContext = scope.ServiceProvider.GetRequiredService<McDbContext>();
-        var channel = await dbContext.Set<Channel>().FindAsync(eto.ChannelId);
+        var channel = await _channelRepository.FindAsync(x => x.Id == eto.ChannelId);
         var options = new SmtpEmailOptions
         {
             Host = channel.ExtraProperties.GetProperty<string>(nameof(EmailChannelOptions.Smtp)),
@@ -40,7 +47,7 @@ public class SendEmailMessageEventHandler
             {
                 var messageRecord = new MessageRecord(item.UserId, channel.Id, taskHistory.MessageTaskId, taskHistory.Id, item.Variables);
                 SetUserInfo(messageRecord, item);
-                TemplateRenderer(eto.MessageData, taskHistory.Variables);
+                TemplateRenderer(eto.MessageData, item.Variables);
                 messageRecord.SetDataValue(nameof(MessageTemplate.Title), eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.Title)));
                 try
                 {
@@ -55,11 +62,10 @@ public class SendEmailMessageEventHandler
                 {
                     messageRecord.SetResult(false, ex.Message);
                 }
-                await dbContext.Set<MessageRecord>().AddAsync(messageRecord);
+                await _messageRecordRepository.AddAsync(messageRecord);
             }
-            taskHistory = await dbContext.Set<MessageTaskHistory>().FindAsync(taskHistory.Id);
             taskHistory.SetComplete();
-            await dbContext.SaveChangesAsync();
+            await _messageTaskHistoryRepository.UpdateAsync(taskHistory);
         }
     }
 

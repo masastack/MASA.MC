@@ -414,6 +414,11 @@ namespace Masa.Mc.Service.Admin.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
+                    b.Property<string>("TaskHistoryNo")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
                     b.Property<string>("Variables")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");

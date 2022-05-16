@@ -5,7 +5,8 @@ namespace Masa.Mc.Contracts.Admin.Dtos.MessageTasks;
 
 public class GetMessageTaskHistoryInputDto : PaginatedOptionsDto
 {
-    public Guid MessageTaskId { get; set; }
+    public string Filter { get; set; } = string.Empty;
+    public Guid? MessageTaskId { get; set; }
     public MessageTaskHistoryStatuses? Status { get; set; }
     public DateTime? StartTime { get; set; }
     public DateTime? EndTime { get; set; }
@@ -19,8 +20,9 @@ public class GetMessageTaskHistoryInputDto : PaginatedOptionsDto
     {
     }
 
-    public GetMessageTaskHistoryInputDto(Guid messageTaskId, MessageTaskHistoryStatuses? status, DateTime? startTime, DateTime? endTime, string sorting, int page, int pageSize) : base(sorting, page, pageSize)
+    public GetMessageTaskHistoryInputDto(string filter, Guid? messageTaskId, MessageTaskHistoryStatuses? status, DateTime? startTime, DateTime? endTime, string sorting, int page, int pageSize) : base(sorting, page, pageSize)
     {
+        Filter = filter;
         MessageTaskId = messageTaskId;
         Status = status;
         StartTime = startTime;

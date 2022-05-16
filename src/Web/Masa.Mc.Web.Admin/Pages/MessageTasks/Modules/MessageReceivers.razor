@@ -11,7 +11,9 @@
 </MRow>
 <MRow Class="mx-1 py-2">
     <MAutocomplete @bind-Value="_userIds"
-                   Items="_stateUserItems"
+                   Loading="_loading"
+                   Items="_items"
+                   Filter="CustomFilter"
                    Color="primary"
                    Class="rounded-2 search"
                    Flat
@@ -29,7 +31,7 @@
             <MChip Close
                    OnCloseClick="()=>Remove(data.Item)">
                 <MAvatar Left>
-                    @if (data.Item.Type != ReceiverGroupItemTypes.User)
+                    @if (data.Item.Type != MessageTaskReceiverTypes.User)
                     {
                         <MIcon>mdi-account-group</MIcon>
                     }
@@ -42,7 +44,7 @@
             </MChip>
         </SelectionContent>
         <ItemContent Context="data">
-            @if (data.Item.Type != ReceiverGroupItemTypes.User)
+            @if (data.Item.Type != MessageTaskReceiverTypes.User)
             {
                 <MListItemAvatar>
                     <MIcon Large>mdi-account-group</MIcon>

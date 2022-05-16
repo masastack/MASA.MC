@@ -12,4 +12,5 @@ public class SendMessageTaskInputDto
     public List<MessageTaskReceiverDto> Receivers { get; set; } = new();
     public SendRuleDto SendRules { get; set; } = new();
     public ExtraPropertyDictionary Variables { get; set; } = new();
+    public ChannelTypes? ChannelType { get; set; }
 }

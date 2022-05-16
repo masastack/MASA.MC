@@ -7,23 +7,27 @@ public class SendSmsMessageEventHandler
 {
     private readonly IAliyunSmsAsyncLocal _aliyunSmsAsyncLocal;
     private readonly ISmsSender _smsSender;
-    private readonly IServiceProvider _serviceProvider;
-    private readonly ITemplateRenderer _templateRenderer;
+    private readonly IChannelRepository _channelRepository;
+    private readonly IMessageRecordRepository _messageRecordRepository;
+    private readonly IMessageTaskHistoryRepository _messageTaskHistoryRepository;
 
-    public SendSmsMessageEventHandler(IAliyunSmsAsyncLocal aliyunSmsAsyncLocal, ISmsSender smsSender, IServiceProvider serviceProvider, ITemplateRenderer templateRenderer)
+    public SendSmsMessageEventHandler(IAliyunSmsAsyncLocal aliyunSmsAsyncLocal
+        , ISmsSender smsSender
+        , IChannelRepository channelRepository
+        , IMessageRecordRepository messageRecordRepository
+        , IMessageTaskHistoryRepository messageTaskHistoryRepository)
     {
         _aliyunSmsAsyncLocal = aliyunSmsAsyncLocal;
         _smsSender = smsSender;
-        _serviceProvider = serviceProvider;
-        _templateRenderer = templateRenderer;
+        _channelRepository = channelRepository;
+        _messageRecordRepository = messageRecordRepository;
+        _messageTaskHistoryRepository = messageTaskHistoryRepository;
     }
 
     [EventHandler]
     public async Task HandleEventAsync(SendSmsMessageEvent eto)
     {
-        using var scope = _serviceProvider.CreateAsyncScope();
-        using var dbContext = scope.ServiceProvider.GetRequiredService<McDbContext>();
-        var channel = await dbContext.Set<Channel>().FindAsync(eto.ChannelId);
+        var channel = await _channelRepository.FindAsync(x => x.Id == eto.ChannelId);
         var options = new AliyunSmsOptions
         {
             AccessKeyId = channel.GetDataValue<string>(nameof(SmsChannelOptions.AccessKeyId)),
@@ -56,11 +60,10 @@ public class SendSmsMessageEventHandler
                 {
                     messageRecord.SetResult(false, ex.Message);
                 }
-                await dbContext.Set<MessageRecord>().AddAsync(messageRecord);
+                await _messageRecordRepository.AddAsync(messageRecord);
             }
-            taskHistory = await dbContext.Set<MessageTaskHistory>().FindAsync(taskHistory.Id);
             taskHistory.SetComplete();
-            await dbContext.SaveChangesAsync();
+            await _messageTaskHistoryRepository.UpdateAsync(taskHistory);
         }
     }
 

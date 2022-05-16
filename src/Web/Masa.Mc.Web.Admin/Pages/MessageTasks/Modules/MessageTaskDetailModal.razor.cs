@@ -30,6 +30,7 @@ public partial class MessageTaskDetailModal : AdminCompontentBase
         _headers = new()
         {
             new() { Text = T($"{_prefix}{nameof(MessageTaskHistoryDto.Status)}"), Value = nameof(MessageTaskHistoryDto.Status), Sortable = false },
+            new() { Text = T($"{_prefix}{nameof(MessageTaskHistoryDto.TaskHistoryNo)}"), Value = nameof(MessageTaskHistoryDto.TaskHistoryNo), Sortable = false },
             new() { Text = T($"{_prefix}{nameof(MessageTaskHistoryDto.SendTime)}"), Value = nameof(MessageTaskHistoryDto.SendTime), Sortable = false },
         };
     }

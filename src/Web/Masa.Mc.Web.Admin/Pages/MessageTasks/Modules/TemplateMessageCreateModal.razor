@@ -75,16 +75,15 @@
                                 </MRow>
                                 if (_messageInfo.Channel != null && _messageInfo.Channel.Type == ChannelTypes.WebsiteMessage)
                                 {
-                                    <MRow>
-                                        <MCol>
-                                            <MTextField @bind-Value="_messageInfo.JumpUrl"
-                                                Label="@T("DisplayName.MessageTemplateJumpUrl")"
-                                                Dense
-                                                Outlined
-                                                Disabled
-                                                HideDetails="@("auto")">
-                                            </MTextField>
-                                        </MCol>
+                                    <MRow Class="mx-1 mt-6">
+                                        <MCheckbox Class="mt-1 mr-2" Disabled @bind-Value="_messageInfo.IsJump" Label="@T("DisplayName.MessageTemplateIsJump")"></MCheckbox>
+                                        <MTextField @bind-Value="_messageInfo.JumpUrl"
+                                            Label="@T("DisplayName.MessageTemplateJumpUrl")"
+                                            Dense
+                                            Outlined
+                                            Disabled
+                                            HideDetails="@("auto")">
+                                        </MTextField>
                                     </MRow>
                                 }
                                 <MessageVariables Class="mt-4" @bind-Value="_model.Variables"></MessageVariables>
@@ -122,7 +121,7 @@
                                     </MCol>
                                 </MRow>
                             }
-                            <MessageSendingRules @bind-Value="_model.SendRules"/>
+                            <MessageSendingRules @bind-Value="_model.SendRules" />
                         </MCol>
                     </MRow>
                 </div>

@@ -1,6 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Components.Rendering
 @inherits LayoutComponentBase
 @inject GlobalConfig GlobalConfig
+@inject IPopupService PopupService
 @implements IDisposable
 
 <MApp>
@@ -16,7 +17,7 @@
     <Navigation />
 
     <MMain Class="fill-lighten-1" Style="padding-top:60px">
-        <MErrorHandler>
+        <MErrorHandler OnErrorHandleAsync="CustomErrorHandleAsync">
             <div class="pa-6 max-width full-height">
                 @Body
             </div>
@@ -35,5 +36,16 @@
     public void Dispose()
     {
         GlobalConfig.OnPageModeChanged -= base.StateHasChanged;
+    }
+
+    private async Task CustomErrorHandleAsync(Exception exception)
+    {
+        GlobalConfig.Loading = false;
+        await PopupService.ToastAsync(alert =>
+        {
+            alert.Type = AlertTypes.Error;
+            alert.Title = "Something wrong!";
+            alert.Content = exception.Message;
+        });
     }
 }

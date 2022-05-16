@@ -41,7 +41,7 @@
                                 <MRow>
                                     <MCol>
                                         <MTextField @bind-Value="_model.MessageInfo.Title"
-                                                Label="@T("DisplayName.MessageTemplateTitle")"
+                                                Label="@T("DisplayName.MessageInfoTitle")"
                                                 Dense
                                                 Outlined
                                                 HideDetails="@("auto")">
@@ -59,15 +59,14 @@
                             </MRow>
                             @if (_channelType == ChannelTypes.WebsiteMessage)
                             {
-                                <MRow>
-                                    <MCol>
+                                <MRow Class="mx-1 mt-6">
+                                    <MCheckbox Class="mt-1 mr-2" @bind-Value="_model.MessageInfo.IsJump" Label="@T("DisplayName.MessageTemplateIsJump")"></MCheckbox>
                                         <MTextField @bind-Value="_model.MessageInfo.JumpUrl"
                                                 Label="@T("DisplayName.MessageTemplateJumpUrl")"
                                                 Dense
                                                 Outlined
                                                 HideDetails="@("auto")">
                                         </MTextField>
-                                    </MCol>
                                 </MRow>
                             }
                             @if (_channelType == ChannelTypes.Sms)

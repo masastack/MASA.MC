@@ -19,3 +19,5 @@ global using Masa.Mc.Contracts.Admin.Dtos.MessageInfos.Validator;
 global using Masa.Mc.Contracts.Admin.Dtos.MessageInfos;
 global using Magicodes.ExporterAndImporter.Core;
 global using Masa.Mc.Contracts.Admin.Enums.MessageRecords;
+global using Masa.Mc.Infrastructure.ObjectExtending.Data;
+global using Masa.Mc.Contracts.Admin.Options.Channels;

@@ -4,7 +4,7 @@
         <div class="sheet-dialog full-height flex-column">
             <div class="mt-4 flex-height-auto overflow-y">
                 <MRow>
-                    <MCol Cols="4">
+                    <MCol Cols="5">
                         <div class="text-subtitle2 mb-4">@T("DisplayName.MessageTaskHistory")</div>
                         <MRow>
                             <MCol Cols="7">
@@ -72,6 +72,9 @@
                                             </MChip>
                                         </td>
                                         <td>
+                                            <span class="text-body3">@item.TaskHistoryNo</span>
+                                        </td>
+                                        <td>
                                             <span class="text-body3">@T("DisplayName.MessageTaskSendTime"):@item.SendTime?.ToString(T("$DateTimeFormat"))</span>
                                         </td>
                                     </tr>
@@ -80,11 +83,11 @@
                         </MSimpleTable>
                         <Pagination Class="mt-5" @bind-Page="_queryParam.Page" @bind-PageSize="_queryParam.PageSize" Total="_historys.Total" OnChange="HandlePaginationChange" />
                     </MCol>
-                    <MCol Cols="8">
+                    <MCol Cols="7">
                         <MRow Class="mx-2 mt-2">
                             <div class="text-subtitle2">@T("DisplayName.MessageInfoContent")</div>
                             <MSpacer></MSpacer>
-                            @if (_historyInfo.Status != MessageTaskHistoryStatuses.Withdrawn)
+                            @if (_info.Channel?.Type == ChannelTypes.WebsiteMessage && _historyInfo.Status != MessageTaskHistoryStatuses.Withdrawn)
                             {
                                 <MButton Rounded Outlined Color="indigo" Class="ml-6 medium-button px-6" OnClick="WithdrawnHistoryAsync">
                                     <span>@T("Withdraw")</span>

@@ -22,7 +22,7 @@
                            ItemText="r=>r.DisplayName"
                            ItemValue="r=>r.Id"
                            TValue="List<Guid>"
-                           TItem="UserViewModel"
+                           TItem="UserDto"
                            TItemValue="Guid"
                            OnSelectedItemUpdate="HandleUserChange"
                            Multiple>
@@ -33,52 +33,28 @@
                     <MChip Close
                            OnCloseClick="()=>Remove(data.Item)">
                         <MAvatar Left>
-                            @if (data.Item.Type != ReceiverGroupItemTypes.User)
-                            {
-                                <MIcon>mdi-account-group</MIcon>
-                            }
-                            else
-                            {
-                                <MImage Src="@data.Item.Avatar"></MImage>
-                            }
+                            <MImage Src="@data.Item.Avatar"></MImage>
                         </MAvatar>
                         @data.Item.DisplayName
                     </MChip>
                 </SelectionContent>
                 <ItemContent Context="data">
-                    @if (data.Item.Type != ReceiverGroupItemTypes.User)
-                    {
-                        <MListItemAvatar>
-                            <MIcon Large>mdi-account-group</MIcon>
-                        </MListItemAvatar>
-                        <MListItemContent>
-                            <MListItemTitle>
-                                @(data.Item.DisplayName)
-                            </MListItemTitle>
-                            <MListItemSubtitle>
-                                @T(data.Item.Type.ToString())
-                            </MListItemSubtitle>
-                        </MListItemContent>
-                    }
-                    else
-                    {
-                        <MListItemAvatar>
-                            <MImage Src="@data.Item.Avatar"></MImage>
-                        </MListItemAvatar>
-                        <MListItemContent>
-                            <MListItemTitle>
-                                @(data.Item.DisplayName)
-                            </MListItemTitle>
-                            @if (_type == ChannelTypes.Email)
-                            {
-                                <MListItemSubtitle>@(data.Item.Email)</MListItemSubtitle>
-                            }
-                            else
-                            {
-                                <MListItemSubtitle>@(data.Item.PhoneNumber)</MListItemSubtitle>
-                            }
-                        </MListItemContent>
-                    }
+                    <MListItemAvatar>
+                        <MImage Src="@data.Item.Avatar"></MImage>
+                    </MListItemAvatar>
+                    <MListItemContent>
+                        <MListItemTitle>
+                            @(data.Item.DisplayName)
+                        </MListItemTitle>
+                        @if (_type == ChannelTypes.Email)
+                        {
+                            <MListItemSubtitle>@(data.Item.Email)</MListItemSubtitle>
+                        }
+                        else
+                        {
+                            <MListItemSubtitle>@(data.Item.PhoneNumber)</MListItemSubtitle>
+                        }
+                    </MListItemContent>
                 </ItemContent>
             </MAutocomplete>
             <MInput @bind-Value="_input.Receivers" />

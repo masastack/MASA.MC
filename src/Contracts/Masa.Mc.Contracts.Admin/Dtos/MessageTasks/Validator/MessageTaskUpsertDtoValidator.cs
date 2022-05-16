@@ -8,10 +8,11 @@ public class MessageTaskUpsertDtoValidator : AbstractValidator<MessageTaskUpsert
     public MessageTaskUpsertDtoValidator()
     {
         RuleFor(inputDto => inputDto.ChannelId).Required();
-        RuleFor(inputDto => inputDto.EntityId).Required().When(x => x.EntityType == MessageEntityTypes.Template);
+        RuleFor(inputDto => inputDto.EntityId).Required().When(m => m.EntityType == MessageEntityTypes.Template).When(m => !m.IsDraft);
         RuleFor(inputDto => inputDto.EntityType).IsInEnum();
         RuleFor(inputDto => inputDto.ReceiverType).IsInEnum();
-        RuleFor(inputDto => inputDto.Receivers).Required().When(x => x.ReceiverType == ReceiverTypes.Assign);
-        RuleFor(inputDto => inputDto.MessageInfo).SetValidator(new MessageInfoUpsertDtoValidator()).When(x => x.EntityType == MessageEntityTypes.Ordinary);
+        RuleFor(inputDto => inputDto.Receivers).Required().When(m => m.ReceiverType == ReceiverTypes.Assign).When(m => !m.IsDraft);
+        RuleFor(inputDto => inputDto.MessageInfo).SetValidator(new MessageInfoUpsertDtoValidator()).When(m => m.EntityType == MessageEntityTypes.Ordinary);
+        RuleFor(inputDto => inputDto.Sign).Required().ChineseLetterNumber().Length(2, 12).When(m => m.ChannelType == ChannelTypes.Sms && !m.IsDraft);
     }
 }

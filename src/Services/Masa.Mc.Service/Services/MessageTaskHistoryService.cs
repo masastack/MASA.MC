@@ -12,9 +12,9 @@ public class MessageTaskHistoryService : ServiceBase
         MapPost(WithdrawnAsync);
     }
 
-    public async Task<PaginatedListDto<MessageTaskHistoryDto>> GetListAsync(IEventBus eventbus, [FromQuery] Guid messageTaskId, [FromQuery] MessageTaskHistoryStatuses? status, [FromQuery] DateTime? startTime, [FromQuery] DateTime? endTime, [FromQuery] string sorting = "", [FromQuery] int page = 1, [FromQuery] int pagesize = 10)
+    public async Task<PaginatedListDto<MessageTaskHistoryDto>> GetListAsync(IEventBus eventbus, [FromQuery] Guid? messageTaskId, [FromQuery] MessageTaskHistoryStatuses? status, [FromQuery] DateTime? startTime, [FromQuery] DateTime? endTime, [FromQuery] string filter = "", [FromQuery] string sorting = "", [FromQuery] int page = 1, [FromQuery] int pagesize = 10)
     {
-        var inputDto = new GetMessageTaskHistoryInputDto(messageTaskId, status, startTime, endTime, sorting, page, pagesize);
+        var inputDto = new GetMessageTaskHistoryInputDto(filter, messageTaskId, status, startTime, endTime, sorting, page, pagesize);
         var query = new GetListMessageTaskHistoryQuery(inputDto);
         await eventbus.PublishAsync(query);
         return query.Result;

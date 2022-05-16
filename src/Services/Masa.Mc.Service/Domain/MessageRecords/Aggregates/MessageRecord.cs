@@ -9,6 +9,7 @@ public class MessageRecord : AuditAggregateRoot<Guid, Guid>, ISoftDelete
     public Guid ChannelId { get; protected set; }
     public AppChannel Channel { get; protected set; } = default!;
     public Guid MessageTaskId { get; protected set; }
+    public AppMessageTask MessageTask { get; protected set; }
     public Guid MessageTaskHistoryId { get; protected set; }
     public bool? Success { get; protected set; }
     public DateTime? SendTime { get; protected set; }
