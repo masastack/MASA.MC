@@ -47,7 +47,7 @@ public class SendEmailMessageEventHandler
             {
                 var messageRecord = new MessageRecord(item.UserId, channel.Id, taskHistory.MessageTaskId, taskHistory.Id, item.Variables);
                 SetUserInfo(messageRecord, item);
-                TemplateRenderer(eto.MessageData, taskHistory.Variables);
+                TemplateRenderer(eto.MessageData, item.Variables);
                 messageRecord.SetDataValue(nameof(MessageTemplate.Title), eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.Title)));
                 try
                 {
