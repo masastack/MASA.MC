@@ -67,7 +67,7 @@ public class MessageTaskQueryHandler
     }
 
     [EventHandler]
-    public async Task GenerateImportTemplateAsync(GenerateImportTemplateQuery query)
+    public async Task GenerateImportTemplateAsync(GenerateReceiverImportTemplateQuery query)
     {
         var result = await _csvImporter.GenerateTemplateBytes<ReceiverImportDto>();
         query.Result = result;
