@@ -1,11 +1,11 @@
 ﻿@inherits AdminCompontentBase
 
-<MRow>
+<MRow Class="my-1">
     <MCol>
         <MFileInput TValue="IBrowserFile"
                     Dense
                     Outlined
-                    Placeholder="请上传文件" OnChange="HandleOnFileChange"></MFileInput>
+                    Placeholder="请上传文件" OnChange="HandleFileChange"></MFileInput>
     </MCol>
     <MCol Align="AlignTypes.Center">
         <a href="@_downloadUrl" class="text-decoration-none">点击下载模板</a>

@@ -6,10 +6,10 @@ namespace Masa.Mc.Service.Admin.Application.MessageTasks;
 public class MessageTaskQueryHandler
 {
     private readonly IMessageTaskRepository _repository;
-    private readonly IExcelImporter _importer;
+    private readonly ICsvImporter _importer;
 
     public MessageTaskQueryHandler(IMessageTaskRepository repository
-        , IExcelImporter importer)
+        , ICsvImporter importer)
     {
         _repository = repository;
         _importer = importer;

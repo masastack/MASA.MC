@@ -21,7 +21,6 @@ builder.Services.AddAuthentication(options =>
 });
 builder.Services.AddAliyunSms();
 builder.Services.AddEmail();
-builder.Services.AddSingleton<IExcelImporter, ExcelImporter>();
 builder.Services.AddSingleton<ICsvImporter, CsvImporter>();
 builder.Services.AddSingleton<ITemplateRenderer, TextTemplateRenderer>();
 TypeAdapterConfig.GlobalSettings.Scan(Assembly.GetExecutingAssembly(), Assembly.Load("Masa.Mc.Contracts.Admin"));

@@ -1,13 +1,13 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
-using Magicodes.ExporterAndImporter.Csv;
-using Magicodes.ExporterAndImporter.Excel;
-
 namespace Masa.Mc.Web.Admin.Pages.MessageTasks.Modules;
 
 public partial class MessageReceiversImport
 {
+    [Parameter]
+    public ChannelTypes? Type { get; set; }
+
     [Parameter]
     public EventCallback<List<MessageTaskReceiverDto>> OnAdd { get; set; }
 
@@ -21,18 +21,20 @@ public partial class MessageReceiversImport
         _downloadUrl = $"{McApiOptions.McServiceBaseAddress}/api/message-task/GenerateReceiverImportTemplate";
     }
 
-    private async void HandleOnFileChange(IBrowserFile file)
+    private async void HandleFileChange(IBrowserFile file)
     {
         await using var memoryStream = new MemoryStream();
         await file.OpenReadStream().CopyToAsync(memoryStream);
-        var dto = new UploadFileDto {
+        var dto = new UploadFileDto
+        {
             FileName = file.Name,
             FileContent = memoryStream.ToArray(),
             Size = file.Size,
-            ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            ContentType = "text/csv"
+            //ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         };
         var list = await MessageTaskService.ImportReceiversAsync(dto);
-        if (OnAdd.HasDelegate)
+        if (list != null && OnAdd.HasDelegate)
         {
             await OnAdd.InvokeAsync(list);
         }

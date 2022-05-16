@@ -5,5 +5,5 @@ namespace Masa.Mc.Service.Admin.Application.MessageTasks.Commands;
 
 public record ImportReceiversCommand(UploadFileDto File) : Command
 {
-    public List<MessageTaskReceiverDto> Result { get; set; } = default!;
+    public List<MessageTaskReceiverDto> Result { get; set; }
 }

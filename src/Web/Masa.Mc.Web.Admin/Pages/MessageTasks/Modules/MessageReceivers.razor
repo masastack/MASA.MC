@@ -15,7 +15,7 @@
 }
 @if (_pageTab == @T("BatchUpload"))
 {
-    <MessageReceiversImport OnAdd="HandleAddAsync" />
+    <MessageReceiversImport Type="@Type" OnAdd="HandleAddAsync" />
 }
 <MCard Class="mx-auto overflow-y-auto" Outlined Height="300">
     @if (Value != null && Value.Count > 0)

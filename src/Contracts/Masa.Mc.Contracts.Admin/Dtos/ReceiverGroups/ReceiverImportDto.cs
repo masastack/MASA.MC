@@ -3,7 +3,6 @@
 
 namespace Masa.Mc.Contracts.Admin.Dtos.ReceiverGroups;
 
-[ExcelImporter(IsLabelingError = true, IsDisableAllFilter = true)]
 public class ReceiverImportDto
 {
     [ImporterHeader(Name = "昵称")]

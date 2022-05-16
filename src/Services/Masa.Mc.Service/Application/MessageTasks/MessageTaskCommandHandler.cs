@@ -8,12 +8,12 @@ public class MessageTaskCommandHandler
     private readonly IMessageTaskRepository _repository;
     private readonly IMessageTaskHistoryRepository _messageTaskHistoryRepository;
     private readonly MessageTaskDomainService _domainService;
-    private readonly IExcelImporter _importer;
+    private readonly ICsvImporter _importer;
 
     public MessageTaskCommandHandler(IMessageTaskRepository repository
         , IMessageTaskHistoryRepository messageTaskHistoryRepository
         , MessageTaskDomainService domainService
-        , IExcelImporter importer)
+        , ICsvImporter importer)
     {
         _repository = repository;
         _messageTaskHistoryRepository = messageTaskHistoryRepository;
@@ -83,6 +83,8 @@ public class MessageTaskCommandHandler
         var file = command.File;
         var stream = new MemoryStream(file.FileContent);
         var import = await _importer.Import<ReceiverImportDto>(stream);
+        if (import.HasError)
+            throw new UserFriendlyException(import.Exception.Message);
         var importDtos = import.Data.ToList();
         var receivers = importDtos.Select(x => new MessageTaskReceiverDto
         {
