@@ -50,12 +50,10 @@
                     </MRow>
                     <MRow>
                         <MCol Cols="12">
-                            <MTextarea @bind-Value="_model.Content"
-                                       Label="@T("DisplayName.MessageTemplateContent")"
-                                       Dense
-                                       Outlined
-                                       HideDetails="@("auto")">
-                            </MTextarea>
+                            <MEditor @bind-Value="_model.Content"
+                                     ContentStyle="height:200px"
+                                     Placeholder="@T("DisplayName.MessageTemplateContent")">
+                            </MEditor>
                         </MCol>
                     </MRow>
                     <MRow Class="mx-1 mt-6">
