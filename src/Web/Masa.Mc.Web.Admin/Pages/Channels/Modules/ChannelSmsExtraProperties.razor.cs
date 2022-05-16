@@ -13,7 +13,6 @@ public partial class ChannelSmsExtraProperties : AdminCompontentBase
 
     public MForm Form { get; set; }
 
-
     private SmsChannelOptions _model = new();
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
