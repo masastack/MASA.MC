@@ -8,16 +8,16 @@ public class AddMessageTaskHistoryEventHandler
     private readonly IMessageTaskHistoryRepository _repository;
     private readonly IMessageInfoRepository _messageInfoRepository;
     private readonly IMessageTemplateRepository _messageTemplateRepository;
-    private readonly IServiceProvider _serviceProvider;
+    private readonly IDomainEventBus _eventBus;
     public AddMessageTaskHistoryEventHandler(IMessageTaskHistoryRepository repository
         , IMessageInfoRepository messageInfoRepository
         , IMessageTemplateRepository messageTemplateRepository
-        , IServiceProvider serviceProvider)
+        , IDomainEventBus eventBus)
     {
         _repository = repository;
         _messageInfoRepository = messageInfoRepository;
         _messageTemplateRepository = messageTemplateRepository;
-        _serviceProvider = serviceProvider;
+        _eventBus = eventBus;
     }
 
     [EventHandler]
@@ -35,14 +35,7 @@ public class AddMessageTaskHistoryEventHandler
     {
         var messageData = await GetMessageDataAsync(messageTask.EntityType, messageTask.EntityId);
         messageData.SetDataValue(nameof(MessageTemplate.Sign), messageTaskHistory.Sign);
-        Task.Run(async () =>
-        {
-            using (var scope = _serviceProvider.CreateAsyncScope())
-            {
-                var eventBus = scope.ServiceProvider.GetRequiredService<IDomainEventBus>();
-                await eventBus.PublishAsync(new CreateMessageEvent(messageTask.ChannelId, messageData, messageTaskHistory.Id));
-            }
-        });
+        await _eventBus.PublishAsync(new CreateMessageEvent(messageTask.ChannelId, messageData, messageTaskHistory.Id));
     }
 
     private async Task<MessageData> GetMessageDataAsync(MessageEntityTypes entityType, Guid entityId)
