@@ -104,9 +104,7 @@ public class MessageTaskService : ServiceBase
     {
         var query = new GenerateReceiverImportTemplateQuery();
         await eventBus.PublishAsync(query);
-        var memoryStream = new MemoryStream(query.Result);
-        return Results.Stream(memoryStream, "text/csv", "ReceiverImportTemplate.csv");
-        //return Results.Stream(memoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "ReceiverImportTemplate.xlsx");
+        return Results.Bytes(query.Result, "text/csv", "ReceiverImportTemplate.csv");
     }
 
     public async Task<List<MessageTaskReceiverDto>> ImportReceiversAsync(IEventBus eventBus, UploadFileDto file)
