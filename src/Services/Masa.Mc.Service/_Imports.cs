@@ -117,4 +117,7 @@ global using Masa.Mc.Contracts.Admin.Enums.MessageRecords;
 global using Masa.Mc.Infrastructure.Sms.Aliyun.Model.Response.SendSms;
 global using Masa.Mc.Service.Admin.Domain.MessageTasks.Events;
 global using Masa.Mc.Contracts.Admin.Dtos;
-global using Magicodes.ExporterAndImporter.Core.Models;
+global using Masa.Mc.Infrastructure.ExporterAndImporter.Csv;
+global using ICsvImporter = Masa.Mc.Infrastructure.ExporterAndImporter.Csv.ICsvImporter;
+global using System.Dynamic;
+global using ICsvExporter = Masa.Mc.Infrastructure.ExporterAndImporter.Csv.ICsvExporter;

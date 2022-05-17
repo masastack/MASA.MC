@@ -9,12 +9,15 @@ public partial class MessageReceiversImport
     public List<MessageTaskReceiverDto> Value { get; set; } = new();
 
     [Parameter]
+    public Guid? MessageTemplatesId { get; set; }
+
+    [Parameter]
     public EventCallback<List<MessageTaskReceiverDto>> ValueChanged { get; set; }
 
     [Parameter]
     public EventCallback<List<MessageTaskReceiverDto>> OnAdd { get; set; }
 
-    private string _downloadUrl=string.Empty;
+    private string _downloadUrl = string.Empty;
     private ImportResultDto<MessageTaskReceiverDto> _importResult;
 
     MessageTaskService MessageTaskService => McCaller.MessageTaskService;
@@ -22,19 +25,26 @@ public partial class MessageReceiversImport
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        _downloadUrl = $"{McApiOptions.McServiceBaseAddress}/api/message-task/GenerateReceiverImportTemplate";
+        _downloadUrl = $"{McApiOptions.McServiceBaseAddress}/api/message-task/GenerateReceiverImportTemplate?messageTemplatesId={MessageTemplatesId}";
     }
 
     private async void HandleFileChange(IBrowserFile file)
     {
         await using var memoryStream = new MemoryStream();
         await file.OpenReadStream().CopyToAsync(memoryStream);
-        var dto = new UploadFileDto
+        var fileContent = memoryStream.ToArray();
+        if (FileEncoderHelper.GetTextFileEncodingType(fileContent) != Encoding.UTF8)
+        {
+            await WarningAsync(T("Description.MessageReceiversUpload.EncodingTips"));
+            return;
+        }
+        var dto = new ImportReceiversDto
         {
             FileName = file.Name,
-            FileContent = memoryStream.ToArray(),
+            FileContent = fileContent,
             Size = file.Size,
-            ContentType = "text/csv"
+            ContentType = "text/csv",
+            MessageTemplatesId = MessageTemplatesId
         };
         _importResult = await MessageTaskService.ImportReceiversAsync(dto);
         Value = _importResult.Data.ToList();

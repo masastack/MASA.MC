@@ -6,13 +6,19 @@ namespace Masa.Mc.Service.Admin.Application.MessageTasks;
 public class MessageTaskQueryHandler
 {
     private readonly IMessageTaskRepository _repository;
+    private readonly IMessageTemplateRepository _messageTemplateRepository;
     private readonly ICsvImporter _importer;
+    private readonly ICsvExporter _exporter;
 
     public MessageTaskQueryHandler(IMessageTaskRepository repository
+        , IMessageTemplateRepository messageTemplateRepository
+        , ICsvExporter exporter
         , ICsvImporter importer)
     {
         _repository = repository;
+        _messageTemplateRepository = messageTemplateRepository;
         _importer = importer;
+        _exporter = exporter;
     }
 
     [EventHandler]
@@ -69,7 +75,22 @@ public class MessageTaskQueryHandler
     [EventHandler]
     public async Task GenerateImportTemplateAsync(GenerateReceiverImportTemplateQuery query)
     {
-        var result = await _importer.GenerateTemplateBytes<ReceiverImportDto>();
-        query.Result = result;
+        var template = await _messageTemplateRepository.FindAsync(x => x.Id == query.MessageTemplateId);
+        if (template == null)
+        {
+            var result = await _importer.GenerateTemplateBytes<ReceiverImportDto>();
+            query.Result = result;
+            return;
+        }
+        var record = new ExpandoObject();
+        record.TryAdd(nameof(ReceiverImportDto.DisplayName), string.Empty);
+        record.TryAdd(nameof(ReceiverImportDto.PhoneNumber), string.Empty);
+        record.TryAdd(nameof(ReceiverImportDto.Email), string.Empty);
+        foreach (var item in template.Items)
+        {
+            record.TryAdd(item.Code, string.Empty);
+        }
+        var byteResult = await _exporter.ExportDynamicHeaderAsByteArray(record);
+        query.Result = byteResult;
     }
 }

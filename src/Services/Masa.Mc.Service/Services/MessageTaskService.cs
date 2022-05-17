@@ -100,16 +100,16 @@ public class MessageTaskService : ServiceBase
         await eventBus.PublishAsync(command);
     }
 
-    public async Task<IResult> GenerateReceiverImportTemplateAsync(IEventBus eventBus)
+    public async Task<IResult> GenerateReceiverImportTemplateAsync(IEventBus eventBus, Guid? messageTemplatesId)
     {
-        var query = new GenerateReceiverImportTemplateQuery();
+        var query = new GenerateReceiverImportTemplateQuery(messageTemplatesId);
         await eventBus.PublishAsync(query);
         return Results.Bytes(query.Result, "text/csv", "ReceiverImportTemplate.csv");
     }
 
-    public async Task<ImportResultDto<MessageTaskReceiverDto>> ImportReceiversAsync(IEventBus eventBus, UploadFileDto file)
+    public async Task<ImportResultDto<MessageTaskReceiverDto>> ImportReceiversAsync(IEventBus eventBus, ImportReceiversDto dto)
     {
-        var command = new ImportReceiversCommand(file);
+        var command = new ImportReceiversCommand(dto);
         await eventBus.PublishAsync(command);
         return command.Result;
     }

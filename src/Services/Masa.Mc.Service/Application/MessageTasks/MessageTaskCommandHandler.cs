@@ -1,6 +1,8 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
+using Magicodes.ExporterAndImporter.Core.Models;
+
 namespace Masa.Mc.Service.Admin.Application.MessageTasks;
 
 public class MessageTaskCommandHandler
@@ -9,16 +11,19 @@ public class MessageTaskCommandHandler
     private readonly IMessageTaskHistoryRepository _messageTaskHistoryRepository;
     private readonly MessageTaskDomainService _domainService;
     private readonly ICsvImporter _importer;
+    private readonly IMessageTemplateRepository _messageTemplateRepository;
 
     public MessageTaskCommandHandler(IMessageTaskRepository repository
         , IMessageTaskHistoryRepository messageTaskHistoryRepository
         , MessageTaskDomainService domainService
-        , ICsvImporter importer)
+        , ICsvImporter importer
+        , IMessageTemplateRepository messageTemplateRepository)
     {
         _repository = repository;
         _messageTaskHistoryRepository = messageTaskHistoryRepository;
         _domainService = domainService;
         _importer = importer;
+        _messageTemplateRepository = messageTemplateRepository;
     }
 
     [EventHandler]
@@ -80,24 +85,66 @@ public class MessageTaskCommandHandler
     [EventHandler]
     public async Task ImportReceiversAsync(ImportReceiversCommand command)
     {
-        var file = command.File;
+        var template = await _messageTemplateRepository.FindAsync(x => x.Id == command.Dto.MessageTemplatesId);
+        var file = command.Dto;
         var stream = new MemoryStream(file.FileContent);
-        var import = await _importer.Import<ReceiverImportDto>(stream);
-        var importDtos = import.Data?.ToList() ?? new();
-        var result = new ImportResultDto<MessageTaskReceiverDto>
+        ImportResult<ReceiverImportDto> import;
+        List<MessageTaskReceiverDto> importDtos = new();
+        if (template == null)
         {
-            HasError = import.HasError,
-            RowErrors = import.RowErrors,
-            TemplateErrors = import.TemplateErrors,
-            ErrorMsg = import.Exception?.Message ?? string.Empty,
-            Data = importDtos.Select(x => new MessageTaskReceiverDto
+            import = await _importer.Import<ReceiverImportDto>(stream);
+            if (import.Data != null)
             {
-                DisplayName = x.DisplayName,
-                PhoneNumber = x.PhoneNumber,
-                Email = x.Email,
-                Type = MessageTaskReceiverTypes.User
-            }).ToList()
-        };
-        command.Result = result;
+                importDtos = import.Data.Select(x => new MessageTaskReceiverDto
+                {
+                    DisplayName = x.DisplayName,
+                    PhoneNumber = x.PhoneNumber,
+                    Email = x.Email,
+                    Type = MessageTaskReceiverTypes.User
+                }).ToList();
+            }
+
+            command.Result = new ImportResultDto<MessageTaskReceiverDto>
+            {
+                HasError = import.HasError,
+                RowErrors = import.RowErrors,
+                TemplateErrors = import.TemplateErrors,
+                ErrorMsg = import.Exception?.Message ?? string.Empty,
+                Data = importDtos
+            };
+        }
+        else
+        {
+            var dynamicImport = await _importer.DynamicImport<dynamic>(stream);
+            if (dynamicImport.Data != null)
+            {
+                foreach (var item in dynamicImport.Data)
+                {
+                    var obj = item as ExpandoObject;
+                    var receiver = new MessageTaskReceiverDto
+                    {
+                        DisplayName = obj.GetOrDefault(nameof(ReceiverImportDto.DisplayName))?.ToString() ?? string.Empty,
+                        PhoneNumber = obj.GetOrDefault(nameof(ReceiverImportDto.PhoneNumber))?.ToString() ?? string.Empty,
+                        Email = obj.GetOrDefault(nameof(ReceiverImportDto.Email))?.ToString() ?? string.Empty,
+                        Type = MessageTaskReceiverTypes.User,
+                    };
+                    foreach (var t in template.Items)
+                    {
+                        receiver.Variables.TryAdd(t.Code, obj.GetOrDefault(t.Code)?.ToString() ?? string.Empty);
+                    }
+
+                    importDtos.Add(receiver);
+                }
+            }
+
+            command.Result = new ImportResultDto<MessageTaskReceiverDto>
+            {
+                HasError = dynamicImport.HasError,
+                RowErrors = dynamicImport.RowErrors,
+                TemplateErrors = dynamicImport.TemplateErrors,
+                ErrorMsg = dynamicImport.Exception?.Message ?? string.Empty,
+                Data = importDtos
+            };
+        }
     }
 }

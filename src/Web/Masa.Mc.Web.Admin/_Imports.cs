@@ -55,3 +55,4 @@ global using Masa.Mc.Web.Admin.Pages.MessageRecords.Modules;
 global using Masa.Mc.Web.Admin.Data.Auth.Subjects;
 global using Masa.Mc.Web.Admin.Data.Auth.Subjects.Dto;
 global using Masa.Mc.Web.Admin.Components.Modules.Subjects;
+global using System.Text;

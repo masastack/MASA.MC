@@ -3,7 +3,7 @@
 
 namespace Masa.Mc.Service.Admin.Application.MessageTasks.Commands;
 
-public record ImportReceiversCommand(UploadFileDto File) : Command
+public record ImportReceiversCommand(ImportReceiversDto Dto) : Command
 {
     public ImportResultDto<MessageTaskReceiverDto> Result { get; set; }
 }

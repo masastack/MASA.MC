@@ -110,7 +110,7 @@
                                 }
                                 @if (_model.ReceiverSelectType == MessageTaskReceiverSelectTypes.BatchUpload)
                                 {
-                                    <MessageReceiversImport @bind-Value="_model.Receivers" />
+                                    <MessageReceiversImport @bind-Value="_model.Receivers" MessageTemplatesId="_model.EntityId"/>
                                 }
                             }
                             <div class="mt-4 text-subtitle2">@T("DisplayName.MessageTaskSendingRule")</div>
