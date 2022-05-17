@@ -5,12 +5,12 @@ namespace Masa.Mc.Contracts.Admin.Dtos.ReceiverGroups;
 
 public class ReceiverImportDto
 {
-    [ImporterHeader(Name = "昵称")]
+    [ImporterHeader(Name = "NickName")]
     public string DisplayName { get; set; } = string.Empty;
 
-    [ImporterHeader(Name = "手机号")]
+    [ImporterHeader(Name = "PhoneNumber")]
     public string PhoneNumber { get; set; } = string.Empty;
 
-    [ImporterHeader(Name = "邮箱")]
+    [ImporterHeader(Name = "Email")]
     public string Email { get; set; } = string.Empty;
 }
