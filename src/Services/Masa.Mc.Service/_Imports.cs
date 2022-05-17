@@ -117,3 +117,4 @@ global using Masa.Mc.Contracts.Admin.Enums.MessageRecords;
 global using Masa.Mc.Infrastructure.Sms.Aliyun.Model.Response.SendSms;
 global using Masa.Mc.Service.Admin.Domain.MessageTasks.Events;
 global using Masa.Mc.Contracts.Admin.Dtos;
+global using Magicodes.ExporterAndImporter.Core.Models;

@@ -27,7 +27,7 @@ public class MessageTaskDomainService : DomainService
         if (!messageTask.IsDraft)
         {
             await _repository.UnitOfWork.SaveChangesAsync();
-            await EventBus.PublishAsync(new AddMessageTaskHistoryEvent(messageTask, messageTask.ReceiverType, messageTask.Receivers, messageTask.SendRules, messageTask.SendTime, messageTask.Sign, messageTask.Variables));
+            await EventBus.PublishAsync(new AddMessageTaskHistoryEvent(messageTask, messageTask.ReceiverType, messageTask.ReceiverSelectType, messageTask.Receivers, messageTask.SendRules, messageTask.SendTime, messageTask.Sign, messageTask.Variables));
         }
     }
 
@@ -45,7 +45,7 @@ public class MessageTaskDomainService : DomainService
         if (!messageTask.IsDraft)
         {
             await _repository.UnitOfWork.SaveChangesAsync();
-            await EventBus.PublishAsync(new AddMessageTaskHistoryEvent(messageTask, messageTask.ReceiverType, messageTask.Receivers, messageTask.SendRules, messageTask.SendTime, messageTask.Sign, messageTask.Variables));
+            await EventBus.PublishAsync(new AddMessageTaskHistoryEvent(messageTask, messageTask.ReceiverType, messageTask.ReceiverSelectType, messageTask.Receivers, messageTask.SendRules, messageTask.SendTime, messageTask.Sign, messageTask.Variables));
         }
     }
 
@@ -59,6 +59,6 @@ public class MessageTaskDomainService : DomainService
         messageTask.SendTask(receiverType, receivers, sendRules, sendTime, sign, variables);
         await _repository.UpdateAsync(messageTask);
         await _repository.UnitOfWork.SaveChangesAsync();
-        await EventBus.PublishAsync(new AddMessageTaskHistoryEvent(messageTask, receiverType, receivers, sendRules, sendTime, sign, variables));
+        await EventBus.PublishAsync(new AddMessageTaskHistoryEvent(messageTask, receiverType, messageTask.ReceiverSelectType, receivers, sendRules, sendTime, sign, variables));
     }
 }

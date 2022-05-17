@@ -107,7 +107,7 @@ public class MessageTaskService : ServiceBase
         return Results.Bytes(query.Result, "text/csv", "ReceiverImportTemplate.csv");
     }
 
-    public async Task<List<MessageTaskReceiverDto>> ImportReceiversAsync(IEventBus eventBus, UploadFileDto file)
+    public async Task<ImportResultDto<MessageTaskReceiverDto>> ImportReceiversAsync(IEventBus eventBus, UploadFileDto file)
     {
         var command = new ImportReceiversCommand(file);
         await eventBus.PublishAsync(command);

@@ -116,6 +116,11 @@ public abstract class AdminCompontentBase : BDomComponentBase
         });
     }
 
+    public List<KeyValuePair<string, TEnum>> GetEnumMap<TEnum>() where TEnum : struct, Enum
+    {
+        return Enum.GetValues<TEnum>().Select(e => new KeyValuePair<string, TEnum>(e.ToString(), e)).ToList();
+    }
+
     public List<KeyValuePair<string, bool>> GetBooleanMap()
     {
         return new()

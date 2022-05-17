@@ -62,12 +62,12 @@
                             {
                                 <MRow Class="mx-1 mt-6">
                                     <MCheckbox Class="mt-1 mr-2" @bind-Value="_model.MessageInfo.IsJump" Label="@T("DisplayName.MessageTemplateIsJump")"></MCheckbox>
-                                        <MTextField @bind-Value="_model.MessageInfo.JumpUrl"
-                                                Label="@T("DisplayName.MessageTemplateJumpUrl")"
-                                                Dense
-                                                Outlined
-                                                HideDetails="@("auto")">
-                                        </MTextField>
+                                    <MTextField @bind-Value="_model.MessageInfo.JumpUrl"
+                                            Label="@T("DisplayName.MessageTemplateJumpUrl")"
+                                            Dense
+                                            Outlined
+                                            HideDetails="@("auto")">
+                                    </MTextField>
                                 </MRow>
                             }
                             @if (_channelType == ChannelTypes.Sms)
@@ -99,11 +99,21 @@
                             @if (_model.ReceiverType == ReceiverTypes.Assign)
                             {
                                 <MInput @bind-Value="_model.Receivers" />
-                                <MessageReceivers Class="mt-2" @bind-Value="_model.Receivers" Type="@_channelType" />
+                                <MRow Class="mx-1 my-2">
+                                    <ButtonGroup @bind-Value="_model.ReceiverSelectType" StyleType=StyleTypes.Slider TValue="MessageTaskReceiverSelectTypes"/>
+                                </MRow>
+                                @if (_model.ReceiverSelectType == MessageTaskReceiverSelectTypes.ManualSelection)
+                                {
+                                    <MessageReceiversSelect @bind-Value="_model.Receivers" Type="@_channelType" />
+                                }
+                                @if (_model.ReceiverSelectType == MessageTaskReceiverSelectTypes.BatchUpload)
+                                {
+                                    <MessageReceiversImport @bind-Value="_model.Receivers" />
+                                }
                             }
                             <div class="mt-4 text-subtitle2">@T("DisplayName.MessageTaskSendingRule")</div>
                             <MInput @bind-Value="_model.SendRules" />
-                            <MessageSendingRules Class="mt-2" @bind-Value="_model.SendRules"/>
+                            <MessageSendingRules Class="mt-2" @bind-Value="_model.SendRules" />
                         </MCol>
                     </MRow>
                 </div>

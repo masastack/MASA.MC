@@ -21,3 +21,5 @@ global using Magicodes.ExporterAndImporter.Core;
 global using Masa.Mc.Contracts.Admin.Enums.MessageRecords;
 global using Masa.Mc.Infrastructure.ObjectExtending.Data;
 global using Masa.Mc.Contracts.Admin.Options.Channels;
+global using Magicodes.ExporterAndImporter.Core.Models;
+global using System.Collections.ObjectModel;

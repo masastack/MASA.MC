@@ -83,16 +83,21 @@ public class MessageTaskCommandHandler
         var file = command.File;
         var stream = new MemoryStream(file.FileContent);
         var import = await _importer.Import<ReceiverImportDto>(stream);
-        if (import.HasError)
-            throw new UserFriendlyException(import.Exception.Message);
-        var importDtos = import.Data.ToList();
-        var receivers = importDtos.Select(x => new MessageTaskReceiverDto
+        var importDtos = import.Data?.ToList() ?? new();
+        var result = new ImportResultDto<MessageTaskReceiverDto>
         {
-            DisplayName = x.DisplayName,
-            PhoneNumber = x.PhoneNumber,
-            Email = x.Email,
-            Type = MessageTaskReceiverTypes.User
-        }).ToList();
-        command.Result = receivers;
+            HasError = import.HasError,
+            RowErrors = import.RowErrors,
+            TemplateErrors = import.TemplateErrors,
+            ErrorMsg = import.Exception?.Message ?? string.Empty,
+            Data = importDtos.Select(x => new MessageTaskReceiverDto
+            {
+                DisplayName = x.DisplayName,
+                PhoneNumber = x.PhoneNumber,
+                Email = x.Email,
+                Type = MessageTaskReceiverTypes.User
+            }).ToList()
+        };
+        command.Result = result;
     }
 }

@@ -5,17 +5,14 @@ namespace Masa.Mc.Web.Admin.Pages.MessageTasks.Modules;
 
 public partial class MessageReceiversSelect : AdminCompontentBase
 {
-    //[Parameter]
-    //public List<MessageTaskReceiverDto> Value { get; set; } = new();
+    [Parameter]
+    public List<MessageTaskReceiverDto> Value { get; set; } = new();
 
-    //[Parameter]
-    //public EventCallback<List<MessageTaskReceiverDto>> ValueChanged { get; set; }
+    [Parameter]
+    public EventCallback<List<MessageTaskReceiverDto>> ValueChanged { get; set; }
 
     [Parameter]
     public ChannelTypes? Type { get; set; }
-
-    [Parameter]
-    public EventCallback<List<MessageTaskReceiverDto>> OnAdd { get; set; }
 
     private ExternalUserCreateModal _createModal;
     private List<Guid> _userIds = new List<Guid>();
@@ -48,40 +45,53 @@ public partial class MessageReceiversSelect : AdminCompontentBase
         }
     }
 
-    public async Task AddAsync()
+    private async Task AddAsync()
     {
         var list = _items.Where(x => _userIds.Contains(x.Id)).ToList();
         var dtos = list.Adapt<List<MessageTaskReceiverDto>>();
-        if (OnAdd.HasDelegate)
-        {
-            await OnAdd.InvokeAsync(dtos);
-        }
-        //foreach (var dto in dtos)
-        //{
-        //    if (!Value.Any(x => x.SubjectId == dto.SubjectId && x.Type == dto.Type))
-        //    {
-        //        Value.Insert(0, dto);
-        //    }
-        //}
-        //await ValueChanged.InvokeAsync(Value);
+        await HandleAddAsync(dtos);
     }
 
     private async Task HandleOk(SubjectDto user)
     {
         _items.Add(user);
         var dtos = new List<MessageTaskReceiverDto> { user.Adapt<MessageTaskReceiverDto>() };
-        if (OnAdd.HasDelegate)
+        if (await HandleAddAsync(dtos))
         {
-            await OnAdd.InvokeAsync(dtos);
+            await SuccessMessageAsync(T("ExternalMemberAddMessage"));
         }
-        //Value.Add(user.Adapt<MessageTaskReceiverDto>());
-        //await ValueChanged.InvokeAsync(Value);
     }
 
-    public bool CustomFilter(SubjectDto item, string queryText, string text)
+    private bool CustomFilter(SubjectDto item, string queryText, string text)
     {
         return item.DisplayName.Contains(queryText) ||
           item.PhoneNumber.Contains(queryText) ||
           item.Email.Contains(queryText);
+    }
+
+    private async Task RemoveValue(MessageTaskReceiverDto item)
+    {
+        Value.Remove(item);
+        await ValueChanged.InvokeAsync(Value);
+    }
+
+    private async Task<bool> HandleAddAsync(List<MessageTaskReceiverDto> receivers)
+    {
+        foreach (var receiver in receivers)
+        {
+            if (Value.Any(x => x.PhoneNumber == receiver.PhoneNumber))
+            {
+                await WarningAsync("手机号不允许重复");
+                return false;
+            }
+            if (Value.Any(x => x.Email == receiver.Email))
+            {
+                await WarningAsync("邮箱不允许重复");
+                return false;
+            }
+            Value.Insert(0, receiver);
+        }
+        await ValueChanged.InvokeAsync(Value);
+        return true;
     }
 }

@@ -16,6 +16,8 @@ public class MessageTaskHistory : AuditAggregateRoot<Guid, Guid>, ISoftDelete
 
     public ReceiverTypes ReceiverType { get; protected set; }
 
+    public MessageTaskReceiverSelectTypes ReceiverSelectType { get; protected set; }
+
     public MessageTaskHistoryStatuses Status { get; protected set; }
 
     public List<MessageTaskReceiver> Receivers { get; protected set; } = new();
@@ -36,11 +38,12 @@ public class MessageTaskHistory : AuditAggregateRoot<Guid, Guid>, ISoftDelete
 
     public bool IsDeleted { get; protected set; }
 
-    protected internal MessageTaskHistory(Guid messageTaskId, string taskHistoryNo, ReceiverTypes receiverType, List<MessageTaskReceiver> receivers, ExtraPropertyDictionary sendRules, DateTime? sendTime, string sign, ExtraPropertyDictionary variables)
+    protected internal MessageTaskHistory(Guid messageTaskId, string taskHistoryNo, ReceiverTypes receiverType, MessageTaskReceiverSelectTypes receiverSelectType, List<MessageTaskReceiver> receivers, ExtraPropertyDictionary sendRules, DateTime? sendTime, string sign, ExtraPropertyDictionary variables)
     {
         MessageTaskId = messageTaskId;
         TaskHistoryNo = taskHistoryNo;
         ReceiverType = receiverType;
+        ReceiverSelectType = receiverSelectType;
         Receivers = receivers;
         SendRules = sendRules;
         SendTime = sendTime;

@@ -56,9 +56,10 @@ public partial class ReceiverSelect : AdminCompontentBase
         _items.Add(user);
         Value.Add(user.Adapt<ReceiverGroupItemDto>());
         await ValueChanged.InvokeAsync(Value);
+        await SuccessMessageAsync(T("ExternalMemberAddMessage"));
     }
 
-    public bool CustomFilter(SubjectDto item, string queryText, string text)
+    private bool CustomFilter(SubjectDto item, string queryText, string text)
     {
         return item.DisplayName.Contains(queryText)||
           item.PhoneNumber.Contains(queryText)||

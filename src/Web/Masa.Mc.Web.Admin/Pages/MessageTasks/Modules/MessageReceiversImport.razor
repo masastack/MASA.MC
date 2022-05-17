@@ -5,9 +5,35 @@
         <MFileInput TValue="IBrowserFile"
                     Dense
                     Outlined
-                    Placeholder="请上传文件" OnChange="HandleFileChange"></MFileInput>
+                    Accept="text/csv"
+                    Placeholder="@T("Description.MessageReceiversUpload.Placeholder")" OnChange="HandleFileChange"></MFileInput>
     </MCol>
     <MCol Align="AlignTypes.Center">
-        <a href="@_downloadUrl" class="text-decoration-none">点击下载模板</a>
+        <a href="@_downloadUrl" class="text-decoration-none">@T("Description.MessageReceiversDownload.Tips")</a>
     </MCol>
 </MRow>
+<div class="pl-2">
+    <p class="mb-0">@T("Explain")</p>
+    <p>@T("Description.MessageReceiversUpload.Tips")</p>
+</div>
+
+@if (_importResult != null && _importResult.HasError)
+{
+    <MAlert Border="Borders.Right"
+        ColoredBorder
+        Type="AlertTypes.Error"
+        Elevation="2">
+        @_importResult.ErrorMsg
+    </MAlert>
+}
+@if (Value != null && Value.Any())
+{
+    <MAlert Border="Borders.Top"
+        ColoredBorder
+        Type="AlertTypes.Info"
+        Elevation="2">
+        @(string.Format(T("Description.MessageReceiversImport.Tips"), Value.Count))
+    </MAlert>
+}
+
+

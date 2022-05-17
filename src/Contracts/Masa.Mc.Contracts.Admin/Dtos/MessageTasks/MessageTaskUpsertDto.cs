@@ -21,6 +21,8 @@ public class MessageTaskUpsertDto
 
     public ReceiverTypes ReceiverType { get; set; }
 
+    public MessageTaskReceiverSelectTypes ReceiverSelectType { get; set; } = MessageTaskReceiverSelectTypes.ManualSelection;
+
     public DateTime? SendTime { get; set; }
 
     public string Sign { get; set; } = string.Empty;

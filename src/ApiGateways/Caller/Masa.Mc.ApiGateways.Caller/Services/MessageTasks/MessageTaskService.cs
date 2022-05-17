@@ -57,8 +57,8 @@ public class MessageTaskService : ServiceBase
         await PostAsync("Disable", inputDto);
     }
 
-    public async Task<List<MessageTaskReceiverDto>> ImportReceiversAsync(UploadFileDto file)
+    public async Task<ImportResultDto<MessageTaskReceiverDto>> ImportReceiversAsync(UploadFileDto file)
     {
-        return await PostAsync<UploadFileDto, List<MessageTaskReceiverDto>>("ImportReceivers", file)??new();
+        return await PostAsync<UploadFileDto, ImportResultDto<MessageTaskReceiverDto>>("ImportReceivers", file)??new();
     }
 }

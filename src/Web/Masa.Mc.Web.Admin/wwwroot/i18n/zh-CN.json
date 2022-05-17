@@ -14,6 +14,7 @@
   "Enable": "启用",
   "IsEnabled": "启用/禁用",
   "Description": "描述说明",
+  "Explain": "说明",
   "Disabled": "禁用",
   "Action": "操作",
   "Add": "添加",
@@ -210,5 +211,9 @@
   "DisplayName.MessageRecordSuccess.False": "发送失败",
   "DisplayName.MessageRecordTimeTypes": "时间类型",
   "DisplayName.MessageRecordTimeTypes.SendTime": "发送时间",
-  "DisplayName.MessageRecordUserId": "收件人"
+  "DisplayName.MessageRecordUserId": "收件人",
+  "Description.MessageReceiversImport.Tips": "共上传{0}条数据。",
+  "Description.MessageReceiversUpload.Placeholder": "请上传文件",
+  "Description.MessageReceiversUpload.Tips": "请上传.csv格式的文件",
+  "Description.MessageReceiversDownload.Tips": "点击下载模板"
 }

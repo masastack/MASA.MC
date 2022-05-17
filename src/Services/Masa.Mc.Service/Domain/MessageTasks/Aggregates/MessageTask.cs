@@ -21,6 +21,8 @@ public class MessageTask : AuditAggregateRoot<Guid, Guid>, ISoftDelete
 
     public ReceiverTypes ReceiverType { get; protected set; }
 
+    public MessageTaskReceiverSelectTypes ReceiverSelectType { get; protected set; }
+
     public DateTime? SendTime { get; protected set; }
 
     public string Sign { get; protected set; } = string.Empty;
@@ -33,7 +35,7 @@ public class MessageTask : AuditAggregateRoot<Guid, Guid>, ISoftDelete
 
     public bool IsDeleted { get; protected set; }
 
-    public MessageTask(string displayName, Guid channelId, MessageEntityTypes entityType, Guid entityId, bool isDraft, string sign, ReceiverTypes receiverType, List<MessageTaskReceiver> receivers, ExtraPropertyDictionary sendRules)
+    public MessageTask(string displayName, Guid channelId, MessageEntityTypes entityType, Guid entityId, bool isDraft, string sign, ReceiverTypes receiverType, MessageTaskReceiverSelectTypes receiverSelectType, List<MessageTaskReceiver> receivers, ExtraPropertyDictionary sendRules)
     {
         DisplayName = displayName;
         ChannelId = channelId;
@@ -41,6 +43,7 @@ public class MessageTask : AuditAggregateRoot<Guid, Guid>, ISoftDelete
         EntityId = entityId;
         Sign = sign;
         SetDraft(isDraft);
+        ReceiverSelectType = receiverSelectType;
         SetReceivers(receiverType, receivers);
         SendRules = sendRules ?? new();
     }

@@ -13,6 +13,8 @@ public class MessageTaskHistoryDto : AuditEntityDto<Guid, Guid>
 
     public ReceiverTypes ReceiverType { get; set; }
 
+    public MessageTaskReceiverSelectTypes ReceiverSelectType { get; set; }
+
     public MessageTaskHistoryStatuses Status { get; set; }
 
     public List<MessageTaskReceiverDto> Receivers { get; set; } = new();

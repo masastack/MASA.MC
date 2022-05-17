@@ -31,7 +31,17 @@
                             @if (_model.ReceiverType == ReceiverTypes.Assign)
                             {
                                 <MInput @bind-Value="_model.Receivers" />
-                                <MessageReceivers Class="mt-2" @bind-Value="_model.Receivers" />
+                                <MRow Class="mx-1 my-2">
+                                    <ButtonGroup @bind-Value="_info.ReceiverSelectType" StyleType=StyleTypes.Slider TValue="MessageTaskReceiverSelectTypes"/>
+                                </MRow>
+                                @if (_info.ReceiverSelectType == MessageTaskReceiverSelectTypes.ManualSelection)
+                                {
+                                    <MessageReceiversSelect @bind-Value="_model.Receivers" Type="@_info.Channel?.Type" />
+                                }
+                                @if (_info.ReceiverSelectType == MessageTaskReceiverSelectTypes.BatchUpload)
+                                {
+                                    <MessageReceiversImport @bind-Value="_model.Receivers" />
+                                }
                             }
                             <div class="mt-4 text-subtitle2">@T("DisplayName.MessageTaskSendingRule")</div>
                             <MInput @bind-Value="_model.SendRules" />

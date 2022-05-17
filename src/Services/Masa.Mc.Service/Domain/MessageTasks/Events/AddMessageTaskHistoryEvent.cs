@@ -3,6 +3,6 @@
 
 namespace Masa.Mc.Service.Admin.Domain.MessageTasks.Events;
 
-public record AddMessageTaskHistoryEvent(MessageTask MessageTask, ReceiverTypes ReceiverType, List<MessageTaskReceiver> Receivers, ExtraPropertyDictionary SendRules, DateTime? SendTime, string Sign, ExtraPropertyDictionary Variables) : DomainEvent
+public record AddMessageTaskHistoryEvent(MessageTask MessageTask, ReceiverTypes ReceiverType, MessageTaskReceiverSelectTypes receiverSelectType, List<MessageTaskReceiver> Receivers, ExtraPropertyDictionary SendRules, DateTime? SendTime, string Sign, ExtraPropertyDictionary Variables) : DomainEvent
 {
 }

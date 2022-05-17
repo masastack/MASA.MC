@@ -6,12 +6,16 @@ namespace Masa.Mc.Web.Admin.Pages.MessageTasks.Modules;
 public partial class MessageReceiversImport
 {
     [Parameter]
-    public ChannelTypes? Type { get; set; }
+    public List<MessageTaskReceiverDto> Value { get; set; } = new();
+
+    [Parameter]
+    public EventCallback<List<MessageTaskReceiverDto>> ValueChanged { get; set; }
 
     [Parameter]
     public EventCallback<List<MessageTaskReceiverDto>> OnAdd { get; set; }
 
-    private string _downloadUrl;
+    private string _downloadUrl=string.Empty;
+    private ImportResultDto<MessageTaskReceiverDto> _importResult;
 
     MessageTaskService MessageTaskService => McCaller.MessageTaskService;
 
@@ -31,12 +35,9 @@ public partial class MessageReceiversImport
             FileContent = memoryStream.ToArray(),
             Size = file.Size,
             ContentType = "text/csv"
-            //ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         };
-        var list = await MessageTaskService.ImportReceiversAsync(dto);
-        if (list != null && OnAdd.HasDelegate)
-        {
-            await OnAdd.InvokeAsync(list);
-        }
+        _importResult = await MessageTaskService.ImportReceiversAsync(dto);
+        Value = _importResult.Data.ToList();
+        await ValueChanged.InvokeAsync(Value);
     }
 }
