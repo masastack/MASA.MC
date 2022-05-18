@@ -1,6 +1,9 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
+using System.ComponentModel;
+using Magicodes.ExporterAndImporter.Core.Extension;
+
 namespace Masa.Mc.Service.Admin.Application.MessageTasks;
 
 public class MessageTaskQueryHandler
@@ -76,21 +79,26 @@ public class MessageTaskQueryHandler
     public async Task GenerateImportTemplateAsync(GenerateReceiverImportTemplateQuery query)
     {
         var template = await _messageTemplateRepository.FindAsync(x => x.Id == query.MessageTemplateId);
-        if (template == null)
-        {
-            var result = await _importer.GenerateTemplateBytes<ReceiverImportDto>();
-            query.Result = result;
-            return;
-        }
         var record = new ExpandoObject();
-        record.TryAdd(nameof(ReceiverImportDto.DisplayName), string.Empty);
-        record.TryAdd(nameof(ReceiverImportDto.PhoneNumber), string.Empty);
-        record.TryAdd(nameof(ReceiverImportDto.Email), string.Empty);
-        foreach (var item in template.Items)
+        var properties = typeof(ReceiverImportDto).GetProperties();
+        foreach (var prop in properties)
         {
-            record.TryAdd(item.Code, string.Empty);
+            var name = prop.Name;
+            var importAttribute = prop.GetCustomAttribute<Magicodes.ExporterAndImporter.Core.ImporterHeaderAttribute>();
+            if (importAttribute != null)
+            {
+                name = importAttribute.Name ?? prop.GetDisplayName() ?? prop.Name;
+            }
+            record.TryAdd(name, string.Empty);
         }
-        var byteResult = await _exporter.ExportDynamicHeaderAsByteArray(record);
-        query.Result = byteResult;
+        if (template != null)
+        {
+            foreach (var item in template.Items)
+            {
+                record.TryAdd(item.Code, string.Empty);
+            }
+        }
+        var result = await _exporter.ExportDynamicHeaderAsByteArray(record);
+        query.Result = result;
     }
 }

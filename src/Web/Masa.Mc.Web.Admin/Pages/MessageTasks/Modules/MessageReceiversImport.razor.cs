@@ -22,9 +22,9 @@ public partial class MessageReceiversImport
 
     MessageTaskService MessageTaskService => McCaller.MessageTaskService;
 
-    protected override void OnInitialized()
+    protected override void OnParametersSet()
     {
-        base.OnInitialized();
+        base.OnParametersSet();
         _downloadUrl = $"{McApiOptions.McServiceBaseAddress}/api/message-task/GenerateReceiverImportTemplate";
         if (MessageTemplatesId.HasValue)
         {

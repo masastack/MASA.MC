@@ -4,7 +4,7 @@
 namespace Masa.Mc.Infrastructure.ExporterAndImporter.Csv.Utility
 {
     /// <summary>
-    ///     导入辅助类
+    /// 导入辅助类
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class ImportHelper<T> : IDisposable where T : class, new()
@@ -26,22 +26,22 @@ namespace Masa.Mc.Infrastructure.ExporterAndImporter.Csv.Utility
         }
 
         /// <summary>
-        ///     导入文件路径
+        /// 导入文件路径
         /// </summary>
         protected string FilePath { get; set; }
 
         /// <summary>
-        ///     导入结果
+        /// 导入结果
         /// </summary>
         internal ImportResult<T> ImportResult { get; set; }
 
         /// <summary>
-        ///     文件流
+        /// 文件流
         /// </summary>
         protected Stream Stream { get; set; }
 
         /// <summary>
-        ///     导入模型
+        /// 导入模型
         /// </summary>
         /// <returns></returns>
         public Task<ImportResult<T>> Import(string filePath = null)
@@ -78,14 +78,14 @@ namespace Masa.Mc.Infrastructure.ExporterAndImporter.Csv.Utility
         }
 
         /// <summary>
-        ///     导入模型
+        ///  导入模型
         /// </summary>
         /// <returns></returns>
-        public Task<ImportResult<T>> DynamicImport(string filePath = null)
+        public Task<ImportResult<dynamic>> DynamicImport(string filePath = null)
         {
             if (!string.IsNullOrWhiteSpace(filePath)) FilePath = filePath;
 
-            ImportResult = new ImportResult<T>();
+            var importResult = new ImportResult<dynamic>();
             try
             {
                 if (Stream == null)
@@ -97,24 +97,25 @@ namespace Masa.Mc.Infrastructure.ExporterAndImporter.Csv.Utility
                 using (var reader = new StreamReader(Stream))
                 using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
                 {
-                    var result = csv.GetRecords<T>();
-                    ImportResult.Data = result.ToList();
-                    return Task.FromResult(ImportResult);
+                    csv.Context.RegisterClassMap<AutoMap<T>>();
+                    var result = csv.GetRecords<dynamic>();
+                    importResult.Data = result.ToList();
+                    return Task.FromResult(importResult);
                 }
             }
             catch (Exception ex)
             {
-                ImportResult.Exception = ex;
+                importResult.Exception = ex;
             }
             finally
             {
                 ((IDisposable)Stream)?.Dispose();
             }
-            return Task.FromResult(ImportResult);
+            return Task.FromResult(importResult);
         }
 
         /// <summary>
-        ///     导出模板
+        /// 导出模板
         /// </summary>
         /// <returns></returns>
         public Task<byte[]> GenerateTemplateByte()
@@ -152,7 +153,7 @@ namespace Masa.Mc.Infrastructure.ExporterAndImporter.Csv.Utility
         }
 
         /// <summary>
-        ///     检查导入文件路径
+        /// 检查导入文件路径
         /// </summary>
         /// <exception cref="ArgumentException">文件路径不能为空! - filePath</exception>
         private static void CheckImportFile(string filePath)
@@ -165,6 +166,7 @@ namespace Masa.Mc.Infrastructure.ExporterAndImporter.Csv.Utility
             //    throw new ImportException("导入文件不存在!");
             //}
         }
+
         /// <summary>
         /// </summary>
         public void Dispose()
@@ -174,7 +176,5 @@ namespace Masa.Mc.Infrastructure.ExporterAndImporter.Csv.Utility
             Stream = null;
             GC.Collect();
         }
-
-
     }
 }

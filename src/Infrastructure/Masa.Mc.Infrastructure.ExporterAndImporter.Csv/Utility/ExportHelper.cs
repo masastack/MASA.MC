@@ -1,8 +1,6 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
-using System.Dynamic;
-
 namespace Masa.Mc.Infrastructure.ExporterAndImporter.Csv.Utility;
 
 /// <summary>
@@ -148,33 +146,6 @@ public class ExportHelper<T> where T : class
             if (!string.IsNullOrWhiteSpace(delimiter))
                 csv.Context.Configuration.Delimiter = delimiter;
 
-            //#region header 
-            //var properties = typeof(T).GetProperties();
-            //foreach (var prop in properties)
-            //{
-            //    var name = prop.Name;
-            //    var headerAttribute = prop.GetCustomAttribute<Core.ExporterHeaderAttribute>();
-            //    if (headerAttribute != null)
-            //    {
-            //        name = headerAttribute.DisplayName ?? prop.GetDisplayName() ?? prop.Name;
-            //    }
-            //    var importAttribute = prop.GetCustomAttribute<Core.ImporterHeaderAttribute>();
-            //    if (importAttribute != null)
-            //    {
-            //        name = importAttribute.Name ?? prop.GetDisplayName() ?? prop.Name;
-            //    }
-            //    csv.WriteField(name);
-            //}
-            //csv.NextRecord();
-            //#endregion
-            //foreach (DataRow row in dataItems.Rows)
-            //{
-            //    for (var i = 0; i < dataItems.Columns.Count; i++)
-            //    {
-            //        csv.WriteField(row[i]);
-            //    }
-            //    csv.NextRecord();
-            //}
             csv.WriteRecords(dataItems.ToList<T>());
             writer.Flush();
             ms.Position = 0;

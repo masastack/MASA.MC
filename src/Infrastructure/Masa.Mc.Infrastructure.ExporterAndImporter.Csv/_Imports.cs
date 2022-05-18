@@ -18,3 +18,5 @@ global using Microsoft.Extensions.DependencyInjection.Extensions;
 global using Masa.Mc.Infrastructure.ExporterAndImporter.Csv.Utility;
 global using CsvHelper.Configuration;
 global using System.Dynamic;
+global using Microsoft.Extensions.DependencyInjection;
+global using Magicodes.ExporterAndImporter.Core;
