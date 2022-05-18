@@ -1,0 +1,26 @@
+﻿@inherits AdminCompontentBase
+<div class="text-subtitle2">@T("DisplayName.MessageTaskReceiver")</div>
+<MRadioGroup Value="ReceiverType" ValueChanged="ReceiverTypeChanged"
+             Row>
+    <MRadio Label="@T("DisplayName.ReceiverType.Assign")"
+            Value="@ReceiverTypes.Assign">
+    </MRadio>
+    <MRadio Label="@T("DisplayName.ReceiverType.Broadcast")"
+            Disabled="ChannelType!=ChannelTypes.WebsiteMessage"
+            Value="@ReceiverTypes.Broadcast">
+    </MRadio>
+</MRadioGroup>
+@if (ReceiverType == ReceiverTypes.Assign)
+{
+    <MRow Class="mx-1 my-2">
+        <ButtonGroup Value="ReceiverSelectType" StyleType=StyleTypes.Slider TValue="MessageTaskReceiverSelectTypes" ValueChanged="ReceiverSelectTypeChanged" />
+    </MRow>
+    @if (ReceiverSelectType == MessageTaskReceiverSelectTypes.ManualSelection)
+    {
+        <MessageReceiversSelect Value="SelectReceivers" Type="ChannelType" ValueChanged="SelectReceiversChanged" />
+    }
+    @if (ReceiverSelectType == MessageTaskReceiverSelectTypes.BatchUpload)
+    {
+        <MessageReceiversImport Value="ImportReceivers" MessageTemplatesId="MessageTemplatesId" ValueChanged="ImportReceiversChanged" />
+    }
+}

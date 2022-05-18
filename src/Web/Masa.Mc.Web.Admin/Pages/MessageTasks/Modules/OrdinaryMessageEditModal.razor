@@ -85,32 +85,12 @@
                             }
                         </MCol>
                         <MCol>
-                            <div class="text-subtitle2">@T("DisplayName.MessageTaskReceiver")</div>
-                            <MRadioGroup @bind-Value="_model.ReceiverType"
-                                         Row>
-                                <MRadio Label="@T("DisplayName.ReceiverType.Assign")"
-                                        Value="@ReceiverTypes.Assign">
-                                </MRadio>
-                                <MRadio Label="@T("DisplayName.ReceiverType.Broadcast")"
-                                        Disabled="_channelType!=ChannelTypes.WebsiteMessage"
-                                        Value="@ReceiverTypes.Broadcast">
-                                </MRadio>
-                            </MRadioGroup>
-                            @if (_model.ReceiverType == ReceiverTypes.Assign)
-                            {
-                                <MInput @bind-Value="_model.Receivers" />
-                                <MRow Class="mx-1 my-2">
-                                    <ButtonGroup @bind-Value="_model.ReceiverSelectType" StyleType=StyleTypes.Slider TValue="MessageTaskReceiverSelectTypes"/>
-                                </MRow>
-                                @if (_model.ReceiverSelectType == MessageTaskReceiverSelectTypes.ManualSelection)
-                                {
-                                    <MessageReceiversSelect @bind-Value="_model.Receivers" Type="@_channelType" />
-                                }
-                                @if (_model.ReceiverSelectType == MessageTaskReceiverSelectTypes.BatchUpload)
-                                {
-                                    <MessageReceiversImport @bind-Value="_model.Receivers"/>
-                                }
-                            }
+                            <MInput @bind-Value="_model.Receivers"/>
+                            <MessageReceivers @bind-ReceiverType="_model.ReceiverType"
+                                              @bind-SelectReceivers="_selectReceivers"
+                                              @bind-ImportReceivers="_importReceivers"
+                                              @bind-ReceiverSelectType="_model.ReceiverSelectType"
+                                              ChannelType="_channelType" />
                             <div class="mt-4 text-subtitle2">@T("DisplayName.MessageTaskSendingRule")</div>
                             <MInput @bind-Value="_model.SendRules" />
                             <MessageSendingRules Class="mt-2" @bind-Value="_model.SendRules" />

@@ -13,6 +13,8 @@ public partial class OrdinaryMessageCreateModal : AdminCompontentBase
     private bool _visible;
     private List<ChannelDto> _channelItems = new();
     private ChannelTypes _channelType;
+    private List<MessageTaskReceiverDto> _selectReceivers = new();
+    private List<MessageTaskReceiverDto> _importReceivers = new();
 
     MessageTaskService MessageTaskService => McCaller.MessageTaskService;
     ChannelService ChannelService => McCaller.ChannelService;
@@ -39,6 +41,7 @@ public partial class OrdinaryMessageCreateModal : AdminCompontentBase
 
     private async Task HandleOkAsync(bool isDraft)
     {
+        _model.Receivers = _model.ReceiverSelectType == MessageTaskReceiverSelectTypes.ManualSelection ? _selectReceivers : _importReceivers;
         _model.IsDraft = isDraft;
         if (!await _form.ValidateAsync())
         {
@@ -59,6 +62,8 @@ public partial class OrdinaryMessageCreateModal : AdminCompontentBase
     private void ResetForm()
     {
         _model = new() { ReceiverType = ReceiverTypes.Assign, EntityType = MessageEntityTypes.Ordinary };
+        _selectReceivers = new();
+        _importReceivers = new();
     }
 
     private void HandleVisibleChanged(bool val)

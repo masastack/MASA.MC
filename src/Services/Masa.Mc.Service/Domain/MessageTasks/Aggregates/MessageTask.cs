@@ -48,9 +48,10 @@ public class MessageTask : AuditAggregateRoot<Guid, Guid>, ISoftDelete
         SendRules = sendRules ?? new();
     }
 
-    public virtual void SendTask(ReceiverTypes receiverType, List<MessageTaskReceiver> receivers, ExtraPropertyDictionary sendRules, DateTime? sendTime, string sign, ExtraPropertyDictionary variables)
+    public virtual void SendTask(ReceiverTypes receiverType, List<MessageTaskReceiver> receivers, MessageTaskReceiverSelectTypes receiverSelectType, ExtraPropertyDictionary sendRules, DateTime? sendTime, string sign, ExtraPropertyDictionary variables)
     {
         SetDraft(false);
+        ReceiverSelectType = receiverSelectType;
         SetReceivers(receiverType, receivers);
         SendRules = sendRules ?? new();
         SendTime = sendTime ?? DateTime.UtcNow;

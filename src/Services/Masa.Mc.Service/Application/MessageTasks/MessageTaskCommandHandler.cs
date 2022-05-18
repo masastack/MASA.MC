@@ -42,7 +42,7 @@ public class MessageTaskCommandHandler
     {
         var inputDto = command.inputDto;
         var receivers = inputDto.Receivers.Adapt<List<MessageTaskReceiver>>();
-        await _domainService.SendAsync(inputDto.Id, inputDto.ReceiverType, receivers, ExtensionPropertyHelper.ObjMapToExtraProperty(inputDto.SendRules), inputDto.SendTime, inputDto.Sign, inputDto.Variables);
+        await _domainService.SendAsync(inputDto.Id, inputDto.ReceiverType, inputDto.ReceiverSelectType, receivers, ExtensionPropertyHelper.ObjMapToExtraProperty(inputDto.SendRules), inputDto.SendTime, inputDto.Sign, inputDto.Variables);
     }
 
     [EventHandler]
@@ -57,7 +57,7 @@ public class MessageTaskCommandHandler
         if (entity.Variables.Any(x => string.IsNullOrEmpty(x.Value.ToString())))
             throw new UserFriendlyException("please fill in the signature template variable of the task first");
         var receivers = inputDto.Receivers.Adapt<List<MessageTaskReceiver>>();
-        await _domainService.SendAsync(inputDto.Id, ReceiverTypes.Assign, receivers, new ExtraPropertyDictionary(), DateTime.UtcNow, entity.Sign, entity.Variables);
+        await _domainService.SendAsync(inputDto.Id, ReceiverTypes.Assign, entity.ReceiverSelectType, receivers, new ExtraPropertyDictionary(), DateTime.UtcNow, entity.Sign, entity.Variables);
     }
 
     [EventHandler]
@@ -141,7 +141,7 @@ public class MessageTaskCommandHandler
     private List<MessageTaskReceiverDto> CheckDynamicImportDtos(ImportResult<dynamic> dynamicImportDtos, List<MessageTemplateItem> items)
     {
         List<MessageTaskReceiverDto> importDtos = new();
-        if (dynamicImportDtos.Data == null|| !dynamicImportDtos.Data.Any())
+        if (dynamicImportDtos.Data == null || !dynamicImportDtos.Data.Any())
         {
             dynamicImportDtos.Exception = new Exception("no valid data detected");
             return importDtos;

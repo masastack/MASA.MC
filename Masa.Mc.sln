@@ -58,7 +58,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Masa.Mc.Infrastructure.Emai
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Masa.Mc.Infrastructure.SignalR", "src\Infrastructure\Masa.Mc.Infrastructure.SignalR\Masa.Mc.Infrastructure.SignalR.csproj", "{E71E792D-4812-4A7E-AB78-7DB4B7FB4D3D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Masa.Mc.Infrastructure.ExporterAndImporter.Csv", "src\Infrastructure\Masa.Mc.Infrastructure.ExporterAndImporter.Csv\Masa.Mc.Infrastructure.ExporterAndImporter.Csv.csproj", "{52353216-56EB-4F38-A6BA-7A23801569C3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Masa.Mc.Infrastructure.ExporterAndImporter.Csv", "src\Infrastructure\Masa.Mc.Infrastructure.ExporterAndImporter.Csv\Masa.Mc.Infrastructure.ExporterAndImporter.Csv.csproj", "{52353216-56EB-4F38-A6BA-7A23801569C3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
