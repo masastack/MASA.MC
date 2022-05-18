@@ -25,7 +25,11 @@ public partial class MessageReceiversImport
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        _downloadUrl = $"{McApiOptions.McServiceBaseAddress}/api/message-task/GenerateReceiverImportTemplate?messageTemplatesId={MessageTemplatesId}";
+        _downloadUrl = $"{McApiOptions.McServiceBaseAddress}/api/message-task/GenerateReceiverImportTemplate";
+        if (MessageTemplatesId.HasValue)
+        {
+            _downloadUrl += $"?messageTemplatesId={MessageTemplatesId}";
+        }
     }
 
     private async void HandleFileChange(IBrowserFile file)

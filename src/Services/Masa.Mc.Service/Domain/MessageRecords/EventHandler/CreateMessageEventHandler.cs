@@ -33,7 +33,7 @@ public class CreateMessageEventHandler
                 DisplayName = x.DisplayName,
                 PhoneNumber = x.PhoneNumber,
                 Email = x.Email,
-                Variables = taskHistory.Variables,
+                Variables = x.Variables.Count == 0 ? taskHistory.Variables : x.Variables,
             })
             .ToList();
         var receiverGroupIds = taskHistory.Receivers.Where(x => x.Type == MessageTaskReceiverTypes.Group).Select(x => x.SubjectId).Distinct();
