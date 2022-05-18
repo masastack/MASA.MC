@@ -65,4 +65,11 @@ public partial class ReceiverSelect : AdminCompontentBase
           item.PhoneNumber.Contains(queryText)||
           item.Email.Contains(queryText);
     }
+
+    public bool CustomFilter(SubjectDto item, string queryText, string text)
+    {
+        return item.DisplayName.Contains(queryText)||
+          item.PhoneNumber.Contains(queryText)||
+          item.Email.Contains(queryText);
+    }
 }
