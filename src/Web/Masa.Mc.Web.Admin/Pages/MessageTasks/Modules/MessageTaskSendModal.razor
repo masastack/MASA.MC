@@ -3,7 +3,7 @@
     <SheetDialog Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.SendMessageTask")">
         <MForm Model="_model" @ref="_form" EnableValidation>
             <div class="sheet-dialog full-height flex-column">
-                <div class="mt-6 flex-height-auto overflow-y">
+                <div class="pt-6 flex-height-auto overflow-y">
                     <MRow>
                         <MCol>
                             @if (_info.EntityType == MessageEntityTypes.Ordinary)
@@ -32,7 +32,6 @@
                                     <MCol>
                                         <MTextField @bind-Value="_model.Sign"
                                                 Label="@T("DisplayName.MessageTemplateSign")"
-                                                Dense
                                                 Outlined
                                                 HideDetails="@("auto")">
                                         </MTextField>
@@ -43,7 +42,7 @@
                         </MCol>
                     </MRow>
                 </div>
-                <div Class="d-flex mt-6">
+                <div Class="d-flex pt-6">
                     <MSpacer></MSpacer>
                     <MButton Color="primary" Class="small-button" OnClick="async() => await HandleOkAsync()">@T("Send")</MButton>
                 </div>

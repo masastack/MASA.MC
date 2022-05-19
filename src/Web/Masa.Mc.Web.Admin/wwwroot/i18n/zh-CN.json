@@ -216,5 +216,7 @@
   "Description.MessageReceiversUpload.Placeholder": "请上传文件",
   "Description.MessageReceiversUpload.Tips": "请上传.csv格式的文件",
   "Description.MessageReceiversDownload.Tips": "点击下载模板",
-  "Description.MessageReceiversUpload.EncodingTips": "请上传UTF-8编码的csv文件"
+  "Description.MessageReceiversUpload.EncodingTips": "请上传UTF-8编码的csv文件",
+  "Description.PhoneNumber.Required": "手机号不允许重复",
+  "Description.Email.Required": "邮箱不允许重复"
 }

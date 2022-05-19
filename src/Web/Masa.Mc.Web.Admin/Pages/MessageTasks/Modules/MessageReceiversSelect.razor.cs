@@ -56,10 +56,7 @@ public partial class MessageReceiversSelect : AdminCompontentBase
     {
         _items.Add(user);
         var dtos = new List<MessageTaskReceiverDto> { user.Adapt<MessageTaskReceiverDto>() };
-        if (await HandleAddAsync(dtos))
-        {
-            await SuccessMessageAsync(T("ExternalMemberAddMessage"));
-        }
+        await HandleAddAsync(dtos);
     }
 
     private bool CustomFilter(SubjectDto item, string queryText, string text)
@@ -72,26 +69,23 @@ public partial class MessageReceiversSelect : AdminCompontentBase
     private async Task RemoveValue(MessageTaskReceiverDto item)
     {
         Value.Remove(item);
-        await ValueChanged.InvokeAsync(Value);
+        if (ValueChanged.HasDelegate)
+        {
+            await ValueChanged.InvokeAsync(Value);
+        }
     }
 
-    private async Task<bool> HandleAddAsync(List<MessageTaskReceiverDto> receivers)
+    private async Task HandleAddAsync(List<MessageTaskReceiverDto> receivers)
     {
         foreach (var receiver in receivers)
         {
-            if (Value.Any(x => x.PhoneNumber == receiver.PhoneNumber))
-            {
-                await WarningAsync("手机号不允许重复");
-                return false;
-            }
-            if (Value.Any(x => x.Email == receiver.Email))
-            {
-                await WarningAsync("邮箱不允许重复");
-                return false;
-            }
+            if (Value.Any(x => x.PhoneNumber == receiver.PhoneNumber)) continue;
+            if (Value.Any(x => x.Email == receiver.Email)) continue;
             Value.Insert(0, receiver);
         }
-        await ValueChanged.InvokeAsync(Value);
-        return true;
+        if (ValueChanged.HasDelegate)
+        {
+            await ValueChanged.InvokeAsync(Value);
+        }
     }
 }

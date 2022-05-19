@@ -22,7 +22,7 @@ public class ExportHelper<T> where T : class
     /// <param name="type"></param>
     public ExportHelper(Type type)
     {
-        this._type = type;
+        _type = type;
     }
 
     /// <summary>

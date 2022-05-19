@@ -52,6 +52,9 @@ public partial class MessageReceiversImport
         };
         _importResult = await MessageTaskService.ImportReceiversAsync(dto);
         Value = _importResult.Data.ToList();
-        await ValueChanged.InvokeAsync(Value);
+        if (ValueChanged.HasDelegate)
+        {
+            await ValueChanged.InvokeAsync(Value);
+        }
     }
 }

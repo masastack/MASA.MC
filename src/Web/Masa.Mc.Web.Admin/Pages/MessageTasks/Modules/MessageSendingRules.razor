@@ -59,7 +59,7 @@
     </MTextField>
     <span class="pt-4">@T("Unit.Bar")</span>
 </MRow>
-<MRow Class="mx-1 mt-6" Justify="JustifyTypes.Start">
+<MRow Class="mx-1 pt-6" Justify="JustifyTypes.Start">
     <MCheckbox Class="mt-1" @bind-Value="Value.IsTiming" Disabled="ReadOnly"></MCheckbox>
     <span class="pt-2">@T("DisplayName.SendingRule.IsTiming")</span>
     <MMenu @bind-Value="_datePickersShow"
@@ -71,7 +71,6 @@
         <ActivatorContent>
             <MTextField @bind-Value="_sendingDate"
                         PrependInnerIcon="mdi-calendar"
-                        Dense
                         Outlined
                         Disabled="ReadOnly"
                         Class="mx-1"
@@ -93,7 +92,6 @@
         <ActivatorContent>
             <MTextField @bind-Value="_sendingTime"
                         PrependInnerIcon="mdi-clock-time-four-outline"
-                        Dense
                         Outlined
                         Disabled="ReadOnly"
                         Class="mx-1"

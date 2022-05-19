@@ -3,7 +3,6 @@
     <MCol>
         <MTextField Value="@T(MessageTask.Channel.Type.ToString())"
                     Label="@T("DisplayName.ChannelType")"
-                    Dense
                     Outlined
                     Disabled
                     HideDetails="@("auto")">
@@ -14,7 +13,6 @@
     <MCol>
         <MTextField @bind-Value="MessageTask.Channel.DisplayName"
                     Label="@T("DisplayName.Channel")"
-                    Dense
                     Outlined
                     Disabled
                     HideDetails="@("auto")">
@@ -27,7 +25,6 @@
         <MCol>
             <MTextField @bind-Value="MessageInfo.Title"
                     Label="@T("DisplayName.MessageTemplateTitle")"
-                    Dense
                     Outlined
                     Disabled
                     HideDetails="@("auto")">
@@ -49,7 +46,6 @@
         <MCol>
             <MTextField @bind-Value="MessageInfo.JumpUrl"
                     Label="@T("DisplayName.MessageTemplateJumpUrl")"
-                    Dense
                     Outlined
                     Disabled
                     HideDetails="@("auto")">
