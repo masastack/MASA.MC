@@ -6,7 +6,7 @@ namespace Masa.Mc.Service.Admin.Domain.MessageTasks.Aggregates;
 /// <summary>
 /// Subsequently, it is intended to be a single aggregation root
 /// </summary>
-public class MessageTaskHistory : AuditAggregateRoot<Guid, Guid>, ISoftDelete
+public class MessageTaskHistory : FullAggregateRoot<Guid, Guid>
 {
     public Guid MessageTaskId { get; protected set; }
 
@@ -35,8 +35,6 @@ public class MessageTaskHistory : AuditAggregateRoot<Guid, Guid>, ISoftDelete
     public ExtraPropertyDictionary Variables { get; protected set; } = new();
 
     public ICollection<MessageReceiverUser> ReceiverUsers { get; protected set; } = new Collection<MessageReceiverUser>();
-
-    public bool IsDeleted { get; protected set; }
 
     protected internal MessageTaskHistory(Guid messageTaskId, string taskHistoryNo, ReceiverTypes receiverType, MessageTaskReceiverSelectTypes receiverSelectType, List<MessageTaskReceiver> receivers, ExtraPropertyDictionary sendRules, DateTime? sendTime, string sign, ExtraPropertyDictionary variables)
     {

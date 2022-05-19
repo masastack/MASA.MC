@@ -70,9 +70,23 @@ var app = builder.Services
         })
         .UseIsolationUoW<McDbContext>(
             isolationBuilder => isolationBuilder.UseMultiEnvironment("env"),
-            dbOptions => dbOptions.UseSqlServer().UseSoftDelete())
+            dbOptions => dbOptions.UseSqlServer().UseFilter())
         .UseRepository<McDbContext>();
     })
+    //.AddDomainEventBus(dispatcherOptions =>
+    //{
+    //    dispatcherOptions
+    //    .UseDaprEventBus<IntegrationEventLogService>(options => options.UseEventLog<McDbContext>())
+    //    .UseEventBus(eventBusBuilder =>
+    //    {
+    //        eventBusBuilder.UseMiddleware(typeof(ValidatorMiddleware<>));
+    //        eventBusBuilder.UseMiddleware(typeof(LogMiddleware<>));
+    //    })
+    //    .UseIsolationUoW<McDbContext>(
+    //        isolationBuilder => isolationBuilder.UseMultiEnvironment("env"),
+    //        dbOptions => dbOptions.UseSqlServer().UseFilter())
+    //    .UseRepository<McDbContext>();
+    //})
     .AddServices(builder);
 app.UseMasaExceptionHandling(opt =>
 {
@@ -103,6 +117,7 @@ app.UseEndpoints(endpoints =>
     endpoints.MapSubscribeHandler();
     endpoints.MapActorsHandlers();
 });
+
 app.UseHttpsRedirection();
 
 app.Run();

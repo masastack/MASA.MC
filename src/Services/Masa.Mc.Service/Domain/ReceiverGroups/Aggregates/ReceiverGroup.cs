@@ -3,7 +3,7 @@
 
 namespace Masa.Mc.Service.Admin.Domain.ReceiverGroups.Aggregates;
 
-public class ReceiverGroup : AuditAggregateRoot<Guid, Guid>
+public class ReceiverGroup : FullAggregateRoot<Guid, Guid>
 {
     public string DisplayName { get; protected set; } = string.Empty;
 

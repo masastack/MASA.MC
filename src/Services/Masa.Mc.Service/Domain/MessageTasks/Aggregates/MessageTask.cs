@@ -3,7 +3,7 @@
 
 namespace Masa.Mc.Service.Admin.Domain.MessageTasks.Aggregates;
 
-public class MessageTask : AuditAggregateRoot<Guid, Guid>, ISoftDelete
+public class MessageTask : FullAggregateRoot<Guid, Guid>
 {
     public string DisplayName { get; protected set; } = string.Empty;
 
@@ -32,8 +32,6 @@ public class MessageTask : AuditAggregateRoot<Guid, Guid>, ISoftDelete
     public ExtraPropertyDictionary SendRules { get; protected set; } = new();
 
     public ExtraPropertyDictionary Variables { get; protected set; } = new();
-
-    public bool IsDeleted { get; protected set; }
 
     public MessageTask(string displayName, Guid channelId, MessageEntityTypes entityType, Guid entityId, bool isDraft, string sign, ReceiverTypes receiverType, MessageTaskReceiverSelectTypes receiverSelectType, List<MessageTaskReceiver> receivers, ExtraPropertyDictionary sendRules)
     {

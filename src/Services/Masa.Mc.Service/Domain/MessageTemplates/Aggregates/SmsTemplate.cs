@@ -3,7 +3,7 @@
 
 namespace Masa.Mc.Service.Admin.Domain.MessageTemplates.Aggregates;
 
-public class SmsTemplate : AuditAggregateRoot<Guid, Guid>
+public class SmsTemplate : FullAggregateRoot<Guid, Guid>
 {
     public Guid ChannelId { get; protected set; }
     public string TemplateCode { get; protected set; } = string.Empty;
