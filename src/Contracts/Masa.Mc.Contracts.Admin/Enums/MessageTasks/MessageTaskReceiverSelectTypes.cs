@@ -3,7 +3,7 @@
 
 namespace Masa.Mc.Contracts.Admin.Enums.MessageTasks;
 
-public enum MessageTaskReceiverSelectTypes
+public enum MessageTaskSelectReceiverTypes
 {
     ManualSelection = 1,
     BatchUpload

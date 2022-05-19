@@ -16,7 +16,7 @@ public class MessageTaskHistory : FullAggregateRoot<Guid, Guid>
 
     public ReceiverTypes ReceiverType { get; protected set; }
 
-    public MessageTaskReceiverSelectTypes ReceiverSelectType { get; protected set; }
+    public MessageTaskSelectReceiverTypes SelectReceiverType { get; protected set; }
 
     public MessageTaskHistoryStatuses Status { get; protected set; }
 
@@ -36,12 +36,12 @@ public class MessageTaskHistory : FullAggregateRoot<Guid, Guid>
 
     public ICollection<MessageReceiverUser> ReceiverUsers { get; protected set; } = new Collection<MessageReceiverUser>();
 
-    protected internal MessageTaskHistory(Guid messageTaskId, string taskHistoryNo, ReceiverTypes receiverType, MessageTaskReceiverSelectTypes receiverSelectType, List<MessageTaskReceiver> receivers, ExtraPropertyDictionary sendRules, DateTime? sendTime, string sign, ExtraPropertyDictionary variables)
+    protected internal MessageTaskHistory(Guid messageTaskId, string taskHistoryNo, ReceiverTypes receiverType, MessageTaskSelectReceiverTypes selectReceiverType, List<MessageTaskReceiver> receivers, ExtraPropertyDictionary sendRules, DateTime? sendTime, string sign, ExtraPropertyDictionary variables)
     {
         MessageTaskId = messageTaskId;
         TaskHistoryNo = taskHistoryNo;
         ReceiverType = receiverType;
-        ReceiverSelectType = receiverSelectType;
+        SelectReceiverType = selectReceiverType;
         Receivers = receivers;
         SendRules = sendRules;
         SendTime = sendTime;

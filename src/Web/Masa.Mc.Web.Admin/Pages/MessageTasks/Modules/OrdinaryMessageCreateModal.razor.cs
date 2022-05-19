@@ -41,7 +41,7 @@ public partial class OrdinaryMessageCreateModal : AdminCompontentBase
 
     private async Task HandleOkAsync(bool isDraft)
     {
-        _model.Receivers = _model.ReceiverSelectType == MessageTaskReceiverSelectTypes.ManualSelection ? _selectReceivers : _importReceivers;
+        _model.Receivers = _model.SelectReceiverType == MessageTaskSelectReceiverTypes.ManualSelection ? _selectReceivers : _importReceivers;
         _model.IsDraft = isDraft;
         if (!await _form.ValidateAsync())
         {

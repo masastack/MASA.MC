@@ -24,10 +24,10 @@ public partial class MessageReceivers
     public EventCallback<List<MessageTaskReceiverDto>> ImportReceiversChanged { get; set; }
 
     [Parameter]
-    public MessageTaskReceiverSelectTypes ReceiverSelectType { get; set; } = MessageTaskReceiverSelectTypes.ManualSelection;
+    public MessageTaskSelectReceiverTypes SelectReceiverType { get; set; } = MessageTaskSelectReceiverTypes.ManualSelection;
 
     [Parameter]
-    public EventCallback<MessageTaskReceiverSelectTypes> ReceiverSelectTypeChanged { get; set; }
+    public EventCallback<MessageTaskSelectReceiverTypes> SelectReceiverTypeChanged { get; set; }
 
     [Parameter]
     public ChannelTypes? ChannelType { get; set; }

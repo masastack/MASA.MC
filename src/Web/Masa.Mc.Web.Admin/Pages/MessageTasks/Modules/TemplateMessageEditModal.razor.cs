@@ -44,7 +44,7 @@ public partial class TemplateMessageEditModal : AdminCompontentBase
     {
         var dto = await MessageTaskService.GetAsync(_entityId);
         _model = dto.Adapt<MessageTaskUpsertDto>();
-        if (_model.ReceiverSelectType == MessageTaskReceiverSelectTypes.ManualSelection)
+        if (_model.SelectReceiverType == MessageTaskSelectReceiverTypes.ManualSelection)
         {
             _selectReceivers = _model.Receivers;
         }
@@ -63,7 +63,7 @@ public partial class TemplateMessageEditModal : AdminCompontentBase
 
     private async Task HandleOkAsync(bool isDraft)
     {
-        _model.Receivers = _model.ReceiverSelectType == MessageTaskReceiverSelectTypes.ManualSelection ? _selectReceivers : _importReceivers;
+        _model.Receivers = _model.SelectReceiverType == MessageTaskSelectReceiverTypes.ManualSelection ? _selectReceivers : _importReceivers;
         _model.IsDraft = isDraft;
         _model.ChannelType = _messageInfo.Channel?.Type;
         if (!await _form.ValidateAsync())

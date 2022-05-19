@@ -21,7 +21,7 @@ public class MessageTaskDto : AuditEntityDto<Guid, Guid>
 
     public ReceiverTypes ReceiverType { get; set; }
 
-    public MessageTaskReceiverSelectTypes ReceiverSelectType { get; set; }
+    public MessageTaskSelectReceiverTypes SelectReceiverType { get; set; }
 
     public DateTime? SendTime { get; set; }
 

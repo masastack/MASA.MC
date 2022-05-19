@@ -38,7 +38,7 @@ public partial class MessageTaskSendModal : AdminCompontentBase
     {
         _info = await MessageTaskService.GetAsync(_entityId) ?? new();
         _model = _info.Adapt<SendMessageTaskInputDto>();
-        if (_model.ReceiverSelectType == MessageTaskReceiverSelectTypes.ManualSelection)
+        if (_model.SelectReceiverType == MessageTaskSelectReceiverTypes.ManualSelection)
         {
             _selectReceivers = _model.Receivers;
         }
@@ -56,7 +56,7 @@ public partial class MessageTaskSendModal : AdminCompontentBase
 
     private async Task HandleOkAsync()
     {
-        _model.Receivers = _model.ReceiverSelectType == MessageTaskReceiverSelectTypes.ManualSelection ? _selectReceivers : _importReceivers;
+        _model.Receivers = _model.SelectReceiverType == MessageTaskSelectReceiverTypes.ManualSelection ? _selectReceivers : _importReceivers;
         if (!await _form.ValidateAsync())
         {
             return;

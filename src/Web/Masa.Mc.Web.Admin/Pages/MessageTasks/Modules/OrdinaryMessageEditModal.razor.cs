@@ -45,7 +45,7 @@ public partial class OrdinaryMessageEditModal : AdminCompontentBase
         {
             _channelType = dto.Channel.Type;
             _model = dto.Adapt<MessageTaskUpsertDto>();
-            if (_model.ReceiverSelectType == MessageTaskReceiverSelectTypes.ManualSelection)
+            if (_model.SelectReceiverType == MessageTaskSelectReceiverTypes.ManualSelection)
             {
                 _selectReceivers = _model.Receivers;
             }
@@ -67,7 +67,7 @@ public partial class OrdinaryMessageEditModal : AdminCompontentBase
 
     private async Task HandleOkAsync(bool isDraft)
     {
-        _model.Receivers = _model.ReceiverSelectType == MessageTaskReceiverSelectTypes.ManualSelection ? _selectReceivers : _importReceivers;
+        _model.Receivers = _model.SelectReceiverType == MessageTaskSelectReceiverTypes.ManualSelection ? _selectReceivers : _importReceivers;
         _model.IsDraft = isDraft;
         if (!await _form.ValidateAsync())
         {

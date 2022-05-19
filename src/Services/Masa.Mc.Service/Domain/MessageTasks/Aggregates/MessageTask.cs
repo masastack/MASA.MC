@@ -21,7 +21,7 @@ public class MessageTask : FullAggregateRoot<Guid, Guid>
 
     public ReceiverTypes ReceiverType { get; protected set; }
 
-    public MessageTaskReceiverSelectTypes ReceiverSelectType { get; protected set; }
+    public MessageTaskSelectReceiverTypes SelectReceiverType { get; protected set; }
 
     public DateTime? SendTime { get; protected set; }
 
@@ -33,7 +33,7 @@ public class MessageTask : FullAggregateRoot<Guid, Guid>
 
     public ExtraPropertyDictionary Variables { get; protected set; } = new();
 
-    public MessageTask(string displayName, Guid channelId, MessageEntityTypes entityType, Guid entityId, bool isDraft, string sign, ReceiverTypes receiverType, MessageTaskReceiverSelectTypes receiverSelectType, List<MessageTaskReceiver> receivers, ExtraPropertyDictionary sendRules)
+    public MessageTask(string displayName, Guid channelId, MessageEntityTypes entityType, Guid entityId, bool isDraft, string sign, ReceiverTypes receiverType, MessageTaskSelectReceiverTypes selectReceiverType, List<MessageTaskReceiver> receivers, ExtraPropertyDictionary sendRules)
     {
         DisplayName = displayName;
         ChannelId = channelId;
@@ -41,15 +41,15 @@ public class MessageTask : FullAggregateRoot<Guid, Guid>
         EntityId = entityId;
         Sign = sign;
         SetDraft(isDraft);
-        ReceiverSelectType = receiverSelectType;
+        SelectReceiverType = selectReceiverType;
         SetReceivers(receiverType, receivers);
         SendRules = sendRules ?? new();
     }
 
-    public virtual void SendTask(ReceiverTypes receiverType, List<MessageTaskReceiver> receivers, MessageTaskReceiverSelectTypes receiverSelectType, ExtraPropertyDictionary sendRules, DateTime? sendTime, string sign, ExtraPropertyDictionary variables)
+    public virtual void SendTask(ReceiverTypes receiverType, List<MessageTaskReceiver> receivers, MessageTaskSelectReceiverTypes selectReceiverType, ExtraPropertyDictionary sendRules, DateTime? sendTime, string sign, ExtraPropertyDictionary variables)
     {
         SetDraft(false);
-        ReceiverSelectType = receiverSelectType;
+        SelectReceiverType = selectReceiverType;
         SetReceivers(receiverType, receivers);
         SendRules = sendRules ?? new();
         SendTime = sendTime ?? DateTime.UtcNow;

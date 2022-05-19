@@ -13,13 +13,13 @@
 @if (ReceiverType == ReceiverTypes.Assign)
 {
     <MRow Class="mx-1 my-2">
-        <ButtonGroup Value="ReceiverSelectType" StyleType=StyleTypes.Slider TValue="MessageTaskReceiverSelectTypes" ValueChanged="ReceiverSelectTypeChanged" />
+        <ButtonGroup Value="SelectReceiverType" StyleType=StyleTypes.Slider TValue="MessageTaskSelectReceiverTypes" ValueChanged="SelectReceiverTypeChanged" />
     </MRow>
-    @if (ReceiverSelectType == MessageTaskReceiverSelectTypes.ManualSelection)
+    @if (SelectReceiverType == MessageTaskSelectReceiverTypes.ManualSelection)
     {
         <MessageReceiversSelect Value="SelectReceivers" Type="ChannelType" ValueChanged="SelectReceiversChanged" />
     }
-    @if (ReceiverSelectType == MessageTaskReceiverSelectTypes.BatchUpload)
+    @if (SelectReceiverType == MessageTaskSelectReceiverTypes.BatchUpload)
     {
         <MessageReceiversImport Value="ImportReceivers" MessageTemplatesId="MessageTemplatesId" ValueChanged="ImportReceiversChanged" />
     }
