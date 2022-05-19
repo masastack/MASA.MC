@@ -34,41 +34,8 @@
                              OnSelectedItemUpdate="RefreshAsync">
                         </MSelect>
                     </MCol>
-                    <MCol Cols="2">
-                        <MMenu @bind-Value="_datePickersShow"
-                           CloseOnContentClick="false"
-                           Transition="scale-transition"
-                           OffsetY
-                           MinWidth="@("auto")">
-                            <ActivatorContent>
-                                <MTextField Value="DateRangeText"
-                                        Label="@T("DateRange")"
-                                        Readonly
-                                        Dense
-                                        Outlined
-                                        HideDetails="@("auto")"
-                                        PrependInnerIcon="mdi-calendar"
-                                        @attributes="context.Attrs"></MTextField>
-                            </ActivatorContent>
-                            <ChildContent>
-                                <MDatePicker @bind-Value="_dates"
-                                         Range
-                                         NoTitle
-                                         Scrollable>
-                                    <MSpacer></MSpacer>
-                                    <MButton Text
-                                         Color="primary"
-                                         OnClick="HandleDatePickersCancel">
-                                        Cancel
-                                    </MButton>
-                                    <MButton Text
-                                         Color="primary"
-                                         OnClick="HandleDatePickersAsync">
-                                        OK
-                                    </MButton>
-                                </MDatePicker>
-                            </ChildContent>
-                        </MMenu>
+                    <MCol Cols="2" Class="mr-4">
+                        <DateRangePicker @bind-StartTime="_queryParam.StartTime" @bind-EndTime="_queryParam.EndTime" OnChange="RefreshAsync" />
                     </MCol>
                     <MCol Cols="2">
                         <MSelect @bind-Value="_queryParam.ChannelId"

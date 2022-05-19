@@ -1,47 +1,5 @@
 ﻿@inherits AdminCompontentBase
-<MRow Class="mx-1 mt-2" Justify="JustifyTypes.Start">
-    <MCol>
-        <MTextField @bind-Value="Value.Timeout"
-                    Outlined
-                    Disabled="ReadOnly"
-                    Height="18"
-                    Type="number">
-            <PrependContent>
-                <span style="width:70px">@T("DisplayName.SendingRule.Timeout")</span>
-            </PrependContent>
-            <AppendOuterContent>
-                @T("Second")
-            </AppendOuterContent>
-        </MTextField>
-    </MCol>
-    <MCol>
-        <MTextField @bind-Value="Value.RetryInterval"
-                    Outlined
-                    Disabled="ReadOnly"
-                    Type="number">
-            <PrependContent>
-                <span style="width:70px">@T("DisplayName.SendingRule.RetryInterval")</span>
-            </PrependContent>
-            <AppendOuterContent>
-                @T("Second")
-            </AppendOuterContent>
-        </MTextField>
-    </MCol>
-    <MCol>
-        <MTextField @bind-Value="Value.RetryCount"
-                    Outlined
-                    Disabled="ReadOnly"
-                    Type="number">
-            <PrependContent>
-                <span style="width:70px">@T("DisplayName.SendingRule.RetryCount")</span>
-            </PrependContent>
-            <AppendOuterContent>
-                @T("Second")
-            </AppendOuterContent>
-        </MTextField>
-    </MCol>
-</MRow>
-<MRow Class="mx-1" Justify="JustifyTypes.Start">
+<MRow Class="mx-1 pt-6" Justify="JustifyTypes.Start">
     <MCheckbox @bind-Value="Value.IsSendingInterval" Disabled="ReadOnly"></MCheckbox>
     <span class="pt-4">@T("Each")</span>
     <MTextField @bind-Value="Value.SendingInterval"

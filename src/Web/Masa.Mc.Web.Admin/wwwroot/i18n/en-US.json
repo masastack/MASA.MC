@@ -1,6 +1,7 @@
 {
   "$Text": "English",
   "$DateTimeFormat": "MM/dd/yyyy HH:mm:ss",
+  "$DateFormat": "MM/dd/yyyy",
   "Unit.Bar": "Bar",
   "DeletionConfirmationMessage": "Are you sure delete data?",
   "BasicInformation": "Basic Information",
