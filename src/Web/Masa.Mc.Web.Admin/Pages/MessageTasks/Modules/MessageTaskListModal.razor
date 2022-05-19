@@ -1,6 +1,6 @@
 ﻿@inherits AdminCompontentBase
 <div @ref="Ref">
-    <SheetDialog Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("DisplayName.MessageTaskList")" ContentStyle="padding-right:80px;padding-left:80px;padding-top:40px;">
+    <SheetDialog Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("DisplayName.MessageTaskList")" ContentStyle="padding-right:80px;padding-left:80px;padding-top:40px;" ContentClass="overflow-auto">
         <MCard>
             <MCardTitle class="mx-2 pt-6">
                 <MTextField @bind-Value="_queryParam.Filter" Clearable Color="primary" Class="rounded-2 search" Placeholder="@T("Search")" HideDetails="@("auto")" Flat Dense Solo BackgroundColor="fill-lighten-1" OnKeyDown="SearchKeyDown" OnClearClick="HandleClearAsync">

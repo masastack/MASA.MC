@@ -5,4 +5,9 @@ namespace Masa.Mc.Service.Admin.Domain.MessageRecords.EventHandler;
 
 public class SendWebsiteMessageEventHandler
 {
+    [EventHandler]
+    public async Task HandleEventAsync(SendWebsiteMessageEvent eto)
+    {
+        await Task.CompletedTask;
+    }
 }
