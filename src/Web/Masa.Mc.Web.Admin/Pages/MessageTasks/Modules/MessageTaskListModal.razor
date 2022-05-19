@@ -8,7 +8,11 @@
                         <MIcon Size=16 Class="mr-2 neutral-lighten-1--text">mdi-magnify</MIcon>
                     </PrependInnerContent>
                 </MTextField>
-                <MIcon Class="ml-4" OnClick="ToggleAdvanced">mdi-filter</MIcon>
+                <div @onclick="ToggleAdvanced" class="ml-4 d-flex button">
+                    <MIcon Class="ma-auto" Color="neutral-lighten-1" Size=20>
+                        @(advanced?"mdi-filter":"mdi-filter-off")
+                    </MIcon>
+                </div>
             </MCardTitle>
             @if (advanced)
             {
