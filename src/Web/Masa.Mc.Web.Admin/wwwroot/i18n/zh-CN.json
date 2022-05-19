@@ -83,6 +83,8 @@
   "Initiate": "启动",
   "Disable": "禁用",
   "Withdraw": "撤回",
+  "Ok": "确定",
+  "Cancel": "取消",
   "Permission.ChannelManagement": "渠道管理",
   "Permission.CreateChannel": "创建渠道",
   "Permission.EditChannel": "编辑渠道",
