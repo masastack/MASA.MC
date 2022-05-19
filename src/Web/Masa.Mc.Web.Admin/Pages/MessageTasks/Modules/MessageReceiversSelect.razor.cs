@@ -79,8 +79,8 @@ public partial class MessageReceiversSelect : AdminCompontentBase
     {
         foreach (var receiver in receivers)
         {
-            if (Value.Any(x => x.PhoneNumber == receiver.PhoneNumber)) continue;
-            if (Value.Any(x => x.Email == receiver.Email)) continue;
+            if (!string.IsNullOrEmpty(receiver.PhoneNumber) && Value.Any(x => x.PhoneNumber == receiver.PhoneNumber)) continue;
+            if (!string.IsNullOrEmpty(receiver.Email) && Value.Any(x => x.Email == receiver.Email)) continue;
             Value.Insert(0, receiver);
         }
         if (ValueChanged.HasDelegate)
