@@ -18,11 +18,18 @@ builder.Services.AddAuthentication(options =>
     options.RequireHttpsMetadata = false;
     options.Audience = "";
 });
+builder.Services.AddMasaRedisCache(builder.Configuration.GetSection(nameof(RedisConfigurationOptions))).AddMasaMemoryCache();
 builder.Services.AddAliyunSms();
 builder.Services.AddEmail();
 builder.Services.AddCsv();
 builder.Services.AddSingleton<ITemplateRenderer, TextTemplateRenderer>();
 TypeAdapterConfig.GlobalSettings.Scan(Assembly.GetExecutingAssembly(), Assembly.Load("Masa.Mc.Contracts.Admin"));
+
+if (builder.Environment.IsDevelopment())
+{
+    builder.Services.AddDaprStarter(builder.Configuration.GetSection(nameof(DaprOptions)));
+}
+
 var app = builder.Services
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     .AddEndpointsApiExplorer()
@@ -72,20 +79,6 @@ var app = builder.Services
             dbOptions => dbOptions.UseSqlServer().UseFilter())
         .UseRepository<McDbContext>();
     })
-    //.AddDomainEventBus(dispatcherOptions =>
-    //{
-    //    dispatcherOptions
-    //    .UseDaprEventBus<IntegrationEventLogService>(options => options.UseEventLog<McDbContext>())
-    //    .UseEventBus(eventBusBuilder =>
-    //    {
-    //        eventBusBuilder.UseMiddleware(typeof(ValidatorMiddleware<>));
-    //        eventBusBuilder.UseMiddleware(typeof(LogMiddleware<>));
-    //    })
-    //    .UseIsolationUoW<McDbContext>(
-    //        isolationBuilder => isolationBuilder.UseMultiEnvironment("env"),
-    //        dbOptions => dbOptions.UseSqlServer().UseFilter())
-    //    .UseRepository<McDbContext>();
-    //})
     .AddServices(builder);
 app.UseMasaExceptionHandling(opt =>
 {
