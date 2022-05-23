@@ -1,12 +1,12 @@
 ﻿@inherits AdminCompontentBase
 <MMenu OffsetX Left OffsetY>
     <ActivatorContent Context="menuContext">
-        <MBadge Color="pink" Dot>
-            <MIcon @attributes="menuContext.Attrs" Size=24 Class="px-1" Color="neutral-lighten-3">mdi-bell</MIcon>
+        <MBadge Color="pink" Bordered Dot OffsetX="10" OffsetY="10">
+            <MIcon @attributes="menuContext.Attrs" Size=24 Class="pl-2" Color="neutral-lighten-3">mdi-bell</MIcon>
         </MBadge>
     </ActivatorContent>
     <ChildContent>
-        <MCard MaxWidth="350"
+        <MCard MaxWidth="400"
                Style="background-color:#4318FF">
             <MToolbar Color="blue darken-4"
                       Dark>
@@ -37,7 +37,7 @@
             </MList>
             <MList Dense>
                 <MDivider Inset></MDivider>
-                <MListItem>
+                <MListItem Link Href="/websiteMessages/websiteMessageManagement">
                     <MListItemIcon>
                         <MIcon>mdi-keyboard-backspace</MIcon>
                     </MListItemIcon>

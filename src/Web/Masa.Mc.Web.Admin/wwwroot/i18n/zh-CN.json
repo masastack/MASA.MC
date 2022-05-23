@@ -225,5 +225,8 @@
   "Description.PhoneNumber.Required": "手机号不允许重复",
   "Description.Email.Required": "邮箱不允许重复",
   "Permission.WebsiteMessageManagement": "消息中心",
-  "Description.Notice.MoreTips": "查看更多消息"
+  "Description.Notice.MoreTips": "查看更多消息",
+  "DisplayName.WebsiteMessageFilterType": "搜索类型",
+  "DisplayName.WebsiteMessageFilterType.MessageTitle": "消息标题",
+  "DisplayName.WebsiteMessageFilterType.MessageContent": "消息内容"
 }

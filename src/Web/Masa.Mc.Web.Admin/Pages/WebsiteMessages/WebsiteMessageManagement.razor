@@ -1,5 +1,15 @@
-﻿<h3>WebsiteMessageManagement</h3>
+﻿@page "/websiteMessages/websiteMessageManagement"
+@inherits AdminCompontentBase
 
-@code {
+<PageTitle>
+    @T("Permission.WebsiteMessageManagement")
+</PageTitle>
 
-}
+<MRow Class="full-height">
+    <MCol Md="@("auto")">
+        <MessageLeft />
+    </MCol>
+    <MCol Class="d-flex flex-column">
+        <MessageRight />
+    </MCol>
+</MRow>
