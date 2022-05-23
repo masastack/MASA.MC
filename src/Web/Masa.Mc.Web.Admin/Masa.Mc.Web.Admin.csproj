@@ -44,8 +44,4 @@
     </Content>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Pages\WebsiteMessages\" />
-  </ItemGroup>
-
 </Project>
