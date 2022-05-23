@@ -34,11 +34,43 @@
                      TItemValue="WebsiteMessageFilterType"
                      TValue="WebsiteMessageFilterType?">
             </MSelect>
-            <div class="ml-6 d-flex button">
-                <MIcon Class="ma-auto" Color="neutral-lighten-1" Size=20>
-                    mdi-dots-horizontal
-                </MIcon>
-            </div>
+
+            <MMenu OffsetY>
+                <ActivatorContent>
+                    <div class="ml-6 d-flex button" @attributes="@context.Attrs">
+                        <MIcon Class="ma-auto" Color="neutral-lighten-1" Size=20>
+                            mdi-dots-horizontal
+                        </MIcon>
+                    </div>
+                </ActivatorContent>
+
+                <ChildContent>
+                    <MList>
+                        <MListItem>
+                            <MListItemContent>
+                                <MListItemTitle>
+                                    全部标记已读
+                                </MListItemTitle>
+                            </MListItemContent>
+                        </MListItem>
+                        <MListItem>
+                            <MListItemContent>
+                                <MListItemTitle>
+                                    显示全部
+                                </MListItemTitle>
+                            </MListItemContent>
+                        </MListItem>
+                        <MListItem>
+                            <MListItemContent>
+                                <MListItemTitle>
+                                    显示未读
+                                </MListItemTitle>
+                            </MListItemContent>
+                        </MListItem>
+                    </MList>
+                </ChildContent>
+            </MMenu>
+
         </div>
 
     </MCardTitle>
@@ -74,7 +106,7 @@
 </MCard>
 @code {
     private Item[] _items = new Item[]
-        {
+    {
        new Item
        {
            Avatar="https://cdn.masastack.com/stack/images/website/masa-blazor/lists/1.png",
@@ -115,7 +147,7 @@
            Date="12月25日",
            IsRead=false
        }
-        };
+    };
 
     class Item
     {
