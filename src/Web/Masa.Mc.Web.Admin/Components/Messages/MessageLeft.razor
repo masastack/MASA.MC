@@ -1,11 +1,12 @@
-﻿<MCard Width="576" Class="mx-auto full-height">
+﻿@inherits AdminCompontentBase
+<MCard Width="576" Class="mx-auto full-height">
     <MCardTitle>
-        消息中心
+        @T("Permission.WebsiteMessageManagement")
     </MCardTitle>
 
     <MList Subheader
            TwoLine>
-        <MListItem>
+        <MListItem Link>
             <MListItemAvatar Class="overflow-visible">
                 <MBadge Bordered Dot Color="pink" OffsetX="10" OffsetY="10">
                     <MAvatar Color="primary">
@@ -15,7 +16,7 @@
             </MListItemAvatar>
 
             <MListItemContent>
-                <MListItemTitle>全部消息</MListItemTitle>
+                <MListItemTitle>@T("DisplayName.AllWebsiteMessage")</MListItemTitle>
             </MListItemContent>
             <MListItemIcon>
                 <MIcon>
@@ -27,7 +28,7 @@
 
         @foreach (var item in _items)
         {
-            <MListItem>
+            <MListItem Link>
                 <MListItemAvatar Class="overflow-visible">
                     @if (item.NoReading == 0)
                     {
@@ -60,7 +61,7 @@
 </MCard>
 @code {
     private Item[] _items = new Item[]
-        {
+            {
        new Item
        {
            Avatar="https://cdn.masastack.com/stack/images/website/masa-blazor/lists/1.png",
@@ -101,7 +102,7 @@
            Date="12月25日",
            NoReading=0
        }
-        };
+            };
 
     class Item
     {

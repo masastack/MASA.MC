@@ -228,5 +228,9 @@
   "Description.Notice.MoreTips": "查看更多消息",
   "DisplayName.WebsiteMessageFilterType": "搜索类型",
   "DisplayName.WebsiteMessageFilterType.MessageTitle": "消息标题",
-  "DisplayName.WebsiteMessageFilterType.MessageContent": "消息内容"
+  "DisplayName.WebsiteMessageFilterType.MessageContent": "消息内容",
+  "DisplayName.AllWebsiteMessage": "全部消息",
+  "DisplayName.WebsiteMessageAction.MarkAllRead": "全部标记已读",
+  "DisplayName.WebsiteMessageAction.ShowAll": "显示全部",
+  "DisplayName.WebsiteMessageAction.ShowUnread": "显示未读"
 }

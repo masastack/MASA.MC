@@ -1,5 +1,67 @@
-﻿<h3>MessageDetail</h3>
+﻿@inherits AdminCompontentBase
+<MCard Class="full-height">
+    <MCardTitle>
+        <div class="d-flex full-width align-center" style="height: 40px !important;">
+            <div class="d-flex button rounded-circle" @onclick="HandleOnBack">
+                <MIcon Class="ma-auto" Color="neutral-lighten-1" Size=20>
+                    mdi-arrow-left
+                </MIcon>
+            </div>
+            <div class="ml-4" style="width: 0px;height:24px;border: 1px solid #E2E7F4;"></div>
+            <MListItem>
+                <MListItemAvatar Class="overflow-visible">
+                    <MAvatar Size=48>
+                        <MImage Src="https://cdn.masastack.com/stack/images/website/masa-blazor/lists/1.png"></MImage>
+                    </MAvatar>
+                </MListItemAvatar>
 
+                <MListItemContent>
+                    <MListItemTitle>MASA</MListItemTitle>
+                </MListItemContent>
+            </MListItem>
+            <MSpacer />
+
+            <MIcon Class="mr-2" Color="neutral-lighten-1" Size=20>
+                mdi-delete-outline
+            </MIcon>
+        </div>
+    </MCardTitle>
+    <MCardText Class="d-flex align-end flex-column" Style="height: calc(100% - 72px) !important">
+        <div class="detail-box pt-4">
+            <span class="text-h6">北雀路一小区居民开灯时，家中突然爆燃！窗户被炸飞，周围3辆汽车受损</span>
+            <div class="text-caption pt-2">
+                <span>12月25日</span>
+            </div>
+            <div class="content">
+                <p>我吃东西越来越清淡，对待人情世故越来越宽容，不乱发脾气，也学会了忍让，慢慢地有了一颗成长的心，也开始害怕听到任何与病痛有关的事，最大的心愿变成了全家人身体健康，相比一两年前迫不及待要去看远方的心，我更希望花十分之九的时间在温柔灯光下和妈妈吃完的一餐饭。</p>
+
+                <p>我吃东西越来越清淡，对待人情世故越来越宽。</p>
+
+                <p>成了全家人身体健康，相比一两我更希望花十分之九的时间在温柔灯光下和妈妈吃完的一餐饭。我更希望花十分之九的时间在温柔灯光下和妈妈吃完的一餐饭。</p>
+                <p>发脾气，也学会了忍让，慢慢地有了一颗成长的心，也开始害怕听到任何与病痛有关的事，最大的心愿变成了全家人身体健康，相比一两我更希望花十分之九的时间在温柔灯光下和妈妈吃完的一餐饭。</p>
+
+                <p>发脾气，也学会了忍让，慢慢地有了一颗成长的心，也开始害怕听到任何与病痛有关的事，最大的心愿变成了全家人身体健康，相比一两我更希望花十分之九的时间在温柔灯光下和妈妈吃完的一餐饭。</p>
+            </div>
+        </div>
+        <div class="mt-auto">
+            <span>
+                <MIcon Class="hover-pointer" Disabled Size=24>mdi-chevron-left</MIcon>
+            </span>
+            <span>
+                <MIcon Class="hover-pointer" Size=24>mdi-chevron-right</MIcon>
+            </span>
+        </div>
+    </MCardText>
+</MCard>
 @code {
+    [Parameter]
+    public EventCallback OnBack { get; set; }
 
+    private async Task HandleOnBack()
+    {
+        if (OnBack.HasDelegate)
+        {
+            await OnBack.InvokeAsync();
+        }
+    }
 }

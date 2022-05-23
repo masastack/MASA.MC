@@ -10,6 +10,13 @@
         <MessageLeft />
     </MCol>
     <MCol Class="d-flex flex-column">
-        <MessageRight />
+        @if (_detailShow)
+        {
+            <MessageDetail OnBack="HandleDetailBack" />
+        }
+        else
+        {
+            <MessageRight OnClick="HandleListItemClick" />
+        }
     </MCol>
 </MRow>
