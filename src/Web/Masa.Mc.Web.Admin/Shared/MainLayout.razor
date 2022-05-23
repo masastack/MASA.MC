@@ -6,13 +6,13 @@
 @implements IDisposable
 
 <MApp ConfirmParameters="@(param => { param.OkText = I18n.T("Ok");param.CancelText = I18n.T("Cancel"); })">
-    <MAppBar Elevation=0 App MaxHeight=60 Class="mx-6 rounded-b-4">
+    <MAppBar Elevation=0 App MaxHeight=60 Class="mx-6 rounded-b-4 white">
         <Favorite />
         <MSpacer />
         <Search />
         <MIcon Size=20 Class="ml-5" Color="neutral-lighten-3">mdi-message-processing-outline</MIcon>
         <Language />
-        <Login />
+        <HeaderRight />
     </MAppBar>
 
     <Navigation />

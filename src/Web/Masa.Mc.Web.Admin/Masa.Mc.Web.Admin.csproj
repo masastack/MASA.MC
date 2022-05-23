@@ -6,6 +6,14 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Shared\HeaderRight.razor.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Shared\HeaderRight.razor.css" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <SupportedPlatform Include="browser" />
@@ -34,6 +42,10 @@
     <Content Update="wwwroot\i18n\zh-CN.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Pages\WebsiteMessages\" />
   </ItemGroup>
 
 </Project>
