@@ -23,6 +23,9 @@ builder.Services.AddAliyunSms();
 builder.Services.AddEmail();
 builder.Services.AddCsv();
 builder.Services.AddSingleton<ITemplateRenderer, TextTemplateRenderer>();
+builder.Services.AddSignalR();
+builder.Services.AddTransient<NotificationsHub>();
+builder.Services.AddTransient<SmsTemplateSyncEventHandler>();
 TypeAdapterConfig.GlobalSettings.Scan(Assembly.GetExecutingAssembly(), Assembly.Load("Masa.Mc.Contracts.Admin"));
 
 if (builder.Environment.IsDevelopment())
@@ -108,6 +111,7 @@ app.UseEndpoints(endpoints =>
 {
     endpoints.MapSubscribeHandler();
     endpoints.MapActorsHandlers();
+    endpoints.MapHub<NotificationsHub>("/signalr-hubs/notifications");
 });
 
 app.UseHttpsRedirection();

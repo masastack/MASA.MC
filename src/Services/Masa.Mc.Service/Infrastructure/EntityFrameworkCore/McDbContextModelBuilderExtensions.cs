@@ -108,5 +108,16 @@ public static class McDbContextModelBuilderExtensions
             b.Property(m => m.Email).HasMaxLength(128);
             b.Property(m => m.Variables).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
         });
+
+        builder.Entity<WebsiteMessage>(b =>
+        {
+            b.ToTable(MCConsts.DbTablePrefix + "WebsiteMessages", MCConsts.DbSchema);
+            b.Property(w => w.Title).IsRequired().HasMaxLength(128);
+        });
+
+        builder.Entity<WebsiteMessageCursor>(b =>
+        {
+            b.ToTable(MCConsts.DbTablePrefix + "WebsiteMessageCursors", MCConsts.DbSchema);
+        });
     }
 }

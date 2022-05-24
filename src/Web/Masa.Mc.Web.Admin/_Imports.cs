@@ -57,3 +57,4 @@ global using Masa.Mc.Web.Admin.Data.Auth.Subjects.Dto;
 global using Masa.Mc.Web.Admin.Components.Modules.Subjects;
 global using System.Text;
 global using Masa.Mc.Contracts.Admin.Dtos.WebsiteMessages;
+global using Masa.Mc.ApiGateways.Caller.Services.WebsiteMessages;

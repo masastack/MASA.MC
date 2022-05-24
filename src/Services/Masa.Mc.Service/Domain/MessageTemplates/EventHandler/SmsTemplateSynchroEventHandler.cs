@@ -21,7 +21,8 @@ public class SmsTemplateSyncEventHandler
         _smsTemplateRepository = smsTemplateRepository;
     }
 
-    [EventHandler]
+    //[EventHandler]
+    [Topic("pubsub", nameof(SmsTemplateSyncDomainEvent))]
     public async Task HandleEvent(SmsTemplateSyncDomainEvent @event)
     {
         var channel = await _channelRepository.FindAsync(x => x.Id == @event.ChannelId);
@@ -42,6 +43,8 @@ public class SmsTemplateSyncEventHandler
             await _smsTemplateRepository.RemoveRangeAsync(removeList);
             var smsTemplateList = aliyunSmsTemplateList.Select(item => new SmsTemplate(channel.Id, item.TemplateCode, item.TemplateName, AliyunSmsTemplateTypeMapToSmsTemplateType(item.TemplateType), AliyunSmsTemplateAuditStatusMapToAuditStatus(item.AuditStatus), item.TemplateContent, item.Reason.RejectInfo));
             await _smsTemplateRepository.AddRangeAsync(smsTemplateList);
+            await _smsTemplateRepository.UnitOfWork.SaveChangesAsync();
+            await _smsTemplateRepository.UnitOfWork.CommitAsync();
         }
     }
 

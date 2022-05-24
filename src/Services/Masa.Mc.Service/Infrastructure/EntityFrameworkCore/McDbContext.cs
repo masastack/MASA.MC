@@ -5,18 +5,6 @@ namespace Masa.Mc.Service.Admin.Infrastructure.EntityFrameworkCore;
 
 public class McDbContext : IsolationDbContext
 {
-    public DbSet<Channel> Channels { get; set; } = default!;
-
-    public DbSet<MessageTemplate> MessageTemplates { get; set; } = default!;
-
-    public DbSet<ReceiverGroup> ReceiverGroups { get; set; } = default!;
-
-    public DbSet<SmsTemplate> SmsTemplates { get; set; } = default!;
-
-    public DbSet<MessageTask> MessageTasks { get; set; } = default!;
-
-    public DbSet<MessageRecord> MessageRecords { get; set; } = default!;
-
     public McDbContext(MasaDbContextOptions<McDbContext> options) : base(options)
     {
 
