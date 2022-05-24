@@ -3,33 +3,19 @@
 
 namespace Masa.Mc.Infrastructure.ExporterAndImporter.Csv.Utility;
 
-/// <summary>
-/// Csv导出辅助类
-/// </summary>
-/// <typeparam name="T"></typeparam>
 public class ExportHelper<T> where T : class
 {
     private readonly Type _type;
 
-    /// <summary>
-    /// </summary>
     public ExportHelper()
     {
     }
 
-    /// <summary>
-    /// </summary>
-    /// <param name="type"></param>
     public ExportHelper(Type type)
     {
         _type = type;
     }
 
-    /// <summary>
-    /// 导出Csv
-    /// </summary>
-    /// <param name="dataItems"></param>
-    /// <returns></returns>
     public byte[] GetCsvExportAsByteArray(ICollection<T> dataItems = null, string delimiter = "")
     {
         using (var ms = new MemoryStream())
@@ -60,10 +46,6 @@ public class ExportHelper<T> where T : class
         }
     }
 
-    /// <summary>
-    /// 导出表头
-    /// </summary>
-    /// <returns></returns>
     public byte[] GetCsvExportHeaderAsByteArray(string delimiter = "")
     {
         var properties = typeof(T).GetSortedPropertyInfos();
@@ -103,10 +85,6 @@ public class ExportHelper<T> where T : class
         }
     }
 
-    /// <summary>
-    /// 导出表头
-    /// </summary>
-    /// <returns></returns>
     public byte[] GetCsvExportDynamicHeaderAsByteArray(IDynamicMetaObjectProvider record, string delimiter = "")
     {
         using (var ms = new MemoryStream())
@@ -129,11 +107,6 @@ public class ExportHelper<T> where T : class
         }
     }
 
-    /// <summary>
-    /// 导出Csv
-    /// </summary>
-    /// <param name="dataItems"></param>
-    /// <returns></returns>
     public byte[] GetCsvExportAsByteArray(DataTable dataItems, string delimiter = "")
     {
         using (var ms = new MemoryStream())

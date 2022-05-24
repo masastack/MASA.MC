@@ -44,7 +44,7 @@ public class ChannelDomainService : DomainService
         var dict = await _repository.FindAsync(d => d.Code == code);
         if (dict != null && dict.Id != expectedId)
         {
-            throw new UserFriendlyException("channel code cannot be repeated");
+            throw new UserFriendlyException("Channel code cannot be repeated");
         }
     }
 }

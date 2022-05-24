@@ -47,7 +47,7 @@ public class ChannelCommandHandler
             throw new UserFriendlyException("channel not found");
         if (await _messageTaskRepository.FindAsync(x => x.ChannelId == createCommand.ChannelId, false) != null)
         {
-            throw new UserFriendlyException("There are channel in use and cannot be deleted");
+            throw new UserFriendlyException("There are channels in use and cannot be deleted");
         }
         await _domainService.DeleteAsync(entity);
     }

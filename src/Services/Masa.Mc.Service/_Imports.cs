@@ -129,3 +129,6 @@ global using Masa.Utils.Caching.Redis.Models;
 global using Masa.Utils.Development.Dapr;
 global using Masa.Utils.Development.Dapr.AspNetCore;
 global using Dapr;
+global using Masa.Mc.Service.Admin.Domain.WebsiteMessages.Aggregates;
+global using Masa.Mc.Service.Admin.Domain.WebsiteMessages.Repositories;
+global using Masa.Mc.Service.Admin.Domain.MessageTemplates.EventHandler;

@@ -22,7 +22,6 @@ public class SmsTemplateSyncEventHandler
     }
 
     [EventHandler]
-
     public async Task HandleEvent(SmsTemplateSyncDomainEvent @event)
     {
         var channel = await _channelRepository.FindAsync(x => x.Id == @event.ChannelId);
