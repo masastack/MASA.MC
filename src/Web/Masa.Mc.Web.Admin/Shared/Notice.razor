@@ -10,7 +10,7 @@
                Style="background-color:#4318FF">
             <MToolbar Color="blue darken-4"
                       Dark>
-                <MToolbarTitle Class="text-title-2">@T("WebsiteMessage")</MToolbarTitle>
+                <MToolbarTitle Class="font-18-medium">@T("WebsiteMessage")</MToolbarTitle>
 
                 <MSpacer></MSpacer>
 
@@ -28,9 +28,9 @@
                         </MListItemAvatar>
 
                         <MListItemContent>
-                            <MListItemTitle Class="text-title-4">@((MarkupString)item.Title)</MListItemTitle>
-                            <MListItemSubtitle Class="text-body-2 py-1">@((MarkupString)item.ZhaiYao)</MListItemSubtitle>
-                            <MListItemSubtitle Class="text-caption">@((MarkupString)item.Date)</MListItemSubtitle>
+                            <MListItemTitle Class="font-14-medium">@((MarkupString)item.Title)</MListItemTitle>
+                            <MListItemSubtitle Class="font-12 py-1">@((MarkupString)item.ZhaiYao)</MListItemSubtitle>
+                            <MListItemSubtitle Class="font-10">@((MarkupString)item.Date)</MListItemSubtitle>
                         </MListItemContent>
                     </MListItem>
                 }
@@ -43,7 +43,7 @@
                     </MListItemIcon>
 
                     <MListItemContent>
-                        <MListItemTitle>@T("Description.Notice.MoreTips")</MListItemTitle>
+                        <MListItemTitle Class="font-12">@T("Description.Notice.MoreTips")</MListItemTitle>
                     </MListItemContent>
                 </MListItem>
             </MList>

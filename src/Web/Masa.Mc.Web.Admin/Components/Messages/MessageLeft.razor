@@ -1,6 +1,6 @@
 ﻿@inherits AdminCompontentBase
 <MCard Width="576" Class="mx-auto full-height">
-    <MCardTitle Class="text-title-1">
+    <MCardTitle Class="font-24-bold neutral-text-emphasis-secondary">
         @T("Permission.WebsiteMessageManagement")
     </MCardTitle>
 
@@ -16,7 +16,7 @@
             </MListItemAvatar>
 
             <MListItemContent>
-                <MListItemTitle Class="text-title-3">@T("DisplayName.AllWebsiteMessage")</MListItemTitle>
+                <MListItemTitle Class="font-16-medium neutral-text-emphasis">@T("DisplayName.AllWebsiteMessage")</MListItemTitle>
             </MListItemContent>
             <MListItemIcon>
                 <MIcon>
@@ -47,13 +47,13 @@
                 </MListItemAvatar>
 
                 <MListItemContent>
-                    <MListItemTitle Class="py-2 text-title-3">@item.Title</MListItemTitle>
+                    <MListItemTitle Class="py-2 font-16-medium neutral-text-emphasis">@item.Title</MListItemTitle>
 
-                    <MListItemSubtitle>@item.ZhaiYao</MListItemSubtitle>
+                    <MListItemSubtitle Class="font-12 neutral-text-regular-secondary">@item.ZhaiYao</MListItemSubtitle>
                 </MListItemContent>
 
                 <MListItemAction>
-                    <MListItemActionText>@item.Date</MListItemActionText>
+                    <MListItemActionText Class="font-10 neutral-text-regular-secondary">@item.Date</MListItemActionText>
                 </MListItemAction>
             </MListItem>
         }

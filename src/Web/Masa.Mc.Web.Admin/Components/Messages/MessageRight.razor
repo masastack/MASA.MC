@@ -12,7 +12,7 @@
                 </MListItemAvatar>
 
                 <MListItemContent>
-                    <MListItemTitle Class="text-title-2">MASA</MListItemTitle>
+                    <MListItemTitle Class="font-18-medium neutral-text-emphasis">MASA</MListItemTitle>
                 </MListItemContent>
             </MListItem>
             <MSpacer />
@@ -79,9 +79,9 @@
             {
                 <MListItem Link OnClick="HandleOnClick">
                     <MListItemContent>
-                        <MListItemTitle Class="py-2 text-title-2">@item.Title</MListItemTitle>
+                        <MListItemTitle Class="py-2 font-18-medium neutral-text-emphasis-secondary">@item.Title</MListItemTitle>
 
-                        <MListItemSubtitle>
+                        <MListItemSubtitle Class="font-14 neutral-text-regular-secondary">
                             @if (!item.IsRead)
                             {
                                 <MAvatar Color="red" Size="8" Class="mx-2">
@@ -94,7 +94,7 @@
                     </MListItemContent>
 
                     <MListItemAction>
-                        <MListItemActionText>@item.Date</MListItemActionText>
+                        <MListItemActionText Class="font-12 neutral-text-regular-secondary">@item.Date</MListItemActionText>
                     </MListItemAction>
                 </MListItem>
             }

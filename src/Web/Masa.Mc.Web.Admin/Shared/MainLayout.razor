@@ -5,7 +5,7 @@
 @inject I18n I18n
 @implements IDisposable
 
-<MApp ConfirmParameters="@(param => { param.OkText = I18n.T("Ok");param.CancelText = I18n.T("Cancel"); })">
+<MApp Class="masa" ConfirmParameters="@(param => { param.OkText = I18n.T("Ok");param.CancelText = I18n.T("Cancel"); })">
     <MAppBar Elevation=0 App MaxHeight=60 Class="mx-6 rounded-b-4 white">
         <Favorite />
         <MSpacer />
