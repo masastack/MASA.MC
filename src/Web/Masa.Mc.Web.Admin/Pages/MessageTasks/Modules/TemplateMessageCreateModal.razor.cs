@@ -14,6 +14,8 @@ public partial class TemplateMessageCreateModal : AdminCompontentBase
     private List<MessageTemplateDto> _templateItems = new();
     private MessageTemplateDto _messageInfo = new();
     private List<ChannelDto> _channelItems = new();
+    private List<MessageTaskReceiverDto> _selectReceivers = new();
+    private List<MessageTaskReceiverDto> _importReceivers = new();
 
     MessageTaskService MessageTaskService => McCaller.MessageTaskService;
     MessageTemplateService MessageTemplateService => McCaller.MessageTemplateService;
@@ -43,6 +45,7 @@ public partial class TemplateMessageCreateModal : AdminCompontentBase
 
     private async Task HandleOkAsync(bool isDraft)
     {
+        _model.Receivers = _model.SelectReceiverType == MessageTaskSelectReceiverTypes.ManualSelection ? _selectReceivers : _importReceivers;
         _model.IsDraft = isDraft;
         _model.ChannelType = _messageInfo.Channel?.Type;
         if (!await _form.ValidateAsync())
@@ -64,6 +67,8 @@ public partial class TemplateMessageCreateModal : AdminCompontentBase
     private void ResetForm()
     {
         _model = new() { ReceiverType = ReceiverTypes.Assign, EntityType = MessageEntityTypes.Template };
+        _selectReceivers = new();
+        _importReceivers = new();
     }
 
     private void HandleVisibleChanged(bool val)

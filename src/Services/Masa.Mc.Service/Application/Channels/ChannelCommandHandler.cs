@@ -19,6 +19,7 @@ public class ChannelCommandHandler
     [EventHandler]
     public async Task CreateAsync(CreateChannelCommand createCommand)
     {
+        await ValidateChannelNameAsync(createCommand.Channel.DisplayName, null);
         var entity = createCommand.Channel.Adapt<Channel>();
         await _domainService.CreateAsync(entity);
     }
@@ -26,6 +27,7 @@ public class ChannelCommandHandler
     [EventHandler]
     public async Task UpdateAsync(UpdateChannelCommand updateCommand)
     {
+        await ValidateChannelNameAsync(updateCommand.Channel.DisplayName, updateCommand.ChannelId);
         var entity = await _repository.FindAsync(x => x.Id == updateCommand.ChannelId);
         if (entity == null)
             throw new UserFriendlyException("channel not found");
@@ -45,8 +47,16 @@ public class ChannelCommandHandler
             throw new UserFriendlyException("channel not found");
         if (await _messageTaskRepository.FindAsync(x => x.ChannelId == createCommand.ChannelId, false) != null)
         {
-            throw new UserFriendlyException("There are message tasks in use and cannot be deleted");
+            throw new UserFriendlyException("There are channels in use and cannot be deleted");
         }
         await _domainService.DeleteAsync(entity);
+    }
+
+    private async Task ValidateChannelNameAsync(string displayName, Guid? id)
+    {
+        if (await _repository.FindAsync(x => x.DisplayName == displayName && x.Id != id) != null)
+        {
+            throw new UserFriendlyException("channel name cannot be repeated");
+        }
     }
 }

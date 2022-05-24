@@ -14,6 +14,8 @@ public partial class OrdinaryMessageEditModal : AdminCompontentBase
     private bool _visible;
     private List<ChannelDto> _channelItems = new();
     private ChannelTypes _channelType;
+    private List<MessageTaskReceiverDto> _selectReceivers = new();
+    private List<MessageTaskReceiverDto> _importReceivers = new();
 
     MessageTaskService MessageTaskService => McCaller.MessageTaskService;
     ChannelService ChannelService => McCaller.ChannelService;
@@ -41,8 +43,16 @@ public partial class OrdinaryMessageEditModal : AdminCompontentBase
         var dto = await MessageTaskService.GetAsync(_entityId);
         if (dto != null)
         {
-             _channelType = dto.Channel.Type;
+            _channelType = dto.Channel.Type;
             _model = dto.Adapt<MessageTaskUpsertDto>();
+            if (_model.SelectReceiverType == MessageTaskSelectReceiverTypes.ManualSelection)
+            {
+                _selectReceivers = _model.Receivers;
+            }
+            else
+            {
+                _importReceivers = _model.Receivers;
+            }
             _channelItems = await ChannelService.GetListByTypeAsync(_channelType);
             var messageInfo = await MessageInfoService.GetAsync(_model.EntityId);
             if (messageInfo != null) _model.MessageInfo = messageInfo.Adapt<MessageInfoUpsertDto>();
@@ -57,6 +67,7 @@ public partial class OrdinaryMessageEditModal : AdminCompontentBase
 
     private async Task HandleOkAsync(bool isDraft)
     {
+        _model.Receivers = _model.SelectReceiverType == MessageTaskSelectReceiverTypes.ManualSelection ? _selectReceivers : _importReceivers;
         _model.IsDraft = isDraft;
         if (!await _form.ValidateAsync())
         {
@@ -96,6 +107,8 @@ public partial class OrdinaryMessageEditModal : AdminCompontentBase
     private void ResetForm()
     {
         _model = new() { ReceiverType = ReceiverTypes.Assign, EntityType = MessageEntityTypes.Ordinary };
+        _selectReceivers = new();
+        _importReceivers = new();
     }
 
     private void HandleVisibleChanged(bool val)

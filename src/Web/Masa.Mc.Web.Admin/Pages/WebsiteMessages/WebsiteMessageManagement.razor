@@ -1,0 +1,22 @@
+﻿@page "/websiteMessages/websiteMessageManagement"
+@inherits AdminCompontentBase
+
+<PageTitle>
+    @T("Permission.WebsiteMessageManagement")
+</PageTitle>
+
+<MRow Class="full-height">
+    <MCol Md="@("auto")">
+        <MessageLeft />
+    </MCol>
+    <MCol Class="d-flex flex-column">
+        @if (_detailShow)
+        {
+            <MessageDetail OnBack="HandleDetailBack" />
+        }
+        else
+        {
+            <MessageRight OnClick="HandleListItemClick" />
+        }
+    </MCol>
+</MRow>

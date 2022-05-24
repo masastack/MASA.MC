@@ -36,6 +36,12 @@ public abstract class ServiceBase
         await CheckResponse(response);
     }
 
+    protected async Task<TResponse?> PostAsync<TRequest, TResponse>(string methodName, TRequest data)
+    {
+        var response = await CallerProvider.PostAsync<TRequest, TResponse>(BuildAdress(methodName), data);
+        return response;
+    }
+
     protected async Task DeleteAsync<TRequest>(string methodName, TRequest? data = default)
     {
         var response = await CallerProvider.DeleteAsync(BuildAdress(methodName), data);
@@ -48,7 +54,7 @@ public abstract class ServiceBase
         await CheckResponse(response);
     }
 
-    string BuildAdress(string methodName)
+    protected string BuildAdress(string methodName)
     {
         return Path.Combine(BaseUrl, methodName.Replace("Async", ""));
     }

@@ -6,7 +6,7 @@ namespace Masa.Mc.Service.Admin.Domain.MessageTasks.Aggregates;
 /// <summary>
 /// Subsequently, it is intended to be a single aggregation root
 /// </summary>
-public class MessageTaskHistory : AuditAggregateRoot<Guid, Guid>, ISoftDelete
+public class MessageTaskHistory : FullAggregateRoot<Guid, Guid>
 {
     public Guid MessageTaskId { get; protected set; }
 
@@ -15,6 +15,8 @@ public class MessageTaskHistory : AuditAggregateRoot<Guid, Guid>, ISoftDelete
     public MessageTask MessageTask { get; protected set; }
 
     public ReceiverTypes ReceiverType { get; protected set; }
+
+    public MessageTaskSelectReceiverTypes SelectReceiverType { get; protected set; }
 
     public MessageTaskHistoryStatuses Status { get; protected set; }
 
@@ -34,13 +36,12 @@ public class MessageTaskHistory : AuditAggregateRoot<Guid, Guid>, ISoftDelete
 
     public ICollection<MessageReceiverUser> ReceiverUsers { get; protected set; } = new Collection<MessageReceiverUser>();
 
-    public bool IsDeleted { get; protected set; }
-
-    protected internal MessageTaskHistory(Guid messageTaskId, string taskHistoryNo, ReceiverTypes receiverType, List<MessageTaskReceiver> receivers, ExtraPropertyDictionary sendRules, DateTime? sendTime, string sign, ExtraPropertyDictionary variables)
+    protected internal MessageTaskHistory(Guid messageTaskId, string taskHistoryNo, ReceiverTypes receiverType, MessageTaskSelectReceiverTypes selectReceiverType, List<MessageTaskReceiver> receivers, ExtraPropertyDictionary sendRules, DateTime? sendTime, string sign, ExtraPropertyDictionary variables)
     {
         MessageTaskId = messageTaskId;
         TaskHistoryNo = taskHistoryNo;
         ReceiverType = receiverType;
+        SelectReceiverType = selectReceiverType;
         Receivers = receivers;
         SendRules = sendRules;
         SendTime = sendTime;

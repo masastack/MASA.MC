@@ -65,6 +65,9 @@ public abstract class AdminCompontentBase : BDomComponentBase
         }
     }
 
+    [Inject]
+    public McApiOptions McApiOptions { get; set; } = default!;
+
     public bool Loading
     {
         get => GlobalConfig.Loading;
@@ -111,6 +114,11 @@ public abstract class AdminCompontentBase : BDomComponentBase
             Loading = false;
             StateHasChanged();
         });
+    }
+
+    public List<KeyValuePair<string, TEnum>> GetEnumMap<TEnum>() where TEnum : struct, Enum
+    {
+        return Enum.GetValues<TEnum>().Select(e => new KeyValuePair<string, TEnum>(e.ToString(), e)).ToList();
     }
 
     public List<KeyValuePair<string, bool>> GetBooleanMap()

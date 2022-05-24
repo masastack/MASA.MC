@@ -56,4 +56,9 @@ public class MessageTaskService : ServiceBase
     {
         await PostAsync("Disable", inputDto);
     }
+
+    public async Task<ImportResultDto<MessageTaskReceiverDto>> ImportReceiversAsync(ImportReceiversDto dto)
+    {
+        return await PostAsync<ImportReceiversDto, ImportResultDto<MessageTaskReceiverDto>>("ImportReceivers", dto) ??new();
+    }
 }

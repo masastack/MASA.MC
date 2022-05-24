@@ -3,7 +3,7 @@
     <SheetDialog Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.CreateMessageTemplate")">
         <MForm Model="_model" EnableValidation @ref="_form">
             <div class="sheet-dialog full-height flex-column">
-                <div class="mt-6 flex-height-auto overflow-y">
+                <div class="pt-6 flex-height-auto overflow-y">
                     <MRow Justify="@("center")">
                         <MCol Cols="12" Sm="6" Md="3">
                             <MTextField Class="mx-auto" style="width:200px;" @bind-Value="_model.DisplayName" HideDetails="@("auto")" Placeholder="@T("DisplayName.MessageTemplateDisplayName")"></MTextField>
@@ -16,7 +16,6 @@
                                      Label="@T("DisplayName.ChannelType")"
                                      ItemText="item => T(item.ToString())"
                                      ItemValue="item => item"
-                                     Dense
                                      Outlined
                                      Disabled
                                      HideDetails="@("auto")">
@@ -28,7 +27,6 @@
                                      Label="@T("DisplayName.Channel")"
                                      ItemText="item => item.DisplayName"
                                      ItemValue="item => item.Id"
-                                     Dense
                                      Outlined
                                      HideDetails="@("auto")">
                             </MSelect>
@@ -38,7 +36,6 @@
                         <MCol Cols="12">
                             <MTextField @bind-Value="_model.Title"
                                         Label="@T("DisplayName.MessageTemplateTitle")"
-                                        Dense
                                         Outlined
                                         HideDetails="@("auto")">
                             </MTextField>
@@ -59,7 +56,6 @@
                                 <div style="width:100px;">
                                     <MTextField @bind-Value="_model.PerDayLimit"
                                                 Type="number"
-                                                Dense
                                                 Outlined
                                                 HideDetails="@("auto")"></MTextField>
                                 </div>
@@ -68,7 +64,7 @@
                         </MCol>
                     </MRow>
                 </div>
-                <div Class="d-flex mt-6">
+                <div Class="d-flex pt-6">
                     <MSpacer></MSpacer>
                     <MButton Color="primary" Class="small-button" OnClick="async() => await HandleOkAsync()">@T("Submit")</MButton>
                 </div>

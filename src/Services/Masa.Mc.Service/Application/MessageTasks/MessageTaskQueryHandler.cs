@@ -1,18 +1,27 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
+using System.ComponentModel;
+using Magicodes.ExporterAndImporter.Core.Extension;
+
 namespace Masa.Mc.Service.Admin.Application.MessageTasks;
 
 public class MessageTaskQueryHandler
 {
     private readonly IMessageTaskRepository _repository;
-    private readonly ICsvImporter _csvImporter;
+    private readonly IMessageTemplateRepository _messageTemplateRepository;
+    private readonly ICsvImporter _importer;
+    private readonly ICsvExporter _exporter;
 
     public MessageTaskQueryHandler(IMessageTaskRepository repository
-        , ICsvImporter csvImporter)
+        , IMessageTemplateRepository messageTemplateRepository
+        , ICsvExporter exporter
+        , ICsvImporter importer)
     {
         _repository = repository;
-        _csvImporter = csvImporter;
+        _messageTemplateRepository = messageTemplateRepository;
+        _importer = importer;
+        _exporter = exporter;
     }
 
     [EventHandler]
@@ -67,9 +76,29 @@ public class MessageTaskQueryHandler
     }
 
     [EventHandler]
-    public async Task GenerateImportTemplateAsync(GenerateImportTemplateQuery query)
+    public async Task GenerateImportTemplateAsync(GenerateReceiverImportTemplateQuery query)
     {
-        var result = await _csvImporter.GenerateTemplateBytes<ReceiverImportDto>();
+        var template = await _messageTemplateRepository.FindAsync(x => x.Id == query.MessageTemplateId);
+        var record = new ExpandoObject();
+        var properties = typeof(ReceiverImportDto).GetProperties();
+        foreach (var prop in properties)
+        {
+            var name = prop.Name;
+            var importAttribute = prop.GetCustomAttribute<Magicodes.ExporterAndImporter.Core.ImporterHeaderAttribute>();
+            if (importAttribute != null)
+            {
+                name = importAttribute.Name ?? prop.GetDisplayName() ?? prop.Name;
+            }
+            record.TryAdd(name, string.Empty);
+        }
+        if (template != null)
+        {
+            foreach (var item in template.Items)
+            {
+                record.TryAdd(item.Code, string.Empty);
+            }
+        }
+        var result = await _exporter.ExportDynamicHeaderAsByteArray(record);
         query.Result = result;
     }
 }

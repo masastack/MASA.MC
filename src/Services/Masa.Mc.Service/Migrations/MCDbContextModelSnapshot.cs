@@ -343,6 +343,9 @@ namespace Masa.Mc.Service.Admin.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("SelectReceiverType")
+                        .HasColumnType("int");
+
                     b.Property<string>("SendRules")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -399,6 +402,9 @@ namespace Masa.Mc.Service.Admin.Migrations
                     b.Property<string>("Receivers")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SelectReceiverType")
+                        .HasColumnType("int");
 
                     b.Property<string>("SendRules")
                         .IsRequired()
@@ -629,6 +635,9 @@ namespace Masa.Mc.Service.Admin.Migrations
                         .IsRequired()
                         .HasMaxLength(128)
                         .HasColumnType("nvarchar(128)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime>("ModificationTime")
                         .HasColumnType("datetime2");

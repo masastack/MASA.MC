@@ -10,4 +10,14 @@ public class UtilConvert
         byte[] buffer = Guid.NewGuid().ToByteArray();
         return BitConverter.ToInt64(buffer, 0).ToString();
     }
+
+    public static dynamic ConvertToDynamic(object obj)
+    {
+        IDictionary<string, object> result = new ExpandoObject();
+        foreach (PropertyDescriptor pro in TypeDescriptor.GetProperties(obj.GetType()))
+        {
+            result.Add(pro.Name, pro.GetValue(obj));
+        }
+        return result as ExpandoObject;
+    }
 }

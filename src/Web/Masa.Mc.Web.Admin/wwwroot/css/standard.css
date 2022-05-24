@@ -1,0 +1,216 @@
+﻿.masa .primary {
+    background-color: #4318FF !important;
+}
+
+.masa .primary-hover {
+    background-color: #6956FF !important;
+}
+
+.masa .primary-clicked {
+    background-color: #3613CC !important;
+}
+
+.masa .primary-disabled {
+    background-color: #A18BFF !important;
+}
+
+.masa .primary-special {
+    background-color: #D9D1FF !important;
+}
+
+.masa .primary-lighten {
+    background-color: #ECE8FF !important;
+}
+
+.masa .fill {
+    background-color: #FFFFFF !important;
+}
+
+.masa .fill-lighten {
+    background-color: #FAFBFE !important;
+}
+
+.masa .fill-hover {
+    background-color: #F6F8FD !important;
+}
+
+.masa .fill-background {
+    background-color: #F0F3FA !important;
+}
+
+.masa .fill-disabled {
+    background-color: #E9EDF7 !important;
+}
+
+.masa .fill-line {
+    background-color: #E2E7F4 !important;
+}
+
+.masa .fill-overlay {
+    background-color: #141726 !important;
+}
+
+/*
+    color of text
+*/
+
+.masa .primary--text {
+    color: #4318FF !important;
+}
+
+.masa .primary--text-hover {
+    color: #6956FF !important;
+}
+
+.masa .primary--text-clicked {
+    color: #3613CC !important;
+}
+
+.masa .primary--text-disabled {
+    color: #A18BFF !important;
+}
+
+.masa .primary--text-special {
+    color: #D9D1FF !important;
+}
+
+.masa .primary--text-lighten {
+    color: #ECE8FF !important;
+}
+
+
+.masa .fill--text {
+    color: #FFFFFF !important;
+}
+
+.masa .fill--text-lighten {
+    color: #FAFBFE !important;
+}
+
+.masa .fill--text-hover {
+    color: #F6F8FD !important;
+}
+
+.masa .fill--text-background {
+    color: #F0F3FA !important;
+}
+
+.masa .fill--text-disabled {
+    color: #E9EDF7 !important;
+}
+
+.masa .fill--text-line {
+    color: #E2E7F4 !important;
+}
+
+.masa .fill--text-overlay {
+    color: #141726 !important;
+}
+
+.masa .neutral-text-secondary {
+    color: #A3AED0 !important;
+}
+
+.masa .neutral-text-regular-secondary {
+    color: #7681AB !important;
+}
+
+.masa .neutral-text-regular {
+    color: #485585 !important;
+}
+
+.masa .neutral-text-emphasis-secondary {
+    color: #323D6F !important;
+}
+
+.masa .neutral-text-emphasis {
+    color: #1B2559 !important;
+}
+
+.masa .neutral-text-hell {
+    color: #000000 !important;
+}
+
+/*
+    font
+*/
+
+.masa .font-10 {
+    font-size: 10px !important;
+    font-weight: 400 !important;
+}
+
+.masa .font-12 {
+    font-size: 12px !important;
+    font-weight: 400 !important;
+}
+
+.masa .font-12-medium {
+    font-size: 12px !important;
+    font-weight: 500 !important;
+}
+
+.masa .font-14 {
+    font-size: 14px !important;
+    font-weight: 400 !important;
+}
+
+.masa .font-14-medium {
+    font-size: 14px !important;
+    font-weight: 500 !important;
+}
+
+.masa .font-14-bold {
+    font-size: 14px !important;
+    font-weight: 700 !important;
+}
+
+.masa .font-16 {
+    font-size: 14px !important;
+    font-weight: 700 !important;
+}
+
+.masa .font-16-medium {
+    font-size: 16px !important;
+    font-weight: 500 !important;
+}
+
+.masa .font-16-bold {
+    font-size: 16px !important;
+    font-weight: 700 !important;
+}
+
+.masa .font-18 {
+    font-size: 18px !important;
+    font-weight: 400 !important;
+}
+
+.masa .font-18-medium {
+    font-size: 18px !important;
+    font-weight: 500 !important;
+}
+
+.masa .font-20-bold {
+    font-size: 20px !important;
+    font-weight: 700 !important;
+}
+
+.masa .font-24-bold {
+    font-size: 24px !important;
+    font-weight: 700 !important;
+}
+
+.masa .font-34-bold {
+    font-size: 34px !important;
+    font-weight: 700 !important;
+}
+
+.masa .font-48-bold {
+    font-size: 48px !important;
+    font-weight: 900 !important;
+}
+
+.masa .font-60-bold {
+    font-size: 60px !important;
+    font-weight: 900 !important;
+}

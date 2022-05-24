@@ -1,7 +1,7 @@
 ﻿@inherits AdminCompontentBase
 @page "/messageTemplates/websiteMessageTemplateManagement"
 
-<PageTitle>@T("MessageTemplateManagement")</PageTitle>
+<PageTitle>@T("WebsiteMessage")</PageTitle>
 
 <MCard>
     <MCardTitle class="mx-2 pt-6">
@@ -10,8 +10,12 @@
                 <MIcon Size=16 Class="mr-2 neutral-lighten-1--text">mdi-magnify</MIcon>
             </PrependInnerContent>
         </MTextField>
-        <MIcon Class="ml-4" OnClick="ToggleAdvanced">mdi-filter</MIcon>
-        <MButton Color="primary" Class="ml-6 medium-button" OnClick="()=> _createModal.OpenModalAsync(ChannelTypes.WebsiteMessage)">
+        <div @onclick="ToggleAdvanced" class="ml-4 d-flex button">
+            <MIcon Class="ma-auto" Color="neutral-lighten-1" Size=20>
+                @(advanced?"mdi-filter":"mdi-filter-off")
+            </MIcon>
+        </div>
+        <MButton Color="primary" Class="ml-4 medium-button" OnClick="()=> _createModal.OpenModalAsync(ChannelTypes.WebsiteMessage)">
             <MIcon Size=18>mdi-plus</MIcon>
             <span class="ml-2">@T("Permission.Create")</span>
         </MButton>
@@ -19,43 +23,10 @@
     @if (advanced)
     {
         <MRow Class="mx-2">
-            <MCol Cols="3">
-                <MMenu @bind-Value="_datePickersShow"
-                   CloseOnContentClick="false"
-                   Transition="scale-transition"
-                   OffsetY
-                   MinWidth="@("auto")">
-                    <ActivatorContent>
-                        <MTextField Value="DateRangeText"
-                                Label="@T("DateRange")"
-                                Readonly
-                                Dense
-                                Outlined
-                                HideDetails="@("auto")"
-                                PrependInnerIcon="mdi-calendar"
-                                @attributes="context.Attrs"></MTextField>
-                    </ActivatorContent>
-                    <ChildContent>
-                        <MDatePicker @bind-Value="_dates"
-                                 Range
-                                 NoTitle
-                                 Scrollable>
-                            <MSpacer></MSpacer>
-                            <MButton Text
-                                 Color="primary"
-                                 OnClick="HandleDatePickersCancel">
-                                Cancel
-                            </MButton>
-                            <MButton Text
-                                 Color="primary"
-                                 OnClick="HandleDatePickersAsync">
-                                OK
-                            </MButton>
-                        </MDatePicker>
-                    </ChildContent>
-                </MMenu>
+            <MCol Cols="2">
+                <DateRangePicker @bind-StartTime="_queryParam.StartTime" @bind-EndTime="_queryParam.EndTime" OnChange="RefreshAsync" />
             </MCol>
-            <MCol Cols="3">
+            <MCol Cols="2">
                 <MSelect Value="_queryParam.ChannelId"
                      Items="@_channelItems"
                      Label="@T("DisplayName.Channel")"

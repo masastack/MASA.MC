@@ -38,7 +38,7 @@
                         @if (_messageTask.EntityType == MessageEntityTypes.Template)
                         {
                             <TemplateMessageInfo MessageTemplateId="_messageTask.EntityId" MessageTask="_messageTask"></TemplateMessageInfo>
-                            <MessageVariables Class="mt-4" @bind-Value="_messageTaskHistory.Variables" ReadOnly></MessageVariables>
+                            <MessageVariables Class="mt-4" @bind-Value="_messageRecord.Variables" ReadOnly></MessageVariables>
                         }
                     </MCol>
                     <MCol>

@@ -17,6 +17,6 @@ public class MessageTemplateUpsertDtoValidator : AbstractValidator<MessageTempla
         RuleFor(inputDto => inputDto.DisplayName).Required().Length(2, 50).ChineseLetterNumber().When(x => x.ChannelType == ChannelTypes.Email);
         RuleFor(inputDto => inputDto.Title).Required().Length(2, 255).ChineseLetterNumber().When(x => x.ChannelType == ChannelTypes.Email || x.ChannelType == ChannelTypes.WebsiteMessage);
         RuleFor(inputDto => inputDto.Content).Required();
-        RuleFor(inputDto => inputDto.JumpUrl).Required().When(x=>x.IsJump);
+        RuleFor(inputDto => inputDto.JumpUrl).Required().Url().When(x=>x.IsJump);
     }
 }

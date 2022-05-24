@@ -1,4 +1,4 @@
-﻿ // Copyright (c) MASA Stack All rights reserved.
+﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
 namespace Masa.Mc.Service.Admin.Services;
@@ -16,7 +16,8 @@ public class MessageTaskService : ServiceBase
         MapPost(SendTestAsync);
         MapPost(EnabledAsync);
         MapPost(DisableAsync);
-        MapGet(GenerateImportTemplateAsync);
+        MapGet(GenerateReceiverImportTemplateAsync);
+        MapPost(ImportReceiversAsync);
     }
 
     public async Task<PaginatedListDto<MessageTaskDto>> GetListAsync(IEventBus eventbus, [FromQuery] Guid? channelId, [FromQuery] MessageEntityTypes? entityType, [FromQuery] bool? isEnabled, [FromQuery] MessageTaskTimeTypes? timeType, [FromQuery] DateTime? startTime, [FromQuery] DateTime? endTime, [FromQuery] string filter = "", [FromQuery] string sorting = "", [FromQuery] int page = 1, [FromQuery] int pagesize = 10)
@@ -99,14 +100,17 @@ public class MessageTaskService : ServiceBase
         await eventBus.PublishAsync(command);
     }
 
-    public async Task<FileStreamResult> GenerateImportTemplateAsync(IEventBus eventBus)
+    public async Task<IResult> GenerateReceiverImportTemplateAsync(IEventBus eventBus, Guid? messageTemplatesId)
     {
-        var query = new GenerateImportTemplateQuery();
+        var query = new GenerateReceiverImportTemplateQuery(messageTemplatesId);
         await eventBus.PublishAsync(query);
-        var memoryStream = new MemoryStream(query.Result);
-        return new FileStreamResult(memoryStream, "text/csv")
-        {
-            FileDownloadName = "ImportTemplate.csv"
-        };
+        return Results.Bytes(query.Result, "text/csv", "ReceiverImportTemplate.csv");
+    }
+
+    public async Task<ImportResultDto<MessageTaskReceiverDto>> ImportReceiversAsync(IEventBus eventBus, ImportReceiversDto dto)
+    {
+        var command = new ImportReceiversCommand(dto);
+        await eventBus.PublishAsync(command);
+        return command.Result;
     }
 }

@@ -2,7 +2,6 @@
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
 var builder = WebApplication.CreateBuilder(args);
-builder.AddMasaConfiguration();
 builder.Services.AddDaprClient();
 builder.Services.AddActors(options =>
 {
@@ -19,11 +18,18 @@ builder.Services.AddAuthentication(options =>
     options.RequireHttpsMetadata = false;
     options.Audience = "";
 });
+builder.Services.AddMasaRedisCache(builder.Configuration.GetSection(nameof(RedisConfigurationOptions))).AddMasaMemoryCache();
 builder.Services.AddAliyunSms();
 builder.Services.AddEmail();
-builder.Services.AddSingleton<ICsvImporter, CsvImporter>();
+builder.Services.AddCsv();
 builder.Services.AddSingleton<ITemplateRenderer, TextTemplateRenderer>();
 TypeAdapterConfig.GlobalSettings.Scan(Assembly.GetExecutingAssembly(), Assembly.Load("Masa.Mc.Contracts.Admin"));
+
+if (builder.Environment.IsDevelopment())
+{
+    builder.Services.AddDaprStarter(builder.Configuration.GetSection(nameof(DaprOptions)));
+}
+
 var app = builder.Services
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     .AddEndpointsApiExplorer()
@@ -70,7 +76,7 @@ var app = builder.Services
         })
         .UseIsolationUoW<McDbContext>(
             isolationBuilder => isolationBuilder.UseMultiEnvironment("env"),
-            dbOptions => dbOptions.UseSqlServer().UseSoftDelete())
+            dbOptions => dbOptions.UseSqlServer().UseFilter())
         .UseRepository<McDbContext>();
     })
     .AddServices(builder);
@@ -87,7 +93,7 @@ app.UseMasaExceptionHandling(opt =>
     };
 });
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (!app.Environment.IsProduction())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
@@ -103,6 +109,7 @@ app.UseEndpoints(endpoints =>
     endpoints.MapSubscribeHandler();
     endpoints.MapActorsHandlers();
 });
+
 app.UseHttpsRedirection();
 
 app.Run();

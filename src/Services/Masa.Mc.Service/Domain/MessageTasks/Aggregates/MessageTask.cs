@@ -3,7 +3,7 @@
 
 namespace Masa.Mc.Service.Admin.Domain.MessageTasks.Aggregates;
 
-public class MessageTask : AuditAggregateRoot<Guid, Guid>, ISoftDelete
+public class MessageTask : FullAggregateRoot<Guid, Guid>
 {
     public string DisplayName { get; protected set; } = string.Empty;
 
@@ -21,6 +21,8 @@ public class MessageTask : AuditAggregateRoot<Guid, Guid>, ISoftDelete
 
     public ReceiverTypes ReceiverType { get; protected set; }
 
+    public MessageTaskSelectReceiverTypes SelectReceiverType { get; protected set; }
+
     public DateTime? SendTime { get; protected set; }
 
     public string Sign { get; protected set; } = string.Empty;
@@ -31,9 +33,7 @@ public class MessageTask : AuditAggregateRoot<Guid, Guid>, ISoftDelete
 
     public ExtraPropertyDictionary Variables { get; protected set; } = new();
 
-    public bool IsDeleted { get; protected set; }
-
-    public MessageTask(string displayName, Guid channelId, MessageEntityTypes entityType, Guid entityId, bool isDraft, string sign, ReceiverTypes receiverType, List<MessageTaskReceiver> receivers, ExtraPropertyDictionary sendRules)
+    public MessageTask(string displayName, Guid channelId, MessageEntityTypes entityType, Guid entityId, bool isDraft, string sign, ReceiverTypes receiverType, MessageTaskSelectReceiverTypes selectReceiverType, List<MessageTaskReceiver> receivers, ExtraPropertyDictionary sendRules)
     {
         DisplayName = displayName;
         ChannelId = channelId;
@@ -41,13 +41,15 @@ public class MessageTask : AuditAggregateRoot<Guid, Guid>, ISoftDelete
         EntityId = entityId;
         Sign = sign;
         SetDraft(isDraft);
+        SelectReceiverType = selectReceiverType;
         SetReceivers(receiverType, receivers);
         SendRules = sendRules ?? new();
     }
 
-    public virtual void SendTask(ReceiverTypes receiverType, List<MessageTaskReceiver> receivers, ExtraPropertyDictionary sendRules, DateTime? sendTime, string sign, ExtraPropertyDictionary variables)
+    public virtual void SendTask(ReceiverTypes receiverType, List<MessageTaskReceiver> receivers, MessageTaskSelectReceiverTypes selectReceiverType, ExtraPropertyDictionary sendRules, DateTime? sendTime, string sign, ExtraPropertyDictionary variables)
     {
         SetDraft(false);
+        SelectReceiverType = selectReceiverType;
         SetReceivers(receiverType, receivers);
         SendRules = sendRules ?? new();
         SendTime = sendTime ?? DateTime.UtcNow;

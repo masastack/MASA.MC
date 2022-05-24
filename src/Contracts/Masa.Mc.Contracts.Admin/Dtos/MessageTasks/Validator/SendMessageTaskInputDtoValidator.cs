@@ -10,5 +10,6 @@ public class SendMessageTaskInputDtoValidator : AbstractValidator<SendMessageTas
         RuleFor(inputDto => inputDto.ReceiverType).IsInEnum();
         RuleFor(inputDto => inputDto.Receivers).Required().When(x => x.ReceiverType == ReceiverTypes.Assign);
         RuleFor(inputDto => inputDto.Sign).Required().ChineseLetterNumber().Length(2, 12).When(m => m.ChannelType == ChannelTypes.Sms);
+        RuleFor(inputDto => inputDto.SendRules).SetValidator(new SendRuleDtoValidator());
     }
 }

@@ -1,6 +1,6 @@
 ﻿@inherits AdminCompontentBase
 <div @ref="Ref">
-    <SheetDialog Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("DisplayName.MessageTaskList")" ContentStyle="padding-right:80px;padding-left:80px;padding-top:40px;">
+    <SheetDialog Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("DisplayName.MessageTaskList")" ContentStyle="padding-right:80px;padding-left:80px;padding-top:40px;" ContentClass="overflow-auto">
         <MCard>
             <MCardTitle class="mx-2 pt-6">
                 <MTextField @bind-Value="_queryParam.Filter" Clearable Color="primary" Class="rounded-2 search" Placeholder="@T("Search")" HideDetails="@("auto")" Flat Dense Solo BackgroundColor="fill-lighten-1" OnKeyDown="SearchKeyDown" OnClearClick="HandleClearAsync">
@@ -8,7 +8,11 @@
                         <MIcon Size=16 Class="mr-2 neutral-lighten-1--text">mdi-magnify</MIcon>
                     </PrependInnerContent>
                 </MTextField>
-                <MIcon Class="ml-4" OnClick="ToggleAdvanced">mdi-filter</MIcon>
+                <div @onclick="ToggleAdvanced" class="ml-4 d-flex button">
+                    <MIcon Class="ma-auto" Color="neutral-lighten-1" Size=20>
+                        @(advanced?"mdi-filter":"mdi-filter-off")
+                    </MIcon>
+                </div>
             </MCardTitle>
             @if (advanced)
             {
@@ -30,41 +34,8 @@
                              OnSelectedItemUpdate="RefreshAsync">
                         </MSelect>
                     </MCol>
-                    <MCol Cols="2">
-                        <MMenu @bind-Value="_datePickersShow"
-                           CloseOnContentClick="false"
-                           Transition="scale-transition"
-                           OffsetY
-                           MinWidth="@("auto")">
-                            <ActivatorContent>
-                                <MTextField Value="DateRangeText"
-                                        Label="@T("DateRange")"
-                                        Readonly
-                                        Dense
-                                        Outlined
-                                        HideDetails="@("auto")"
-                                        PrependInnerIcon="mdi-calendar"
-                                        @attributes="context.Attrs"></MTextField>
-                            </ActivatorContent>
-                            <ChildContent>
-                                <MDatePicker @bind-Value="_dates"
-                                         Range
-                                         NoTitle
-                                         Scrollable>
-                                    <MSpacer></MSpacer>
-                                    <MButton Text
-                                         Color="primary"
-                                         OnClick="HandleDatePickersCancel">
-                                        Cancel
-                                    </MButton>
-                                    <MButton Text
-                                         Color="primary"
-                                         OnClick="HandleDatePickersAsync">
-                                        OK
-                                    </MButton>
-                                </MDatePicker>
-                            </ChildContent>
-                        </MMenu>
+                    <MCol Cols="2" Class="mr-4">
+                        <DateRangePicker @bind-StartTime="_queryParam.StartTime" @bind-EndTime="_queryParam.EndTime" OnChange="RefreshAsync" />
                     </MCol>
                     <MCol Cols="2">
                         <MSelect @bind-Value="_queryParam.ChannelId"

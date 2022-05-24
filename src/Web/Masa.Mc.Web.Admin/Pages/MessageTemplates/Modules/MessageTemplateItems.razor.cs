@@ -30,6 +30,7 @@ public partial class MessageTemplateItems : AdminCompontentBase
 
     protected override async Task OnInitializedAsync()
     {
+        await base.OnInitializedAsync();
         var _prefix = "DisplayName.MessageTemplateItem";
         _headers = new List<DataTableHeader<MessageTemplateItemDto>>
         {

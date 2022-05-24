@@ -13,9 +13,6 @@ public partial class EmailTemplateManagement : AdminCompontentBase
     private PaginatedListDto<MessageTemplateDto> _entities = new();
     private List<ChannelDto> _channelItems = new();
     private bool advanced = true;
-    private bool _datePickersShow;
-    private List<DateOnly> _dates = new List<DateOnly> { };
-    private string DateRangeText => string.Join(" ~ ", _dates.Select(date => date.ToString("yyyy-MM-dd")));
 
     ChannelService ChannelService => McCaller.ChannelService;
 
@@ -86,22 +83,5 @@ public partial class EmailTemplateManagement : AdminCompontentBase
     private void ToggleAdvanced()
     {
         advanced = !advanced;
-    }
-
-    private async Task HandleDatePickersAsync()
-    {
-        _datePickersShow = false;
-        if (_dates.Count > 0) _queryParam.StartTime = _dates[0].ToDateTime(new TimeOnly(0, 0, 0));
-        if (_dates.Count > 1) _queryParam.EndTime = _dates[1].ToDateTime(new TimeOnly(23, 59, 59));
-        await LoadData();
-    }
-
-    private async Task HandleDatePickersCancel()
-    {
-        _datePickersShow = false;
-        _queryParam.StartTime = null;
-        _queryParam.EndTime = null;
-        _dates = new();
-        await LoadData();
     }
 }

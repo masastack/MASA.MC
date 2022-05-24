@@ -40,7 +40,6 @@ public partial class ExternalUserCreateModal : AdminCompontentBase
             Email = _model.Email,
             Type = MessageTaskReceiverTypes.User
         };
-        await SuccessMessageAsync(T("ExternalMemberAddMessage"));
         _visible = false;
 
         if (OnOk.HasDelegate)

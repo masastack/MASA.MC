@@ -1,7 +1,7 @@
 ﻿@inherits AdminCompontentBase
 @page "/messageRecords/messageRecordManagement"
 
-<PageTitle>@T("MessageRecordManagement")</PageTitle>
+<PageTitle>@T("Permission.MessageRecord")</PageTitle>
 
 <MCard>
     <MCardTitle class="mx-2 pt-6">
@@ -10,7 +10,11 @@
                 <MIcon Size=16 Class="mr-2 neutral-lighten-1--text">mdi-magnify</MIcon>
             </PrependInnerContent>
         </MTextField>
-        <MIcon Class="ml-4" OnClick="ToggleAdvanced">mdi-filter</MIcon>
+        <div @onclick="ToggleAdvanced" class="ml-4 d-flex button">
+            <MIcon Class="ma-auto" Color="neutral-lighten-1" Size=20>
+                @(advanced?"mdi-filter":"mdi-filter-off")
+            </MIcon>
+        </div>
     </MCardTitle>
     @if (advanced)
     {
@@ -33,40 +37,7 @@
                 </MSelect>
             </MCol>
             <MCol Cols="2">
-                <MMenu @bind-Value="_datePickersShow"
-                   CloseOnContentClick="false"
-                   Transition="scale-transition"
-                   OffsetY
-                   MinWidth="@("auto")">
-                    <ActivatorContent>
-                        <MTextField Value="DateRangeText"
-                                Label="@T("DateRange")"
-                                Readonly
-                                Dense
-                                Outlined
-                                HideDetails="@("auto")"
-                                PrependInnerIcon="mdi-calendar"
-                                @attributes="context.Attrs"></MTextField>
-                    </ActivatorContent>
-                    <ChildContent>
-                        <MDatePicker @bind-Value="_dates"
-                                 Range
-                                 NoTitle
-                                 Scrollable>
-                            <MSpacer></MSpacer>
-                            <MButton Text
-                                 Color="primary"
-                                 OnClick="HandleDatePickersCancel">
-                                Cancel
-                            </MButton>
-                            <MButton Text
-                                 Color="primary"
-                                 OnClick="HandleDatePickersAsync">
-                                OK
-                            </MButton>
-                        </MDatePicker>
-                    </ChildContent>
-                </MMenu>
+                <DateRangePicker @bind-StartTime="_queryParam.StartTime" @bind-EndTime="_queryParam.EndTime" OnChange="RefreshAsync" />
             </MCol>
             <MCol Cols="2">
                 <MSelect @bind-Value="_queryParam.ChannelId"

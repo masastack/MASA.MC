@@ -7,23 +7,42 @@
   },
   {
     "Id": 2,
+    "Title": "Permission.MessageManagement",
+    "Icon": "mdi-animation",
+    "Children": [
+      {
+        "Id": 3,
+        "Title": "Permission.SendMessage",
+        "Icon": "mdi-circle",
+        "Href": "messageTasks/sendMessage"
+      },
+      {
+        "Id": 4,
+        "Title": "Permission.MessageRecord",
+        "Icon": "mdi-circle",
+        "Href": "messageRecords/messageRecordManagement"
+      }
+    ]
+  },
+  {
+    "Id": 5,
     "Title": "Permission.MessageTemplateManagement",
     "Icon": "mdi-image-filter-none",
     "Children": [
       {
-        "Id": 3,
+        "Id": 6,
         "Title": "Sms",
         "Icon": "mdi-circle",
         "Href": "messageTemplates/smsTemplateManagement"
       },
       {
-        "Id": 4,
+        "Id": 7,
         "Title": "Email",
         "Icon": "mdi-circle",
         "Href": "messageTemplates/emailTemplateManagement"
       },
       {
-        "Id": 5,
+        "Id": 8,
         "Title": "WebsiteMessage",
         "Icon": "mdi-circle",
         "Href": "messageTemplates/websiteMessageTemplateManagement"
@@ -31,28 +50,9 @@
     ]
   },
   {
-    "Id": 6,
+    "Id": 9,
     "Title": "Permission.ReceiverGroupManagement",
     "Icon": "mdi-account-group",
     "Href": "receiverGroups/receiverGroupManagement"
-  },
-  {
-    "Id": 7,
-    "Title": "Permission.MessageManagement",
-    "Icon": "mdi-animation",
-    "Children": [
-      {
-        "Id": 8,
-        "Title": "Permission.SendMessage",
-        "Icon": "mdi-circle",
-        "Href": "messageTasks/sendMessage"
-      },
-      {
-        "Id": 9,
-        "Title": "Permission.MessageRecord",
-        "Icon": "mdi-circle",
-        "Href": "messageRecords/messageRecordManagement"
-      }
-    ]
   }
 ]

@@ -1,0 +1,193 @@
+﻿@inherits AdminCompontentBase
+<MCard Class="full-height">
+    <MCardTitle>
+        <div class="d-flex full-width" style="height: 40px !important;">
+            <MListItem>
+                <MListItemAvatar Class="overflow-visible">
+                    <MBadge Bordered Dot Color="pink" OffsetX="10" OffsetY="10">
+                        <MAvatar Color="primary">
+                        </MAvatar>
+                    </MBadge>
+
+                </MListItemAvatar>
+
+                <MListItemContent>
+                    <MListItemTitle Class="font-18-medium neutral-text-emphasis">MASA</MListItemTitle>
+                </MListItemContent>
+            </MListItem>
+            <MSpacer />
+            <MTextField @bind-Value="_queryParam.Filter" Clearable Color="primary" Class="rounded-2 search" Placeholder="@T("Search")" HideDetails="@("auto")" Flat Dense Solo BackgroundColor="fill-lighten-1">
+                <PrependInnerContent>
+                    <MIcon Size=16 Class="mr-2 neutral-lighten-1--text">mdi-magnify</MIcon>
+                </PrependInnerContent>
+            </MTextField>
+            <MSelect Class="ml-6" @bind-Value="@_queryParam.FilterType"
+                     Items="@(GetEnumList<WebsiteMessageFilterType>())"
+                     Label="@T("DisplayName.WebsiteMessageFilterType")"
+                     ItemText="@(item => T($"DisplayName.WebsiteMessageFilterType.{item.ToString()}"))"
+                     ItemValue="item => item"
+                     Dense
+                     Outlined
+                     Clearable
+                     HideDetails="@("auto")"
+                     TItem="WebsiteMessageFilterType"
+                     TItemValue="WebsiteMessageFilterType"
+                     TValue="WebsiteMessageFilterType?">
+            </MSelect>
+
+            <MMenu OffsetY>
+                <ActivatorContent>
+                    <div class="ml-6 d-flex button rounded-circle" @attributes="@context.Attrs">
+                        <MIcon Class="ma-auto" Color="neutral-lighten-1" Size=20>
+                            mdi-dots-horizontal
+                        </MIcon>
+                    </div>
+                </ActivatorContent>
+
+                <ChildContent>
+                    <MList>
+                        <MListItem>
+                            <MListItemContent>
+                                <MListItemTitle>
+                                    @T("DisplayName.WebsiteMessageAction.MarkAllRead")
+                                </MListItemTitle>
+                            </MListItemContent>
+                        </MListItem>
+                        <MListItem>
+                            <MListItemContent>
+                                <MListItemTitle>
+                                    @T("DisplayName.WebsiteMessageAction.ShowAll")
+                                </MListItemTitle>
+                            </MListItemContent>
+                        </MListItem>
+                        <MListItem>
+                            <MListItemContent>
+                                <MListItemTitle>
+                                    @T("DisplayName.WebsiteMessageAction.ShowUnread")
+                                </MListItemTitle>
+                            </MListItemContent>
+                        </MListItem>
+                    </MList>
+                </ChildContent>
+            </MMenu>
+        </div>
+    </MCardTitle>
+    <MCardText>
+        <MList Subheader
+               TwoLine>
+            @foreach (var item in _items)
+            {
+                <MListItem Link OnClick="HandleOnClick">
+                    <MListItemContent>
+                        <MListItemTitle Class="py-2 font-18-medium neutral-text-emphasis-secondary">@item.Title</MListItemTitle>
+
+                        <MListItemSubtitle Class="font-14 neutral-text-regular-secondary">
+                            @if (!item.IsRead)
+                            {
+                                <MAvatar Color="red" Size="8" Class="mx-2">
+                                </MAvatar>
+                            }
+                            @item.ZhaiYao
+                        </MListItemSubtitle>
+
+
+                    </MListItemContent>
+
+                    <MListItemAction>
+                        <MListItemActionText Class="font-12 neutral-text-regular-secondary">@item.Date</MListItemActionText>
+                    </MListItemAction>
+                </MListItem>
+            }
+        </MList>
+        <Pagination Class="mt-5" @bind-Page="_queryParam.Page" @bind-PageSize="_queryParam.PageSize" Total="_items.Count()" />
+    </MCardText>
+</MCard>
+@code {
+    [Parameter]
+    public EventCallback OnClick { get; set; }
+
+    private Item[] _items = new Item[]
+    {
+       new Item
+       {
+           Avatar="https://cdn.masastack.com/stack/images/website/masa-blazor/lists/1.png",
+           Title="北雀路一小区居民开灯时，家中突然爆燃！窗...",
+           ZhaiYao="我吃东西越来越清淡，对待人情世故越来越宽容，不乱发脾气，也学会了忍让。",
+           Date="12月25日",
+           IsRead=false
+       },
+       new Item
+       {
+           Avatar="https://cdn.masastack.com/stack/images/website/masa-blazor/lists/2.png",
+           Title="北雀路一小区居民开灯时，家中突然爆燃！窗...",
+           ZhaiYao="我吃东西越来越清淡，对待人情世故越来越宽容，不乱发脾气，也学会了忍让。",
+           Date="12月25日",
+           IsRead=true
+       },
+       new Item
+       {
+           Avatar="https://cdn.masastack.com/stack/images/website/masa-blazor/lists/3.png",
+           Title="北雀路一小区居民开灯时，家中突然爆燃！窗...",
+           ZhaiYao="我吃东西越来越清淡，对待人情世故越来越宽容，不乱发脾气，也学会了忍让。",
+           Date="12月25日",
+           IsRead=false
+       },
+       new Item
+       {
+           Avatar="https://cdn.masastack.com/stack/images/website/masa-blazor/lists/4.png",
+           Title="北雀路一小区居民开灯时，家中突然爆燃！窗...",
+           ZhaiYao="我吃东西越来越清淡，对待人情世故越来越宽容，不乱发脾气，也学会了忍让。",
+           Date="12月25日",
+           IsRead=true
+       },
+       new Item
+       {
+           Avatar="https://cdn.masastack.com/stack/images/website/masa-blazor/lists/5.png",
+           Title="北雀路一小区居民开灯时，家中突然爆燃！窗...",
+           ZhaiYao="我吃东西越来越清淡，对待人情世故越来越宽容，不乱发脾气，也学会了忍让。",
+           Date="12月25日",
+           IsRead=false
+       },
+       new Item
+       {
+           Avatar="https://cdn.masastack.com/stack/images/website/masa-blazor/lists/5.png",
+           Title="北雀路一小区居民开灯时，家中突然爆燃！窗...",
+           ZhaiYao="我吃东西越来越清淡，对待人情世故越来越宽容，不乱发脾气，也学会了忍让。",
+           Date="12月25日",
+           IsRead=false
+       },
+       new Item
+       {
+           Avatar="https://cdn.masastack.com/stack/images/website/masa-blazor/lists/5.png",
+           Title="北雀路一小区居民开灯时，家中突然爆燃！窗...",
+           ZhaiYao="我吃东西越来越清淡，对待人情世故越来越宽容，不乱发脾气，也学会了忍让。",
+           Date="12月25日",
+           IsRead=false
+       },
+       new Item
+       {
+           Avatar="https://cdn.masastack.com/stack/images/website/masa-blazor/lists/5.png",
+           Title="北雀路一小区居民开灯时，家中突然爆燃！窗...",
+           ZhaiYao="我吃东西越来越清淡，对待人情世故越来越宽容，不乱发脾气，也学会了忍让。",
+           Date="12月25日",
+           IsRead=false
+       }
+    };
+
+    class Item
+    {
+        public string Avatar { get; set; }
+        public string Title { get; set; }
+        public string ZhaiYao { get; set; }
+        public string Date { get; set; }
+        public bool IsRead { get; set; }
+    }
+
+    private async Task HandleOnClick()
+    {
+        if (OnClick.HasDelegate)
+        {
+            await OnClick.InvokeAsync();
+        }
+    }
+}

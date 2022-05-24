@@ -13,6 +13,8 @@ public partial class MessageTaskSendModal : AdminCompontentBase
     private MessageTaskDto _info = new();
     private Guid _entityId;
     private bool _visible;
+    private List<MessageTaskReceiverDto> _selectReceivers = new();
+    private List<MessageTaskReceiverDto> _importReceivers = new();
 
     MessageTaskService MessageTaskService => McCaller.MessageTaskService;
 
@@ -36,6 +38,14 @@ public partial class MessageTaskSendModal : AdminCompontentBase
     {
         _info = await MessageTaskService.GetAsync(_entityId) ?? new();
         _model = _info.Adapt<SendMessageTaskInputDto>();
+        if (_model.SelectReceiverType == MessageTaskSelectReceiverTypes.ManualSelection)
+        {
+            _selectReceivers = _model.Receivers;
+        }
+        else
+        {
+            _importReceivers = _model.Receivers;
+        }
     }
 
     private void HandleCancel()
@@ -46,6 +56,7 @@ public partial class MessageTaskSendModal : AdminCompontentBase
 
     private async Task HandleOkAsync()
     {
+        _model.Receivers = _model.SelectReceiverType == MessageTaskSelectReceiverTypes.ManualSelection ? _selectReceivers : _importReceivers;
         if (!await _form.ValidateAsync())
         {
             return;
@@ -65,6 +76,9 @@ public partial class MessageTaskSendModal : AdminCompontentBase
     private void ResetForm()
     {
         _model = new();
+        _info = new();
+        _selectReceivers = new();
+        _importReceivers = new();
     }
 
     private void HandleVisibleChanged(bool val)
