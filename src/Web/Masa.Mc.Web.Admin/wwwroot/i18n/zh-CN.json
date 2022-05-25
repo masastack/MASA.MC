@@ -90,6 +90,7 @@
   "StartTime": "开始时间",
   "EndTime": "结束时间",
   "OperationSuccessfulMessage": "操作成功.",
+  "DeletedSuccessfullyMessage": "删除成功.",
   "Permission.ChannelManagement": "渠道管理",
   "Permission.CreateChannel": "创建渠道",
   "Permission.EditChannel": "编辑渠道",

@@ -19,7 +19,7 @@
             </MListItem>
             <MSpacer />
 
-            <MIcon Class="mr-2" Color="neutral-lighten-1" Size=20>
+            <MIcon Class="mr-2" Color="neutral-lighten-1" Size=20 OnClick="HandleDelAsync">
                 mdi-delete-outline
             </MIcon>
         </div>
@@ -44,15 +44,3 @@
         </div>
     </MCardText>
 </MCard>
-@code {
-    [Parameter]
-    public EventCallback OnBack { get; set; }
-
-    private async Task HandleOnBack()
-    {
-        if (OnBack.HasDelegate)
-        {
-            await OnBack.InvokeAsync();
-        }
-    }
-}

@@ -9,8 +9,10 @@ public class WebsiteMessageService : ServiceBase
     {
         MapGet(GetAsync, "{id}");
         MapGet(GetListAsync, string.Empty);
+        MapDelete(DeleteAsync, "{id}");
         MapGet(GetChannelListAsync);
         MapPost(SetAllReadAsync);
+        MapPost(ReadAsync);
     }
 
     public async Task<PaginatedListDto<WebsiteMessageDto>> GetListAsync(IEventBus eventbus, [FromQuery] WebsiteMessageFilterType? filterType, [FromQuery] Guid? channelId, [FromQuery] bool? isRead, [FromQuery] string filter = "", [FromQuery] string sorting = "", [FromQuery] int page = 1, [FromQuery] int pagesize = 10)
@@ -38,6 +40,18 @@ public class WebsiteMessageService : ServiceBase
     public async Task SetAllReadAsync(IEventBus eventbus, [FromBody] GetWebsiteMessageInputDto inputDto)
     {
         var command = new SetAllReadWebsiteMessageCommand(inputDto);
+        await eventbus.PublishAsync(command);
+    }
+
+    public async Task DeleteAsync(IEventBus eventBus, Guid id)
+    {
+        var command = new DeleteWebsiteMessageCommand(id);
+        await eventBus.PublishAsync(command);
+    }
+
+    public async Task ReadAsync(IEventBus eventbus, [FromBody] ReadWebsiteMessageInputDto inputDto)
+    {
+        var command = new ReadWebsiteMessageCommand(inputDto);
         await eventbus.PublishAsync(command);
     }
 }

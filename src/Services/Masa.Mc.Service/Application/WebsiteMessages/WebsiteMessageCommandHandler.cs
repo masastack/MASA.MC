@@ -25,6 +25,16 @@ public class WebsiteMessageCommandHandler
     }
 
     [EventHandler]
+    public async Task ReadAsync(ReadWebsiteMessageCommand command)
+    {
+        var entity = await _repository.FindAsync(x => x.Id == command.dto.Id);
+        if (entity == null)
+            throw new UserFriendlyException("receiverGroup not found");
+        entity.SetRead();
+        await _repository.UpdateAsync(entity);
+    }
+
+    [EventHandler]
     public async Task DeleteAsync(DeleteWebsiteMessageCommand createCommand)
     {
         var entity = await _repository.FindAsync(x => x.Id == createCommand.WebsiteMessageId);

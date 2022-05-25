@@ -31,4 +31,14 @@ public class WebsiteMessageService : ServiceBase
     {
         await PostAsync(nameof(SetAllReadAsync), inputDto);
     }
+
+    public async Task DeleteAsync(Guid id)
+    {
+        await DeleteAsync($"{id}");
+    }
+
+    public async Task ReadAsync(ReadWebsiteMessageInputDto inputDto)
+    {
+        await PostAsync(nameof(ReadAsync), inputDto);
+    }
 }
