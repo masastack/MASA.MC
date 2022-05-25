@@ -140,3 +140,4 @@ global using Masa.Mc.Service.Admin.Infrastructure.Notifications.SignalR.Hubs;
 global using Masa.Mc.Service.Admin.Infrastructure.Notifications.SignalR;
 global using Microsoft.Extensions.Options;
 global using Masa.Mc.Contracts.Admin.Enums.WebsiteMessages;
+global using Masa.Mc.Service.Admin.Application.WebsiteMessages.Commands;

@@ -1,4 +1,5 @@
-﻿@page "/websiteMessages/websiteMessageManagement"
+﻿@page "/websiteMessages/websiteMessageManagement/{MessageId}"
+@page "/websiteMessages/websiteMessageManagement"
 @inherits AdminCompontentBase
 
 <PageTitle>
@@ -6,17 +7,17 @@
 </PageTitle>
 
 <MRow Class="full-height">
-    <MCol Md="@("auto")">
-        <MessageLeft />
+    <MCol Md="5">
+        <MessageLeft OnClick="HandleChannelClick" />
     </MCol>
     <MCol Class="d-flex flex-column">
         @if (_detailShow)
         {
-            <MessageDetail OnBack="HandleDetailBack" />
+            <MessageDetail EntityId="_messageId" OnBack="HandleDetailBack" />
         }
         else
         {
-            <MessageRight OnClick="HandleListItemClick" />
+            <MessageRight ChannelId="_channelId" OnClick="HandleListItemClick" />
         }
     </MCol>
 </MRow>

@@ -5,15 +5,41 @@ namespace Masa.Mc.Web.Admin.Pages.WebsiteMessages;
 
 public partial class WebsiteMessageManagement : AdminCompontentBase
 {
-    private bool _detailShow = false;
+    [Parameter]
+    public string MessageId { get; set; }
 
-    private void HandleListItemClick()
+    private bool _detailShow = false;
+    private Guid? _channelId;
+    private Guid _messageId;
+
+    protected override void OnParametersSet()
     {
+        if (string.IsNullOrEmpty(MessageId))
+        {
+            _detailShow = false;
+            _messageId = default(Guid);
+        }
+        else
+        {
+            _messageId = Guid.Parse(MessageId);
+            _detailShow = true;
+        }
+    }
+
+    private void HandleListItemClick(Guid messageId)
+    {
+        _messageId = messageId;
         _detailShow = true;
     }
 
     private void HandleDetailBack()
     {
+        _detailShow = false;
+    }
+
+    private void HandleChannelClick(Guid? channelId)
+    {
+        _channelId = channelId;
         _detailShow = false;
     }
 }

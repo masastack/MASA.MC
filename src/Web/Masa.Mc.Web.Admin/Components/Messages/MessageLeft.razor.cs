@@ -5,7 +5,10 @@ namespace Masa.Mc.Web.Admin.Components.Messages;
 
 public partial class MessageLeft : AdminCompontentBase
 {
-    private List<WebsiteMessageDto> _entities = new();
+    [Parameter]
+    public EventCallback<Guid?> OnClick { get; set; }
+
+    private List<WebsiteMessageChannelListDto> _entities = new();
 
     WebsiteMessageService WebsiteMessageService => McCaller.WebsiteMessageService;
 
@@ -24,5 +27,13 @@ public partial class MessageLeft : AdminCompontentBase
         _entities = (await WebsiteMessageService.GetChannelListAsync());
         Loading = false;
         StateHasChanged();
+    }
+
+    private async Task HandleOnClick(Guid? channelId)
+    {
+        if (OnClick.HasDelegate)
+        {
+            await OnClick.InvokeAsync(channelId);
+        }
     }
 }

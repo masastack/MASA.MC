@@ -10,11 +10,12 @@ public class WebsiteMessageService : ServiceBase
         MapGet(GetAsync, "{id}");
         MapGet(GetListAsync, string.Empty);
         MapGet(GetChannelListAsync);
+        MapPost(SetAllReadAsync);
     }
 
-    public async Task<PaginatedListDto<WebsiteMessageDto>> GetListAsync(IEventBus eventbus, [FromQuery] WebsiteMessageFilterType? filterType, [FromQuery] Guid? channelId, [FromQuery] string filter = "", [FromQuery] string sorting = "", [FromQuery] int page = 1, [FromQuery] int pagesize = 10)
+    public async Task<PaginatedListDto<WebsiteMessageDto>> GetListAsync(IEventBus eventbus, [FromQuery] WebsiteMessageFilterType? filterType, [FromQuery] Guid? channelId, [FromQuery] bool? isRead, [FromQuery] string filter = "", [FromQuery] string sorting = "", [FromQuery] int page = 1, [FromQuery] int pagesize = 10)
     {
-        var inputDto = new GetWebsiteMessageInputDto(filter, filterType, channelId, sorting, page, pagesize);
+        var inputDto = new GetWebsiteMessageInputDto(filter, filterType, channelId, isRead, sorting, page, pagesize);
         var query = new GetListWebsiteMessageQuery(inputDto);
         await eventbus.PublishAsync(query);
         return query.Result;
@@ -27,10 +28,16 @@ public class WebsiteMessageService : ServiceBase
         return query.Result;
     }
 
-    public async Task<List<WebsiteMessageDto>> GetChannelListAsync(IEventBus eventbus)
+    public async Task<List<WebsiteMessageChannelListDto>> GetChannelListAsync(IEventBus eventbus)
     {
         var query = new GetChannelListWebsiteMessageQuery();
         await eventbus.PublishAsync(query);
         return query.Result;
+    }
+
+    public async Task SetAllReadAsync(IEventBus eventbus, [FromBody] GetWebsiteMessageInputDto inputDto)
+    {
+        var command = new SetAllReadWebsiteMessageCommand(inputDto);
+        await eventbus.PublishAsync(command);
     }
 }

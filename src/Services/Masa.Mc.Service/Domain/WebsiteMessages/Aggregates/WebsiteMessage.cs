@@ -36,7 +36,7 @@ public class WebsiteMessage : FullAggregateRoot<Guid, Guid>
         ReadTime = readTime;
     }
 
-    private void SetRead()
+    public void SetRead()
     {
         IsRead = true;
         ReadTime = DateTime.UtcNow;

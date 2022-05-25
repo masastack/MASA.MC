@@ -10,6 +10,7 @@ public class GetWebsiteMessageInputDto : PaginatedOptionsDto
     public string Filter { get; set; } = string.Empty;
     public WebsiteMessageFilterType? FilterType { get; set; }
     public Guid? ChannelId { get; set; }
+    public bool? IsRead { get; set; }
 
     public GetWebsiteMessageInputDto()
     {
@@ -19,10 +20,11 @@ public class GetWebsiteMessageInputDto : PaginatedOptionsDto
     {
     }
 
-    public GetWebsiteMessageInputDto(string filter, WebsiteMessageFilterType? filterType, Guid? channelId, string sorting, int page, int pageSize) : base(sorting, page, pageSize)
+    public GetWebsiteMessageInputDto(string filter, WebsiteMessageFilterType? filterType, Guid? channelId, bool? isRead, string sorting, int page, int pageSize) : base(sorting, page, pageSize)
     {
         Filter = filter;
         FilterType = filterType;
         ChannelId = channelId;
+        IsRead = isRead;
     }
 }

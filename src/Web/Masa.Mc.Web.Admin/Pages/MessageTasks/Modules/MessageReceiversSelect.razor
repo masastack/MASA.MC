@@ -96,9 +96,7 @@
                                     {
                                         if (string.IsNullOrEmpty(item.Avatar))
                                         {
-                                            <MAvatar Color="primary" Size="56">
-                                                <span class="white--text">@(string.IsNullOrEmpty(item.DisplayName)?"":item.DisplayName.Substring(0,1))</span>
-                                            </MAvatar>
+                                            <EmptyAvatar Value="@item.DisplayName" />
                                         }
                                         else
                                         {

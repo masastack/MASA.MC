@@ -10,7 +10,7 @@ public class WebsiteMessageRepository : Repository<McDbContext, WebsiteMessage>,
     {
     }
 
-    private async Task<IQueryable<WebsiteMessage>> GetQueryableAsync()
+    public async Task<IQueryable<WebsiteMessage>> GetQueryableAsync()
     {
         return await Task.FromResult(Context.Set<WebsiteMessage>().AsQueryable());
     }
@@ -35,6 +35,6 @@ public class WebsiteMessageRepository : Repository<McDbContext, WebsiteMessage>,
         var list = set.Select(x => x.ChannelId)
             .Distinct()
             .SelectMany(x => sorted.Where(y => y.ChannelId == x).Take(1));
-        return await Task.FromResult(list.ToList());
+        return await Task.FromResult(list.OrderByDescending(x => x.CreationTime).ToList());
     }
 }

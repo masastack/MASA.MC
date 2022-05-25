@@ -8,10 +8,12 @@ namespace Masa.Mc.Service.Admin.Application.WebsiteMessages;
 public class WebsiteMessageQueryHandler
 {
     private readonly IWebsiteMessageRepository _repository;
+    private readonly IChannelRepository _channelRepository;
 
-    public WebsiteMessageQueryHandler(IWebsiteMessageRepository repository)
+    public WebsiteMessageQueryHandler(IWebsiteMessageRepository repository, IChannelRepository channelRepository)
     {
         _repository = repository;
+        _channelRepository = channelRepository;
     }
 
     [EventHandler]
@@ -34,6 +36,7 @@ public class WebsiteMessageQueryHandler
         queryable = queryable.OrderBy(options.Sorting).PageBy(options.Page, options.PageSize);
         var entities = await queryable.ToListAsync();
         var entityDtos = entities.Adapt<List<WebsiteMessageDto>>();
+        FillListDtos(entityDtos);
         var result = new PaginatedListDto<WebsiteMessageDto>(totalCount, totalPages, entityDtos);
         query.Result = result;
     }
@@ -42,7 +45,8 @@ public class WebsiteMessageQueryHandler
     public async Task GetChannelListAsync(GetChannelListWebsiteMessageQuery query)
     {
         var entities = await _repository.GetChannelListAsync();
-        var entityDtos = entities.Adapt<List<WebsiteMessageDto>>();
+        var entityDtos = entities.Adapt<List<WebsiteMessageChannelListDto>>();
+        await FillChannelListDtos(entityDtos);
         query.Result = entityDtos;
     }
 
@@ -62,6 +66,7 @@ public class WebsiteMessageQueryHandler
                 break;
         }
         condition = condition.And(inputDto.ChannelId.HasValue, w => w.ChannelId == inputDto.ChannelId);
+        condition = condition.And(inputDto.IsRead.HasValue, w => w.IsRead == inputDto.IsRead);
         return await Task.FromResult(condition); ;
     }
 
@@ -70,5 +75,25 @@ public class WebsiteMessageQueryHandler
         var query = await _repository.WithDetailsAsync()!;
         var condition = await CreateFilteredPredicate(inputDto);
         return query.Where(condition);
+    }
+
+    private async Task FillChannelListDtos(List<WebsiteMessageChannelListDto> dtos)
+    {
+        var channeIds = dtos.Select(d => d.ChannelId).ToList();
+        var channeList = await _channelRepository.GetListAsync(x => channeIds.Contains(x.Id));
+        foreach (var item in dtos)
+        {
+            item.NoReading = await _repository.GetCountAsync(x => x.ChannelId == item.ChannelId && !x.IsRead);
+            var channel = channeList.FirstOrDefault(x => x.Id == item.ChannelId);
+            if (channel != null) item.Channel = channel.Adapt<ChannelDto>();
+        }
+    }
+
+    private void FillListDtos(List<WebsiteMessageDto> dtos)
+    {
+        foreach (var item in dtos)
+        {
+            item.ZhaiYao = HtmlHelper.CutString(item.Content, 250);
+        }
     }
 }

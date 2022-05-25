@@ -3,7 +3,7 @@
 
 namespace Masa.Mc.Service.Admin.Application.WebsiteMessages.Queries;
 
-public record GetChannelListWebsiteMessageQuery : Query<List<WebsiteMessageDto>>
+public record GetChannelListWebsiteMessageQuery : Query<List<WebsiteMessageChannelListDto>>
 {
-    public override List<WebsiteMessageDto> Result { get; set; } = default!;
+    public override List<WebsiteMessageChannelListDto> Result { get; set; } = default!;
 }

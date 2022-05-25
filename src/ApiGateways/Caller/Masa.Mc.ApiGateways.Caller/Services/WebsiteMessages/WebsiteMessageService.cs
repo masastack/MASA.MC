@@ -22,8 +22,13 @@ public class WebsiteMessageService : ServiceBase
         return await GetAsync<WebsiteMessageDto>($"{id}");
     }
 
-    public async Task<List<WebsiteMessageDto>> GetChannelListAsync()
+    public async Task<List<WebsiteMessageChannelListDto>> GetChannelListAsync()
     {
-        return await GetAsync<List<WebsiteMessageDto>>(nameof(GetChannelListAsync));
+        return await GetAsync<List<WebsiteMessageChannelListDto>>(nameof(GetChannelListAsync));
+    }
+
+    public async Task SetAllReadAsync(SetAllReadWebsiteMessageInputDto inputDto)
+    {
+        await PostAsync(nameof(SetAllReadAsync), inputDto);
     }
 }

@@ -20,4 +20,6 @@ public class WebsiteMessageDto : AuditEntityDto<Guid, Guid>
     public bool IsRead { get; set; }
 
     public DateTime? ReadTime { get; set; }
+
+    public string ZhaiYao { get; set; } = string.Empty;
 }
