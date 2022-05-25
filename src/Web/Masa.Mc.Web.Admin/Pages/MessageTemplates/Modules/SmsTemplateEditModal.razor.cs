@@ -15,12 +15,28 @@ public partial class SmsTemplateEditModal : AdminCompontentBase
     private List<ChannelDto> _channelItems = new();
     private List<SmsTemplateDto> _templateItems = new();
     private ChannelTypes _channelType;
+    private HubConnection hubConnection;
 
     ChannelService ChannelService => McCaller.ChannelService;
 
     MessageTemplateService MessageTemplateService => McCaller.MessageTemplateService;
 
     SmsTemplateService SmsTemplateService => McCaller.SmsTemplateService;
+
+    protected override async Task OnInitializedAsync()
+    {
+        hubConnection = new HubConnectionBuilder()
+            .WithUrl(NavigationManager.ToAbsoluteUri($"{McApiOptions.McServiceBaseAddress}/signalr-hubs/notifications"))
+            .Build();
+
+        hubConnection.On(SignalRMethodConsts.GET_SMS_TEMPLATE, async () =>
+        {
+            _templateItems = await SmsTemplateService.GetListByChannelIdAsync(_model.ChannelId);
+            await InvokeAsync(StateHasChanged);
+        });
+
+        await hubConnection.StartAsync();
+    }
 
     public async Task OpenModalAsync(MessageTemplateDto model)
     {
@@ -144,5 +160,11 @@ public partial class SmsTemplateEditModal : AdminCompontentBase
         string endstr = "}";
         _model.Title = _model.Title.Replace($"{startstr}{args.OldCode}{endstr}", $"{startstr}{args.NewCode}{endstr}");
         _model.Content = _model.Content.Replace($"{startstr}{args.OldCode}{endstr}", $"{startstr}{args.NewCode}{endstr}");
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        hubConnection?.DisposeAsync();
+        await Task.CompletedTask;
     }
 }

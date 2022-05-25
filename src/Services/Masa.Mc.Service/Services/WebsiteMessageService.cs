@@ -13,6 +13,7 @@ public class WebsiteMessageService : ServiceBase
         MapGet(GetChannelListAsync);
         MapPost(SetAllReadAsync);
         MapPost(ReadAsync);
+        MapPost(CheckAsync);
     }
 
     public async Task<PaginatedListDto<WebsiteMessageDto>> GetListAsync(IEventBus eventbus, [FromQuery] WebsiteMessageFilterType? filterType, [FromQuery] Guid? channelId, [FromQuery] bool? isRead, [FromQuery] string filter = "", [FromQuery] string sorting = "", [FromQuery] int page = 1, [FromQuery] int pagesize = 10)
@@ -52,6 +53,12 @@ public class WebsiteMessageService : ServiceBase
     public async Task ReadAsync(IEventBus eventbus, [FromBody] ReadWebsiteMessageInputDto inputDto)
     {
         var command = new ReadWebsiteMessageCommand(inputDto);
+        await eventbus.PublishAsync(command);
+    }
+
+    public async Task CheckAsync(IEventBus eventbus)
+    {
+        var command = new CheckWebsiteMessageCursorCommand();
         await eventbus.PublishAsync(command);
     }
 }

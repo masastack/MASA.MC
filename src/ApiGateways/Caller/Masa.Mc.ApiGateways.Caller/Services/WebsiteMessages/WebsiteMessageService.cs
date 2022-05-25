@@ -41,4 +41,9 @@ public class WebsiteMessageService : ServiceBase
     {
         await PostAsync(nameof(ReadAsync), inputDto);
     }
+
+    public async Task CheckAsync()
+    {
+        await PostAsync(nameof(CheckAsync));
+    }
 }

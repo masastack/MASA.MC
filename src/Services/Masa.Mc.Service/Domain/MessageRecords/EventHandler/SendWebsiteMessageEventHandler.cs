@@ -6,21 +6,18 @@ namespace Masa.Mc.Service.Admin.Domain.MessageRecords.EventHandler;
 public class SendWebsiteMessageEventHandler
 {
     private readonly IHubContext<NotificationsHub> _hubContext;
-    private readonly NotificationsSignalROptions _options;
     private readonly IMessageRecordRepository _messageRecordRepository;
     private readonly IMessageTaskHistoryRepository _messageTaskHistoryRepository;
     private readonly IWebsiteMessageRepository _websiteMessageRepository;
     private readonly ITemplateRenderer _templateRenderer;
 
     public SendWebsiteMessageEventHandler(IHubContext<NotificationsHub> hubContext
-        , IOptions<NotificationsSignalROptions> options
         , IMessageRecordRepository messageRecordRepository
         , IMessageTaskHistoryRepository messageTaskHistoryRepository
         , IWebsiteMessageRepository websiteMessageRepository
         , ITemplateRenderer templateRenderer)
     {
         _hubContext = hubContext;
-        _options = options.Value;
         _messageRecordRepository = messageRecordRepository;
         _messageTaskHistoryRepository = messageTaskHistoryRepository;
         _websiteMessageRepository = websiteMessageRepository;
@@ -35,7 +32,7 @@ public class SendWebsiteMessageEventHandler
         {
             TemplateRenderer(eto.MessageData, taskHistory.Variables);
             var singalRGroup = _hubContext.Clients.Group("Global");
-            await singalRGroup.SendAsync(_options.MethodName, eto.MessageData.ExtraProperties);
+            await singalRGroup.SendAsync(SignalRMethodConsts.CHECK_NOTIFICATION);
         }
         if (taskHistory.ReceiverType == ReceiverTypes.Assign)
         {
@@ -45,10 +42,11 @@ public class SendWebsiteMessageEventHandler
                 SetUserInfo(messageRecord, item);
                 TemplateRenderer(eto.MessageData, item.Variables);
                 messageRecord.SetDataValue(nameof(MessageTemplate.Title), eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.Title)));
+                var websiteMessage = new WebsiteMessage(eto.ChannelId, item.UserId, eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.Title)), eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.Content)), taskHistory.SendTime.Value);
                 try
                 {
                     var onlineClients = _hubContext.Clients.User(item.UserId.ToString());
-                    await onlineClients.SendAsync(_options.MethodName, eto.MessageData);
+                    await onlineClients.SendAsync(SignalRMethodConsts.GET_NOTIFICATION, websiteMessage);
                     messageRecord.SetResult(true, string.Empty);
                 }
                 catch (Exception ex)
@@ -56,7 +54,7 @@ public class SendWebsiteMessageEventHandler
                     messageRecord.SetResult(false, ex.Message);
                 }
                 await _messageRecordRepository.AddAsync(messageRecord);
-                await _websiteMessageRepository.AddAsync(new WebsiteMessage(eto.ChannelId, item.UserId, eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.Title)), eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.Content)), taskHistory.SendTime.Value));
+                await _websiteMessageRepository.AddAsync(websiteMessage);
             }
         }
         taskHistory.SetComplete();

@@ -22,7 +22,9 @@ public class WebsiteMessageCursorDomainService : DomainService
         }
         else
         {
-
+            await EventBus.PublishAsync(new WebsiteMessageCreatedDomainEvent(userId, cursor.UpdateTime));
+            cursor.Update();
+            await _repository.UpdateAsync(cursor);
         }
     }
 }

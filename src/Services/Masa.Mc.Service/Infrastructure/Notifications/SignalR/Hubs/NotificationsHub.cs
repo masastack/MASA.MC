@@ -5,5 +5,15 @@ namespace Masa.Mc.Service.Admin.Infrastructure.Notifications.SignalR.Hubs;
 
 public class NotificationsHub: Hub
 {
+    public override async Task OnConnectedAsync()
+    {
+        await base.OnConnectedAsync();
+        await Groups.AddToGroupAsync(Context.ConnectionId, "Global", Context.ConnectionAborted);
+    }
 
+    public override async Task OnDisconnectedAsync(Exception exception)
+    {
+        await base.OnDisconnectedAsync(exception);
+        await Groups.RemoveFromGroupAsync(Context.ConnectionId, "Global", Context.ConnectionAborted);
+    }
 }

@@ -9,19 +9,21 @@ public class SmsTemplateSyncEventHandler
     private readonly ISmsTemplateService _smsTemplateService;
     private readonly IChannelRepository _channelRepository;
     private readonly ISmsTemplateRepository _smsTemplateRepository;
+    private readonly IHubContext<NotificationsHub> _hubContext;
 
     public SmsTemplateSyncEventHandler(IAliyunSmsAsyncLocal aliyunSmsAsyncLocal
         , ISmsTemplateService smsTemplateService
         , IChannelRepository channelRepository
-        , ISmsTemplateRepository smsTemplateRepository)
+        , ISmsTemplateRepository smsTemplateRepository
+        , IHubContext<NotificationsHub> hubContext)
     {
         _aliyunSmsAsyncLocal = aliyunSmsAsyncLocal;
         _smsTemplateService = smsTemplateService;
         _channelRepository = channelRepository;
         _smsTemplateRepository = smsTemplateRepository;
+        _hubContext = hubContext;
     }
 
-    //[EventHandler]
     [Topic("pubsub", nameof(SmsTemplateSyncDomainEvent))]
     public async Task HandleEvent(SmsTemplateSyncDomainEvent @event)
     {
@@ -46,6 +48,7 @@ public class SmsTemplateSyncEventHandler
             await _smsTemplateRepository.UnitOfWork.SaveChangesAsync();
             await _smsTemplateRepository.UnitOfWork.CommitAsync();
         }
+        await _hubContext.Clients.All.SendAsync(SignalRMethodConsts.GET_SMS_TEMPLATE);
     }
 
     private SmsTemplateTypes AliyunSmsTemplateTypeMapToSmsTemplateType(int? templateType)

@@ -1,9 +1,16 @@
 ﻿@inherits AdminCompontentBase
 <MMenu OffsetX Left OffsetY>
     <ActivatorContent Context="menuContext">
-        <MBadge Color="pink" Bordered Dot OffsetX="10" OffsetY="10">
+        @if (_entities.Result.Any(x => !x.IsRead))
+        {
+            <MBadge Color="pink" Bordered Dot OffsetX="10" OffsetY="10">
+                <MIcon @attributes="menuContext.Attrs" Size=24 Class="pl-2" Color="neutral-lighten-3">mdi-bell</MIcon>
+            </MBadge>
+        }
+        else
+        {
             <MIcon @attributes="menuContext.Attrs" Size=24 Class="pl-2" Color="neutral-lighten-3">mdi-bell</MIcon>
-        </MBadge>
+        }
     </ActivatorContent>
     <ChildContent>
         <MCard MaxWidth="400"

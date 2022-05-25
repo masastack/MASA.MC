@@ -7,10 +7,21 @@ public class WebsiteMessageCreatedEventHandler
 {
     private readonly IWebsiteMessageRepository _repository;
     private readonly IMessageTaskHistoryRepository _messageTaskHistoryRepository;
-    public WebsiteMessageCreatedEventHandler(IWebsiteMessageRepository repository, IMessageTaskHistoryRepository messageTaskHistoryRepository)
+    private readonly MessageTaskDomainService _messageTaskDomainService;
+    private readonly IHubContext<NotificationsHub> _hubContext;
+    private readonly IMessageRecordRepository _messageRecordRepository;
+
+    public WebsiteMessageCreatedEventHandler(IWebsiteMessageRepository repository
+        , IMessageTaskHistoryRepository messageTaskHistoryRepository
+        , MessageTaskDomainService messageTaskDomainService
+        , IHubContext<NotificationsHub> hubContext
+        , IMessageRecordRepository messageRecordRepository)
     {
         _repository = repository;
         _messageTaskHistoryRepository = messageTaskHistoryRepository;
+        _messageTaskDomainService = messageTaskDomainService;
+        _hubContext = hubContext;
+        _messageRecordRepository = messageRecordRepository;
     }
 
     [EventHandler]
@@ -22,7 +33,13 @@ public class WebsiteMessageCreatedEventHandler
         {
             var taskHistoryDetail = await _messageTaskHistoryRepository.FindAsync(x => x.Id == taskHistory.Id, true);
             if (taskHistoryDetail == null) continue;
-            await _repository.AddAsync(new WebsiteMessage(taskHistoryDetail.MessageTask.ChannelId, @event.UserId, taskHistoryDetail.MessageTask.DisplayName, "", taskHistoryDetail.SendTime.Value));
+            var messageData = await _messageTaskDomainService.GetMessageDataAsync(taskHistoryDetail.MessageTask.EntityType, taskHistoryDetail.MessageTask.EntityId, taskHistoryDetail.Variables);
+            var websiteMessage = new WebsiteMessage(taskHistoryDetail.MessageTask.ChannelId, @event.UserId, messageData.GetDataValue<string>(nameof(MessageTemplate.Title)), messageData.GetDataValue<string>(nameof(MessageTemplate.Content)), taskHistoryDetail.SendTime.Value);
+            await _repository.AddAsync(websiteMessage);
+            var messageRecord = new MessageRecord(@event.UserId, websiteMessage.ChannelId, taskHistory.MessageTaskId, taskHistory.Id, taskHistory.Variables);
+            await _messageRecordRepository.AddAsync(messageRecord);
+            var onlineClients = _hubContext.Clients.User(@event.UserId.ToString());
+            await onlineClients.SendAsync(SignalRMethodConsts.GET_NOTIFICATION, websiteMessage);
         }
     }
 }
