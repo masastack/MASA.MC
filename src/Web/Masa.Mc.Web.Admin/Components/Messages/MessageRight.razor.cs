@@ -11,6 +11,9 @@ public partial class MessageRight
     [Parameter]
     public EventCallback<Guid> OnClick { get; set; }
 
+    [Inject]
+    public NoticeState NoticeState { get; set; } = default!;
+
     private GetWebsiteMessageInputDto _queryParam = new();
     private PaginatedListDto<WebsiteMessageDto> _entities = new();
     private ChannelDto _channel;
@@ -85,5 +88,6 @@ public partial class MessageRight
         await WebsiteMessageService.SetAllReadAsync(dto);
         await SuccessMessageAsync(T("OperationSuccessfulMessage"));
         await LoadData();
+        NoticeState.SetAllRead();
     }
 }

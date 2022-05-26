@@ -1,7 +1,7 @@
 ﻿@inherits AdminCompontentBase
 <MMenu OffsetX Left OffsetY>
     <ActivatorContent Context="menuContext">
-        @if (_entities.Result.Any(x => !x.IsRead))
+        @if (!NoticeState.IsRead)
         {
             <MBadge Color="pink" Bordered Dot OffsetX="10" OffsetY="10">
                 <MIcon @attributes="menuContext.Attrs" Size=24 Class="pl-2" Color="neutral-lighten-3">mdi-bell</MIcon>
@@ -27,7 +27,7 @@
             </MToolbar>
 
             <MList ThreeLine>
-                @foreach (var item in _entities.Result)
+                @foreach (var item in NoticeState.Notices)
                 {
                     <MListItem Link Href="@($"/websiteMessages/websiteMessageManagement/{item.Id}")">
                         <MListItemAvatar>
