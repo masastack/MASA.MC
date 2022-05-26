@@ -31,9 +31,9 @@ public class SendWebsiteMessageEventHandler
         if (taskHistory.ReceiverType == ReceiverTypes.Broadcast)
         {
             TemplateRenderer(eto.MessageData, taskHistory.Variables);
-            //var singalRGroup = _hubContext.Clients.Group("Global");
-            //await singalRGroup.SendAsync(SignalRMethodConsts.CHECK_NOTIFICATION);
-            await _hubContext.Clients.All.SendAsync(SignalRMethodConsts.CHECK_NOTIFICATION);
+            var singalRGroup = _hubContext.Clients.Group("Global");
+            await singalRGroup.SendAsync(SignalRMethodConsts.CHECK_NOTIFICATION);
+            //await _hubContext.Clients.All.SendAsync(SignalRMethodConsts.CHECK_NOTIFICATION);
         }
         if (taskHistory.ReceiverType == ReceiverTypes.Assign)
         {

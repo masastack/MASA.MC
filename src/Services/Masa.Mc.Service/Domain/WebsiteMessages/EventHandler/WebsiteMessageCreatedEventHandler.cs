@@ -31,6 +31,7 @@ public class WebsiteMessageCreatedEventHandler
         var taskHistorys = (await _messageTaskHistoryRepository.WithDetailsAsync()).Where(x => x.SendTime >= @event.CheckTime && x.ReceiverType == ReceiverTypes.Broadcast && checkStatus.Contains(x.Status)).ToList();
         foreach (var taskHistory in taskHistorys)
         {
+            if (await _messageRecordRepository.FindAsync(x => x.MessageTaskHistoryId == taskHistory.Id && x.UserId == Guid.Parse(TempCurrentUserConsts.ID)) != null) continue;
             var messageData = await _messageTaskDomainService.GetMessageDataAsync(taskHistory.MessageTask.EntityType, taskHistory.MessageTask.EntityId, taskHistory.Variables);
 
             var websiteMessage = new WebsiteMessage(taskHistory.MessageTask.ChannelId, @event.UserId, messageData.GetDataValue<string>(nameof(MessageTemplate.Title)), messageData.GetDataValue<string>(nameof(MessageTemplate.Content)), taskHistory.SendTime.Value);
@@ -38,18 +39,20 @@ public class WebsiteMessageCreatedEventHandler
 
             var messageRecord = new MessageRecord(@event.UserId, websiteMessage.ChannelId, taskHistory.MessageTaskId, taskHistory.Id, taskHistory.Variables);
             SetExtraProperties(messageRecord, messageData);
-            await _messageRecordRepository.AddAsync(messageRecord);
 
             var onlineClients = _hubContext.Clients.User(@event.UserId.ToString());
             await onlineClients.SendAsync(SignalRMethodConsts.GET_NOTIFICATION, websiteMessage);
+
+            messageRecord.SetResult(true, string.Empty);
+            await _messageRecordRepository.AddAsync(messageRecord);
         }
     }
 
     private void SetExtraProperties(MessageRecord messageRecord, MessageData messageData)
     {
-        messageRecord.SetDataValue(nameof(MessageReceiverUser.DisplayName), "吴自浩");
-        messageRecord.SetDataValue(nameof(MessageReceiverUser.Email), "445430380@qq.com");
-        messageRecord.SetDataValue(nameof(MessageReceiverUser.PhoneNumber), "15267799306");
+        messageRecord.SetDataValue(nameof(MessageReceiverUser.DisplayName), TempCurrentUserConsts.NAME);
+        messageRecord.SetDataValue(nameof(MessageReceiverUser.Email), TempCurrentUserConsts.EMAIL);
+        messageRecord.SetDataValue(nameof(MessageReceiverUser.PhoneNumber), TempCurrentUserConsts.PHONE_NUMBER);
         messageRecord.SetDataValue(nameof(MessageTemplate.Title), messageData.GetDataValue<string>(nameof(MessageTemplate.Title)));
     }
 }
