@@ -28,18 +28,28 @@ public class WebsiteMessageCreatedEventHandler
     public async Task HandleEvent(WebsiteMessageCreatedDomainEvent @event)
     {
         var checkStatus = new List<MessageTaskHistoryStatuses> { MessageTaskHistoryStatuses.Sending, MessageTaskHistoryStatuses.Completed };
-        var taskHistorys = await _messageTaskHistoryRepository.GetListAsync(x => x.SendTime >= @event.CheckTime && x.ReceiverType == ReceiverTypes.Broadcast && checkStatus.Contains(x.Status));
+        var taskHistorys = (await _messageTaskHistoryRepository.WithDetailsAsync()).Where(x => x.SendTime >= @event.CheckTime && x.ReceiverType == ReceiverTypes.Broadcast && checkStatus.Contains(x.Status)).ToList();
         foreach (var taskHistory in taskHistorys)
         {
-            var taskHistoryDetail = await _messageTaskHistoryRepository.FindAsync(x => x.Id == taskHistory.Id, true);
-            if (taskHistoryDetail == null) continue;
-            var messageData = await _messageTaskDomainService.GetMessageDataAsync(taskHistoryDetail.MessageTask.EntityType, taskHistoryDetail.MessageTask.EntityId, taskHistoryDetail.Variables);
-            var websiteMessage = new WebsiteMessage(taskHistoryDetail.MessageTask.ChannelId, @event.UserId, messageData.GetDataValue<string>(nameof(MessageTemplate.Title)), messageData.GetDataValue<string>(nameof(MessageTemplate.Content)), taskHistoryDetail.SendTime.Value);
+            var messageData = await _messageTaskDomainService.GetMessageDataAsync(taskHistory.MessageTask.EntityType, taskHistory.MessageTask.EntityId, taskHistory.Variables);
+
+            var websiteMessage = new WebsiteMessage(taskHistory.MessageTask.ChannelId, @event.UserId, messageData.GetDataValue<string>(nameof(MessageTemplate.Title)), messageData.GetDataValue<string>(nameof(MessageTemplate.Content)), taskHistory.SendTime.Value);
             await _repository.AddAsync(websiteMessage);
+
             var messageRecord = new MessageRecord(@event.UserId, websiteMessage.ChannelId, taskHistory.MessageTaskId, taskHistory.Id, taskHistory.Variables);
+            SetExtraProperties(messageRecord, messageData);
             await _messageRecordRepository.AddAsync(messageRecord);
+
             var onlineClients = _hubContext.Clients.User(@event.UserId.ToString());
             await onlineClients.SendAsync(SignalRMethodConsts.GET_NOTIFICATION, websiteMessage);
         }
+    }
+
+    private void SetExtraProperties(MessageRecord messageRecord, MessageData messageData)
+    {
+        messageRecord.SetDataValue(nameof(MessageReceiverUser.DisplayName), "吴自浩");
+        messageRecord.SetDataValue(nameof(MessageReceiverUser.Email), "445430380@qq.com");
+        messageRecord.SetDataValue(nameof(MessageReceiverUser.PhoneNumber), "15267799306");
+        messageRecord.SetDataValue(nameof(MessageTemplate.Title), messageData.GetDataValue<string>(nameof(MessageTemplate.Title)));
     }
 }

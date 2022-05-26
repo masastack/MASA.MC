@@ -23,6 +23,7 @@ builder.Services.AddAliyunSms();
 builder.Services.AddEmail();
 builder.Services.AddCsv();
 builder.Services.AddSingleton<ITemplateRenderer, TextTemplateRenderer>();
+builder.Services.AddTransient<Microsoft.AspNetCore.SignalR.IUserIdProvider, McUserIdProvider>();
 builder.Services.AddSignalR();
 builder.Services.AddTransient<NotificationsHub>();
 builder.Services.AddTransient<SmsTemplateSyncEventHandler>();

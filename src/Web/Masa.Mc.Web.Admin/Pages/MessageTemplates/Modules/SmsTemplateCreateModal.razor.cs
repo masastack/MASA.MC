@@ -139,9 +139,8 @@ public partial class SmsTemplateCreateModal : AdminCompontentBase
         _model.Content = _model.Content.Replace($"{startstr}{args.OldCode}{endstr}", $"{startstr}{args.NewCode}{endstr}");
     }
 
-    public async ValueTask DisposeAsync()
+    public override void Dispose()
     {
         hubConnection?.DisposeAsync();
-        await Task.CompletedTask;
     }
 }

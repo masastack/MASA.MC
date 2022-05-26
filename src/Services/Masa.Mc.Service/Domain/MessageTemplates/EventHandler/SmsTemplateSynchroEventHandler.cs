@@ -48,7 +48,7 @@ public class SmsTemplateSyncEventHandler
             await _smsTemplateRepository.UnitOfWork.SaveChangesAsync();
             await _smsTemplateRepository.UnitOfWork.CommitAsync();
         }
-        await _hubContext.Clients.All.SendAsync(SignalRMethodConsts.GET_SMS_TEMPLATE);
+        await _hubContext.Clients.User(TempCurrentUserConsts.ID).SendAsync(SignalRMethodConsts.GET_SMS_TEMPLATE);
     }
 
     private SmsTemplateTypes AliyunSmsTemplateTypeMapToSmsTemplateType(int? templateType)

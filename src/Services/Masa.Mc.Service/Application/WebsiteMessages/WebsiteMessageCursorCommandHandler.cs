@@ -15,7 +15,7 @@ public class WebsiteMessageCursorCommandHandler
     [EventHandler]
     public virtual async Task CheckAsync(CheckWebsiteMessageCursorCommand command)
     {
-        var currentUserId = Guid.Parse("55206182-C619-4B5B-AAF8-1D460006257D");
+        var currentUserId = Guid.Parse(TempCurrentUserConsts.ID);
         await _domainService.CheckAsync(currentUserId);
     }
 }

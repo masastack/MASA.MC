@@ -13,6 +13,8 @@ public partial class Notice : AdminCompontentBase
 
     protected override async Task OnInitializedAsync()
     {
+        await WebsiteMessageService.CheckAsync();
+
         hubConnection = new HubConnectionBuilder()
             .WithUrl(NavigationManager.ToAbsoluteUri($"{McApiOptions.McServiceBaseAddress}/signalr-hubs/notifications"))
             .Build();
@@ -49,9 +51,8 @@ public partial class Notice : AdminCompontentBase
         StateHasChanged();
     }
 
-    public async ValueTask DisposeAsync()
+    public override void Dispose()
     {
         hubConnection?.DisposeAsync();
-        await Task.CompletedTask;
     }
 }

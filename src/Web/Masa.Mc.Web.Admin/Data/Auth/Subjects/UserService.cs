@@ -7,6 +7,7 @@ public class UserService
 {
     static List<UserDto> _datas = new()
     {
+        new UserDto(new Guid(TempCurrentUserConsts.ID), TempCurrentUserConsts.NAME, "https://cdn.masastack.com/stack/images/website/masa-blazor/doddgu.png", TempCurrentUserConsts.PHONE_NUMBER, TempCurrentUserConsts.EMAIL),
         new UserDto(new Guid("1C97411E-82A8-4AEE-3DBD-08DA1C923854"), "鬼谷子1", "https://cdn.masastack.com/stack/images/website/masa-blazor/doddgu.png", "13312341231", "121@163.com"),
         new UserDto(new Guid("0A911818-05D2-4E7F-6884-08DA1D1E7DF3"), "鬼谷子2", "https://cdn.masastack.com/stack/images/website/masa-blazor/doddgu.png", "13312341232", "122@163.com"),
         new UserDto(new Guid("FDB58E02-0FD8-4C1D-A5EC-08DA1DD3703C"), "鬼谷子3", "https://cdn.masastack.com/stack/images/website/masa-blazor/doddgu.png", "13312341233", "123@163.com"),
