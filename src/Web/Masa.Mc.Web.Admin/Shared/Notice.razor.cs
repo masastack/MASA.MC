@@ -11,7 +11,6 @@ public partial class Notice : AdminCompontentBase
     public NoticeState NoticeState { get; set; } = default!;
 
     private GetWebsiteMessageInputDto _queryParam = new(5);
-    //private PaginatedListDto<WebsiteMessageDto> _entities = new();
     private HubConnection hubConnection;
 
     WebsiteMessageService WebsiteMessageService => McCaller.WebsiteMessageService;

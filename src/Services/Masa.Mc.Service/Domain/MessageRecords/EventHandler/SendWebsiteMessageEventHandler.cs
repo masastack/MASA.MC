@@ -6,22 +6,19 @@ namespace Masa.Mc.Service.Admin.Domain.MessageRecords.EventHandler;
 public class SendWebsiteMessageEventHandler
 {
     private readonly IHubContext<NotificationsHub> _hubContext;
-    private readonly IMessageRecordRepository _messageRecordRepository;
     private readonly IMessageTaskHistoryRepository _messageTaskHistoryRepository;
-    private readonly IWebsiteMessageRepository _websiteMessageRepository;
     private readonly ITemplateRenderer _templateRenderer;
+    private readonly WebsiteMessageDomainService _websiteMessageDomainService;
 
     public SendWebsiteMessageEventHandler(IHubContext<NotificationsHub> hubContext
-        , IMessageRecordRepository messageRecordRepository
         , IMessageTaskHistoryRepository messageTaskHistoryRepository
-        , IWebsiteMessageRepository websiteMessageRepository
-        , ITemplateRenderer templateRenderer)
+        , ITemplateRenderer templateRenderer
+        , WebsiteMessageDomainService websiteMessageDomainService)
     {
         _hubContext = hubContext;
-        _messageRecordRepository = messageRecordRepository;
         _messageTaskHistoryRepository = messageTaskHistoryRepository;
-        _websiteMessageRepository = websiteMessageRepository;
         _templateRenderer = templateRenderer;
+        _websiteMessageDomainService = websiteMessageDomainService;
     }
 
     [EventHandler(1)]
@@ -33,14 +30,8 @@ public class SendWebsiteMessageEventHandler
         {
             foreach (var item in taskHistory.ReceiverUsers)
             {
-                var messageRecord = new MessageRecord(item.UserId, eto.ChannelId, taskHistory.MessageTaskId, taskHistory.Id, item.Variables);
-                SetUserInfo(messageRecord, item);
                 TemplateRenderer(eto.MessageData, item.Variables);
-                messageRecord.SetDataValue(nameof(MessageTemplate.Title), eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.Title)));
-                var websiteMessage = new WebsiteMessage(eto.ChannelId, item.UserId, eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.Title)), eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.Content)), taskHistory.SendTime.Value);
-                messageRecord.SetResult(true, string.Empty);
-                await _messageRecordRepository.AddAsync(messageRecord);
-                await _websiteMessageRepository.AddAsync(websiteMessage);
+                await _websiteMessageDomainService.CreateAsync(eto.MessageData, taskHistory, item);
                 userIds.Add(item.UserId.ToString());
             }
         }
@@ -65,12 +56,5 @@ public class SendWebsiteMessageEventHandler
     {
         messageData.SetDataValue(nameof(MessageTemplate.Title), await _templateRenderer.RenderAsync(messageData.GetDataValue<string>(nameof(MessageTemplate.Title)), Variables));
         messageData.SetDataValue(nameof(MessageTemplate.Content), await _templateRenderer.RenderAsync(messageData.GetDataValue<string>(nameof(MessageTemplate.Content)), Variables));
-    }
-
-    private void SetUserInfo(MessageRecord messageRecord, MessageReceiverUser item)
-    {
-        messageRecord.SetDataValue(nameof(item.DisplayName), item.DisplayName);
-        messageRecord.SetDataValue(nameof(item.Email), item.Email);
-        messageRecord.SetDataValue(nameof(item.PhoneNumber), item.PhoneNumber);
     }
 }

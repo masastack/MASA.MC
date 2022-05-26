@@ -83,7 +83,7 @@ public class WebsiteMessageQueryHandler
         var channeList = await _channelRepository.GetListAsync(x => channeIds.Contains(x.Id));
         foreach (var item in dtos)
         {
-            item.NoReading = await _repository.GetCountAsync(x => x.ChannelId == item.ChannelId && !x.IsRead);
+            item.NoReading = await _repository.GetCountAsync(x => x.ChannelId == item.ChannelId && !x.IsRead && x.UserId == item.UserId);
             var channel = channeList.FirstOrDefault(x => x.Id == item.ChannelId);
             if (channel != null) item.Channel = channel.Adapt<ChannelDto>();
         }

@@ -30,7 +30,7 @@ public class WebsiteMessageRepository : Repository<McDbContext, WebsiteMessage>,
 
     public async Task<List<WebsiteMessage>> GetChannelListAsync(Guid userId)
     {
-        var set = Context.Set<WebsiteMessage>().AsNoTracking();
+        var set = Context.Set<WebsiteMessage>().AsNoTracking().Where(x => x.UserId == userId);
         var sorted = set.OrderByDescending(x => x.CreationTime);
         var list = set.Select(x => x.ChannelId)
             .Distinct()
