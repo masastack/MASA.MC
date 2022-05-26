@@ -44,7 +44,7 @@ public class WebsiteMessageQueryHandler
     [EventHandler]
     public async Task GetChannelListAsync(GetChannelListWebsiteMessageQuery query)
     {
-        var entities = await _repository.GetChannelListAsync();
+        var entities = await _repository.GetChannelListAsync(Guid.Parse(TempCurrentUserConsts.ID));
         var entityDtos = entities.Adapt<List<WebsiteMessageChannelListDto>>();
         await FillChannelListDtos(entityDtos);
         query.Result = entityDtos;
@@ -52,7 +52,7 @@ public class WebsiteMessageQueryHandler
 
     private async Task<Expression<Func<WebsiteMessage, bool>>> CreateFilteredPredicate(GetWebsiteMessageInputDto inputDto)
     {
-        Expression<Func<WebsiteMessage, bool>> condition = channel => true;
+        Expression<Func<WebsiteMessage, bool>> condition = w => w.UserId == Guid.Parse(TempCurrentUserConsts.ID);
         switch (inputDto.FilterType)
         {
             case WebsiteMessageFilterType.MessageTitle:

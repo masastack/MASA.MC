@@ -8,5 +8,5 @@ public interface IWebsiteMessageRepository : IRepository<WebsiteMessage>
     Task<IQueryable<WebsiteMessage>> GetQueryableAsync();
     Task<IQueryable<WebsiteMessage>> WithDetailsAsync();
     Task<WebsiteMessage?> FindAsync(Expression<Func<WebsiteMessage, bool>> predicate, bool include = true, CancellationToken cancellationToken = default(CancellationToken));
-    Task<List<WebsiteMessage>> GetChannelListAsync();
+    Task<List<WebsiteMessage>> GetChannelListAsync(Guid userId);
 }

@@ -28,7 +28,7 @@ public class WebsiteMessageRepository : Repository<McDbContext, WebsiteMessage>,
             : await Context.Set<WebsiteMessage>().Where(predicate).FirstOrDefaultAsync(cancellationToken);
     }
 
-    public async Task<List<WebsiteMessage>> GetChannelListAsync()
+    public async Task<List<WebsiteMessage>> GetChannelListAsync(Guid userId)
     {
         var set = Context.Set<WebsiteMessage>().AsNoTracking();
         var sorted = set.OrderByDescending(x => x.CreationTime);

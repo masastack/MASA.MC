@@ -28,13 +28,7 @@ public class SendWebsiteMessageEventHandler
     public async Task HandleEventAsync(SendWebsiteMessageEvent eto)
     {
         var taskHistory = eto.MessageTaskHistory;
-        if (taskHistory.ReceiverType == ReceiverTypes.Broadcast)
-        {
-            TemplateRenderer(eto.MessageData, taskHistory.Variables);
-            var singalRGroup = _hubContext.Clients.Group("Global");
-            await singalRGroup.SendAsync(SignalRMethodConsts.CHECK_NOTIFICATION);
-            //await _hubContext.Clients.All.SendAsync(SignalRMethodConsts.CHECK_NOTIFICATION);
-        }
+        var userIds = new List<string>();
         if (taskHistory.ReceiverType == ReceiverTypes.Assign)
         {
             foreach (var item in taskHistory.ReceiverUsers)
@@ -44,22 +38,27 @@ public class SendWebsiteMessageEventHandler
                 TemplateRenderer(eto.MessageData, item.Variables);
                 messageRecord.SetDataValue(nameof(MessageTemplate.Title), eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.Title)));
                 var websiteMessage = new WebsiteMessage(eto.ChannelId, item.UserId, eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.Title)), eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.Content)), taskHistory.SendTime.Value);
-                try
-                {
-                    var onlineClients = _hubContext.Clients.User(item.UserId.ToString());
-                    await onlineClients.SendAsync(SignalRMethodConsts.GET_NOTIFICATION, websiteMessage);
-                    messageRecord.SetResult(true, string.Empty);
-                }
-                catch (Exception ex)
-                {
-                    messageRecord.SetResult(false, ex.Message);
-                }
+                messageRecord.SetResult(true, string.Empty);
                 await _messageRecordRepository.AddAsync(messageRecord);
                 await _websiteMessageRepository.AddAsync(websiteMessage);
+                userIds.Add(item.UserId.ToString());
             }
         }
         taskHistory.SetComplete();
         await _messageTaskHistoryRepository.UpdateAsync(taskHistory);
+        await _messageTaskHistoryRepository.UnitOfWork.SaveChangesAsync();
+        await _messageTaskHistoryRepository.UnitOfWork.CommitAsync();
+
+        if (taskHistory.ReceiverType == ReceiverTypes.Broadcast)
+        {
+            var singalRGroup = _hubContext.Clients.Group("Global");
+            await singalRGroup.SendAsync(SignalRMethodConsts.CHECK_NOTIFICATION);
+        }
+        if (taskHistory.ReceiverType == ReceiverTypes.Assign)
+        {
+            var onlineClients = _hubContext.Clients.Users(userIds);
+            await onlineClients.SendAsync(SignalRMethodConsts.GET_NOTIFICATION);
+        }
     }
 
     private async void TemplateRenderer(MessageData messageData, ExtraPropertyDictionary Variables)

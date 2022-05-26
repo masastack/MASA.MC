@@ -83,22 +83,17 @@ public abstract class AdminCompontentBase : BDomComponentBase
 
     public async Task SuccessMessageAsync(string message)
     {
-        await PopupService.AlertAsync(message, AlertTypes.Success);
+        await PopupService.ToastSuccessAsync(message);
     }
 
     public async Task WarningAsync(string message)
     {
-        await PopupService.AlertAsync(message, AlertTypes.Warning);
+        await PopupService.ToastWarningAsync(message);
     }
 
     public async Task ErrorMessageAsync(string message)
     {
-        await PopupService.AlertAsync(alert =>
-        {
-            alert.Top = true;
-            alert.Type = AlertTypes.Error;
-            alert.Content = message;
-        });
+        await PopupService.ToastErrorAsync(message);
     }
 
     public static List<TEnum> GetEnumList<TEnum>() where TEnum : struct, Enum

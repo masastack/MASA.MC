@@ -13,25 +13,22 @@ public partial class Notice : AdminCompontentBase
 
     protected override async Task OnInitializedAsync()
     {
-        await WebsiteMessageService.CheckAsync();
-
         hubConnection = new HubConnectionBuilder()
             .WithUrl(NavigationManager.ToAbsoluteUri($"{McApiOptions.McServiceBaseAddress}/signalr-hubs/notifications"))
             .Build();
-
         hubConnection.On(SignalRMethodConsts.GET_NOTIFICATION, async () =>
         {
             await LoadData();
-            await InvokeAsync(StateHasChanged);
         });
 
         hubConnection.On(SignalRMethodConsts.CHECK_NOTIFICATION, async () =>
         {
             await WebsiteMessageService.CheckAsync();
-            await InvokeAsync(StateHasChanged);
         });
 
         await hubConnection.StartAsync();
+
+        await WebsiteMessageService.CheckAsync();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -45,10 +42,9 @@ public partial class Notice : AdminCompontentBase
 
     private async Task LoadData()
     {
-        Loading = true;
-        _entities = (await WebsiteMessageService.GetListAsync(_queryParam));
-        Loading = false;
+        _entities = await WebsiteMessageService.GetListAsync(_queryParam);
         StateHasChanged();
+        //await InvokeAsync(StateHasChanged);
     }
 
     public override void Dispose()
