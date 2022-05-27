@@ -52,7 +52,7 @@ public partial class MessageReceiversImport
 
     private async Task Download()
     {
-        var contentBytes= await MessageTaskService.GenerateReceiverImportTemplateAsync(MessageTemplatesId);
+        var contentBytes = await MessageTaskService.GenerateReceiverImportTemplateAsync(MessageTemplatesId);
         await BlazorDownloadFileService.DownloadFile("ReceiverImportTemplate.csv", contentBytes, "text/csv");
     }
 }

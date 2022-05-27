@@ -64,6 +64,6 @@ public class MessageTaskService : ServiceBase
 
     public async Task<byte[]> GenerateReceiverImportTemplateAsync(Guid? messageTemplatesId)
     {
-        return await GetAsync<byte[]>(nameof(GenerateReceiverImportTemplateAsync));
+        return await GetAsync<byte[]>($"{nameof(GenerateReceiverImportTemplateAsync)}?messageTemplatesId={messageTemplatesId}");
     }
 }
