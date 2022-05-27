@@ -17,7 +17,7 @@ public partial class Notice : AdminCompontentBase
 
     protected override async Task OnInitializedAsync()
     {
-        NoticeState.OnNoticeChanged += LoadData;
+        NoticeState.OnNoticeChanged += Changed;
 
         hubConnection = new HubConnectionBuilder()
             .WithUrl(NavigationManager.ToAbsoluteUri($"{McApiOptions.McServiceBaseAddress}/signalr-hubs/notifications"))
@@ -50,12 +50,16 @@ public partial class Notice : AdminCompontentBase
     {
         var dtos = await WebsiteMessageService.GetListAsync(_queryParam);
         NoticeState.SetNotices(dtos.Result);
+    }
+
+    async Task Changed()
+    {
         await InvokeAsync(StateHasChanged);
     }
 
     public override void Dispose()
     {
-        NoticeState.OnNoticeChanged -= LoadData;
+        NoticeState.OnNoticeChanged -= Changed;
         hubConnection?.DisposeAsync();
     }
 }

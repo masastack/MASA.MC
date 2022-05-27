@@ -34,9 +34,11 @@ public class NoticeState
 
     public void SetAllRead()
     {
-        foreach (var item in Notices)
+        var notices = Notices.Select(x =>
         {
-            item.IsRead = true;
-        }
+            x.IsRead = true;
+            return x;
+        });
+        Notices = notices.ToList();
     }
 }
