@@ -50,6 +50,22 @@ public class WebsiteMessageQueryHandler
         query.Result = entityDtos;
     }
 
+    [EventHandler]
+    public async Task GetPrevWebsiteMessageId(GetPrevWebsiteMessageIdQuery query)
+    {
+        Expression<Func<WebsiteMessage, bool>> condition = w => w.UserId == Guid.Parse(TempCurrentUserConsts.ID);
+        var prev = await _repository.GetPrevWebsiteMessage(query.WebsiteMessageId, condition);
+        query.Result = prev != null ? prev.Id : default;
+    }
+
+    [EventHandler]
+    public async Task GetNextWebsiteMessageId(GetNextWebsiteMessageIdQuery query)
+    {
+        Expression<Func<WebsiteMessage, bool>> condition = w => w.UserId == Guid.Parse(TempCurrentUserConsts.ID);
+        var next = await _repository.GetNextWebsiteMessage(query.WebsiteMessageId, condition);
+        query.Result = next != null ? next.Id : default;
+    }
+
     private async Task<Expression<Func<WebsiteMessage, bool>>> CreateFilteredPredicate(GetWebsiteMessageInputDto inputDto)
     {
         Expression<Func<WebsiteMessage, bool>> condition = w => w.UserId == Guid.Parse(TempCurrentUserConsts.ID);

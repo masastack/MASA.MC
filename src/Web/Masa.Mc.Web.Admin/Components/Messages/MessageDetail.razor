@@ -35,11 +35,11 @@
             </div>
         </div>
         <div class="mt-auto">
-            <span>
-                <MIcon Class="hover-pointer" Disabled Size=24>mdi-chevron-left</MIcon>
+            <span @onclick="()=>HandlePrevAndNext(_prevId)">
+                <MIcon Class="hover-pointer" Disabled="_prevId==default" Size=24>mdi-chevron-left</MIcon>
             </span>
-            <span>
-                <MIcon Class="hover-pointer" Size=24>mdi-chevron-right</MIcon>
+            <span @onclick="()=>HandlePrevAndNext(_nextId)">
+                <MIcon Class="hover-pointer" Disabled="_nextId==default" Size=24>mdi-chevron-right</MIcon>
             </span>
         </div>
     </MCardText>

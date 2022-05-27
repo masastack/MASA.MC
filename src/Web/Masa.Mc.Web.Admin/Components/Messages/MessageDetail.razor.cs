@@ -12,15 +12,24 @@ public partial class MessageDetail
     public EventCallback OnBack { get; set; }
 
     private WebsiteMessageDto _entity = new();
+    private Guid _prevId;
+    private Guid _nextId;
 
     WebsiteMessageService WebsiteMessageService => McCaller.WebsiteMessageService;
 
     protected override async void OnParametersSet()
     {
-        _entity = await WebsiteMessageService.GetAsync(EntityId) ?? new();
+        await GetFormDataAsync(EntityId);
+    }
+
+    private async Task GetFormDataAsync(Guid id)
+    {
+        _entity = await WebsiteMessageService.GetAsync(id) ?? new();
+        _prevId = await WebsiteMessageService.GetPrevWebsiteMessageId(id);
+        _nextId = await WebsiteMessageService.GetNextWebsiteMessageId(id);
         if (!_entity.IsRead)
         {
-            await WebsiteMessageService.ReadAsync(new ReadWebsiteMessageInputDto { Id = EntityId });
+            await WebsiteMessageService.ReadAsync(new ReadWebsiteMessageInputDto { Id = id });
         }
         StateHasChanged();
     }
@@ -45,5 +54,11 @@ public partial class MessageDetail
         {
             await OnBack.InvokeAsync();
         }
+    }
+
+    private async Task HandlePrevAndNext(Guid id)
+    {
+        if (id == default) return;
+        await GetFormDataAsync(id);
     }
 }

@@ -37,4 +37,20 @@ public class WebsiteMessageRepository : Repository<McDbContext, WebsiteMessage>,
             .SelectMany(x => sorted.Where(y => y.ChannelId == x).Take(1));
         return await Task.FromResult(list.OrderByDescending(x => x.CreationTime).ToList());
     }
+
+    public async Task<WebsiteMessage?> GetPrevWebsiteMessage(Guid id, Expression<Func<WebsiteMessage, bool>> predicate)
+    {
+        var set = Context.Set<WebsiteMessage>();
+        var entity = await set.FirstOrDefaultAsync(x => x.Id == id);
+        if (entity == null) return null;
+        return set.Where(predicate).Where(x => x.CreationTime < entity.CreationTime).OrderByDescending(x => x.CreationTime).FirstOrDefault();
+    }
+
+    public async Task<WebsiteMessage?> GetNextWebsiteMessage(Guid id, Expression<Func<WebsiteMessage, bool>> predicate)
+    {
+        var set = Context.Set<WebsiteMessage>();
+        var entity = await set.FirstOrDefaultAsync(x => x.Id == id);
+        if (entity == null) return null;
+        return set.Where(predicate).Where(x => x.CreationTime > entity.CreationTime).OrderBy(x => x.CreationTime).FirstOrDefault();
+    }
 }
