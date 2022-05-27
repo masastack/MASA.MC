@@ -17,7 +17,9 @@ public partial class MessageReceiversImport
     [Parameter]
     public EventCallback<List<MessageTaskReceiverDto>> OnAdd { get; set; }
 
-    private string _downloadUrl = string.Empty;
+    [Inject]
+    IBlazorDownloadFileService BlazorDownloadFileService { get; set; } = default!;
+
     private ImportResultDto<MessageTaskReceiverDto> _importResult;
 
     MessageTaskService MessageTaskService => McCaller.MessageTaskService;
@@ -25,11 +27,6 @@ public partial class MessageReceiversImport
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
-        _downloadUrl = $"{McApiOptions.McServiceBaseAddress}/api/message-task/GenerateReceiverImportTemplate";
-        if (MessageTemplatesId.HasValue)
-        {
-            _downloadUrl += $"?messageTemplatesId={MessageTemplatesId}";
-        }
     }
 
     private async void HandleFileChange(IBrowserFile file)
@@ -56,5 +53,11 @@ public partial class MessageReceiversImport
         {
             await ValueChanged.InvokeAsync(Value);
         }
+    }
+
+    private async Task Download()
+    {
+        var contentBytes= await MessageTaskService.GenerateReceiverImportTemplateAsync(MessageTemplatesId);
+        await BlazorDownloadFileService.DownloadFile("ReceiverImportTemplate.csv", contentBytes, "text/csv");
     }
 }

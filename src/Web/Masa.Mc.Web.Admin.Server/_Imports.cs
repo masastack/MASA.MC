@@ -8,3 +8,4 @@ global using System.Reflection;
 global using Mapster;
 global using Masa.Mc.Contracts.Admin.Dtos.Channels;
 global using Microsoft.AspNetCore.ResponseCompression;
+global using BlazorDownloadFile;

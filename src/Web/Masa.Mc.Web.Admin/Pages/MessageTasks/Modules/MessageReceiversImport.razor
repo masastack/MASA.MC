@@ -9,7 +9,7 @@
                     Placeholder="@T("Description.MessageReceiversUpload.Placeholder")" OnChange="HandleFileChange"></MFileInput>
     </MCol>
     <MCol Align="AlignTypes.Center">
-        <a href="@_downloadUrl" class="text-decoration-none">@T("Description.MessageReceiversDownload.Tips")</a>
+        <a class="text-decoration-none" @onclick="Download">@T("Description.MessageReceiversDownload.Tips")</a>
     </MCol>
 </MRow>
 <div class="pl-2">
