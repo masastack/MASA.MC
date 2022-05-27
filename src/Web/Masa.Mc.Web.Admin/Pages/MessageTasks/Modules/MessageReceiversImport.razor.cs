@@ -24,11 +24,6 @@ public partial class MessageReceiversImport
 
     MessageTaskService MessageTaskService => McCaller.MessageTaskService;
 
-    protected override void OnParametersSet()
-    {
-        base.OnParametersSet();
-    }
-
     private async void HandleFileChange(IBrowserFile file)
     {
         await using var memoryStream = new MemoryStream();
