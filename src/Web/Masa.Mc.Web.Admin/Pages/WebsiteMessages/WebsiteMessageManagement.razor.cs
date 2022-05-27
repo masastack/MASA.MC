@@ -8,6 +8,7 @@ public partial class WebsiteMessageManagement : AdminCompontentBase
     [Parameter]
     public string MessageId { get; set; }
 
+    private MessageLeft _messageLeftRef = default!;
     private bool _detailShow = false;
     private Guid? _channelId;
     private Guid _messageId;
@@ -41,5 +42,10 @@ public partial class WebsiteMessageManagement : AdminCompontentBase
     {
         _channelId = channelId;
         _detailShow = false;
+    }
+
+    private async Task HandleAllRead()
+    {
+        await _messageLeftRef.LoadData();
     }
 }

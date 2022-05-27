@@ -8,16 +8,16 @@
 
 <MRow Class="full-height">
     <MCol Md="5">
-        <MessageLeft OnClick="HandleChannelClick" />
+        <MessageLeft @ref="_messageLeftRef" OnClick="HandleChannelClick" />
     </MCol>
     <MCol Class="d-flex flex-column">
         @if (_detailShow)
         {
-            <MessageDetail EntityId="_messageId" OnBack="HandleDetailBack" />
+            <MessageDetail EntityId="_messageId" OnBack="HandleDetailBack"/>
         }
         else
         {
-            <MessageRight ChannelId="_channelId" OnClick="HandleListItemClick" />
+            <MessageRight ChannelId="_channelId" OnClick="HandleListItemClick" OnAllRead="HandleAllRead"/>
         }
     </MCol>
 </MRow>

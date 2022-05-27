@@ -62,3 +62,4 @@ global using Microsoft.AspNetCore.SignalR.Client;
 global using Masa.Mc.Contracts.Admin.Consts;
 global using Masa.Mc.Web.Admin.Store;
 global using BlazorDownloadFile;
+global using Masa.Mc.Web.Admin.Components.Messages;

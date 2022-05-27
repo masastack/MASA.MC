@@ -21,7 +21,7 @@ public partial class MessageLeft : AdminCompontentBase
         await base.OnAfterRenderAsync(firstRender);
     }
 
-    private async Task LoadData()
+    public async Task LoadData()
     {
         Loading = true;
         _entities = (await WebsiteMessageService.GetChannelListAsync());

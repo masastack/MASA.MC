@@ -11,6 +11,9 @@ public partial class MessageRight
     [Parameter]
     public EventCallback<Guid> OnClick { get; set; }
 
+    [Parameter]
+    public EventCallback OnAllRead { get; set; }
+
     [Inject]
     public NoticeState NoticeState { get; set; } = default!;
 
@@ -89,5 +92,9 @@ public partial class MessageRight
         await SuccessMessageAsync(T("OperationSuccessfulMessage"));
         await LoadData();
         NoticeState.SetAllRead();
+        if (OnAllRead.HasDelegate)
+        {
+            await OnAllRead.InvokeAsync();
+        }
     }
 }
