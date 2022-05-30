@@ -7,9 +7,9 @@ public class AuditEntityDto<TKey, TUserId>: EntityDto<TKey>
 {
     public TUserId Creator { get; set; } = default!;
 
-    public DateTimeOffset CreationTime { get; set; }
+    public DateTime CreationTime { get; set; }
 
     public TUserId Modifier { get; set; } = default!;
 
-    public DateTimeOffset ModificationTime { get; set; }
+    public DateTime ModificationTime { get; set; }
 }

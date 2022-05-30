@@ -102,9 +102,21 @@ public class WebsiteMessageQueryHandler
     private async Task FillDetailDto(WebsiteMessageDto dto)
     {
         Expression<Func<WebsiteMessage, bool>> condition = w => w.UserId == Guid.Parse(TempCurrentUserConsts.ID);
-        var prev = await _repository.GetPrevWebsiteMessage(dto.Id, condition);
-        var next = await _repository.GetNextWebsiteMessage(dto.Id, condition);
+        var prev = await GetPrevWebsiteMessage(dto.CreationTime, condition);
+        var next = await GetNextWebsiteMessage(dto.CreationTime, condition);
         dto.PrevId = prev != null ? prev.Id : default;
         dto.NextId = next != null ? next.Id : default;
+    }
+
+    public async Task<WebsiteMessage?> GetPrevWebsiteMessage(DateTime creationTime, Expression<Func<WebsiteMessage, bool>> predicate)
+    {
+        var query = await _repository.GetQueryableAsync()!;
+        return query.Where(predicate).Where(x => x.CreationTime < creationTime).OrderByDescending(x => x.CreationTime).FirstOrDefault();
+    }
+
+    public async Task<WebsiteMessage?> GetNextWebsiteMessage(DateTime creationTime, Expression<Func<WebsiteMessage, bool>> predicate)
+    {
+        var query = await _repository.GetQueryableAsync()!;
+        return query.Where(predicate).Where(x => x.CreationTime > creationTime).OrderBy(x => x.CreationTime).FirstOrDefault();
     }
 }
