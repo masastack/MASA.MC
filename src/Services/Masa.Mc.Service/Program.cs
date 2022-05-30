@@ -44,7 +44,7 @@ builder.Services.AddTransient<NotificationsHub>();
 builder.Services.AddTransient<SmsTemplateSyncEventHandler>();
 TypeAdapterConfig.GlobalSettings.Scan(Assembly.GetExecutingAssembly(), Assembly.Load("Masa.Mc.Contracts.Admin"));
 
-if (builder.Environment.IsDevelopment())
+if (!builder.Environment.IsProduction())
 {
     builder.Services.AddDaprStarter(builder.Configuration.GetSection(nameof(DaprOptions)));
 }
