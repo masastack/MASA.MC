@@ -23,8 +23,9 @@ public partial class SmsTemplateCreateModal : AdminCompontentBase
 
     protected override async Task OnInitializedAsync()
     {
-        await base.OnInitializedAsync();
-        HubConnection.On(SignalRMethodConsts.GET_SMS_TEMPLATE, async () =>
+        await base.HubConnectionBuilder();
+
+        base.HubConnection?.On(SignalRMethodConsts.GET_SMS_TEMPLATE, async () =>
         {
             _templateItems = await SmsTemplateService.GetListByChannelIdAsync(_model.ChannelId);
             await InvokeAsync(StateHasChanged);

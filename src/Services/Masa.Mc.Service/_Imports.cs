@@ -145,3 +145,6 @@ global using Microsoft.AspNetCore.Authorization;
 global using Masa.Mc.Contracts.Admin.Consts;
 global using Masa.Mc.Service.Admin.Domain.WebsiteMessages.Services;
 global using Magicodes.ExporterAndImporter.Core.Extension;
+global using Masa.Contrib.Storage.ObjectStorage.Aliyun;
+global using Dapr.Client;
+global using Masa.Contrib.Storage.ObjectStorage.Aliyun.Options;

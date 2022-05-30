@@ -34,11 +34,6 @@
         GlobalConfig.OnPageModeChanged += base.StateHasChanged;
     }
 
-    public void Dispose()
-    {
-        GlobalConfig.OnPageModeChanged -= base.StateHasChanged;
-    }
-
     private async Task CustomErrorHandleAsync(Exception exception)
     {
         GlobalConfig.Loading = false;
@@ -48,5 +43,10 @@
             alert.Title = "Something wrong!";
             alert.Content = exception.Message;
         });
+    }
+
+    public void Dispose()
+    {
+        GlobalConfig.OnPageModeChanged -= base.StateHasChanged;
     }
 }

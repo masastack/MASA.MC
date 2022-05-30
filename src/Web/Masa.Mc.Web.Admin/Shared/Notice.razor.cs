@@ -16,16 +16,18 @@ public partial class Notice : AdminCompontentBase
 
     protected override async Task OnInitializedAsync()
     {
-        NoticeState.OnNoticeChanged += Changed;
-
         await base.OnInitializedAsync();
 
-        HubConnection.On(SignalRMethodConsts.GET_NOTIFICATION, async () =>
+        NoticeState.OnNoticeChanged += Changed;
+
+        await base.HubConnectionBuilder();
+
+        base.HubConnection?.On(SignalRMethodConsts.GET_NOTIFICATION, async () =>
         {
             await LoadData();
         });
 
-        HubConnection.On(SignalRMethodConsts.CHECK_NOTIFICATION, async () =>
+        base.HubConnection?.On(SignalRMethodConsts.CHECK_NOTIFICATION, async () =>
         {
             await WebsiteMessageService.CheckAsync();
         });
@@ -35,6 +37,7 @@ public partial class Notice : AdminCompontentBase
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        Console.WriteLine("Notice:OnAfterRenderAsync");
         if (firstRender)
         {
             await LoadData();

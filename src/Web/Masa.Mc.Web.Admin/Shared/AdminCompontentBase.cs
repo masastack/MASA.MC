@@ -76,15 +76,7 @@ public abstract class AdminCompontentBase : BDomComponentBase
 
     public string T(string key) => I18n.T(key);
 
-    public HubConnection HubConnection { get; set; } = default!;
-
-    protected override async Task OnInitializedAsync()
-    {
-        HubConnection = new HubConnectionBuilder()
-            .WithUrl(NavigationManager.ToAbsoluteUri($"{McApiOptions.McServiceBaseAddress}/signalr-hubs/notifications"))
-            .Build();
-        await HubConnection.StartAsync();
-    }
+    public HubConnection? HubConnection { get; set; }
 
     public async Task ConfirmAsync(string messgae, Func<Task> callback, AlertTypes type = AlertTypes.Warning)
     {
@@ -133,6 +125,14 @@ public abstract class AdminCompontentBase : BDomComponentBase
             new(T("Enable"), true),
             new(T("Disabled"), false)
         };
+    }
+
+    public async Task HubConnectionBuilder()
+    {
+        HubConnection = new HubConnectionBuilder()
+            .WithUrl(NavigationManager.ToAbsoluteUri($"{McApiOptions.McServiceBaseAddress}/signalr-hubs/notifications"))
+            .Build();
+        await HubConnection.StartAsync();
     }
 
     public override void Dispose()

@@ -6,6 +6,21 @@ builder.Services.AddDaprClient();
 builder.Services.AddActors(options =>
 {
 });
+builder.Services.AddAliyunStorage(serviceProvider =>
+{
+    var daprClient = serviceProvider.GetRequiredService<DaprClient>();
+    var accessId = daprClient.GetSecretAsync("localsecretstore", "access_id").Result.First().Value;
+    var accessSecret = daprClient.GetSecretAsync("localsecretstore", "access_secret").Result.First().Value;
+    var endpoint = daprClient.GetSecretAsync("localsecretstore", "endpoint").Result.First().Value;
+    var roleArn = daprClient.GetSecretAsync("localsecretstore", "roleArn").Result.First().Value;
+    return new AliyunStorageOptions(accessId, accessSecret, endpoint, roleArn, "SessionTest")
+    {
+        Sts = new AliyunStsOptions()
+        {
+            RegionId = "cn-hangzhou"
+        }
+    };
+});
 builder.Services.AddAuthorization();
 builder.Services.AddAuthentication(options =>
 {
