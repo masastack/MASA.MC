@@ -3,8 +3,7 @@
 
 namespace Masa.Mc.Service.Admin.Application.Channels.Queries;
 
-public record GetListChannelQuery(GetChannelInputDto Input) : Query<PaginatedListDto<ChannelDto>>
+public class GetChannelListQueryValidator : AbstractValidator<GetChannelListQuery>
 {
-    public override PaginatedListDto<ChannelDto> Result { get; set; } = default!;
-
+    public GetChannelListQueryValidator() => RuleFor(inpu => inpu.Input).SetValidator(new GetChannelInputDtoValidator());
 }

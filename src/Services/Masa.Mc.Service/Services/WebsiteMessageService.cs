@@ -19,7 +19,7 @@ public class WebsiteMessageService : ServiceBase
     public async Task<PaginatedListDto<WebsiteMessageDto>> GetListAsync(IEventBus eventbus, [FromQuery] WebsiteMessageFilterType? filterType, [FromQuery] Guid? channelId, [FromQuery] bool? isRead, [FromQuery] string filter = "", [FromQuery] string sorting = "", [FromQuery] int page = 1, [FromQuery] int pagesize = 10)
     {
         var inputDto = new GetWebsiteMessageInputDto(filter, filterType, channelId, isRead, sorting, page, pagesize);
-        var query = new GetListWebsiteMessageQuery(inputDto);
+        var query = new GetWebsiteMessageListQuery(inputDto);
         await eventbus.PublishAsync(query);
         return query.Result;
     }

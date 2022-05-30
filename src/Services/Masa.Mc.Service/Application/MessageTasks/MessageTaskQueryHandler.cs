@@ -34,7 +34,7 @@ public class MessageTaskQueryHandler
     }
 
     [EventHandler]
-    public async Task GetListAsync(GetListMessageTaskQuery query)
+    public async Task GetListAsync(GetMessageTaskListQuery query)
     {
         var options = query.Input;
         var queryable = await CreateFilteredQueryAsync(options);

@@ -19,7 +19,7 @@ public class ChannelService : ServiceBase
     public async Task<PaginatedListDto<ChannelDto>> GetListAsync(IEventBus eventbus, [FromQuery] ChannelTypes? type, [FromQuery] string displayName = "", [FromQuery] string filter = "", [FromQuery] string sorting = "", [FromQuery] int page = 1, [FromQuery] int pagesize = 10)
     {
         var inputDto = new GetChannelInputDto(filter, type, displayName, sorting, page, pagesize);
-        var query = new GetListChannelQuery(inputDto);
+        var query = new GetChannelListQuery(inputDto);
         await eventbus.PublishAsync(query);
         return query.Result;
     }

@@ -28,7 +28,7 @@ public class WebsiteMessageQueryHandler
     }
 
     [EventHandler]
-    public async Task GetListAsync(GetListWebsiteMessageQuery query)
+    public async Task GetListAsync(GetWebsiteMessageListQuery query)
     {
         var options = query.Input;
         var queryable = await CreateFilteredQueryAsync(options);

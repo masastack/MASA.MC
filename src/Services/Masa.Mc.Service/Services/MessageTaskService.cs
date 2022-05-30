@@ -23,7 +23,7 @@ public class MessageTaskService : ServiceBase
     public async Task<PaginatedListDto<MessageTaskDto>> GetListAsync(IEventBus eventbus, [FromQuery] Guid? channelId, [FromQuery] MessageEntityTypes? entityType, [FromQuery] bool? isEnabled, [FromQuery] MessageTaskTimeTypes? timeType, [FromQuery] DateTimeOffset? startTime, [FromQuery] DateTimeOffset? endTime, [FromQuery] string filter = "", [FromQuery] string sorting = "", [FromQuery] int page = 1, [FromQuery] int pagesize = 10)
     {
         var inputDto = new GetMessageTaskInputDto(filter, channelId, entityType, isEnabled, timeType, startTime, endTime, sorting, page, pagesize);
-        var query = new GetListMessageTaskQuery(inputDto);
+        var query = new GetMessageTaskListQuery(inputDto);
         await eventbus.PublishAsync(query);
         return query.Result;
     }

@@ -3,7 +3,7 @@
 
 namespace Masa.Mc.Service.Admin.Application.MessageTasks.Queries;
 
-public record GetListMessageTaskHistoryQuery(GetMessageTaskHistoryInputDto Input) : Query<PaginatedListDto<MessageTaskHistoryDto>>
+public record GetMessageTaskHistoryListQuery(GetMessageTaskHistoryInputDto Input) : Query<PaginatedListDto<MessageTaskHistoryDto>>
 {
     public override PaginatedListDto<MessageTaskHistoryDto> Result { get; set; } = default!;
 

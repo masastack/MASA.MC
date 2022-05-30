@@ -15,7 +15,7 @@ public class MessageTaskHistoryService : ServiceBase
     public async Task<PaginatedListDto<MessageTaskHistoryDto>> GetListAsync(IEventBus eventbus, [FromQuery] Guid? messageTaskId, [FromQuery] MessageTaskHistoryStatuses? status, [FromQuery] DateTimeOffset? startTime, [FromQuery] DateTimeOffset? endTime, [FromQuery] string filter = "", [FromQuery] string sorting = "", [FromQuery] int page = 1, [FromQuery] int pagesize = 10)
     {
         var inputDto = new GetMessageTaskHistoryInputDto(filter, messageTaskId, status, startTime, endTime, sorting, page, pagesize);
-        var query = new GetListMessageTaskHistoryQuery(inputDto);
+        var query = new GetMessageTaskHistoryListQuery(inputDto);
         await eventbus.PublishAsync(query);
         return query.Result;
     }

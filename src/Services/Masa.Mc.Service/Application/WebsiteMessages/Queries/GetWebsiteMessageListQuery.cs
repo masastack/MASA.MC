@@ -3,7 +3,7 @@
 
 namespace Masa.Mc.Service.Admin.Application.WebsiteMessages.Queries;
 
-public record GetListWebsiteMessageQuery(GetWebsiteMessageInputDto Input) : Query<PaginatedListDto<WebsiteMessageDto>>
+public record GetWebsiteMessageListQuery(GetWebsiteMessageInputDto Input) : Query<PaginatedListDto<WebsiteMessageDto>>
 {
     public override PaginatedListDto<WebsiteMessageDto> Result { get; set; } = default!;
 }

@@ -22,7 +22,7 @@ public class ChannelQueryHandler
     }
 
     [EventHandler]
-    public async Task GetListAsync(GetListChannelQuery query)
+    public async Task GetListAsync(GetChannelListQuery query)
     {
         var options = query.Input;
         var condition = await CreateFilteredPredicate(options);

@@ -20,12 +20,11 @@ public class NoticeState
         }
     }
 
-    private List<WebsiteMessageDto> _notices = new();
-
     public delegate Task NoticeChanged();
 
     public event NoticeChanged? OnNoticeChanged;
 
+    private List<WebsiteMessageDto> _notices = new();
 
     public void SetNotices(List<WebsiteMessageDto> notices)
     {

@@ -3,7 +3,7 @@
 
 namespace Masa.Mc.Service.Admin.Application.MessageTasks.Queries;
 
-public class GetListMessageTaskQueryValidator : AbstractValidator<GetListMessageTaskQuery>
+public class GetMessageTaskListQueryValidator : AbstractValidator<GetMessageTaskListQuery>
 {
-    public GetListMessageTaskQueryValidator() => RuleFor(inpu => inpu.Input).SetValidator(new GetMessageTaskInputDtoValidator());
+    public GetMessageTaskListQueryValidator() => RuleFor(inpu => inpu.Input).SetValidator(new GetMessageTaskInputDtoValidator());
 }
