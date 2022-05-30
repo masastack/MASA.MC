@@ -19,7 +19,7 @@ public partial class ChannelSmsExtraProperties : AdminCompontentBase
     {
         if (firstRender)
         {
-            _model = ExtensionPropertyHelper.ExtraPropertyMapToObj<SmsChannelOptions>(Value);
+            _model = ExtensionPropertyHelper.ConvertToType<SmsChannelOptions>(Value);
         }
         await base.OnAfterRenderAsync(firstRender);
     }

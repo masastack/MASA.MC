@@ -19,7 +19,7 @@ public partial class ChannelEmailExtraProperties : AdminCompontentBase
     {
         if (firstRender)
         {
-            _model = ExtensionPropertyHelper.ExtraPropertyMapToObj<EmailChannelOptions>(Value);
+            _model = ExtensionPropertyHelper.ConvertToType<EmailChannelOptions>(Value);
         }
         await base.OnAfterRenderAsync(firstRender);
     }
