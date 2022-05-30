@@ -17,12 +17,12 @@ public class WebsiteMessageCursorDomainService : DomainService
         var cursor = await _repository.FindAsync(x => x.UserId == userId);
         if (cursor == null)
         {
-            cursor = new WebsiteMessageCursor(userId, DateTime.UtcNow);
+            cursor = new WebsiteMessageCursor(userId, DateTimeOffset.Now);
             await _repository.AddAsync(cursor);
         }
         else
         {
-            await EventBus.PublishAsync(new WebsiteMessageCreatedDomainEvent(userId, cursor.UpdateTime));
+            await EventBus.PublishAsync(new AddWebsiteMessageDomainEvent(userId, cursor.UpdateTime));
             cursor.Update();
             await _repository.UpdateAsync(cursor);
         }

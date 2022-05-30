@@ -8,7 +8,7 @@
            TwoLine>
         <MListItem Link OnClick="()=>HandleOnClick(null)">
             <MListItemAvatar Class="overflow-visible">
-                @if (_entities.Any(x => !x.IsRead))
+                @if (_channels.Any(x => !x.IsRead))
                 {
                     <MBadge Bordered Dot Color="pink" OffsetX="10" OffsetY="10">
                         <MAvatar Color="primary">
@@ -33,7 +33,7 @@
         </MListItem>
 
 
-        @foreach (var item in _entities)
+        @foreach (var item in _channels)
         {
             <MListItem Link OnClick="()=>HandleOnClick(item.ChannelId)">
                 <MListItemAvatar Class="overflow-visible">

@@ -48,14 +48,4 @@ public class WebsiteMessageService : ServiceBase
     {
         await PostAsync(nameof(CheckAsync));
     }
-
-    public async Task<Guid> GetPrevWebsiteMessageId(Guid id)
-    {
-        return JsonSerializer.Deserialize<Guid>(await GetAsync<string>($"{nameof(GetPrevWebsiteMessageId)}?id={id}"));
-    }
-
-    public async Task<Guid> GetNextWebsiteMessageId(Guid id)
-    {
-        return JsonSerializer.Deserialize<Guid>(await GetAsync<string>($"{nameof(GetNextWebsiteMessageId)}?id={id}"));
-    }
 }

@@ -24,11 +24,11 @@ public class MessageTaskHistory : FullAggregateRoot<Guid, Guid>
 
     public ExtraPropertyDictionary SendRules { get; protected set; } = new();
 
-    public DateTime? SendTime { get; protected set; }
+    public DateTimeOffset? SendTime { get; protected set; }
 
-    public DateTime? CompletionTime { get; protected set; }
+    public DateTimeOffset? CompletionTime { get; protected set; }
 
-    public DateTime? WithdrawTime { get; protected set; }
+    public DateTimeOffset? WithdrawTime { get; protected set; }
 
     public string Sign { get; protected set; } = string.Empty;
 
@@ -36,7 +36,7 @@ public class MessageTaskHistory : FullAggregateRoot<Guid, Guid>
 
     public ICollection<MessageReceiverUser> ReceiverUsers { get; protected set; } = new Collection<MessageReceiverUser>();
 
-    protected internal MessageTaskHistory(Guid messageTaskId, string taskHistoryNo, ReceiverTypes receiverType, MessageTaskSelectReceiverTypes selectReceiverType, List<MessageTaskReceiver> receivers, ExtraPropertyDictionary sendRules, DateTime? sendTime, string sign, ExtraPropertyDictionary variables)
+    protected internal MessageTaskHistory(Guid messageTaskId, string taskHistoryNo, ReceiverTypes receiverType, MessageTaskSelectReceiverTypes selectReceiverType, List<MessageTaskReceiver> receivers, ExtraPropertyDictionary sendRules, DateTimeOffset? sendTime, string sign, ExtraPropertyDictionary variables)
     {
         MessageTaskId = messageTaskId;
         TaskHistoryNo = taskHistoryNo;
@@ -52,19 +52,19 @@ public class MessageTaskHistory : FullAggregateRoot<Guid, Guid>
 
     public void SetSending()
     {
-        SendTime = DateTime.UtcNow;
+        SendTime = DateTimeOffset.Now;
         Status = MessageTaskHistoryStatuses.Sending;
     }
 
     public void SetComplete()
     {
-        CompletionTime = DateTime.UtcNow;
+        CompletionTime = DateTimeOffset.Now;
         Status = MessageTaskHistoryStatuses.Completed;
     }
 
     public void SetWithdraw()
     {
-        WithdrawTime = DateTime.UtcNow;
+        WithdrawTime = DateTimeOffset.Now;
         Status = MessageTaskHistoryStatuses.Withdrawn;
     }
 

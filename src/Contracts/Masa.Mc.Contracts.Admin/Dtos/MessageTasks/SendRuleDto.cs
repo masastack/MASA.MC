@@ -9,5 +9,5 @@ public class SendRuleDto
     public long SendingInterval { get; set; }
     public long SendingCount { get; set; }
     public bool IsTiming { get; set; }
-    public DateTime? SendTime { get; set; }
+    public DateTimeOffset? SendTime { get; set; }
 }

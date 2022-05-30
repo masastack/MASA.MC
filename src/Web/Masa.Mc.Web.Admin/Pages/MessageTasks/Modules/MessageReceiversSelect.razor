@@ -72,13 +72,10 @@
     <MButton Rounded Outlined Color="indigo" Class="ml-6 medium-button px-6" OnClick="AddAsync">
         <span>@T("Add")</span>
     </MButton>
-    @if (Type != ChannelTypes.WebsiteMessage)
-    {
-        <MButton Color="primary" Class="ml-6 medium-button" OnClick="_createModal.OpenModalAsync">
-            <MIcon Size=18>mdi-plus</MIcon>
-            <span class="ml-2">@T("ExternalMember")</span>
-        </MButton>
-    }
+    <MButton Color="primary" Class="ml-6 medium-button" OnClick="_createModal.OpenModalAsync">
+        <MIcon Size=18>mdi-plus</MIcon>
+        <span class="ml-2">@T("ExternalMember")</span>
+    </MButton>
 </MRow>
 <MCard Class="mx-auto overflow-y-auto" Outlined Height="300">
     @if (Value != null && Value.Count > 0)

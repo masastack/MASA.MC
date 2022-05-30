@@ -57,7 +57,7 @@ public class MessageTaskCommandHandler
         if (entity.Variables.Any(x => string.IsNullOrEmpty(x.Value.ToString())))
             throw new UserFriendlyException("please fill in the signature template variable of the task first");
         var receivers = inputDto.Receivers.Adapt<List<MessageTaskReceiver>>();
-        await _domainService.SendAsync(inputDto.Id, ReceiverTypes.Assign, entity.SelectReceiverType, receivers, new ExtraPropertyDictionary(), DateTime.UtcNow, entity.Sign, entity.Variables);
+        await _domainService.SendAsync(inputDto.Id, ReceiverTypes.Assign, entity.SelectReceiverType, receivers, new ExtraPropertyDictionary(), DateTimeOffset.Now, entity.Sign, entity.Variables);
     }
 
     [EventHandler]

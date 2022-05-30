@@ -6,27 +6,23 @@ namespace Masa.Mc.Web.Admin.Components.Messages;
 public partial class MessageDetail
 {
     [Parameter]
-    public Guid EntityId { get; set; }
+    public Guid MessageId { get; set; }
 
     [Parameter]
     public EventCallback OnBack { get; set; }
 
     private WebsiteMessageDto _entity = new();
-    private Guid _prevId;
-    private Guid _nextId;
 
     WebsiteMessageService WebsiteMessageService => McCaller.WebsiteMessageService;
 
     protected override async void OnParametersSet()
     {
-        await GetFormDataAsync(EntityId);
+        await GetFormDataAsync(MessageId);
     }
 
     private async Task GetFormDataAsync(Guid id)
     {
         _entity = await WebsiteMessageService.GetAsync(id) ?? new();
-        _prevId = await WebsiteMessageService.GetPrevWebsiteMessageId(id);
-        _nextId = await WebsiteMessageService.GetNextWebsiteMessageId(id);
         if (!_entity.IsRead)
         {
             await WebsiteMessageService.ReadAsync(new ReadWebsiteMessageInputDto { Id = id });
@@ -42,7 +38,7 @@ public partial class MessageDetail
     private async Task DeleteAsync()
     {
         Loading = true;
-        await WebsiteMessageService.DeleteAsync(EntityId);
+        await WebsiteMessageService.DeleteAsync(MessageId);
         Loading = false;
         await SuccessMessageAsync(T("DeletedSuccessfullyMessage"));
         await HandleOnBack();

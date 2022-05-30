@@ -3,6 +3,6 @@
 
 namespace Masa.Mc.Service.Admin.Application.WebsiteMessages.Commands;
 
-public record SetAllReadWebsiteMessageCommand(GetWebsiteMessageInputDto dto) : Command
+public record ReadAllWebsiteMessageCommand(GetWebsiteMessageInputDto dto) : Command
 {
 }

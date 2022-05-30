@@ -15,8 +15,8 @@ public class MessageTemplate : FullAggregateRoot<Guid, Guid>
     public string Sign { get; protected set; } = string.Empty;
     public MessageTemplateStatuses Status { get; protected set; }
     public MessageTemplateAuditStatuses AuditStatus { get; protected set; }
-    public DateTime? AuditTime { get; protected set; }
-    public DateTime? InvalidTime { get; protected set; }
+    public DateTimeOffset? AuditTime { get; protected set; }
+    public DateTimeOffset? InvalidTime { get; protected set; }
     public string AuditReason { get; protected set; } = string.Empty;
     public int TemplateType { get; protected set; }
     public long PerDayLimit { get; protected set; }
@@ -84,14 +84,14 @@ public class MessageTemplate : FullAggregateRoot<Guid, Guid>
         AuditStatus = auditStatus;
         if (auditStatus != MessageTemplateAuditStatuses.WaitAudit)
         {
-            AuditTime = DateTime.UtcNow;
+            AuditTime = DateTimeOffset.Now;
             AuditReason = auditReason;
         }
     }
 
     public virtual void SetInvalid()
     {
-        InvalidTime = DateTime.UtcNow;
+        InvalidTime = DateTimeOffset.Now;
         Status = MessageTemplateStatuses.Invalid;
     }
 

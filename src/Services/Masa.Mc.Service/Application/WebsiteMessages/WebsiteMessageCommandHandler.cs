@@ -13,7 +13,7 @@ public class WebsiteMessageCommandHandler
     }
 
     [EventHandler]
-    public async Task SetAllReadAsync(SetAllReadWebsiteMessageCommand command)
+    public async Task SetAllReadAsync(ReadAllWebsiteMessageCommand command)
     {
         var queryable = await CreateFilteredQueryAsync(command.dto);
         var list = await queryable.ToListAsync();

@@ -14,8 +14,6 @@ public class WebsiteMessageService : ServiceBase
         MapPost(SetAllReadAsync);
         MapPost(ReadAsync);
         MapPost(CheckAsync);
-        MapGet(GetPrevWebsiteMessageId);
-        MapGet(GetNextWebsiteMessageId);
     }
 
     public async Task<PaginatedListDto<WebsiteMessageDto>> GetListAsync(IEventBus eventbus, [FromQuery] WebsiteMessageFilterType? filterType, [FromQuery] Guid? channelId, [FromQuery] bool? isRead, [FromQuery] string filter = "", [FromQuery] string sorting = "", [FromQuery] int page = 1, [FromQuery] int pagesize = 10)
@@ -42,7 +40,7 @@ public class WebsiteMessageService : ServiceBase
 
     public async Task SetAllReadAsync(IEventBus eventbus, [FromBody] GetWebsiteMessageInputDto inputDto)
     {
-        var command = new SetAllReadWebsiteMessageCommand(inputDto);
+        var command = new ReadAllWebsiteMessageCommand(inputDto);
         await eventbus.PublishAsync(command);
     }
 
@@ -62,19 +60,5 @@ public class WebsiteMessageService : ServiceBase
     {
         var command = new CheckWebsiteMessageCursorCommand();
         await eventbus.PublishAsync(command);
-    }
-
-    public async Task<Guid> GetPrevWebsiteMessageId(IEventBus eventBus, [FromQuery] Guid id)
-    {
-        var query = new GetPrevWebsiteMessageIdQuery(id);
-        await eventBus.PublishAsync(query);
-        return query.Result;
-    }
-
-    public async Task<Guid> GetNextWebsiteMessageId(IEventBus eventBus, [FromQuery] Guid id)
-    {
-        var query = new GetNextWebsiteMessageIdQuery(id);
-        await eventBus.PublishAsync(query);
-        return query.Result;
     }
 }

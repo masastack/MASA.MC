@@ -14,7 +14,7 @@ namespace Masa.Mc.Web.Admin.Data.Others.AccountSettings
             new("3", "Canada"),
         };
 
-        public static InformationDto GetInformation() => new("", DateOnly.FromDateTime(DateTime.Now), "1", "", 6562542568);
+        public static InformationDto GetInformation() => new("", DateOnly.FromDateTime(DateTimeOffset.Now.DateTime), "1", "", 6562542568);
 
         public static SocialDto GetSocial() => new("https://www.twitter.com", "", "", "https://www.linkedin.com", "", "");
     }

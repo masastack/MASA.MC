@@ -14,6 +14,11 @@
     <Content Include="Shared\HeaderRight.razor.css" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="wwwroot\oss\aliyun-oss-sdk.min.js" />
+    <None Include="wwwroot\oss\upload.js" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <SupportedPlatform Include="browser" />

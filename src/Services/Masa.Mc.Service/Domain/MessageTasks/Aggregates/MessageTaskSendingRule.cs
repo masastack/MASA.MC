@@ -9,5 +9,5 @@ public class MessageTaskSendingRule
     public long SendingInterval { get; protected set; }
     public long SendingCount { get; protected set; }
     public bool IsTiming { get; protected set; }
-    public DateTime? SendTime { get; protected set; }
+    public DateTimeOffset? SendTime { get; protected set; }
 }

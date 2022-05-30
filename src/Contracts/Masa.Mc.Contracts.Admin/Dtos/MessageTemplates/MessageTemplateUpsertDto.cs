@@ -23,8 +23,8 @@ public class MessageTemplateUpsertDto
     public string Sign { get; set; } = string.Empty;
     public MessageTemplateStatuses Status { get; set; } = MessageTemplateStatuses.Normal;
     public MessageTemplateAuditStatuses AuditStatus { get; set; } = MessageTemplateAuditStatuses.Adopt;
-    public DateTime? AuditTime { get; set; }
-    public DateTime? InvalidTime { get; set; }
+    public DateTimeOffset? AuditTime { get; set; }
+    public DateTimeOffset? InvalidTime { get; set; }
     public string AuditReason { get; set; } = string.Empty;
     public int TemplateType { get; set; }
     public long PerDayLimit { get; set; }

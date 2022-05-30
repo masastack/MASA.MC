@@ -15,17 +15,17 @@ public class WebsiteMessage : FullAggregateRoot<Guid, Guid>
 
     public string Content { get; protected set; } = string.Empty;
 
-    public DateTime SendTime { get; protected set; }
+    public DateTimeOffset SendTime { get; protected set; }
 
     public bool IsRead { get; set; }
 
-    public DateTime? ReadTime { get; set; }
+    public DateTimeOffset? ReadTime { get; set; }
 
-    public WebsiteMessage(Guid channelId, Guid userId, string title, string content, DateTime sendTime) : this(channelId, userId, title, content, sendTime, false, null)
+    public WebsiteMessage(Guid channelId, Guid userId, string title, string content, DateTimeOffset sendTime) : this(channelId, userId, title, content, sendTime, false, null)
     {
     }
 
-    public WebsiteMessage(Guid channelId, Guid userId, string title, string content, DateTime sendTime, bool isRead, DateTime? readTime)
+    public WebsiteMessage(Guid channelId, Guid userId, string title, string content, DateTimeOffset sendTime, bool isRead, DateTimeOffset? readTime)
     {
         ChannelId = channelId;
         UserId = userId;
@@ -39,6 +39,6 @@ public class WebsiteMessage : FullAggregateRoot<Guid, Guid>
     public void SetRead()
     {
         IsRead = true;
-        ReadTime = DateTime.UtcNow;
+        ReadTime = DateTimeOffset.Now;
     }
 }

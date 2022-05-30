@@ -8,7 +8,7 @@ public partial class MessageLeft : AdminCompontentBase
     [Parameter]
     public EventCallback<Guid?> OnClick { get; set; }
 
-    private List<WebsiteMessageChannelDto> _entities = new();
+    private List<WebsiteMessageChannelDto> _channels = new();
 
     WebsiteMessageService WebsiteMessageService => McCaller.WebsiteMessageService;
 
@@ -24,7 +24,7 @@ public partial class MessageLeft : AdminCompontentBase
     public async Task LoadData()
     {
         Loading = true;
-        _entities = (await WebsiteMessageService.GetChannelListAsync());
+        _channels = (await WebsiteMessageService.GetChannelListAsync());
         Loading = false;
         StateHasChanged();
     }

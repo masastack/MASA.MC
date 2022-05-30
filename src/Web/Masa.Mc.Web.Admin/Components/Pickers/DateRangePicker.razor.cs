@@ -6,16 +6,16 @@ namespace Masa.Mc.Web.Admin.Components.Pickers;
 public partial class DateRangePicker
 {
     [Parameter]
-    public DateTime? StartTime { get; set; }
+    public DateTimeOffset? StartTime { get; set; }
 
     [Parameter]
-    public EventCallback<DateTime?> StartTimeChanged { get; set; }
+    public EventCallback<DateTimeOffset?> StartTimeChanged { get; set; }
 
     [Parameter]
-    public DateTime? EndTime { get; set; }
+    public DateTimeOffset? EndTime { get; set; }
 
     [Parameter]
-    public EventCallback<DateTime?> EndTimeChanged { get; set; }
+    public EventCallback<DateTimeOffset?> EndTimeChanged { get; set; }
 
     [Parameter]
     public EventCallback OnChange{ get; set; }
@@ -30,8 +30,8 @@ public partial class DateRangePicker
 
     protected override void OnParametersSet()
     {
-        _StartTime = StartTime.HasValue ? DateOnly.FromDateTime(StartTime.Value) : null;
-        _EndTime = EndTime.HasValue ? DateOnly.FromDateTime(EndTime.Value) : null;
+        _StartTime = StartTime.HasValue ? DateOnly.FromDateTime(StartTime.Value.DateTime) : null;
+        _EndTime = EndTime.HasValue ? DateOnly.FromDateTime(EndTime.Value.DateTime) : null;
     }
 
     private async Task UpdateStartTimeAsync(DateOnly? dateTime)

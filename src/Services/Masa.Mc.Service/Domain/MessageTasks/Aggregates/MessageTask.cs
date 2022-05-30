@@ -23,7 +23,7 @@ public class MessageTask : FullAggregateRoot<Guid, Guid>
 
     public MessageTaskSelectReceiverTypes SelectReceiverType { get; protected set; }
 
-    public DateTime? SendTime { get; protected set; }
+    public DateTimeOffset? SendTime { get; protected set; }
 
     public string Sign { get; protected set; } = string.Empty;
 
@@ -46,13 +46,13 @@ public class MessageTask : FullAggregateRoot<Guid, Guid>
         SendRules = sendRules ?? new();
     }
 
-    public virtual void SendTask(ReceiverTypes receiverType, List<MessageTaskReceiver> receivers, MessageTaskSelectReceiverTypes selectReceiverType, ExtraPropertyDictionary sendRules, DateTime? sendTime, string sign, ExtraPropertyDictionary variables)
+    public virtual void SendTask(ReceiverTypes receiverType, List<MessageTaskReceiver> receivers, MessageTaskSelectReceiverTypes selectReceiverType, ExtraPropertyDictionary sendRules, DateTimeOffset? sendTime, string sign, ExtraPropertyDictionary variables)
     {
         SetDraft(false);
         SelectReceiverType = selectReceiverType;
         SetReceivers(receiverType, receivers);
         SendRules = sendRules ?? new();
-        SendTime = sendTime ?? DateTime.UtcNow;
+        SendTime = sendTime ?? DateTimeOffset.Now;
         Sign = sign;
         Variables = variables;
     }

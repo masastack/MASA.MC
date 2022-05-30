@@ -7,9 +7,9 @@ public class WebsiteMessageCursor : FullAggregateRoot<Guid, Guid>
 {
     public Guid UserId { get; protected set; }
 
-    public DateTime UpdateTime { get; protected set; }
+    public DateTimeOffset UpdateTime { get; protected set; }
 
-    public WebsiteMessageCursor(Guid userId, DateTime updateTime)
+    public WebsiteMessageCursor(Guid userId, DateTimeOffset updateTime)
     {
         UserId = userId;
         UpdateTime = updateTime;
@@ -17,6 +17,6 @@ public class WebsiteMessageCursor : FullAggregateRoot<Guid, Guid>
 
     public virtual void Update()
     {
-        UpdateTime = DateTime.UtcNow;
+        UpdateTime = DateTimeOffset.Now;
     }
 }

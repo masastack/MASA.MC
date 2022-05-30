@@ -25,7 +25,7 @@ public static class TypeHelper
             typeof(bool),
             typeof(float),
             typeof(decimal),
-            typeof(DateTime),
+            typeof(DateTimeOffset),
             typeof(DateTimeOffset),
             typeof(TimeSpan),
             typeof(Guid)
@@ -154,7 +154,7 @@ public static class TypeHelper
 
         return type == typeof(string) ||
                type == typeof(decimal) ||
-               type == typeof(DateTime) ||
+               type == typeof(DateTimeOffset) ||
                type == typeof(DateTimeOffset) ||
                type == typeof(TimeSpan) ||
                type == typeof(Guid);
@@ -236,7 +236,7 @@ public static class TypeHelper
         {
             return "number";
         }
-        else if (type == typeof(DateTime))
+        else if (type == typeof(DateTimeOffset))
         {
             return "string";
         }

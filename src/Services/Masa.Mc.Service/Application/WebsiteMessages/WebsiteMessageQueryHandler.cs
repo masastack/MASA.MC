@@ -22,7 +22,9 @@ public class WebsiteMessageQueryHandler
         var entity = await _repository.FindAsync(x => x.Id == query.WebsiteMessageId);
         if (entity == null)
             throw new UserFriendlyException("WebsiteMessage not found");
-        query.Result = entity.Adapt<WebsiteMessageDto>();
+        var dto = entity.Adapt<WebsiteMessageDto>();
+        await FillDetailDto(dto);
+        query.Result = dto;
     }
 
     [EventHandler]
@@ -48,22 +50,6 @@ public class WebsiteMessageQueryHandler
         var entityDtos = entities.Adapt<List<WebsiteMessageChannelDto>>();
         await FillChannelListDtos(entityDtos);
         query.Result = entityDtos;
-    }
-
-    [EventHandler]
-    public async Task GetPrevWebsiteMessageId(GetPrevWebsiteMessageIdQuery query)
-    {
-        Expression<Func<WebsiteMessage, bool>> condition = w => w.UserId == Guid.Parse(TempCurrentUserConsts.ID);
-        var prev = await _repository.GetPrevWebsiteMessage(query.WebsiteMessageId, condition);
-        query.Result = prev != null ? prev.Id : default;
-    }
-
-    [EventHandler]
-    public async Task GetNextWebsiteMessageId(GetNextWebsiteMessageIdQuery query)
-    {
-        Expression<Func<WebsiteMessage, bool>> condition = w => w.UserId == Guid.Parse(TempCurrentUserConsts.ID);
-        var next = await _repository.GetNextWebsiteMessage(query.WebsiteMessageId, condition);
-        query.Result = next != null ? next.Id : default;
     }
 
     private async Task<Expression<Func<WebsiteMessage, bool>>> CreateFilteredPredicate(GetWebsiteMessageInputDto inputDto)
@@ -109,7 +95,16 @@ public class WebsiteMessageQueryHandler
     {
         foreach (var item in dtos)
         {
-            item.ZhaiYao = HtmlHelper.CutString(item.Content, 250);
+            item.Abstract = HtmlHelper.CutString(item.Content, 250);
         }
+    }
+
+    private async Task FillDetailDto(WebsiteMessageDto dto)
+    {
+        Expression<Func<WebsiteMessage, bool>> condition = w => w.UserId == Guid.Parse(TempCurrentUserConsts.ID);
+        var prev = await _repository.GetPrevWebsiteMessage(dto.Id, condition);
+        var next = await _repository.GetNextWebsiteMessage(dto.Id, condition);
+        dto.PrevId = prev != null ? prev.Id : default;
+        dto.NextId = next != null ? next.Id : default;
     }
 }

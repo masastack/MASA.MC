@@ -25,7 +25,7 @@ public class WebsiteMessageCreatedEventHandler
     }
 
     [EventHandler]
-    public async Task HandleEvent(WebsiteMessageCreatedDomainEvent @event)
+    public async Task HandleEvent(AddWebsiteMessageDomainEvent @event)
     {
         var checkStatus = new List<MessageTaskHistoryStatuses> { MessageTaskHistoryStatuses.Sending, MessageTaskHistoryStatuses.Completed };
         var checkTime = @event.CheckTime;

@@ -23,7 +23,7 @@ public class MessageTaskUpsertDto
 
     public MessageTaskSelectReceiverTypes SelectReceiverType { get; set; } = MessageTaskSelectReceiverTypes.ManualSelection;
 
-    public DateTime? SendTime { get; set; } = DateTime.UtcNow;
+    public DateTimeOffset? SendTime { get; set; } = DateTimeOffset.Now;
 
     public string Sign { get; set; } = string.Empty;
 

@@ -15,11 +15,15 @@ public class WebsiteMessageDto : AuditEntityDto<Guid, Guid>
 
     public string Content { get; set; } = string.Empty;
 
-    public DateTime SendTime { get; set; }
+    public DateTimeOffset SendTime { get; set; }
 
     public bool IsRead { get; set; }
 
-    public DateTime? ReadTime { get; set; }
+    public DateTimeOffset? ReadTime { get; set; }
 
-    public string ZhaiYao { get; set; } = string.Empty;
+    public string Abstract { get; set; } = string.Empty;
+
+    public Guid PrevId { get; set; }
+
+    public Guid NextId { get; set; }
 }
