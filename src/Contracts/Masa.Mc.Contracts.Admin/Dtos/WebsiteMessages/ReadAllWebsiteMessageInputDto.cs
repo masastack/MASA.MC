@@ -3,7 +3,7 @@
 
 namespace Masa.Mc.Contracts.Admin.Dtos.WebsiteMessages;
 
-public class WebsiteMessageChannelListDto: WebsiteMessageDto
+public class ReadAllWebsiteMessageInputDto: GetWebsiteMessageInputDto
 {
-    public long NoReading { get; set; }
+
 }

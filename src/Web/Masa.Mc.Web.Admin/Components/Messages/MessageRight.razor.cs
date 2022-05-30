@@ -87,7 +87,7 @@ public partial class MessageRight
 
     private async Task HandleMarkAllRead()
     {
-        var dto = _queryParam.Adapt<SetAllReadWebsiteMessageInputDto>();
+        var dto = _queryParam.Adapt<ReadAllWebsiteMessageInputDto>();
         await WebsiteMessageService.SetAllReadAsync(dto);
         await SuccessMessageAsync(T("OperationSuccessfulMessage"));
         await LoadData();

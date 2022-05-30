@@ -8,7 +8,7 @@ public partial class MessageLeft : AdminCompontentBase
     [Parameter]
     public EventCallback<Guid?> OnClick { get; set; }
 
-    private List<WebsiteMessageChannelListDto> _entities = new();
+    private List<WebsiteMessageChannelDto> _entities = new();
 
     WebsiteMessageService WebsiteMessageService => McCaller.WebsiteMessageService;
 

@@ -45,7 +45,7 @@ public class WebsiteMessageQueryHandler
     public async Task GetChannelListAsync(GetChannelListWebsiteMessageQuery query)
     {
         var entities = await _repository.GetChannelListAsync(Guid.Parse(TempCurrentUserConsts.ID));
-        var entityDtos = entities.Adapt<List<WebsiteMessageChannelListDto>>();
+        var entityDtos = entities.Adapt<List<WebsiteMessageChannelDto>>();
         await FillChannelListDtos(entityDtos);
         query.Result = entityDtos;
     }
@@ -93,7 +93,7 @@ public class WebsiteMessageQueryHandler
         return query.Where(condition);
     }
 
-    private async Task FillChannelListDtos(List<WebsiteMessageChannelListDto> dtos)
+    private async Task FillChannelListDtos(List<WebsiteMessageChannelDto> dtos)
     {
         var channeIds = dtos.Select(d => d.ChannelId).ToList();
         var channeList = await _channelRepository.GetListAsync(x => channeIds.Contains(x.Id));

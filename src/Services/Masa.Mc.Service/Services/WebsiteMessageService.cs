@@ -33,7 +33,7 @@ public class WebsiteMessageService : ServiceBase
         return query.Result;
     }
 
-    public async Task<List<WebsiteMessageChannelListDto>> GetChannelListAsync(IEventBus eventbus)
+    public async Task<List<WebsiteMessageChannelDto>> GetChannelListAsync(IEventBus eventbus)
     {
         var query = new GetChannelListWebsiteMessageQuery();
         await eventbus.PublishAsync(query);
