@@ -76,6 +76,16 @@ public abstract class AdminCompontentBase : BDomComponentBase
 
     public string T(string key) => I18n.T(key);
 
+    public HubConnection HubConnection { get; set; } = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        HubConnection = new HubConnectionBuilder()
+            .WithUrl(NavigationManager.ToAbsoluteUri($"{McApiOptions.McServiceBaseAddress}/signalr-hubs/notifications"))
+            .Build();
+        await HubConnection.StartAsync();
+    }
+
     public async Task ConfirmAsync(string messgae, Func<Task> callback, AlertTypes type = AlertTypes.Warning)
     {
         if (await PopupService.ConfirmAsync(I18n.T("OperationConfirmation"), messgae, type)) await callback.Invoke();
@@ -123,5 +133,10 @@ public abstract class AdminCompontentBase : BDomComponentBase
             new(T("Enable"), true),
             new(T("Disabled"), false)
         };
+    }
+
+    public override void Dispose()
+    {
+        HubConnection?.DisposeAsync();
     }
 }

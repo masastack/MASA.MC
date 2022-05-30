@@ -144,3 +144,4 @@ global using Masa.Mc.Service.Admin.Application.WebsiteMessages.Commands;
 global using Microsoft.AspNetCore.Authorization;
 global using Masa.Mc.Contracts.Admin.Consts;
 global using Masa.Mc.Service.Admin.Domain.WebsiteMessages.Services;
+global using Magicodes.ExporterAndImporter.Core.Extension;

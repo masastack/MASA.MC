@@ -11,7 +11,6 @@ public partial class Notice : AdminCompontentBase
     public NoticeState NoticeState { get; set; } = default!;
 
     private GetWebsiteMessageInputDto _queryParam = new(5);
-    private HubConnection hubConnection;
 
     WebsiteMessageService WebsiteMessageService => McCaller.WebsiteMessageService;
 
@@ -19,20 +18,17 @@ public partial class Notice : AdminCompontentBase
     {
         NoticeState.OnNoticeChanged += Changed;
 
-        hubConnection = new HubConnectionBuilder()
-            .WithUrl(NavigationManager.ToAbsoluteUri($"{McApiOptions.McServiceBaseAddress}/signalr-hubs/notifications"))
-            .Build();
-        hubConnection.On(SignalRMethodConsts.GET_NOTIFICATION, async () =>
+        await base.OnInitializedAsync();
+
+        HubConnection.On(SignalRMethodConsts.GET_NOTIFICATION, async () =>
         {
             await LoadData();
         });
 
-        hubConnection.On(SignalRMethodConsts.CHECK_NOTIFICATION, async () =>
+        HubConnection.On(SignalRMethodConsts.CHECK_NOTIFICATION, async () =>
         {
             await WebsiteMessageService.CheckAsync();
         });
-
-        await hubConnection.StartAsync();
 
         await WebsiteMessageService.CheckAsync();
     }
@@ -60,6 +56,5 @@ public partial class Notice : AdminCompontentBase
     public override void Dispose()
     {
         NoticeState.OnNoticeChanged -= Changed;
-        hubConnection?.DisposeAsync();
     }
 }

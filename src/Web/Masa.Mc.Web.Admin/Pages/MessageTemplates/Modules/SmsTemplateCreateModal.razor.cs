@@ -14,7 +14,6 @@ public partial class SmsTemplateCreateModal : AdminCompontentBase
     private List<ChannelDto> _channelItems = new();
     private List<SmsTemplateDto> _templateItems = new();
     private ChannelTypes _channelType;
-    private HubConnection hubConnection;
 
     ChannelService ChannelService => McCaller.ChannelService;
 
@@ -24,17 +23,12 @@ public partial class SmsTemplateCreateModal : AdminCompontentBase
 
     protected override async Task OnInitializedAsync()
     {
-        hubConnection = new HubConnectionBuilder()
-            .WithUrl(NavigationManager.ToAbsoluteUri($"{McApiOptions.McServiceBaseAddress}/signalr-hubs/notifications"))
-            .Build();
-
-        hubConnection.On(SignalRMethodConsts.GET_SMS_TEMPLATE, async () =>
+        await base.OnInitializedAsync();
+        HubConnection.On(SignalRMethodConsts.GET_SMS_TEMPLATE, async () =>
         {
             _templateItems = await SmsTemplateService.GetListByChannelIdAsync(_model.ChannelId);
             await InvokeAsync(StateHasChanged);
         });
-
-        await hubConnection.StartAsync();
     }
 
     public async Task OpenModalAsync(ChannelTypes? channelType)
@@ -137,10 +131,5 @@ public partial class SmsTemplateCreateModal : AdminCompontentBase
         string endstr = "}";
         _model.Title = _model.Title.Replace($"{startstr}{args.OldCode}{endstr}", $"{startstr}{args.NewCode}{endstr}");
         _model.Content = _model.Content.Replace($"{startstr}{args.OldCode}{endstr}", $"{startstr}{args.NewCode}{endstr}");
-    }
-
-    public override void Dispose()
-    {
-        hubConnection?.DisposeAsync();
     }
 }
