@@ -37,12 +37,7 @@
     private async Task CustomErrorHandleAsync(Exception exception)
     {
         GlobalConfig.Loading = false;
-        await PopupService.ToastAsync(alert =>
-        {
-            alert.Type = AlertTypes.Error;
-            alert.Title = "Something wrong!";
-            alert.Content = exception.Message;
-        });
+        await PopupService.ToastErrorAsync(exception.Message);
     }
 
     public void Dispose()
