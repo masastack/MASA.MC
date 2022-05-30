@@ -148,3 +148,5 @@ global using Magicodes.ExporterAndImporter.Core.Extension;
 global using Masa.Contrib.Storage.ObjectStorage.Aliyun;
 global using Dapr.Client;
 global using Masa.Contrib.Storage.ObjectStorage.Aliyun.Options;
+global using Masa.Mc.Contracts.Admin.Dtos.Oss;
+global using Masa.BuildingBlocks.Storage.ObjectStorage;

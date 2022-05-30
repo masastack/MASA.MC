@@ -15,8 +15,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="wwwroot\oss\aliyun-oss-sdk.min.js" />
-    <None Include="wwwroot\oss\upload.js" />
+    <None Include="wwwroot\js\oss\aliyun-oss-sdk.min.js" />
+    <None Include="wwwroot\js\oss\upload.js" />
   </ItemGroup>
 
 

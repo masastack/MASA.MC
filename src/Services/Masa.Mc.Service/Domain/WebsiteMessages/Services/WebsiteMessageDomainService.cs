@@ -16,6 +16,8 @@ public class WebsiteMessageDomainService : DomainService
 
     public virtual async Task CreateAsync(MessageData messageData, MessageTaskHistory taskHistory,MessageReceiverUser item)
     {
+        if (await _messageRecordRepository.FindAsync(x => x.MessageTaskHistoryId == taskHistory.Id && x.UserId == item.UserId) != null) return;
+
         var websiteMessage = new WebsiteMessage(taskHistory.MessageTask.ChannelId, item.UserId, messageData.GetDataValue<string>(nameof(MessageTemplate.Title)), messageData.GetDataValue<string>(nameof(MessageTemplate.Content)), taskHistory.SendTime.Value);
 
         var messageRecord = new MessageRecord(item.UserId, websiteMessage.ChannelId, taskHistory.MessageTaskId, taskHistory.Id, item.Variables);

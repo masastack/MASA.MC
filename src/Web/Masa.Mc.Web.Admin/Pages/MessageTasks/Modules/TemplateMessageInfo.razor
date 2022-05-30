@@ -44,10 +44,8 @@
 }
 <MRow>
     <MCol>
-        <MEditor @bind-Value="MessageTemplate.Content"
-                 ReadOnly
-                 ContentStyle="height:200px">
-        </MEditor>
+        <DefaultMarkdown @bind-Value="MessageTemplate.Content">
+        </DefaultMarkdown>
     </MCol>
 </MRow>
 @if (MessageTask.Channel != null && MessageTask.Channel.Type == ChannelTypes.WebsiteMessage)

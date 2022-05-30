@@ -63,3 +63,5 @@ global using Masa.Mc.Contracts.Admin.Consts;
 global using Masa.Mc.Web.Admin.Store;
 global using BlazorDownloadFile;
 global using Masa.Mc.Web.Admin.Components.Messages;
+global using Microsoft.JSInterop;
+global using Masa.Mc.ApiGateways.Caller.Services.Oss;

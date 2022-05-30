@@ -41,12 +41,9 @@
                             </MTextField>
                         </MCol>
                     </MRow>
-                    <MRow>
+                    <MRow >
                         <MCol Cols="12">
-                            <MEditor @bind-Value="_model.Content"
-                                     ContentStyle="height:200px"
-                                     Placeholder="@T("DisplayName.MessageTemplateContent")">
-                            </MEditor>
+                            <DefaultMarkdown @bind-Value="_model.Content"></DefaultMarkdown>
                         </MCol>
                     </MRow>
                     <MRow>
