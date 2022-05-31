@@ -1,5 +1,5 @@
 ﻿@inherits AdminCompontentBase
-<MMenu OffsetX Left OffsetY>
+<MMenu OffsetX Left OffsetY Style="border-radius: 16px !important">
     <ActivatorContent Context="menuContext">
         @if (!NoticeState.IsRead)
         {
@@ -13,7 +13,7 @@
         }
     </ActivatorContent>
     <ChildContent>
-        <MCard MaxWidth="400"
+        <MCard Width="400"
                Style="background-color:#4318FF">
             <MToolbar Color="blue darken-4"
                       Dark>
@@ -42,10 +42,10 @@
                     </MListItem>
                 }
             </MList>
-            <MList Roboto>
+            <MList Dense>
                 <MListItem Link Href="/websiteMessages/websiteMessageManagement" Class="border-top-solid pt-2">
                     <MListItemIcon Class="mr-0">
-                        <MIcon Size="16" Color="#7681AB">mdi-keyboard-backspace</MIcon>
+                        <MIcon Size="12" Color="#7681AB" Class="pr-3 mc-icon icon-keyboard-backspace">icon-keyboard-backspace</MIcon>
                     </MListItemIcon>
 
                     <MListItemContent>
