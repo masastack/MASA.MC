@@ -1,12 +1,12 @@
 ﻿@inherits AdminCompontentBase
 <MCard Class="mx-auto full-height">
-    <MCardTitle Class="font-24-bold neutral-text-emphasis-secondary">
+    <MCardTitle Class="font-24-bold neutral-text-emphasis-secondary pa-6">
         @T("Permission.WebsiteMessageManagement")
     </MCardTitle>
 
     <MList Subheader
            TwoLine>
-        <MListItem Link OnClick="()=>HandleOnClick(null)">
+        <MListItem Link OnClick="()=>HandleOnClick(null)" Class="pl-8">
             <MListItemAvatar Class="overflow-visible">
                 @if (_channels.Any(x => !x.IsRead))
                 {
@@ -35,7 +35,7 @@
 
         @foreach (var item in _channels)
         {
-            <MListItem Link OnClick="()=>HandleOnClick(item.ChannelId)">
+            <MListItem Link OnClick="()=>HandleOnClick(item.ChannelId)" Class="pl-8">
                 <MListItemAvatar Class="overflow-visible">
                     @if (item.NoReading == 0)
                     {
@@ -55,7 +55,7 @@
                     <MListItemSubtitle Class="font-12 neutral-text-regular-secondary">@item.Title</MListItemSubtitle>
                 </MListItemContent>
 
-                <MListItemAction>
+                <MListItemAction Class="align-self-start">
                     <MListItemActionText Class="font-10 neutral-text-regular-secondary">@item.SendTime.Humanize(culture:new CultureInfo(I18n.CurrentLanguage))</MListItemActionText>
                 </MListItemAction>
             </MListItem>

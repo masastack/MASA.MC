@@ -1,4 +1,4 @@
-﻿.border-top-solid {
+﻿::deep .border-top-solid {
     box-shadow: inset 0px 1px 0px #E9EDF7;
 }
 ::deep .m-menu__content {
