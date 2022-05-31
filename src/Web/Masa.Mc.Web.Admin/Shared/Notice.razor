@@ -30,8 +30,8 @@
                 @foreach (var item in NoticeState.Notices)
                 {
                     <MListItem Link Href="@($"/websiteMessages/websiteMessageManagement/{item.Id}")">
-                        <MListItemAvatar>
-                            <EmptyAvatar Value="@item.Channel?.DisplayName" />
+                        <MListItemAvatar Class="mt-2">
+                            <EmptyAvatar Value="@item.Channel?.DisplayName" Size="40" />
                         </MListItemAvatar>
 
                         <MListItemContent>
@@ -42,11 +42,10 @@
                     </MListItem>
                 }
             </MList>
-            <MList Dense>
-                <MDivider Inset></MDivider>
-                <MListItem Link Href="/websiteMessages/websiteMessageManagement">
-                    <MListItemIcon>
-                        <MIcon>mdi-keyboard-backspace</MIcon>
+            <MList Roboto>
+                <MListItem Link Href="/websiteMessages/websiteMessageManagement" Class="border-top-solid pt-2">
+                    <MListItemIcon Class="mr-0">
+                        <MIcon Size="16" Color="#7681AB">mdi-keyboard-backspace</MIcon>
                     </MListItemIcon>
 
                     <MListItemContent>
