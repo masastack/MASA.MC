@@ -20,7 +20,7 @@ public class ChannelDomainService : DomainService
         {
             await _repository.UnitOfWork.SaveChangesAsync();
             await _repository.UnitOfWork.CommitAsync();
-            await EventBus.PublishAsync(new SmsTemplateSyncDomainEvent(channel.Id));
+            await EventBus.PublishAsync(new SmsTemplateSynchroIntegrationDomainEvent(channel.Id));
         }
     }
 

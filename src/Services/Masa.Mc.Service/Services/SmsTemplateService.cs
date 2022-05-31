@@ -10,7 +10,6 @@ public class SmsTemplateService : ServiceBase
     {
         MapGet(GetListByChannelIdAsync);
         MapPost(SyncAsync);
-        MapPost(SyncHandlerAsync);
     }
 
     public async Task<List<SmsTemplateDto>> GetListByChannelIdAsync(IEventBus eventbus, Guid channelId)
@@ -20,15 +19,10 @@ public class SmsTemplateService : ServiceBase
         return query.Result;
     }
 
-    public async Task SyncAsync(IEventBus eventbus, SmsTemplateSyncInputDto inputDto)
+    [Topic(DAPR_PUBSUB_NAME, nameof(SmsTemplateSynchroIntegrationDomainEvent))]
+    public async Task SyncAsync(IEventBus eventbus, SmsTemplateSynchroIntegrationDomainEvent @event)
     {
-        var command = new SyncSmsTemplateCommand(inputDto.ChannelId);
+        var command = new SyncSmsTemplateCommand(@event.ChannelId);
         await eventbus.PublishAsync(command); 
-    }
-
-    [Topic(DAPR_PUBSUB_NAME, nameof(SmsTemplateSyncDomainEvent))]
-    public async Task SyncHandlerAsync(SmsTemplateSyncDomainEvent @event, [FromServices] SmsTemplateSyncEventHandler handler)
-    {
-        await handler.HandleEvent(new SmsTemplateSyncDomainEvent(@event.ChannelId));
     }
 }

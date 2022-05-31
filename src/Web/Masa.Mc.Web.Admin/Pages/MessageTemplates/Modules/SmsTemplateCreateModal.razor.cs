@@ -21,17 +21,6 @@ public partial class SmsTemplateCreateModal : AdminCompontentBase
 
     MessageTemplateService MessageTemplateService => McCaller.MessageTemplateService;
 
-    protected override async Task OnInitializedAsync()
-    {
-        await base.HubConnectionBuilder();
-
-        base.HubConnection?.On(SignalRMethodConsts.GET_SMS_TEMPLATE, async () =>
-        {
-            _templateItems = await SmsTemplateService.GetListByChannelIdAsync(_model.ChannelId);
-            await InvokeAsync(StateHasChanged);
-        });
-    }
-
     public async Task OpenModalAsync(ChannelTypes? channelType)
     {
         _model.ChannelType = ChannelTypes.Sms;
