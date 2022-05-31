@@ -25,7 +25,7 @@ public static class TypeHelper
             typeof(bool),
             typeof(float),
             typeof(decimal),
-            typeof(DateTimeOffset),
+            typeof(DateTime),
             typeof(DateTimeOffset),
             typeof(TimeSpan),
             typeof(Guid)
