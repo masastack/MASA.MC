@@ -1,4 +1,4 @@
-async function ossUploadImage(imageFile, ossParamter) {
+async function ossUpload(file, ossParamter) {
     const client = new OSS(ossParamter);
 
     const headers = {
@@ -20,7 +20,7 @@ async function ossUploadImage(imageFile, ossParamter) {
         // 'x-oss-forbid-overwrite': 'true',
     };
 
-    return await putObject(client, imageFile, headers);
+    return await putObject(client, file, headers);
 }
 
 async function putObject(client, file, headers) {

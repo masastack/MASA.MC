@@ -4,14 +4,13 @@
     let fileInput = element.querySelector('input[type=file]')
     let files = fileInput.files;
 
-    ossUploadImage(files[index], ossParamter).then(imageUrl => {
+    ossUpload(files[index], ossParamter).then(fileUrl => {
         let succFileText = "";
         if (vditor && vditor.vditor.currentMode === "wysiwyg") {
-            succFileText += `\n <img alt=${imageUrl} src="${imageUrl}">`;
+            succFileText += `\n <img alt=${fileUrl} src="${fileUrl}">`;
         } else {
-            succFileText += `\n![${imageUrl}](${imageUrl})`;
+            succFileText += `\n![${fileUrl}](${fileUrl})`;
         }
-        console.log("ossUploadImage", imageUrl);
         document.execCommand("insertHTML", false, succFileText);
         index += 1;
         if (index < files.length) {
