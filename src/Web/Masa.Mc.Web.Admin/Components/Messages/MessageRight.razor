@@ -1,6 +1,6 @@
 ﻿@inherits AdminCompontentBase
 <MCard Class="full-height">
-    <MCardTitle>
+    <MCardTitle Class="pl-2 pt-6">
         <div class="d-flex full-width" style="height: 40px !important;">
             <MListItem>
                 <MListItemAvatar Class="overflow-visible">
@@ -40,7 +40,6 @@
                      OnClearClick="RefreshAsync"
                      OnSelectedItemUpdate="RefreshAsync">
             </MSelect>
-
             <MMenu OffsetY>
                 <ActivatorContent>
                     <div class="ml-6 d-flex button rounded-circle" @attributes="@context.Attrs">
