@@ -42,8 +42,6 @@ public class SmsTemplateCommandHandler
             await _smsTemplateRepository.RemoveRangeAsync(removeList);
             var smsTemplateList = aliyunSmsTemplateList.Select(item => new SmsTemplate(channel.Id, item.TemplateCode, item.TemplateName, AliyunSmsTemplateTypeMapToSmsTemplateType(item.TemplateType), AliyunSmsTemplateAuditStatusMapToAuditStatus(item.AuditStatus), item.TemplateContent, item.Reason.RejectInfo));
             await _smsTemplateRepository.AddRangeAsync(smsTemplateList);
-            await _smsTemplateRepository.UnitOfWork.SaveChangesAsync();
-            await _smsTemplateRepository.UnitOfWork.CommitAsync();
         }
     }
 
