@@ -16,7 +16,7 @@ public class WebsiteMessageDomainService : DomainService
 
     public virtual async Task CreateAsync(MessageData messageData, MessageTaskHistory taskHistory, MessageReceiverUser item)
     {
-        if (await IsExistsAsync(taskHistory.Id, item.UserId)) return;
+        if (await _messageRecordRepository.IsExistsAsync(taskHistory.Id, item.UserId)) return;
 
         var websiteMessage = new WebsiteMessage(taskHistory.MessageTask.ChannelId, item.UserId, messageData.GetDataValue<string>(nameof(MessageTemplate.Title)), messageData.GetDataValue<string>(nameof(MessageTemplate.Content)), taskHistory.SendTime.Value);
 
@@ -26,11 +26,6 @@ public class WebsiteMessageDomainService : DomainService
 
         await _repository.AddAsync(websiteMessage);
         await _messageRecordRepository.AddAsync(messageRecord);
-    }
-
-    public virtual async Task<bool> IsExistsAsync(Guid taskHistoryId, Guid userId)
-    {
-        return await _messageRecordRepository.FindAsync(x => x.MessageTaskHistoryId == taskHistoryId && x.UserId == userId) != null;
     }
 
     private void SetExtraProperties(MessageRecord messageRecord, MessageData messageData, MessageReceiverUser item)
