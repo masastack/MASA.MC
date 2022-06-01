@@ -77,11 +77,13 @@ export function destroy(domRef) {
 }
 export function disabled(domRef) {
     domRef.Vditor.disabled();
-    let obj = domRef.querySelector('[data-type=preview]');
-    obj.click();
 }
 export function enable(domRef) {
     domRef.Vditor.enable();
+}
+export function preview(domRef) {
+    let obj = domRef.querySelector('[data-type=preview]');
+    obj.click();
 }
 function SetDefaultFileNameHandle(vditorOptions) {
     let { upload } = vditorOptions;
