@@ -95,7 +95,7 @@ public class WebsiteMessageQueryHandler
     {
         foreach (var item in dtos)
         {
-            item.Abstract = HtmlHelper.CutString(item.Content, 250);
+            item.Abstract = HtmlHelper.CutString(item.Content, 250).Trim();
         }
     }
 
