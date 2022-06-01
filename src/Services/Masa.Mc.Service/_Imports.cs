@@ -150,3 +150,6 @@ global using Dapr.Client;
 global using Masa.Contrib.Storage.ObjectStorage.Aliyun.Options;
 global using Masa.Mc.Contracts.Admin.Dtos.Oss;
 global using Masa.BuildingBlocks.Storage.ObjectStorage;
+global using Masa.BuildingBlocks.BasicAbility.Auth;
+global using Masa.Mc.Contracts.Admin.Dtos.Subjects;
+global using Masa.Mc.Service.Admin.Application.Subjects.Queries;

@@ -13,6 +13,7 @@
 	<ItemGroup>
 		<PackageReference Include="Mapster" Version="7.3.0" />
 		<PackageReference Include="Masa.BuildingBlocks.Dispatcher.Events" Version="0.4.0-rc.4" />
+		<PackageReference Include="Masa.Contrib.BasicAbility.Auth" Version="0.4.0" />
 		<PackageReference Include="Masa.Contrib.Configuration" Version="0.4.0-rc.4" />
 		<PackageReference Include="Masa.Contrib.Data.Contracts.EF" Version="0.4.0-rc.4" />
 		<PackageReference Include="Masa.Contrib.Data.EntityFrameworkCore.SqlServer" Version="0.4.0-rc.4" />

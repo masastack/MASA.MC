@@ -1,8 +1,11 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
+using Masa.Contrib.BasicAbility.Auth;
+
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDaprClient();
+builder.Services.AddAuthClient(builder.Configuration.GetValue<string>("AuthClient:Url"));
 builder.Services.AddActors(options =>
 {
 });
