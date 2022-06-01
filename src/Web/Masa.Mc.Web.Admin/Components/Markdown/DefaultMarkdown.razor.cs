@@ -12,6 +12,9 @@ public partial class DefaultMarkdown: AdminCompontentBase
     public string Html { get; set; } = string.Empty;
 
     [Parameter]
+    public bool Reaonly { get; set; }
+
+    [Parameter]
     public EventCallback<string> ValueChanged { get; set; }
 
     [Parameter]
@@ -19,9 +22,17 @@ public partial class DefaultMarkdown: AdminCompontentBase
 
     private OssService OssService => McCaller.OssService;
 
-    private MMarkdown Ref { get; set; }
+    private Markdown Ref { get; set; }
 
     private IJSObjectReference VditorHelper;
+
+    private Dictionary<string, object> _options = new Dictionary<string, object>();
+
+    protected override void OnInitialized()
+    {
+        _options.Add("mode", "ir");
+        base.OnInitialized();
+    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {

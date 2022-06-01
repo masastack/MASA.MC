@@ -44,14 +44,14 @@
 }
 <MRow>
     <MCol>
-        <DefaultMarkdown @bind-Html="MessageTemplate.Content" @bind-Value="MessageTemplate.Markdown">
+        <DefaultMarkdown @bind-Html="MessageTemplate.Content" @bind-Value="MessageTemplate.Markdown" Reaonly>
         </DefaultMarkdown>
     </MCol>
 </MRow>
 @if (MessageTask.Channel != null && MessageTask.Channel.Type == ChannelTypes.WebsiteMessage)
 {
     <MRow Class="mx-1 pt-6">
-        <MCheckbox Class="mt-1 mr-2" @bind-Value="MessageTemplate.IsJump" Label="@T("DisplayName.MessageTemplateIsJump")"></MCheckbox>
+        <MCheckbox Class="mt-1 mr-2" @bind-Value="MessageTemplate.IsJump" Label="@T("DisplayName.MessageTemplateIsJump")" Disabled></MCheckbox>
         <MTextField @bind-Value="MessageTemplate.JumpUrl"
                 Label="@T("DisplayName.MessageTemplateJumpUrl")"
                 Outlined
