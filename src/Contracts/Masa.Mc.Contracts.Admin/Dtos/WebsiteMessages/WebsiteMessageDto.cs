@@ -15,6 +15,8 @@ public class WebsiteMessageDto : AuditEntityDto<Guid, Guid>
 
     public string Content { get; set; } = string.Empty;
 
+    public string LinkUrl { get; set; } = string.Empty;
+
     public DateTimeOffset SendTime { get; set; }
 
     public bool IsRead { get; set; }

@@ -113,6 +113,7 @@ public static class McDbContextModelBuilderExtensions
         {
             b.ToTable(MCConsts.DbTablePrefix + "WebsiteMessages", MCConsts.DbSchema);
             b.Property(w => w.Title).IsRequired().HasMaxLength(128);
+            b.Property(m => m.LinkUrl).HasMaxLength(256);
         });
 
         builder.Entity<WebsiteMessageCursor>(b =>

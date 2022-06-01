@@ -39,11 +39,17 @@ public partial class MessageRight
         StateHasChanged();
     }
 
-    private async Task HandleOnClick(Guid id)
+    private async Task HandleOnClick(WebsiteMessageDto item)
     {
+        if (!string.IsNullOrEmpty(item.LinkUrl))
+        {
+            NavigationManager.NavigateTo(item.LinkUrl);
+            return;
+        }
+
         if (OnClick.HasDelegate)
         {
-            await OnClick.InvokeAsync(id);
+            await OnClick.InvokeAsync(item.Id);
         }
     }
 

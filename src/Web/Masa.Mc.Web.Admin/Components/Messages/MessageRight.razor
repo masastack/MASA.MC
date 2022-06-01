@@ -82,7 +82,7 @@
                TwoLine>
             @foreach (var item in _entities.Result)
             {
-                <MListItem Link OnClick="()=>HandleOnClick(item.Id)">
+                <MListItem Link OnClick="()=>HandleOnClick(item)">
                     <MListItemContent>
                         <MListItemTitle Class="py-2 font-18-medium neutral-text-emphasis-secondary">@item.Title</MListItemTitle>
 
