@@ -65,3 +65,4 @@ global using BlazorDownloadFile;
 global using Masa.Mc.Web.Admin.Components.Messages;
 global using Microsoft.JSInterop;
 global using Masa.Mc.ApiGateways.Caller.Services.Oss;
+global using Masa.Blazor.Components.Editor;

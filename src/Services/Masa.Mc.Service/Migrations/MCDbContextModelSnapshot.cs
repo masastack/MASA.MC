@@ -183,6 +183,10 @@ namespace Masa.Mc.Service.Admin.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
+                    b.Property<string>("Markdown")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("ModificationTime")
                         .HasColumnType("datetime2");
 
@@ -493,6 +497,10 @@ namespace Masa.Mc.Service.Admin.Migrations
                         .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("Markdown")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("ModificationTime")
                         .HasColumnType("datetime2");

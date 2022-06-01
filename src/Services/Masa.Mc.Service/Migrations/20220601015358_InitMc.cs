@@ -1,7 +1,4 @@
-﻿// Copyright (c) MASA Stack All rights reserved.
-// Licensed under the Apache License. See LICENSE.txt in the project root for license information.
-
-using System;
+﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -26,7 +23,8 @@ namespace Masa.Mc.Service.Admin.Migrations
                     Creator = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Modifier = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ModificationTime = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    ModificationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -54,6 +52,27 @@ namespace Masa.Mc.Service.Admin.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "MessageInfos",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Markdown = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsJump = table.Column<bool>(type: "bit", nullable: false),
+                    JumpUrl = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    Creator = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Modifier = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ModificationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MessageInfos", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "MessageTemplates",
                 columns: table => new
                 {
@@ -62,6 +81,7 @@ namespace Masa.Mc.Service.Admin.Migrations
                     DisplayName = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Markdown = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Example = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TemplateId = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
                     IsJump = table.Column<bool>(type: "bit", nullable: false),
@@ -69,16 +89,17 @@ namespace Masa.Mc.Service.Admin.Migrations
                     Sign = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
                     AuditStatus = table.Column<int>(type: "int", nullable: false),
-                    AuditTime = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    InvalidTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    AuditTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    InvalidTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     AuditReason = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TemplateType = table.Column<int>(type: "int", nullable: false),
-                    DayLimit = table.Column<long>(type: "bigint", nullable: false),
+                    PerDayLimit = table.Column<long>(type: "bigint", nullable: false),
                     IsStatic = table.Column<bool>(type: "bit", nullable: false),
                     Creator = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Modifier = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ModificationTime = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    ModificationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -95,7 +116,8 @@ namespace Masa.Mc.Service.Admin.Migrations
                     Creator = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Modifier = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ModificationTime = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    ModificationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -125,26 +147,112 @@ namespace Masa.Mc.Service.Admin.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "WebsiteMessageCursors",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UpdateTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    Creator = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Modifier = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ModificationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_WebsiteMessageCursors", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MessageRecords",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ChannelId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MessageTaskId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MessageTaskHistoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Success = table.Column<bool>(type: "bit", nullable: true),
+                    SendTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    FailureReason = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ExtraProperties = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Variables = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Creator = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Modifier = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ModificationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MessageRecords", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_MessageRecords_Channels_ChannelId",
+                        column: x => x.ChannelId,
+                        principalTable: "Channels",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "MessageTasks",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    DisplayName = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
                     ChannelId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     EntityType = table.Column<int>(type: "int", nullable: false),
                     EntityId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Receivers = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    SendingRules = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsDraft = table.Column<bool>(type: "bit", nullable: false),
                     IsEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    ReceiverType = table.Column<int>(type: "int", nullable: false),
+                    SelectReceiverType = table.Column<int>(type: "int", nullable: false),
+                    SendTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    Sign = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    Receivers = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SendRules = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Variables = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Creator = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Modifier = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ModificationTime = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    ModificationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_MessageTasks", x => x.Id);
                     table.ForeignKey(
                         name: "FK_MessageTasks_Channels_ChannelId",
+                        column: x => x.ChannelId,
+                        principalTable: "Channels",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "WebsiteMessages",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ChannelId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SendTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    IsRead = table.Column<bool>(type: "bit", nullable: false),
+                    ReadTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    Creator = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Modifier = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ModificationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_WebsiteMessages", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_WebsiteMessages_Channels_ChannelId",
                         column: x => x.ChannelId,
                         principalTable: "Channels",
                         principalColumn: "Id",
@@ -179,11 +287,11 @@ namespace Masa.Mc.Service.Admin.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     GroupId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    DataId = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DisplayName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SubjectId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    DisplayName = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
                     Avatar = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
                     Type = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -216,6 +324,62 @@ namespace Masa.Mc.Service.Admin.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "MessageTaskHistorys",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MessageTaskId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TaskHistoryNo = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    ReceiverType = table.Column<int>(type: "int", nullable: false),
+                    SelectReceiverType = table.Column<int>(type: "int", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    Receivers = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SendRules = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SendTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    CompletionTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    WithdrawTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    Sign = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Variables = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Creator = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Modifier = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ModificationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MessageTaskHistorys", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_MessageTaskHistorys_MessageTasks_MessageTaskId",
+                        column: x => x.MessageTaskId,
+                        principalTable: "MessageTasks",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MessageReceiverUsers",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    DisplayName = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    Variables = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    MessageTaskHistoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MessageReceiverUsers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_MessageReceiverUsers_MessageTaskHistorys_MessageTaskHistoryId",
+                        column: x => x.MessageTaskHistoryId,
+                        principalTable: "MessageTaskHistorys",
+                        principalColumn: "Id");
+                });
+
             migrationBuilder.CreateIndex(
                 name: "index_eventid_version",
                 table: "IntegrationEventLog",
@@ -230,6 +394,21 @@ namespace Masa.Mc.Service.Admin.Migrations
                 name: "index_state_timessent_modificationtime",
                 table: "IntegrationEventLog",
                 columns: new[] { "State", "TimesSent", "ModificationTime" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MessageReceiverUsers_MessageTaskHistoryId",
+                table: "MessageReceiverUsers",
+                column: "MessageTaskHistoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MessageRecords_ChannelId",
+                table: "MessageRecords",
+                column: "ChannelId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MessageTaskHistorys_MessageTaskId",
+                table: "MessageTaskHistorys",
+                column: "MessageTaskId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_MessageTasks_ChannelId",
@@ -255,6 +434,11 @@ namespace Masa.Mc.Service.Admin.Migrations
                 name: "IX_ReceiverGroupUsers_GroupId_UserId",
                 table: "ReceiverGroupUsers",
                 columns: new[] { "GroupId", "UserId" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WebsiteMessages_ChannelId",
+                table: "WebsiteMessages",
+                column: "ChannelId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -263,7 +447,13 @@ namespace Masa.Mc.Service.Admin.Migrations
                 name: "IntegrationEventLog");
 
             migrationBuilder.DropTable(
-                name: "MessageTasks");
+                name: "MessageInfos");
+
+            migrationBuilder.DropTable(
+                name: "MessageReceiverUsers");
+
+            migrationBuilder.DropTable(
+                name: "MessageRecords");
 
             migrationBuilder.DropTable(
                 name: "MessageTemplateItems");
@@ -278,13 +468,25 @@ namespace Masa.Mc.Service.Admin.Migrations
                 name: "SmsTemplates");
 
             migrationBuilder.DropTable(
-                name: "Channels");
+                name: "WebsiteMessageCursors");
+
+            migrationBuilder.DropTable(
+                name: "WebsiteMessages");
+
+            migrationBuilder.DropTable(
+                name: "MessageTaskHistorys");
 
             migrationBuilder.DropTable(
                 name: "MessageTemplates");
 
             migrationBuilder.DropTable(
                 name: "ReceiverGroups");
+
+            migrationBuilder.DropTable(
+                name: "MessageTasks");
+
+            migrationBuilder.DropTable(
+                name: "Channels");
         }
     }
 }

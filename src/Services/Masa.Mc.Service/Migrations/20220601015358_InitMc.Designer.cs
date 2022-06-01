@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Masa.Mc.Service.Admin.Migrations
 {
     [DbContext(typeof(McDbContext))]
-    [Migration("20220524065038_WebsiteMessage")]
-    partial class WebsiteMessage
+    [Migration("20220601015358_InitMc")]
+    partial class InitMc
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -185,6 +185,10 @@ namespace Masa.Mc.Service.Admin.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
+                    b.Property<string>("Markdown")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("ModificationTime")
                         .HasColumnType("datetime2");
 
@@ -239,8 +243,8 @@ namespace Masa.Mc.Service.Admin.Migrations
                     b.Property<Guid>("Modifier")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime?>("SendTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset?>("SendTime")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<bool?>("Success")
                         .HasColumnType("bit");
@@ -352,8 +356,8 @@ namespace Masa.Mc.Service.Admin.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("SendTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset?>("SendTime")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Sign")
                         .IsRequired()
@@ -377,8 +381,8 @@ namespace Masa.Mc.Service.Admin.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime?>("CompletionTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset?>("CompletionTime")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
@@ -412,8 +416,8 @@ namespace Masa.Mc.Service.Admin.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("SendTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset?>("SendTime")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Sign")
                         .IsRequired()
@@ -431,8 +435,8 @@ namespace Masa.Mc.Service.Admin.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("WithdrawTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset?>("WithdrawTime")
+                        .HasColumnType("datetimeoffset");
 
                     b.HasKey("Id");
 
@@ -454,8 +458,8 @@ namespace Masa.Mc.Service.Admin.Migrations
                     b.Property<int>("AuditStatus")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("AuditTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset?>("AuditTime")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<Guid>("ChannelId")
                         .HasColumnType("uniqueidentifier");
@@ -479,8 +483,8 @@ namespace Masa.Mc.Service.Admin.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("InvalidTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset?>("InvalidTime")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -495,6 +499,10 @@ namespace Masa.Mc.Service.Admin.Migrations
                         .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("Markdown")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("ModificationTime")
                         .HasColumnType("datetime2");
@@ -743,11 +751,11 @@ namespace Masa.Mc.Service.Admin.Migrations
                     b.Property<Guid>("Modifier")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime?>("ReadTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset?>("ReadTime")
+                        .HasColumnType("datetimeoffset");
 
-                    b.Property<DateTime>("SendTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset>("SendTime")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -785,8 +793,8 @@ namespace Masa.Mc.Service.Admin.Migrations
                     b.Property<Guid>("Modifier")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("UpdateTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset>("UpdateTime")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");

@@ -1,25 +1,31 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
-namespace Masa.Mc.Web.Admin.Components.Markdown;
+namespace Masa.Mc.Web.Admin.Components.Editor;
 
-public partial class DefaultMarkdown: AdminCompontentBase
+public partial class DefaultEditor : AdminCompontentBase
 {
     [Parameter]
     public string Value { get; set; } = string.Empty;
 
     [Parameter]
-    public string Html { get; set; } = string.Empty;
-
-    [Parameter]
     public EventCallback<string> ValueChanged { get; set; }
 
     [Parameter]
-    public EventCallback<string> HtmlChanged { get; set; }
+    public string ContentClass { get; set; }
+
+    [Parameter]
+    public string ContentStyle { get; set; }
+
+    [Parameter]
+    public string Placeholder { get; set; }
+
+    [Parameter]
+    public bool ReadOnly { get; set; }
 
     private OssService OssService => McCaller.OssService;
 
-    private MMarkdown Ref { get; set; }
+    private MEditor Ref { get; set; }
 
     private IJSObjectReference VditorHelper;
 
@@ -30,12 +36,13 @@ public partial class DefaultMarkdown: AdminCompontentBase
         {
             return;
         }
-        VditorHelper = await Js.InvokeAsync<IJSObjectReference>("import", "./_content/Masa.Mc.Web.Admin/js/vditor/vditor-helper.js");
+        VditorHelper = await Js.InvokeAsync<IJSObjectReference>("import", "./_content/Masa.Mc.Web.Admin/js/vditor/quill-helper.js");
     }
 
-    private async Task HandleUploadAsync()
+    private async Task<bool> HandleUploadAsync(List<EditorUploadFileItem> flist)
     {
         var paramter = await OssService.GetSecurityTokenAsync();
         await VditorHelper.InvokeVoidAsync("upload", Ref.Ref, paramter);
+        return true;
     }
 }

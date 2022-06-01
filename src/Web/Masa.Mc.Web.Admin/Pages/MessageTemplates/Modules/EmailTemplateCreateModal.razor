@@ -43,7 +43,7 @@
                     </MRow>
                     <MRow >
                         <MCol Cols="12">
-                            <DefaultMarkdown @bind-Value="_model.Content"></DefaultMarkdown>
+                            <DefaultMarkdown @bind-Html="_model.Content" @bind-Value="_model.Markdown"></DefaultMarkdown>
                             <MInput @bind-Value="_model.Content" />
                         </MCol>
                     </MRow>

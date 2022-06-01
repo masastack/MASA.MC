@@ -14,10 +14,10 @@
         line-height: 30px;
     }
 
-        .detail-box .content p {
+        .detail-box .content ::deep p {
             margin: 10px 0;
         }
 
-        .detail-box .content img {
+        .detail-box .content ::deep img {
             max-width: 100%;
         }

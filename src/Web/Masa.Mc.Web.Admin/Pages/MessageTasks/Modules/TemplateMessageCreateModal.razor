@@ -63,7 +63,7 @@
                                 }
                                 <MRow>
                                     <MCol>
-                                        <DefaultMarkdown @bind-Value="_messageInfo.Content"></DefaultMarkdown>
+                                        <DefaultMarkdown @bind-Html="_messageInfo.Content" @bind-Value="_messageInfo.Markdown"></DefaultMarkdown>
                                     </MCol>
                                 </MRow>
                                 if (_messageInfo.Channel != null && _messageInfo.Channel.Type == ChannelTypes.WebsiteMessage)

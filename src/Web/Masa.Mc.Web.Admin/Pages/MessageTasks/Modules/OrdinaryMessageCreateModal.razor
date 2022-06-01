@@ -48,7 +48,7 @@
                             }
                             <MRow>
                                 <MCol>
-                                    <DefaultMarkdown @bind-Value="_model.MessageInfo.Content"></DefaultMarkdown>
+                                    <DefaultMarkdown @bind-Html="_model.MessageInfo.Content" @bind-Value="_model.MessageInfo.Markdown"></DefaultMarkdown>
                                     <MInput @bind-Value="_model.MessageInfo.Content" />
                                 </MCol>
                             </MRow>
