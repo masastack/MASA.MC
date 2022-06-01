@@ -1,57 +1,59 @@
 ﻿@inherits AdminCompontentBase
-<MMenu OffsetX Left OffsetY ContentStyle="border-radius:16px !important">
-    <ActivatorContent Context="menuContext">
-        @if (!NoticeState.IsRead)
-        {
-            <MBadge Color="pink" Bordered Dot OffsetX="10" OffsetY="10">
+<div class="notice">
+    <MMenu OffsetX Left OffsetY ContentStyle="border-radius:16px !important">
+        <ActivatorContent Context="menuContext">
+            @if (!NoticeState.IsRead)
+            {
+                <MBadge Color="pink" Bordered Dot OffsetX="10" OffsetY="10">
+                    <MIcon @attributes="menuContext.Attrs" Size=24 Class="pl-2" Color="neutral-lighten-3">mdi-bell</MIcon>
+                </MBadge>
+            }
+            else
+            {
                 <MIcon @attributes="menuContext.Attrs" Size=24 Class="pl-2" Color="neutral-lighten-3">mdi-bell</MIcon>
-            </MBadge>
-        }
-        else
-        {
-            <MIcon @attributes="menuContext.Attrs" Size=24 Class="pl-2" Color="neutral-lighten-3">mdi-bell</MIcon>
-        }
-    </ActivatorContent>
-    <ChildContent>
-        <MCard Width="400">
-            <MToolbar Color="blue darken-4"
-                      Dark>
-                <MToolbarTitle Class="font-18-medium">@T("WebsiteMessage")</MToolbarTitle>
+            }
+        </ActivatorContent>
+        <ChildContent>
+            <MCard Width="400">
+                <MToolbar Color="blue darken-4"
+                          Dark>
+                    <MToolbarTitle Class="font-18-medium">@T("WebsiteMessage")</MToolbarTitle>
 
-                <MSpacer></MSpacer>
+                    <MSpacer></MSpacer>
 
-                <MButton Icon>
-                    <MIcon>mdi-bell-outline</MIcon>
-                </MButton>
-            </MToolbar>
+                    <MButton Icon>
+                        <MIcon>mdi-bell-outline</MIcon>
+                    </MButton>
+                </MToolbar>
 
-            <MList ThreeLine>
-                @foreach (var item in NoticeState.Notices)
-                {
-                    <MListItem Link Href="@($"/websiteMessages/websiteMessageManagement/{item.Id}")">
-                        <MListItemAvatar Class="mt-2">
-                            <EmptyAvatar Value="@item.Channel?.DisplayName" Size="40" />
-                        </MListItemAvatar>
+                <MList ThreeLine>
+                    @foreach (var item in NoticeState.Notices)
+                    {
+                        <MListItem Link Href="@($"/websiteMessages/websiteMessageManagement/{item.Id}")">
+                            <MListItemAvatar Class="mt-2">
+                                <EmptyAvatar Value="@item.Channel?.DisplayName" Size="40" />
+                            </MListItemAvatar>
+
+                            <MListItemContent>
+                                <MListItemTitle Class="font-14-medium">@item.Channel?.DisplayName</MListItemTitle>
+                                <MListItemSubtitle Class="font-12 py-1">@item.Title</MListItemSubtitle>
+                                <MListItemSubtitle Class="font-10">@item.SendTime.ToString(T("$MonthDayFormat"))</MListItemSubtitle>
+                            </MListItemContent>
+                        </MListItem>
+                    }
+                </MList>
+                <MList Dense>
+                    <MListItem Link Href="/websiteMessages/websiteMessageManagement" Class="border-top-solid pt-2" Style="box-shadow: inset 0px 1px 0px #E9EDF7">
+                        <MListItemIcon Class="mr-0">
+                            <MIcon Size="12" Color="#7681AB" Class="pr-3 mc-icon icon-keyboard-backspace">icon-keyboard-backspace</MIcon>
+                        </MListItemIcon>
 
                         <MListItemContent>
-                            <MListItemTitle Class="font-14-medium">@item.Channel?.DisplayName</MListItemTitle>
-                            <MListItemSubtitle Class="font-12 py-1">@item.Title</MListItemSubtitle>
-                            <MListItemSubtitle Class="font-10">@item.SendTime.ToString(T("$MonthDayFormat"))</MListItemSubtitle>
+                            <MListItemTitle Class="font-12">@T("Description.Notice.MoreTips")</MListItemTitle>
                         </MListItemContent>
                     </MListItem>
-                }
-            </MList>
-            <MList Dense>
-                <MListItem Link Href="/websiteMessages/websiteMessageManagement" Class="border-top-solid pt-2" Style="box-shadow: inset 0px 1px 0px #E9EDF7">
-                    <MListItemIcon Class="mr-0">
-                        <MIcon Size="12" Color="#7681AB" Class="pr-3 mc-icon icon-keyboard-backspace">icon-keyboard-backspace</MIcon>
-                    </MListItemIcon>
-
-                    <MListItemContent>
-                        <MListItemTitle Class="font-12">@T("Description.Notice.MoreTips")</MListItemTitle>
-                    </MListItemContent>
-                </MListItem>
-            </MList>
-        </MCard>
-    </ChildContent>
-</MMenu>
+                </MList>
+            </MCard>
+        </ChildContent>
+    </MMenu>
+</div>

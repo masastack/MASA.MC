@@ -1,6 +1,9 @@
-﻿::deep .border-top-solid {
+﻿.notice ::deep .border-top-solid {
     box-shadow: inset 0px 1px 0px #E9EDF7;
 }
-::deep .m-menu__content {
+.notice ::deep .m-menu__content {
+    border-radius: 16px !important;
+}
+.notice ::deep .m-card {
     border-radius: 16px !important;
 }
