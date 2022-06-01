@@ -1,0 +1,18 @@
+﻿.detail-box {
+    background: #F0F3FA;
+    border-radius: 4px;
+}
+    .detail-box .content {
+        position: relative;
+        color: #333;
+        font-size: 15px;
+        line-height: 30px;
+    }
+
+        .detail-box .content ::deep p {
+            margin: 10px 0;
+        }
+
+        .detail-box .content ::deep img {
+            max-width: 100%;
+        }

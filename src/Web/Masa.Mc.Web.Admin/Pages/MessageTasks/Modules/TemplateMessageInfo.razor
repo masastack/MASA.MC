@@ -44,8 +44,7 @@
 }
 <MRow>
     <MCol>
-        <DefaultMarkdown @bind-Html="MessageTemplate.Content" @bind-Value="MessageTemplate.Markdown" Reaonly>
-        </DefaultMarkdown>
+        <RichText Value="@MessageTemplate.Content"></RichText>
     </MCol>
 </MRow>
 @if (MessageTask.Channel != null && MessageTask.Channel.Type == ChannelTypes.WebsiteMessage)

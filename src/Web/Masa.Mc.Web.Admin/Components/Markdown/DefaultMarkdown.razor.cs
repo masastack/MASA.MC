@@ -22,15 +22,12 @@ public partial class DefaultMarkdown: AdminCompontentBase
 
     private OssService OssService => McCaller.OssService;
 
-    private Markdown Ref { get; set; }
+    private MMarkdown Ref { get; set; }
 
     private IJSObjectReference VditorHelper;
 
-    private Dictionary<string, object> _options = new Dictionary<string, object>();
-
     protected override void OnInitialized()
     {
-        _options.Add("mode", "ir");
         base.OnInitialized();
     }
 
@@ -48,5 +45,19 @@ public partial class DefaultMarkdown: AdminCompontentBase
     {
         var paramter = await OssService.GetSecurityTokenAsync();
         await VditorHelper.InvokeVoidAsync("upload", Ref.Ref, paramter);
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        try
+        {
+            if (VditorHelper != null)
+            {
+                await VditorHelper.DisposeAsync();
+            }
+        }
+        catch (Exception)
+        {
+        }
     }
 }
