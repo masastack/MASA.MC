@@ -61,4 +61,9 @@ public class MessageTaskService : ServiceBase
     {
         return await PostAsync<ImportReceiversDto, ImportResultDto<MessageTaskReceiverDto>>("ImportReceivers", dto) ??new();
     }
+
+    public async Task<byte[]> GenerateReceiverImportTemplateAsync(Guid? messageTemplatesId)
+    {
+        return await GetAsync<byte[]>($"{nameof(GenerateReceiverImportTemplateAsync)}?messageTemplatesId={messageTemplatesId}");
+    }
 }

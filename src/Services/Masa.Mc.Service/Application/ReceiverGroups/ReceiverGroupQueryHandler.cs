@@ -22,7 +22,7 @@ public class ReceiverGroupQueryHandler
     }
 
     [EventHandler]
-    public async Task GetListAsync(GetListReceiverGroupQuery query)
+    public async Task GetListAsync(GetReceiverGroupListQuery query)
     {
         var options = query.Input;
         var queryable = await CreateFilteredQueryAsync(options);

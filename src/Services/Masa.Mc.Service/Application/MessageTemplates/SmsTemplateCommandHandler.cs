@@ -5,20 +5,65 @@ namespace Masa.Mc.Service.Admin.Application.MessageTemplates;
 
 public class SmsTemplateCommandHandler
 {
-    private readonly ISmsTemplateRepository _repository;
-    private readonly IIntegrationEventBus _integrationEventBus;
-    private readonly SmsTemplateDomainService _domainService;
+    private readonly IAliyunSmsAsyncLocal _aliyunSmsAsyncLocal;
+    private readonly ISmsTemplateService _smsTemplateService;
+    private readonly IChannelRepository _channelRepository;
+    private readonly ISmsTemplateRepository _smsTemplateRepository;
 
-    public SmsTemplateCommandHandler(ISmsTemplateRepository repository, IIntegrationEventBus integrationEventBus, SmsTemplateDomainService domainService)
+    public SmsTemplateCommandHandler(IAliyunSmsAsyncLocal aliyunSmsAsyncLocal
+        , ISmsTemplateService smsTemplateService
+        , IChannelRepository channelRepository
+        , ISmsTemplateRepository smsTemplateRepository)
     {
-        _repository = repository;
-        _integrationEventBus = integrationEventBus;
-        _domainService = domainService;
+        _aliyunSmsAsyncLocal = aliyunSmsAsyncLocal;
+        _smsTemplateService = smsTemplateService;
+        _channelRepository = channelRepository;
+        _smsTemplateRepository = smsTemplateRepository;
     }
 
     [EventHandler]
     public async Task SyncAsync(SyncSmsTemplateCommand command)
     {
-        await _domainService.SyncAsync(command.ChannelId);
+        var channel = await _channelRepository.FindAsync(x => x.Id == command.ChannelId);
+        var options = new AliyunSmsOptions
+        {
+            AccessKeyId = channel.GetDataValue<string>(nameof(SmsChannelOptions.AccessKeyId)),
+            AccessKeySecret = channel.GetDataValue<string>(nameof(SmsChannelOptions.AccessKeySecret))
+        };
+        using (_aliyunSmsAsyncLocal.Change(options))
+        {
+            var aliyunSmsTemplateListResponse = await _smsTemplateService.GetSmsTemplateListAsync() as SmsTemplateListResponse;
+            if (!aliyunSmsTemplateListResponse.Success)
+            {
+                throw new UserFriendlyException(aliyunSmsTemplateListResponse.Message);
+            }
+            var aliyunSmsTemplateList = aliyunSmsTemplateListResponse.Data.Body.SmsTemplateList;
+            var removeList = await _smsTemplateRepository.GetListAsync(x => x.ChannelId == channel.Id);
+            await _smsTemplateRepository.RemoveRangeAsync(removeList);
+            var smsTemplateList = aliyunSmsTemplateList.Select(item => new SmsTemplate(channel.Id, item.TemplateCode, item.TemplateName, AliyunSmsTemplateTypeMapToSmsTemplateType(item.TemplateType), AliyunSmsTemplateAuditStatusMapToAuditStatus(item.AuditStatus), item.TemplateContent, item.Reason.RejectInfo));
+            await _smsTemplateRepository.AddRangeAsync(smsTemplateList);
+        }
+    }
+
+    private SmsTemplateTypes AliyunSmsTemplateTypeMapToSmsTemplateType(int? templateType)
+    {
+        return templateType switch
+        {
+            2 => SmsTemplateTypes.VerificationCode,
+            0 => SmsTemplateTypes.Notification,
+            6 => SmsTemplateTypes.Promotion,
+            7 => SmsTemplateTypes.Digital,
+            _ => SmsTemplateTypes.Other
+        };
+    }
+
+    private MessageTemplateAuditStatuses AliyunSmsTemplateAuditStatusMapToAuditStatus(string auditStatus)
+    {
+        return auditStatus switch
+        {
+            "AUDIT_STATE_PASS" => MessageTemplateAuditStatuses.Adopt,
+            "AUDIT_STATE_NOT_PASS" => MessageTemplateAuditStatuses.Fail,
+            _ => MessageTemplateAuditStatuses.WaitAudit
+        };
     }
 }

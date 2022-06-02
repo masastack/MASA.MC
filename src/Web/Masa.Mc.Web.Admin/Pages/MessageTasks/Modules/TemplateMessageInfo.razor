@@ -44,16 +44,13 @@
 }
 <MRow>
     <MCol>
-        <MEditor @bind-Value="MessageTemplate.Content"
-                 ReadOnly
-                 ContentStyle="height:200px">
-        </MEditor>
+        <RichText Value="@MessageTemplate.Content"></RichText>
     </MCol>
 </MRow>
 @if (MessageTask.Channel != null && MessageTask.Channel.Type == ChannelTypes.WebsiteMessage)
 {
     <MRow Class="mx-1 pt-6">
-        <MCheckbox Class="mt-1 mr-2" @bind-Value="MessageTemplate.IsJump" Label="@T("DisplayName.MessageTemplateIsJump")"></MCheckbox>
+        <MCheckbox Class="mt-1 mr-2" @bind-Value="MessageTemplate.IsJump" Label="@T("DisplayName.MessageTemplateIsJump")" Disabled></MCheckbox>
         <MTextField @bind-Value="MessageTemplate.JumpUrl"
                 Label="@T("DisplayName.MessageTemplateJumpUrl")"
                 Outlined

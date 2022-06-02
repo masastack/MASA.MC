@@ -8,6 +8,7 @@ public class MessageTemplate : FullAggregateRoot<Guid, Guid>
     public string DisplayName { get; protected set; } = string.Empty;
     public string Title { get; protected set; } = string.Empty;
     public string Content { get; protected set; } = string.Empty;
+    public string Markdown { get; protected set; } = string.Empty;
     public string Example { get; protected set; } = string.Empty;
     public string TemplateId { get; protected set; } = string.Empty;
     public bool IsJump { get; protected set; }
@@ -15,8 +16,8 @@ public class MessageTemplate : FullAggregateRoot<Guid, Guid>
     public string Sign { get; protected set; } = string.Empty;
     public MessageTemplateStatuses Status { get; protected set; }
     public MessageTemplateAuditStatuses AuditStatus { get; protected set; }
-    public DateTime? AuditTime { get; protected set; }
-    public DateTime? InvalidTime { get; protected set; }
+    public DateTimeOffset? AuditTime { get; protected set; }
+    public DateTimeOffset? InvalidTime { get; protected set; }
     public string AuditReason { get; protected set; } = string.Empty;
     public int TemplateType { get; protected set; }
     public long PerDayLimit { get; protected set; }
@@ -28,6 +29,7 @@ public class MessageTemplate : FullAggregateRoot<Guid, Guid>
         string displayName,
         string title,
         string content,
+        string markdown,
         string example,
         string templateId,
         bool isJump,
@@ -50,7 +52,7 @@ public class MessageTemplate : FullAggregateRoot<Guid, Guid>
         Status = status;
         IsStatic = isStatic;
 
-        SetContent(title, content);
+        SetContent(title, content, markdown);
         SetJump(isJump, jumpUrl);
         SetAuditStatus(auditStatus, auditReason);
 
@@ -73,10 +75,12 @@ public class MessageTemplate : FullAggregateRoot<Guid, Guid>
 
     public virtual void SetContent(
         string title,
-        string content)
+        string content,
+        string markdown)
     {
         Title = title;
         Content = content;
+        Markdown = markdown;
     }
 
     public virtual void SetAuditStatus(MessageTemplateAuditStatuses auditStatus, string auditReason = "")
@@ -84,14 +88,14 @@ public class MessageTemplate : FullAggregateRoot<Guid, Guid>
         AuditStatus = auditStatus;
         if (auditStatus != MessageTemplateAuditStatuses.WaitAudit)
         {
-            AuditTime = DateTime.UtcNow;
+            AuditTime = DateTimeOffset.Now;
             AuditReason = auditReason;
         }
     }
 
     public virtual void SetInvalid()
     {
-        InvalidTime = DateTime.UtcNow;
+        InvalidTime = DateTimeOffset.Now;
         Status = MessageTemplateStatuses.Invalid;
     }
 

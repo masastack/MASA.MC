@@ -49,9 +49,7 @@
                             }
                             <MRow>
                                 <MCol>
-                                    <MEditor @bind-Value="_model.MessageInfo.Content"
-                                             ContentStyle="height:200px">
-                                    </MEditor>
+                                    <DefaultMarkdown @bind-Html="_model.MessageInfo.Content" @bind-Value="_model.MessageInfo.Markdown"></DefaultMarkdown>
                                     <MInput @bind-Value="_model.MessageInfo.Content" />
                                 </MCol>
                             </MRow>

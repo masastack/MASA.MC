@@ -3,7 +3,6 @@
 
 namespace Masa.Mc.Service.Admin.Domain.MessageTemplates.Events;
 
-public record SmsTemplateSyncDomainEvent(Guid ChannelId) : DomainEvent
+public record SmsTemplateSynchroDomainEvent(Guid ChannelId) : DomainEvent
 {
-
 }

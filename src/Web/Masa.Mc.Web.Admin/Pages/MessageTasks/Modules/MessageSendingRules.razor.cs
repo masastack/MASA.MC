@@ -23,8 +23,8 @@ public partial class MessageSendingRules : AdminCompontentBase
     {
         if (Value.SendTime != null)
         {
-            _sendingDate = DateOnly.FromDateTime(Value.SendTime.Value);
-            _sendingTime = TimeOnly.FromDateTime(Value.SendTime.Value);
+            _sendingDate = DateOnly.FromDateTime(Value.SendTime.Value.DateTime);
+            _sendingTime = TimeOnly.FromDateTime(Value.SendTime.Value.DateTime);
             Value.IsTiming = true;
         }
         else

@@ -24,7 +24,7 @@ public class MessageTemplateQueryHandler
     }
 
     [EventHandler]
-    public async Task GetListAsync(GetListMessageTemplateQuery query)
+    public async Task GetListAsync(GetMessageTemplateListQuery query)
     {
         var options = query.Input;
         var queryable = await CreateFilteredDetailQueryAsync(options);

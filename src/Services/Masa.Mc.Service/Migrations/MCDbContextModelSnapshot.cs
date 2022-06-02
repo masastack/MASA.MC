@@ -183,6 +183,10 @@ namespace Masa.Mc.Service.Admin.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
+                    b.Property<string>("Markdown")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("ModificationTime")
                         .HasColumnType("datetime2");
 
@@ -237,8 +241,8 @@ namespace Masa.Mc.Service.Admin.Migrations
                     b.Property<Guid>("Modifier")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime?>("SendTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset?>("SendTime")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<bool?>("Success")
                         .HasColumnType("bit");
@@ -350,8 +354,8 @@ namespace Masa.Mc.Service.Admin.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("SendTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset?>("SendTime")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Sign")
                         .IsRequired()
@@ -375,8 +379,8 @@ namespace Masa.Mc.Service.Admin.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime?>("CompletionTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset?>("CompletionTime")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
@@ -410,8 +414,8 @@ namespace Masa.Mc.Service.Admin.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("SendTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset?>("SendTime")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Sign")
                         .IsRequired()
@@ -429,8 +433,8 @@ namespace Masa.Mc.Service.Admin.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("WithdrawTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset?>("WithdrawTime")
+                        .HasColumnType("datetimeoffset");
 
                     b.HasKey("Id");
 
@@ -452,8 +456,8 @@ namespace Masa.Mc.Service.Admin.Migrations
                     b.Property<int>("AuditStatus")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("AuditTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset?>("AuditTime")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<Guid>("ChannelId")
                         .HasColumnType("uniqueidentifier");
@@ -477,8 +481,8 @@ namespace Masa.Mc.Service.Admin.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("InvalidTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset?>("InvalidTime")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -493,6 +497,10 @@ namespace Masa.Mc.Service.Admin.Migrations
                         .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("Markdown")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("ModificationTime")
                         .HasColumnType("datetime2");
@@ -710,6 +718,95 @@ namespace Masa.Mc.Service.Admin.Migrations
                     b.ToTable("ReceiverGroupUsers", (string)null);
                 });
 
+            modelBuilder.Entity("Masa.Mc.Service.Admin.Domain.WebsiteMessages.Aggregates.WebsiteMessage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ChannelId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("Creator")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LinkUrl")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<DateTime>("ModificationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("Modifier")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset?>("ReadTime")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset>("SendTime")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChannelId");
+
+                    b.ToTable("WebsiteMessages", (string)null);
+                });
+
+            modelBuilder.Entity("Masa.Mc.Service.Admin.Domain.WebsiteMessages.Aggregates.WebsiteMessageCursor", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("Creator")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("ModificationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("Modifier")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("UpdateTime")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("WebsiteMessageCursors", (string)null);
+                });
+
             modelBuilder.Entity("Masa.Mc.Service.Admin.Domain.Channels.Aggregates.AppChannel", b =>
                 {
                     b.HasOne("Masa.Mc.Service.Admin.Domain.Channels.Aggregates.Channel", null)
@@ -784,6 +881,17 @@ namespace Masa.Mc.Service.Admin.Migrations
                         .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Masa.Mc.Service.Admin.Domain.WebsiteMessages.Aggregates.WebsiteMessage", b =>
+                {
+                    b.HasOne("Masa.Mc.Service.Admin.Domain.Channels.Aggregates.AppChannel", "Channel")
+                        .WithMany()
+                        .HasForeignKey("ChannelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Channel");
                 });
 
             modelBuilder.Entity("Masa.Mc.Service.Admin.Domain.MessageTasks.Aggregates.MessageTaskHistory", b =>

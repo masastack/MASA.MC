@@ -12,7 +12,7 @@ public class MessageRecord : FullAggregateRoot<Guid, Guid>
     public AppMessageTask MessageTask { get; protected set; }
     public Guid MessageTaskHistoryId { get; protected set; }
     public bool? Success { get; protected set; }
-    public DateTime? SendTime { get; protected set; }
+    public DateTimeOffset? SendTime { get; protected set; }
     public string FailureReason { get; protected set; } = string.Empty;
     public ExtraPropertyDictionary ExtraProperties { get; protected set; } = new();
 
@@ -29,7 +29,7 @@ public class MessageRecord : FullAggregateRoot<Guid, Guid>
 
     public void SetResult(bool success, string failureReason)
     {
-        SendTime = DateTime.UtcNow;
+        SendTime = DateTimeOffset.Now;
         Success = success;
         FailureReason = failureReason;
     }

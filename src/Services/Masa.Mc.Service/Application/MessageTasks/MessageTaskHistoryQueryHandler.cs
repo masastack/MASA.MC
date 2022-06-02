@@ -22,7 +22,7 @@ public class MessageTaskHistoryQueryHandler
     }
 
     [EventHandler]
-    public async Task GetListAsync(GetListMessageTaskHistoryQuery query)
+    public async Task GetListAsync(GetMessageTaskHistoryListQuery query)
     {
         var options = query.Input;
         var queryable = await CreateFilteredQueryAsync(options);

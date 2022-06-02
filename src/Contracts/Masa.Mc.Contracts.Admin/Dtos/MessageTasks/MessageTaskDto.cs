@@ -23,7 +23,7 @@ public class MessageTaskDto : AuditEntityDto<Guid, Guid>
 
     public MessageTaskSelectReceiverTypes SelectReceiverType { get; set; }
 
-    public DateTime? SendTime { get; set; }
+    public DateTimeOffset? SendTime { get; set; }
 
     public string Sign { get; set; } = string.Empty;
 

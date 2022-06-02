@@ -21,11 +21,11 @@ public class MessageTaskHistoryDto : AuditEntityDto<Guid, Guid>
 
     public SendRuleDto SendRules { get; set; } = new();
 
-    public DateTime? SendTime { get; set; }
+    public DateTimeOffset? SendTime { get; set; }
 
-    public DateTime? CompletionTime { get; set; }
+    public DateTimeOffset? CompletionTime { get; set; }
 
-    public DateTime? WithdrawTime { get; set; }
+    public DateTimeOffset? WithdrawTime { get; set; }
 
     public string Sign { get; set; } = string.Empty;
 

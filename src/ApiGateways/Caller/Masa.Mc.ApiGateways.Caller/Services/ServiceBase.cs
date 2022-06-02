@@ -36,6 +36,12 @@ public abstract class ServiceBase
         await CheckResponse(response);
     }
 
+    protected async Task PostAsync(string methodName)
+    {
+        var response = await CallerProvider.PostAsync(BuildAdress(methodName), null);
+        await CheckResponse(response);
+    }
+
     protected async Task<TResponse?> PostAsync<TRequest, TResponse>(string methodName, TRequest data)
     {
         var response = await CallerProvider.PostAsync<TRequest, TResponse>(BuildAdress(methodName), data);

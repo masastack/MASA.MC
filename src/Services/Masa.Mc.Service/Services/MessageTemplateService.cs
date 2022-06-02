@@ -14,10 +14,10 @@ public class MessageTemplateService : ServiceBase
         MapGet(GetListAsync, string.Empty);
     }
 
-    public async Task<PaginatedListDto<MessageTemplateDto>> GetListAsync(IEventBus eventbus, [FromQuery] ChannelTypes? channelType, [FromQuery] Guid? channelId, [FromQuery] MessageTemplateStatuses? status, [FromQuery] MessageTemplateAuditStatuses? auditStatus, [FromQuery] DateTime? startTime, [FromQuery] DateTime? endTime, [FromQuery] int templateType, [FromQuery] string filter = "", [FromQuery] string sorting = "", [FromQuery] int page = 1, [FromQuery] int pagesize = 10)
+    public async Task<PaginatedListDto<MessageTemplateDto>> GetListAsync(IEventBus eventbus, [FromQuery] ChannelTypes? channelType, [FromQuery] Guid? channelId, [FromQuery] MessageTemplateStatuses? status, [FromQuery] MessageTemplateAuditStatuses? auditStatus, [FromQuery] DateTimeOffset? startTime, [FromQuery] DateTimeOffset? endTime, [FromQuery] int templateType, [FromQuery] string filter = "", [FromQuery] string sorting = "", [FromQuery] int page = 1, [FromQuery] int pagesize = 10)
     {
         var inputDto = new GetMessageTemplateInputDto(filter, channelType, channelId, status, auditStatus, startTime, endTime, templateType, sorting, page, pagesize);
-        var query = new GetListMessageTemplateQuery(inputDto);
+        var query = new GetMessageTemplateListQuery(inputDto);
         await eventbus.PublishAsync(query);
         return query.Result;
     }

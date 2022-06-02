@@ -81,6 +81,7 @@ public partial class MessageReceiversSelect : AdminCompontentBase
         {
             if (!string.IsNullOrEmpty(receiver.PhoneNumber) && Value.Any(x => x.PhoneNumber == receiver.PhoneNumber)) continue;
             if (!string.IsNullOrEmpty(receiver.Email) && Value.Any(x => x.Email == receiver.Email)) continue;
+            if (receiver.SubjectId != default && Value.Any(x => x.SubjectId == receiver.SubjectId)) continue;
             Value.Insert(0, receiver);
         }
         if (ValueChanged.HasDelegate)

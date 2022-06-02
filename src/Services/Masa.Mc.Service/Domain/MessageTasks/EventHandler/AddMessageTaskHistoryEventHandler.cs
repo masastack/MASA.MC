@@ -6,18 +6,15 @@ namespace Masa.Mc.Service.Admin.Domain.MessageTasks.EventHandler;
 public class AddMessageTaskHistoryEventHandler
 {
     private readonly IMessageTaskHistoryRepository _repository;
-    private readonly IMessageInfoRepository _messageInfoRepository;
-    private readonly IMessageTemplateRepository _messageTemplateRepository;
     private readonly IDomainEventBus _eventBus;
+    private readonly MessageTaskDomainService _messageTaskDomainService;
     public AddMessageTaskHistoryEventHandler(IMessageTaskHistoryRepository repository
-        , IMessageInfoRepository messageInfoRepository
-        , IMessageTemplateRepository messageTemplateRepository
-        , IDomainEventBus eventBus)
+        , IDomainEventBus eventBus
+        , MessageTaskDomainService messageTaskDomainService)
     {
         _repository = repository;
-        _messageInfoRepository = messageInfoRepository;
-        _messageTemplateRepository = messageTemplateRepository;
         _eventBus = eventBus;
+        _messageTaskDomainService = messageTaskDomainService;
     }
 
     [EventHandler]
@@ -33,24 +30,8 @@ public class AddMessageTaskHistoryEventHandler
 
     private async Task PublishMessageAsync(MessageTask messageTask, MessageTaskHistory messageTaskHistory)
     {
-        var messageData = await GetMessageDataAsync(messageTask.EntityType, messageTask.EntityId);
+        var messageData = await _messageTaskDomainService.GetMessageDataAsync(messageTask.EntityType, messageTask.EntityId);
         messageData.SetDataValue(nameof(MessageTemplate.Sign), messageTaskHistory.Sign);
         await _eventBus.PublishAsync(new CreateMessageEvent(messageTask.ChannelId, messageData, messageTaskHistory.Id));
-    }
-
-    private async Task<MessageData> GetMessageDataAsync(MessageEntityTypes entityType, Guid entityId)
-    {
-        if (entityType == MessageEntityTypes.Ordinary)
-        {
-            var messageInfo = await _messageInfoRepository.FindAsync(x => x.Id == entityId);
-            return new MessageData { ExtraProperties = ExtensionPropertyHelper.ObjMapToExtraProperty(messageInfo) };
-        }
-        if (entityType == MessageEntityTypes.Template)
-        {
-            var messageTemplate = await _messageTemplateRepository.FindAsync(x => x.Id == entityId);
-            var messageData = new MessageData { ExtraProperties = ExtensionPropertyHelper.ObjMapToExtraProperty(messageTemplate) };
-            return messageData;
-        }
-        return new MessageData();
     }
 }

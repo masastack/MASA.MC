@@ -27,4 +27,9 @@ public class MessageRecordRepository : Repository<McDbContext, MessageRecord>, I
             ? await (await WithDetailsAsync()).Where(predicate).FirstOrDefaultAsync(cancellationToken)
             : await Context.Set<MessageRecord>().Where(predicate).FirstOrDefaultAsync(cancellationToken);
     }
+
+    public async Task<bool> IsExistsAsync(Guid taskHistoryId, Guid userId)
+    {
+        return await Context.Set<MessageRecord>().AnyAsync(x => x.MessageTaskHistoryId == taskHistoryId && x.UserId == userId);
+    }
 }

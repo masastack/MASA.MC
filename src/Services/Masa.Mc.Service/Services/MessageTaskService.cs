@@ -20,10 +20,10 @@ public class MessageTaskService : ServiceBase
         MapPost(ImportReceiversAsync);
     }
 
-    public async Task<PaginatedListDto<MessageTaskDto>> GetListAsync(IEventBus eventbus, [FromQuery] Guid? channelId, [FromQuery] MessageEntityTypes? entityType, [FromQuery] bool? isEnabled, [FromQuery] MessageTaskTimeTypes? timeType, [FromQuery] DateTime? startTime, [FromQuery] DateTime? endTime, [FromQuery] string filter = "", [FromQuery] string sorting = "", [FromQuery] int page = 1, [FromQuery] int pagesize = 10)
+    public async Task<PaginatedListDto<MessageTaskDto>> GetListAsync(IEventBus eventbus, [FromQuery] Guid? channelId, [FromQuery] MessageEntityTypes? entityType, [FromQuery] bool? isEnabled, [FromQuery] MessageTaskTimeTypes? timeType, [FromQuery] DateTimeOffset? startTime, [FromQuery] DateTimeOffset? endTime, [FromQuery] string filter = "", [FromQuery] string sorting = "", [FromQuery] int page = 1, [FromQuery] int pagesize = 10)
     {
         var inputDto = new GetMessageTaskInputDto(filter, channelId, entityType, isEnabled, timeType, startTime, endTime, sorting, page, pagesize);
-        var query = new GetListMessageTaskQuery(inputDto);
+        var query = new GetMessageTaskListQuery(inputDto);
         await eventbus.PublishAsync(query);
         return query.Result;
     }
@@ -100,11 +100,11 @@ public class MessageTaskService : ServiceBase
         await eventBus.PublishAsync(command);
     }
 
-    public async Task<IResult> GenerateReceiverImportTemplateAsync(IEventBus eventBus, Guid? messageTemplatesId)
+    public async Task<byte[]> GenerateReceiverImportTemplateAsync(IEventBus eventBus, Guid? messageTemplatesId)
     {
         var query = new GenerateReceiverImportTemplateQuery(messageTemplatesId);
         await eventBus.PublishAsync(query);
-        return Results.Bytes(query.Result, "text/csv", "ReceiverImportTemplate.csv");
+        return query.Result;
     }
 
     public async Task<ImportResultDto<MessageTaskReceiverDto>> ImportReceiversAsync(IEventBus eventBus, ImportReceiversDto dto)

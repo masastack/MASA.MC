@@ -13,6 +13,7 @@ public class MessageTemplateDto : AuditEntityDto<Guid, Guid>
     public string DisplayName { get; set; } = string.Empty;
     public string Title { get; set; } = string.Empty;
     public string Content { get; set; } = string.Empty;
+    public string Markdown { get; set; } = string.Empty;
     public string Example { get; set; } = string.Empty;
     public string TemplateId { get; set; } = string.Empty;
     public bool IsJump { get; set; }
@@ -20,8 +21,8 @@ public class MessageTemplateDto : AuditEntityDto<Guid, Guid>
     public string Sign { get; set; } = string.Empty;
     public MessageTemplateStatuses Status { get; set; }
     public MessageTemplateAuditStatuses AuditStatus { get; set; }
-    public DateTime? AuditTime { get; set; }
-    public DateTime? InvalidTime { get; set; }
+    public DateTimeOffset? AuditTime { get; set; }
+    public DateTimeOffset? InvalidTime { get; set; }
     public string AuditReason { get; set; } = string.Empty;
     public int TemplateType { get; set; }
     public long PerDayLimit { get; set; }

@@ -1,101 +1,59 @@
 ﻿@inherits AdminCompontentBase
-<MMenu OffsetX Left OffsetY>
-    <ActivatorContent Context="menuContext">
-        <MBadge Color="pink" Bordered Dot OffsetX="10" OffsetY="10">
-            <MIcon @attributes="menuContext.Attrs" Size=24 Class="pl-2" Color="neutral-lighten-3">mdi-bell</MIcon>
-        </MBadge>
-    </ActivatorContent>
-    <ChildContent>
-        <MCard MaxWidth="400"
-               Style="background-color:#4318FF">
-            <MToolbar Color="blue darken-4"
-                      Dark>
-                <MToolbarTitle Class="font-18-medium">@T("WebsiteMessage")</MToolbarTitle>
+<div class="notice">
+    <MMenu OffsetX Left OffsetY ContentStyle="border-radius:16px !important">
+        <ActivatorContent Context="menuContext">
+            @if (!NoticeState.IsRead)
+            {
+                <MBadge Color="pink" Bordered Dot OffsetX="10" OffsetY="10">
+                    <MIcon @attributes="menuContext.Attrs" Size=24 Class="pl-2" Color="neutral-lighten-3">mdi-bell</MIcon>
+                </MBadge>
+            }
+            else
+            {
+                <MIcon @attributes="menuContext.Attrs" Size=24 Class="pl-2" Color="neutral-lighten-3">mdi-bell</MIcon>
+            }
+        </ActivatorContent>
+        <ChildContent>
+            <MCard Width="400">
+                <MToolbar Color="blue darken-4"
+                          Dark>
+                    <MToolbarTitle Class="font-18-medium">@T("WebsiteMessage")</MToolbarTitle>
 
-                <MSpacer></MSpacer>
+                    <MSpacer></MSpacer>
 
-                <MButton Icon>
-                    <MIcon>mdi-bell-outline</MIcon>
-                </MButton>
-            </MToolbar>
+                    <MButton Icon>
+                        <MIcon>mdi-bell-outline</MIcon>
+                    </MButton>
+                </MToolbar>
 
-            <MList ThreeLine>
-                @foreach (var item in _items)
-                {
-                    <MListItem>
-                        <MListItemAvatar>
-                            <MImage Src="@item.Avatar"></MImage>
-                        </MListItemAvatar>
+                <MList ThreeLine>
+                    @foreach (var item in NoticeState.Notices)
+                    {
+                        <MListItem Link Href="@($"/websiteMessages/websiteMessageManagement/{item.Id}")">
+                            <MListItemAvatar Class="mt-2">
+                                <EmptyAvatar Value="@item.Channel?.DisplayName" Size="40" />
+                            </MListItemAvatar>
+
+                            <MListItemContent>
+                                <MListItemTitle Class="font-14-medium">@item.Channel?.DisplayName</MListItemTitle>
+                                <MListItemSubtitle Class="font-12 py-1">@item.Title</MListItemSubtitle>
+                                <MListItemSubtitle Class="font-10">@item.SendTime.ToString(T("$MonthDayFormat"))</MListItemSubtitle>
+                            </MListItemContent>
+                        </MListItem>
+                    }
+                </MList>
+                <MList Dense>
+                    <MListItem Link Href="/websiteMessages/websiteMessageManagement" Class="border-top-solid pt-2" Style="box-shadow: inset 0px 1px 0px #E9EDF7">
+                        <MListItemIcon Class="mr-0">
+                            <MIcon Size="12" Color="#7681AB" Class="pr-3 mc-icon icon-keyboard-backspace">icon-keyboard-backspace</MIcon>
+                        </MListItemIcon>
 
                         <MListItemContent>
-                            <MListItemTitle Class="font-14-medium">@((MarkupString)item.Title)</MListItemTitle>
-                            <MListItemSubtitle Class="font-12 py-1">@((MarkupString)item.ZhaiYao)</MListItemSubtitle>
-                            <MListItemSubtitle Class="font-10">@((MarkupString)item.Date)</MListItemSubtitle>
+                            <MListItemTitle Class="font-12">@T("Description.Notice.MoreTips")</MListItemTitle>
                         </MListItemContent>
                     </MListItem>
-                }
-            </MList>
-            <MList Dense>
-                <MDivider Inset></MDivider>
-                <MListItem Link Href="/websiteMessages/websiteMessageManagement">
-                    <MListItemIcon>
-                        <MIcon>mdi-keyboard-backspace</MIcon>
-                    </MListItemIcon>
-
-                    <MListItemContent>
-                        <MListItemTitle Class="font-12">@T("Description.Notice.MoreTips")</MListItemTitle>
-                    </MListItemContent>
-                </MListItem>
-            </MList>
-        </MCard>
-    </ChildContent>
-</MMenu>
-
-@code {
-    private Item[] _items = new Item[]
-                    {
-       new Item
-       {
-           Avatar="https://cdn.masastack.com/stack/images/website/masa-blazor/lists/1.png",
-           Title="北雀路一小区居民开灯时，家中突然爆燃！窗...",
-           ZhaiYao="我吃东西越来越清淡，对待人情世故越来越宽容，不乱发脾气，也学会了忍让。",
-           Date="12月25日"
-       },
-       new Item
-       {
-           Avatar="https://cdn.masastack.com/stack/images/website/masa-blazor/lists/2.png",
-           Title="北雀路一小区居民开灯时，家中突然爆燃！窗...",
-           ZhaiYao="我吃东西越来越清淡，对待人情世故越来越宽容，不乱发脾气，也学会了忍让。",
-           Date="12月25日"
-       },
-       new Item
-       {
-           Avatar="https://cdn.masastack.com/stack/images/website/masa-blazor/lists/3.png",
-           Title="北雀路一小区居民开灯时，家中突然爆燃！窗...",
-           ZhaiYao="我吃东西越来越清淡，对待人情世故越来越宽容，不乱发脾气，也学会了忍让。",
-           Date="12月25日"
-       },
-       new Item
-       {
-           Avatar="https://cdn.masastack.com/stack/images/website/masa-blazor/lists/4.png",
-           Title="北雀路一小区居民开灯时，家中突然爆燃！窗...",
-           ZhaiYao="我吃东西越来越清淡，对待人情世故越来越宽容，不乱发脾气，也学会了忍让。",
-           Date="12月25日"
-       },
-       new Item
-       {
-           Avatar="https://cdn.masastack.com/stack/images/website/masa-blazor/lists/5.png",
-           Title="北雀路一小区居民开灯时，家中突然爆燃！窗...",
-           ZhaiYao="我吃东西越来越清淡，对待人情世故越来越宽容，不乱发脾气，也学会了忍让。",
-           Date="12月25日"
-       }
-                    };
-
-    class Item
-    {
-        public string Avatar { get; set; }
-        public string Title { get; set; }
-        public string ZhaiYao { get; set; }
-        public string Date { get; set; }
-    }
-}
+                </MList>
+            </MCard>
+        </ChildContent>
+    </MMenu>
+</div>

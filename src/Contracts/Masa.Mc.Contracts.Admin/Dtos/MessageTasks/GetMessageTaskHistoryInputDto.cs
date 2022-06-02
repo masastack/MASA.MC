@@ -8,8 +8,8 @@ public class GetMessageTaskHistoryInputDto : PaginatedOptionsDto
     public string Filter { get; set; } = string.Empty;
     public Guid? MessageTaskId { get; set; }
     public MessageTaskHistoryStatuses? Status { get; set; }
-    public DateTime? StartTime { get; set; }
-    public DateTime? EndTime { get; set; }
+    public DateTimeOffset? StartTime { get; set; }
+    public DateTimeOffset? EndTime { get; set; }
 
     public GetMessageTaskHistoryInputDto()
     {
@@ -20,7 +20,7 @@ public class GetMessageTaskHistoryInputDto : PaginatedOptionsDto
     {
     }
 
-    public GetMessageTaskHistoryInputDto(string filter, Guid? messageTaskId, MessageTaskHistoryStatuses? status, DateTime? startTime, DateTime? endTime, string sorting, int page, int pageSize) : base(sorting, page, pageSize)
+    public GetMessageTaskHistoryInputDto(string filter, Guid? messageTaskId, MessageTaskHistoryStatuses? status, DateTimeOffset? startTime, DateTimeOffset? endTime, string sorting, int page, int pageSize) : base(sorting, page, pageSize)
     {
         Filter = filter;
         MessageTaskId = messageTaskId;

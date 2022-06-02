@@ -6,6 +6,21 @@ builder.Services.AddDaprClient();
 builder.Services.AddActors(options =>
 {
 });
+builder.Services.AddAliyunStorage(serviceProvider =>
+{
+    var daprClient = serviceProvider.GetRequiredService<DaprClient>();
+    var accessId = daprClient.GetSecretAsync("localsecretstore", "access_id").Result.First().Value;
+    var accessSecret = daprClient.GetSecretAsync("localsecretstore", "access_secret").Result.First().Value;
+    var endpoint = daprClient.GetSecretAsync("localsecretstore", "endpoint").Result.First().Value;
+    var roleArn = daprClient.GetSecretAsync("localsecretstore", "roleArn").Result.First().Value;
+    return new AliyunStorageOptions(accessId, accessSecret, endpoint, roleArn, "SessionTest")
+    {
+        Sts = new AliyunStsOptions()
+        {
+            RegionId = "cn-hangzhou"
+        }
+    };
+});
 builder.Services.AddAuthorization();
 builder.Services.AddAuthentication(options =>
 {
@@ -23,9 +38,12 @@ builder.Services.AddAliyunSms();
 builder.Services.AddEmail();
 builder.Services.AddCsv();
 builder.Services.AddSingleton<ITemplateRenderer, TextTemplateRenderer>();
+builder.Services.AddTransient<Microsoft.AspNetCore.SignalR.IUserIdProvider, McUserIdProvider>();
+builder.Services.AddSignalR();
+builder.Services.AddTransient<NotificationsHub>();
 TypeAdapterConfig.GlobalSettings.Scan(Assembly.GetExecutingAssembly(), Assembly.Load("Masa.Mc.Contracts.Admin"));
 
-if (builder.Environment.IsDevelopment())
+if (!builder.Environment.IsProduction())
 {
     builder.Services.AddDaprStarter(builder.Configuration.GetSection(nameof(DaprOptions)));
 }
@@ -108,6 +126,7 @@ app.UseEndpoints(endpoints =>
 {
     endpoints.MapSubscribeHandler();
     endpoints.MapActorsHandlers();
+    endpoints.MapHub<NotificationsHub>("/signalr-hubs/notifications");
 });
 
 app.UseHttpsRedirection();

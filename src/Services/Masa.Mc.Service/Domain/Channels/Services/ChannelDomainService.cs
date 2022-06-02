@@ -19,8 +19,8 @@ public class ChannelDomainService : DomainService
         if (channel.Type == ChannelTypes.Sms)
         {
             await _repository.UnitOfWork.SaveChangesAsync();
-            var channelId = channel.Id;
-            await EventBus.PublishAsync(new SmsTemplateSyncDomainEvent(channelId));
+            await _repository.UnitOfWork.CommitAsync();
+            await EventBus.PublishAsync(new SmsTemplateSynchroIntegrationDomainEvent(channel.Id));
         }
     }
 

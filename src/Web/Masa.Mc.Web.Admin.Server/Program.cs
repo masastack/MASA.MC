@@ -5,6 +5,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
+builder.Services.AddBlazorDownloadFile();
 builder.Services.AddMasaBlazor(builder =>
 {
     builder.UseTheme(option =>
@@ -13,6 +14,11 @@ builder.Services.AddMasaBlazor(builder =>
         option.Accent = "#4318FF";
     }
     );
+});
+builder.Services.AddResponseCompression(opts =>
+{
+    opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
+        new[] { "application/octet-stream" });
 });
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddGlobalForServer();

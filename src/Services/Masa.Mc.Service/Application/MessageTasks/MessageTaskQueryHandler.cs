@@ -1,9 +1,6 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
-using System.ComponentModel;
-using Magicodes.ExporterAndImporter.Core.Extension;
-
 namespace Masa.Mc.Service.Admin.Application.MessageTasks;
 
 public class MessageTaskQueryHandler
@@ -34,7 +31,7 @@ public class MessageTaskQueryHandler
     }
 
     [EventHandler]
-    public async Task GetListAsync(GetListMessageTaskQuery query)
+    public async Task GetListAsync(GetMessageTaskListQuery query)
     {
         var options = query.Input;
         var queryable = await CreateFilteredQueryAsync(options);

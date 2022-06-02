@@ -50,7 +50,7 @@ public partial class OrdinaryMessageCreateModal : AdminCompontentBase
         Loading = true;
         await MessageTaskService.CreateAsync(_model);
         Loading = false;
-        await SuccessMessageAsync(T("MessageTaskCreateMessage"));
+        //await SuccessMessageAsync(T("MessageTaskCreateMessage"));
         _visible = false;
         ResetForm();
         if (OnOk.HasDelegate)

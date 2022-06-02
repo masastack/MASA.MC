@@ -10,8 +10,8 @@ public class GetMessageTemplateInputDto : PaginatedOptionsDto
     public MessageTemplateAuditStatuses? AuditStatus { get; set; }
     public ChannelTypes? ChannelType { get; set; }
     public Guid? ChannelId { get; set; }
-    public DateTime? StartTime { get; set; }
-    public DateTime? EndTime { get; set; }
+    public DateTimeOffset? StartTime { get; set; }
+    public DateTimeOffset? EndTime { get; set; }
     public int TemplateType { get; set; }
 
     public GetMessageTemplateInputDto()
@@ -23,7 +23,7 @@ public class GetMessageTemplateInputDto : PaginatedOptionsDto
     {
     }
 
-    public GetMessageTemplateInputDto(string filter, ChannelTypes? channelType, Guid? channelId, MessageTemplateStatuses? status, MessageTemplateAuditStatuses? auditStatus, DateTime? startTime, DateTime? endTime, int templateType, string sorting, int page, int pageSize) : base(sorting, page, pageSize)
+    public GetMessageTemplateInputDto(string filter, ChannelTypes? channelType, Guid? channelId, MessageTemplateStatuses? status, MessageTemplateAuditStatuses? auditStatus, DateTimeOffset? startTime, DateTimeOffset? endTime, int templateType, string sorting, int page, int pageSize) : base(sorting, page, pageSize)
     {
         Filter = filter;
         ChannelType = channelType;

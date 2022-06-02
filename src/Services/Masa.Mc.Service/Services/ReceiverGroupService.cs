@@ -17,7 +17,7 @@ public class ReceiverGroupService : ServiceBase
     public async Task<PaginatedListDto<ReceiverGroupDto>> GetListAsync(IEventBus eventbus, [FromQuery] string filter = "", [FromQuery] string sorting = "", [FromQuery] int page = 1, [FromQuery] int pagesize = 10)
     {
         var inputDto = new GetReceiverGroupInputDto(filter, sorting, page, pagesize);
-        var query = new GetListReceiverGroupQuery(inputDto);
+        var query = new GetReceiverGroupListQuery(inputDto);
         await eventbus.PublishAsync(query);
         return query.Result;
     }

@@ -11,7 +11,7 @@ public class MessageRecordDto : AuditEntityDto<Guid, Guid>
     public Guid MessageTaskId { get;  set; }
     public Guid MessageTaskHistoryId { get;  set; }
     public bool? Success { get;  set; }
-    public DateTime? SendTime { get;  set; }
+    public DateTimeOffset? SendTime { get;  set; }
     public string FailureReason { get;  set; } = string.Empty;
     public bool IsDeleted { get;  set; }
     public ExtraPropertyDictionary ExtraProperties { get;  set; } = new();

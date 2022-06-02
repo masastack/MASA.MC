@@ -27,3 +27,7 @@ global using Masa.Mc.Contracts.Admin.Dtos.MessageRecords;
 global using Masa.Mc.ApiGateways.Caller.Services.MessageRecords;
 global using Microsoft.AspNetCore.Mvc;
 global using Masa.Mc.Contracts.Admin.Dtos;
+global using Masa.Mc.Contracts.Admin.Dtos.WebsiteMessages;
+global using Masa.Mc.ApiGateways.Caller.Services.WebsiteMessages;
+global using Masa.Mc.Contracts.Admin.Dtos.Oss;
+global using Masa.Mc.ApiGateways.Caller.Services.Oss;
