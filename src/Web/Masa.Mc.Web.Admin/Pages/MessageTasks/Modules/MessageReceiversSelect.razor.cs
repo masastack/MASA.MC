@@ -16,7 +16,7 @@ public partial class MessageReceiversSelect : AdminCompontentBase
 
     private ExternalUserCreateModal _createModal;
     private List<Guid> _userIds = new List<Guid>();
-    private List<SubjectDto> _items = new();
+    private List<SubjectDataDto> _items = new();
     private bool _loading;
     private GetReceiverGroupInputDto _queryParam = new(99);
 
@@ -25,8 +25,8 @@ public partial class MessageReceiversSelect : AdminCompontentBase
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        var subjects = SubjectService.GetList();
-        var receiverGroups = (await ReceiverGroupService.GetListAsync(_queryParam)).Result.Select(r => new SubjectDto
+        var subjects = SubjectDataService.GetList();
+        var receiverGroups = (await ReceiverGroupService.GetListAsync(_queryParam)).Result.Select(r => new SubjectDataDto
         {
             Id = r.Id,
             Type = MessageTaskReceiverTypes.Group,
@@ -36,7 +36,7 @@ public partial class MessageReceiversSelect : AdminCompontentBase
         _items = receiverGroups.Concat(subjects).ToList();
     }
 
-    public void Remove(SubjectDto item)
+    public void Remove(SubjectDataDto item)
     {
         var index = _userIds.IndexOf(item.Id);
         if (index >= 0)
@@ -52,14 +52,14 @@ public partial class MessageReceiversSelect : AdminCompontentBase
         await HandleAddAsync(dtos);
     }
 
-    private async Task HandleOk(SubjectDto user)
+    private async Task HandleOk(SubjectDataDto user)
     {
         _items.Add(user);
         var dtos = new List<MessageTaskReceiverDto> { user.Adapt<MessageTaskReceiverDto>() };
         await HandleAddAsync(dtos);
     }
 
-    private bool CustomFilter(SubjectDto item, string queryText, string text)
+    private bool CustomFilter(SubjectDataDto item, string queryText, string text)
     {
         return item.DisplayName.Contains(queryText) ||
           item.PhoneNumber.Contains(queryText) ||

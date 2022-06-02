@@ -3,13 +3,9 @@
 
 namespace Masa.Mc.Web.Admin.Data.Auth.Subjects.Dto;
 
-public class SubjectDto
+public class UserDataDto
 {
     public Guid Id { get; set; }
-
-    public MessageTaskReceiverTypes Type { get; set; }
-
-    public Guid SubjectId { get; set; }
 
     public string DisplayName { get; set; } = string.Empty;
 
@@ -19,16 +15,14 @@ public class SubjectDto
 
     public string Email { get; set; } = string.Empty;
 
-    public SubjectDto()
+    public UserDataDto()
     {
 
     }
 
-    public SubjectDto(Guid id, MessageTaskReceiverTypes type, string subjectId, string displayName, string avatar, string phoneNumber, string email)
+    public UserDataDto(Guid id, string displayName, string avatar, string phoneNumber, string email)
     {
         Id = id;
-        Type = type;
-        SubjectId = new Guid(subjectId);
         DisplayName = displayName;
         Avatar = avatar;
         PhoneNumber = phoneNumber;

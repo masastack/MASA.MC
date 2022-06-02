@@ -6,7 +6,7 @@ namespace Masa.Mc.Web.Admin.Components.Modules.Subjects;
 public partial class ExternalUserCreateModal : AdminCompontentBase
 {
     [Parameter]
-    public EventCallback<SubjectDto> OnOk { get; set; }
+    public EventCallback<SubjectDataDto> OnOk { get; set; }
 
     private CreateExternalUserDto _model = new();
     private bool _visible;
@@ -31,7 +31,7 @@ public partial class ExternalUserCreateModal : AdminCompontentBase
     private async Task HandleOk()
     {
         var id = Guid.NewGuid();
-        var subject = new SubjectDto
+        var subject = new SubjectDataDto
         {
             Id = id,
             SubjectId = id,

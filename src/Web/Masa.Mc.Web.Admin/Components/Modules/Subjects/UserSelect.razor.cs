@@ -21,18 +21,18 @@ public partial class UserSelect : AdminCompontentBase
     public EventCallback<MouseEventArgs> OnClearClick { get; set; }
 
     [Parameter]
-    public EventCallback<UserDto> OnSelectedItemUpdate { get; set; }
+    public EventCallback<UserDataDto> OnSelectedItemUpdate { get; set; }
 
     private bool _isLoading;
 
-    protected List<UserDto> Items = new();
+    protected List<UserDataDto> Items = new();
 
     public void UpdateSearchInput(string val)
     {
         if (Items.Count > 0) return;
         if (_isLoading) return;
         _isLoading = true;
-        var res = UserService.GetList();
+        var res = UserDataService.GetList();
         Items = res.Where(x => x.DisplayName.Contains(val) || x.PhoneNumber.Contains(val) || x.Email.Contains(val)).Take(20).ToList();
         _isLoading = false;
     }

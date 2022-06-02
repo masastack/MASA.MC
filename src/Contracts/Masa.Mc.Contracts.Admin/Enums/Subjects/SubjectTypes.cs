@@ -1,13 +1,12 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
-namespace Masa.Mc.Contracts.Admin.Enums.MessageTasks;
+namespace Masa.Mc.Contracts.Admin.Enums.Subjects;
 
-public enum MessageTaskReceiverTypes
+public enum SubjectTypes
 {
     User = 1,
-    Organization,
+    Department,
     Role,
     Team,
-    Group
 }

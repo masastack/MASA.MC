@@ -1,6 +1,7 @@
 ﻿@inherits AdminCompontentBase
 <MRow Class="mx-1 py-2">
-    <MAutocomplete @bind-Value="_userIds"
+    <SubjectAutoComplete @ref="_subjectRef" @bind-Value="_userIds"></SubjectAutoComplete>
+    @*<MAutocomplete @bind-Value="_userIds"
                    Loading="_loading"
                    Items="_items"
                    Filter="CustomFilter"
@@ -78,7 +79,7 @@
                 </MListItemContent>
             }
         </ItemContent>
-    </MAutocomplete>
+    </MAutocomplete>*@
     <MButton Rounded Outlined Color="indigo" Class="ml-6 medium-button px-6" OnClick="AddAsync">
         <span>@T("Add")</span>
     </MButton>
@@ -87,7 +88,7 @@
         <span class="ml-2">@T("ExternalMember")</span>
     </MButton>
 </MRow>
-<MCard Class="mx-auto overflow-y-auto" Outlined Height="470">
+<MCard Class="mx-auto overflow-y-auto mt-4" Outlined Height="470">
     @if (Value.Count > 0)
     {
         <MList ThreeLine>

@@ -31,3 +31,5 @@ global using Masa.Mc.Contracts.Admin.Dtos.WebsiteMessages;
 global using Masa.Mc.ApiGateways.Caller.Services.WebsiteMessages;
 global using Masa.Mc.Contracts.Admin.Dtos.Oss;
 global using Masa.Mc.ApiGateways.Caller.Services.Oss;
+global using Masa.Mc.Contracts.Admin.Dtos.Subjects;
+global using Masa.Mc.ApiGateways.Caller.Services.Subjects;

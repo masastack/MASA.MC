@@ -6,4 +6,9 @@ namespace Masa.Mc.Contracts.Admin.Dtos.Subjects;
 public class GetSubjectInputDto
 {
     public string Filter { get; set; } = string.Empty;
+
+    public GetSubjectInputDto(string filter)
+    {
+        Filter = filter;
+    }
 }

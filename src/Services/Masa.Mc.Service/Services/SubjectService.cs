@@ -12,7 +12,7 @@ public class SubjectService : ServiceBase
 
     public async Task<List<SubjectDto>> GetListAsync(IEventBus eventbus, [FromQuery] string filter = "")
     {
-        var inputDto = new GetSubjectInputDto { Filter = filter };
+        var inputDto = new GetSubjectInputDto(filter);
         var query = new GetSubjectListQuery(inputDto);
         await eventbus.PublishAsync(query);
         return query.Result;

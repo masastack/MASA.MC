@@ -6,7 +6,7 @@ namespace Masa.Mc.Contracts.Admin.Enums.ReceiverGroups;
 public enum ReceiverGroupItemTypes
 {
     User = 1,
-    Team = 2,
-    Role = 3,
-    Organization = 4
+    Organization,
+    Role,
+    Team
 }
