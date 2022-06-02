@@ -23,6 +23,6 @@ public class UserCommandHandler
             Email = createExternalUserDto.Email
         };
         var user = await _authClient.UserService.AddAsync(requestData);
-        command.Result = user;
+        command.Result = user.Adapt<UserDto>();
     }
 }

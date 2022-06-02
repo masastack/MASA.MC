@@ -5,5 +5,5 @@ namespace Masa.Mc.Service.Admin.Application.Subjects.Commands;
 
 public record CreateExternalUserCommand(CreateExternalUserDto ExternalUser) : Command
 {
-    public UserModel? Result { get; set; } = new();
+    public UserDto? Result { get; set; } = new();
 }

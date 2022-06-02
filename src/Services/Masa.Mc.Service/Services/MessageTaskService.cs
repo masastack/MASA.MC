@@ -18,6 +18,7 @@ public class MessageTaskService : ServiceBase
         MapPost(DisableAsync);
         MapGet(GenerateReceiverImportTemplateAsync);
         MapPost(ImportReceiversAsync);
+        MapGet(GetMessageTaskReceiverListAsync);
     }
 
     public async Task<PaginatedListDto<MessageTaskDto>> GetListAsync(IEventBus eventbus, [FromQuery] Guid? channelId, [FromQuery] MessageEntityTypes? entityType, [FromQuery] bool? isEnabled, [FromQuery] MessageTaskTimeTypes? timeType, [FromQuery] DateTimeOffset? startTime, [FromQuery] DateTimeOffset? endTime, [FromQuery] string filter = "", [FromQuery] string sorting = "", [FromQuery] int page = 1, [FromQuery] int pagesize = 10)
@@ -112,5 +113,37 @@ public class MessageTaskService : ServiceBase
         var command = new ImportReceiversCommand(dto);
         await eventBus.PublishAsync(command);
         return command.Result;
+    }
+
+    public async Task<List<MessageTaskReceiverDto>> GetMessageTaskReceiverListAsync(IEventBus eventBus, [FromQuery] string filter = "")
+    {
+        var list = new List<MessageTaskReceiverDto>();
+
+        var subjectInputDto = new GetSubjectInputDto(filter);
+        var subjectQuery = new GetSubjectListQuery(subjectInputDto);
+        await eventBus.PublishAsync(subjectQuery);
+        var subjectList = subjectQuery.Result;
+        list.AddRange(subjectList.Select(x => new MessageTaskReceiverDto
+        {
+            SubjectId = x.SubjectId,
+            DisplayName = x.Name ?? x.DisplayName,
+            Avatar = x.Avatar,
+            PhoneNumber = x.PhoneNumber,
+            Email = x.Email,
+            Type = (MessageTaskReceiverTypes)(int)x.SubjectType
+        }));
+
+        var receiverGroupInputDto = new GetReceiverGroupInputDto(filter, "", 1, 99);
+        var receiverGroupQuery = new GetReceiverGroupListQuery(receiverGroupInputDto);
+        await eventBus.PublishAsync(receiverGroupQuery);
+        var receiverGroupList = receiverGroupQuery.Result.Result;
+        list.AddRange(receiverGroupList.Select(x => new MessageTaskReceiverDto
+        {
+            SubjectId = x.Id,
+            DisplayName = x.DisplayName,
+            Type = MessageTaskReceiverTypes.Group
+        }));
+
+        return list;
     }
 }

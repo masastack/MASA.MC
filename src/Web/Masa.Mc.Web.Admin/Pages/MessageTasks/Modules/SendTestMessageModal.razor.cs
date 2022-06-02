@@ -12,7 +12,7 @@ public partial class SendTestMessageModal : AdminCompontentBase
     private bool _visible;
     private ChannelTypes? _type;
     private List<Guid> _userIds = new List<Guid>();
-    private List<UserDataDto> _stateUserItems = UserDataService.GetList();
+    private MessageTaskReceiverAutoComplete _subjectRef;
 
     MessageTaskService MessageTaskService => McCaller.MessageTaskService;
 
@@ -53,27 +53,8 @@ public partial class SendTestMessageModal : AdminCompontentBase
         _input = new();
     }
 
-    public void Remove(UserDataDto item)
-    {
-        var index = _userIds.IndexOf(item.Id);
-        if (index >= 0)
-        {
-            _userIds.RemoveAt(index);
-        }
-    }
-
     private void HandleUserChange()
     {
-        var items = _stateUserItems.Where(x => _userIds.Contains(x.Id)).ToList();
-        var dtos = items.Select(x => new MessageTaskReceiverDto
-        {
-            SubjectId = x.Id,
-            DisplayName = x.DisplayName,
-            Avatar = x.Avatar,
-            PhoneNumber = x.PhoneNumber,
-            Email = x.Email,
-            Type = MessageTaskReceiverTypes.User
-        }).ToList();
-        _input.Receivers = dtos;
+        _input.Receivers = _subjectRef.Items;
     }
 }

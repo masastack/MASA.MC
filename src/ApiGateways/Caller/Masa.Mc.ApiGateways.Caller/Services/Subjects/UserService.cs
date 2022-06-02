@@ -12,8 +12,8 @@ public class UserService : ServiceBase
         BaseUrl = "api/user";
     }
 
-    public async Task<UserModel?> CreateExternalUserAsync(CreateExternalUserDto inputDto)
+    public async Task<UserDto?> CreateExternalUserAsync(CreateExternalUserDto inputDto)
     {
-        return await PostAsync<CreateExternalUserDto, UserModel?>(nameof(CreateExternalUserAsync), inputDto);
+        return await PostAsync<CreateExternalUserDto, UserDto?>(nameof(CreateExternalUserAsync), inputDto);
     }
 }

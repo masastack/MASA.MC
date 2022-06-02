@@ -10,7 +10,7 @@ public class UserService : ServiceBase
         MapPost(CreateExternalUserAsync);
     }
 
-    public async Task<UserModel?> CreateExternalUserAsync(IEventBus eventBus, [FromBody] CreateExternalUserDto inputDto)
+    public async Task<UserDto?> CreateExternalUserAsync(IEventBus eventBus, [FromBody] CreateExternalUserDto inputDto)
     {
         var command = new CreateExternalUserCommand(inputDto);
         await eventBus.PublishAsync(command);

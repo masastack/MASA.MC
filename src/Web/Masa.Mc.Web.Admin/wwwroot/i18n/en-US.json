@@ -151,5 +151,10 @@
   "DisplayName.SubjectTypes.User": "User",
   "DisplayName.SubjectTypes.Department": "Department",
   "DisplayName.SubjectTypes.Role": "Role",
-  "DisplayName.SubjectTypes.Team": "Team"
+  "DisplayName.SubjectTypes.Team": "Team",
+  "DisplayName.MessageTaskReceiverTypes.User": "User",
+  "DisplayName.MessageTaskReceiverTypes.Organization": "Organization",
+  "DisplayName.MessageTaskReceiverTypes.Role": "Role",
+  "DisplayName.MessageTaskReceiverTypes.Team": "Team",
+  "DisplayName.MessageTaskReceiverTypes.Group": "Group"
 }

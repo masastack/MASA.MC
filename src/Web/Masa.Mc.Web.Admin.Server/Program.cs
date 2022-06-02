@@ -22,6 +22,7 @@ builder.Services.AddResponseCompression(opts =>
 });
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddGlobalForServer();
+builder.Services.AddAutoComplete();
 builder.Services.AddAuthApiGateways(option => option.McServiceBaseAddress = builder.Configuration["McServiceBaseAddress"]);
 builder.Services.AddSingleton<ChannelUpsertDtoValidator>();
 var app = builder.Build();

@@ -56,10 +56,11 @@
                      OnSelectedItemUpdate="RefreshAsync">
                 </MSelect>
             </MCol>
-            <MCol Cols="2">
+            @*<MCol Cols="2">
+                <UserAutoComplete Value="_queryParam.UserId.HasValue?_queryParam.UserId.Value:default(Guid)" ValueChanged="RefreshAsync"></UserAutoComplete>
                 <UserSelect @bind-Value="_queryParam.UserId" Placeholder="@T("DisplayName.MessageRecordUserId")" OnClearClick="RefreshAsync"
                         OnSelectedItemUpdate="RefreshAsync" />
-            </MCol>
+            </MCol>*@
             <MCol Cols="2">
                 <BooleanSelect @bind-Value="_queryParam.Success" Items="_successItems" Placeholder="@T("DisplayName.MessageRecordSuccess")" OnClearClick="RefreshAsync"
                            OnSelectedItemUpdate="RefreshAsync" />
@@ -117,7 +118,7 @@
                 }
             </ItemColContent>
             <FooterContent>
-                <Pagination Class="mt-5" @bind-Page="_queryParam.Page" @bind-PageSize="_queryParam.PageSize" Total="_entities.Total" OnChange="HandlePaginationChange" />
+                <Masa.Mc.Web.Admin.Components.Pagination.Pagination Class="mt-5" @bind-Page="_queryParam.Page" @bind-PageSize="_queryParam.PageSize" Total="_entities.Total" OnChange="HandlePaginationChange" />
             </FooterContent>
         </MDataTable>
     </MCardText>

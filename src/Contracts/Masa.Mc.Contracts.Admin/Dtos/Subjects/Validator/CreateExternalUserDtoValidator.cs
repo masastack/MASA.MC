@@ -1,7 +1,7 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
-namespace Masa.Mc.Web.Admin.Data.Auth.Subjects.Dto;
+namespace Masa.Mc.Contracts.Admin.Dtos.Subjects.Validator;
 
 public class CreateExternalUserDtoValidator : AbstractValidator<CreateExternalUserDto>
 {

@@ -6,12 +6,12 @@ namespace Masa.Mc.Web.Admin.Components.Modules.Subjects;
 public partial class ExternalUserCreateModal : AdminCompontentBase
 {
     [Parameter]
-    public EventCallback<SubjectDataDto> OnOk { get; set; }
+    public EventCallback<UserDto> OnOk { get; set; }
 
     private CreateExternalUserDto _model = new();
     private bool _visible;
 
-    ReceiverGroupService ReceiverGroupService => McCaller.ReceiverGroupService;
+    UserService UserService => McCaller.UserService;
 
     public async Task OpenModalAsync()
     {
@@ -30,22 +30,15 @@ public partial class ExternalUserCreateModal : AdminCompontentBase
 
     private async Task HandleOk()
     {
-        var id = Guid.NewGuid();
-        var subject = new SubjectDataDto
-        {
-            Id = id,
-            SubjectId = id,
-            DisplayName = _model.DisplayName,
-            PhoneNumber = _model.PhoneNumber,
-            Email = _model.Email,
-            Type = MessageTaskReceiverTypes.User
-        };
+        var user = await UserService.CreateExternalUserAsync(_model);
+
         _visible = false;
 
         if (OnOk.HasDelegate)
         {
-            await OnOk.InvokeAsync(subject);
+            await OnOk.InvokeAsync(user);
         }
+
         ResetForm();
     }
 

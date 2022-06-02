@@ -17,6 +17,7 @@ public class McCaller : HttpClientCallerBase
     WebsiteMessageService? _websiteMessageService;
     OssService? _ossService;
     SubjectService? _subjectService;
+    UserService? _userService;
     #endregion
 
     public ChannelService ChannelService => _channelService ?? (_channelService = new(CallerProvider));
@@ -40,6 +41,8 @@ public class McCaller : HttpClientCallerBase
     public OssService OssService => _ossService ?? (_ossService = new OssService(CallerProvider));
 
     public SubjectService SubjectService => _subjectService ?? (_subjectService = new(CallerProvider));
+
+    public UserService UserService => _userService ?? (_userService = new(CallerProvider));
 
     protected override string BaseAddress { get; set; }
 
