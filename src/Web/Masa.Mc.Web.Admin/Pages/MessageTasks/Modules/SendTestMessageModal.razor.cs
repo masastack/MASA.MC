@@ -53,8 +53,9 @@ public partial class SendTestMessageModal : AdminCompontentBase
         _input = new();
     }
 
-    private void HandleUserChange()
+    private void HandleUserChange(List<Guid> userId)
     {
+        _userIds = userId;
         _input.Receivers = _userRef.UserSelect.Select(x => new MessageTaskReceiverDto
         {
             SubjectId = x.Id,
