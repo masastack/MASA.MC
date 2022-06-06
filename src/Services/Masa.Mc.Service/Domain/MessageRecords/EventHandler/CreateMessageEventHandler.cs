@@ -10,33 +10,79 @@ public class CreateMessageEventHandler
     private readonly IMessageTaskHistoryRepository _messageTaskHistoryRepository;
     private readonly IReceiverGroupRepository _receiverGroupRepository;
     private readonly IDomainEventBus _eventBus;
+    private readonly IAuthClient _authClient;
     public CreateMessageEventHandler(IChannelRepository channelRepository
         , IMessageTaskHistoryRepository messageTaskHistoryRepository
         , IReceiverGroupRepository receiverGroupRepository
-        , IDomainEventBus eventBus)
+        , IDomainEventBus eventBus
+        , IAuthClient authClient)
     {
         _channelRepository = channelRepository;
         _messageTaskHistoryRepository = messageTaskHistoryRepository;
         _receiverGroupRepository = receiverGroupRepository;
         _eventBus = eventBus;
+        _authClient = authClient;
     }
 
     [EventHandler(1)]
-    public async Task CheckReceiverUsersAsync(CreateMessageEvent eto)
+    public void FillReceiverUsers(CreateMessageEvent eto)
     {
-        //Auth did not do this temporarily
-        var taskHistory = await _messageTaskHistoryRepository.FindAsync(x => x.Id == eto.MessageTaskHistoryId);
-        var receiverUsers = taskHistory.Receivers.Where(x => x.Type == MessageTaskReceiverTypes.User)
+        var receiverUsers = eto.MessageTaskHistory.Receivers.Where(x => x.Type == MessageTaskReceiverTypes.User)
             .Select(x => new MessageReceiverUser
             {
                 UserId = x.SubjectId,
                 DisplayName = x.DisplayName,
                 PhoneNumber = x.PhoneNumber,
                 Email = x.Email,
-                Variables = x.Variables.Count == 0 ? taskHistory.Variables : x.Variables,
+                Variables = x.Variables.Count == 0 ? eto.MessageTaskHistory.Variables : x.Variables,
             })
             .ToList();
-        var receiverGroupIds = taskHistory.Receivers.Where(x => x.Type == MessageTaskReceiverTypes.Group).Select(x => x.SubjectId).Distinct();
+        eto.ReceiverUsers.AddRange(receiverUsers);
+    }
+
+    [EventHandler(2)]
+    public async Task FillDepartmentUsersAsync(CreateMessageEvent eto)
+    {
+        var orgIds = eto.MessageTaskHistory.Receivers.Where(x => x.Type == MessageTaskReceiverTypes.Organization).Select(x => x.SubjectId).Distinct();
+        foreach (var orgId in orgIds)
+        {
+            var departmentUsers = await _authClient.UserService.GetListByDepartmentAsync(orgId);
+            var receiverUsers = departmentUsers.Select(x => MapToMessageReceiverUser(x, eto.MessageTaskHistory.Variables))
+            .ToList();
+            eto.ReceiverUsers.AddRange(receiverUsers);
+        }
+    }
+
+    [EventHandler(3)]
+    public async Task FillRoleUsersAsync(CreateMessageEvent eto)
+    {
+        var roleIds = eto.MessageTaskHistory.Receivers.Where(x => x.Type == MessageTaskReceiverTypes.Role).Select(x => x.SubjectId).Distinct();
+        foreach (var roleId in roleIds)
+        {
+            var roleUsers = await _authClient.UserService.GetListByRoleAsync(roleId);
+            var receiverUsers = roleUsers.Select(x => MapToMessageReceiverUser(x, eto.MessageTaskHistory.Variables))
+            .ToList();
+            eto.ReceiverUsers.AddRange(receiverUsers);
+        }
+    }
+
+    [EventHandler(4)]
+    public async Task FillTeamUsersAsync(CreateMessageEvent eto)
+    {
+        var teamIds = eto.MessageTaskHistory.Receivers.Where(x => x.Type == MessageTaskReceiverTypes.Team).Select(x => x.SubjectId).Distinct();
+        foreach (var teamId in teamIds)
+        {
+            var teamUsers = await _authClient.UserService.GetListByRoleAsync(teamId);
+            var receiverUsers = teamUsers.Select(x => MapToMessageReceiverUser(x, eto.MessageTaskHistory.Variables))
+            .ToList();
+            eto.ReceiverUsers.AddRange(receiverUsers);
+        }
+    }
+
+    [EventHandler(5)]
+    public async Task FillReceiverGroupUsersAsync(CreateMessageEvent eto)
+    {
+        var receiverGroupIds = eto.MessageTaskHistory.Receivers.Where(x => x.Type == MessageTaskReceiverTypes.Group).Select(x => x.SubjectId).Distinct();
         foreach (var receiverGroupId in receiverGroupIds)
         {
             var receiverGroup = await _receiverGroupRepository.FindAsync(x => x.Id == receiverGroupId);
@@ -48,14 +94,19 @@ public class CreateMessageEventHandler
                 DisplayName = x.DisplayName,
                 PhoneNumber = x.PhoneNumber,
                 Email = x.Email,
-                Variables = taskHistory.Variables,
+                Variables = eto.MessageTaskHistory.Variables,
             })
             .ToList();
-            receiverUsers.AddRange(receiverGroupUsers);
+            eto.ReceiverUsers.AddRange(receiverGroupUsers);
         }
-        taskHistory.SetReceiverUsers(receiverUsers);
-        taskHistory.SetSending();
-        await SendMessagesAsync(eto.ChannelId, eto.MessageData, taskHistory);
+    }
+
+    [EventHandler(6)]
+    public async Task CheckSendAsync(CreateMessageEvent eto)
+    {
+        eto.MessageTaskHistory.SetReceiverUsers(eto.ReceiverUsers);
+        eto.MessageTaskHistory.SetSending();
+        await SendMessagesAsync(eto.ChannelId, eto.MessageData, eto.MessageTaskHistory);
     }
 
     private async Task SendMessagesAsync(Guid channelId, MessageData messageData, MessageTaskHistory messageTaskHistory)
@@ -75,6 +126,18 @@ public class CreateMessageEventHandler
             default:
                 break;
         }
+    }
+
+    private MessageReceiverUser MapToMessageReceiverUser(StaffModel staff, ExtraPropertyDictionary variables)
+    {
+        return new MessageReceiverUser
+        {
+            UserId = staff.User.Id,
+            DisplayName = staff.User.Name ?? staff.User.DisplayName ?? string.Empty,
+            PhoneNumber = staff.User.PhoneNumber ?? string.Empty,
+            Email = staff.User?.Email ?? string.Empty,
+            Variables = variables,
+        };
     }
 }
 

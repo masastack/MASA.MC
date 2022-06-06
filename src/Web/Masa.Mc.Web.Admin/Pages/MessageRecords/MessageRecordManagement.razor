@@ -56,11 +56,10 @@
                      OnSelectedItemUpdate="RefreshAsync">
                 </MSelect>
             </MCol>
-            @*<MCol Cols="2">
-                <UserAutoComplete Value="_queryParam.UserId.HasValue?_queryParam.UserId.Value:default(Guid)" ValueChanged="RefreshAsync"></UserAutoComplete>
+            <MCol Cols="2">
                 <UserSelect @bind-Value="_queryParam.UserId" Placeholder="@T("DisplayName.MessageRecordUserId")" OnClearClick="RefreshAsync"
                         OnSelectedItemUpdate="RefreshAsync" />
-            </MCol>*@
+            </MCol>
             <MCol Cols="2">
                 <BooleanSelect @bind-Value="_queryParam.Success" Items="_successItems" Placeholder="@T("DisplayName.MessageRecordSuccess")" OnClearClick="RefreshAsync"
                            OnSelectedItemUpdate="RefreshAsync" />

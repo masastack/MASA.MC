@@ -69,3 +69,6 @@ global using Masa.Mc.Web.Admin.Data.Base;
 global using Microsoft.Extensions.DependencyInjection;
 global using Masa.Utils.Data.Elasticsearch;
 global using Masa.Contrib.SearchEngine.AutoComplete;
+global using Masa.BuildingBlocks.SearchEngine.AutoComplete;
+global using Masa.BuildingBlocks.SearchEngine.AutoComplete.Options;
+global using Masa.Stack.Components;

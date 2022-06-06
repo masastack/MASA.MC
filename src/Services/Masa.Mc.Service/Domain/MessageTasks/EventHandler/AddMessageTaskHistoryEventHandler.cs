@@ -22,9 +22,7 @@ public class AddMessageTaskHistoryEventHandler
     {
         var taskHistoryNo = $"SJ{UtilConvert.GetGuidToNumber()}";
         var history = new MessageTaskHistory(eto.MessageTask.Id, taskHistoryNo, eto.ReceiverType, eto.selectReceiverType, eto.Receivers, eto.SendRules, eto.SendTime, eto.Sign, eto.Variables);
-        await _repository.AddAsync(history);
-        await _repository.UnitOfWork.SaveChangesAsync();
-        await _repository.UnitOfWork.CommitAsync();
+        await _repository.AddAsync(history);;
         await PublishMessageAsync(eto.MessageTask, history);
     }
 
@@ -32,6 +30,6 @@ public class AddMessageTaskHistoryEventHandler
     {
         var messageData = await _messageTaskDomainService.GetMessageDataAsync(messageTask.EntityType, messageTask.EntityId);
         messageData.SetDataValue(nameof(MessageTemplate.Sign), messageTaskHistory.Sign);
-        await _eventBus.PublishAsync(new CreateMessageEvent(messageTask.ChannelId, messageData, messageTaskHistory.Id));
+        await _eventBus.PublishAsync(new CreateMessageEvent(messageTask.ChannelId, messageData, messageTaskHistory, new List<MessageReceiverUser>()));
     }
 }

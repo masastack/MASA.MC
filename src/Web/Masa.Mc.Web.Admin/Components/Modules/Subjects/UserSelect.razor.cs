@@ -1,0 +1,72 @@
+﻿// Copyright (c) MASA Stack All rights reserved.
+// Licensed under the Apache License. See LICENSE.txt in the project root for license information.
+
+namespace Masa.Mc.Web.Admin.Components.Modules.Subjects;
+
+public partial class UserSelect : AdminCompontentBase
+{
+    IAutoCompleteClient? _autocompleteClient;
+
+    [Parameter]
+    public Guid? Value { get; set; }
+
+    [Parameter]
+    public EventCallback<Guid?> ValueChanged { get; set; }
+
+    [Parameter]
+    public string Placeholder { get; set; } = "";
+
+    [Parameter]
+    public string Label { get; set; }
+
+    [Parameter]
+    public int Page { get; set; } = 1;
+
+    [Parameter]
+    public int PageSize { get; set; } = 10;
+
+    [Parameter]
+    public EventCallback<MouseEventArgs> OnClearClick { get; set; }
+
+    [Parameter]
+    public EventCallback<UserSelectModel> OnSelectedItemUpdate { get; set; }
+
+    protected List<UserSelectModel> Items = new();
+
+    public string Search { get; set; } = "";
+
+    [Inject]
+    public IAutoCompleteClient AutoCompleteClient
+    {
+        get => _autocompleteClient ?? throw new Exception("Please inject IAutoCompleteClient");
+        set => _autocompleteClient = value;
+    }
+
+    public async Task OnSearchChanged(string search)
+    {
+        Search = search;
+        await Task.Delay(300);
+        if (Search == "")
+        {
+            Items.Clear();
+        }
+        else if (Search == search)
+        {
+            var response = await AutoCompleteClient.GetAsync<UserSelectModel, Guid>(search, new AutoCompleteOptions
+            {
+                Page = Page,
+                PageSize = PageSize,
+            });
+            Items = response.Data;
+        }
+    }
+
+    public string TextView(UserSelectModel user)
+    {
+        if (string.IsNullOrEmpty(user.Name) is false) return user.Name;
+        if (string.IsNullOrEmpty(user.Account) is false) return user.Account;
+        if (string.IsNullOrEmpty(user.PhoneNumber) is false) return user.PhoneNumber;
+        if (string.IsNullOrEmpty(user.Email) is false) return user.Email;
+        return "";
+    }
+}

@@ -122,7 +122,6 @@ global using ICsvImporter = Masa.Mc.Infrastructure.ExporterAndImporter.Csv.ICsvI
 global using System.Dynamic;
 global using ICsvExporter = Masa.Mc.Infrastructure.ExporterAndImporter.Csv.ICsvExporter;
 global using Masa.BuildingBlocks.Ddd.Domain.Entities.Full;
-global using Masa.Utils.Extensions.Expressions;
 global using Masa.Utils.Caching.DistributedMemory.DependencyInjection;
 global using Masa.Utils.Caching.Redis.DependencyInjection;
 global using Masa.Utils.Caching.Redis.Models;
