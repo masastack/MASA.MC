@@ -23,11 +23,11 @@ public partial class SubjectAutoComplete : AdminCompontentBase
         await Task.Delay(300);
         if (Search == "")
         {
-            SubjectSelect.Clear();
+            Items.Clear();
         }
         else if (Search == search)
         {
-            SubjectSelect = await SubjectService.GetListAsync(new GetSubjectInputDto(search));
+            Items = await SubjectService.GetListAsync(new GetSubjectInputDto(search));
         }
     }
 
@@ -46,8 +46,8 @@ public partial class SubjectAutoComplete : AdminCompontentBase
         {
             await ValueChanged.InvokeAsync(value);
         }
-        var list = SubjectSelect.Where(x => value.Contains(x.SubjectId)).ToList();
-        Items = list;
+        var list = Items.Where(x => value.Contains(x.SubjectId)).ToList();
+        SubjectSelect = list;
     }
 }
 

@@ -14,15 +14,13 @@ public partial class MessageReceiversSelect : AdminCompontentBase
     [Parameter]
     public ChannelTypes? Type { get; set; }
 
-    private ExternalUserCreateModal _createModal;
-    private MessageTaskReceiverAutoComplete _subjectRef;
+    private ExternalUserCreateModal _createModal = default!;
+    private MessageTaskReceiverAutoComplete _subjectRef = default!;
     private List<Guid> _userIds = new List<Guid>();
-    private bool _loading;
-    private GetReceiverGroupInputDto _queryParam = new(99);
 
     private async Task AddAsync()
     {
-        var dtos = _subjectRef.Items;
+        var dtos = _subjectRef.SubjectSelect;
         await HandleAddAsync(dtos);
     }
 
@@ -31,10 +29,10 @@ public partial class MessageReceiversSelect : AdminCompontentBase
         var receiver = new MessageTaskReceiverDto
         {
             SubjectId = user.Id,
-            DisplayName = user.Name ?? user.DisplayName,
+            DisplayName = user.Name ?? user.DisplayName ?? string.Empty,
             Avatar = user.Avatar,
-            PhoneNumber = user.PhoneNumber,
-            Email = user.Email,
+            PhoneNumber = user.PhoneNumber ?? string.Empty,
+            Email = user.Email ?? string.Empty,
             Type = MessageTaskReceiverTypes.User
         };
         var dtos = new List<MessageTaskReceiverDto> { receiver };

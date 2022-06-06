@@ -5,9 +5,6 @@ public partial class MessageTaskReceiverAutoComplete : AdminCompontentBase
     public List<Guid> Value { get; set; } = new();
 
     [Parameter]
-    public MessageTaskReceiverTypes? Type { get; set; }
-
-    [Parameter]
     public EventCallback<List<Guid>> ValueChanged { get; set; }
 
     public List<MessageTaskReceiverDto> Items { get; set; } = new();
@@ -24,16 +21,12 @@ public partial class MessageTaskReceiverAutoComplete : AdminCompontentBase
         await Task.Delay(300);
         if (Search == "")
         {
-            SubjectSelect.Clear();
+            Items.Clear();
         }
         else if (Search == search)
         {
             var subjectList = await MessageTaskService.GetMessageTaskReceiverListAsync(search);
-            if (Type.HasValue)
-            {
-                subjectList = subjectList.Where(x => x.Type == Type).ToList();
-            }
-            SubjectSelect = subjectList;
+            Items = subjectList;
         }
     }
 
@@ -48,8 +41,8 @@ public partial class MessageTaskReceiverAutoComplete : AdminCompontentBase
     private async Task HandleValueChanged(List<Guid> value)
     {
         value = value ?? new();
-        var list = SubjectSelect.Where(x => value.Contains(x.SubjectId)).ToList();
-        Items = list;
+        var list = Items.Where(x => value.Contains(x.SubjectId)).ToList();
+        SubjectSelect = list;
 
         if (ValueChanged.HasDelegate)
         {

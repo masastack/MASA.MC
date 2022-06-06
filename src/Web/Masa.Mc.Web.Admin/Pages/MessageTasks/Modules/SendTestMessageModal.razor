@@ -9,7 +9,7 @@
             OnSave="HandleOkAsync"
             OnCancel="HandleCancel">
         <ChildContent>
-            <MessageTaskReceiverAutoComplete @ref="_subjectRef" Value="_userIds" Type="MessageTaskReceiverTypes.User" ValueChanged="HandleUserChange"></MessageTaskReceiverAutoComplete>
+            <Masa.Mc.Web.Admin.Components.Modules.Subjects.UserAutoComplete @ref="_userRef" Value="_userIds" ValueChanged="HandleUserChange"></Masa.Mc.Web.Admin.Components.Modules.Subjects.UserAutoComplete>
             <MInput @bind-Value="_input.Receivers" />
         </ChildContent>
         <SaveContent Context="save">

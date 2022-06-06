@@ -12,7 +12,7 @@ public partial class SendTestMessageModal : AdminCompontentBase
     private bool _visible;
     private ChannelTypes? _type;
     private List<Guid> _userIds = new List<Guid>();
-    private MessageTaskReceiverAutoComplete _subjectRef;
+    private Components.Modules.Subjects.UserAutoComplete _userRef;
 
     MessageTaskService MessageTaskService => McCaller.MessageTaskService;
 
@@ -55,6 +55,14 @@ public partial class SendTestMessageModal : AdminCompontentBase
 
     private void HandleUserChange()
     {
-        _input.Receivers = _subjectRef.Items;
+        _input.Receivers = _userRef.UserSelect.Select(x => new MessageTaskReceiverDto
+        {
+            SubjectId = x.Id,
+            DisplayName = x.Name,
+            Avatar = x.Avatar,
+            PhoneNumber = x.PhoneNumber,
+            Email = x.Email,
+            Type = MessageTaskReceiverTypes.User
+        }).ToList();
     }
 }

@@ -11,21 +11,20 @@ public partial class ReceiverSelect : AdminCompontentBase
     [Parameter]
     public EventCallback<List<ReceiverGroupItemDto>> ValueChanged { get; set; }
 
-    private ExternalUserCreateModal _createModal;
-    private SubjectAutoComplete _subjectRef;
+    private ExternalUserCreateModal _createModal = default!;
+    private SubjectAutoComplete _subjectRef = default!;
     private List<Guid> _userIds = new List<Guid>();
-    private bool _loading;
 
     public async Task AddAsync()
     {
-        var dtos = _subjectRef.Items.Select(x => new ReceiverGroupItemDto
+        var dtos = _subjectRef.SubjectSelect.Select(x => new ReceiverGroupItemDto
         {
             Type = (ReceiverGroupItemTypes)((int)x.SubjectType),
             SubjectId = x.SubjectId,
-            DisplayName = x.Name ?? x.DisplayName,
-            Avatar = x.Avatar,
-            PhoneNumber = x.PhoneNumber,
-            Email = x.Email
+            DisplayName = x.Name ?? x.DisplayName ?? string.Empty,
+            Avatar = x.Avatar ?? string.Empty,
+            PhoneNumber = x.PhoneNumber ?? string.Empty,
+            Email = x.Email ?? string.Empty
         });
 
         foreach (var dto in dtos)
@@ -50,10 +49,10 @@ public partial class ReceiverSelect : AdminCompontentBase
         {
             Type = ReceiverGroupItemTypes.User,
             SubjectId = user.Id,
-            DisplayName = user.Name ?? user.DisplayName,
+            DisplayName = user.Name ?? user.DisplayName ?? string.Empty,
             Avatar = user.Avatar,
-            PhoneNumber = user.PhoneNumber,
-            Email = user.Email
+            PhoneNumber = user.PhoneNumber ?? string.Empty,
+            Email = user.Email ?? string.Empty
         });
         await ValueChanged.InvokeAsync(Value);
         await SuccessMessageAsync(T("ExternalMemberAddMessage"));
