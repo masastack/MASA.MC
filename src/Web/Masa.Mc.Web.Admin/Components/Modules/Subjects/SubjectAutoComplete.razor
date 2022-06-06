@@ -32,15 +32,15 @@
             else
             {
                 @if (string.IsNullOrEmpty(data.Item.Avatar))
-            {
-                <EmptyAvatar Class="ma-auto" Size=30 Value="@(data.Item.Name??data.Item.DisplayName)" />
-            }
-            else
-            {
-                <MAvatar Size=30 Class="ma-auto">
-                    <img src="@data.Item.Avatar" />
-                </MAvatar>
-            }
+                {
+                    <EmptyAvatar Class="ma-auto" Size=30 Value="@(data.Item.Name??data.Item.DisplayName)" />
+                }
+                else
+                {
+                    <MAvatar Size=30 Class="ma-auto">
+                        <img src="@data.Item.Avatar" />
+                    </MAvatar>
+                }
             }
             
             <div class="ma-auto ml-2">

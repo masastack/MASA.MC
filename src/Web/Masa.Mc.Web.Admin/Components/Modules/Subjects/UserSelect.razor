@@ -23,9 +23,16 @@
     </PrependInnerContent>
     <ItemContent Context="data">
         <div class="d-flex" style="height:48px;">
-            <MAvatar Size=30 Class="ma-auto">
-                <img src="@data.Item.Avatar" />
-            </MAvatar>
+            @if (string.IsNullOrEmpty(data.Item.Avatar))
+            {
+                <EmptyAvatar Class="ma-auto" Size=30 Value="@(data.Item.Name)" />
+            }
+            else
+            {
+                <MAvatar Size=30 Class="ma-auto">
+                    <img src="@data.Item.Avatar" />
+                </MAvatar>
+            }
             <div class="ma-auto ml-2">
                 <div class="d-flex">
                     <span class="text-btn default-lighten-1--text">@data.Item.Name</span>

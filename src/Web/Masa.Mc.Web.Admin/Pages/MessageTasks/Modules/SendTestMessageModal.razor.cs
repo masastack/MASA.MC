@@ -10,16 +10,14 @@ public partial class SendTestMessageModal : AdminCompontentBase
 
     private SendTestMessageTaskInputDto _input = new();
     private bool _visible;
-    private ChannelTypes? _type;
     private List<Guid> _userIds = new List<Guid>();
-    private Components.Modules.Subjects.UserAutoComplete _userRef;
+    private Components.Modules.Subjects.UserAutoComplete _userRef = default!;
 
     MessageTaskService MessageTaskService => McCaller.MessageTaskService;
 
     public async Task OpenModalAsync(Guid messageTaskId, ChannelTypes? type)
     {
         _input.Id = messageTaskId;
-        _type = type;
         await InvokeAsync(() =>
         {
             _visible = true;
