@@ -43,10 +43,10 @@ builder.Services.AddSignalR();
 builder.Services.AddTransient<NotificationsHub>();
 TypeAdapterConfig.GlobalSettings.Scan(Assembly.GetExecutingAssembly(), Assembly.Load("Masa.Mc.Contracts.Admin"));
 
-if (!builder.Environment.IsProduction())
-{
-    builder.Services.AddDaprStarter(builder.Configuration.GetSection(nameof(DaprOptions)));
-}
+//if (!builder.Environment.IsProduction())
+//{
+//    builder.Services.AddDaprStarter(builder.Configuration.GetSection(nameof(DaprOptions)));
+//}
 
 var app = builder.Services
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
