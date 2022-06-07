@@ -5,11 +5,13 @@ namespace Masa.Mc.Service.Admin.Services;
 
 public class MessageTaskHistoryService : ServiceBase
 {
+    private const string DAPR_PUBSUB_NAME = "pubsub";
     public MessageTaskHistoryService(IServiceCollection services) : base(services, "api/message-task-history")
     {
         MapGet(GetAsync, "{id}");
         MapGet(GetListAsync, string.Empty);
         MapPost(WithdrawnAsync);
+        MapPost(SendMessageAsync);
     }
 
     public async Task<PaginatedListDto<MessageTaskHistoryDto>> GetListAsync(IEventBus eventbus, [FromQuery] Guid? messageTaskId, [FromQuery] MessageTaskHistoryStatuses? status, [FromQuery] DateTimeOffset? startTime, [FromQuery] DateTimeOffset? endTime, [FromQuery] string filter = "", [FromQuery] string sorting = "", [FromQuery] int page = 1, [FromQuery] int pagesize = 10)
@@ -31,5 +33,11 @@ public class MessageTaskHistoryService : ServiceBase
     {
         var command = new WithdrawnMessageTaskHistoryCommand(inputDto);
         await eventBus.PublishAsync(command);
+    }
+
+    [Topic(DAPR_PUBSUB_NAME, nameof(CreateMessageIntegrationDomainEvent))]
+    public async Task SendMessageAsync(IEventBus eventbus, CreateMessageIntegrationDomainEvent @event)
+    {
+        await eventbus.PublishAsync(new CreateMessageEvent(@event.ChannelId, @event.MessageData, @event.MessageTaskHistoryId));
     }
 }

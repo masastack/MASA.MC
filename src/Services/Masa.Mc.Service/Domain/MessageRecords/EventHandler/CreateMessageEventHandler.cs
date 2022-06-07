@@ -3,7 +3,6 @@
 
 namespace Masa.Mc.Service.Admin.Domain.MessageRecords.EventHandler;
 
-//did not finish
 public class CreateMessageEventHandler
 {
     private readonly IChannelRepository _channelRepository;
@@ -25,8 +24,12 @@ public class CreateMessageEventHandler
     }
 
     [EventHandler(1)]
-    public void FillReceiverUsers(CreateMessageEvent eto)
+    public async void FillReceiverUsers(CreateMessageEvent eto)
     {
+        eto.ReceiverUsers = new List<MessageReceiverUser>();
+        eto.MessageTaskHistory = await _messageTaskHistoryRepository.FindAsync(x => x.Id == eto.MessageTaskHistoryId);
+        if (eto.MessageTaskHistory == null || eto.MessageTaskHistory.ReceiverType == ReceiverTypes.Broadcast) return;
+
         var receiverUsers = eto.MessageTaskHistory.Receivers.Where(x => x.Type == MessageTaskReceiverTypes.User)
             .Select(x => new MessageReceiverUser
             {
@@ -43,6 +46,8 @@ public class CreateMessageEventHandler
     [EventHandler(2)]
     public async Task FillDepartmentUsersAsync(CreateMessageEvent eto)
     {
+        if (eto.MessageTaskHistory == null || eto.MessageTaskHistory.ReceiverType == ReceiverTypes.Broadcast) return;
+
         var orgIds = eto.MessageTaskHistory.Receivers.Where(x => x.Type == MessageTaskReceiverTypes.Organization).Select(x => x.SubjectId).Distinct();
         foreach (var orgId in orgIds)
         {
@@ -56,6 +61,8 @@ public class CreateMessageEventHandler
     [EventHandler(3)]
     public async Task FillRoleUsersAsync(CreateMessageEvent eto)
     {
+        if (eto.MessageTaskHistory == null || eto.MessageTaskHistory.ReceiverType == ReceiverTypes.Broadcast) return;
+
         var roleIds = eto.MessageTaskHistory.Receivers.Where(x => x.Type == MessageTaskReceiverTypes.Role).Select(x => x.SubjectId).Distinct();
         foreach (var roleId in roleIds)
         {
@@ -69,6 +76,8 @@ public class CreateMessageEventHandler
     [EventHandler(4)]
     public async Task FillTeamUsersAsync(CreateMessageEvent eto)
     {
+        if (eto.MessageTaskHistory == null || eto.MessageTaskHistory.ReceiverType == ReceiverTypes.Broadcast) return;
+
         var teamIds = eto.MessageTaskHistory.Receivers.Where(x => x.Type == MessageTaskReceiverTypes.Team).Select(x => x.SubjectId).Distinct();
         foreach (var teamId in teamIds)
         {
@@ -82,6 +91,8 @@ public class CreateMessageEventHandler
     [EventHandler(5)]
     public async Task FillReceiverGroupUsersAsync(CreateMessageEvent eto)
     {
+        if (eto.MessageTaskHistory == null || eto.MessageTaskHistory.ReceiverType == ReceiverTypes.Broadcast) return;
+
         var receiverGroupIds = eto.MessageTaskHistory.Receivers.Where(x => x.Type == MessageTaskReceiverTypes.Group).Select(x => x.SubjectId).Distinct();
         foreach (var receiverGroupId in receiverGroupIds)
         {
@@ -104,7 +115,9 @@ public class CreateMessageEventHandler
     [EventHandler(6)]
     public async Task CheckSendAsync(CreateMessageEvent eto)
     {
-        eto.MessageTaskHistory.SetReceiverUsers(eto.ReceiverUsers);
+        var receiverUsers = eto.ReceiverUsers;
+        if (eto.MessageTaskHistory==null) return;
+        eto.MessageTaskHistory.SetReceiverUsers(receiverUsers);
         eto.MessageTaskHistory.SetSending();
         await SendMessagesAsync(eto.ChannelId, eto.MessageData, eto.MessageTaskHistory);
     }

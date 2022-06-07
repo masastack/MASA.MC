@@ -37,8 +37,8 @@ public class SendWebsiteMessageEventHandler
         }
         taskHistory.SetComplete();
         await _messageTaskHistoryRepository.UpdateAsync(taskHistory);
-        await _messageTaskHistoryRepository.UnitOfWork.SaveChangesAsync();
-        await _messageTaskHistoryRepository.UnitOfWork.CommitAsync();
+        //await _messageTaskHistoryRepository.UnitOfWork.SaveChangesAsync();
+        //await _messageTaskHistoryRepository.UnitOfWork.CommitAsync();
 
         if (taskHistory.ReceiverType == ReceiverTypes.Broadcast)
         {

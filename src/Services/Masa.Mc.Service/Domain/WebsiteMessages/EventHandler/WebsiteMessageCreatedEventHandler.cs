@@ -38,7 +38,6 @@ public class WebsiteMessageCreatedEventHandler
                 PhoneNumber = TempCurrentUserConsts.PHONE_NUMBER
             };
             await _websiteMessageDomainService.CreateAsync(messageData, taskHistory, receiverUser);
-
         }
         var onlineClients = _hubContext.Clients.User(@event.UserId.ToString());
         await onlineClients.SendAsync(SignalRMethodConsts.GET_NOTIFICATION);
