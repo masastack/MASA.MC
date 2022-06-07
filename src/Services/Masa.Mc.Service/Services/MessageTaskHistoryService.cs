@@ -36,8 +36,8 @@ public class MessageTaskHistoryService : ServiceBase
     }
 
     [Topic(DAPR_PUBSUB_NAME, nameof(CreateMessageIntegrationDomainEvent))]
-    public async Task SendMessageAsync(IEventBus eventbus, CreateMessageIntegrationDomainEvent @event)
+    public async Task SendMessageAsync(IEventBus eventBus, CreateMessageIntegrationDomainEvent @event)
     {
-        await eventbus.PublishAsync(new CreateMessageEvent(@event.ChannelId, @event.MessageData, @event.MessageTaskHistoryId));
+        await eventBus.PublishAsync(new CreateMessageEvent(@event.ChannelId, @event.MessageData, @event.MessageTaskHistoryId));
     }
 }
