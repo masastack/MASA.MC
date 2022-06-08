@@ -27,7 +27,8 @@ public class CreateMessageEventHandler
     public async void FillReceiverUsers(CreateMessageEvent eto)
     {
         eto.ReceiverUsers = new List<MessageReceiverUser>();
-        eto.MessageTaskHistory = await _messageTaskHistoryRepository.FindAsync(x => x.Id == eto.MessageTaskHistoryId);
+        var messageTaskHistory = await _messageTaskHistoryRepository.FindAsync(x => x.Id == eto.MessageTaskHistoryId);
+        eto.MessageTaskHistory = messageTaskHistory;
         if (eto.MessageTaskHistory == null || eto.MessageTaskHistory.ReceiverType == ReceiverTypes.Broadcast) return;
 
         var receiverUsers = eto.MessageTaskHistory.Receivers.Where(x => x.Type == MessageTaskReceiverTypes.User)
@@ -116,7 +117,7 @@ public class CreateMessageEventHandler
     public async Task CheckSendAsync(CreateMessageEvent eto)
     {
         var receiverUsers = eto.ReceiverUsers;
-        if (eto.MessageTaskHistory==null) return;
+        if (eto.MessageTaskHistory == null) return;
         eto.MessageTaskHistory.SetReceiverUsers(receiverUsers);
         eto.MessageTaskHistory.SetSending();
         await SendMessagesAsync(eto.ChannelId, eto.MessageData, eto.MessageTaskHistory);

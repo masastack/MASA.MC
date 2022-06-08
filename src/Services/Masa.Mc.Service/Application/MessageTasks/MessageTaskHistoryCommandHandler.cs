@@ -6,10 +6,12 @@ namespace Masa.Mc.Service.Admin.Application.MessageTasks;
 public class MessageTaskHistoryCommandHandler
 {
     private readonly IMessageTaskHistoryRepository _repository;
+    private readonly MessageTaskHistoryDomainService _domainService;
 
-    public MessageTaskHistoryCommandHandler(IMessageTaskHistoryRepository repository)
+    public MessageTaskHistoryCommandHandler(IMessageTaskHistoryRepository repository, MessageTaskHistoryDomainService domainService)
     {
         _repository = repository;
+        _domainService = domainService;
     }
 
     [EventHandler]
@@ -22,5 +24,11 @@ public class MessageTaskHistoryCommandHandler
             throw new UserFriendlyException("withdrawn");
         entity.SetWithdraw();
         await _repository.UpdateAsync(entity);
+    }
+
+    [EventHandler]
+    public async Task ExecuteHistoryAsync(ExecuteMessageTaskHistoryCommand command)
+    {
+        await _domainService.ExecuteAsync(command.Input.HistoryId);
     }
 }
