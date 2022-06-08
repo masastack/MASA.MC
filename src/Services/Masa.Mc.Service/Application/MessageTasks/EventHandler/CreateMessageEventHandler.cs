@@ -27,8 +27,7 @@ public class CreateMessageEventHandler
     public async void FillReceiverUsers(CreateMessageEvent eto)
     {
         eto.ReceiverUsers = new List<MessageReceiverUser>();
-        var messageTaskHistory = await _messageTaskHistoryRepository.FindAsync(x => x.Id == eto.MessageTaskHistoryId);
-        eto.MessageTaskHistory = messageTaskHistory;
+        eto.MessageTaskHistory = (await _messageTaskHistoryRepository.WithDetailsAsync()).FirstOrDefault(x => x.Id == eto.MessageTaskHistoryId);
         if (eto.MessageTaskHistory == null || eto.MessageTaskHistory.ReceiverType == ReceiverTypes.Broadcast) return;
 
         var receiverUsers = eto.MessageTaskHistory.Receivers.Where(x => x.Type == MessageTaskReceiverTypes.User)
@@ -42,6 +41,15 @@ public class CreateMessageEventHandler
             })
             .ToList();
         eto.ReceiverUsers.AddRange(receiverUsers);
+
+        var orgIds = eto.MessageTaskHistory.Receivers.Where(x => x.Type == MessageTaskReceiverTypes.Organization).Select(x => x.SubjectId).Distinct();
+        foreach (var orgId in orgIds)
+        {
+            var departmentUsers = await _authClient.UserService.GetListByDepartmentAsync(orgId);
+            var receiverUsers2 = departmentUsers.Select(x => MapToMessageReceiverUser(x, eto.MessageTaskHistory.Variables))
+            .ToList();
+            eto.ReceiverUsers.AddRange(receiverUsers2);
+        }
     }
 
     [EventHandler(2)]
@@ -82,7 +90,7 @@ public class CreateMessageEventHandler
         var teamIds = eto.MessageTaskHistory.Receivers.Where(x => x.Type == MessageTaskReceiverTypes.Team).Select(x => x.SubjectId).Distinct();
         foreach (var teamId in teamIds)
         {
-            var teamUsers = await _authClient.UserService.GetListByRoleAsync(teamId);
+            var teamUsers = await _authClient.UserService.GetListByTeamAsync(teamId);
             var receiverUsers = teamUsers.Select(x => MapToMessageReceiverUser(x, eto.MessageTaskHistory.Variables))
             .ToList();
             eto.ReceiverUsers.AddRange(receiverUsers);
@@ -117,7 +125,6 @@ public class CreateMessageEventHandler
     public async Task CheckSendAsync(CreateMessageEvent eto)
     {
         var receiverUsers = eto.ReceiverUsers;
-        if (eto.MessageTaskHistory == null) return;
         eto.MessageTaskHistory.SetReceiverUsers(receiverUsers);
         eto.MessageTaskHistory.SetSending();
         await SendMessagesAsync(eto.ChannelId, eto.MessageData, eto.MessageTaskHistory);

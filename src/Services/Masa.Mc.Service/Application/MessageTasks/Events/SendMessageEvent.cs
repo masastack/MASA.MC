@@ -3,6 +3,6 @@
 
 namespace Masa.Mc.Service.Admin.Application.MessageTasks.Events;
 
-public record SendMessageEvent(Guid ChannelId, MessageData MessageData, MessageTaskHistory MessageTaskHistory) : DomainEvent
+public record SendMessageEvent(Guid ChannelId, MessageData MessageData, MessageTaskHistory MessageTaskHistory) : Event
 {
 }
