@@ -12,7 +12,6 @@ public class MessageTaskHistoryService : ServiceBase
         MapGet(GetListAsync, string.Empty);
         MapPost(WithdrawnAsync);
         MapPost(SendMessageAsync);
-        MapPost(ExecuteAsync);
     }
 
     public async Task<PaginatedListDto<MessageTaskHistoryDto>> GetListAsync(IEventBus eventbus, [FromQuery] Guid? messageTaskId, [FromQuery] MessageTaskHistoryStatuses? status, [FromQuery] DateTimeOffset? startTime, [FromQuery] DateTimeOffset? endTime, [FromQuery] string filter = "", [FromQuery] string sorting = "", [FromQuery] int page = 1, [FromQuery] int pagesize = 10)
@@ -40,11 +39,5 @@ public class MessageTaskHistoryService : ServiceBase
     public async Task SendMessageAsync(IEventBus eventBus, CreateMessageIntegrationDomainEvent @event)
     {
         await eventBus.PublishAsync(new CreateMessageEvent(@event.ChannelId, @event.MessageData, @event.MessageTaskHistoryId));
-    }
-
-    public async Task ExecuteAsync(IEventBus eventBus, ExecuteMessageTaskHistoryInputDto inputDto)
-    {
-        var command = new ExecuteMessageTaskHistoryCommand(inputDto);
-        await eventBus.PublishAsync(command);
     }
 }
