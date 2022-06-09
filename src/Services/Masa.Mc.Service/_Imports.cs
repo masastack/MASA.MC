@@ -154,4 +154,4 @@ global using Masa.Mc.Service.Admin.Application.Subjects.Queries;
 global using Masa.Mc.Service.Admin.Application.Subjects.Commands;
 global using Masa.BuildingBlocks.BasicAbility.Auth.Model;
 global using Masa.BuildingBlocks.SearchEngine.AutoComplete;
-global using Masa.Mc.Service.Admin.Application.MessageTasks.Events;
+global using Masa.BuildingBlocks.BasicAbility.Auth.Enum;

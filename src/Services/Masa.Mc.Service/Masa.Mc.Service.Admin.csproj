@@ -60,8 +60,4 @@
 	  <ProjectReference Include="..\..\Infrastructure\Masa.Mc.Infrastructure.Sms.Aliyun\Masa.Mc.Infrastructure.Sms.Aliyun.csproj" />
 	  <ProjectReference Include="..\..\Infrastructure\Masa.Mc.Infrastructure.Sms\Masa.Mc.Infrastructure.Sms.csproj" />
 	</ItemGroup>
-	
-	<ItemGroup>
-	  <Folder Include="Domain\Channels\Events\" />
-	</ItemGroup>
 </Project>

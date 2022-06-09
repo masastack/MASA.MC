@@ -26,7 +26,7 @@ public class MessageTaskDomainService : DomainService
     {
         if (!messageTask.IsDraft)
         {
-            messageTask.SendTask(messageTask.ReceiverType, messageTask.Receivers, messageTask.SelectReceiverType, messageTask.SendRules, messageTask.SendTime, messageTask.Sign, messageTask.Variables);
+            messageTask.SendTask(messageTask.ReceiverType, messageTask.Receivers, messageTask.SelectReceiverType, messageTask.SendRules, messageTask.Sign, messageTask.Variables);
         }
         else
         {
@@ -36,7 +36,7 @@ public class MessageTaskDomainService : DomainService
         if (!messageTask.IsDraft)
         {
             await _repository.UnitOfWork.SaveChangesAsync();
-            await EventBus.PublishAsync(new AddMessageTaskHistoryEvent(messageTask, messageTask.ReceiverType, messageTask.SelectReceiverType, messageTask.Receivers, messageTask.SendRules, messageTask.SendTime, messageTask.Sign, messageTask.Variables));
+            await EventBus.PublishAsync(new AddMessageTaskHistoryEvent(messageTask, messageTask.ReceiverType, messageTask.SelectReceiverType, messageTask.Receivers, messageTask.SendRules, messageTask.Sign, messageTask.Variables));
         }
     }
 
@@ -44,7 +44,7 @@ public class MessageTaskDomainService : DomainService
     {
         if (!messageTask.IsDraft)
         {
-            messageTask.SendTask(messageTask.ReceiverType, messageTask.Receivers, messageTask.SelectReceiverType, messageTask.SendRules, messageTask.SendTime, messageTask.Sign, messageTask.Variables);
+            messageTask.SendTask(messageTask.ReceiverType, messageTask.Receivers, messageTask.SelectReceiverType, messageTask.SendRules, messageTask.Sign, messageTask.Variables);
         }
         else
         {
@@ -54,7 +54,7 @@ public class MessageTaskDomainService : DomainService
         if (!messageTask.IsDraft)
         {
             await _repository.UnitOfWork.SaveChangesAsync();
-            await EventBus.PublishAsync(new AddMessageTaskHistoryEvent(messageTask, messageTask.ReceiverType, messageTask.SelectReceiverType, messageTask.Receivers, messageTask.SendRules, messageTask.SendTime, messageTask.Sign, messageTask.Variables));
+            await EventBus.PublishAsync(new AddMessageTaskHistoryEvent(messageTask, messageTask.ReceiverType, messageTask.SelectReceiverType, messageTask.Receivers, messageTask.SendRules, messageTask.Sign, messageTask.Variables));
         }
     }
 
@@ -65,10 +65,10 @@ public class MessageTaskDomainService : DomainService
             throw new UserFriendlyException("messageTask not found");
         if (!messageTask.IsEnabled)
             throw new UserFriendlyException("cannot send when disabled");
-        messageTask.SendTask(receiverType, receivers, selectReceiverType, sendRules, sendTime, sign, variables);
+        messageTask.SendTask(receiverType, receivers, selectReceiverType, sendRules, sign, variables);
         await _repository.UpdateAsync(messageTask);
         await _repository.UnitOfWork.SaveChangesAsync();
-        await EventBus.PublishAsync(new AddMessageTaskHistoryEvent(messageTask, receiverType, selectReceiverType, receivers, sendRules, sendTime, sign, variables));
+        await EventBus.PublishAsync(new AddMessageTaskHistoryEvent(messageTask, receiverType, selectReceiverType, receivers, sendRules, sign, variables));
     }
 
     public virtual async Task<MessageData> GetMessageDataAsync(MessageEntityTypes entityType, Guid entityId, ExtraPropertyDictionary variables = null)

@@ -27,10 +27,7 @@ public class MessageTaskHistoryDomainService : DomainService
         var messageTaskHistory = await _repository.FindAsync(x=>x.Id== messageTaskHistoryId);
         var messageData = await GetMessageDataAsync(messageTaskHistory.MessageTask.EntityType, messageTaskHistory.MessageTask.EntityId);
         messageData.SetDataValue(nameof(MessageTemplate.Sign), messageTaskHistory.Sign);
-        //await EventBus.PublishAsync(new CreateMessageEvent(messageTaskHistory.MessageTask.ChannelId, messageData, messageTaskHistory.Id));
-        await _repository.UnitOfWork.SaveChangesAsync();
-        await _repository.UnitOfWork.CommitAsync();
-        await EventBus.PublishAsync(new CreateMessageIntegrationDomainEvent(messageTaskHistory.MessageTask.ChannelId, messageData, messageTaskHistory.Id));
+        await EventBus.PublishAsync(new CreateMessageEvent(messageTaskHistory.MessageTask.ChannelId, messageData, messageTaskHistory.Id));
     }
 
     public virtual async Task<MessageData> GetMessageDataAsync(MessageEntityTypes entityType, Guid entityId, ExtraPropertyDictionary variables = null)
