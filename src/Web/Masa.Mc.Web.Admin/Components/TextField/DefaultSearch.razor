@@ -1,0 +1,44 @@
+﻿<MTextField Value="Value"
+            ValueChanged="ValueChanged"
+            Class="@Class"
+            Dense="@Dense"
+            Flat
+            Placeholder="Search"
+            HideDetails="true"
+            OnKeyDown="HandleOnKeyDown"
+            Solo
+            Style="@($"border-radius:10px; mix-blend-mode: normal;{Style}")">
+            <PrependInnerContent>
+                <MIcon Size=16 Class="mr-2 neutral-lighten-1--text">mdi-magnify</MIcon>
+            </PrependInnerContent>
+</MTextField>
+
+@code {
+
+    [Parameter]
+    public string? Value { get; set; }
+
+    [Parameter]
+    public EventCallback<string?> ValueChanged { get; set; }
+
+    [Parameter]
+    public string? Class { get; set; }
+
+    [Parameter]
+    public bool Dense { get; set; }
+
+    [Parameter]
+    public EventCallback OnEnter { get; set; }
+
+    [Parameter]
+    public string? Style { get; set; }
+
+    private async Task HandleOnKeyDown(KeyboardEventArgs args)
+    {
+        if (args.Key == "Enter" && OnEnter.HasDelegate)
+        {
+            await OnEnter.InvokeAsync();
+        }
+    }
+
+}

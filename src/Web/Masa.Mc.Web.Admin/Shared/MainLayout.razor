@@ -4,30 +4,29 @@
 @inject IPopupService PopupService
 @inject I18n I18n
 @implements IDisposable
+<div class="main-layout">
+    <MApp Class="masa" ConfirmParameters="@(param => { param.OkText = I18n.T("Ok");param.CancelText = I18n.T("Cancel"); })">
+        <MAppBar Elevation=0 App MaxHeight=60 Class="mx-6 rounded-b-4 fill-background pa-0 app-bar">
+            <DefaultSearch />
+            <MSpacer />
+            <Favorite />
+            <Language />
+            <HeaderRight />
+        </MAppBar>
 
-<MApp Class="masa" ConfirmParameters="@(param => { param.OkText = I18n.T("Ok");param.CancelText = I18n.T("Cancel"); })">
-    <MAppBar Elevation=0 App MaxHeight=60 Class="mx-6 rounded-b-4 white">
-        <Favorite />
-        <MSpacer />
-        <Search />
-        <MIcon Size=20 Class="ml-5" Color="neutral-lighten-3">mdi-message-processing-outline</MIcon>
-        <Language />
-        <HeaderRight />
-    </MAppBar>
+        <Navigation />
 
-    <Navigation />
-
-    <MMain Class="fill-lighten-1" Style="padding-top:60px">
-        <MErrorHandler OnErrorHandleAsync="CustomErrorHandleAsync">
-            <div class="pa-6 max-width full-height">
-                @Body
-            </div>
-        </MErrorHandler>
-        <MLoading />
-        <MConfirmDialog />
-    </MMain>
-</MApp>
-
+        <MMain Class="fill-lighten-1" Style="padding-top:60px">
+            <MErrorHandler OnErrorHandleAsync="CustomErrorHandleAsync">
+                <div class="pa-6 max-width full-height">
+                    @Body
+                </div>
+            </MErrorHandler>
+            <MLoading />
+            <MConfirmDialog />
+        </MMain>
+    </MApp>
+</div>
 @code {
     protected override void OnInitialized()
     {
