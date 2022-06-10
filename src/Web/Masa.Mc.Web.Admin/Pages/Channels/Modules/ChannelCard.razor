@@ -3,7 +3,7 @@
     <MCardTitle class="px-0 py-1">
         <MListItem>
             <MListItemTitle Class="overflow-visible">
-                <span class="emphasis2 rounded-r-xl fill--text ml-n6" style="padding: 2px 16px">@T(Channel.Type.ToString())</span>
+                <span class="emphasis2 rounded-r-xl fill--text ml-n6 caption" style="padding: 2px 16px">@T(Channel.Type.ToString())</span>
             </MListItemTitle>
             <MListItemIcon Class="mr-n2">
                 <MIcon Size=20 OnClick="HandleEditClick" Color="#A3AED0">mdi-pencil</MIcon>
@@ -12,7 +12,7 @@
     </MCardTitle>
     <MCardText class="flex-grow-1 px-0 d-flex flex-column justify-center align-center">
         <div class="h6 emphasis--text">@Channel.DisplayName</div>
-        <div class="caption default2--text">@Channel.Code</div>
+        <div class="caption regular3--text">@Channel.Code</div>
     </MCardText>
     <div class="fill-hover caption px-2 py-1 regular2--text text-justify line-clamp-2 rounded-lg" style="height:44px">@Channel.Description</div>
     <MCardActions class="px-3 pb-3">

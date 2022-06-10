@@ -9,16 +9,16 @@ public partial class DateRangePicker
     public DateTimeOffset? StartTime { get; set; }
 
     [Parameter]
-    public EventCallback<DateTimeOffset?> StartTimeChanged { get; set; }
+    public EventCallback<DateTime?> StartTimeChanged { get; set; }
 
     [Parameter]
     public DateTimeOffset? EndTime { get; set; }
 
     [Parameter]
-    public EventCallback<DateTimeOffset?> EndTimeChanged { get; set; }
+    public EventCallback<DateTime?> EndTimeChanged { get; set; }
 
     [Parameter]
-    public EventCallback OnChange{ get; set; }
+    public EventCallback OnChange { get; set; }
 
     private bool StartTimeVisible { get; set; }
 
@@ -41,7 +41,7 @@ public partial class DateRangePicker
         else
         {
             StartTime = startTime;
-            if (StartTimeChanged.HasDelegate) await StartTimeChanged.InvokeAsync(StartTime);
+            if (StartTimeChanged.HasDelegate) await StartTimeChanged.InvokeAsync(StartTime != null ? StartTime.Value.DateTime : null);
             if (OnChange.HasDelegate) await OnChange.InvokeAsync();
         }
     }
@@ -53,7 +53,7 @@ public partial class DateRangePicker
         else
         {
             EndTime = endTime;
-            if (StartTimeChanged.HasDelegate) await EndTimeChanged.InvokeAsync(EndTime);
+            if (StartTimeChanged.HasDelegate) await EndTimeChanged.InvokeAsync(EndTime != null ? EndTime.Value.DateTime : null);
             if (OnChange.HasDelegate) await OnChange.InvokeAsync();
         }
     }
