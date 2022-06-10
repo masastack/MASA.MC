@@ -8,7 +8,7 @@ public partial class MessageRecordManagement : AdminCompontentBase
     public List<DataTableHeader<MessageRecordDto>> Headers { get; set; } = new();
 
     private MessageRecordDetailModal _detailModal = default!;
-    private GetMessageRecordInputDto _queryParam = new();
+    private GetMessageRecordInputDto _queryParam = new() { TimeType = MessageRecordTimeTypes.SendTime };
     private PaginatedListDto<MessageRecordDto> _entities = new();
     private List<ChannelDto> _channelItems = new();
     private bool advanced = true;
@@ -84,7 +84,7 @@ public partial class MessageRecordManagement : AdminCompontentBase
 
     private async Task HandleClearAsync()
     {
-        _queryParam = new();
+        _queryParam = new() { TimeType = MessageRecordTimeTypes.SendTime };
         await LoadData();
     }
 

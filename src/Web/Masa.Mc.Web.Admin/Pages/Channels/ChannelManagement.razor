@@ -4,7 +4,7 @@
 <PageTitle>@T("Permission.ChannelManagement")</PageTitle>
 <MRow Class="ma-0">
     <DefaultSearch @bind-Value="_queryParam.Filter" Clearable Class="rounded-2 search" Placeholder="@T("Search")" Dense OnEnter="RefreshAsync" OnClearClick="HandleClearAsync" />
-    <MButton Color="primary" Class="ml-6 rounded-lg" OnClick="()=> _createModal.OpenModalAsync()">
+    <MButton Color="primary" Class="ml-6 rounded-lg btn" OnClick="()=> _createModal.OpenModalAsync()">
         <span>@T("Permission.CreateChannel")</span>
     </MButton>
 </MRow>
@@ -16,11 +16,6 @@
             <ChannelCard Height="375" Channel="_entitie" OnEditClick="async()=>await _editModal.OpenModalAsync(_entitie)" />
         </MCol>
     }
-    <MCol Md="3">
-        <MCard Outlined class="d-flex justify-center align-center" Style="border-style: dashed;" Height="375">
-            <MButton Class="text-h6" Ripple=false Plain OnClick="()=> _createModal.OpenModalAsync()"><MIcon Size="28" Left>mdi-plus</MIcon>@T("Permission.CreateChannel")</MButton>
-        </MCard>
-    </MCol>
 </MRow>
 <Masa.Mc.Web.Admin.Components.Pagination.Pagination Class="mt-5" @bind-Page="_queryParam.Page" @bind-PageSize="_queryParam.PageSize" Total="_entities.Total" OnChange="HandlePaginationChange" />
 

@@ -8,7 +8,8 @@
                Items="Items"
                OnSearchInputUpdate="OnSearchChanged"
                HideDetails="@("auto")"
-               Outlined
+               Dense
+               Solo
                Clearable
                HideNoData
                HideSelected
@@ -16,6 +17,7 @@
                ItemValue="u=>u.Id"
                Label="@Label"
                Placeholder="@Placeholder"
+               Class="fill-card body2"
                OnClearClick="OnClearClick"
                OnSelectedItemUpdate="OnSelectedItemUpdate">
     <PrependInnerContent>

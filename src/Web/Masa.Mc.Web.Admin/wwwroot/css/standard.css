@@ -35,10 +35,6 @@
         background-color: #000000 !important;
     }
 
-    .masa .default2 {
-        background-color: #A3AED0 !important;
-    }
-
     .masa .emphasis {
         background-color: #1B2559 !important;
     }
@@ -53,6 +49,10 @@
 
     .masa .regular2 {
         background-color: #7681AB !important;
+    }
+
+    .masa .regular3 {
+        background-color: #A3AED0 !important;
     }
 
     .masa .fill {
@@ -259,10 +259,6 @@
         color: #000000 !important;
     }
 
-    .masa .default2--text {
-        color: #A3AED0 !important;
-    }
-
     .masa .emphasis--text {
         color: #1B2559 !important;
     }
@@ -277,6 +273,10 @@
 
     .masa .regular2--text {
         color: #7681AB !important;
+    }
+
+    .masa .regular3--text {
+        color: #A3AED0 !important;
     }
 
     .masa .fill--text {
@@ -388,6 +388,11 @@
     }
 
     .masa .h7 {
+        font-size: 1.125rem !important;
+        font-weight: 500 !important;
+    }
+
+    .masa .h8 {
         font-size: 1rem !important;
         font-weight: 700 !important;
     }

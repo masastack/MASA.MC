@@ -1,8 +1,8 @@
 ﻿@inherits AdminCompontentBase
 
-<div class="d-flex @Class" style="border: 1px solid #E2E7F4;box-sizing: border-box;border-radius: 8px;height: 48px;width:100%;">
+<div class="d-flex fill fill-card @Class" style="height: 38px;width:100%">
     <div class="ma-auto d-flex" style="height:24px;width:100%;">
-        <MIcon Size=24 Color="neutral-lighten-1" Class="pl-2">mdi-calendar-month</MIcon>
+        <MIcon Size=20 Color="emphasis2--text" Class="pl-2">mdi-calendar-month</MIcon>
         <MMenu @bind-Value="StartTimeVisible" CloseOnContentClick="false" OffsetY Transition="scale-transition">
             <ActivatorContent>
                 <div class="ml-5 text-btn my-auto hover-pointer" style="height:20px;" @attributes="@context.Attrs">

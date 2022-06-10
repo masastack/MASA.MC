@@ -1467,3 +1467,22 @@ tr:hover {
     -webkit-line-clamp: 2;
     overflow: hidden;
 }
+
+.fold{
+    width: calc(100% - 550px);
+    display: inline-block;
+}
+
+.fill-card {
+    border: 1px solid #FFFFFF;
+    border-radius: 8px;
+}
+
+.m-text-field.m-text-field--solo:not(.m-text-field--solo-flat) > .m-input__control > .m-input__slot {
+    box-shadow: initial;
+}
+
+.m-data-table > .m-data-table__wrapper > table > thead > tr > th, .m-data-table > .m-data-table__wrapper > table > tbody > tr > td {
+    padding: 0 24px !important;
+}
+
