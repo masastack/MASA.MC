@@ -6,8 +6,8 @@
 @implements IDisposable
 <div class="main-layout">
     <MApp Class="masa" ConfirmParameters="@(param => { param.OkText = I18n.T("Ok");param.CancelText = I18n.T("Cancel"); })">
-        <MAppBar Elevation=0 App MaxHeight=60 Class="mx-6 rounded-b-4 fill-background pa-0 app-bar">
-            <DefaultSearch />
+        <MAppBar Elevation=0 App MaxHeight=60 Class="mx-6 rounded-b-4 fill-background app-bar">
+            <DefaultSearch Placeholder="@I18n.T("Search")" />
             <MSpacer />
             <Favorite />
             <Language />

@@ -2,33 +2,28 @@
 @page "/channels/channelManagement"
 
 <PageTitle>@T("Permission.ChannelManagement")</PageTitle>
+<MRow Class="ma-0">
+    <DefaultSearch @bind-Value="_queryParam.Filter" Clearable Class="rounded-2 search" Placeholder="@T("Search")" Dense OnEnter="RefreshAsync" OnClearClick="HandleClearAsync" />
+    <MButton Color="primary" Class="ml-6 rounded-lg" OnClick="()=> _createModal.OpenModalAsync()">
+        <span>@T("Permission.CreateChannel")</span>
+    </MButton>
+</MRow>
 
-<MCard Class="full-height">
-    <MCardTitle class="mx-2 pt-6">
-        <MTextField @bind-Value="_queryParam.Filter" Clearable Class="rounded-2 search" Placeholder="@T("Search")" HideDetails="@("auto")" Flat Dense Solo BackgroundColor="fill-lighten-1" OnKeyDown="SearchKeyDown" OnClearClick="HandleClearAsync">
-            <PrependInnerContent>
-                <MIcon Size=16 Class="mr-2 neutral-lighten-1--text">mdi-magnify</MIcon>
-            </PrependInnerContent>
-        </MTextField>
-    </MCardTitle>
-    <MCardText>
-        <MRow>
-            @foreach (var _entitie in _entities.Result)
-            {
-                <MCol Md="3">
-                    <ChannelCard Height="200" Channel="_entitie" OnEditClick="async()=>await _editModal.OpenModalAsync(_entitie)" />
-                </MCol>
-            }
-            <MCol Md="3">
-                <MCard Outlined class="d-flex justify-center align-center" Style="border-style: dashed;" Height="200">
-                    <MButton Class="text-h6" Ripple=false Plain OnClick="()=> _createModal.OpenModalAsync()"><MIcon Size="28" Left>mdi-plus</MIcon>@T("Permission.CreateChannel")</MButton>
-                </MCard>
-            </MCol>
-        </MRow>
-        <Masa.Mc.Web.Admin.Components.Pagination.Pagination Class="mt-5" @bind-Page="_queryParam.Page" @bind-PageSize="_queryParam.PageSize" Total="_entities.Total" OnChange="HandlePaginationChange" />
-    </MCardText>
-</MCard>
+<MRow>
+    @foreach (var _entitie in _entities.Result)
+    {
+        <MCol Md="3">
+            <ChannelCard Height="375" Channel="_entitie" OnEditClick="async()=>await _editModal.OpenModalAsync(_entitie)" />
+        </MCol>
+    }
+    <MCol Md="3">
+        <MCard Outlined class="d-flex justify-center align-center" Style="border-style: dashed;" Height="375">
+            <MButton Class="text-h6" Ripple=false Plain OnClick="()=> _createModal.OpenModalAsync()"><MIcon Size="28" Left>mdi-plus</MIcon>@T("Permission.CreateChannel")</MButton>
+        </MCard>
+    </MCol>
+</MRow>
+<Masa.Mc.Web.Admin.Components.Pagination.Pagination Class="mt-5" @bind-Page="_queryParam.Page" @bind-PageSize="_queryParam.PageSize" Total="_entities.Total" OnChange="HandlePaginationChange" />
 
-<ChannelEditModal @ref="_editModal" OnOk="HandleOk"/>
-<ChannelCreateModal @ref="_createModal" OnOk="HandleOk"/>
+<ChannelEditModal @ref="_editModal" OnOk="HandleOk" />
+<ChannelCreateModal @ref="_createModal" OnOk="HandleOk" />
 

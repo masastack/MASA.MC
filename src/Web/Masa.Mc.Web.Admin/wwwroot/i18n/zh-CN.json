@@ -92,7 +92,7 @@
   "OperationSuccessfulMessage": "操作成功.",
   "DeletedSuccessfullyMessage": "删除成功.",
   "Permission.ChannelManagement": "渠道管理",
-  "Permission.CreateChannel": "创建渠道",
+  "Permission.CreateChannel": "新增渠道",
   "Permission.EditChannel": "编辑渠道",
   "SelectChannelType": "选择渠道类型",
   "ChannelConfiguration": "渠道配置",
