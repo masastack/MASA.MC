@@ -18,7 +18,6 @@ public partial class MessageTaskReceiverAutoComplete : AdminCompontentBase
     public async Task OnSearchChanged(string search)
     {
         Search = search;
-        await Task.Delay(300);
         if (Search == "")
         {
             Items.Clear();
