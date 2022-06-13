@@ -11,3 +11,5 @@ global using Microsoft.AspNetCore.ResponseCompression;
 global using BlazorDownloadFile;
 global using Masa.Mc.Web.Admin;
 global using Masa.Stack.Components;
+global using Masa.Contrib.SearchEngine.AutoComplete;
+global using Masa.Utils.Data.Elasticsearch;
