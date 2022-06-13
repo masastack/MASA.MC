@@ -1,17 +1,27 @@
 ﻿@inherits AdminCompontentBase
 <div class="notice">
-    <MMenu OffsetX Left OffsetY ContentStyle="border-radius:16px !important">
-        <ActivatorContent Context="menuContext">
-            @if (!NoticeState.IsRead)
-            {
-                <MBadge Color="pink" Bordered Dot OffsetX="10" OffsetY="10">
-                    <MIcon @attributes="menuContext.Attrs" Size=24 Class="pl-2" Color="neutral-lighten-3">mdi-bell</MIcon>
-                </MBadge>
-            }
-            else
-            {
-                <MIcon @attributes="menuContext.Attrs" Size=24 Class="pl-2" Color="neutral-lighten-3">mdi-bell</MIcon>
-            }
+    <MMenu OffsetY Bottom>
+        <ActivatorContent>
+            <MButton Icon
+                     Width="40"
+                     Height="40"
+                     Class="emphasis2--text"
+                     @attributes="@context.Attrs">
+                @if (!NoticeState.IsRead)
+                {
+                    <MBadge Bordered OverLap Dot Color="red">
+                        <MIcon Size="20">
+                            mdi-bell
+                        </MIcon>
+                    </MBadge>
+                }
+                else
+                {
+                    <MIcon Size="20">
+                        mdi-bell
+                    </MIcon>
+                }
+            </MButton>
         </ActivatorContent>
         <ChildContent>
             <MCard Width="400">

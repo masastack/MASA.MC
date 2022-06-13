@@ -1,42 +1,47 @@
-﻿@using Microsoft.AspNetCore.Components.Rendering
-@inherits LayoutComponentBase
+﻿@inherits LayoutComponentBase
 @inject GlobalConfig GlobalConfig
-@inject IPopupService PopupService
-@inject I18n I18n
 @implements IDisposable
-<div class="main-layout">
-    <MApp Class="masa" ConfirmParameters="@(param => { param.OkText = I18n.T("Ok");param.CancelText = I18n.T("Cancel"); })">
-        <MAppBar Elevation=0 App MaxHeight=60 Class="mx-6 rounded-b-4 fill-background app-bar">
-            <DefaultSearch Placeholder="@I18n.T("Search")" />
-            <MSpacer />
-            <Favorite />
-            <Language />
-            <HeaderRight />
-        </MAppBar>
 
-        <Navigation />
+<McLayout NavItems="NavList"
+        DefaultRoute="/channels/channelManagement"
+        Logo="https://cdn.masastack.com/stack/images/logo/MASAStack/logo-h-en.png"
+        MiniLogo="https://cdn.masastack.com/stack/images/logo/MASAStack/logo.png">
+    @Body
+</McLayout>
 
-        <MMain Class="fill-lighten-1" Style="padding-top:60px">
-            <MErrorHandler OnErrorHandleAsync="CustomErrorHandleAsync">
-                <div class="pa-6 max-width full-height">
-                    @Body
-                </div>
-            </MErrorHandler>
-            <MLoading />
-            <MConfirmDialog />
-        </MMain>
-    </MApp>
-</div>
 @code {
     protected override void OnInitialized()
     {
         GlobalConfig.OnPageModeChanged += base.StateHasChanged;
     }
 
-    private async Task CustomErrorHandleAsync(Exception exception)
+    private List<Nav> NavList { get; set; } = new();
+
+    protected override Task OnAfterRenderAsync(bool firstRender)
     {
-        GlobalConfig.Loading = false;
-        await PopupService.ToastErrorAsync(exception.Message);
+        if (firstRender)
+        {
+            NavList = new List<Nav>()
+            {
+                new Nav("channelManagement", "Permission.ChannelManagement", "mdi-email-outline", "channels/channelManagement", 1),
+                new Nav("messageManagement", "Permission.MessageManagement", "mdi-animation", 1, new List<Nav>
+                {
+                    new Nav("sendMessage", "Permission.SendMessage", "messageTasks/sendMessage", 2, "messageManagement"),
+                    new Nav("messageRecord", "Permission.MessageRecord", "messageRecords/messageRecordManagement", 2, "messageManagement"),
+                }),
+                new Nav("messageTemplateManagement", "Permission.MessageTemplateManagement", "mdi-image-filter-none", 1, new List<Nav>
+                {
+                    new Nav("sms", "Sms", "messageTemplates/smsTemplateManagement", 2, "messageTemplateManagement"),
+                    new Nav("email", "Email", "messageTemplates/emailTemplateManagement", 2, "messageTemplateManagement"),
+                    new Nav("websiteMessage", "WebsiteMessage", "messageTemplates/websiteMessageTemplateManagement", 2, "messageTemplateManagement"),
+                }),
+                new Nav("receiverGroupManagement", "Permission.ReceiverGroupManagement", "mdi-account-group", "receiverGroups/receiverGroupManagement", 1),
+            };
+
+            StateHasChanged();
+        }
+
+        return base.OnAfterRenderAsync(firstRender);
     }
 
     public void Dispose()
