@@ -34,4 +34,6 @@ public class MessageTaskDto : AuditEntityDto<Guid, Guid>
     public SendRuleDto SendRules { get; set; } = new();
 
     public ExtraPropertyDictionary Variables { get; set; } = new();
+
+    public string Content { get; set; } = string.Empty;
 }

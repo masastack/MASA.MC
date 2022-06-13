@@ -1,0 +1,74 @@
+﻿@inherits AdminCompontentBase
+<MCard Class="d-flex flex-column px-2 rounded-xl" MinHeight=Height>
+    <MCardTitle class="px-0 py-1">
+        <MListItem>
+            <MListItemTitle Class="overflow-visible">
+                <span class="emphasis2 rounded-r-xl fill--text ml-n6 caption" style="padding: 2px 16px">@MessageTask.Channel?.DisplayName</span>
+            </MListItemTitle>
+            <MListItemIcon Class="mr-n2">
+                <MMenu OffsetY>
+                    <ActivatorContent>
+                        <MIcon @attributes="@context.Attrs" Size=26 OnClick="HandleEditClick" Color="#323D6F">mdi-dots-horizontal</MIcon>
+                    </ActivatorContent>
+                    <ChildContent>
+                        <MList Dense>
+                            <MListItem>
+                                <MListItemContent>
+                                    <MListItemTitle>
+                                        <span class="body regular--text">@T("Permission.ViewMessageTask")</span>
+                                    </MListItemTitle>
+                                </MListItemContent>
+                            </MListItem>
+                            <MListItem>
+                                <MListItemContent>
+                                    <MListItemTitle>
+                                        <span class="body regular--text">@T("Permission.TestMessageTask")</span>
+                                    </MListItemTitle>
+                                </MListItemContent>
+                            </MListItem>
+                            <MListItem>
+                                <MListItemContent>
+                                    <MListItemTitle>
+                                        <span class="body warning--text">@T("Delete")</span>
+                                    </MListItemTitle>
+                                </MListItemContent>
+                            </MListItem>
+                        </MList>
+                    </ChildContent>
+                </MMenu>
+
+            </MListItemIcon>
+        </MListItem>
+    </MCardTitle>
+    <MDivider></MDivider>
+    <MCardText class="flex-grow-1 px-0 d-flex flex-column">
+        <div class="h8 emphasis--text" style="line-height: 24px;">@MessageTask.DisplayName</div>
+        <div class="caption regular3--text" style="line-height: 18px;">@MessageTask.SendTime</div>
+    </MCardText>
+    <div class="fill-hover caption px-2 py-1 regular2--text text-justify line-clamp-2 rounded-lg" style="height:192px">@MessageTask.Content</div>
+    <MCardActions class="px-3 pb-3">
+        <span class="body2 emphasis2--text">@T($"DisplayName.MessageEntityType.{((MessageEntityTypes)MessageTask.EntityType).ToString()}")</span>
+        <MSpacer />
+        <span class="caption regular3--text">@MessageTask.ModificationTime.Humanize(culture:new CultureInfo(I18n.CurrentLanguage)) </span>
+    </MCardActions>
+</MCard>
+
+@code {
+    [Parameter]
+    public EventCallback OnEditClick { get; set; }
+
+    [Parameter]
+    public int Height { get; set; } = 230;
+
+    [EditorRequired]
+    [Parameter]
+    public MessageTaskDto MessageTask { get; set; } = null!;
+
+    private async Task HandleEditClick()
+    {
+        if (OnEditClick.HasDelegate)
+        {
+            await OnEditClick.InvokeAsync();
+        }
+    }
+}

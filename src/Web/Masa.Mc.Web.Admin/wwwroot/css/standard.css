@@ -354,6 +354,10 @@
     .masa .green-lighten--text {
         color: #E6FAF5 !important;
     }
+
+    .masa .warning--text {
+        color: #FF5252 !important;
+    }
     /*
     font
 */

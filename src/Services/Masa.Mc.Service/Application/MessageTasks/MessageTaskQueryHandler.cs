@@ -8,17 +8,17 @@ public class MessageTaskQueryHandler
     private readonly IMessageTaskRepository _repository;
     private readonly IMessageTemplateRepository _messageTemplateRepository;
     private readonly ICsvExporter _exporter;
-    private readonly IAuthClient _authClient;
+    private readonly MessageTaskDomainService _domainService;
 
     public MessageTaskQueryHandler(IMessageTaskRepository repository
         , IMessageTemplateRepository messageTemplateRepository
         , ICsvExporter exporter
-        , IAuthClient authClient)
+        , MessageTaskDomainService domainService)
     {
         _repository = repository;
         _messageTemplateRepository = messageTemplateRepository;
         _exporter = exporter;
-        _authClient = authClient;
+        _domainService = domainService;
     }
 
     [EventHandler]
@@ -41,6 +41,7 @@ public class MessageTaskQueryHandler
         queryable = queryable.OrderBy(options.Sorting).PageBy(options.Page, options.PageSize);
         var entities = await queryable.ToListAsync();
         var entityDtos = entities.Adapt<List<MessageTaskDto>>();
+        await FillMessageTaskListDtos(entityDtos);
         var result = new PaginatedListDto<MessageTaskDto>(totalCount, totalPages, entityDtos);
         query.Result = result;
     }
@@ -97,5 +98,14 @@ public class MessageTaskQueryHandler
         }
         var result = await _exporter.ExportDynamicHeaderAsByteArray(record);
         query.Result = result;
+    }
+
+    private async Task FillMessageTaskListDtos(List<MessageTaskDto> dtos)
+    {
+        foreach (var item in dtos)
+        {
+            var messageData = await _domainService.GetMessageDataAsync(item.EntityType, item.EntityId, item.Variables);
+            item.Content = HtmlHelper.CutString(messageData.GetDataValue<string>(nameof(MessageTemplate.Content)),280);
+        }
     }
 }
