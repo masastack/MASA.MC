@@ -38,7 +38,7 @@
             <div class="ma-auto ml-2">
                 <div class="d-flex">
                     <span class="text-btn default-lighten-1--text">@data.Item.Name</span>
-                    @if (string.IsNullOrEmpty(data.Item.Name) is false && string.IsNullOrEmpty(data.Item.PhoneNumber) is false)
+                    @if (!string.IsNullOrEmpty(data.Item.Name) && !string.IsNullOrEmpty(data.Item.PhoneNumber))
                     {
                         <div class="my-auto mx-2" style="width: 0px;height: 8px;border: 1px solid #E2E7F4;"></div>
                     }
@@ -46,7 +46,7 @@
                 </div>
                 <div class="d-flex">
                     <span class="text-overline" style="text-transform: none !important;">@data.Item.Account</span>
-                    @if (string.IsNullOrEmpty(data.Item.Account) is false && string.IsNullOrEmpty(data.Item.Email) is false)
+                    @if (!string.IsNullOrEmpty(data.Item.Account) && !string.IsNullOrEmpty(data.Item.Email))
                     {
                         <div class="my-auto mx-2" style="width: 0px;height: 8px;border: 1px solid #E2E7F4;"></div>
                     }

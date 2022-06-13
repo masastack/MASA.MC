@@ -33,10 +33,10 @@ public partial class SubjectAutoComplete : AdminCompontentBase
 
     public string TextView(SubjectDto subject)
     {
-        if (string.IsNullOrEmpty(subject.Name) is false) return subject.Name;
-        if (string.IsNullOrEmpty(subject.DisplayName) is false) return subject.DisplayName;
-        if (string.IsNullOrEmpty(subject.PhoneNumber) is false) return subject.PhoneNumber;
-        if (string.IsNullOrEmpty(subject.Email) is false) return subject.Email;
+        if (!string.IsNullOrEmpty(subject.Name)) return subject.Name;
+        if (!string.IsNullOrEmpty(subject.DisplayName)) return subject.DisplayName;
+        if (!string.IsNullOrEmpty(subject.PhoneNumber)) return subject.PhoneNumber;
+        if (!string.IsNullOrEmpty(subject.Email)) return subject.Email;
         return "";
     }
 

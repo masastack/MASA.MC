@@ -63,10 +63,10 @@ public partial class UserSelect : AdminCompontentBase
 
     public string TextView(UserSelectModel user)
     {
-        if (string.IsNullOrEmpty(user.Name) is false) return user.Name;
-        if (string.IsNullOrEmpty(user.Account) is false) return user.Account;
-        if (string.IsNullOrEmpty(user.PhoneNumber) is false) return user.PhoneNumber;
-        if (string.IsNullOrEmpty(user.Email) is false) return user.Email;
+        if (!string.IsNullOrEmpty(user.Name)) return user.Name;
+        if (!string.IsNullOrEmpty(user.Account)) return user.Account;
+        if (!string.IsNullOrEmpty(user.PhoneNumber)) return user.PhoneNumber;
+        if (!string.IsNullOrEmpty(user.Email)) return user.Email;
         return "";
     }
 }

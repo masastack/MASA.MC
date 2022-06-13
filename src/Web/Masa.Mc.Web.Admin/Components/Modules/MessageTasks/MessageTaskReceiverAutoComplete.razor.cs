@@ -32,9 +32,9 @@ public partial class MessageTaskReceiverAutoComplete : AdminCompontentBase
 
     public string TextView(MessageTaskReceiverDto subject)
     {
-        if (string.IsNullOrEmpty(subject.DisplayName) is false) return subject.DisplayName;
-        if (string.IsNullOrEmpty(subject.PhoneNumber) is false) return subject.PhoneNumber;
-        if (string.IsNullOrEmpty(subject.Email) is false) return subject.Email;
+        if (!string.IsNullOrEmpty(subject.DisplayName)) return subject.DisplayName;
+        if (!string.IsNullOrEmpty(subject.PhoneNumber)) return subject.PhoneNumber;
+        if (!string.IsNullOrEmpty(subject.Email)) return subject.Email;
         return "";
     }
 
