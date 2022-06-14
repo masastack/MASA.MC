@@ -84,4 +84,38 @@ public partial class MessageTaskList : AdminCompontentBase
     {
         NavigationManager.NavigateTo("/messageTasks/sendMessage");
     }
+
+    private async Task HandleDelAsync(Guid _entityId)
+    {
+        await ConfirmAsync(T("DeletionConfirmationMessage"), async () => { await DeleteAsync(_entityId); });
+    }
+
+    private async Task DeleteAsync(Guid _entityId)
+    {
+        Loading = true;
+        await MessageTaskService.DeleteAsync(_entityId);
+        Loading = false;
+        await SuccessMessageAsync(T("MessageTaskDeleteMessage"));
+        await LoadData();
+    }
+
+    private async Task HandleIsDraft()
+    {
+        _queryParam.IsDraft = _queryParam.IsDraft == true ? null : true;
+        await LoadData();
+    }
+
+    private async Task HandleIsEnabled(MessageTaskDto item)
+    {
+        if (!item.IsEnabled)
+        {
+            await MessageTaskService.EnabledAsync(new EnabledMessageTaskInputDto { MessageTaskId = item.Id });
+            item.IsEnabled = true;
+        }
+        else
+        {
+            await MessageTaskService.DisableAsync(new DisableMessageTaskInputDto { MessageTaskId = item.Id });
+            item.IsEnabled = false;
+        }
+    }
 }

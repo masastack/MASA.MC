@@ -73,11 +73,16 @@
                 </MRow>
             </div>
         }
-        <div class="d-flex @(!advanced?"full-width":"")" style="float: right;">
+        <div class="d-flex float-right @(!advanced?"full-width":"")">
             <DefaultSearch @bind-Value="_queryParam.Filter" Clearable Class="rounded-2 search" Placeholder="@T("Search")" Dense OnEnter="RefreshAsync" OnClearClick="HandleClearAsync" />
             <div @onclick="ToggleAdvanced" class="ml-6 d-flex button fill">
                 <MIcon Class="ma-auto" Color="neutral-lighten-1" Size=20>
                     @(!advanced?"mdi-filter":"mdi-filter-off")
+                </MIcon>
+            </div>
+            <div class="ml-6 d-flex button fill">
+                <MIcon Class="ma-auto" Color="@(_queryParam.IsDraft==true?"primary":"neutral-lighten-1")" Size=20 OnClick="HandleIsDraft">
+                    mdi-file
                 </MIcon>
             </div>
         </div>
@@ -86,7 +91,7 @@
         @foreach (var _entitie in _entities.Result)
         {
             <MCol Md="3">
-                <MessageTaskCard Height="375" MessageTask="_entitie" />
+                <MessageTaskCard Height="375" MessageTask="_entitie" OnEdit="()=>HandleEditAsync(_entitie)" OnView="()=>_detailModal.OpenModalAsync(_entitie)" OnTest="()=>_sendTestModal.OpenModalAsync(_entitie.Id,_entitie.Channel?.Type)" OnDelete="()=>HandleDelAsync(_entitie.Id)" OnIsEnabled="()=>HandleIsEnabled(_entitie)" />
             </MCol>
         }
     </MRow>

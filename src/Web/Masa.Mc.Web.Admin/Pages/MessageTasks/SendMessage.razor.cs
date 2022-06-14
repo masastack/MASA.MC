@@ -7,7 +7,6 @@ public partial class SendMessage : AdminCompontentBase
 {
     private OrdinaryMessageCreateModal _ordinaryCreateModal = default!;
     private TemplateMessageCreateModal _templateCreateModal = default!;
-    private MessageTaskListModal _listModal = default!;
 
     private void NavigateToList()
     {

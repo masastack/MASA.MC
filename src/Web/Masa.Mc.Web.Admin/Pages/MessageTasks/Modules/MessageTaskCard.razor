@@ -8,28 +8,48 @@
             <MListItemIcon Class="mr-n2">
                 <MMenu OffsetY>
                     <ActivatorContent>
-                        <MIcon @attributes="@context.Attrs" Size=26 OnClick="HandleEditClick" Color="#323D6F">mdi-dots-horizontal</MIcon>
+                        <MIcon @attributes="@context.Attrs" Size=26 Color="#323D6F">mdi-dots-horizontal</MIcon>
                     </ActivatorContent>
                     <ChildContent>
                         <MList Dense>
                             <MListItem>
                                 <MListItemContent>
                                     <MListItemTitle>
-                                        <span class="body regular--text">@T("Permission.ViewMessageTask")</span>
+                                        <BooleanButtonGroup Value="@MessageTask.IsEnabled" StyleType="StyleTypes.Slider" ValueChanged="HandleOnIsEnabled" />
                                     </MListItemTitle>
                                 </MListItemContent>
                             </MListItem>
-                            <MListItem>
+                            @if (MessageTask.IsDraft)
+                            {
+                                <MListItem Link OnClick="HandleOnEdit">
+                                    <MListItemContent>
+                                        <MListItemTitle>
+                                            <span class="body regular--text">@T("Edit")</span>
+                                        </MListItemTitle>
+                                    </MListItemContent>
+                                </MListItem>
+                            }
+                            else
+                            {
+                                <MListItem Link OnClick="HandleOnView">
+                                    <MListItemContent>
+                                        <MListItemTitle>
+                                            <span class="body regular--text">@T("Permission.ViewMessageTask")</span>
+                                        </MListItemTitle>
+                                    </MListItemContent>
+                                </MListItem>
+                            }
+                            <MListItem Link OnClick="HandleOnTest">
                                 <MListItemContent>
                                     <MListItemTitle>
                                         <span class="body regular--text">@T("Permission.TestMessageTask")</span>
                                     </MListItemTitle>
                                 </MListItemContent>
                             </MListItem>
-                            <MListItem>
+                            <MListItem Link OnClick="HandleOnDelete">
                                 <MListItemContent>
                                     <MListItemTitle>
-                                        <span class="body warning--text">@T("Delete")</span>
+                                        <span class="body error--text">@T("Delete")</span>
                                     </MListItemTitle>
                                 </MListItemContent>
                             </MListItem>
@@ -48,6 +68,14 @@
     <div class="fill-hover caption px-2 py-1 regular2--text text-justify line-clamp-2 rounded-lg" style="height:192px">@MessageTask.Content</div>
     <MCardActions class="px-3 pb-3">
         <span class="body2 emphasis2--text">@T($"DisplayName.MessageEntityType.{((MessageEntityTypes)MessageTask.EntityType).ToString()}")</span>
+        @if (MessageTask.SendTime==null)
+        {
+            <span class="d-flex px-1" style="height: 8px">
+                <MDivider Vertical />
+            </span>
+            <MIcon Class="regular3--text caption" Left Size=12>mdi-clock-outline</MIcon>
+            <span class="regular3--text caption">@T("DisplayName.MessageTaskHistoryStatus.WaitSend")</span>
+        }
         <MSpacer />
         <span class="caption regular3--text">@MessageTask.ModificationTime.Humanize(culture:new CultureInfo(I18n.CurrentLanguage)) </span>
     </MCardActions>
@@ -55,20 +83,64 @@
 
 @code {
     [Parameter]
-    public EventCallback OnEditClick { get; set; }
-
-    [Parameter]
     public int Height { get; set; } = 230;
 
     [EditorRequired]
     [Parameter]
     public MessageTaskDto MessageTask { get; set; } = null!;
 
-    private async Task HandleEditClick()
+    [Parameter]
+    public EventCallback OnEdit { get; set; }
+
+    [Parameter]
+    public EventCallback OnView { get; set; }
+
+    [Parameter]
+    public EventCallback OnTest { get; set; }
+
+    [Parameter]
+    public EventCallback OnDelete { get; set; }
+
+    [Parameter]
+    public EventCallback OnIsEnabled { get; set; }
+
+    private async Task HandleOnEdit()
     {
-        if (OnEditClick.HasDelegate)
+        if (OnEdit.HasDelegate)
         {
-            await OnEditClick.InvokeAsync();
+            await OnEdit.InvokeAsync();
+        }
+    }
+
+    private async Task HandleOnView()
+    {
+        if (OnView.HasDelegate)
+        {
+            await OnView.InvokeAsync();
+        }
+    }
+
+    private async Task HandleOnTest()
+    {
+        if (OnTest.HasDelegate)
+        {
+            await OnTest.InvokeAsync();
+        }
+    }
+
+    private async Task HandleOnDelete()
+    {
+        if (OnDelete.HasDelegate)
+        {
+            await OnDelete.InvokeAsync();
+        }
+    }
+
+    private async Task HandleOnIsEnabled()
+    {
+        if (OnIsEnabled.HasDelegate)
+        {
+            await OnIsEnabled.InvokeAsync();
         }
     }
 }
