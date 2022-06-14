@@ -9,7 +9,6 @@ public class NotificationsHub: Hub
     {
         await base.OnConnectedAsync();
         await Groups.AddToGroupAsync(Context.ConnectionId, "Global", Context.ConnectionAborted);
-
     }
 
     public override async Task OnDisconnectedAsync(Exception exception)

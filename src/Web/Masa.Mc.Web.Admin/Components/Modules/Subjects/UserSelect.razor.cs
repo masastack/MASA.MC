@@ -5,6 +5,8 @@ namespace Masa.Mc.Web.Admin.Components.Modules.Subjects;
 
 public partial class UserSelect : AdminCompontentBase
 {
+    IAutoCompleteClient? _autocompleteClient;
+
     [Parameter]
     public Guid? Value { get; set; }
 
@@ -18,22 +20,52 @@ public partial class UserSelect : AdminCompontentBase
     public string Label { get; set; }
 
     [Parameter]
+    public int Page { get; set; } = 1;
+
+    [Parameter]
+    public int PageSize { get; set; } = 10;
+
+    [Parameter]
     public EventCallback<MouseEventArgs> OnClearClick { get; set; }
 
     [Parameter]
-    public EventCallback<UserDto> OnSelectedItemUpdate { get; set; }
+    public EventCallback<UserSelectModel> OnSelectedItemUpdate { get; set; }
 
-    private bool _isLoading;
+    protected List<UserSelectModel> Items = new();
 
-    protected List<UserDto> Items = new();
+    public string Search { get; set; } = "";
 
-    public void UpdateSearchInput(string val)
+    [Inject]
+    public IAutoCompleteClient AutoCompleteClient
     {
-        if (Items.Count > 0) return;
-        if (_isLoading) return;
-        _isLoading = true;
-        var res = UserService.GetList();
-        Items = res.Where(x => x.DisplayName.Contains(val) || x.PhoneNumber.Contains(val) || x.Email.Contains(val)).Take(20).ToList();
-        _isLoading = false;
+        get => _autocompleteClient ?? throw new Exception("Please inject IAutoCompleteClient");
+        set => _autocompleteClient = value;
+    }
+
+    public async Task OnSearchChanged(string search)
+    {
+        Search = search;
+        if (Search == "")
+        {
+            Items.Clear();
+        }
+        else if (Search == search)
+        {
+            var response = await AutoCompleteClient.GetAsync<UserSelectModel, Guid>(search, new AutoCompleteOptions
+            {
+                Page = Page,
+                PageSize = PageSize,
+            });
+            Items = response.Data;
+        }
+    }
+
+    public string TextView(UserSelectModel user)
+    {
+        if (!string.IsNullOrEmpty(user.Name)) return user.Name;
+        if (!string.IsNullOrEmpty(user.Account)) return user.Account;
+        if (!string.IsNullOrEmpty(user.PhoneNumber)) return user.PhoneNumber;
+        if (!string.IsNullOrEmpty(user.Email)) return user.Email;
+        return "";
     }
 }

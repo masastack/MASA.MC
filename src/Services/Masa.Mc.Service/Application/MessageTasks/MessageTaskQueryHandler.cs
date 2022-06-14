@@ -7,18 +7,18 @@ public class MessageTaskQueryHandler
 {
     private readonly IMessageTaskRepository _repository;
     private readonly IMessageTemplateRepository _messageTemplateRepository;
-    private readonly ICsvImporter _importer;
     private readonly ICsvExporter _exporter;
+    private readonly IAuthClient _authClient;
 
     public MessageTaskQueryHandler(IMessageTaskRepository repository
         , IMessageTemplateRepository messageTemplateRepository
         , ICsvExporter exporter
-        , ICsvImporter importer)
+        , IAuthClient authClient)
     {
         _repository = repository;
         _messageTemplateRepository = messageTemplateRepository;
-        _importer = importer;
         _exporter = exporter;
+        _authClient = authClient;
     }
 
     [EventHandler]

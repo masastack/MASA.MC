@@ -11,30 +11,22 @@ public partial class ReceiverSelect : AdminCompontentBase
     [Parameter]
     public EventCallback<List<ReceiverGroupItemDto>> ValueChanged { get; set; }
 
-    private ExternalUserCreateModal _createModal;
+    private ExternalUserCreateModal _createModal = default!;
+    private SubjectAutoComplete _subjectRef = default!;
     private List<Guid> _userIds = new List<Guid>();
-    private List<SubjectDto> _items = new();
-    private bool _loading;
-
-    protected override async Task OnInitializedAsync()
-    {
-        await base.OnInitializedAsync();
-        _items = SubjectService.GetList();
-    }
-
-    public void Remove(SubjectDto item)
-    {
-        var index = _userIds.IndexOf(item.Id);
-        if (index >= 0)
-        {
-            _userIds.RemoveAt(index);
-        }
-    }
 
     public async Task AddAsync()
     {
-        var list = _items.Where(x => _userIds.Contains(x.Id)).ToList();
-        var dtos = list.Adapt<List<ReceiverGroupItemDto>>();
+        var dtos = _subjectRef.SubjectSelect.Select(x => new ReceiverGroupItemDto
+        {
+            Type = (ReceiverGroupItemTypes)((int)x.SubjectType),
+            SubjectId = x.SubjectId,
+            DisplayName = x.Name ?? x.DisplayName ?? string.Empty,
+            Avatar = x.Avatar ?? string.Empty,
+            PhoneNumber = x.PhoneNumber ?? string.Empty,
+            Email = x.Email ?? string.Empty
+        });
+
         foreach (var dto in dtos)
         {
             if (!Value.Any(x => x.SubjectId == dto.SubjectId && x.Type == dto.Type))
@@ -51,18 +43,18 @@ public partial class ReceiverSelect : AdminCompontentBase
         await ValueChanged.InvokeAsync(Value);
     }
 
-    private async Task HandleOk(SubjectDto user)
+    private async Task HandleOk(UserDto user)
     {
-        _items.Add(user);
-        Value.Add(user.Adapt<ReceiverGroupItemDto>());
+        Value.Add(new ReceiverGroupItemDto
+        {
+            Type = ReceiverGroupItemTypes.User,
+            SubjectId = user.Id,
+            DisplayName = user.Name ?? user.DisplayName ?? string.Empty,
+            Avatar = user.Avatar,
+            PhoneNumber = user.PhoneNumber ?? string.Empty,
+            Email = user.Email ?? string.Empty
+        });
         await ValueChanged.InvokeAsync(Value);
         await SuccessMessageAsync(T("ExternalMemberAddMessage"));
-    }
-
-    private bool CustomFilter(SubjectDto item, string queryText, string text)
-    {
-        return item.DisplayName.Contains(queryText)||
-          item.PhoneNumber.Contains(queryText)||
-          item.Email.Contains(queryText);
     }
 }

@@ -14,56 +14,29 @@ public partial class MessageReceiversSelect : AdminCompontentBase
     [Parameter]
     public ChannelTypes? Type { get; set; }
 
-    private ExternalUserCreateModal _createModal;
+    private ExternalUserCreateModal _createModal = default!;
+    private MessageTaskReceiverAutoComplete _subjectRef = default!;
     private List<Guid> _userIds = new List<Guid>();
-    private List<SubjectDto> _items = new();
-    private bool _loading;
-    private GetReceiverGroupInputDto _queryParam = new(99);
-
-    ReceiverGroupService ReceiverGroupService => McCaller.ReceiverGroupService;
-
-    protected override async Task OnInitializedAsync()
-    {
-        await base.OnInitializedAsync();
-        var subjects = SubjectService.GetList();
-        var receiverGroups = (await ReceiverGroupService.GetListAsync(_queryParam)).Result.Select(r => new SubjectDto
-        {
-            Id = r.Id,
-            Type = MessageTaskReceiverTypes.Group,
-            SubjectId = r.Id,
-            DisplayName = r.DisplayName
-        });
-        _items = receiverGroups.Concat(subjects).ToList();
-    }
-
-    public void Remove(SubjectDto item)
-    {
-        var index = _userIds.IndexOf(item.Id);
-        if (index >= 0)
-        {
-            _userIds.RemoveAt(index);
-        }
-    }
 
     private async Task AddAsync()
     {
-        var list = _items.Where(x => _userIds.Contains(x.Id)).ToList();
-        var dtos = list.Adapt<List<MessageTaskReceiverDto>>();
+        var dtos = _subjectRef.SubjectSelect;
         await HandleAddAsync(dtos);
     }
 
-    private async Task HandleOk(SubjectDto user)
+    private async Task HandleOk(UserDto user)
     {
-        _items.Add(user);
-        var dtos = new List<MessageTaskReceiverDto> { user.Adapt<MessageTaskReceiverDto>() };
+        var receiver = new MessageTaskReceiverDto
+        {
+            SubjectId = user.Id,
+            DisplayName = user.Name ?? user.DisplayName ?? string.Empty,
+            Avatar = user.Avatar,
+            PhoneNumber = user.PhoneNumber ?? string.Empty,
+            Email = user.Email ?? string.Empty,
+            Type = MessageTaskReceiverTypes.User
+        };
+        var dtos = new List<MessageTaskReceiverDto> { receiver };
         await HandleAddAsync(dtos);
-    }
-
-    private bool CustomFilter(SubjectDto item, string queryText, string text)
-    {
-        return item.DisplayName.Contains(queryText) ||
-          item.PhoneNumber.Contains(queryText) ||
-          item.Email.Contains(queryText);
     }
 
     private async Task RemoveValue(MessageTaskReceiverDto item)

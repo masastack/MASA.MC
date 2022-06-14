@@ -46,13 +46,12 @@ public class MessageTask : FullAggregateRoot<Guid, Guid>
         SendRules = sendRules ?? new();
     }
 
-    public virtual void SendTask(ReceiverTypes receiverType, List<MessageTaskReceiver> receivers, MessageTaskSelectReceiverTypes selectReceiverType, ExtraPropertyDictionary sendRules, DateTimeOffset? sendTime, string sign, ExtraPropertyDictionary variables)
+    public virtual void SendTask(ReceiverTypes receiverType, List<MessageTaskReceiver> receivers, MessageTaskSelectReceiverTypes selectReceiverType, ExtraPropertyDictionary sendRules, string sign, ExtraPropertyDictionary variables)
     {
         SetDraft(false);
         SelectReceiverType = selectReceiverType;
         SetReceivers(receiverType, receivers);
         SendRules = sendRules ?? new();
-        SendTime = sendTime ?? DateTimeOffset.Now;
         Sign = sign;
         Variables = variables;
     }

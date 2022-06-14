@@ -3,6 +3,7 @@
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDaprClient();
+builder.Services.AddAuthClient(builder.Configuration.GetValue<string>("AuthClient:Url"));
 builder.Services.AddActors(options =>
 {
 });
@@ -43,10 +44,12 @@ builder.Services.AddSignalR();
 builder.Services.AddTransient<NotificationsHub>();
 TypeAdapterConfig.GlobalSettings.Scan(Assembly.GetExecutingAssembly(), Assembly.Load("Masa.Mc.Contracts.Admin"));
 
-//if (!builder.Environment.IsProduction())
-//{
-//    builder.Services.AddDaprStarter(builder.Configuration.GetSection(nameof(DaprOptions)));
-//}
+#if DEBUG
+if (!builder.Environment.IsProduction())
+{
+    builder.Services.AddDaprStarter(builder.Configuration.GetSection(nameof(DaprOptions)));
+}
+#endif
 
 var app = builder.Services
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

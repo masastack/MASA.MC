@@ -235,5 +235,14 @@
   "DisplayName.AllWebsiteMessage": "全部消息",
   "DisplayName.WebsiteMessageAction.MarkAllRead": "全部标记已读",
   "DisplayName.WebsiteMessageAction.ShowAll": "显示全部",
-  "DisplayName.WebsiteMessageAction.ShowUnread": "显示未读"
+  "DisplayName.WebsiteMessageAction.ShowUnread": "显示未读",
+  "DisplayName.SubjectTypes.User": "用户",
+  "DisplayName.SubjectTypes.Department": "部门",
+  "DisplayName.SubjectTypes.Role": "角色",
+  "DisplayName.SubjectTypes.Team": "团队",
+  "DisplayName.MessageTaskReceiverTypes.User": "用户",
+  "DisplayName.MessageTaskReceiverTypes.Organization": "部门",
+  "DisplayName.MessageTaskReceiverTypes.Role": "角色",
+  "DisplayName.MessageTaskReceiverTypes.Team": "团队",
+  "DisplayName.MessageTaskReceiverTypes.Group": "收件人组"
 }

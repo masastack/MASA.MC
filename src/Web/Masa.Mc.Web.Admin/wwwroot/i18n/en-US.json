@@ -147,5 +147,14 @@
   "DisplayName.MessageRecordSuccess.True": "Sent successfully",
   "DisplayName.MessageRecordSuccess.False": "Fail in send",
   "DisplayName.MessageRecordTimeTypes": "Time type",
-  "DisplayName.MessageRecordTimeTypes.SendTime": "Send time"
+  "DisplayName.MessageRecordTimeTypes.SendTime": "Send time",
+  "DisplayName.SubjectTypes.User": "User",
+  "DisplayName.SubjectTypes.Department": "Department",
+  "DisplayName.SubjectTypes.Role": "Role",
+  "DisplayName.SubjectTypes.Team": "Team",
+  "DisplayName.MessageTaskReceiverTypes.User": "User",
+  "DisplayName.MessageTaskReceiverTypes.Organization": "Organization",
+  "DisplayName.MessageTaskReceiverTypes.Role": "Role",
+  "DisplayName.MessageTaskReceiverTypes.Team": "Team",
+  "DisplayName.MessageTaskReceiverTypes.Group": "Group"
 }

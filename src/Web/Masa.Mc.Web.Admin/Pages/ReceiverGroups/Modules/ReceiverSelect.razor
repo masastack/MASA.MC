@@ -1,84 +1,6 @@
 ﻿@inherits AdminCompontentBase
 <MRow Class="mx-1 py-2">
-    <MAutocomplete @bind-Value="_userIds"
-                   Loading="_loading"
-                   Items="_items"
-                   Filter="CustomFilter"
-                   Color="primary"
-                   Class="rounded-2 search"
-                   Flat
-                   Dense
-                   Solo
-                   HideNoData
-                   BackgroundColor="fill-lighten-1"
-                   Label="@T("Description.ReceiverGroup.SelectUser")"
-                   ItemText="r=>r.DisplayName"
-                   ItemValue="r=>r.Id"
-                   Multiple>
-        <PrependInnerContent>
-            <MIcon Size=16 Class="mr-2 neutral-lighten-1--text">mdi-magnify</MIcon>
-        </PrependInnerContent>
-        <SelectionContent Context="data">
-            <MChip Close
-                   OnCloseClick="()=>Remove(data.Item)">
-                <MAvatar Left>
-                    @if (data.Item.Type != MessageTaskReceiverTypes.User)
-                    {
-                        <MIcon>mdi-account-group</MIcon>
-                    }
-                    else
-                    {
-                        if (string.IsNullOrEmpty(data.Item.Avatar))
-                        {
-                            <EmptyAvatar Value="@data.Item.DisplayName" />
-                        }
-                        else
-                        {
-                            <MImage Src="@data.Item.Avatar"></MImage>
-                        }
-                    }
-                </MAvatar>
-                @data.Item.DisplayName
-            </MChip>
-        </SelectionContent>
-        <ItemContent Context="data">
-            @if (data.Item.Type != MessageTaskReceiverTypes.User)
-            {
-                <MListItemAvatar>
-                    <MIcon Large>mdi-account-group</MIcon>
-                </MListItemAvatar>
-                <MListItemContent>
-                    <MListItemTitle>
-                        @(data.Item.DisplayName)
-                    </MListItemTitle>
-                    <MListItemSubtitle>
-                        @T(data.Item.Type.ToString())
-                    </MListItemSubtitle>
-                </MListItemContent>
-            }
-            else
-            {
-                <MListItemAvatar>
-                    @if (string.IsNullOrEmpty(data.Item.Avatar))
-                    {
-                        <EmptyAvatar Value="@data.Item.DisplayName" />
-                    }
-                    else
-                    {
-                        <MImage Src="@data.Item.Avatar"></MImage>
-                    }
-                </MListItemAvatar>
-                <MListItemContent>
-                    <MListItemTitle>
-                        @(data.Item.DisplayName)
-                    </MListItemTitle>
-                    <MListItemSubtitle>
-                        @(data.Item.PhoneNumber)|@(data.Item.Email)
-                    </MListItemSubtitle>
-                </MListItemContent>
-            }
-        </ItemContent>
-    </MAutocomplete>
+    <SubjectAutoComplete @ref="_subjectRef" @bind-Value="_userIds"></SubjectAutoComplete>
     <MButton Rounded Outlined Color="indigo" Class="ml-6 medium-button px-6" OnClick="AddAsync">
         <span>@T("Add")</span>
     </MButton>
@@ -87,7 +9,7 @@
         <span class="ml-2">@T("ExternalMember")</span>
     </MButton>
 </MRow>
-<MCard Class="mx-auto overflow-y-auto" Outlined Height="470">
+<MCard Class="mx-auto overflow-y-auto mt-4" Outlined Height="470">
     @if (Value.Count > 0)
     {
         <MList ThreeLine>

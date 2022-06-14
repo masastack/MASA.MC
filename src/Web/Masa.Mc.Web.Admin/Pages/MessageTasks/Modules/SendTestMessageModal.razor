@@ -4,59 +4,12 @@
             Persistent
             Title="@T("Permission.TestMessageTask")"
             HideCancelAction
-            Width="684"
+            Width="350"
             FormModel="_input"
             OnSave="HandleOkAsync"
             OnCancel="HandleCancel">
         <ChildContent>
-            <MAutocomplete @bind-Value="_userIds"
-                           Items="_stateUserItems"
-                           Color="primary"
-                           Class="rounded-2 search"
-                           Style="width:100%"
-                           Flat
-                           Dense
-                           Solo
-                           BackgroundColor="fill-lighten-1"
-                           Label="@T("Description.ReceiverGroup.SelectUser")"
-                           ItemText="r=>r.DisplayName"
-                           ItemValue="r=>r.Id"
-                           TValue="List<Guid>"
-                           TItem="UserDto"
-                           TItemValue="Guid"
-                           OnSelectedItemUpdate="HandleUserChange"
-                           Multiple>
-                <PrependInnerContent>
-                    <MIcon Size=16 Class="mr-2 neutral-lighten-1--text">mdi-magnify</MIcon>
-                </PrependInnerContent>
-                <SelectionContent Context="data">
-                    <MChip Close
-                           OnCloseClick="()=>Remove(data.Item)">
-                        <MAvatar Left>
-                            <MImage Src="@data.Item.Avatar"></MImage>
-                        </MAvatar>
-                        @data.Item.DisplayName
-                    </MChip>
-                </SelectionContent>
-                <ItemContent Context="data">
-                    <MListItemAvatar>
-                        <MImage Src="@data.Item.Avatar"></MImage>
-                    </MListItemAvatar>
-                    <MListItemContent>
-                        <MListItemTitle>
-                            @(data.Item.DisplayName)
-                        </MListItemTitle>
-                        @if (_type == ChannelTypes.Email)
-                        {
-                            <MListItemSubtitle>@(data.Item.Email)</MListItemSubtitle>
-                        }
-                        else
-                        {
-                            <MListItemSubtitle>@(data.Item.PhoneNumber)</MListItemSubtitle>
-                        }
-                    </MListItemContent>
-                </ItemContent>
-            </MAutocomplete>
+            <Masa.Mc.Web.Admin.Components.Modules.Subjects.UserAutoComplete @ref="_userRef" Value="_userIds" ValueChanged="HandleUserChange"></Masa.Mc.Web.Admin.Components.Modules.Subjects.UserAutoComplete>
             <MInput @bind-Value="_input.Receivers" />
         </ChildContent>
         <SaveContent Context="save">

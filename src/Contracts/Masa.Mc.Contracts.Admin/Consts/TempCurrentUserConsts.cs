@@ -5,7 +5,7 @@ namespace Masa.Mc.Contracts.Admin.Consts;
 
 public static class TempCurrentUserConsts
 {
-    public const string ID = "211e406e-81f5-4e83-a841-9a1d5855f307";
+    public const string ID = "e4e6b87d-7e30-4f49-7237-08da3fa66630";
     public const string USER_NAME = "wzh425";
     public const string NAME = "吴自浩";
     public const string PHONE_NUMBER = "15267799306";

@@ -26,7 +26,7 @@ public class WebsiteMessageCreatedEventHandler
     {
         var checkStatus = new List<MessageTaskHistoryStatuses> { MessageTaskHistoryStatuses.Sending, MessageTaskHistoryStatuses.Completed };
         var checkTime = @event.CheckTime;
-        var taskHistorys = (await _messageTaskHistoryRepository.WithDetailsAsync()).Where(x => x.SendTime >= checkTime && x.ReceiverType == ReceiverTypes.Broadcast && checkStatus.Contains(x.Status)).ToList();
+        var taskHistorys = (await _messageTaskHistoryRepository.WithDetailsAsync()).Where(x => x.CompletionTime >= checkTime && x.ReceiverType == ReceiverTypes.Broadcast && checkStatus.Contains(x.Status)).ToList();
         foreach (var taskHistory in taskHistorys)
         {
             var messageData = await _messageTaskDomainService.GetMessageDataAsync(taskHistory.MessageTask.EntityType, taskHistory.MessageTask.EntityId, taskHistory.Variables);
@@ -38,7 +38,6 @@ public class WebsiteMessageCreatedEventHandler
                 PhoneNumber = TempCurrentUserConsts.PHONE_NUMBER
             };
             await _websiteMessageDomainService.CreateAsync(messageData, taskHistory, receiverUser);
-
         }
         var onlineClients = _hubContext.Clients.User(@event.UserId.ToString());
         await onlineClients.SendAsync(SignalRMethodConsts.GET_NOTIFICATION);

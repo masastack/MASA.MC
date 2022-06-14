@@ -10,16 +10,14 @@ public partial class SendTestMessageModal : AdminCompontentBase
 
     private SendTestMessageTaskInputDto _input = new();
     private bool _visible;
-    private ChannelTypes? _type;
     private List<Guid> _userIds = new List<Guid>();
-    private List<UserDto> _stateUserItems = UserService.GetList();
+    private Components.Modules.Subjects.UserAutoComplete _userRef = default!;
 
     MessageTaskService MessageTaskService => McCaller.MessageTaskService;
 
     public async Task OpenModalAsync(Guid messageTaskId, ChannelTypes? type)
     {
         _input.Id = messageTaskId;
-        _type = type;
         await InvokeAsync(() =>
         {
             _visible = true;
@@ -53,27 +51,17 @@ public partial class SendTestMessageModal : AdminCompontentBase
         _input = new();
     }
 
-    public void Remove(UserDto item)
+    private void HandleUserChange(List<Guid> userId)
     {
-        var index = _userIds.IndexOf(item.Id);
-        if (index >= 0)
-        {
-            _userIds.RemoveAt(index);
-        }
-    }
-
-    private void HandleUserChange()
-    {
-        var items = _stateUserItems.Where(x => _userIds.Contains(x.Id)).ToList();
-        var dtos = items.Select(x => new MessageTaskReceiverDto
+        _userIds = userId;
+        _input.Receivers = _userRef.UserSelect.Select(x => new MessageTaskReceiverDto
         {
             SubjectId = x.Id,
-            DisplayName = x.DisplayName,
+            DisplayName = x.Name,
             Avatar = x.Avatar,
             PhoneNumber = x.PhoneNumber,
             Email = x.Email,
             Type = MessageTaskReceiverTypes.User
         }).ToList();
-        _input.Receivers = dtos;
     }
 }

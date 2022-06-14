@@ -1458,3 +1458,8 @@ tr:hover {
 .m-text-field.m-text-field--solo.elevation-0:not(.m-text-field--solo-flat) > .m-input__control > .m-input__slot {
     box-shadow: none;
 }
+
+.divider-vertical-2 {
+    height: 8px;
+    border: 1px solid #E2E7F4;
+}
