@@ -79,39 +79,46 @@
             {
                 case ("Receiver"):
                     <div class="d-flex my-1">
-                        <MAvatar>
-                            <MImage Src="https://cdn.masastack.com/stack/images/website/masa-blazor/jack.png"></MImage>
-                        </MAvatar>
-                        <div class="ml-2">
+                        @if (string.IsNullOrEmpty(context.Item.ExtraProperties.GetProperty<string>("Avatar")))
+                        {
+                            <EmptyAvatar Size=40 Value="@(context.Item.ExtraProperties.GetProperty<string>("DisplayName"))" />
+                        }
+                        else
+                        {
+                            <MAvatar>
+                                <MImage Size=40 Src="@(context.Item.ExtraProperties.GetProperty<string>("Avatar"))"></MImage>
+                            </MAvatar>
+                        }
+                        <div class="ml-3">
                             <div class="subtitle emphasis--text">@(context.Item.ExtraProperties.GetProperty<string>("DisplayName"))</div>
                             <div class="caption regular2--text">@(context.Item.ExtraProperties.GetProperty<string>("PhoneNumber")) | @(context.Item.ExtraProperties.GetProperty<string>("Email"))</div>
                         </div>
                     </div>
                     break;
                 case ("ChannelDisplayName"):
-                    <span class="text-body3">@context.Item.Channel?.DisplayName</span>
+                    <span class="body regular--text">@context.Item.Channel?.DisplayName</span>
                     break;
                 case ("MessageInfoTitle"):
-                    <span class="text-body3">@(context.Item.ExtraProperties.GetProperty<string>("Title"))</span>
+                    <span class="body regular--text">@(context.Item.ExtraProperties.GetProperty<string>("Title"))</span>
                     break;
                 case (nameof(MessageRecordDto.SendTime)):
-                    <span class="text-body3">@context.Item.SendTime?.ToString(T("$DateTimeFormat"))</span>
+                    <span class="body regular--text">@context.Item.SendTime?.ToString(T("$DateTimeFormat"))</span>
                     break;
                 case nameof(MessageRecordDto.Success):
                     if (context.Item.Success == true)
                     {
-                        <span>@T("DisplayName.MessageRecordSuccess.True")</span>
+                        <span class="body regular--text">@T("DisplayName.MessageRecordSuccess.True")</span>
                     }
                     if (context.Item.Success == false)
                     {
-                        <span>@T("DisplayName.MessageRecordSuccess.False")</span>
+                        <span class="body regular--text">@T("DisplayName.MessageRecordSuccess.False")</span>
                     }
                     break;
                 case "Action":
-                    <MIcon Small Color="neutral-lighten-2" OnClick="async()=>await _detailModal.OpenModalAsync(context.Item)">mdi-eye</MIcon>
+                    <MIcon Small Color="emphasis2" OnClick="async()=>await _detailModal.OpenModalAsync(context.Item)">mdi-eye</MIcon>
                     break;
                 default:
-                    <span class="text-body3">@context.Value</span>
+                    <span class="body regular--text">@context.Value</span>
                     break;
             }
         </ItemColContent>

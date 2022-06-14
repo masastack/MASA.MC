@@ -23,9 +23,9 @@ public partial class MessageRecordManagement : AdminCompontentBase
         var _prefix = "DisplayName.MessageRecord";
         Headers = new()
         {
-            new() { Text = T("DisplayName.MessageTaskReceiver"), Value = "Receiver", Sortable = false, Width = 380 },
-            new() { Text = T("DisplayName.ChannelDisplayName"), Value = "ChannelDisplayName", Sortable = false },
-            new() { Text = T("DisplayName.MessageInfoTitle"), Value = "MessageInfoTitle", Sortable = false, Width = 200 },
+            new() { Text = T("DisplayName.MessageTaskReceiver"), Value = "Receiver", Sortable = false},
+            new() { Text = T("DisplayName.ChannelDisplayName"), Value = "ChannelDisplayName", Sortable = false},
+            new() { Text = T("DisplayName.MessageInfoTitle"), Value = "MessageInfoTitle", Sortable = false},
             new() { Text = T($"{_prefix}{nameof(MessageRecordDto.SendTime)}"), Value = nameof(MessageRecordDto.SendTime), Sortable = true },
             new() { Text = T($"{_prefix}{nameof(MessageRecordDto.Success)}"), Value = nameof(MessageRecordDto.Success), Sortable = false },
             new() { Text = T($"{_prefix}{nameof(MessageRecordDto.FailureReason)}"), Value = nameof(MessageRecordDto.FailureReason), Sortable = false, Width = 200 },

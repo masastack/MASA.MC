@@ -20,17 +20,23 @@
         <ItemColContent>
             @switch (context.Header.Value)
             {
-                case (nameof(MessageTemplateDto.ModificationTime)):
-                    <span class="text-body3">@context.Item.ModificationTime.ToString(T("$DateTimeFormat"))</span>
+                case (nameof(ReceiverGroupDto.DisplayName)):
+                    <span class="h8 emphasis--text">@context.Value</span>
                     break;
-                case (nameof(MessageTemplateDto.Modifier)):
-                    <span class="text-body3">@TempCurrentUserConsts.NAME</span>
+                case (nameof(ReceiverGroupDto.Description)):
+                    <span class="body regular--text">@context.Value</span>
+                    break;
+                case (nameof(ReceiverGroupDto.ModificationTime)):
+                    <span class="body regular--text">@context.Item.ModificationTime.ToString(T("$DateTimeFormat"))</span>
+                    break;
+                case (nameof(ReceiverGroupDto.Modifier)):
+                    <span class="body2 regular--text">@TempCurrentUserConsts.NAME</span>
                     break;
                 case "Action":
-                    <MIcon Small Color="neutral-lighten-2" OnClick="async()=>await _editModal.OpenModalAsync(context.Item)">mdi-pencil</MIcon>
+                    <MIcon Small Color="emphasis2" OnClick="async()=>await _editModal.OpenModalAsync(context.Item)">mdi-pencil</MIcon>
                     break;
                 default:
-                    <span class="text-body3">@context.Value</span>
+                    <span class="body regular--text">@context.Value</span>
                     break;
             }
         </ItemColContent>

@@ -70,10 +70,10 @@
             @switch (context.Header.Value)
             {
                 case ("ChannelDisplayName"):
-                    <span class="text-body3">@context.Item.Channel?.DisplayName</span>
+                    <span class="body regular--text">@context.Item.Channel?.DisplayName</span>
                     break;
                 case (nameof(MessageTemplateDto.ModificationTime)):
-                    <span class="text-body3">@context.Item.ModificationTime.ToString(T("$DateTimeFormat"))</span>
+                    <span class="body regular--text">@context.Item.ModificationTime.ToString(T("$DateTimeFormat"))</span>
                     break;
                 case nameof(MessageTemplateDto.AuditStatus):
                     string color = string.Empty;
@@ -92,19 +92,19 @@
                             break;
                     }
                     <MChip Color="@($"{color}-lighten-5")" TextColor="@color" Ripple="false">
-                        <span>@T($"DisplayName.MessageTemplateAuditStatus.{context.Item.AuditStatus.ToString()}")</span>
+                        <span class="body regular--text">@T($"DisplayName.MessageTemplateAuditStatus.{context.Item.AuditStatus.ToString()}")</span>
                     </MChip>
                     break;
                 case nameof(MessageTemplateDto.Status):
                     <MChip Ripple="false">
-                        <span>@T($"DisplayName.MessageTemplateStatus.{context.Item.Status.ToString()}")</span>
+                        <span class="body regular--text">@T($"DisplayName.MessageTemplateStatus.{context.Item.Status.ToString()}")</span>
                     </MChip>
                     break;
                 case "Action":
-                    <MIcon Small Color="neutral-lighten-2" OnClick="async()=>await _editModal.OpenModalAsync(context.Item)">mdi-pencil</MIcon>
+                    <MIcon Small Color="emphasis2" OnClick="async()=>await _editModal.OpenModalAsync(context.Item)">mdi-pencil</MIcon>
                     break;
                 default:
-                    <span class="text-body3">@context.Value</span>
+                    <span class="body regular--text">@context.Value</span>
                     break;
             }
         </ItemColContent>
