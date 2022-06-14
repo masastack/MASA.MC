@@ -800,3 +800,14 @@ tr:hover {
     color: #FF5252 !important;
     caret-color: #FF5252 !important;
 }
+.btn-form {
+    width: 140px !important;
+    height: 56px !important;
+    padding: 4px 58px !important;
+    border-radius: 12px !important;
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 28px;
+}

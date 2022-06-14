@@ -1,0 +1,84 @@
+﻿@inherits AdminCompontentBase
+<div class="mc-modal">
+    <MDialog Value="Value"
+             ValueChanged="ValueChanged"
+             ContentClass="@Class"
+             MaxWidth="@MaxWidth"
+             Scrollable
+             Transition="dialog-transition"
+             Width="@Width">
+        <ChildContent>
+            <MCard Height="@Height" Class="px-3 pt-5">
+                <MCardTitle Class="h6 emphasis--text">
+                    <MIcon Size=16 Color="primary" Class="pr-2">
+                        mdi-circle
+                    </MIcon>
+                    <span>@Title</span>
+                    <MSpacer></MSpacer>
+                    <MButton Fab
+                             Small
+                             Outlined
+                             Color="emphasis"
+                             Style="border-color: #E2E7F4;width:32px;height:32px"
+                             OnClick="HandleOnCancel">
+                        <MIcon Size=24>
+                            mdi-close
+                        </MIcon>
+                    </MButton>
+                </MCardTitle>
+
+                <MCardText Style="@($"padding: 24px;")">
+                    @ChildContent
+                </MCardText>
+            </MCard>
+        </ChildContent>
+    </MDialog>
+</div>
+
+@code {
+    [Parameter]
+    public bool Value { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> ValueChanged { get; set; }
+
+    [Parameter]
+    public string Title { get; set; } = string.Empty;
+
+    [Parameter]
+    public StringNumber Width { get; set; }
+
+    [Parameter]
+    public StringNumber MaxWidth { get; set; }
+
+    [Parameter]
+    public StringNumber Height { get; set; }
+
+    [Parameter]
+    public EventCallback<ModalActionEventArgs> OnCancel { get; set; }
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    protected virtual async Task HandleOnCancel()
+    {
+        if (OnCancel.HasDelegate)
+        {
+            await OnCancel.InvokeAsync();
+        }
+        else
+        {
+            await InternalValueChanged(false);
+        }
+    }
+
+    private async Task InternalValueChanged(bool value)
+    {
+        Value = value;
+
+        if (ValueChanged.HasDelegate)
+        {
+            await ValueChanged.InvokeAsync(value);
+        }
+    }
+}

@@ -1,0 +1,6 @@
+﻿.mc-modal ::deep .m-card__title {
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 30px;
+    color: #1B2559;
+}
