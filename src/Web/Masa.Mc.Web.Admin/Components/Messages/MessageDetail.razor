@@ -14,7 +14,7 @@
                 </MListItemAvatar>
 
                 <MListItemContent>
-                    <MListItemTitle Class="font-18-medium neutral-text-emphasis">@_entity.Channel?.DisplayName</MListItemTitle>
+                    <MListItemTitle Class="h7 emphasis--text">@_entity.Channel?.DisplayName</MListItemTitle>
                 </MListItemContent>
             </MListItem>
             <MSpacer />
@@ -26,11 +26,11 @@
     </MCardTitle>
     <MCardText Class="d-flex align-end flex-column" Style="height: calc(100% - 72px) !important">
         <div class="detail-box pt-4">
-            <span class="font-18-medium neutral-text-emphasis-secondary">@_entity.Title</span>
-            <div class="font-14 neutral-text-regular-secondary pt-2">
+            <span class="h7 emphasis2--text">@_entity.Title</span>
+            <div class="body2 regular2--text pt-2">
                 <span>@_entity.SendTime.ToString(T("$DateTimeFormat"))</span>
             </div>
-            <div class="content">
+            <div class="content body regular2--text">
                 @((MarkupString)_entity.Content)
             </div>
         </div>

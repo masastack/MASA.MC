@@ -5,11 +5,11 @@
             <MCardTitle class="mx-2 pt-6">
                 <MTextField @bind-Value="_queryParam.Filter" Clearable Color="primary" Class="rounded-2 search" Placeholder="@T("Search")" HideDetails="@("auto")" Flat Dense Solo BackgroundColor="fill-lighten-1" OnKeyDown="SearchKeyDown" OnClearClick="HandleClearAsync">
                     <PrependInnerContent>
-                        <MIcon Size=16 Class="mr-2 neutral-lighten-1--text">mdi-magnify</MIcon>
+                        <MIcon Size=16 Class="mr-2 emphasis2">mdi-magnify</MIcon>
                     </PrependInnerContent>
                 </MTextField>
                 <div @onclick="ToggleAdvanced" class="ml-4 d-flex button">
-                    <MIcon Class="ma-auto" Color="neutral-lighten-1" Size=20>
+                    <MIcon Class="ma-auto" Color="emphasis2" Size=20>
                         @(advanced?"mdi-filter":"mdi-filter-off")
                     </MIcon>
                 </div>
