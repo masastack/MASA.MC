@@ -23,7 +23,8 @@ builder.Services.AddResponseCompression(opts =>
 builder.Services.AddMasaStackComponentsForServer("wwwroot/i18n");
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddGlobalForServer();
-builder.Services.AddAutoComplete();
+builder.Services.AddElasticsearchClient("auth", option => option.UseNodes("http://10.10.90.44:31920/").UseDefault())
+                .AddAutoComplete(option => option.UseIndexName("user_index"));
 builder.Services.AddAuthApiGateways(option => option.McServiceBaseAddress = builder.Configuration["McServiceBaseAddress"]);
 builder.Services.AddSingleton<ChannelUpsertDtoValidator>();
 var app = builder.Build();

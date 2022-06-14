@@ -6,7 +6,6 @@ namespace Masa.Mc.Service.Admin.Services;
 public class MessageTaskHistoryService : ServiceBase
 {
     private const string DAPR_PUBSUB_NAME = "pubsub";
-
     public MessageTaskHistoryService(IServiceCollection services) : base(services, "api/message-task-history")
     {
         MapGet(GetAsync, "{id}");
