@@ -17,16 +17,12 @@
                         }
                     </MListItemAvatar>
                     <MListItemContent>
-                        <MListItemTitle Class="font-18-medium neutral-text-emphasis">@(_channel!=null?_channel.DisplayName:T("DisplayName.AllWebsiteMessage"))</MListItemTitle>
+                        <MListItemTitle Class="h7 emphasis--text">@(_channel!=null?_channel.DisplayName:T("DisplayName.AllWebsiteMessage"))</MListItemTitle>
                     </MListItemContent>
                 </MListItem>
                 <MSpacer />
-                <MTextField @bind-Value="_queryParam.Filter" Clearable Color="primary" Class="rounded-2 search" Placeholder="@T("Search")" HideDetails="@("auto")" Flat Dense Solo BackgroundColor="fill-lighten-1" OnKeyDown="SearchKeyDown" OnClearClick="HandleClearAsync">
-                    <PrependInnerContent>
-                        <MIcon Size=16 Class="mr-2 neutral-lighten-1--text">mdi-magnify</MIcon>
-                    </PrependInnerContent>
-                </MTextField>
-                <MSelect Class="ml-6 rounded-2 small" @bind-Value="@_queryParam.FilterType" Style="height: 30px !important;"
+                <DefaultSearch @bind-Value="_queryParam.Filter" Clearable Class="rounded-2 search" Placeholder="@T("Search")" Dense BackgroundColor="fill-background" Style="flex: none;width:300px" OnEnter="RefreshAsync" OnClearClick="HandleClearAsync" />
+                <MSelect Class="ml-6 rounded-2 small" @bind-Value="@_queryParam.FilterType" Style="flex: none;width:136px"
                          Items="@(GetEnumList<WebsiteMessageFilterType>())"
                          Label="@T("DisplayName.WebsiteMessageFilterType")"
                          ItemText="@(item => T($"DisplayName.WebsiteMessageFilterType.{item.ToString()}"))"
@@ -76,26 +72,26 @@
                 </MMenu>
             </div>
         </MCardTitle>
-        <MCardText>
+        <MCardText Class="mt-6">
             <MList Subheader
                    TwoLine>
                 @foreach (var item in _entities.Result)
                 {
                     <MListItem Link OnClick="()=>HandleOnClick(item)">
-                        <MListItemContent>
-                            <MListItemTitle Class="py-2 font-18-medium neutral-text-emphasis-secondary">@item.Title</MListItemTitle>
+                        <MListItemContent Class="pt-0">
+                            <MListItemTitle Class="py-2 h7 emphasis2--text">@item.Title</MListItemTitle>
 
-                            <MListItemSubtitle Class="font-14 neutral-text-regular-secondary text-truncate" Style="width:400px">
+                            <MListItemSubtitle Class="body2 regular2--text text-truncate" Style="width:400px">
                                 @if (!item.IsRead)
                                 {
-                                    <MAvatar Color="red" Size="8" Class="mx-2">
+                                    <MAvatar Color="red" Size="8" Class="ml-2">
                                     </MAvatar>
                                 }
                                 @item.Abstract
                             </MListItemSubtitle>
                         </MListItemContent>
                         <MListItemAction Class="align-self-start">
-                            <MListItemActionText Class="font-12 neutral-text-regular-secondary">@item.SendTime.ToString(T("$DateTimeFormat"))</MListItemActionText>
+                            <MListItemActionText Class="caption regular2--text">@item.SendTime.ToString(T("$DateTimeFormat"))</MListItemActionText>
                         </MListItemAction>
                     </MListItem>
                 }
