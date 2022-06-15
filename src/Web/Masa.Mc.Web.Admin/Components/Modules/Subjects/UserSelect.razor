@@ -8,13 +8,16 @@
                Items="Items"
                OnSearchInputUpdate="OnSearchChanged"
                HideDetails="@("auto")"
-               Outlined
+               Flat
+               Dense
+               Solo
                Clearable
                HideNoData
                HideSelected
                ItemText="u=>TextView(u)"
                ItemValue="u=>u.Id"
                Label="@Label"
+               Class="@($"{Class} rounded-2")"
                Placeholder="@Placeholder"
                OnClearClick="OnClearClick"
                OnSelectedItemUpdate="OnSelectedItemUpdate">

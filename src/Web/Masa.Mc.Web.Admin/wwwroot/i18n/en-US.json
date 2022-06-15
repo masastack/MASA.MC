@@ -156,5 +156,6 @@
   "DisplayName.MessageTaskReceiverTypes.Organization": "Organization",
   "DisplayName.MessageTaskReceiverTypes.Role": "Role",
   "DisplayName.MessageTaskReceiverTypes.Team": "Team",
-  "DisplayName.MessageTaskReceiverTypes.Group": "Group"
+  "DisplayName.MessageTaskReceiverTypes.Group": "Group",
+  "DisplayName.Color.Lable": "Select color"
 }

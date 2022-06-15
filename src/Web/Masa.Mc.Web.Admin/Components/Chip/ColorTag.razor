@@ -1,0 +1,22 @@
+﻿<span class="@($"rounded-r-xl fill--text ml-n6 caption {Color}")" style="@($"padding: 2px 16px;height:{Height}px;")">@ChildContent</span>
+
+@code {
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    [Parameter]
+    public StringNumber Height { get; set; } = 22;
+
+    [Parameter]
+    public string Color { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+
+        if (string.IsNullOrEmpty(Color))
+        {
+            Color = "emphasis2";
+        }
+    }
+}

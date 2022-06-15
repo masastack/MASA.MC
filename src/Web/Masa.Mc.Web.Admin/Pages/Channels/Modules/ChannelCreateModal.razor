@@ -2,11 +2,11 @@
 <div @ref="Ref">
     <McModal Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.CreateChannel")" Width="770" Height="792">
         <ChildContent>
-            <MForm Model="_model" @ref="_form" EnableValidation Context="form" Class="full-height"> 
+            <MForm Model="_model" @ref="_form" EnableValidation Context="form" Class="full-height">
                 <MStepper Value="_step" Class="full-height" Style="box-shadow:none">
                     <MStepperItems Class="full-height">
                         <MStepperContent Step="1" Class="pa-0">
-                            <MContainer Fluid>
+                            <MContainer Fluid Class="pt-15 px-1">
                                 <MRow Align="AlignTypes.Center" Justify="JustifyTypes.Center">
                                     <MCol Md="4">
                                         <MHover>
@@ -68,20 +68,24 @@
                         <MStepperContent Step="2" Class="pa-0 full-height">
                             <div class="full-height flex-column">
                                 <div class="flex-height-auto flex-grow-1">
-                                    <MRow>
+                                    <MRow Class="mt-6">
                                         <MCol>
                                             <DefaultTextField @bind-Value="_model.DisplayName"
-                                                    Label="@T("DisplayName.ChannelDisplayName")">
+                                                              Label="@T("DisplayName.ChannelDisplayName")">
                                             </DefaultTextField>
                                         </MCol>
                                         <MCol>
                                             <DefaultTextField @bind-Value="_model.Code"
-                                                    Label="@T("DisplayName.ChannelCode")">
+                                                              Label="@T("DisplayName.ChannelCode")">
                                             </DefaultTextField>
                                         </MCol>
                                     </MRow>
                                     <ChannelExtraProperties @ref="_channelExtraPropertiesRef" @bind-Value="_model.ExtraProperties" @bind-Type="_model.Type" />
-                                    <MRow>
+                                    <div class="flex-column justify-space-between mt-9" Style="height: 80px;">
+                                        <div class="subtitle3 regular--text">@T("DisplayName.Color.Lable")</div>
+                                        <ColorGroup @bind-Value="_model.Color" Colors='_colors' />
+                                    </div>
+                                    <MRow Class="mt-6">
                                         <MCol>
                                             <MTextarea @bind-Value="_model.Description"
                                                        Label="@T("DisplayName.ChannelDescription")"
@@ -92,7 +96,7 @@
                                     </MRow>
                                 </div>
                                 <div class="d-flex">
-                                    <MIcon Size="12" Color="emphasis2" Class="mc-icon icon-keyboard-backspace" OnClick="()=> _step-- ">icon-keyboard-backspace</MIcon>
+                                    <MIcon Size="24" Color="emphasis2"  OnClick="()=> _step-- ">mdi-keyboard-backspace</MIcon>
                                     <MSpacer></MSpacer>
                                     <MButton Color="primary" Class="btn-form" OnClick="HandleOkAsync">@T("Submit")</MButton>
                                 </div>

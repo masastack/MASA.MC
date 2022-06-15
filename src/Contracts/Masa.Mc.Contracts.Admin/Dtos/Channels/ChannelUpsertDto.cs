@@ -16,4 +16,6 @@ public class ChannelUpsertDto
     public bool IsStatic { get; set; }
 
     public ExtraPropertyDictionary ExtraProperties { get; set; }=new();
+
+    public string Color { get; set; } = string.Empty;
 }

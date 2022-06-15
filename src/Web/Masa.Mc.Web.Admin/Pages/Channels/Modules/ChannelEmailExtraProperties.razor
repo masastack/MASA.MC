@@ -1,6 +1,6 @@
 ﻿@inherits AdminCompontentBase
 <MForm Model="_model" @ref="Form" EnableValidation>
-    <MRow>
+    <MRow Class="mt-6">
         <MCol>
             <DefaultTextField @bind-Value="_model.UserName"
                               Label="@T("EmailChannelOptions.UserName")">
@@ -12,19 +12,21 @@
             </DefaultTextField>
         </MCol>
     </MRow>
-    <MRow>
-        <MCol Md="6">
+    <MRow Class="mt-6">
+        <MCol>
             <DefaultTextField @bind-Value="_model.Smtp"
                               Label="@T("EmailChannelOptions.Smtp")">
             </DefaultTextField>
         </MCol>
-        <MCol Md="3">
-            <MCheckbox Class="mt-1 float-left mr-2" @bind-Value="_model.Ssl" Label="@T("EmailChannelOptions.Ssl")" OnChange="HandleChangeAsync"></MCheckbox>
-        </MCol>
-        <MCol Md="3">
-            <DefaultTextField @bind-Value="_model.Port"
-                              Label="@T("EmailChannelOptions.Port")">
-            </DefaultTextField>
+        <MCol>
+            <MRow Class="pl-3">
+                <MCol Style="border: 1px solid #E2E7F4;border-radius: 8px;height: 48px;margin-top: 12px;padding-top: 4px;"><MCheckbox Dense @bind-Value="_model.Ssl" Label="@T("EmailChannelOptions.Ssl")" OnChange="HandleChangeAsync"></MCheckbox></MCol>
+                <MCol>
+                    <DefaultTextField @bind-Value="_model.Port"
+                                      Label="@T("EmailChannelOptions.Port")">
+                    </DefaultTextField>
+                </MCol>
+            </MRow>
         </MCol>
     </MRow>
 </MForm>

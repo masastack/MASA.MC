@@ -8,8 +8,8 @@
              Transition="dialog-transition"
              Width="@Width">
         <ChildContent>
-            <MCard Height="@Height" Class="px-3 pt-5">
-                <MCardTitle Class="h6 emphasis--text">
+            <MCard Height="@Height" Style="padding:36px 42px;">
+                <MCardTitle Class="h6 emphasis--text pa-0">
                     <MIcon Size=16 Color="primary" Class="pr-2">
                         mdi-circle
                     </MIcon>
@@ -27,7 +27,7 @@
                     </MButton>
                 </MCardTitle>
 
-                <MCardText Style="@($"padding: 24px;")">
+                <MCardText Class="pa-0 overflow-visible">
                     @ChildContent
                 </MCardText>
             </MCard>

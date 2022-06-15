@@ -18,4 +18,6 @@ public class ChannelDto : AuditEntityDto<Guid, Guid>
     public ExtraPropertyDictionary ExtraProperties { get; set; } = new();
 
     public string ModifierName { get; set; } = string.Empty;
+
+    public string Color { get; set; } = string.Empty;
 }

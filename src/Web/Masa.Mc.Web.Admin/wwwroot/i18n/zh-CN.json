@@ -244,5 +244,6 @@
   "DisplayName.MessageTaskReceiverTypes.Organization": "部门",
   "DisplayName.MessageTaskReceiverTypes.Role": "角色",
   "DisplayName.MessageTaskReceiverTypes.Team": "团队",
-  "DisplayName.MessageTaskReceiverTypes.Group": "收件人组"
+  "DisplayName.MessageTaskReceiverTypes.Group": "收件人组",
+  "DisplayName.Color.Lable": "选择颜色"
 }

@@ -24,18 +24,18 @@
             NavList = new List<Nav>()
             {
                 new Nav("channelManagement", "Permission.ChannelManagement", "mdi-email-outline", "channels/channelManagement", 1),
-                new Nav("messageManagement", "Permission.MessageManagement", "mdi-animation", 1, new List<Nav>
+                new Nav("messageManagement", "Permission.MessageManagement", "fas fa-tasks", 1, new List<Nav>
                 {
                     new Nav("sendMessage", "Permission.SendMessage", "messageTasks/sendMessage", 2, "messageManagement"),
                     new Nav("messageRecord", "Permission.MessageRecord", "messageRecords/messageRecordManagement", 2, "messageManagement"),
                 }),
-                new Nav("messageTemplateManagement", "Permission.MessageTemplateManagement", "mdi-image-filter-none", 1, new List<Nav>
+                new Nav("messageTemplateManagement", "Permission.MessageTemplateManagement", "mdi-collage", 1, new List<Nav>
                 {
                     new Nav("sms", "Sms", "messageTemplates/smsTemplateManagement", 2, "messageTemplateManagement"),
                     new Nav("email", "Email", "messageTemplates/emailTemplateManagement", 2, "messageTemplateManagement"),
                     new Nav("websiteMessage", "WebsiteMessage", "messageTemplates/websiteMessageTemplateManagement", 2, "messageTemplateManagement"),
                 }),
-                new Nav("receiverGroupManagement", "Permission.ReceiverGroupManagement", "mdi-account-group", "receiverGroups/receiverGroupManagement", 1),
+                new Nav("receiverGroupManagement", "Permission.ReceiverGroupManagement", "fas fa-object-ungroup", "receiverGroups/receiverGroupManagement", 1),
             };
 
             StateHasChanged();

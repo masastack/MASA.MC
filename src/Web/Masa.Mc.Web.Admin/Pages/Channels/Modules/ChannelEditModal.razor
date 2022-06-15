@@ -1,12 +1,13 @@
 ﻿@inherits AdminCompontentBase
 <div @ref="Ref">
-    <McModal Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.EditChannel")" Width="770" Height="792">
+    <McModal Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.EditChannel")" Width="770" Height="799">
         <MForm Model="_model" @ref="_form" EnableValidation Class="full-height">
             <div class="full-height flex-column">
                 <div class="flex-height-auto flex-grow-1">
-                    <MRow>
+                    <MRow Class="mt-6">
                         <MCol>
                             <DefaultTextField @bind-Value="_model.DisplayName"
+                                              Color="@_model.Color"
                                               Label="@T("DisplayName.ChannelDisplayName")">
                             </DefaultTextField>
                         </MCol>
@@ -16,23 +17,25 @@
                             </DefaultTextField>
                         </MCol>
                     </MRow>
-                    <MRow>
+                    <MRow Class="mt-6">
                         <MCol>
-                            <MSelect @bind-Value="@_model.Type"
+                            <DefaultSelect @bind-Value="@_model.Type"
                                      Items="@channelTypeItems"
                                      Label="@T("DisplayName.ChannelType")"
                                      Readonly
                                      ItemText="item => T(item.ToString())"
                                      ItemValue="item => item"
-                                     Outlined
-                                     Disabled
-                                     HideDetails="@("auto")">
-                            </MSelect>
+                                     Disabled>
+                            </DefaultSelect>
                         </MCol>
                     </MRow>
                     <ChannelExtraProperties @ref="_channelExtraPropertiesRef" @bind-Value="_model.ExtraProperties" @bind-Type="_model.Type" />
-                    <MRow>
-                        <MCol Cols="12">
+                    <div class="flex-column justify-space-between mt-9" Style="height: 80px;">
+                        <div class="subtitle3 regular--text">@T("DisplayName.Color.Lable")</div>
+                        <ColorGroup @bind-Value="_model.Color" Colors='_colors'  />
+                    </div>
+                    <MRow Class="mt-6">
+                        <MCol>
                             <MTextarea @bind-Value="_model.Description"
                                        Label="@T("DisplayName.ChannelDescription")"
                                        Outlined
