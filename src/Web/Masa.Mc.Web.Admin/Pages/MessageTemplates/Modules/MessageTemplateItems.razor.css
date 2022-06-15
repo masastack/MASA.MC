@@ -1,0 +1,18 @@
+﻿.message-template-items ::deep .theme--light.m-toolbar.m-sheet{
+    background-color: #f6f8fd !important;
+}
+.message-template-items ::deep .theme--light.m-data-table {
+    background-color: #f6f8fd !important;
+}
+.message-template-items ::deep .text-start {
+    padding: 0 !important;
+}
+.message-template-items ::deep .m-toolbar__content {
+    padding: 0 !important;
+}
+.message-template-items ::deep .theme--light.m-data-table > .m-data-table__wrapper > table > tbody > tr:not(:last-child) > td:last-child, .theme--light.m-data-table > .m-data-table__wrapper > table > tbody > tr:not(:last-child) > th:last-child {
+    border-bottom: none;
+}
+.message-template-items ::deep .theme--light.m-data-table > .m-data-table__wrapper > table > tbody > tr:not(:last-child) > td:not(.m-data-table__mobile-row), .theme--light.m-data-table > .m-data-table__wrapper > table > tbody > tr:not(:last-child) > th:not(.m-data-table__mobile-row) {
+    border-bottom: none;
+}

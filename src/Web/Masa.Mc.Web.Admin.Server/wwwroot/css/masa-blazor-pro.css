@@ -811,3 +811,14 @@ tr:hover {
     font-size: 16px;
     line-height: 28px;
 }
+
+/* fill/线 */
+.btn-fill-line {
+    border: 1px solid #E2E7F4 !important;
+    border-radius: 8px !important;
+}
+
+.small-btn {
+    min-width: 100px !important;
+    height: 40px !important;
+}

@@ -97,6 +97,7 @@ public partial class SmsTemplateCreateModal : AdminCompontentBase
         _model.TemplateId = string.Empty;
         _model.Items = new();
         _templateItems = await SmsTemplateService.GetListByChannelIdAsync(_model.ChannelId);
+        StateHasChanged();
     }
 
     private List<MessageTemplateItemDto> ParseTemplateItem(string content)
@@ -109,6 +110,10 @@ public partial class SmsTemplateCreateModal : AdminCompontentBase
 
     private async Task SyncAsync()
     {
+        if (_model.ChannelId == default)
+        {
+            return;
+        }
         Loading = true;
         await SmsTemplateService.SyncAsync(new SmsTemplateSyncInputDto(_model.ChannelId));
         _templateItems = await SmsTemplateService.GetListByChannelIdAsync(_model.ChannelId);
