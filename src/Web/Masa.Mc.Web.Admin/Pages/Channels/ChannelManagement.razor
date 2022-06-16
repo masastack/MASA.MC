@@ -4,7 +4,7 @@
 <PageTitle>@T("Permission.ChannelManagement")</PageTitle>
 <MRow Class="ma-0">
     <DefaultSearch @bind-Value="_queryParam.Filter" Clearable Class="rounded-2 search" Placeholder="@T("Search")" Dense OnEnter="RefreshAsync" OnClearClick="HandleClearAsync" />
-    <MButton Color="primary" Class="ml-6 rounded-lg btn" OnClick="()=> _createModal.OpenModalAsync()">
+    <MButton Color="primary" Class="ml-6 rounded-lg btn small-btn" OnClick="()=> _createModal.OpenModalAsync()">
         <span>@T("Permission.CreateChannel")</span>
     </MButton>
 </MRow>
