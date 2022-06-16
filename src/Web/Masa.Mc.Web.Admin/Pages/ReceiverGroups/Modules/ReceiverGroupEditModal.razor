@@ -1,17 +1,19 @@
 ﻿@inherits AdminCompontentBase
 <div @ref="Ref">
-    <SheetDialog Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.EditReceiverGroup")">
-        <MForm Model="_model" EnableValidation>
-            <div class="sheet-dialog full-height flex-column">
-                <div class="pt-6 flex-height-auto overflow-y">
-                    <MRow Justify="@("center")">
-                        <MCol Cols="12" Sm="6" Md="3">
-                            <MTextField Class="mx-auto" style="width:200px;" @bind-Value="_model.DisplayName" HideDetails="@("auto")" Placeholder="@T("DisplayName.ReceiverGroupDisplayName")"></MTextField>
+    <McModal Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.EditReceiverGroup")">
+        <MForm Model="_model" EnableValidation Class="full-height">
+            <div class="full-height flex-column">
+                <div class="flex-height-auto flex-grow-1">
+                    <MRow Class="mt-6">
+                        <MCol>
+                            <DefaultTextField @bind-Value="_model.DisplayName"
+                                              Label="@T("DisplayName.ReceiverGroupDisplayName")">
+                            </DefaultTextField>
                         </MCol>
                     </MRow>
                     <ReceiverSelect @bind-Value="_model.Items"></ReceiverSelect>
-                    <MRow Class="mt-1">
-                        <MCol Cols="12">
+                    <MRow Class="mt-6">
+                        <MCol>
                             <MTextarea @bind-Value="_model.Description"
                                        Label="@T("DisplayName.ReceiverGroupDescription")"
                                        Outlined
@@ -20,12 +22,12 @@
                         </MCol>
                     </MRow>
                 </div>
-                <div Class="d-flex pt-6">
-                    <MButton Class="mr-6" Text Color="error" OnClick="HandleDel">@T("Delete")</MButton>
+                <div Class="d-flex mt-6">
+                    <MIcon Size="24" Color="error" OnClick="HandleDel">mdi-delete</MIcon>
                     <MSpacer></MSpacer>
-                    <MButton Color="primary" Class="small-button" OnClick="async() => await HandleOk(context)">@T("Save")</MButton>
+                    <MButton Color="primary" Class="btn-form" OnClick="async() => await HandleOk(context)">@T("Save")</MButton>
                 </div>
             </div>
         </MForm>
-    </SheetDialog>
+    </McModal>
 </div>

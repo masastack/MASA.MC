@@ -57,4 +57,9 @@ public partial class ReceiverSelect : AdminCompontentBase
         await ValueChanged.InvokeAsync(Value);
         await SuccessMessageAsync(T("ExternalMemberAddMessage"));
     }
+
+    private void HandleSubjectSelected()
+    {
+        Console.WriteLine("1");
+    }
 }
