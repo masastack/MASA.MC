@@ -1,8 +1,8 @@
 apiVersion: dapr.io/v1alpha1
 kind: Component
 metadata:
-  name: statestore
-  namespace: masa-mc-dev
+  name: masa-mc-statestore.yaml
+  namespace: default
 spec:
   type: state.redis
   version: v1

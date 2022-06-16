@@ -2,7 +2,7 @@ apiVersion: dapr.io/v1alpha1
 kind: Component
 metadata:
   name: pubsub
-  namespace: masa-mc-dev
+  namespace: default
 spec:
   type: pubsub.redis
   version: v1
