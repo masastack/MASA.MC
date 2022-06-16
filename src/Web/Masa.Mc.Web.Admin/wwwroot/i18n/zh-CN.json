@@ -186,7 +186,7 @@
   "DisplayName.MessageTaskEntityType": "消息类型",
   "DisplayName.MessageTaskSendTime": "发送时间",
   "DisplayName.ReceiverType": "收件人类型",
-  "DisplayName.ReceiverType.Assign": "指定接收人",
+  "DisplayName.ReceiverType.Assign": "指定收件人",
   "DisplayName.ReceiverType.Broadcast": "广播",
   "MessageTaskCreateMessage": "添加消息任务成功.",
   "MessageTaskEditMessage": "编辑消息任务成功.",

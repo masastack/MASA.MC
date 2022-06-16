@@ -9,12 +9,13 @@ public partial class OrdinaryMessageCreateModal : AdminCompontentBase
     public EventCallback OnOk { get; set; }
 
     private MForm _form;
-    private MessageTaskUpsertDto _model = new() { ReceiverType = ReceiverTypes.Assign, EntityType = MessageEntityTypes.Ordinary };
+    private MessageTaskUpsertDto _model = new() { EntityType = MessageEntityTypes.Ordinary };
     private bool _visible;
     private List<ChannelDto> _channelItems = new();
     private ChannelTypes _channelType;
     private List<MessageTaskReceiverDto> _selectReceivers = new();
     private List<MessageTaskReceiverDto> _importReceivers = new();
+    int _tabIndex = 0;
 
     MessageTaskService MessageTaskService => McCaller.MessageTaskService;
     ChannelService ChannelService => McCaller.ChannelService;
@@ -61,7 +62,7 @@ public partial class OrdinaryMessageCreateModal : AdminCompontentBase
 
     private void ResetForm()
     {
-        _model = new() { ReceiverType = ReceiverTypes.Assign, EntityType = MessageEntityTypes.Ordinary };
+        _model = new() { EntityType = MessageEntityTypes.Ordinary };
         _selectReceivers = new();
         _importReceivers = new();
     }
@@ -77,6 +78,15 @@ public partial class OrdinaryMessageCreateModal : AdminCompontentBase
         if (_channelType != ChannelTypes.WebsiteMessage)
         {
             _model.ReceiverType = ReceiverTypes.Assign;
+        }
+    }
+
+    private void HandleReceiverType(ReceiverTypes receiverType)
+    {
+        _model.ReceiverType = receiverType;
+        if (receiverType == ReceiverTypes.Broadcast)
+        {
+            _tabIndex++;
         }
     }
 }
