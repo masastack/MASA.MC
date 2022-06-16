@@ -98,59 +98,40 @@
     </div>
 </div>
 <MCard>
-    <MDataTable Headers="Headers" Items="_entities.Result" TItem="MessageTemplateDto" ItemsPerPage="_queryParam.PageSize" HideDefaultFooter Class="mt-6">
-    <HeaderColContent Context="header">
-        <span class="text-btn">@header.Text</span>
-    </HeaderColContent>
-    <ItemColContent>
-        @switch (context.Header.Value)
-        {
-            case ("ChannelDisplayName"):
-                <span class="body regular--text">@context.Item.Channel?.DisplayName</span>
-                break;
-            case nameof(MessageTemplateDto.TemplateType):
-                <span class="body regular--text">@T($"DisplayName.SmsTemplateType.{((SmsTemplateTypes)context.Item.TemplateType).ToString()}")</span>
-                break;
-            case (nameof(MessageTemplateDto.ModificationTime)):
-                <span class="body regular--text">@context.Item.ModificationTime.ToString(T("$DateTimeFormat"))</span>
-                break;
-            case nameof(MessageTemplateDto.AuditStatus):
-                string color = string.Empty;
-                switch (context.Item.AuditStatus)
-                {
-                    case MessageTemplateAuditStatuses.WaitAudit:
-                        color = "orange";
-                        break;
-                    case MessageTemplateAuditStatuses.Adopt:
-                        color = "sample-green";
-                        break;
-                    case MessageTemplateAuditStatuses.Fail:
-                        color = "error";
-                        break;
-                    default:
-                        break;
-                }
-                <MChip Color="@($"{color}-lighten-5")" TextColor="@color" Ripple="false">
-                    <span class="body regular--text">@T($"DisplayName.MessageTemplateAuditStatus.{context.Item.AuditStatus.ToString()}")</span>
-                </MChip>
-                break;
-            case nameof(MessageTemplateDto.Status):
-                <MChip Ripple="false">
-                    <span class="body regular--text">@T($"DisplayName.MessageTemplateStatus.{context.Item.Status.ToString()}")</span>
-                </MChip>
-                break;
-            case "Action":
-                <MIcon Small Color="emphasis2" OnClick="async()=>await _editModal.OpenModalAsync(context.Item)">mdi-pencil</MIcon>
-                break;
-            default:
-                <span class="body regular--text">@context.Value</span>
-                break;
-        }
-    </ItemColContent>
-    <FooterContent>
-        <McPagination Class="mt-3 mx-6 pb-6" @bind-Page="_queryParam.Page" @bind-PageSize="_queryParam.PageSize" Total="_entities.Total" OnChange="HandlePaginationChange" />
-    </FooterContent>
-</MDataTable>
+    <DefaultDataTable Headers="Headers" Items="_entities.Result" TItem="MessageTemplateDto" ItemsPerPage="_queryParam.PageSize" HideDefaultFooter Class="mt-6">
+        <HeaderColContent Context="header">
+            <span class="text-btn">@header.Text</span>
+        </HeaderColContent>
+        <ItemColContent>
+            @switch (context.Header.Value)
+            {
+                case ("ChannelDisplayName"):
+                    <span class="body regular--text">@context.Item.Channel?.DisplayName</span>
+                    break;
+                case nameof(MessageTemplateDto.TemplateType):
+                    <span class="body regular--text">@T($"DisplayName.SmsTemplateType.{((SmsTemplateTypes)context.Item.TemplateType).ToString()}")</span>
+                    break;
+                case (nameof(MessageTemplateDto.Modifier)):
+                    <span class="body2 regular--text">@TempCurrentUserConsts.NAME</span>
+                    break;
+                case (nameof(MessageTemplateDto.ModificationTime)):
+                    <DateTimeListItem Value="@context.Item.ModificationTime"></DateTimeListItem>
+                    break;
+                case nameof(MessageTemplateDto.AuditStatus):
+                    <MessageTemplateStatusTag Value="@context.Item.AuditStatus" />
+                    break;
+                case "Action":
+                    <MIcon Small Color="emphasis2" OnClick="async()=>await _editModal.OpenModalAsync(context.Item)">mdi-pencil</MIcon>
+                    break;
+                default:
+                    <span class="body regular--text">@context.Value</span>
+                    break;
+            }
+        </ItemColContent>
+        <FooterContent>
+            <McPagination Class="mt-3 mx-6 pb-6" @bind-Page="_queryParam.Page" @bind-PageSize="_queryParam.PageSize" Total="_entities.Total" OnChange="HandlePaginationChange" />
+        </FooterContent>
+    </DefaultDataTable>
 </MCard>
 
 <SmsTemplateCreateModal @ref="_createModal" OnOk="HandleOk" />

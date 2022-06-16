@@ -70,7 +70,7 @@
 </div>
 
 <MCard>
-    <MDataTable Headers="Headers" Items="_entities.Result" TItem="MessageRecordDto" ItemsPerPage="_queryParam.PageSize" HideDefaultFooter Class="mt-6">
+    <DefaultDataTable Headers="Headers" Items="_entities.Result" TItem="MessageRecordDto" ItemsPerPage="_queryParam.PageSize" HideDefaultFooter Class="mt-6">
         <HeaderColContent Context="header">
             <span class="text-btn">@header.Text</span>
         </HeaderColContent>
@@ -78,22 +78,27 @@
             @switch (context.Header.Value)
             {
                 case ("Receiver"):
-                    <div class="d-flex my-1">
-                        @if (string.IsNullOrEmpty(context.Item.ExtraProperties.GetProperty<string>("Avatar")))
-                        {
-                            <EmptyAvatar Size=40 Value="@(context.Item.ExtraProperties.GetProperty<string>("DisplayName"))" />
-                        }
-                        else
-                        {
-                            <MAvatar>
-                                <MImage Size=40 Src="@(context.Item.ExtraProperties.GetProperty<string>("Avatar"))"></MImage>
-                            </MAvatar>
-                        }
-                        <div class="ml-3">
-                            <div class="subtitle emphasis--text">@(context.Item.ExtraProperties.GetProperty<string>("DisplayName"))</div>
-                            <div class="caption regular2--text">@(context.Item.ExtraProperties.GetProperty<string>("PhoneNumber")) | @(context.Item.ExtraProperties.GetProperty<string>("Email"))</div>
-                        </div>
-                    </div>
+                    <MListItem Class="px-0">
+                        <MListItemAvatar Class="mr-3">
+                            @if (string.IsNullOrEmpty(context.Item.ExtraProperties.GetProperty<string>("Avatar")))
+                            {
+                                <EmptyAvatar Size=40 Value="@(context.Item.ExtraProperties.GetProperty<string>("DisplayName"))" />
+                            }
+                            else
+                            {
+                                <MAvatar Size=40>
+                                    <MImage Src="@(context.Item.ExtraProperties.GetProperty<string>("Avatar"))"></MImage>
+                                </MAvatar>
+                            }
+                        </MListItemAvatar>
+                        <MListItemContent>
+                            <MListItemTitle class="subtitle emphasis--text">@(context.Item.ExtraProperties.GetProperty<string>("DisplayName"))</MListItemTitle>
+                            <MListItemSubtitle class="caption regular2--text">@(context.Item.ExtraProperties.GetProperty<string>("PhoneNumber"))</MListItemSubtitle>
+                        </MListItemContent>
+                    </MListItem>
+                    break;
+                case (nameof(MessageTaskReceiverDto.Email)):
+                    <span class="body regular--text">@(context.Item.ExtraProperties.GetProperty<string>(nameof(MessageTaskReceiverDto.Email)))</span>
                     break;
                 case ("ChannelDisplayName"):
                     <span class="body regular--text">@context.Item.Channel?.DisplayName</span>
@@ -101,18 +106,14 @@
                 case ("MessageInfoTitle"):
                     <span class="body regular--text">@(context.Item.ExtraProperties.GetProperty<string>("Title"))</span>
                     break;
+                case (nameof(MessageRecordDto.ExpectSendTime)):
+                    <DateTimeListItem Value="@context.Item.ExpectSendTime"></DateTimeListItem>
+                    break;
                 case (nameof(MessageRecordDto.SendTime)):
-                    <span class="body regular--text">@context.Item.SendTime?.ToString(T("$DateTimeFormat"))</span>
+                    <DateTimeListItem Value="@context.Item.SendTime"></DateTimeListItem>
                     break;
                 case nameof(MessageRecordDto.Success):
-                    if (context.Item.Success == true)
-                    {
-                        <span class="body regular--text">@T("DisplayName.MessageRecordSuccess.True")</span>
-                    }
-                    if (context.Item.Success == false)
-                    {
-                        <span class="body regular--text">@T("DisplayName.MessageRecordSuccess.False")</span>
-                    }
+                    <MessageRecordStatusTag Value="@context.Item.Success"/>
                     break;
                 case "Action":
                     <MIcon Small Color="emphasis2" OnClick="async()=>await _detailModal.OpenModalAsync(context.Item)">mdi-eye</MIcon>
@@ -125,7 +126,7 @@
         <FooterContent>
             <McPagination Class="mt-3 mx-6 pb-6" @bind-Page="_queryParam.Page" @bind-PageSize="_queryParam.PageSize" Total="_entities.Total" OnChange="HandlePaginationChange" />
         </FooterContent>
-    </MDataTable>
+    </DefaultDataTable>
 </MCard>
 
 <MessageRecordDetailModal @ref="_detailModal" OnOk="HandleOk" />

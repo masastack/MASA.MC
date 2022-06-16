@@ -1,0 +1,14 @@
+﻿@inherits AdminCompontentBase
+@if (Value == true)
+{
+    <span class="green-lighten green--text btn tag">@T("Success")</span>
+}
+else if (Value == false)
+{
+    <span class="warning-lighten warning--text btn tag">@T("Failure")</span>
+}
+
+@code {
+    [Parameter]
+    public bool? Value { get; set; }
+}

@@ -3,6 +3,7 @@
   "$DateTimeFormat": "MM/dd/yyyy HH:mm:ss",
   "$DateFormat": "MM/dd/yyyy",
   "$MonthDayFormat": "MM/dd",
+  "$TimeFormat": "HH:mm:ss",
   "Unit.Bar": "Bar",
   "DeletionConfirmationMessage": "Are you sure delete data?",
   "BasicInformation": "Basic Information",
@@ -141,6 +142,7 @@
   "DisplayName.MessageTaskHistoryStatus.Withdrawn": "Withdrawn",
   "Permission.TestMessageTask": "Test message task",
   "DisplayName.MessageRecordSendTime": "Send time",
+  "DisplayName.MessageRecordExpectSendTime": "Expect send time",
   "DisplayName.MessageRecordReceiptTime": "Receipt time",
   "DisplayName.MessageRecordSuccess": "Send status",
   "DisplayName.MessageRecordFailureReason": "Failure reason",
@@ -157,5 +159,7 @@
   "DisplayName.MessageTaskReceiverTypes.Role": "Role",
   "DisplayName.MessageTaskReceiverTypes.Team": "Team",
   "DisplayName.MessageTaskReceiverTypes.Group": "Group",
-  "DisplayName.Color.Lable": "Select color"
+  "DisplayName.Color.Lable": "Select color",
+  "Success": "Success",
+  "Failure": "Failure"
 }

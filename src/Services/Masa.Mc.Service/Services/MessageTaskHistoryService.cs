@@ -5,8 +5,6 @@ namespace Masa.Mc.Service.Admin.Services;
 
 public class MessageTaskHistoryService : ServiceBase
 {
-    private const string DAPR_PUBSUB_NAME = "pubsub";
-
     public MessageTaskHistoryService(IServiceCollection services) : base(services, "api/message-task-history")
     {
         MapGet(GetAsync, "{id}");
@@ -36,7 +34,7 @@ public class MessageTaskHistoryService : ServiceBase
         await eventBus.PublishAsync(command);
     }
 
-    [Topic(DAPR_PUBSUB_NAME, nameof(CreateMessageIntegrationDomainEvent))]
+    [Topic(DaprConsts.DAPR_PUBSUB_NAME, nameof(CreateMessageIntegrationDomainEvent))]
     public async Task SendMessageAsync(IEventBus eventBus, CreateMessageIntegrationDomainEvent @event)
     {
         await eventBus.PublishAsync(new CreateMessageEvent(@event.ChannelId, @event.MessageData, @event.MessageTaskHistoryId));

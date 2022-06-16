@@ -72,8 +72,11 @@
                 case ("ChannelDisplayName"):
                     <span class="body regular--text">@context.Item.Channel?.DisplayName</span>
                     break;
+                case (nameof(MessageTemplateDto.Modifier)):
+                    <span class="body2 regular--text">@TempCurrentUserConsts.NAME</span>
+                    break;
                 case (nameof(MessageTemplateDto.ModificationTime)):
-                    <span class="body regular--text">@context.Item.ModificationTime.ToString(T("$DateTimeFormat"))</span>
+                    <DateTimeListItem Value="@context.Item.ModificationTime"></DateTimeListItem>
                     break;
                 case nameof(MessageTemplateDto.AuditStatus):
                     string color = string.Empty;

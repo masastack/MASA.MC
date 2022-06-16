@@ -24,12 +24,14 @@ public partial class MessageRecordManagement : AdminCompontentBase
         Headers = new()
         {
             new() { Text = T("DisplayName.MessageTaskReceiver"), Value = "Receiver", Sortable = false},
+            new() { Text = T(nameof(MessageTaskReceiverDto.Email)), Value = nameof(MessageTaskReceiverDto.Email), Sortable = false},
             new() { Text = T("DisplayName.ChannelDisplayName"), Value = "ChannelDisplayName", Sortable = false},
             new() { Text = T("DisplayName.MessageInfoTitle"), Value = "MessageInfoTitle", Sortable = false},
-            new() { Text = T($"{_prefix}{nameof(MessageRecordDto.SendTime)}"), Value = nameof(MessageRecordDto.SendTime), Sortable = true },
-            new() { Text = T($"{_prefix}{nameof(MessageRecordDto.Success)}"), Value = nameof(MessageRecordDto.Success), Sortable = false },
-            new() { Text = T($"{_prefix}{nameof(MessageRecordDto.FailureReason)}"), Value = nameof(MessageRecordDto.FailureReason), Sortable = false, Width = 200 },
-            new() { Text = T("Action"), Value = "Action", Sortable = false },
+            new() { Text = T($"{_prefix}{nameof(MessageRecordDto.ExpectSendTime)}"), Value = nameof(MessageRecordDto.ExpectSendTime), Sortable = false},
+            new() { Text = T($"{_prefix}{nameof(MessageRecordDto.SendTime)}"), Value = nameof(MessageRecordDto.SendTime), Sortable = false},
+            new() { Text = T($"{_prefix}{nameof(MessageRecordDto.Success)}"), Value = nameof(MessageRecordDto.Success), Sortable = false},
+            new() { Text = T($"{_prefix}{nameof(MessageRecordDto.FailureReason)}"), Value = nameof(MessageRecordDto.FailureReason), Sortable = false},
+            new() { Text = T("Action"), Value = "Action", Sortable = false},
         };
         _channelItems = (await ChannelService.GetListAsync(new GetChannelInputDto(99))).Result;
         _successItems = new()
