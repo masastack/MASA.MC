@@ -5,7 +5,6 @@ namespace Masa.Mc.Service.Admin.Services;
 
 public class SmsTemplateService : ServiceBase
 {
-    private const string DAPR_PUBSUB_NAME = "pubsub";
     public SmsTemplateService(IServiceCollection services) : base(services, "api/sms-template")
     {
         MapGet(GetListByChannelIdAsync);
@@ -19,7 +18,7 @@ public class SmsTemplateService : ServiceBase
         return query.Result;
     }
 
-    [Topic(DAPR_PUBSUB_NAME, nameof(SmsTemplateSynchroIntegrationDomainEvent))]
+    [Topic(DaprConsts.DAPR_PUBSUB_NAME, nameof(SmsTemplateSynchroIntegrationDomainEvent))]
     public async Task SyncAsync(IEventBus eventbus, SmsTemplateSynchroIntegrationDomainEvent @event)
     {
         var command = new SyncSmsTemplateCommand(@event.ChannelId);
