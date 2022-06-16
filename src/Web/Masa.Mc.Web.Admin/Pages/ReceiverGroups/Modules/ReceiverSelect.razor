@@ -1,7 +1,7 @@
 ﻿@inherits AdminCompontentBase
 <MRow Class="mt-6">
     <MCol Class="d-flex align-self-stretch">
-        <SubjectAutoComplete Class="d-flex" @ref="_subjectRef" @bind-Value="_userIds" OnSelectedItemUpdate="HandleSubjectSelected"></SubjectAutoComplete>
+        <SubjectAutoComplete Class="d-flex" @bind-Value="_userIds" OnSelectedItemUpdate="HandleSubjectSelected"></SubjectAutoComplete>
         <MButton Color="fill" Class="d-flex ml-6 rounded-lg btn small-btn pa-0 btn-fill-line" OnClick="_createModal.OpenModalAsync">
             <MIcon Size=18>mdi-plus</MIcon>
             <span>@T("ExternalMember")</span>

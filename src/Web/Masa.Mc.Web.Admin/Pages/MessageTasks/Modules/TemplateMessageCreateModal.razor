@@ -1,9 +1,9 @@
 ﻿@inherits AdminCompontentBase
 <div @ref="Ref">
-    <SheetDialog Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.SendTemplateMessage")">
-        <MForm Model="_model" @ref="_form" EnableValidation>
-            <div class="sheet-dialog full-height flex-column">
-                <div class="pt-6 flex-height-auto overflow-y">
+    <McModal Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.SendTemplateMessage")">
+        <MForm Model="_model" @ref="_form" EnableValidation Class="full-height">
+            <div class="full-height flex-column">
+                <div class="flex-height-auto flex-grow-1">
                     <MRow>
                         <MCol>
                             <MRow>
@@ -117,5 +117,5 @@
                 </div>
             </div>
         </MForm>
-    </SheetDialog>
+    </McModal>
 </div>

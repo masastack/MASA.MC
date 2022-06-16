@@ -1,9 +1,53 @@
 ﻿@inherits AdminCompontentBase
 <div @ref="Ref">
-    <SheetDialog Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.SendOrdinaryMessage")">
-        <MForm Model="_model" @ref="_form" EnableValidation>
-            <div class="sheet-dialog full-height flex-column">
-                <div class="pt-6 flex-height-auto overflow-y">
+    <McModal Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.SendOrdinaryMessage")">
+        <MForm Model="_model" @ref="_form" EnableValidation Class="full-height">
+            <ElevationTab TabMinWidth="227" Class="mt-10" Tabs='new List<string> { "收件人", "消息内容", "发送规则" }' Dense>
+                <ElevationTabItem>
+                    <MContainer Fluid Class="pt-9 px-5">
+                        <MRow Align="AlignTypes.Center" Justify="JustifyTypes.SpaceBetween">
+                           
+                                <MHover Context="hoverContext">
+                                    <MCard @attributes="hoverContext.Attrs" Height="331" Width="331" Class="@($"d-flex flex-column justify-center align-center {hoverContext.Class} {(hoverContext.Hover ? "primary" : "fill-background")}")"
+                                           Elevation="@(hoverContext.Hover ? 12 : 2)">
+                                        @if (hoverContext.Hover)
+                                        {
+                                            <MIcon Size=33 Color="#FFFFFF">mdi-phone-outline</MIcon>
+                                            <div class="h6 pt-10" style="color:#FAFAFA">@T("Sms")</div>
+                                        }
+                                        else
+                                        {
+                                            <MIcon Size=33 Color="#323D6F">mdi-phone</MIcon>
+                                            <div class="h6 pt-10 regular--text">@T("Sms")</div>
+                                        }
+                                    </MCard>
+                                </MHover>
+                            
+                                <MHover Context="hoverContext">
+                                    <MCard @attributes="hoverContext.Attrs" Height="331" Width="331" Class="@($"d-flex flex-column justify-center align-center {hoverContext.Class} {(hoverContext.Hover ? "primary" : "fill-background")}")"
+                                           Elevation="@(hoverContext.Hover ? 12 : 2)">
+                                        @if (hoverContext.Hover)
+                                        {
+                                            <MIcon Size=33 Color="#FFFFFF">mdi-email-outline</MIcon>
+                                            <div class="h6 pt-10" style="color:#FAFAFA">@T("Email")</div>
+                                        }
+                                        else
+                                        {
+                                            <MIcon Size=33 Color="#323D6F">mdi-email</MIcon>
+                                            <div class="h6 pt-10 regular--text">@T("Email")</div>
+                                        }
+                                    </MCard>
+                                </MHover>
+                            
+                        </MRow>
+                    </MContainer>
+                </ElevationTabItem>
+                <ElevationTabItem>
+                    Api Permission
+                </ElevationTabItem>
+            </ElevationTab>
+            <div class="full-height flex-column">
+                <div class="flex-height-auto flex-grow-1">
                     <MRow>
                         <MCol>
                             <MRow>
@@ -56,11 +100,11 @@
                             {
                                 <MRow Class="mx-1 pt-6">
                                     <MCheckbox Class="mt-1 mr-2" @bind-Value="_model.MessageInfo.IsJump" Label="@T("DisplayName.MessageTemplateIsJump")"></MCheckbox>
-                                        <MTextField @bind-Value="_model.MessageInfo.JumpUrl"
-                                                Label="@T("DisplayName.MessageTemplateJumpUrl")"
-                                                Outlined
-                                                HideDetails="@("auto")">
-                                        </MTextField>
+                                    <MTextField @bind-Value="_model.MessageInfo.JumpUrl"
+                                            Label="@T("DisplayName.MessageTemplateJumpUrl")"
+                                            Outlined
+                                            HideDetails="@("auto")">
+                                    </MTextField>
                                 </MRow>
                             }
                             @if (_channelType == ChannelTypes.Sms)
@@ -77,7 +121,7 @@
                             }
                         </MCol>
                         <MCol>
-                            <MInput @bind-Value="_model.Receivers"/>
+                            <MInput @bind-Value="_model.Receivers" />
                             <MessageReceivers @bind-ReceiverType="_model.ReceiverType"
                                               @bind-SelectReceivers="_selectReceivers"
                                               @bind-ImportReceivers="_importReceivers"
@@ -85,7 +129,7 @@
                                               ChannelType="_channelType" />
                             <div class="mt-4 text-subtitle2">@T("DisplayName.MessageTaskSendingRule")</div>
                             <MInput @bind-Value="_model.SendRules" />
-                            <MessageSendingRules Class="mt-2" @bind-Value="_model.SendRules"/>
+                            <MessageSendingRules Class="mt-2" @bind-Value="_model.SendRules" />
                         </MCol>
                     </MRow>
                 </div>
@@ -99,5 +143,5 @@
                 </div>
             </div>
         </MForm>
-    </SheetDialog>
+    </McModal>
 </div>
