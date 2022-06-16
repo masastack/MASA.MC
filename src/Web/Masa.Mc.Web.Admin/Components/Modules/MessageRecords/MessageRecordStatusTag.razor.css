@@ -1,8 +1,10 @@
 ﻿.tag {
     border-radius: 18px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 8px;
     min-width: 56px;
+    border-radius: 18px;
     height: 27px;
-    line-height: 27px;
-    text-align: center;
-    display: block;
 }

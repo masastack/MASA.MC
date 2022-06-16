@@ -62,7 +62,7 @@
     </div>
 </div>
 <MCard>
-    <MDataTable Headers="Headers" Items="_entities.Result" TItem="MessageTemplateDto" ItemsPerPage="_queryParam.PageSize" HideDefaultFooter Class="mt-6">
+    <DefaultDataTable Headers="Headers" Items="_entities.Result" TItem="MessageTemplateDto" ItemsPerPage="_queryParam.PageSize" HideDefaultFooter Class="mt-6">
         <HeaderColContent Context="header">
             <span class="text-btn">@header.Text</span>
         </HeaderColContent>
@@ -114,7 +114,7 @@
         <FooterContent>
             <McPagination Class="mt-3 mx-6 pb-6" @bind-Page="_queryParam.Page" @bind-PageSize="_queryParam.PageSize" Total="_entities.Total" OnChange="HandlePaginationChange" />
         </FooterContent>
-    </MDataTable>
+    </DefaultDataTable>
 </MCard>
 <EmailTemplateCreateModal @ref="_createModal" OnOk="HandleOk" />
 <EmailTemplateEditModal @ref="_editModal" OnOk="HandleOk" />

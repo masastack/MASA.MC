@@ -13,7 +13,7 @@
 </div>
 
 <MCard>
-    <MDataTable Headers="Headers" Items="_entities.Result" TItem="ReceiverGroupDto" ItemsPerPage="_queryParam.PageSize" HideDefaultFooter Class="mt-6">
+    <DefaultDataTable Headers="Headers" Items="_entities.Result" TItem="ReceiverGroupDto" ItemsPerPage="_queryParam.PageSize" HideDefaultFooter Class="mt-6">
         <HeaderColContent Context="header">
             <span class="text-btn">@header.Text</span>
         </HeaderColContent>
@@ -27,7 +27,7 @@
                     <span class="body regular--text">@context.Value</span>
                     break;
                 case (nameof(ReceiverGroupDto.ModificationTime)):
-                    <span class="body regular--text">@context.Item.ModificationTime.ToString(T("$DateTimeFormat"))</span>
+                    <DateTimeListItem Value="@context.Item.ModificationTime"></DateTimeListItem>
                     break;
                 case (nameof(ReceiverGroupDto.Modifier)):
                     <span class="body2 regular--text">@TempCurrentUserConsts.NAME</span>
@@ -43,7 +43,7 @@
         <FooterContent>
             <McPagination Class="mt-3 mx-6 pb-6" @bind-Page="_queryParam.Page" @bind-PageSize="_queryParam.PageSize" Total="_entities.Total" OnChange="HandlePaginationChange" />
         </FooterContent>
-    </MDataTable>
+    </DefaultDataTable>
 </MCard>
 
 <ReceiverGroupEditModal @ref="_editModal" OnOk="HandleOk" />
