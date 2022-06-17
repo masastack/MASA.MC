@@ -150,6 +150,13 @@
   "DisplayName.MessageRecordSuccess.False": "Fail in send",
   "DisplayName.MessageRecordTimeTypes": "Time type",
   "DisplayName.MessageRecordTimeTypes.SendTime": "Send time",
+  "DisplayName.MessageRecordUserId": "Addressee",
+  "Description.MessageReceiversImport.Tips": "A total of {0} pieces of data were uploaded.",
+  "Description.MessageReceiversUpload.Placeholder": "Please upload the file",
+  "Description.MessageReceiversUpload.Tips": "Please upload CSV format file",
+  "Description.MessageReceiversDownload.Name": "Template file csv",
+  "Description.MessageReceiversDownload.Tips": "Download",
+  "Description.MessageReceiversUpload.EncodingTips": "Please upload the UTF-8 encoded CSV file",
   "DisplayName.SubjectTypes.User": "User",
   "DisplayName.SubjectTypes.Department": "Department",
   "DisplayName.SubjectTypes.Role": "Role",
@@ -161,5 +168,8 @@
   "DisplayName.MessageTaskReceiverTypes.Group": "Group",
   "DisplayName.Color.Lable": "Select color",
   "Success": "Success",
-  "Failure": "Failure"
+  "Failure": "Failure",
+  "View": "View",
+  "UploadComplete": "Upload complete",
+  "UploadFile": "Upload file"
 }

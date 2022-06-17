@@ -225,7 +225,8 @@
   "Description.MessageReceiversImport.Tips": "共上传{0}条数据。",
   "Description.MessageReceiversUpload.Placeholder": "请上传文件",
   "Description.MessageReceiversUpload.Tips": "请上传.csv格式的文件",
-  "Description.MessageReceiversDownload.Tips": "点击下载模板",
+  "Description.MessageReceiversDownload.Name": "模板file.csv",
+  "Description.MessageReceiversDownload.Tips": "下载",
   "Description.MessageReceiversUpload.EncodingTips": "请上传UTF-8编码的csv文件",
   "Description.PhoneNumber.Required": "手机号不允许重复",
   "Description.Email.Required": "邮箱不允许重复",
@@ -249,5 +250,8 @@
   "DisplayName.MessageTaskReceiverTypes.Group": "收件人组",
   "DisplayName.Color.Lable": "选择颜色",
   "Success": "成功",
-  "Failure": "失败"
+  "Failure": "失败",
+  "View": "查看",
+  "UploadComplete": "上传完成",
+  "UploadFile": "上传文件"
 }

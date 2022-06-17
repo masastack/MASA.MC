@@ -1,69 +1,95 @@
 ﻿@inherits AdminCompontentBase
-<MRow Class="mx-1 pt-6" Justify="JustifyTypes.Start">
-    <MCheckbox @bind-Value="Value.IsSendingInterval" Disabled="ReadOnly"></MCheckbox>
-    <span class="pt-4">@T("Each")</span>
-    <MTextField @bind-Value="Value.SendingInterval"
-                Outlined
-                Disabled="ReadOnly"
-                Class="mx-1"
-                Type="number">
-    </MTextField>
-    <span class="pt-4">@T("Second")，@T("Send")</span>
-    <MTextField @bind-Value="Value.SendingCount"
-                Outlined
-                Disabled="ReadOnly"
-                Class="mx-1"
-                Type="number">
-    </MTextField>
-    <span class="pt-4">@T("Unit.Bar")</span>
+<MRow Class="mt-6">
+    <MCol>
+        <div class="d-flex align-center justify-start btn regular--text">
+            <MCheckbox Class="mt-0" @bind-Value="Value.IsSendingInterval" Disabled="ReadOnly"></MCheckbox>
+            <span class="ml-3">@T("Each")</span>
+            <div class="mx-2" style="width:100px">
+                <MTextField @bind-Value="Value.SendingInterval"
+                            Outlined
+                            Dense
+                            Disabled="ReadOnly"
+                            HideDetails="@("auto")"
+                            Type="number">
+                </MTextField>
+            </div>
+            <span>@T("Second")</span>
+            <div class="d-inline-flex mx-6" style="height: 24px">
+                <MDivider Vertical />
+            </div>
+            <span>@T("Send")</span>
+            <div class="mx-2" style="width:100px">
+                <MTextField @bind-Value="Value.SendingCount"
+                            Outlined
+                            Dense
+                            Disabled="ReadOnly"
+                            HideDetails="@("auto")"
+                            Type="number">
+                </MTextField>
+            </div>
+            <span>@T("Unit.Bar")</span>
+        </div>
+    </MCol>
 </MRow>
-<MRow Class="mx-1 pt-6" Justify="JustifyTypes.Start">
-    <MCheckbox Class="mt-1" @bind-Value="Value.IsTiming" Disabled="ReadOnly"></MCheckbox>
-    <span class="pt-2">@T("DisplayName.SendingRule.IsTiming")</span>
-    <MMenu @bind-Value="_datePickersShow"
-           CloseOnContentClick="false"
-           NudgeRight="40"
-           Transition="scale-transition"
-           OffsetY
-           MinWidth="@("auto")">
-        <ActivatorContent>
-            <MTextField @bind-Value="_sendingDate"
-                        PrependInnerIcon="mdi-calendar"
-                        Outlined
-                        Disabled="ReadOnly"
-                        Class="mx-1"
-                        HideDetails="@("auto")"
-                        @attributes="context.Attrs"></MTextField>
-        </ActivatorContent>
-        <ChildContent>
-            <MDatePicker @bind-Value="_sendingDate"
-                         OnInput="HandleDatePickerInputAsync"></MDatePicker>
-        </ChildContent>
-    </MMenu>
-    <MMenu @bind-Value="_timePickersShow"
-           CloseOnContentClick="false"
-           NudgeRight="40"
-           Transition="scale-transition"
-           OffsetY
-           MaxWidth="290"
-           MinWidth="290">
-        <ActivatorContent>
-            <MTextField @bind-Value="_sendingTime"
-                        PrependInnerIcon="mdi-clock-time-four-outline"
-                        Outlined
-                        Disabled="ReadOnly"
-                        Class="mx-1"
-                        HideDetails="@("auto")"
-                        @attributes="context.Attrs"></MTextField>
-        </ActivatorContent>
-        <ChildContent>
-            @if (_timePickersShow)
-            {
-                <MTimePicker @bind-Value="_sendingTime"
-                         OnChange="HandleTimePickerChangeAsync"
-                         FullWidth></MTimePicker>
-            }
-        </ChildContent>
-    </MMenu>
+<MRow Class="mt-6">
+    <MCol>
+        <div class="d-flex align-center justify-start btn regular--text">
+            <MCheckbox Class="mt-0" @bind-Value="Value.IsTiming" Disabled="ReadOnly"></MCheckbox>
+            <span class="ml-3">@T("DisplayName.SendingRule.IsTiming")</span>
+            <MMenu @bind-Value="_datePickersShow"
+                   CloseOnContentClick="false"
+                   NudgeRight="40"
+                   Transition="scale-transition"
+                   OffsetY
+                   MinWidth="@("auto")">
+                <ActivatorContent>
+                    <div class="mx-2" style="width:140px">
+                        <MTextField @bind-Value="_sendingDate"
+                                    PrependInnerIcon="mdi-calendar"
+                                    Outlined
+                                    Dense
+                                    Disabled="ReadOnly"
+                                    HideDetails="@("auto")"
+                                    @attributes="context.Attrs"></MTextField>
+                    </div>
+                </ActivatorContent>
+                <ChildContent>
+                    <MDatePicker @bind-Value="_sendingDate"
+                                 OnInput="HandleDatePickerInputAsync"></MDatePicker>
+                </ChildContent>
+            </MMenu>
+            <div class="d-inline-flex mx-6" style="height: 24px">
+                <MDivider Vertical />
+            </div>
+            <MMenu @bind-Value="_timePickersShow"
+                   CloseOnContentClick="false"
+                   NudgeRight="40"
+                   Transition="scale-transition"
+                   OffsetY
+                   MaxWidth="290"
+                   MinWidth="290">
+                <ActivatorContent>
+                    <div class="mx-2" style="width:100px">
+                        <MTextField @bind-Value="_sendingTime"
+                                    PrependInnerIcon="mdi-clock-time-four-outline"
+                                    Outlined
+                                    Disabled="ReadOnly"
+                                    Dense
+                                    HideDetails="@("auto")"
+                                    @attributes="context.Attrs"></MTextField>
+                    </div>
+                </ActivatorContent>
+                <ChildContent>
+                    @if (_timePickersShow)
+                    {
+                        <MTimePicker @bind-Value="_sendingTime"
+                                 OnChange="HandleTimePickerChangeAsync"
+                                 FullWidth></MTimePicker>
+                    }
+                </ChildContent>
+            </MMenu>
+        </div>
+    </MCol>
 </MRow>
-<p><MInput @bind-Value="Value.SendTime"/></p>
+
+<p><MInput @bind-Value="Value.SendTime" /></p>

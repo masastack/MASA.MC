@@ -1,8 +1,8 @@
 ﻿@inherits AdminCompontentBase
 <div @ref="Ref">
-    <McModal Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.SendOrdinaryMessage")" Height="936">
+    <McModal Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.SendOrdinaryMessage")" Height="850">
         <MForm Model="_model" @ref="_form" EnableValidation Class="full-height">
-            <ElevationTab TabIndex="_tabIndex" TabMinWidth="227" Class="mt-10 full-height" ItemsClass="full-height" Tabs='new List<string> { "收件人", "消息内容", "发送规则" }' Dense>
+            <ElevationTab TabIndex="_tabIndex" TabMinWidth="227" Class="mt-10 full-height" ItemsClass="full-height" Tabs='new List<string> { T("DisplayName.MessageTaskReceiver"), T("DisplayName.MessageInfoContent"), T("DisplayName.MessageTaskSendingRule") }' Dense>
                 <ElevationTabItem>
                     @if (_model.ReceiverType == ReceiverTypes.Assign)
                     {
@@ -124,7 +124,7 @@
                                 </MRow>
                             }
                         </div>
-                        <div class="d-flex">
+                        <div class="d-flex mb-9">
                             <MIcon Size="24" Color="emphasis2" OnClick="()=> _tabIndex-- ">mdi-keyboard-backspace</MIcon>
                             <MSpacer></MSpacer>
                             <MButton Color="fill" Class="btn-form" OnClick="async() => await HandleOkAsync(true)">@T("Save")</MButton>
@@ -135,11 +135,10 @@
                 <ElevationTabItem>
                     <div class="full-height flex-column">
                         <div class="flex-height-auto flex-grow-1">
-                            <div class="mt-4 text-subtitle2">@T("DisplayName.MessageTaskSendingRule")</div>
                             <MInput @bind-Value="_model.SendRules" />
                             <MessageSendingRules Class="mt-2" @bind-Value="_model.SendRules" />
                         </div>
-                        <div class="d-flex">
+                        <div class="d-flex mb-9">
                             <MIcon Size="24" Color="emphasis2" OnClick="()=> _tabIndex-- ">mdi-keyboard-backspace</MIcon>
                             <MSpacer></MSpacer>
                             <MButton Color="fill" Class="btn-form" OnClick="async() => await HandleOkAsync(true)">@T("Save")</MButton>

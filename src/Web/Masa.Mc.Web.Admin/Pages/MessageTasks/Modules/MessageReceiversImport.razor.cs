@@ -22,21 +22,29 @@ public partial class MessageReceiversImport
 
     private ImportResultDto<MessageTaskReceiverDto> _importResult;
 
+    private int _progress = 0;
+    private string _fileName = string.Empty;
+    private bool _isUpload;
+
     MessageTaskService MessageTaskService => McCaller.MessageTaskService;
 
     private async void HandleFileChange(IBrowserFile file)
     {
+        _progress = 0;
         await using var memoryStream = new MemoryStream();
         await file.OpenReadStream().CopyToAsync(memoryStream);
         var fileContent = memoryStream.ToArray();
+        _progress = 100;
+        _isUpload = true;
         if (FileEncoderHelper.GetTextFileEncodingType(fileContent) != Encoding.UTF8)
         {
             await WarningAsync(T("Description.MessageReceiversUpload.EncodingTips"));
             return;
         }
+        _fileName = file.Name;
         var dto = new ImportReceiversDto
         {
-            FileName = file.Name,
+            FileName = _fileName,
             FileContent = fileContent,
             Size = file.Size,
             ContentType = "text/csv",

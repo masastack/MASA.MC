@@ -19,48 +19,56 @@
                HideDetails="@("auto")"
                Style="@($"width:340px;height:40px;{Style}")"
                Class="@($"{Class} rounded-2")"
-               Multiple>
+               Multiple
+               OnSelectedItemUpdate="OnSelectedItemUpdate">
     <PrependInnerContent>
         <MIcon Size=16 Class="mr-2 default-lighten-1--text">mdi-magnify</MIcon>
     </PrependInnerContent>
     <ItemContent Context="data">
-        <div class="d-flex" style="height:48px;">
-            @if (data.Item.Type != MessageTaskReceiverTypes.User)
-            {
-                <MIcon Size=30>mdi-account-group</MIcon>
-            }
-            else
-            {
-                @if (string.IsNullOrEmpty(data.Item.Avatar))
-                {
-                    <EmptyAvatar Class="ma-auto" Size=30 Value="@(data.Item.DisplayName)" />
-                }
-                else
-                {
-                    <MAvatar Size=30 Class="ma-auto">
-                        <img src="@data.Item.Avatar" />
-                    </MAvatar>
-                }
-            }
-            
-            <div class="ma-auto ml-2">
-                <div class="d-flex">
-                    <span class="text-btn default-lighten-1--text">@(data.Item.Type == MessageTaskReceiverTypes.User?data.Item.DisplayName:T($"DisplayName.MessageTaskReceiverTypes.{data.Item.Type}"))</span>
-                    @if (!string.IsNullOrEmpty(data.Item.DisplayName) && !string.IsNullOrEmpty(data.Item.PhoneNumber))
+        <MListItem Class="pa-4 pl-0">
+            <ItemContent>
+                <MListItemAvatar Size=40 Class="ma-0">
+                    @if (data.Item.Type != MessageTaskReceiverTypes.User)
                     {
-                        <div class="my-auto mx-2 divider-vertical-2"></div>
+                        <MAvatar Color="primary">
+                            <MIcon Size=24 Color="fill">mdi-animation</MIcon>
+                        </MAvatar>
                     }
-                    <span class="text-btn default-lighten-1--text">@data.Item.PhoneNumber</span>
-                </div>
-                <div class="d-flex">
-                    <span class="text-overline" style="text-transform: none !important;">@data.Item.DisplayName</span>
-                    @if (!string.IsNullOrEmpty(data.Item.DisplayName) && !string.IsNullOrEmpty(data.Item.Email))
+                    else
                     {
-                        <div class="my-auto mx-2 divider-vertical-2"></div>
+                        @if (string.IsNullOrEmpty(data.Item.Avatar))
+                        {
+                            <EmptyAvatar Value="@(data.Item.DisplayName)" />
+                        }
+                        else
+                        {
+                            <MImage Src="@data.Item.Avatar"></MImage>
+                        }
                     }
-                    <span class="text-overline" style="text-transform: none !important;">@data.Item.Email</span>
-                </div>
-            </div>
-        </div>
+                </MListItemAvatar>
+                <MListItemContent Class="ml-2 pa-0">
+                    <MListItemTitle>
+                        <span class="btn emphasis2--text">@(data.Item.DisplayName)</span>
+                        <div class="d-inline-flex mx-2" style="height: 8px">
+                            <MDivider Vertical />
+                        </div>
+                        <span class="overline regular2--text">@T($"DisplayName.MessageTaskReceiverTypes.{data.Item.Type}")</span>
+                    </MListItemTitle>
+                    @if (data.Item.Type == MessageTaskReceiverTypes.User)
+                    {
+                        <MListItemSubtitle>
+                            <span class="body2 regular2--text">@(data.Item.PhoneNumber)</span>
+                            <div class="d-inline-flex mx-1" style="height: 8px">
+                                <MDivider Vertical />
+                            </div>
+                            <span class="body2 regular2--text">@(data.Item.Email)</span>
+                        </MListItemSubtitle>
+                    }
+                </MListItemContent>
+                <MListItemAction>
+                    <MCheckbox Value="@Value.Contains(data.Item.SubjectId)"></MCheckbox>
+                </MListItemAction>
+            </ItemContent>
+        </MListItem>
     </ItemContent>
 </MAutocomplete>

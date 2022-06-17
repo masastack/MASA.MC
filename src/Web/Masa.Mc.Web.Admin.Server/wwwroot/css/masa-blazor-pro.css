@@ -824,3 +824,11 @@ tr:hover {
     height: 40px !important;
     padding: 4px !important;
 }
+
+.linear--text {
+    color: #A18BFF !important;
+}
+
+.gradient--text {
+    color: #4318FF !important;
+}

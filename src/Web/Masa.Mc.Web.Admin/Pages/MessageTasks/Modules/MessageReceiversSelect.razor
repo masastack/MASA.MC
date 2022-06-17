@@ -1,73 +1,70 @@
 ﻿@inherits AdminCompontentBase
-<MRow Class="mx-1">
-    <MessageTaskReceiverAutoComplete @ref="_subjectRef" @bind-Value="_userIds"></MessageTaskReceiverAutoComplete>
-    <MButton Rounded Outlined Color="indigo" Class="ml-6 medium-button px-6" OnClick="AddAsync">
-        <span>@T("Add")</span>
-    </MButton>
-    <MButton Color="primary" Class="ml-6 medium-button" OnClick="_createModal.OpenModalAsync">
-        <MIcon Size=18>mdi-plus</MIcon>
-        <span class="ml-2">@T("ExternalMember")</span>
-    </MButton>
+<MRow Class="mt-6">
+    <MCol Class="d-flex align-self-stretch">
+        <MessageTaskReceiverAutoComplete Class="d-flex" @bind-Value="_userIds" OnSelectedItemUpdate="HandleSubjectSelected"></MessageTaskReceiverAutoComplete>
+        <MButton Color="fill" Class="d-flex ml-6 rounded-lg btn small-btn pa-0 btn-fill-line" OnClick="_createModal.OpenModalAsync">
+            <MIcon Size=18>mdi-plus</MIcon>
+            <span>@T("ExternalMember")</span>
+        </MButton>
+    </MCol>
 </MRow>
-<MCard Class="mx-auto overflow-y-auto mt-6" Outlined Height="300">
-    @if (Value != null && Value.Count > 0)
-    {
-        <MList ThreeLine>
-            <MRow>
-                @foreach (var item in Value)
-                {
-                    <MCol Md="3">
-                        <MHover>
-                            <MListItem @attributes="context.Attrs" Class="@($"{context.Class} {(context.Hover ? "on-hover" : "")}")">
-                                <MListItemAvatar>
-                                    @if (item.Type != MessageTaskReceiverTypes.User)
-                                    {
-                                        <MIcon Large>mdi-account-group</MIcon>
-                                    }
-                                    else
-                                    {
-                                        if (string.IsNullOrEmpty(item.Avatar))
-                                        {
-                                            <EmptyAvatar Value="@item.DisplayName" />
-                                        }
-                                        else
-                                        {
-                                            <MImage Src="@item.Avatar"></MImage>
-                                        }
-                                    }
-                                </MListItemAvatar>
-                                <MListItemContent>
-                                    <MListItemTitle>@(item.DisplayName)</MListItemTitle>
-                                    @if (item.Type == MessageTaskReceiverTypes.User)
-                                    {
-                                        if (Type == ChannelTypes.Email)
-                                        {
-                                            <MListItemSubtitle>@(item.Email)</MListItemSubtitle>
-                                        }
-                                        else
-                                        {
-                                            <MListItemSubtitle>@(item.PhoneNumber)</MListItemSubtitle>
-                                        }
-                                    }
-                                </MListItemContent>
-                                <MOverlay Absolute Opacity="0.2" Class="justify-end align-start"
-                                  Value="@(context.Hover)">
-                                    <MButton Icon OnClick="()=>RemoveValue(item)">
-                                        <MIcon>mdi-close</MIcon>
-                                    </MButton>
-                                </MOverlay>
-                            </MListItem>
-                        </MHover>
-                    </MCol>
-                }
-            </MRow>
+@if (Value != null && Value.Count > 0)
+{
+    <MCard Class="mx-auto overflow-y-auto mt-6 pa-0" Height="500">
+        <MList>
+            @foreach (var item in Value)
+            {
+                <MHover>
+                    <MListItem @attributes="context.Attrs" Class="@($"pa-4 {context.Class} {(context.Hover ? "on-hover" : "")}")">
+                        <MListItemAvatar Size=40 Class="ma-0">
+                            @if (item.Type != MessageTaskReceiverTypes.User)
+                            {
+                                <MAvatar Color="primary">
+                                    <MIcon Size=24 Color="fill">mdi-animation</MIcon>
+                                </MAvatar>
+                            }
+                            else
+                            {
+                                @if (string.IsNullOrEmpty(item.Avatar))
+                                {
+                                    <EmptyAvatar Value="@item.DisplayName" />
+                                }
+                                else
+                                {
+                                    <MImage Src="@item.Avatar"></MImage>
+                                }
+                            }
+                        </MListItemAvatar>
+                        <MListItemContent Class="ml-2 pa-0">
+                            <MListItemTitle>
+                                <span class="btn emphasis2--text">@(item.DisplayName)</span>
+                                <div class="d-inline-flex mx-2" style="height: 8px">
+                                    <MDivider Vertical />
+                                </div>
+                                <span class="overline regular2--text">@T($"DisplayName.MessageTaskReceiverTypes.{item.Type}")</span>
+                            </MListItemTitle>
+                            @if (item.Type == MessageTaskReceiverTypes.User)
+                            {
+                                <MListItemSubtitle>
+                                    <span class="body2 regular2--text">@(item.PhoneNumber)</span>
+                                    <div class="d-inline-flex mx-1" style="height: 8px">
+                                        <MDivider Vertical />
+                                    </div>
+                                    <span class="body2 regular2--text">@(item.Email)</span>
+                                </MListItemSubtitle>
+                            }
+                        </MListItemContent>
+                        <MOverlay Absolute Opacity="0.2" Class="justify-end align-center"
+                          Value="@(context.Hover)">
+                            <MButton Icon OnClick="()=>RemoveValue(item)">
+                                <MIcon>mdi-close</MIcon>
+                            </MButton>
+                        </MOverlay>
+                    </MListItem>
+                </MHover>
+            }
         </MList>
-    }
-    else
-    {
-        <div class="d-flex align-center justify-center pa-4 text-h4" style="height:100%">
-            @T("Description.ReceiverGroup.AddSelectMember")
-        </div>
-    }
-</MCard>
+    </MCard>
+}
+
 <ExternalUserCreateModal @ref="_createModal" OnOk="HandleOk" />

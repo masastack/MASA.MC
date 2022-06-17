@@ -14,6 +14,12 @@ public partial class ReceiverSelect : AdminCompontentBase
     private ExternalUserCreateModal _createModal = default!;
     private List<Guid> _userIds = new List<Guid>();
 
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        _userIds = Value.Select(x=>x.SubjectId).ToList();
+    }
+
     public async Task RemoveValue(ReceiverGroupItemDto item)
     {
         Value.RemoveAll(x => x.SubjectId == item.SubjectId);

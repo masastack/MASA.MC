@@ -8,9 +8,9 @@
         </MButton>
     </MCol>
 </MRow>
-<MCard Class="mx-auto overflow-y-auto mt-6 pa-0" Height="301">
-    @if (Value.Count > 0)
-    {
+@if (Value.Count > 0)
+{
+    <MCard Class="mx-auto overflow-y-auto mt-6 pa-0" Height="301">
         <MList>
             @foreach (var item in Value)
             {
@@ -64,12 +64,6 @@
                 </MHover>
             }
         </MList>
-    }
-    else
-    {
-        <div class="d-flex align-center justify-center pa-4 text-h4" style="height:100%">
-            @T("Description.ReceiverGroup.AddSelectMember")
-        </div>
-    }
-</MCard>
+    </MCard>
+}
 <ExternalUserCreateModal @ref="_createModal" OnOk="HandleOk" />
