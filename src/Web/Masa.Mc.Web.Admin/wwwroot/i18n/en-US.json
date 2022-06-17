@@ -152,6 +152,7 @@
   "DisplayName.MessageRecordTimeTypes.SendTime": "Send time",
   "DisplayName.MessageRecordUserId": "Addressee",
   "Description.MessageReceiversImport.Tips": "A total of {0} pieces of data were uploaded.",
+  "Description.MessageReceiversImport.ErrorMsg": "Upload failed, please check the file data and upload again",
   "Description.MessageReceiversUpload.Placeholder": "Please upload the file",
   "Description.MessageReceiversUpload.Tips": "Please upload CSV format file",
   "Description.MessageReceiversDownload.Name": "Template file csv",

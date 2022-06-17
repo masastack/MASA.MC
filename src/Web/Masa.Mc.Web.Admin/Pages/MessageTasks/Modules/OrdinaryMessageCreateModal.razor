@@ -2,7 +2,7 @@
 <div @ref="Ref">
     <McModal Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.SendOrdinaryMessage")" Height="850">
         <MForm Model="_model" @ref="_form" EnableValidation Class="full-height">
-            <ElevationTab TabIndex="_tabIndex" TabMinWidth="227" Class="mt-10 full-height" ItemsClass="full-height" Tabs='new List<string> { T("DisplayName.MessageTaskReceiver"), T("DisplayName.MessageInfoContent"), T("DisplayName.MessageTaskSendingRule") }' Dense>
+            <ElevationTab @bind-TabIndex="_tabIndex" TabMinWidth="227" Class="mt-10 full-height" ItemsClass="full-height" Tabs='new List<string> { T("DisplayName.MessageTaskReceiver"), T("DisplayName.MessageInfoContent"), T("DisplayName.MessageTaskSendingRule") }' Dense>
                 <ElevationTabItem>
                     @if (_model.ReceiverType == ReceiverTypes.Assign)
                     {
@@ -59,7 +59,7 @@
                 </ElevationTabItem>
                 <ElevationTabItem>
                     <div class="full-height flex-column">
-                        <div class="flex-height-auto flex-grow-1">
+                        <div class="flex-height-auto flex-grow-1 overflow-y">
                             <MRow Class="mt-6">
                                 <MCol>
                                     <DefaultSelect @bind-Value="@_channelType"
@@ -125,10 +125,10 @@
                             }
                         </div>
                         <div class="d-flex mb-9">
-                            <MIcon Size="24" Color="emphasis2" OnClick="()=> _tabIndex-- ">mdi-keyboard-backspace</MIcon>
+                            <MIcon Size="24" Color="emphasis2" OnClick="()=> _tabIndex=0">mdi-keyboard-backspace</MIcon>
                             <MSpacer></MSpacer>
-                            <MButton Color="fill" Class="btn-form" OnClick="async() => await HandleOkAsync(true)">@T("Save")</MButton>
-                            <MButton Color="primary" Class="btn-form" OnClick="()=> _tabIndex++ ">@T("NextStep")</MButton>
+                            <MButton Color="fill" Class="btn-form btn-fill-line rounded-3 emphasis2--text" OnClick="async() => await HandleOkAsync(true)">@T("Save")</MButton>
+                            <MButton Color="primary" Class="btn-form ml-6" OnClick="()=> _tabIndex=2">@T("NextStep")</MButton>
                         </div>
                     </div>
                 </ElevationTabItem>
@@ -139,10 +139,10 @@
                             <MessageSendingRules Class="mt-2" @bind-Value="_model.SendRules" />
                         </div>
                         <div class="d-flex mb-9">
-                            <MIcon Size="24" Color="emphasis2" OnClick="()=> _tabIndex-- ">mdi-keyboard-backspace</MIcon>
+                            <MIcon Size="24" Color="emphasis2" OnClick="()=> _tabIndex=1">mdi-keyboard-backspace</MIcon>
                             <MSpacer></MSpacer>
-                            <MButton Color="fill" Class="btn-form" OnClick="async() => await HandleOkAsync(true)">@T("Save")</MButton>
-                            <MButton Color="primary" Class="btn-form" OnClick="async() => await HandleOkAsync(false)">@T("SaveSend")</MButton>
+                            <MButton Color="fill" Class="btn-form btn-fill-line rounded-3 emphasis2--text" OnClick="async() => await HandleOkAsync(true)">@T("Save")</MButton>
+                            <MButton Color="primary" Class="btn-form ml-6" OnClick="async() => await HandleOkAsync(false)">@T("SaveSend")</MButton>
                         </div>
                     </div>
                 </ElevationTabItem>

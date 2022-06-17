@@ -15,7 +15,7 @@ public partial class OrdinaryMessageCreateModal : AdminCompontentBase
     private ChannelTypes _channelType;
     private List<MessageTaskReceiverDto> _selectReceivers = new();
     private List<MessageTaskReceiverDto> _importReceivers = new();
-    int _tabIndex = 0;
+    StringNumber _tabIndex = 0;
 
     MessageTaskService MessageTaskService => McCaller.MessageTaskService;
     ChannelService ChannelService => McCaller.ChannelService;
@@ -51,7 +51,7 @@ public partial class OrdinaryMessageCreateModal : AdminCompontentBase
         Loading = true;
         await MessageTaskService.CreateAsync(_model);
         Loading = false;
-        //await SuccessMessageAsync(T("MessageTaskCreateMessage"));
+        await SuccessMessageAsync(T("MessageTaskCreateMessage"));
         _visible = false;
         ResetForm();
         if (OnOk.HasDelegate)
@@ -86,7 +86,7 @@ public partial class OrdinaryMessageCreateModal : AdminCompontentBase
         _model.ReceiverType = receiverType;
         if (receiverType == ReceiverTypes.Broadcast)
         {
-            _tabIndex++;
+            _tabIndex = 1;
         }
     }
 }

@@ -223,6 +223,7 @@
   "DisplayName.MessageRecordTimeTypes.SendTime": "发送时间",
   "DisplayName.MessageRecordUserId": "收件人",
   "Description.MessageReceiversImport.Tips": "共上传{0}条数据。",
+  "Description.MessageReceiversImport.ErrorMsg": "上传失败，请检查文件数据后重新上传",
   "Description.MessageReceiversUpload.Placeholder": "请上传文件",
   "Description.MessageReceiversUpload.Tips": "请上传.csv格式的文件",
   "Description.MessageReceiversDownload.Name": "模板file.csv",
