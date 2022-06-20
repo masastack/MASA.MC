@@ -27,12 +27,10 @@
     <ItemContent Context="data">
         <MListItem Class="pa-4 pl-0">
             <ItemContent>
-                <MListItemAvatar Size=40 Class="ma-0">
+                <MListItemAvatar Size=40 Class="ma-0" Color="primary">
                     @if (data.Item.Type != MessageTaskReceiverTypes.User)
                     {
-                        <MAvatar Color="primary">
-                            <MIcon Size=24 Color="fill">mdi-animation</MIcon>
-                        </MAvatar>
+                        <MIcon Size=24 Color="fill">mdi-animation</MIcon>
                     }
                     else
                     {

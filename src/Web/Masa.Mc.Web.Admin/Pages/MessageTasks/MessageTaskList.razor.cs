@@ -5,8 +5,6 @@ namespace Masa.Mc.Web.Admin.Pages.MessageTasks;
 
 public partial class MessageTaskList : AdminCompontentBase
 {
-    public List<DataTableHeader<MessageTaskDto>> Headers { get; set; } = new();
-
     private TemplateMessageEditModal _templateEditModal = default!;
     private OrdinaryMessageEditModal _ordinaryEditModal = default!;
     private MessageTaskSendModal _sendModal = default!;

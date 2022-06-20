@@ -16,12 +16,10 @@
             {
                 <MHover>
                     <MListItem @attributes="context.Attrs" Class="@($"pa-4 {context.Class} {(context.Hover ? "on-hover" : "")}")">
-                        <MListItemAvatar Size=40 Class="ma-0">
+                        <MListItemAvatar Size=40 Class="ma-0" Color="primary">
                             @if (item.Type != ReceiverGroupItemTypes.User)
                             {
-                                <MAvatar Color="primary">
-                                    <MIcon Size=24 Color="fill">mdi-animation</MIcon>
-                                </MAvatar>
+                                <MIcon Size=24 Color="fill">mdi-animation</MIcon>
                             }
                             else
                             {
