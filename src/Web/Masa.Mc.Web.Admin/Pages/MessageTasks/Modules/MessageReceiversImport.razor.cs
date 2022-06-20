@@ -25,16 +25,13 @@ public partial class MessageReceiversImport
     private int _progress = 0;
     private string _fileName = string.Empty;
     private bool _isUpload;
+    private long maxFileSize = 1024 * 1024 * 15;
 
     MessageTaskService MessageTaskService => McCaller.MessageTaskService;
 
     private async void HandleFileChange(IBrowserFile file)
     {
-        _progress = 0;
-        await using var memoryStream = new MemoryStream();
-        await file.OpenReadStream().CopyToAsync(memoryStream);
-        var fileContent = memoryStream.ToArray();
-        _progress = 100;
+        var fileContent = await ReadFile(file);
         _isUpload = true;
         if (FileEncoderHelper.GetTextFileEncodingType(fileContent) != Encoding.UTF8)
         {
@@ -62,5 +59,24 @@ public partial class MessageReceiversImport
     {
         var contentBytes = await MessageTaskService.GenerateReceiverImportTemplateAsync(MessageTemplatesId);
         await BlazorDownloadFileService.DownloadFile("ReceiverImportTemplate.csv", contentBytes, "text/csv");
+    }
+
+    private async Task<byte[]> ReadFile(IBrowserFile file)
+    {
+        await using var memoryStream = new MemoryStream();
+        using var readStream = file.OpenReadStream(maxFileSize);
+        var bytesRead = 0;
+        var totalRead = 0;
+        var buffer = new byte[2048];
+
+        while ((bytesRead = await readStream.ReadAsync(buffer)) != 0)
+        {
+            totalRead += bytesRead;
+
+            await memoryStream.WriteAsync(buffer, 0, bytesRead);
+
+            _progress = (int)(totalRead * 100.0 / file.Size);
+        }
+        return memoryStream.ToArray();
     }
 }
