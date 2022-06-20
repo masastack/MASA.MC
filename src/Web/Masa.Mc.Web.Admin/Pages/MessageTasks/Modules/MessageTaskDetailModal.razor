@@ -1,67 +1,82 @@
 ﻿@inherits AdminCompontentBase
 <div @ref="Ref">
     <SheetDialog Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.ViewMessageTask")">
-        <div class="sheet-dialog full-height flex-column">
-            <div class="mt-4 flex-height-auto overflow-y">
-                <MRow>
-                    <MCol Cols="5">
-                        <div class="text-subtitle2 mb-4">@T("DisplayName.MessageTaskHistory")</div>
-                        <MRow>
-                            <MCol Cols="7">
-                                <MMenu @bind-Value="_datePickersShow"
-                                       CloseOnContentClick="false"
-                                       Transition="scale-transition"
-                                       OffsetY
-                                       MinWidth="@("auto")">
-                                    <ActivatorContent>
-                                        <MTextField Value="DateRangeText"
-                                                    Label="@T("DateRange")"
-                                                    Readonly
-                                                    Dense
-                                                    Outlined
-                                                    HideDetails="@("auto")"
-                                                    PrependInnerIcon="mdi-calendar"
-                                                    @attributes="context.Attrs"></MTextField>
-                                    </ActivatorContent>
-                                    <ChildContent>
-                                        <MDatePicker @bind-Value="_dates"
-                                                     Range
-                                                     NoTitle
-                                                     Scrollable>
-                                            <MSpacer></MSpacer>
-                                            <MButton Text
-                                                     Color="primary"
-                                                     OnClick="HandleDatePickersCancel">
-                                                Cancel
-                                            </MButton>
-                                            <MButton Text
-                                                     Color="primary"
-                                                     OnClick="HandleDatePickersAsync">
-                                                OK
-                                            </MButton>
-                                        </MDatePicker>
-                                    </ChildContent>
-                                </MMenu>
-                            </MCol>
-                            <MCol Cols="5">
-                                <MSelect @bind-Value="@_queryParam.Status"
-                                         Items="@(GetEnumList<MessageTaskHistoryStatuses>())"
-                                         Label="@T("DisplayName.MessageTaskHistoryStatus")"
-                                         ItemText="@(item => T($"DisplayName.MessageTaskHistoryStatus.{item.ToString()}"))"
-                                         ItemValue="item => item"
-                                         Dense
-                                         Outlined
-                                         Clearable
-                                         HideDetails="@("auto")"
-                                         TItem="MessageTaskHistoryStatuses"
-                                         TItemValue="MessageTaskHistoryStatuses"
-                                         TValue="MessageTaskHistoryStatuses?"
-                                         OnClearClick="Refresh"
-                                         OnSelectedItemUpdate="Refresh">
-                                </MSelect>
-                            </MCol>
-                        </MRow>
-                        <MSimpleTable Class="mt-2">
+        <div class="full-height flex-column">
+            <div class="flex-height-auto overflow-y d-flex">
+            
+                    <div class="pa-12" style="width: 428px;">
+                        <div class="subtitle2 emphasis2--text">@T("DisplayName.MessageTaskHistory")</div>
+                        <DateRangePicker Class="btn-fill-line mt-6" @bind-StartTime="_queryParam.StartTime" @bind-EndTime="_queryParam.EndTime" OnChange="LoadData" />
+
+                        <DefaultSelect @bind-Value="@_queryParam.Status"
+                                       Items="@(GetEnumList<MessageTaskHistoryStatuses>())"
+                                       Label="@T("DisplayName.MessageTaskHistoryStatus")"
+                                       ItemText="@(item => T($"DisplayName.MessageTaskHistoryStatus.{item.ToString()}"))"
+                                       ItemValue="item => item"
+                                       Clearable
+                                       Class="mt-6 justify-center"
+                                       TItem="MessageTaskHistoryStatuses"
+                                       TItemValue="MessageTaskHistoryStatuses"
+                                       TValue="MessageTaskHistoryStatuses?"
+                                       OnClearClick="Refresh"
+                                       OnSelectedItemUpdate="Refresh">
+                        </DefaultSelect>
+                        <MTimeline Dense=false Class="mt-9" Style="margin-left: -66px;">
+                            <MTimelineItem Color="fill" Small FillDot Right>
+                                <OppositeContent>
+                                    <span class="caption regular2--text mr-n5">待发送</span>
+                                </OppositeContent>
+                                <IconContent>
+                                    <MIcon Size=20
+                                    Dark
+                                           Color="emphasis2">
+                                        mdi-clock-outline
+                                    </MIcon>
+                                </IconContent>
+                                <ChildContent>
+                                    <div class="ml-n5">
+                                        <div class="caption regular--text">SJ202204081408</div>
+                                        <div class="overline regular3--text">2022年03月08日 14:10:00</div>
+                                    </div>
+                                </ChildContent>
+                            </MTimelineItem>
+                            <MTimelineItem Color="fill" Small FillDot Right>
+                                <OppositeContent>
+                                    <span class="caption regular2--text mr-n5">待发送</span>
+                                </OppositeContent>
+                                <IconContent>
+                                    <MIcon Size=20
+                                           Color="emphasis2">
+                                        mdi-clock-outline
+                                    </MIcon>
+                                </IconContent>
+                                <ChildContent>
+                                    <div class="ml-n5">
+                                        <div class="caption regular--text">SJ202204081408</div>
+                                        <div class="overline regular3--text">2022年03月08日 14:10:00</div>
+                                    </div>
+                                </ChildContent>
+                            </MTimelineItem>
+                            <MTimelineItem Color="fill" Small FillDot Right>
+                                <OppositeContent>
+                                    <span class="caption regular2--text mr-n5">待发送</span>
+                                </OppositeContent>
+                                <IconContent>
+                                    <MIcon Size=20
+                                           Color="emphasis2">
+                                        mdi-clock-outline
+                                    </MIcon>
+                                </IconContent>
+                                <ChildContent>
+                                    <div class="ml-n5">
+                                        <div class="caption regular--text">SJ202204081408</div>
+                                        <div class="overline regular3--text">2022年03月08日 14:10:00</div>
+                                    </div>
+                                </ChildContent>
+                            </MTimelineItem>
+                        </MTimeline>
+
+                        @*<MSimpleTable Class="mt-2">
                             <tbody>
                                 @foreach (var item in _historys.Result)
                                 {
@@ -80,11 +95,12 @@
                                     </tr>
                                 }
                             </tbody>
-                        </MSimpleTable>
+                        </MSimpleTable>*@
                         <McPagination Class="mt-5" @bind-Page="_queryParam.Page" @bind-PageSize="_queryParam.PageSize" Total="_historys.Total" OnChange="HandlePaginationChange" />
-                    </MCol>
-                    <MCol Cols="7">
-                        <MRow Class="mx-2 mt-2">
+                    </div>
+                    <MDivider Vertical Class="my-9"></MDivider>
+                    <div style="padding:72px 114px">
+                        @*<MRow Class="mx-2 mt-2">
                             <div class="text-subtitle2">@T("DisplayName.MessageInfoContent")</div>
                             <MSpacer></MSpacer>
                             @if (_info.Channel?.Type == ChannelTypes.WebsiteMessage && _historyInfo.Status != MessageTaskHistoryStatuses.Withdrawn)
@@ -128,16 +144,9 @@
                                 </MCol>
                             </MRow>
                         }
-                        <MessageSendingRules ReadOnly Class="mt-2" @bind-Value="_historyInfo.SendRules" @bind-SendTime="_historyInfo.SendTime" />
-                    </MCol>
-                </MRow>
-            </div>
-            <div Class="d-flex pt-6">
-                <MSwitch Class="mt-1" Value="@_info.IsEnabled"
-                         Inset
-                         Label="@(_info.IsEnabled?T("Enable"):T("Disabled"))" ValueChanged="HandleIsEnabledChanged"></MSwitch>
-                <MButton Class="mr-6" Text Color="error" OnClick="HandleDelAsync">@T("Delete")</MButton>
-                <MSpacer></MSpacer>
+                        <MessageSendingRules ReadOnly Class="mt-2" @bind-Value="_historyInfo.SendRules" @bind-SendTime="_historyInfo.SendTime" />*@
+                    </div>
+               
             </div>
         </div>
     </SheetDialog>
