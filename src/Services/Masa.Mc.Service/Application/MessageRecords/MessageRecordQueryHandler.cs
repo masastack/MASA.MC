@@ -6,10 +6,13 @@ namespace Masa.Mc.Service.Admin.Application.MessageRecords;
 public class MessageRecordQueryHandler
 {
     private readonly IMessageRecordRepository _repository;
+    private readonly IMessageTaskHistoryRepository _messageTaskHistoryRepository;
 
-    public MessageRecordQueryHandler(IMessageRecordRepository repository)
+    public MessageRecordQueryHandler(IMessageRecordRepository repository
+        , IMessageTaskHistoryRepository messageTaskHistoryRepository)
     {
         _repository = repository;
+        _messageTaskHistoryRepository = messageTaskHistoryRepository;
     }
 
     [EventHandler]
@@ -32,6 +35,7 @@ public class MessageRecordQueryHandler
         queryable = queryable.OrderBy(options.Sorting).PageBy(options.Page, options.PageSize);
         var entities = await queryable.ToListAsync();
         var entityDtos = entities.Adapt<List<MessageRecordDto>>();
+        await FillMessageRecordDtos(entityDtos);
         var result = new PaginatedListDto<MessageRecordDto>(totalCount, totalPages, entityDtos);
         query.Result = result;
     }
@@ -56,5 +60,17 @@ public class MessageRecordQueryHandler
         var query = await _repository.WithDetailsAsync()!;
         var condition = await CreateFilteredPredicate(inputDto);
         return query.Where(condition);
+    }
+
+    private async Task FillMessageRecordDtos(List<MessageRecordDto> dtos)
+    {
+        foreach (var item in dtos)
+        {
+            var taskHistory = await _messageTaskHistoryRepository.FindAsync(x => x.Id == item.MessageTaskHistoryId);
+            if (taskHistory != null)
+            {
+                item.ExpectSendTime = taskHistory.SendRules.GetProperty<DateTimeOffset?>(nameof(SendRuleDto.SendTime));
+            }
+        }
     }
 }

@@ -1,86 +1,110 @@
 ﻿@inherits AdminCompontentBase
 <div @ref="Ref">
-    <SheetDialog Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.CreateChannel")">
-        <MForm Model="_model" @ref="_form" EnableValidation>
-            <MStepper Value="_step" Class="sheet-dialog">
-                <MStepperItems>
-                    <MStepperContent Step="1">
-                        <div class="full-height flex-column">
-                            <div class="d-flex flex-height-auto">
-                                <div class="text-h6 pl-16">@T("SelectChannelType")</div>
-                                <MRow Class="my-16">
+    <McModal Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.CreateChannel")" Width="770" Height="792">
+        <ChildContent>
+            <MForm Model="_model" @ref="_form" EnableValidation Context="form" Class="full-height">
+                <MStepper Value="_step" Class="full-height" Style="box-shadow:none">
+                    <MStepperItems Class="full-height">
+                        <MStepperContent Step="1" Class="pa-0">
+                            <MContainer Fluid Class="pt-15 px-1">
+                                <MRow Align="AlignTypes.Center" Justify="JustifyTypes.Center">
+                                    <MCol Md="4">
+                                        <MHover>
+                                            <MCard @attributes="context.Attrs" Height="208" Width="208" Class="@($"d-flex flex-column justify-center align-center {context.Class} {(context.Hover ? "primary" : "fill-background")}")"
+                                                   Elevation="@(context.Hover ? 12 : 2)"
+                                                   OnClick="()=> HandleSelectType(ChannelTypes.Sms)">
+                                                @if (context.Hover)
+                                                {
+                                                    <MIcon Size=33 Color="#FFFFFF">mdi-phone-outline</MIcon>
+                                                    <div class="h6 pt-10" style="color:#FAFAFA">@T("Sms")</div>
+                                                }
+                                                else
+                                                {
+                                                    <MIcon Size=33 Color="#323D6F">mdi-phone</MIcon>
+                                                    <div class="h6 pt-10 regular--text">@T("Sms")</div>
+                                                }
+                                            </MCard>
+                                        </MHover>
+                                    </MCol>
+                                    <MCol Md="4">
+                                        <MHover>
+                                            <MCard @attributes="context.Attrs" Height="208" Width="208" Class="@($"d-flex flex-column justify-center align-center {context.Class} {(context.Hover ? "primary" : "fill-background")}")"
+                                                   Elevation="@(context.Hover ? 12 : 2)"
+                                                   OnClick="()=>HandleSelectType(ChannelTypes.Email)">
+                                                @if (context.Hover)
+                                                {
+                                                    <MIcon Size=33 Color="#FFFFFF">mdi-email-outline</MIcon>
+                                                    <div class="h6 pt-10" style="color:#FAFAFA">@T("Email")</div>
+                                                }
+                                                else
+                                                {
+                                                    <MIcon Size=33 Color="#323D6F">mdi-email</MIcon>
+                                                    <div class="h6 pt-10 regular--text">@T("Email")</div>
+                                                }
+                                            </MCard>
+                                        </MHover>
+                                    </MCol>
+                                    <MCol Md="4">
+                                        <MHover>
+                                            <MCard @attributes="context.Attrs" Height="208" Width="208" Class="@($"d-flex flex-column justify-center align-center {context.Class} {(context.Hover ? "primary" : "fill-background")}")"
+                                                   Elevation="@(context.Hover ? 12 : 2)"
+                                                   OnClick="()=>HandleSelectType(ChannelTypes.WebsiteMessage)">
+                                                @if (context.Hover)
+                                                {
+                                                    <MIcon Size=33 Color="#FFFFFF">mdi-bell-outline</MIcon>
+                                                    <div class="h6 pt-10" style="color:#FAFAFA">@T("WebsiteMessage")</div>
+                                                }
+                                                else
+                                                {
+                                                    <MIcon Size=33 Color="#323D6F">mdi-bell</MIcon>
+                                                    <div class="h6 pt-10 regular--text">@T("WebsiteMessage")</div>
+                                                }
+                                            </MCard>
+                                        </MHover>
+                                    </MCol>
+                                </MRow>
+                            </MContainer>
+                        </MStepperContent>
+                        <MStepperContent Step="2" Class="pa-0 full-height">
+                            <div class="full-height flex-column">
+                                <div class="flex-height-auto flex-grow-1">
+                                    <MRow Class="mt-6">
+                                        <MCol>
+                                            <DefaultTextField @bind-Value="_model.DisplayName"
+                                                              Label="@T("DisplayName.ChannelDisplayName")">
+                                            </DefaultTextField>
+                                        </MCol>
+                                        <MCol>
+                                            <DefaultTextField @bind-Value="_model.Code"
+                                                              Label="@T("DisplayName.ChannelCode")">
+                                            </DefaultTextField>
+                                        </MCol>
+                                    </MRow>
+                                    <ChannelExtraProperties @ref="_channelExtraPropertiesRef" @bind-Value="_model.ExtraProperties" @bind-Type="_model.Type" />
+                                    <div class="flex-column justify-space-between mt-9" Style="height: 80px;">
+                                        <div class="subtitle3 regular--text">@T("DisplayName.Color.Lable")</div>
+                                        <ColorGroup @bind-Value="_model.Color" Colors='_colors' />
+                                    </div>
+                                    <MRow Class="mt-6">
+                                        <MCol>
+                                            <MTextarea @bind-Value="_model.Description"
+                                                       Label="@T("DisplayName.ChannelDescription")"
+                                                       Outlined
+                                                       HideDetails="@("auto")">
+                                            </MTextarea>
+                                        </MCol>
+                                    </MRow>
+                                </div>
+                                <div class="d-flex">
+                                    <MIcon Size="24" Color="emphasis2"  OnClick="()=> _step-- ">mdi-keyboard-backspace</MIcon>
                                     <MSpacer></MSpacer>
-                                    <MCol Md="2" Class="full-height">
-                                        <MCard Outlined Class="d-flex full-height justify-center align-center" Style="border-style: dashed;">
-                                            <MButton Ripple=false Plain OnClick="()=> HandleSelectType(ChannelTypes.Sms)"><MIcon Left>mdi-plus</MIcon>@T("Sms")</MButton>
-                                        </MCard>
-                                    </MCol>
-                                    <MCol Md="2" Offset="1" Class="full-height">
-                                        <MCard Outlined Class="d-flex full-height justify-center align-center" Style="border-style: dashed;">
-                                            <MButton Ripple=false Plain OnClick="()=>HandleSelectType(ChannelTypes.Email)"><MIcon Left>mdi-plus</MIcon>@T("Email")</MButton>
-                                        </MCard>
-                                    </MCol>
-                                    <MCol Md="2" Offset="1" Class="full-height">
-                                        <MCard Outlined Class="d-flex full-height justify-center align-center" Style="border-style: dashed;">
-                                            <MButton Ripple=false Plain OnClick="()=>HandleSelectType(ChannelTypes.WebsiteMessage)"><MIcon Left>mdi-plus</MIcon>@T("WebsiteMessage")</MButton>
-                                        </MCard>
-                                    </MCol>
-                                    <MSpacer></MSpacer>
-                                </MRow>
+                                    <MButton Color="primary" Class="btn-form" OnClick="HandleOkAsync">@T("Submit")</MButton>
+                                </div>
                             </div>
-                            <div class="d-flex">
-                                <MSpacer></MSpacer>
-                                <MButton Color="primary" Class="small-button" OnClick="HandleNextStepAsync">@T("NextStep")</MButton>
-                            </div>
-                        </div>
-                    </MStepperContent>
-                    <MStepperContent Step="2">
-                        <div class="full-height flex-column">
-                            <div class="flex-height-auto overflow-y">
-                                <MRow Justify="@("center")">
-                                    <MCol Cols="12" Sm="6" Md="3">
-                                        <MTextField Class="mx-auto" style="width:200px;" @bind-Value="_model.DisplayName" HideDetails="@("auto")" Placeholder="@T("DisplayName.ChannelDisplayName")"></MTextField>
-                                    </MCol>
-                                </MRow>
-                                <MRow>
-                                    <MCol>
-                                        <MSelect @bind-Value="@_model.Type"
-                                                 Items="@channelTypeItems"
-                                                 Label="@T("DisplayName.ChannelType")"
-                                                 ItemText="item => T(item.ToString())"
-                                                 ItemValue="item => item"
-                                                 Outlined
-                                                 Disabled
-                                                 HideDetails="@("auto")">
-                                        </MSelect>
-                                    </MCol>
-                                    <MCol>
-                                        <MTextField @bind-Value="_model.Code"
-                                                    Label="@T("DisplayName.ChannelCode")"
-                                                    Outlined
-                                                    HideDetails="@("auto")" />
-                                    </MCol>
-                                </MRow>
-                                <ChannelExtraProperties @ref="_channelExtraPropertiesRef" @bind-Value="_model.ExtraProperties" @bind-Type="_model.Type" />
-                                <MRow>
-                                    <MCol>
-                                        <MTextarea @bind-Value="_model.Description"
-                                                   Label="@T("DisplayName.ChannelDescription")"
-                                                   Outlined
-                                                   HideDetails="@("auto")">
-                                        </MTextarea>
-                                    </MCol>
-                                </MRow>
-                            </div>
-                            <div class="d-flex pt-6">
-                                <MSpacer></MSpacer>
-                                <MButton Outlined Class="small-button" OnClick="()=> _step-- ">@T("PreviousStep")</MButton>
-                                <MButton Color="primary" Class="small-button ml-6" OnClick="HandleOkAsync">@T("Submit")</MButton>
-                            </div>
-                        </div>
-                    </MStepperContent>
-                </MStepperItems>
-            </MStepper>
-        </MForm>
-    </SheetDialog>
+                        </MStepperContent>
+                    </MStepperItems>
+                </MStepper>
+            </MForm>
+        </ChildContent>
+    </McModal>
 </div>

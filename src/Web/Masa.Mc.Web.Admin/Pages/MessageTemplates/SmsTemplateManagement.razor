@@ -2,155 +2,136 @@
 @page "/messageTemplates/smsTemplateManagement"
 
 <PageTitle>@T("Sms")</PageTitle>
-
-<MCard>
-    <MCardTitle class="mx-2 pt-6">
-        <MTextField @bind-Value="_queryParam.Filter" Clearable Color="primary" Class="rounded-2 search" Placeholder="@T("Search")" HideDetails="@("auto")" Flat Dense Solo BackgroundColor="fill-lighten-1" OnKeyDown="SearchKeyDown" OnClearClick="HandleClearAsync">
-            <PrependInnerContent>
-                <MIcon Size=16 Class="mr-2 neutral-lighten-1--text">mdi-magnify</MIcon>
-            </PrependInnerContent>
-        </MTextField>
-        <div @onclick="ToggleAdvanced" class="ml-4 d-flex button">
-            <MIcon Class="ma-auto" Color="neutral-lighten-1" Size=20>
-                @(advanced?"mdi-filter":"mdi-filter-off")
-            </MIcon>
-        </div>
-        <MButton Color="primary" Class="ml-4 medium-button" OnClick="()=> _createModal.OpenModalAsync(ChannelTypes.Sms)">
-            <MIcon Size=18>mdi-plus</MIcon>
-            <span class="ml-2">@T("Permission.Create")</span>
-        </MButton>
-    </MCardTitle>
+<div style="height:40px">
     @if (advanced)
     {
-        <MRow Class="mx-2">
-            <MCol Cols="2">
-                <DateRangePicker @bind-StartTime="_queryParam.StartTime" @bind-EndTime="_queryParam.EndTime" OnChange="RefreshAsync" />
-            </MCol>
-            <MCol Cols="2">
-                <MSelect @bind-Value="@_queryParam.TemplateType"
-                     Items="@(GetEnumList<SmsTemplateTypes>())"
-                     Label="@T("DisplayName.MessageTemplateTemplateType")"
-                     ItemText="@(item => T($"DisplayName.SmsTemplateType.{item.ToString()}"))"
-                     ItemValue="item => (int)item"
-                     Dense
-                     Outlined
-                     Clearable
-                     HideDetails="@("auto")"
-                     TItem="SmsTemplateTypes"
-                     TItemValue="int"
-                     TValue="int"
-                     OnClearClick="RefreshAsync"
-                     OnSelectedItemUpdate="RefreshAsync">
-                </MSelect>
-            </MCol>
-            <MCol Cols="2">
-                <MSelect @bind-Value="_queryParam.ChannelId"
-                     Items="@_channelItems"
-                     Label="@T("DisplayName.Channel")"
-                     ItemText="item => item.DisplayName"
-                     ItemValue="item => item.Id"
-                     Dense
-                     Outlined
-                     Clearable
-                     HideDetails="@("auto")"
-                     TItem="ChannelDto"
-                     TItemValue="Guid"
-                     TValue="Guid?"
-                     OnClearClick="RefreshAsync"
-                     OnSelectedItemUpdate="RefreshAsync">
-                </MSelect>
-            </MCol>
-            <MCol Cols="2">
-                <MSelect @bind-Value="@_queryParam.AuditStatus"
-                     Items="@(GetEnumList<MessageTemplateAuditStatuses>())"
-                     Label="@T("DisplayName.MessageTemplateAuditStatus")"
-                     ItemText="item => T(item.ToString())"
-                     ItemValue="item => item"
-                     Dense
-                     Outlined
-                     Clearable
-                     HideDetails="@("auto")"
-                     TItem="MessageTemplateAuditStatuses"
-                     TItemValue="MessageTemplateAuditStatuses"
-                     TValue="MessageTemplateAuditStatuses?"
-                     OnClearClick="RefreshAsync"
-                     OnSelectedItemUpdate="RefreshAsync">
-                </MSelect>
-            </MCol>
-            <MCol Cols="2">
-                <MSelect @bind-Value="@_queryParam.Status"
-                     Items="@(GetEnumList<MessageTemplateStatuses>())"
-                     Label="@T("DisplayName.MessageTemplateStatus")"
-                     ItemText="item => T(item.ToString())"
-                     ItemValue="item => item"
-                     Dense
-                     Outlined
-                     Clearable
-                     HideDetails="@("auto")"
-                     TItem="MessageTemplateStatuses"
-                     TItemValue="MessageTemplateStatuses"
-                     TValue="MessageTemplateStatuses?"
-                     OnClearClick="RefreshAsync"
-                     OnSelectedItemUpdate="RefreshAsync">
-                </MSelect>
-            </MCol>
-        </MRow>
+        <div class="fold">
+            <MRow>
+                <MCol Md="3">
+                    <DateRangePicker @bind-StartTime="_queryParam.StartTime" @bind-EndTime="_queryParam.EndTime" OnChange="RefreshAsync" />
+                </MCol>
+                <MCol Md="2">
+                    <MSelect @bind-Value="@_queryParam.TemplateType"
+                         Items="@(GetEnumList<SmsTemplateTypes>())"
+                         Label="@T("DisplayName.MessageTemplateTemplateType")"
+                         ItemText="@(item => T($"DisplayName.SmsTemplateType.{item.ToString()}"))"
+                         ItemValue="item => (int)item"
+                         Dense
+                         Solo
+                         Clearable
+                         HideDetails="@("auto")"
+                         TItem="SmsTemplateTypes"
+                         TItemValue="int"
+                         TValue="int"
+                         Class="fill-card body2"
+                         OnClearClick="RefreshAsync"
+                         OnSelectedItemUpdate="RefreshAsync">
+                    </MSelect>
+                </MCol>
+                <MCol Md="2">
+                    <MSelect @bind-Value="_queryParam.ChannelId"
+                         Items="@_channelItems"
+                         Label="@T("DisplayName.Channel")"
+                         ItemText="item => item.DisplayName"
+                         ItemValue="item => item.Id"
+                         Dense
+                         Solo
+                         Clearable
+                         HideDetails="@("auto")"
+                         TItem="ChannelDto"
+                         TItemValue="Guid"
+                         TValue="Guid?"
+                         Class="fill-card body2"
+                         OnClearClick="RefreshAsync"
+                         OnSelectedItemUpdate="RefreshAsync">
+                    </MSelect>
+                </MCol>
+                <MCol Md="2">
+                    <MSelect @bind-Value="@_queryParam.AuditStatus"
+                         Items="@(GetEnumList<MessageTemplateAuditStatuses>())"
+                         Label="@T("DisplayName.MessageTemplateAuditStatus")"
+                         ItemText="item => T(item.ToString())"
+                         ItemValue="item => item"
+                         Dense
+                         Solo
+                         Clearable
+                         HideDetails="@("auto")"
+                         TItem="MessageTemplateAuditStatuses"
+                         TItemValue="MessageTemplateAuditStatuses"
+                         TValue="MessageTemplateAuditStatuses?"
+                         Class="fill-card body2"
+                         OnClearClick="RefreshAsync"
+                         OnSelectedItemUpdate="RefreshAsync">
+                    </MSelect>
+                </MCol>
+                <MCol Md="2">
+                    <MSelect @bind-Value="@_queryParam.Status"
+                         Items="@(GetEnumList<MessageTemplateStatuses>())"
+                         Label="@T("DisplayName.MessageTemplateStatus")"
+                         ItemText="item => T(item.ToString())"
+                         ItemValue="item => item"
+                         Dense
+                         Solo
+                         Clearable
+                         HideDetails="@("auto")"
+                         TItem="MessageTemplateStatuses"
+                         TItemValue="MessageTemplateStatuses"
+                         TValue="MessageTemplateStatuses?"
+                         Class="fill-card body2"
+                         OnClearClick="RefreshAsync"
+                         OnSelectedItemUpdate="RefreshAsync">
+                    </MSelect>
+                </MCol>
+            </MRow>
+        </div>
     }
-    <MCardText>
-        <MDataTable Headers="Headers" Items="_entities.Result" TItem="MessageTemplateDto" ItemsPerPage="_queryParam.PageSize" HideDefaultFooter Class="user">
-            <HeaderColContent Context="header">
-                <span class="text-btn">@header.Text</span>
-            </HeaderColContent>
-            <ItemColContent>
-                @switch (context.Header.Value)
-                {
-                    case ("ChannelDisplayName"):
-                        <span class="text-body3">@context.Item.Channel?.DisplayName</span>
-                        break;
-                    case nameof(MessageTemplateDto.TemplateType):
-                        <span>@T($"DisplayName.SmsTemplateType.{((SmsTemplateTypes)context.Item.TemplateType).ToString()}")</span>
-                        break;
-                    case (nameof(MessageTemplateDto.ModificationTime)):
-                        <span class="text-body3">@context.Item.ModificationTime.ToString(T("$DateTimeFormat"))</span>
-                        break;
-                    case nameof(MessageTemplateDto.AuditStatus):
-                        string color = string.Empty;
-                        switch (context.Item.AuditStatus)
-                        {
-                            case MessageTemplateAuditStatuses.WaitAudit:
-                                color = "orange";
-                                break;
-                            case MessageTemplateAuditStatuses.Adopt:
-                                color = "sample-green";
-                                break;
-                            case MessageTemplateAuditStatuses.Fail:
-                                color = "error";
-                                break;
-                            default:
-                                break;
-                        }
-                        <MChip Color="@($"{color}-lighten-5")" TextColor="@color" Ripple="false">
-                            <span>@T($"DisplayName.MessageTemplateAuditStatus.{context.Item.AuditStatus.ToString()}")</span>
-                        </MChip>
-                        break;
-                    case nameof(MessageTemplateDto.Status):
-                        <MChip Ripple="false">
-                            <span>@T($"DisplayName.MessageTemplateStatus.{context.Item.Status.ToString()}")</span>
-                        </MChip>
-                        break;
-                    case "Action":
-                        <MIcon Small Color="neutral-lighten-2" OnClick="async()=>await _editModal.OpenModalAsync(context.Item)">mdi-pencil</MIcon>
-                        break;
-                    default:
-                        <span class="text-body3">@context.Value</span>
-                        break;
-                }
-            </ItemColContent>
-            <FooterContent>
-                <McPagination Class="mt-5" @bind-Page="_queryParam.Page" @bind-PageSize="_queryParam.PageSize" Total="_entities.Total" OnChange="HandlePaginationChange" />
-            </FooterContent>
-        </MDataTable>
-    </MCardText>
+    <div class="d-flex @(!advanced?"full-width":"")" style="float: right;">
+        <DefaultSearch @bind-Value="_queryParam.Filter" Clearable Class="rounded-2 search" Placeholder="@T("Search")" Dense OnEnter="RefreshAsync" OnClearClick="HandleClearAsync" />
+        <div @onclick="ToggleAdvanced" class="ml-6 d-flex button fill">
+            <MIcon Class="ma-auto" Color="emphasis2" Size=20>
+                @(!advanced?"mdi-filter":"mdi-filter-off")
+            </MIcon>
+        </div>
+        <MButton Color="primary" Class="ml-6 rounded-lg btn small-btn" OnClick="()=> _createModal.OpenModalAsync(ChannelTypes.Sms)">
+            <span>@T("Permission.Create")</span>
+        </MButton>
+    </div>
+</div>
+<MCard>
+    <DefaultDataTable Headers="Headers" Items="_entities.Result" TItem="MessageTemplateDto" ItemsPerPage="_queryParam.PageSize" HideDefaultFooter Class="mt-6">
+        <HeaderColContent Context="header">
+            <span class="text-btn">@header.Text</span>
+        </HeaderColContent>
+        <ItemColContent>
+            @switch (context.Header.Value)
+            {
+                case ("ChannelDisplayName"):
+                    <span class="body regular--text">@context.Item.Channel?.DisplayName</span>
+                    break;
+                case nameof(MessageTemplateDto.TemplateType):
+                    <span class="body regular--text">@T($"DisplayName.SmsTemplateType.{((SmsTemplateTypes)context.Item.TemplateType).ToString()}")</span>
+                    break;
+                case (nameof(MessageTemplateDto.Modifier)):
+                    <span class="body2 regular--text">@TempCurrentUserConsts.NAME</span>
+                    break;
+                case (nameof(MessageTemplateDto.ModificationTime)):
+                    <DateTimeListItem Value="@context.Item.ModificationTime"></DateTimeListItem>
+                    break;
+                case nameof(MessageTemplateDto.AuditStatus):
+                    <MessageTemplateStatusTag Value="@context.Item.AuditStatus" />
+                    break;
+                case "Action":
+                    <MIcon Small Color="emphasis2" OnClick="async()=>await _editModal.OpenModalAsync(context.Item)">mdi-pencil</MIcon>
+                    break;
+                default:
+                    <span class="body regular--text">@context.Value</span>
+                    break;
+            }
+        </ItemColContent>
+        <FooterContent>
+            <McPagination Class="mt-3 mx-6 pb-6" @bind-Page="_queryParam.Page" @bind-PageSize="_queryParam.PageSize" Total="_entities.Total" OnChange="HandlePaginationChange" />
+        </FooterContent>
+    </DefaultDataTable>
 </MCard>
 
 <SmsTemplateCreateModal @ref="_createModal" OnOk="HandleOk" />

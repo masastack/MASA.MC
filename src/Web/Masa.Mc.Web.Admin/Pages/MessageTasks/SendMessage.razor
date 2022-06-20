@@ -2,30 +2,55 @@
 @page "/messageTasks/sendMessage"
 
 <PageTitle>@T("Permission.SendMessage")</PageTitle>
-
-<MCard Class="full-height">
-    <MCardText Class="full-height" Style="overflow-y:auto;">
-        <MContainer Class="full-height pt-8">
-            <MRow Align="AlignTypes.End" Justify="JustifyTypes.End">
-                <MButton Rounded Outlined Color="indigo" Class="mr-6 medium-button" OnClick="_listModal.OpenModalAsync">
-                    <span>@T("DisplayName.MessageTaskList")</span>
-                </MButton>
-            </MRow>
-            <MRow Class="py-8 full-height" Align="AlignTypes.Center" Justify="JustifyTypes.Center">
-                <MCol Cols="3" Class="full-height">
-                    <MCard Outlined Class="d-flex full-height justify-center align-center" Style="border-style: dashed;">
-                        <MButton Ripple=false Plain OnClick="_ordinaryCreateModal.OpenModalAsync"><MIcon Left>mdi-plus</MIcon>@T("DisplayName.MessageEntityType.Ordinary")</MButton>
-                    </MCard>
+<div class="full-height flex-column">
+    <MCard Class="flex-height-auto d-flex flex-column justify-center align-center">
+        <MContainer Fluid>
+            <MRow Align="AlignTypes.Center" Justify="JustifyTypes.Center">
+                <MCol Cols="4">
+                    <MHover>
+                        <MCard @attributes="context.Attrs" Height="408" Width="408" Class="@($"d-flex flex-column justify-center align-center {context.Class} {(context.Hover ? "primary" : "fill-background")}")"
+                               Elevation="@(context.Hover ? 12 : 2)"
+                               OnClick="_ordinaryCreateModal.OpenModalAsync">
+                            @if (context.Hover)
+                            {
+                                <MIcon Size=33 Color="#FFFFFF">mdi-email-outline</MIcon>
+                                <div class="h6 pt-10" style="color:#FAFAFA">@T("DisplayName.MessageEntityType.Ordinary")</div>
+                            }
+                            else
+                            {
+                                <MIcon Size=33 Color="#323D6F">mdi-email</MIcon>
+                                <div class="h6 pt-10 regular--text">@T("DisplayName.MessageEntityType.Ordinary")</div>
+                            }
+                        </MCard>
+                    </MHover>
                 </MCol>
-                <MCol Cols="3" Offset="1" Class="full-height">
-                    <MCard Outlined Class="d-flex full-height justify-center align-center" Style="border-style: dashed;">
-                        <MButton Ripple=false Plain OnClick="_templateCreateModal.OpenModalAsync"><MIcon Left>mdi-plus</MIcon>@T("DisplayName.MessageEntityType.Template")</MButton>
-                    </MCard>
+                <MCol Cols="4">
+                    <MHover>
+                        <MCard @attributes="context.Attrs" Height="408" Width="408" Class="@($"d-flex flex-column justify-center align-center {context.Class} {(context.Hover ? "primary" : "fill-background")}")"
+                               Elevation="@(context.Hover ? 12 : 2)"
+                               OnClick="_templateCreateModal.OpenModalAsync">
+                            @if (context.Hover)
+                            {
+                                <MIcon Size=33 Color="#FFFFFF">mdi-email-outline</MIcon>
+                                <div class="h6 pt-10" style="color:#FAFAFA">@T("DisplayName.MessageEntityType.Template")</div>
+                            }
+                            else
+                            {
+                                <MIcon Size=33 Color="#323D6F">mdi-email</MIcon>
+                                <div class="h6 pt-10 regular--text">@T("DisplayName.MessageEntityType.Template")</div>
+                            }
+                        </MCard>
+                    </MHover>
                 </MCol>
             </MRow>
         </MContainer>
-    </MCardText>
-</MCard>
+    </MCard>
+
+    <div class="mt-6 fill rounded-2 d-flex justify-center align-center px-6 py-3 mb-6" style="height:56px">
+        <MButton Ripple=false Plain IsActive Class="emphasis2--text h6" OnClick="NavigateToList"><MIcon Left>fas fa-tasks</MIcon>@T("DisplayName.MessageTaskList")</MButton>
+    </div>
+</div>
+
+
 <OrdinaryMessageCreateModal @ref="_ordinaryCreateModal" />
 <TemplateMessageCreateModal @ref="_templateCreateModal" />
-<MessageTaskListModal @ref="_listModal" />

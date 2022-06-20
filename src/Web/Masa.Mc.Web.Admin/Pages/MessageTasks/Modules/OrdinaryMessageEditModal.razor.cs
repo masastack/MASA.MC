@@ -16,6 +16,7 @@ public partial class OrdinaryMessageEditModal : AdminCompontentBase
     private ChannelTypes _channelType;
     private List<MessageTaskReceiverDto> _selectReceivers = new();
     private List<MessageTaskReceiverDto> _importReceivers = new();
+    StringNumber _tabIndex = 0;
 
     MessageTaskService MessageTaskService => McCaller.MessageTaskService;
     ChannelService ChannelService => McCaller.ChannelService;
@@ -122,6 +123,15 @@ public partial class OrdinaryMessageEditModal : AdminCompontentBase
         if (_channelType != ChannelTypes.WebsiteMessage)
         {
             _model.ReceiverType = ReceiverTypes.Assign;
+        }
+    }
+
+    private void HandleReceiverType(ReceiverTypes receiverType)
+    {
+        _model.ReceiverType = receiverType;
+        if (receiverType == ReceiverTypes.Broadcast)
+        {
+            _tabIndex = 1;
         }
     }
 }

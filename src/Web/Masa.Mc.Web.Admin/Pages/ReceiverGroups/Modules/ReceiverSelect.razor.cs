@@ -12,34 +12,17 @@ public partial class ReceiverSelect : AdminCompontentBase
     public EventCallback<List<ReceiverGroupItemDto>> ValueChanged { get; set; }
 
     private ExternalUserCreateModal _createModal = default!;
-    private SubjectAutoComplete _subjectRef = default!;
     private List<Guid> _userIds = new List<Guid>();
 
-    public async Task AddAsync()
+    protected override async Task OnInitializedAsync()
     {
-        var dtos = _subjectRef.SubjectSelect.Select(x => new ReceiverGroupItemDto
-        {
-            Type = (ReceiverGroupItemTypes)((int)x.SubjectType),
-            SubjectId = x.SubjectId,
-            DisplayName = x.Name ?? x.DisplayName ?? string.Empty,
-            Avatar = x.Avatar ?? string.Empty,
-            PhoneNumber = x.PhoneNumber ?? string.Empty,
-            Email = x.Email ?? string.Empty
-        });
-
-        foreach (var dto in dtos)
-        {
-            if (!Value.Any(x => x.SubjectId == dto.SubjectId && x.Type == dto.Type))
-            {
-                Value.Insert(0, dto);
-            }
-        }
-        await ValueChanged.InvokeAsync(Value);
+        await base.OnInitializedAsync();
+        _userIds = Value.Select(x=>x.SubjectId).ToList();
     }
 
     public async Task RemoveValue(ReceiverGroupItemDto item)
     {
-        Value.RemoveAll(x => x.SubjectId == item.SubjectId && x.Type == item.Type);
+        Value.RemoveAll(x => x.SubjectId == item.SubjectId);
         await ValueChanged.InvokeAsync(Value);
     }
 
@@ -56,5 +39,26 @@ public partial class ReceiverSelect : AdminCompontentBase
         });
         await ValueChanged.InvokeAsync(Value);
         await SuccessMessageAsync(T("ExternalMemberAddMessage"));
+    }
+
+    private async Task HandleSubjectSelected(SubjectDto item)
+    {
+        if (Value.Any(x=>x.SubjectId== item.SubjectId))
+        {
+            Value.RemoveAll(x => x.SubjectId == item.SubjectId);
+        }
+        else
+        {
+            Value.Add(new ReceiverGroupItemDto
+            {
+                Type = (ReceiverGroupItemTypes)((int)item.SubjectType),
+                SubjectId = item.SubjectId,
+                DisplayName = item.Name ?? item.DisplayName ?? string.Empty,
+                Avatar = item.Avatar ?? string.Empty,
+                PhoneNumber = item.PhoneNumber ?? string.Empty,
+                Email = item.Email ?? string.Empty
+            });
+        }
+        await ValueChanged.InvokeAsync(Value);
     }
 }

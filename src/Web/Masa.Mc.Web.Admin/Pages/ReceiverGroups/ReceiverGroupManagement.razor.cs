@@ -5,12 +5,27 @@ namespace Masa.Mc.Web.Admin.Pages.ReceiverGroups;
 
 public partial class ReceiverGroupManagement : AdminCompontentBase
 {
+    public List<DataTableHeader<ReceiverGroupDto>> Headers { get; set; } = new();
+
     private ReceiverGroupEditModal _editModal;
     private ReceiverGroupCreateModal _createModal;
     private GetReceiverGroupInputDto _queryParam = new(15);
     private PaginatedListDto<ReceiverGroupDto> _entities = new();
 
     ReceiverGroupService ReceiverGroupService => McCaller.ReceiverGroupService;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var _prefix = "DisplayName.ReceiverGroup";
+        Headers = new()
+        {
+            new() { Text = T($"{_prefix}{nameof(ReceiverGroupDto.DisplayName)}"), Value = nameof(ReceiverGroupDto.DisplayName), Sortable = false },
+            new() { Text = T($"{nameof(ReceiverGroupDto.Modifier)}"), Value = nameof(ReceiverGroupDto.Modifier), Sortable = false },
+            new() { Text = T($"{nameof(MessageRecordDto.ModificationTime)}"), Value = nameof(ReceiverGroupDto.ModificationTime), Sortable = false },
+            new() { Text = T($"{_prefix}{nameof(ReceiverGroupDto.Description)}"), Value = nameof(ReceiverGroupDto.Description), Sortable = false },
+            new() { Text = T("Action"), Value = "Action", Sortable = false },
+        };
+    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {

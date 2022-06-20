@@ -7,7 +7,7 @@ public partial class ChannelManagement : AdminCompontentBase
 {
     private ChannelEditModal _editModal;
     private ChannelCreateModal _createModal;
-    private GetChannelInputDto _queryParam = new(15);
+    private GetChannelInputDto _queryParam = new(999);
     private PaginatedListDto<ChannelDto> _entities = new();
 
     ChannelService ChannelService => McCaller.ChannelService;

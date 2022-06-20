@@ -1,12 +1,67 @@
 ﻿@inherits AdminCompontentBase
 <div @ref="Ref">
-    <SheetDialog Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.EditTemplateMessage")">
-        <MForm Model="_model" @ref="_form" EnableValidation>
-            <div class="sheet-dialog full-height flex-column">
-                <div class="pt-6 flex-height-auto overflow-y">
-                    <MRow>
-                        <MCol>
-                            <MRow>
+    <McModal Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.EditTemplateMessage")" Height="850">
+        <MForm Model="_model" @ref="_form" EnableValidation Class="full-height">
+            <ElevationTab @bind-TabIndex="_tabIndex" TabMinWidth="227" Class="mt-10 full-height" ItemsClass="full-height" Tabs='new List<string> { T("DisplayName.MessageTaskReceiver"), T("DisplayName.MessageInfoContent"), T("DisplayName.MessageTaskSendingRule") }' Dense>
+                <ElevationTabItem>
+                    @if (_model.ReceiverType == ReceiverTypes.Assign)
+                    {
+                        <MInput @bind-Value="_model.Receivers" />
+                        <MessageReceivers @bind-ReceiverType="_model.ReceiverType"
+                                      @bind-SelectReceivers="_selectReceivers"
+                                      @bind-ImportReceivers="_importReceivers"
+                                      @bind-SelectReceiverType="_model.SelectReceiverType"
+                                      ChannelType="_messageInfo.Channel?.Type"
+                                      MessageTemplatesId="_model.EntityId" />
+                    }
+                    else
+                    {
+                        <MContainer Fluid Class="pt-9 px-1 full-height">
+                            <MRow Align="AlignTypes.Center" Justify="JustifyTypes.SpaceBetween">
+                                <MCol>
+                                    <MHover Context="hoverContext">
+                                        <MCard @attributes="hoverContext.Attrs" Height="320" Width="320" Class="@($"d-flex flex-column justify-center align-center {hoverContext.Class} {(hoverContext.Hover ? "primary" : "fill-background")}")"
+                                           Elevation="@(hoverContext.Hover ? 12 : 2)"
+                                           OnClick="()=>HandleReceiverType(ReceiverTypes.Assign)">
+                                            @if (hoverContext.Hover)
+                                            {
+                                                <MIcon Size=40 Color="#FFFFFF">mdi-account-supervisor-circle-outline</MIcon>
+                                                <div class="h6 pt-10" style="color:#FAFAFA">@T("DisplayName.ReceiverType.Assign")</div>
+                                            }
+                                            else
+                                            {
+                                                <MIcon Size=40 Color="#323D6F">mdi-account-supervisor-circle</MIcon>
+                                                <div class="h6 pt-10 regular--text">@T("DisplayName.ReceiverType.Assign")</div>
+                                            }
+                                        </MCard>
+                                    </MHover>
+                                </MCol>
+                                <MCol>
+                                    <MHover Context="hoverContext">
+                                        <MCard @attributes="hoverContext.Attrs" Height="320" Width="320" Class="@($"d-flex flex-column justify-center align-center {hoverContext.Class} {(hoverContext.Hover ? "primary" : "fill-background")}")"
+                                           Elevation="@(hoverContext.Hover ? 12 : 2)"
+                                           OnClick="()=>HandleReceiverType(ReceiverTypes.Broadcast)">
+                                            @if (hoverContext.Hover)
+                                            {
+                                                <MIcon Size=40 Color="#FFFFFF">mdi-email-outline</MIcon>
+                                                <div class="h6 pt-10" style="color:#FAFAFA">@T("DisplayName.ReceiverType.Broadcast")</div>
+                                            }
+                                            else
+                                            {
+                                                <MIcon Size=40 Color="#323D6F">mdi-email</MIcon>
+                                                <div class="h6 pt-10 regular--text">@T("DisplayName.ReceiverType.Broadcast")</div>
+                                            }
+                                        </MCard>
+                                    </MHover>
+                                </MCol>
+                            </MRow>
+                        </MContainer>
+                    }
+                </ElevationTabItem>
+                <ElevationTabItem>
+                    <div class="full-height flex-column">
+                        <div class="flex-height-auto flex-grow-1 overflow-y">
+                            <MRow Class="mt-6">
                                 <MCol>
                                     <MAutocomplete Items="_templateItems" @bind-Value="_model.EntityId"
                                                    Label="@T("DisplayName.MessageTemplateTemplateId")"
@@ -22,97 +77,90 @@
                             </MRow>
                             @if (_model.EntityId != default)
                             {
-                                <MRow>
+                                <MRow Class="mt-6">
                                     <MCol>
-                                        <MSelect Value="@_messageInfo.Channel?.Type"
-                                             Items="@(GetEnumList<ChannelTypes>())"
-                                             Label="@T("DisplayName.ChannelType")"
-                                             ItemText="item => T(item.ToString())"
-                                             ItemValue="item => item"
-                                             Outlined
-                                             Disabled
-                                             HideDetails="@("auto")">
-                                        </MSelect>
+                                        <DefaultSelect Value="@_messageInfo.Channel?.Type"
+                                                   Items="@(GetEnumList<ChannelTypes>())"
+                                                   Label="@T("DisplayName.ChannelType")"
+                                                   ItemText="item => T(item.ToString())"
+                                                   ItemValue="item => item"
+                                                   Disabled>
+                                        </DefaultSelect>
                                     </MCol>
                                 </MRow>
-                                <MRow>
+                                <MRow Class="mt-6">
                                     <MCol>
-                                        <MTextField Value="@_messageInfo.Channel?.DisplayName"
-                                                Label="@T("DisplayName.Channel")"
-                                                Outlined
-                                                Disabled
-                                                HideDetails="@("auto")">
-                                        </MTextField>
+                                        <DefaultTextField Value="@_messageInfo.Channel?.DisplayName"
+                                                      Label="@T("DisplayName.Channel")"
+                                                      Disabled>
+                                        </DefaultTextField>
                                     </MCol>
                                 </MRow>
                                 if (_messageInfo.Channel != null && _messageInfo.Channel.Type != ChannelTypes.Sms)
                                 {
-                                    <MRow>
+                                    <MRow Class="mt-6">
                                         <MCol>
-                                            <MTextField @bind-Value="_messageInfo.Title"
-                                                Label="@T("DisplayName.MessageTemplateTitle")"
-                                                Outlined
-                                                Disabled
-                                                HideDetails="@("auto")">
-                                            </MTextField>
+                                            <DefaultTextField @bind-Value="_messageInfo.Title"
+                                                      Label="@T("DisplayName.MessageTemplateTitle")"
+                                                      Disabled>
+                                            </DefaultTextField>
                                         </MCol>
                                     </MRow>
                                 }
-                                <MRow>
+                                <MRow Class="mt-6">
                                     <MCol>
                                         <RichText Value="@_messageInfo.Content"></RichText>
                                     </MCol>
                                 </MRow>
                                 if (_messageInfo.Channel != null && _messageInfo.Channel.Type == ChannelTypes.WebsiteMessage)
                                 {
-                                    <MRow Class="mx-1 pt-6">
-                                        <MCheckbox Class="mt-1 mr-2" Disabled @bind-Value="_messageInfo.IsJump" Label="@T("DisplayName.MessageTemplateIsJump")"></MCheckbox>
-                                        <MTextField @bind-Value="_messageInfo.JumpUrl"
-                                            Label="@T("DisplayName.MessageTemplateJumpUrl")"
-                                            Outlined
-                                            Disabled
-                                            HideDetails="@("auto")">
-                                        </MTextField>
+                                    <MRow Class="mt-6">
+                                        <MCol>
+                                            <DefaultTextField @bind-Value="_messageInfo.JumpUrl"
+                                                      Label="@T("DisplayName.MessageTemplateJumpUrl")">
+                                                <PrependContent>
+                                                    <MCheckbox Class="mt-0" @bind-Value="_messageInfo.IsJump"></MCheckbox>
+                                                </PrependContent>
+                                            </DefaultTextField>
+                                        </MCol>
                                     </MRow>
                                 }
-                                <MessageVariables Class="mt-4" @bind-Value="_model.Variables"></MessageVariables>
+                                <MessageVariables Class="mt-9" @bind-Value="_model.Variables"></MessageVariables>
                             }
-                        </MCol>
-                        <MCol>
-                            <MInput @bind-Value="_model.Receivers"/>
-                            <MessageReceivers @bind-ReceiverType="_model.ReceiverType"
-                                              @bind-SelectReceivers="_selectReceivers"
-                                              @bind-ImportReceivers="_importReceivers"
-                                              @bind-SelectReceiverType="_model.SelectReceiverType"
-                                              ChannelType="_messageInfo.Channel?.Type" 
-                                              MessageTemplatesId="_model.EntityId"/>
-                            <div class="mt-4 text-subtitle2">@T("DisplayName.MessageTaskSendingRule")</div>
+                        </div>
+                        <div class="d-flex mb-9">
+                            <MIcon Size="24" Color="emphasis2" OnClick="()=> _tabIndex=0">mdi-keyboard-backspace</MIcon>
+                            <MSpacer></MSpacer>
+                            <MButton Color="fill" Class="btn-form btn-fill-line rounded-3 emphasis2--text" OnClick="async() => await HandleOkAsync(true)">@T("Save")</MButton>
+                            <MButton Color="primary" Class="btn-form ml-6" OnClick="()=> _tabIndex=2">@T("NextStep")</MButton>
+                        </div>
+                    </div>
+                </ElevationTabItem>
+                <ElevationTabItem>
+                    <div class="full-height flex-column">
+                        <div class="flex-height-auto flex-grow-1">
                             <MInput @bind-Value="_model.SendRules" />
                             @if (_messageInfo.Channel != null && _messageInfo.Channel.Type == ChannelTypes.Sms)
                             {
-                                <MRow Class="mt-4">
+                                <MRow Class="mt-6">
                                     <MCol>
-                                        <MTextField @bind-Value="_model.Sign"
-                                                Label="@T("DisplayName.MessageTemplateSign")"
-                                                Outlined
-                                                HideDetails="@("auto")">
-                                        </MTextField>
+                                        <DefaultTextField @bind-Value="_model.Sign"
+                                                      Label="@T("DisplayName.MessageTemplateSign")">
+                                        </DefaultTextField>
                                     </MCol>
                                 </MRow>
                             }
                             <MessageSendingRules Class="mt-2" @bind-Value="_model.SendRules" />
-                        </MCol>
-                    </MRow>
-                </div>
-                <div Class="d-flex pt-6">
-                    <MButton Class="mr-6" Text Color="error" OnClick="HandleDelAsync">@T("Delete")</MButton>
-                    <MSpacer></MSpacer>
-                    <MButton Rounded Outlined Color="indigo" Class="ml-6 medium-button px-6" OnClick="async() => await HandleOkAsync(true)">
-                        <span>@T("Save")</span>
-                    </MButton>
-                    <MButton Color="primary" Class="small-button ml-6" OnClick="async() => await HandleOkAsync(false)">@T("SaveSend")</MButton>
-                </div>
-            </div>
+                        </div>
+                        <div class="d-flex mb-9">
+                            <MIcon Size="24" Color="emphasis2" OnClick="()=> _tabIndex=1">mdi-keyboard-backspace</MIcon>
+                            <MSpacer></MSpacer>
+                            <MButton Color="fill" Class="btn-form btn-fill-line rounded-3 emphasis2--text" OnClick="async() => await HandleOkAsync(true)">@T("Save")</MButton>
+                            <MButton Color="primary" Class="btn-form ml-6" OnClick="async() => await HandleOkAsync(false)">@T("SaveSend")</MButton>
+                        </div>
+                    </div>
+                </ElevationTabItem>
+            </ElevationTab>
         </MForm>
-    </SheetDialog>
+    </McModal>
 </div>

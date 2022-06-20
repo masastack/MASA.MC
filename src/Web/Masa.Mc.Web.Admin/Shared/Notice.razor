@@ -1,23 +1,33 @@
 ﻿@inherits AdminCompontentBase
 <div class="notice">
-    <MMenu OffsetX Left OffsetY ContentStyle="border-radius:16px !important">
-        <ActivatorContent Context="menuContext">
-            @if (!NoticeState.IsRead)
-            {
-                <MBadge Color="pink" Bordered Dot OffsetX="10" OffsetY="10">
-                    <MIcon @attributes="menuContext.Attrs" Size=24 Class="pl-2" Color="neutral-lighten-3">mdi-bell</MIcon>
-                </MBadge>
-            }
-            else
-            {
-                <MIcon @attributes="menuContext.Attrs" Size=24 Class="pl-2" Color="neutral-lighten-3">mdi-bell</MIcon>
-            }
+    <MMenu OffsetY Bottom>
+        <ActivatorContent>
+            <MButton Icon
+                     Width="40"
+                     Height="40"
+                     Class="emphasis2--text"
+                     @attributes="@context.Attrs">
+                @if (!NoticeState.IsRead)
+                {
+                    <MBadge Bordered OverLap Dot Color="red">
+                        <MIcon Size="20">
+                            mdi-bell
+                        </MIcon>
+                    </MBadge>
+                }
+                else
+                {
+                    <MIcon Size="20">
+                        mdi-bell
+                    </MIcon>
+                }
+            </MButton>
         </ActivatorContent>
         <ChildContent>
             <MCard Width="400">
                 <MToolbar Color="blue darken-4"
                           Dark>
-                    <MToolbarTitle Class="font-18-medium">@T("WebsiteMessage")</MToolbarTitle>
+                    <MToolbarTitle Class="h7 fill--text">@T("WebsiteMessage")</MToolbarTitle>
 
                     <MSpacer></MSpacer>
 
@@ -35,9 +45,9 @@
                             </MListItemAvatar>
 
                             <MListItemContent>
-                                <MListItemTitle Class="font-14-medium">@item.Channel?.DisplayName</MListItemTitle>
-                                <MListItemSubtitle Class="font-12 py-1">@item.Title</MListItemSubtitle>
-                                <MListItemSubtitle Class="font-10">@item.SendTime.ToString(T("$MonthDayFormat"))</MListItemSubtitle>
+                                <MListItemTitle Class="btn emphasis--text">@item.Channel?.DisplayName</MListItemTitle>
+                                <MListItemSubtitle Class="caption regular2--text">@item.Title</MListItemSubtitle>
+                                <MListItemSubtitle Class="overline regular3--text">@item.SendTime.ToString(T("$MonthDayFormat"))</MListItemSubtitle>
                             </MListItemContent>
                         </MListItem>
                     }
@@ -45,11 +55,11 @@
                 <MList Dense>
                     <MListItem Link Href="/websiteMessages/websiteMessageManagement" Class="border-top-solid pt-2" Style="box-shadow: inset 0px 1px 0px #E9EDF7">
                         <MListItemIcon Class="mr-0">
-                            <MIcon Size="12" Color="#7681AB" Class="pr-3 mc-icon icon-keyboard-backspace">icon-keyboard-backspace</MIcon>
+                            <MIcon Size="16" Color="regular2" Class="pr-3">mdi-keyboard-backspace</MIcon>
                         </MListItemIcon>
 
                         <MListItemContent>
-                            <MListItemTitle Class="font-12">@T("Description.Notice.MoreTips")</MListItemTitle>
+                            <MListItemTitle Class="caption regular2--text">@T("Description.Notice.MoreTips")</MListItemTitle>
                         </MListItemContent>
                     </MListItem>
                 </MList>

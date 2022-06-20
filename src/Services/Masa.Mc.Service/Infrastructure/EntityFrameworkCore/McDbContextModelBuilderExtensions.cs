@@ -11,6 +11,7 @@ public static class McDbContextModelBuilderExtensions
         builder.Entity<Channel>(b =>
         {
             b.ToTable(MCConsts.DbTablePrefix + "Channels", MCConsts.DbSchema);
+            b.Property(x => x.Color).HasMaxLength(128).HasColumnName(nameof(Channel.Color));
             b.Property(c => c.Code).IsRequired().HasMaxLength(64).HasColumnName(nameof(Channel.Code));
             b.Property(c => c.DisplayName).IsRequired().HasMaxLength(128).HasColumnName(nameof(Channel.DisplayName));
             b.Property(c => c.Type).HasColumnName(nameof(Channel.Type));

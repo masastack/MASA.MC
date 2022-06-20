@@ -7,6 +7,9 @@ public partial class MessageTaskReceiverAutoComplete : AdminCompontentBase
     [Parameter]
     public EventCallback<List<Guid>> ValueChanged { get; set; }
 
+    [Parameter]
+    public EventCallback<MessageTaskReceiverDto> OnSelectedItemUpdate { get; set; }
+
     public List<MessageTaskReceiverDto> Items { get; set; } = new();
 
     public List<MessageTaskReceiverDto> SubjectSelect { get; set; } = new();

@@ -132,6 +132,10 @@ public partial class SmsTemplateEditModal : AdminCompontentBase
 
     private async Task SyncAsync()
     {
+        if (_model.ChannelId == default)
+        {
+            return;
+        }
         Loading = true;
         await SmsTemplateService.SyncAsync(new SmsTemplateSyncInputDto(_model.ChannelId));
         _templateItems = await SmsTemplateService.GetListByChannelIdAsync(_model.ChannelId);

@@ -112,6 +112,11 @@ namespace Masa.Mc.Service.Admin.Migrations
                         .HasColumnType("nvarchar(64)")
                         .HasColumnName("Code");
 
+                    b.Property<string>("Color")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
 

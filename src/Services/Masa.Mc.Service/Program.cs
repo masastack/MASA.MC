@@ -45,10 +45,7 @@ builder.Services.AddTransient<NotificationsHub>();
 TypeAdapterConfig.GlobalSettings.Scan(Assembly.GetExecutingAssembly(), Assembly.Load("Masa.Mc.Contracts.Admin"));
 
 #if DEBUG
-if (!builder.Environment.IsProduction())
-{
-    builder.Services.AddDaprStarter(builder.Configuration.GetSection(nameof(DaprOptions)));
-}
+builder.Services.AddDaprStarter(builder.Configuration.GetSection(nameof(DaprOptions)));
 #endif
 
 var app = builder.Services

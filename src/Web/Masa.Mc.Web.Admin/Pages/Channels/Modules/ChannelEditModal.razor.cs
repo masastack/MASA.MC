@@ -16,6 +16,7 @@ public partial class ChannelEditModal : AdminCompontentBase
     private bool _visible;
     private List<ChannelTypes> channelTypeItems = Enum.GetValues(typeof(ChannelTypes))
         .Cast<ChannelTypes>().ToList();
+    private List<string> _colors = new List<string> { "purple", "green", "yellow", "red", "blue" };
     private ChannelExtraProperties _channelExtraPropertiesRef = default!;
 
     ChannelService ChannelService => McCaller.ChannelService;

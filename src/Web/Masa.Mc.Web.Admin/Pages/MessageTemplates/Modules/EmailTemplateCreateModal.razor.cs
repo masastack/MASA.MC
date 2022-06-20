@@ -40,6 +40,7 @@ public partial class EmailTemplateCreateModal : AdminCompontentBase
 
     private async Task HandleOkAsync()
     {
+        _model.DisplayName = _model.Title;
         if (!await _form.ValidateAsync())
         {
             return;

@@ -9,7 +9,8 @@
                Loading="_isLoading"
                OnSearchInputUpdate="UpdateSearchInputAsync"
                HideDetails="@("auto")"
-               Outlined
+               Dense
+               Solo
                Clearable
                HideNoData
                HideSelected
@@ -17,5 +18,6 @@
                ItemValue="r=>r.Id"
                Label="@Label"
                Placeholder="@Placeholder"
+               Class="fill-card body2"
                OnClearClick="OnClearClick"
                OnSelectedItemUpdate="OnSelectedItemUpdate" />

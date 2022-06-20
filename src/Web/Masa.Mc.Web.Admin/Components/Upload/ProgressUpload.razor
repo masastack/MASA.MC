@@ -1,0 +1,32 @@
+﻿@inherits AdminCompontentBase
+<div class="mt-9 rounded-xl d-flex flex-column justify-center align-center" style="height: 499px;border: 4px dashed #E2E7F4;">
+    <MHover OpenDelay="200">
+        <div @attributes="context.Attrs" class="@($"{context.Class}")">
+            <MProgressCircular Value="progress" Size="258" Width="18" Color="gradient">
+                <MImage Width=80 Height=80 Class="d-flex justify-center align-center" ContentClass="text-center"
+                        Src="@(context.Hover?"_content/Masa.Mc.Web.Admin/img/upload/upload-active.png":"_content/Masa.Mc.Web.Admin/img/upload/upload.png")">
+                    <MFileInput TValue="IBrowserFile"
+                                Dense
+                                Outlined
+                                Accept="text/csv"
+                                Class="full-width full-height"
+                                Style="opacity:0"
+                                Placeholder="@T("Description.MessageReceiversUpload.Placeholder")"
+                                OnChange="HandleFileChange"></MFileInput>
+                </MImage>
+            </MProgressCircular>
+        </div>
+    </MHover>
+</div>
+
+@code {
+    private int progress = 0;
+
+    private async void HandleFileChange(IBrowserFile file)
+    {
+        await using var memoryStream = new MemoryStream();
+        await file.OpenReadStream().CopyToAsync(memoryStream);
+        var fileContent = memoryStream.ToArray();
+        progress = 100;
+    }
+}

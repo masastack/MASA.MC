@@ -9,6 +9,9 @@ public partial class SubjectAutoComplete : AdminCompontentBase
     [Parameter]
     public EventCallback<List<Guid>> ValueChanged { get; set; }
 
+    [Parameter]
+    public EventCallback<SubjectDto> OnSelectedItemUpdate { get; set; }
+
     public List<SubjectDto> Items { get; set; } = new();
 
     public List<SubjectDto> SubjectSelect { get; set; } = new();

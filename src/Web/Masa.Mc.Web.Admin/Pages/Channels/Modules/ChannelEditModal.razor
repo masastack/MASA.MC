@@ -1,39 +1,41 @@
 ﻿@inherits AdminCompontentBase
 <div @ref="Ref">
-    <SheetDialog Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.EditChannel")">
-        <MForm Model="_model" @ref="_form" EnableValidation>
-            <div class="sheet-dialog full-height flex-column">
-                <div class="pt-6 flex-height-auto overflow-y">
-                    <MRow Justify="@("center")">
-                        <MCol Cols="12" Sm="6" Md="3">
-                            <MTextField Class="mx-auto" style="width:200px;" @bind-Value="_model.DisplayName" HideDetails="@("auto")" Placeholder="@T("DisplayName.ChannelDisplayName")"></MTextField>
+    <McModal Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.EditChannel")" Width="770" Height="799">
+        <MForm Model="_model" @ref="_form" EnableValidation Class="full-height">
+            <div class="full-height flex-column">
+                <div class="flex-height-auto flex-grow-1">
+                    <MRow Class="mt-6">
+                        <MCol>
+                            <DefaultTextField @bind-Value="_model.DisplayName"
+                                              Color="@_model.Color"
+                                              Label="@T("DisplayName.ChannelDisplayName")">
+                            </DefaultTextField>
+                        </MCol>
+                        <MCol>
+                            <DefaultTextField @bind-Value="_model.Code"
+                                              Label="@T("DisplayName.ChannelCode")">
+                            </DefaultTextField>
                         </MCol>
                     </MRow>
-                    <MRow>
-                        <MCol Cols="6">
-                            <MSelect @bind-Value="@_model.Type"
+                    <MRow Class="mt-6">
+                        <MCol>
+                            <DefaultSelect @bind-Value="@_model.Type"
                                      Items="@channelTypeItems"
                                      Label="@T("DisplayName.ChannelType")"
                                      Readonly
                                      ItemText="item => T(item.ToString())"
                                      ItemValue="item => item"
-                                     Outlined
-                                     Disabled
-                                     HideDetails="@("auto")">
-                            </MSelect>
-                        </MCol>
-                        <MCol Cols="6">
-                            <MTextField @bind-Value="_model.Code"
-                                        Label="@T("DisplayName.ChannelCode")"
-                                        Readonly
-                                        Outlined
-                                        Disabled
-                                        HideDetails="@("auto")" />
+                                     Disabled>
+                            </DefaultSelect>
                         </MCol>
                     </MRow>
                     <ChannelExtraProperties @ref="_channelExtraPropertiesRef" @bind-Value="_model.ExtraProperties" @bind-Type="_model.Type" />
-                    <MRow>
-                        <MCol Cols="12">
+                    <div class="flex-column justify-space-between mt-9" Style="height: 80px;">
+                        <div class="subtitle3 regular--text">@T("DisplayName.Color.Lable")</div>
+                        <ColorGroup @bind-Value="_model.Color" Colors='_colors'  />
+                    </div>
+                    <MRow Class="mt-6">
+                        <MCol>
                             <MTextarea @bind-Value="_model.Description"
                                        Label="@T("DisplayName.ChannelDescription")"
                                        Outlined
@@ -42,12 +44,12 @@
                         </MCol>
                     </MRow>
                 </div>
-                <div Class="d-flex pt-6">
-                    <MButton Class="mr-6" Text Color="error" OnClick="HandleDel">@T("Delete")</MButton>
+                <div Class="d-flex mt-6">
+                    <MIcon Size="24" Color="error" OnClick="HandleDel">mdi-delete</MIcon>
                     <MSpacer></MSpacer>
-                    <MButton Color="primary" Class="small-button" OnClick="async() => await HandleOk()">@T("Save")</MButton>
+                    <MButton Color="primary" Class="btn-form" OnClick="async() => await HandleOk()">@T("Save")</MButton>
                 </div>
             </div>
         </MForm>
-    </SheetDialog>
+    </McModal>
 </div>

@@ -1,32 +1,13 @@
-﻿@using Microsoft.AspNetCore.Components.Rendering
-@inherits LayoutComponentBase
+﻿@inherits LayoutComponentBase
 @inject GlobalConfig GlobalConfig
-@inject IPopupService PopupService
-@inject I18n I18n
 @implements IDisposable
 
-<MApp Class="masa" ConfirmParameters="@(param => { param.OkText = I18n.T("Ok");param.CancelText = I18n.T("Cancel"); })">
-    <MAppBar Elevation=0 App MaxHeight=60 Class="mx-6 rounded-b-4 white">
-        <Favorite />
-        <MSpacer />
-        <Search />
-        <MIcon Size=20 Class="ml-5" Color="neutral-lighten-3">mdi-message-processing-outline</MIcon>
-        <Language />
-        <HeaderRight />
-    </MAppBar>
-
-    <Navigation />
-
-    <MMain Class="fill-lighten-1" Style="padding-top:60px">
-        <MErrorHandler OnErrorHandleAsync="CustomErrorHandleAsync">
-            <div class="pa-6 max-width full-height">
-                @Body
-            </div>
-        </MErrorHandler>
-        <MLoading />
-        <MConfirmDialog />
-    </MMain>
-</MApp>
+<McLayout NavItems="NavList"
+        DefaultRoute="/channels/channelManagement"
+        Logo="https://cdn.masastack.com/stack/images/logo/MASAStack/logo-h-en.png"
+        MiniLogo="/_content/Masa.Mc.Web.Admin/img/mainLayout/logo.svg">
+    @Body
+</McLayout>
 
 @code {
     protected override void OnInitialized()
@@ -34,10 +15,33 @@
         GlobalConfig.OnPageModeChanged += base.StateHasChanged;
     }
 
-    private async Task CustomErrorHandleAsync(Exception exception)
+    private List<Nav> NavList { get; set; } = new();
+
+    protected override Task OnAfterRenderAsync(bool firstRender)
     {
-        GlobalConfig.Loading = false;
-        await PopupService.ToastErrorAsync(exception.Message);
+        if (firstRender)
+        {
+            NavList = new List<Nav>()
+            {
+                new Nav("channelManagement", "Permission.ChannelManagement", "mdi-email-outline", "channels/channelManagement", 1),
+                new Nav("messageManagement", "Permission.MessageManagement", "fas fa-tasks", 1, new List<Nav>
+                {
+                    new Nav("sendMessage", "Permission.SendMessage", "messageTasks/sendMessage", 2, "messageManagement"),
+                    new Nav("messageRecord", "Permission.MessageRecord", "messageRecords/messageRecordManagement", 2, "messageManagement"),
+                }),
+                new Nav("messageTemplateManagement", "Permission.MessageTemplateManagement", "mdi-collage", 1, new List<Nav>
+                {
+                    new Nav("sms", "Sms", "messageTemplates/smsTemplateManagement", 2, "messageTemplateManagement"),
+                    new Nav("email", "Email", "messageTemplates/emailTemplateManagement", 2, "messageTemplateManagement"),
+                    new Nav("websiteMessage", "WebsiteMessage", "messageTemplates/websiteMessageTemplateManagement", 2, "messageTemplateManagement"),
+                }),
+                new Nav("receiverGroupManagement", "Permission.ReceiverGroupManagement", "fas fa-object-ungroup", "receiverGroups/receiverGroupManagement", 1),
+            };
+
+            StateHasChanged();
+        }
+
+        return base.OnAfterRenderAsync(firstRender);
     }
 
     public void Dispose()

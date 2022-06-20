@@ -59,12 +59,17 @@ public class MessageTaskService : ServiceBase
 
     public async Task<ImportResultDto<MessageTaskReceiverDto>> ImportReceiversAsync(ImportReceiversDto dto)
     {
-        return await PostAsync<ImportReceiversDto, ImportResultDto<MessageTaskReceiverDto>>("ImportReceivers", dto) ??new();
+        return await PostAsync<ImportReceiversDto, ImportResultDto<MessageTaskReceiverDto>>("ImportReceivers", dto) ?? new();
     }
 
     public async Task<byte[]> GenerateReceiverImportTemplateAsync(Guid? messageTemplatesId)
     {
-        return await GetAsync<byte[]>($"{nameof(GenerateReceiverImportTemplateAsync)}?messageTemplatesId={messageTemplatesId}");
+        var url = $"{nameof(GenerateReceiverImportTemplateAsync)}";
+        if (messageTemplatesId.HasValue)
+        {
+            url += $"?messageTemplatesId={messageTemplatesId}";
+        }
+        return await GetAsync<byte[]>(url);
     }
 
     public async Task<List<MessageTaskReceiverDto>> GetMessageTaskReceiverListAsync(string filter = "")

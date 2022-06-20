@@ -6,6 +6,7 @@ namespace Masa.Mc.Service.Admin.Services;
 public class SmsTemplateService : ServiceBase
 {
     private const string DAPR_PUBSUB_NAME = "pubsub";
+
     public SmsTemplateService(IServiceCollection services) : base(services, "api/sms-template")
     {
         MapGet(GetListByChannelIdAsync);

@@ -15,14 +15,7 @@ public partial class MessageReceiversSelect : AdminCompontentBase
     public ChannelTypes? Type { get; set; }
 
     private ExternalUserCreateModal _createModal = default!;
-    private MessageTaskReceiverAutoComplete _subjectRef = default!;
     private List<Guid> _userIds = new List<Guid>();
-
-    private async Task AddAsync()
-    {
-        var dtos = _subjectRef.SubjectSelect;
-        await HandleAddAsync(dtos);
-    }
 
     private async Task HandleOk(UserDto user)
     {
@@ -61,5 +54,18 @@ public partial class MessageReceiversSelect : AdminCompontentBase
         {
             await ValueChanged.InvokeAsync(Value);
         }
+    }
+
+    private async Task HandleSubjectSelected(MessageTaskReceiverDto item)
+    {
+        if (Value.Any(x => x.SubjectId == item.SubjectId))
+        {
+            Value.RemoveAll(x => x.SubjectId == item.SubjectId);
+        }
+        else
+        {
+            Value.Add(item);
+        }
+        await ValueChanged.InvokeAsync(Value);
     }
 }

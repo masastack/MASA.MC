@@ -9,8 +9,8 @@ public class GetMessageRecordInputDto : PaginatedOptionsDto
     public Guid? ChannelId { get; set; }
     public bool? Success { get; set; }
     public MessageRecordTimeTypes? TimeType { get; set; }
-    public DateTimeOffset? StartTime { get; set; }
-    public DateTimeOffset? EndTime { get; set; }
+    public DateTime? StartTime { get; set; }
+    public DateTime? EndTime { get; set; }
     public Guid? UserId { get; set; }
     public Guid? MessageTemplateId { get; set; }
     public Guid? MessageTaskHistoryId { get; set; }
@@ -24,7 +24,7 @@ public class GetMessageRecordInputDto : PaginatedOptionsDto
     }
 
     public GetMessageRecordInputDto(string filter, Guid? channelId, bool? success, MessageRecordTimeTypes? timeType,
-       DateTimeOffset? startTime, DateTimeOffset? endTime, Guid? userId, Guid? messageTemplateId, Guid? messageTaskHistoryId, string sorting, int page, int pageSize) : base(sorting, page, pageSize)
+       DateTime? startTime, DateTime? endTime, Guid? userId, Guid? messageTemplateId, Guid? messageTaskHistoryId, string sorting, int page, int pageSize) : base(sorting, page, pageSize)
     {
         Filter = filter;
         ChannelId = channelId;

@@ -3,32 +3,49 @@
 
 <PageTitle>@T("Permission.ReceiverGroupManagement")</PageTitle>
 
+<div style="height:40px">
+    <div class="d-flex" style="float: right;">
+        <DefaultSearch @bind-Value="_queryParam.Filter" Clearable Class="rounded-2 search" Placeholder="@T("Search")" Dense OnEnter="RefreshAsync" OnClearClick="HandleClearAsync" />
+        <MButton Color="primary" Class="ml-6 rounded-lg btn small-btn" OnClick="()=> _createModal.OpenModalAsync()">
+            <span>@T("Permission.CreateReceiverGroup")</span>
+        </MButton>
+    </div>
+</div>
+
 <MCard>
-    <MCardTitle class="mx-2 pt-6">
-        <MTextField @bind-Value="_queryParam.Filter" Clearable Color="primary" Class="rounded-2 search" Placeholder="@T("Search")" HideDetails="@("auto")" Flat Dense Solo BackgroundColor="fill-lighten-1" OnKeyDown="SearchKeyDown" OnClearClick="HandleClearAsync">
-            <PrependInnerContent>
-                <MIcon Size=16 Class="mr-2 neutral-lighten-1--text">mdi-magnify</MIcon>
-            </PrependInnerContent>
-        </MTextField>
-    </MCardTitle>
-    <MCardText>
-        <MRow>
-            @foreach (var _entitie in _entities.Result)
+    <DefaultDataTable Headers="Headers" Items="_entities.Result" TItem="ReceiverGroupDto" ItemsPerPage="_queryParam.PageSize" HideDefaultFooter Class="mt-6">
+        <HeaderColContent Context="header">
+            <span class="text-btn">@header.Text</span>
+        </HeaderColContent>
+        <ItemColContent>
+            @switch (context.Header.Value)
             {
-                <MCol Md="3">
-                    <ReceiverGroupCard Height="170" Model="_entitie" OnEditClick="async()=>await _editModal.OpenModalAsync(_entitie)" />
-                </MCol>
+                case (nameof(ReceiverGroupDto.DisplayName)):
+                    <span class="h8 emphasis--text">@context.Value</span>
+                    break;
+                case (nameof(ReceiverGroupDto.Description)):
+                    <span class="body regular--text">@context.Value</span>
+                    break;
+                case (nameof(ReceiverGroupDto.ModificationTime)):
+                    <DateTimeListItem Value="@context.Item.ModificationTime"></DateTimeListItem>
+                    break;
+                case (nameof(ReceiverGroupDto.Modifier)):
+                    <span class="body2 regular--text">@TempCurrentUserConsts.NAME</span>
+                    break;
+                case "Action":
+                    <MIcon Small Color="emphasis2" OnClick="async()=>await _editModal.OpenModalAsync(context.Item)">mdi-pencil</MIcon>
+                    break;
+                default:
+                    <span class="body regular--text">@context.Value</span>
+                    break;
             }
-            <MCol Md="3">
-                <MCard Outlined class="d-flex justify-center align-center" Style="border-style: dashed;" Height="170">
-                    <MButton Ripple=false Plain OnClick="()=> _createModal.OpenModalAsync()"><MIcon Left>mdi-plus</MIcon>@T("Permission.CreateReceiverGroup")</MButton>
-                </MCard>
-            </MCol>
-        </MRow>
-        <McPagination Class="mt-5" @bind-Page="_queryParam.Page" @bind-PageSize="_queryParam.PageSize" Total="_entities.Total" OnChange="HandlePaginationChange" />
-    </MCardText>
+        </ItemColContent>
+        <FooterContent>
+            <McPagination Class="mt-3 mx-6 pb-6" @bind-Page="_queryParam.Page" @bind-PageSize="_queryParam.PageSize" Total="_entities.Total" OnChange="HandlePaginationChange" />
+        </FooterContent>
+    </DefaultDataTable>
 </MCard>
 
-<ReceiverGroupEditModal @ref="_editModal" OnOk="HandleOk"/>
-<ReceiverGroupCreateModal @ref="_createModal" OnOk="HandleOk"/>
+<ReceiverGroupEditModal @ref="_editModal" OnOk="HandleOk" />
+<ReceiverGroupCreateModal @ref="_createModal" OnOk="HandleOk" />
 

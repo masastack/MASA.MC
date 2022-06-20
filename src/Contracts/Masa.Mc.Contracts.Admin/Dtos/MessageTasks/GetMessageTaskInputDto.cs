@@ -8,10 +8,11 @@ public class GetMessageTaskInputDto : PaginatedOptionsDto
     public string Filter { get; set; } = string.Empty;
     public Guid? ChannelId { get; set; }
     public MessageEntityTypes? EntityType { get; set; }
+    public bool? IsDraft { get; set; }
     public bool? IsEnabled { get; set; }
     public MessageTaskTimeTypes? TimeType { get; set; }
-    public DateTimeOffset? StartTime { get; set; }
-    public DateTimeOffset? EndTime { get; set; }
+    public DateTime? StartTime { get; set; }
+    public DateTime? EndTime { get; set; }
 
     public GetMessageTaskInputDto()
     {
@@ -22,11 +23,12 @@ public class GetMessageTaskInputDto : PaginatedOptionsDto
     {
     }
 
-    public GetMessageTaskInputDto(string filter, Guid? channelId, MessageEntityTypes? entityType, bool? isEnabled, MessageTaskTimeTypes? timeType, DateTimeOffset? startTime, DateTimeOffset? endTime, string sorting, int page, int pageSize) : base(sorting, page, pageSize)
+    public GetMessageTaskInputDto(string filter, Guid? channelId, MessageEntityTypes? entityType, bool? isDraft, bool? isEnabled, MessageTaskTimeTypes? timeType, DateTime? startTime, DateTime? endTime, string sorting, int page, int pageSize) : base(sorting, page, pageSize)
     {
         Filter = filter;
         ChannelId = channelId;
         EntityType = entityType;
+        IsDraft = isDraft;
         IsEnabled = isEnabled;
         TimeType = timeType;
         StartTime = startTime;

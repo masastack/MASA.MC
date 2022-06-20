@@ -8,7 +8,7 @@ public partial class MessageRecordManagement : AdminCompontentBase
     public List<DataTableHeader<MessageRecordDto>> Headers { get; set; } = new();
 
     private MessageRecordDetailModal _detailModal = default!;
-    private GetMessageRecordInputDto _queryParam = new();
+    private GetMessageRecordInputDto _queryParam = new() { TimeType = MessageRecordTimeTypes.SendTime };
     private PaginatedListDto<MessageRecordDto> _entities = new();
     private List<ChannelDto> _channelItems = new();
     private bool advanced = true;
@@ -23,13 +23,15 @@ public partial class MessageRecordManagement : AdminCompontentBase
         var _prefix = "DisplayName.MessageRecord";
         Headers = new()
         {
-            new() { Text = T("DisplayName.MessageTaskReceiver"), Value = "Receiver", Sortable = false, Width = 380 },
-            new() { Text = T("DisplayName.ChannelDisplayName"), Value = "ChannelDisplayName", Sortable = false },
-            new() { Text = T("DisplayName.MessageInfoTitle"), Value = "MessageInfoTitle", Sortable = false, Width = 200 },
-            new() { Text = T($"{_prefix}{nameof(MessageRecordDto.SendTime)}"), Value = nameof(MessageRecordDto.SendTime), Sortable = true },
-            new() { Text = T($"{_prefix}{nameof(MessageRecordDto.Success)}"), Value = nameof(MessageRecordDto.Success), Sortable = false },
-            new() { Text = T($"{_prefix}{nameof(MessageRecordDto.FailureReason)}"), Value = nameof(MessageRecordDto.FailureReason), Sortable = false, Width = 200 },
-            new() { Text = T("Action"), Value = "Action", Sortable = false },
+            new() { Text = T("DisplayName.MessageTaskReceiver"), Value = "Receiver", Sortable = false},
+            new() { Text = T(nameof(MessageTaskReceiverDto.Email)), Value = nameof(MessageTaskReceiverDto.Email), Sortable = false},
+            new() { Text = T("DisplayName.ChannelDisplayName"), Value = "ChannelDisplayName", Sortable = false},
+            new() { Text = T("DisplayName.MessageInfoTitle"), Value = "MessageInfoTitle", Sortable = false},
+            new() { Text = T($"{_prefix}{nameof(MessageRecordDto.ExpectSendTime)}"), Value = nameof(MessageRecordDto.ExpectSendTime), Sortable = false},
+            new() { Text = T($"{_prefix}{nameof(MessageRecordDto.SendTime)}"), Value = nameof(MessageRecordDto.SendTime), Sortable = false},
+            new() { Text = T($"{_prefix}{nameof(MessageRecordDto.Success)}"), Value = nameof(MessageRecordDto.Success), Sortable = false},
+            new() { Text = T($"{_prefix}{nameof(MessageRecordDto.FailureReason)}"), Value = nameof(MessageRecordDto.FailureReason), Sortable = false},
+            new() { Text = T("Action"), Value = "Action", Sortable = false},
         };
         _channelItems = (await ChannelService.GetListAsync(new GetChannelInputDto(99))).Result;
         _successItems = new()
@@ -84,7 +86,7 @@ public partial class MessageRecordManagement : AdminCompontentBase
 
     private async Task HandleClearAsync()
     {
-        _queryParam = new();
+        _queryParam = new() { TimeType = MessageRecordTimeTypes.SendTime };
         await LoadData();
     }
 
