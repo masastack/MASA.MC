@@ -211,7 +211,7 @@
   "DisplayName.MessageTaskHistoryStatus.Completed": "发送完成",
   "DisplayName.MessageTaskHistoryStatus.Withdrawn": "已撤回",
   "MessageTaskHistoryWithdrawnMessage": "撤回消息任务历史成功.",
-  "Permission.TestMessageTask": "测试",
+  "Permission.TestMessageTask": "测试消息任务",
   "DisplayName.MessageRecordSendTime": "实际发送时间",
   "DisplayName.MessageRecordExpectSendTime": "预计发送时间",
   "DisplayName.MessageRecordReceiptTime": "接收时间",
@@ -254,5 +254,7 @@
   "Failure": "失败",
   "View": "查看",
   "UploadComplete": "上传完成",
-  "UploadFile": "上传文件"
+  "UploadFile": "上传文件",
+  "Test": "测试",
+  "SendTestTask": "发送测试任务"
 }

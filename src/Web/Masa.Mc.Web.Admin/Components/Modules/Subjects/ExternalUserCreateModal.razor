@@ -4,13 +4,12 @@
             Persistent
             Title="@T("AddExternalMember")"
             HideCancelAction
-            Width="684"
+            Width="398"
             FormModel="_model"
             HideTitleDivider
             HideActionsDivider
-            HeaderClass="mt-0 pb-0 h6 emphasis2--text pa-6"
-            Class="px-6"
-            ActionsClass="pa-6 pb-6"
+            HeaderClass="h6 emphasis2--text pa-6 pb-0"
+            ActionsClass="pa-6 pt-0"
             OnSave="HandleOk"
             OnCancel="HandleCancel">
         <ChildContent>
@@ -19,7 +18,7 @@
             <DefaultTextField Class="mt-6" Label="@T("Email")" @bind-Value="_model.Email"></DefaultTextField>
         </ChildContent>
         <SaveContent Context="save">
-            <MButton OnClick="save.Click" Class="btn-form rounded-3 fuill-width" Color="primary" >@(T("Submit"))</MButton>
+            <MButton OnClick="save.Click" Class="btn-form-full" Color="primary" >@(T("Submit"))</MButton>
         </SaveContent>
     </PModal>
 </div>

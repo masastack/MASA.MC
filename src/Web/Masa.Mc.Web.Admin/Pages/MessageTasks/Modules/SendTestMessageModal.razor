@@ -4,8 +4,12 @@
             Persistent
             Title="@T("Permission.TestMessageTask")"
             HideCancelAction
-            Width="350"
+            Width="398"
             FormModel="_input"
+            HideTitleDivider
+            HideActionsDivider
+            HeaderClass="h6 emphasis2--text pa-6 pb-0"
+            ActionsClass="pa-6 pt-0"
             OnSave="HandleOkAsync"
             OnCancel="HandleCancel">
         <ChildContent>
@@ -13,7 +17,7 @@
             <MInput @bind-Value="_input.Receivers" />
         </ChildContent>
         <SaveContent Context="save">
-            <MButton Width=100 Class="rounded-pill" Color="primary" Style="float:right;" OnClick="save.Click">@(T("Send"))</MButton>
+            <MButton Class="btn-form-rounded caption" Color="primary" OnClick="save.Click">@(T("SendTestTask"))</MButton>
         </SaveContent>
     </PModal>
 </div>

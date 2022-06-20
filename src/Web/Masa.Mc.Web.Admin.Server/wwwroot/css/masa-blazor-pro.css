@@ -812,6 +812,19 @@ tr:hover {
     line-height: 28px;
 }
 
+.btn-form-full {
+    width: 100% !important;
+    height: 56px !important;
+    padding: 4px 58px !important;
+    border-radius: 12px !important;
+}
+
+.btn-form-rounded {
+    height: 40px !important;
+    padding: 8px 14px !important;
+    border-radius: 99px !important;
+}
+
 /* fill/线 */
 .btn-fill-line {
     border: 1px solid #E2E7F4 !important;
