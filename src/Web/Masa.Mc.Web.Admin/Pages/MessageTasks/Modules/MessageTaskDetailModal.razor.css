@@ -22,3 +22,10 @@
     padding: 72px 114px;
     width: calc(100% - 428px);
 }
+
+.task-history-box {
+    margin-left: -66px;
+}
+.task-history-box ::deep .m-timeline-item__dot {
+    box-shadow: none;
+}

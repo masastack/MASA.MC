@@ -1,42 +1,42 @@
 ﻿@switch (Value)
 {
     case MessageTaskHistoryStatuses.WaitSend:
-        <MIcon Size=20
+        <MIcon Size=@Size
        Dark
        Color="emphasis2">
             mdi-clock-outline
         </MIcon>
         break;
     case MessageTaskHistoryStatuses.Sending:
-        <MIcon Size=20
+        <MIcon Size=@Size
        Dark
        Color="regular3">
             mdi-dots-horizontal-circle-outline
         </MIcon>
         break;
     case MessageTaskHistoryStatuses.Withdrawn:
-        <MIcon Size=20
+        <MIcon Size=@Size
        Dark
        Color="emphasis2">
             mdi-keyboard-return
         </MIcon>
         break;
     case MessageTaskHistoryStatuses.Success:
-        <MIcon Size=20
+        <MIcon Size=@Size
        Dark
        Color="success">
             mdi-check-circle-outline
         </MIcon>
         break;
     case MessageTaskHistoryStatuses.Fail:
-        <MIcon Size=20
+        <MIcon Size=@Size
        Dark
        Color="error">
             mdi-close-circle-outline
         </MIcon>
         break;
     case MessageTaskHistoryStatuses.PartialFailure:
-        <MIcon Size=20
+        <MIcon Size=@Size
        Dark
        Color="error">
             mdi-minus-circle-outline
@@ -47,4 +47,7 @@
 @code {
     [Parameter]
     public MessageTaskHistoryStatuses Value { get; set; }
+
+    [Parameter]
+    public StringNumber Size { get; set; }
 }

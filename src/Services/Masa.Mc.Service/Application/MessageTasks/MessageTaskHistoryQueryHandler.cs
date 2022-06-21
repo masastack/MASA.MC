@@ -65,11 +65,11 @@ public class MessageTaskHistoryQueryHandler
             {
                 continue;
             }
-            if (!await _messageRecordRepository.AnyAsync(x => x.Success != true))
+            if (!await _messageRecordRepository.AnyAsync(x => x.MessageTaskHistoryId == item.Id && x.Success != true))
             {
                 item.Status = MessageTaskHistoryStatuses.Success;
             }
-            else if (await _messageRecordRepository.AnyAsync(x => x.Success == true))
+            else if (await _messageRecordRepository.AnyAsync(x => x.MessageTaskHistoryId == item.Id && x.Success == true))
             {
                 item.Status = MessageTaskHistoryStatuses.PartialFailure;
             }

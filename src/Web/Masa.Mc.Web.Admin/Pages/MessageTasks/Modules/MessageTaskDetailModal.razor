@@ -21,25 +21,42 @@
                                        OnSelectedItemUpdate="Refresh">
                         </DefaultSelect>
                     </div>
-                    <MTimeline Dense=false Class="mt-9" Style="margin-left: -66px;">
-                        @foreach (var item in _historys.Result)
-                        {
-                            <MTimelineItem Color="fill" Small FillDot Right @onclick="()=>HandleItemSelect(item)">
-                                <OppositeContent>
-                                    <span class="caption regular2--text mr-n5">@T($"DisplayName.MessageTaskHistoryStatus.{((MessageTaskHistoryStatuses)item.Status).ToString()}")</span>
-                                </OppositeContent>
-                                <IconContent>
-                                    <MessageTaskHistoryStatusIcon Value="@item.Status" />
-                                </IconContent>
-                                <ChildContent>
-                                    <div class="ml-n5">
-                                        <div class="caption regular--text">@item.TaskHistoryNo</div>
-                                        <div class="overline regular3--text">@item.SendTime?.ToString(T("$DateTimeFormat"))</div>
-                                    </div>
-                                </ChildContent>
-                            </MTimelineItem>
-                        }
-                    </MTimeline>
+                    <div class="task-history-box">
+                        <MTimeline Dense=false Class="mt-9">
+                            @foreach (var item in _historys.Result)
+                            {
+                                <MTimelineItem Color="fill" Small FillDot Right @onclick="()=>HandleItemSelect(item)">
+                                    <OppositeContent>
+                                        @if (_historyInfo.Id == item.Id)
+                                        {
+                                            <div class="btn emphasis--text mr-n5">@T($"DisplayName.MessageTaskHistoryStatus.{((MessageTaskHistoryStatuses)item.Status).ToString()}")</div>
+                                            <div class="overline regular3--text">@T("Current")</div>
+                                        }
+                                        else
+                                        {
+                                            <div class="caption regular2--text mr-n5">@T($"DisplayName.MessageTaskHistoryStatus.{((MessageTaskHistoryStatuses)item.Status).ToString()}")</div>
+                                        }
+                                    </OppositeContent>
+                                    <IconContent>
+                                        <MessageTaskHistoryStatusIcon Size="@(_historyInfo.Id == item.Id?20:16)" Value="@item.Status" />
+                                    </IconContent>
+                                    <ChildContent>
+                                        <div class="ml-n5">
+                                            @if (_historyInfo.Id == item.Id)
+                                            {
+                                                <div class="btn emphasis--text">@item.TaskHistoryNo</div>
+                                            }
+                                            else
+                                            {
+                                                <div class="caption regular--text">@item.TaskHistoryNo</div>
+                                            }
+                                            <div class="overline regular3--text">@item.SendTime?.ToString(T("$DateTimeFormat"))</div>
+                                        </div>
+                                    </ChildContent>
+                                </MTimelineItem>
+                            }
+                        </MTimeline>
+                    </div>
                 </div>
                 <McPagination Class="mt-5 d-flex" @bind-Page="_queryParam.Page" @bind-PageSize="_queryParam.PageSize" Total="_historys.Total" OnChange="HandlePaginationChange" />
             </div>
