@@ -1,7 +1,7 @@
 ﻿@inherits AdminCompontentBase
 <div @ref="Ref">
     <McModal Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.EditReceiverGroup")" Height=900>
-        <MForm Model="_model" EnableValidation Class="full-height">
+        <MForm Model="_model" @ref="_form" EnableValidation Class="full-height">
             <div class="full-height flex-column">
                 <div class="flex-height-auto flex-grow-1">
                     <MRow Class="mt-6">
@@ -11,7 +11,7 @@
                             </DefaultTextField>
                         </MCol>
                     </MRow>
-                    <ReceiverSelect @bind-Value="_model.Items"></ReceiverSelect>
+                    <ReceiverSelect @ref="_ReceiverSelect" @bind-Value="_model.Items"></ReceiverSelect>
                     <MRow Class="mt-6">
                         <MCol>
                             <MTextarea @bind-Value="_model.Description"

@@ -7,7 +7,7 @@
     <div class="d-flex" style="float: right;">
         <DefaultSearch @bind-Value="_queryParam.Filter" Clearable Class="rounded-2 search" Placeholder="@T("Search")" Dense OnEnter="RefreshAsync" OnClearClick="HandleClearAsync" />
         <MButton Color="primary" Class="ml-6 rounded-lg btn small-btn" OnClick="()=> _createModal.OpenModalAsync()">
-            <span>@T("Permission.CreateReceiverGroup")</span>
+            <span>@T("Permission.Create")</span>
         </MButton>
     </div>
 </div>

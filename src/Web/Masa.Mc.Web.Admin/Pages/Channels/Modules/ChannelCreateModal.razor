@@ -7,11 +7,11 @@
                     <MStepperItems Class="full-height">
                         <MStepperContent Step="1" Class="pa-0">
                             <MContainer Fluid Class="pt-15 px-1">
+                                <div class="subtitle3 regular--text mb-8">@T("Description.Channel.Type.Required")</div>
                                 <MRow Align="AlignTypes.Center" Justify="JustifyTypes.Center">
                                     <MCol Md="4">
                                         <MHover>
                                             <MCard @attributes="context.Attrs" Height="208" Width="208" Class="@($"d-flex flex-column justify-center align-center {context.Class} {(context.Hover ? "primary" : "fill-background")}")"
-                                                   Elevation="@(context.Hover ? 12 : 2)"
                                                    OnClick="()=> HandleSelectType(ChannelTypes.Sms)">
                                                 @if (context.Hover)
                                                 {
@@ -29,7 +29,6 @@
                                     <MCol Md="4">
                                         <MHover>
                                             <MCard @attributes="context.Attrs" Height="208" Width="208" Class="@($"d-flex flex-column justify-center align-center {context.Class} {(context.Hover ? "primary" : "fill-background")}")"
-                                                   Elevation="@(context.Hover ? 12 : 2)"
                                                    OnClick="()=>HandleSelectType(ChannelTypes.Email)">
                                                 @if (context.Hover)
                                                 {
@@ -47,7 +46,6 @@
                                     <MCol Md="4">
                                         <MHover>
                                             <MCard @attributes="context.Attrs" Height="208" Width="208" Class="@($"d-flex flex-column justify-center align-center {context.Class} {(context.Hover ? "primary" : "fill-background")}")"
-                                                   Elevation="@(context.Hover ? 12 : 2)"
                                                    OnClick="()=>HandleSelectType(ChannelTypes.WebsiteMessage)">
                                                 @if (context.Hover)
                                                 {

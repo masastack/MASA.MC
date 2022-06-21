@@ -9,6 +9,8 @@ public partial class ReceiverGroupCreateModal : AdminCompontentBase
     public EventCallback OnOk { get; set; }
 
     private ReceiverGroupUpsertDto _model = new();
+    private MForm _form = default!;
+    private ReceiverSelect _ReceiverSelect = default!;
     private bool _visible;
 
     ReceiverGroupService ReceiverGroupService => McCaller.ReceiverGroupService;
@@ -22,10 +24,10 @@ public partial class ReceiverGroupCreateModal : AdminCompontentBase
         });
     }
 
-    private void HandleCancel()
+    private async Task HandleCancel()
     {
         _visible = false;
-        ResetForm();
+        await ResetForm();
     }
 
     private async Task HandleOk(EditContext context)
@@ -39,20 +41,22 @@ public partial class ReceiverGroupCreateModal : AdminCompontentBase
         Loading = false;
         await SuccessMessageAsync(T("ReceiverGroupCreateMessage"));
         _visible = false;
-        ResetForm();
+        await ResetForm();
         if (OnOk.HasDelegate)
         {
             await OnOk.InvokeAsync();
         }
     }
 
-    private void ResetForm()
+    private async Task ResetForm()
     {
         _model = new();
+        await _form.ResetValidationAsync();
+        _ReceiverSelect.ResetForm();
     }
 
-    private void HandleVisibleChanged(bool val)
+    private async Task HandleVisibleChanged(bool val)
     {
-        if (!val) HandleCancel();
+        if (!val) await HandleCancel();
     }
 }

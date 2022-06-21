@@ -34,10 +34,10 @@ public partial class OrdinaryMessageCreateModal : AdminCompontentBase
         });
     }
 
-    private void HandleCancel()
+    private async Task HandleCancel()
     {
         _visible = false;
-        ResetForm();
+        await ResetForm();
     }
 
     private async Task HandleOkAsync(bool isDraft)
@@ -53,23 +53,24 @@ public partial class OrdinaryMessageCreateModal : AdminCompontentBase
         Loading = false;
         await SuccessMessageAsync(T("MessageTaskCreateMessage"));
         _visible = false;
-        ResetForm();
+        await ResetForm();
         if (OnOk.HasDelegate)
         {
             await OnOk.InvokeAsync();
         }
     }
 
-    private void ResetForm()
+    private async Task ResetForm()
     {
         _model = new() { EntityType = MessageEntityTypes.Ordinary };
         _selectReceivers = new();
         _importReceivers = new();
+        await _form.ResetValidationAsync();
     }
 
-    private void HandleVisibleChanged(bool val)
+    private async Task HandleVisibleChanged(bool val)
     {
-        if (!val) HandleCancel();
+        if (!val) await HandleCancel();
     }
 
     private async Task HandleChannelTypeChangeAsync()

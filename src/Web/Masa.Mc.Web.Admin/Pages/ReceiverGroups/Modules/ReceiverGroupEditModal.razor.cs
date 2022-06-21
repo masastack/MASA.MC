@@ -9,6 +9,8 @@ public partial class ReceiverGroupEditModal : AdminCompontentBase
     public EventCallback OnOk { get; set; }
 
     private ReceiverGroupUpsertDto _model = new();
+    private MForm _form = default!;
+    private ReceiverSelect _ReceiverSelect = default!;
     private Guid _entityId;
     private bool _visible;
 
@@ -32,10 +34,10 @@ public partial class ReceiverGroupEditModal : AdminCompontentBase
         _model = dto.Adapt<ReceiverGroupUpsertDto>();
     }
 
-    private void HandleCancel()
+    private async Task HandleCancel()
     {
         _visible = false;
-        ResetForm();
+        await ResetForm();
     }
 
     private async Task HandleOk(EditContext context)
@@ -48,7 +50,7 @@ public partial class ReceiverGroupEditModal : AdminCompontentBase
         await ReceiverGroupService.UpdateAsync(_entityId, _model);
         Loading = false;
         _visible = false;
-        ResetForm();
+        await ResetForm();
         await SuccessMessageAsync(T("ReceiverGroupEditMessage"));
         if (OnOk.HasDelegate)
         {
@@ -67,15 +69,17 @@ public partial class ReceiverGroupEditModal : AdminCompontentBase
         Loading = false;
         await SuccessMessageAsync(T("ReceiverGroupDeleteMessage"));
         _visible = false;
-        ResetForm();
+        await ResetForm();
         if (OnOk.HasDelegate)
         {
             await OnOk.InvokeAsync();
         }
     }
-    private void ResetForm()
+    private async Task ResetForm()
     {
         _model = new();
+        await _form.ResetValidationAsync();
+        _ReceiverSelect.ResetForm();
     }
 
     private void HandleVisibleChanged(bool val)

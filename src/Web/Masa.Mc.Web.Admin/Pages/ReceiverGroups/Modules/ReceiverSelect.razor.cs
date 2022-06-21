@@ -61,4 +61,9 @@ public partial class ReceiverSelect : AdminCompontentBase
         }
         await ValueChanged.InvokeAsync(Value);
     }
+
+    public void ResetForm()
+    {
+        _userIds = new();
+    }
 }

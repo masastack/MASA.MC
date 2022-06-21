@@ -39,10 +39,10 @@ public partial class WebsiteMessageTemplateEditModal : AdminCompontentBase
         await HandleSelectChannelType(_channelType);
     }
 
-    private void HandleCancel()
+    private async Task HandleCancel()
     {
         _visible = false;
-        ResetForm();
+        await ResetForm();
     }
 
     private async Task HandleOk()
@@ -57,7 +57,7 @@ public partial class WebsiteMessageTemplateEditModal : AdminCompontentBase
         Loading = false;
         await SuccessMessageAsync(T("MessageTemplateEditMessage"));
         _visible = false;
-        ResetForm();
+        await ResetForm();
         if (OnOk.HasDelegate)
         {
             await OnOk.InvokeAsync();
@@ -76,21 +76,22 @@ public partial class WebsiteMessageTemplateEditModal : AdminCompontentBase
         Loading = false;
         await SuccessMessageAsync(T("MessageTemplateDeleteMessage"));
         _visible = false;
-        ResetForm();
+        await ResetForm();
         if (OnOk.HasDelegate)
         {
             await OnOk.InvokeAsync();
         }
     }
 
-    private void ResetForm()
+    private async Task ResetForm()
     {
         _model = new();
+        await _form.ResetValidationAsync();
     }
 
-    private void HandleVisibleChanged(bool val)
+    private async Task HandleVisibleChanged(bool val)
     {
-        if (!val) HandleCancel();
+        if (!val) await HandleCancel();
     }
 
     private async Task HandleSelectChannelType(ChannelTypes Type)
