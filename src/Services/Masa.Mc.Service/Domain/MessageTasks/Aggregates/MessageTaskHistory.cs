@@ -72,4 +72,13 @@ public class MessageTaskHistory : FullAggregateRoot<Guid, Guid>
     {
         ReceiverUsers = receiverUsers;
     }
+
+    public void SetResult(MessageTaskHistoryStatuses status)
+    {
+        if (Status != MessageTaskHistoryStatuses.Completed)
+        {
+            return;
+        }
+        Status = status;
+    }
 }
