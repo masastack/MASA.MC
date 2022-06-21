@@ -2,7 +2,7 @@
 @page "/messageRecords/messageRecordManagement"
 
 <PageTitle>@T("Permission.MessageRecord")</PageTitle>
-<div style="height:40px">
+<div class="search-panel">
     @if (advanced)
     {
         <div class="fold">
@@ -59,7 +59,7 @@
             </MRow>
         </div>
     }
-    <div class="d-flex @(!advanced?"full-width":"")" style="float: right;">
+    <div class="d-flex search-panel-right @(isAnimate?"animate__animated":"") @(!advanced?"animate__searchOpen":"animate__searchShrink")"> 
         <DefaultSearch @bind-Value="_queryParam.Filter" Clearable Class="rounded-2 search" Placeholder="@T("Search")" Dense OnEnter="RefreshAsync" OnClearClick="HandleClearAsync" />
         <div @onclick="ToggleAdvanced" class="ml-6 d-flex button fill">
             <MIcon Class="ma-auto" Color="emphasis2" Size=20>

@@ -13,6 +13,7 @@ public partial class SmsTemplateManagement : AdminCompontentBase
     private PaginatedListDto<MessageTemplateDto> _entities = new();
     private List<ChannelDto> _channelItems = new();
     private bool advanced = true;
+    private bool isAnimate;
 
     ChannelService ChannelService => McCaller.ChannelService;
 
@@ -87,5 +88,6 @@ public partial class SmsTemplateManagement : AdminCompontentBase
     private void ToggleAdvanced()
     {
         advanced = !advanced;
+        isAnimate = true;
     }
 }
