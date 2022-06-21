@@ -6,12 +6,10 @@ namespace Masa.Mc.Service.Admin.Application.MessageTaskHistorys;
 public class MessageTaskHistoryQueryHandler
 {
     private readonly IMessageTaskHistoryRepository _repository;
-    private readonly IMessageRecordRepository _messageRecordRepository;
 
-    public MessageTaskHistoryQueryHandler(IMessageTaskHistoryRepository repository, IMessageRecordRepository messageRecordRepository)
+    public MessageTaskHistoryQueryHandler(IMessageTaskHistoryRepository repository)
     {
         _repository = repository;
-        _messageRecordRepository = messageRecordRepository;
     }
 
     [EventHandler]
@@ -34,7 +32,6 @@ public class MessageTaskHistoryQueryHandler
         queryable = queryable.OrderBy(options.Sorting).PageBy(options.Page, options.PageSize);
         var entities = await queryable.ToListAsync();
         var entityDtos = entities.Adapt<List<MessageTaskHistoryDto>>();
-        await FillMessageTaskHistoryDtos(entityDtos);
         var result = new PaginatedListDto<MessageTaskHistoryDto>(totalCount, totalPages, entityDtos);
         query.Result = result;
     }
@@ -55,28 +52,5 @@ public class MessageTaskHistoryQueryHandler
         var query = await _repository.WithDetailsAsync()!;
         var condition = await CreateFilteredPredicate(inputDto);
         return query.Where(condition);
-    }
-
-    private async Task FillMessageTaskHistoryDtos(List<MessageTaskHistoryDto> dtos)
-    {
-        foreach (var item in dtos)
-        {
-            if (item.Status != MessageTaskHistoryStatuses.Completed)
-            {
-                continue;
-            }
-            if (!await _messageRecordRepository.AnyAsync(x => x.MessageTaskHistoryId == item.Id && x.Success != true))
-            {
-                item.Status = MessageTaskHistoryStatuses.Success;
-            }
-            else if (await _messageRecordRepository.AnyAsync(x => x.MessageTaskHistoryId == item.Id && x.Success == true))
-            {
-                item.Status = MessageTaskHistoryStatuses.PartialFailure;
-            }
-            else
-            {
-                item.Status = MessageTaskHistoryStatuses.Fail;
-            }
-        }
     }
 }

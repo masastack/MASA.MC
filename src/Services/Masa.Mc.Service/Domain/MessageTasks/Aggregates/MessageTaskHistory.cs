@@ -56,12 +56,6 @@ public class MessageTaskHistory : FullAggregateRoot<Guid, Guid>
         Status = MessageTaskHistoryStatuses.Sending;
     }
 
-    public void SetComplete()
-    {
-        CompletionTime = DateTimeOffset.Now;
-        Status = MessageTaskHistoryStatuses.Completed;
-    }
-
     public void SetWithdraw()
     {
         WithdrawTime = DateTimeOffset.Now;
@@ -75,10 +69,7 @@ public class MessageTaskHistory : FullAggregateRoot<Guid, Guid>
 
     public void SetResult(MessageTaskHistoryStatuses status)
     {
-        if (Status != MessageTaskHistoryStatuses.Completed)
-        {
-            return;
-        }
         Status = status;
+        CompletionTime = DateTimeOffset.Now;
     }
 }
