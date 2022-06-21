@@ -24,7 +24,7 @@ public class WebsiteMessageCreatedEventHandler
     [EventHandler]
     public async Task HandleEvent(AddWebsiteMessageDomainEvent @event)
     {
-        var checkStatus = new List<MessageTaskHistoryStatuses> { MessageTaskHistoryStatuses.Sending, MessageTaskHistoryStatuses.Completed };
+        var checkStatus = new List<MessageTaskHistoryStatuses> { MessageTaskHistoryStatuses.Sending, MessageTaskHistoryStatuses.Success, MessageTaskHistoryStatuses.Fail, MessageTaskHistoryStatuses.PartialFailure };
         var checkTime = @event.CheckTime;
         var taskHistorys = (await _messageTaskHistoryRepository.WithDetailsAsync()).Where(x => x.CompletionTime >= checkTime && x.ReceiverType == ReceiverTypes.Broadcast && checkStatus.Contains(x.Status)).ToList();
         foreach (var taskHistory in taskHistorys)

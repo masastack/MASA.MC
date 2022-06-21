@@ -43,6 +43,9 @@ public class SendEmailMessageEventHandler
         using (_emailAsyncLocal.Change(options))
         {
             var taskHistory = eto.MessageTaskHistory;
+            int errorCount = 0;
+            int okCount = 0;
+            int totalCount = taskHistory.ReceiverUsers.Count;
             foreach (var item in taskHistory.ReceiverUsers)
             {
                 var messageRecord = new MessageRecord(item.UserId, channel.Id, taskHistory.MessageTaskId, taskHistory.Id, item.Variables);
@@ -57,14 +60,16 @@ public class SendEmailMessageEventHandler
                         eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.Content))
                     );
                     messageRecord.SetResult(true, string.Empty);
+                    okCount++;
                 }
                 catch (Exception ex)
                 {
                     messageRecord.SetResult(false, ex.Message);
+                    errorCount++;
                 }
                 await _messageRecordRepository.AddAsync(messageRecord);
             }
-            taskHistory.SetComplete();
+            taskHistory.SetResult(okCount == totalCount ? MessageTaskHistoryStatuses.Success : (okCount > 0 ? MessageTaskHistoryStatuses.PartialFailure : MessageTaskHistoryStatuses.Fail));
             await _messageTaskHistoryRepository.UpdateAsync(taskHistory);
         }
     }

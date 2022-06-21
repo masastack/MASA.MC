@@ -35,7 +35,7 @@ public class SendWebsiteMessageEventHandler
                 userIds.Add(item.UserId.ToString());
             }
         }
-        taskHistory.SetComplete();
+        taskHistory.SetResult(MessageTaskHistoryStatuses.Success);
         await _messageTaskHistoryRepository.UpdateAsync(taskHistory);
         await _messageTaskHistoryRepository.UnitOfWork.SaveChangesAsync();
         await _messageTaskHistoryRepository.UnitOfWork.CommitAsync();
