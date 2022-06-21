@@ -8,5 +8,8 @@ public enum MessageTaskHistoryStatuses
     WaitSend = 1,
     Sending,
     Completed,
-    Withdrawn
+    Withdrawn,
+    Success = 101,
+    Fail = 102,
+    PartialFailure = 103
 }

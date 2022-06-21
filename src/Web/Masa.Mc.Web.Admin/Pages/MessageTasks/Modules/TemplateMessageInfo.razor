@@ -1,61 +1,55 @@
 ﻿@inherits AdminCompontentBase
-<MRow>
-    <MCol>
-        <MTextField Value="@MessageTemplate.DisplayName"
-                    Label="@T("DisplayName.MessageTemplateTemplateId")"
-                    Outlined
-                    Disabled
-                    HideDetails="@("auto")">
-        </MTextField>
-    </MCol>
-</MRow>
-<MRow>
-    <MCol>
-        <MTextField Value="@T(MessageTask.Channel.Type.ToString())"
-                    Label="@T("DisplayName.ChannelType")"
-                    Outlined
-                    Disabled
-                    HideDetails="@("auto")">
-        </MTextField>
-    </MCol>
-</MRow>
-<MRow>
-    <MCol>
-        <MTextField @bind-Value="MessageTask.Channel.DisplayName"
-                    Label="@T("DisplayName.Channel")"
-                    Outlined
-                    Disabled
-                    HideDetails="@("auto")">
-        </MTextField>
-    </MCol>
-</MRow>
-@if (MessageTask.Channel != null && MessageTask.Channel.Type != ChannelTypes.Sms)
-{
-    <MRow>
-        <MCol>
-            <MTextField @bind-Value="MessageTemplate.Title"
-                    Label="@T("DisplayName.MessageTemplateTitle")"
-                    Outlined
-                    Disabled
-                    HideDetails="@("auto")">
-            </MTextField>
-        </MCol>
-    </MRow>
-}
-<MRow>
-    <MCol>
-        <RichText Value="@MessageTemplate.Content"></RichText>
-    </MCol>
-</MRow>
-@if (MessageTask.Channel != null && MessageTask.Channel.Type == ChannelTypes.WebsiteMessage)
-{
-    <MRow Class="mx-1 pt-6">
-        <MCheckbox Class="mt-1 mr-2" @bind-Value="MessageTemplate.IsJump" Label="@T("DisplayName.MessageTemplateIsJump")" Disabled></MCheckbox>
-        <MTextField @bind-Value="MessageTemplate.JumpUrl"
-                Label="@T("DisplayName.MessageTemplateJumpUrl")"
-                Outlined
-                Disabled
-                HideDetails="@("auto")">
-        </MTextField>
-    </MRow>
-}
+<div class="template-message-info">
+    <dl class="mt-8">
+        <dt class="overline regular3--text">@T("DisplayName.MessageTemplateTemplateId")</dt>
+        <dd class="body2 emphasis2--text mt-1">@MessageTemplate.DisplayName</dd>
+    </dl>
+    <dl class="mt-8">
+        <dt class="overline regular3--text">@T("DisplayName.ChannelType")</dt>
+        <dd class="body2 emphasis2--text mt-1">@MessageTask.Channel.Type.ToString()</dd>
+    </dl>
+    <dl class="mt-8">
+        <dt class="overline regular3--text">@T("DisplayName.Channel")</dt>
+        <dd class="body2 emphasis2--text mt-1">@MessageTask.Channel.DisplayName</dd>
+    </dl>
+    @if (MessageTask.Channel != null && MessageTask.Channel.Type != ChannelTypes.Sms)
+    {
+        <dl class="mt-8">
+            <dt class="overline regular3--text">@T("DisplayName.MessageTemplateTitle")</dt>
+            <dd class="body2 emphasis2--text mt-1">@MessageTemplate.Title</dd>
+        </dl>
+    }
+    <dl class="mt-8">
+        <dt class="overline regular3--text">@T("DisplayName.MessageTemplateContent")</dt>
+        <dd class="body2 emphasis2--text mt-1"><RichText Value="@MessageTemplate.Content"></RichText></dd>
+    </dl>
+    <div class="subtitle2 emphasis2--text mt-8">@T("DisplayName.VariableValueTransfer")</div>
+    <MSimpleTable Class="btn-fill-line mt-8">
+        <thead>
+            <tr>
+                <th class="text-left body2 regular3--text">
+                    @T("DisplayName.MessageTemplateItemCode")
+                </th>
+                <th class="text-left body2 regular3--text">
+                    @T("DisplayName.MessageTemplateItemValue")
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Variables)
+            {
+                <tr @key="item.Key" class="body regular--text">
+                    <td>@item.Key</td>
+                    <td>@item.Value</td>
+                </tr>
+            }
+        </tbody>
+    </MSimpleTable>
+    @if (MessageTask.Channel != null && MessageTask.Channel.Type == ChannelTypes.WebsiteMessage && MessageTemplate.IsJump)
+    {
+        <dl class="mt-8">
+            <dt class="overline regular3--text">@T("DisplayName.MessageTemplateJumpUrl")</dt>
+            <dd class="body2 emphasis2--text mt-1">@MessageTemplate.JumpUrl</dd>
+        </dl>
+    }
+</div>

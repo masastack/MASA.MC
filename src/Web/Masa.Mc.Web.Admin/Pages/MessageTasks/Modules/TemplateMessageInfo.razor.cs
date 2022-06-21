@@ -11,6 +11,9 @@ public partial class TemplateMessageInfo : AdminCompontentBase
     [Parameter]
     public MessageTaskDto MessageTask { get; set; } = new();
 
+    [Parameter]
+    public ExtraPropertyDictionary Variables { get; set; } = new();
+
     public MessageTemplateDto MessageTemplate { get; set; } = new();
 
     MessageTemplateService MessageTemplateService => McCaller.MessageTemplateService;

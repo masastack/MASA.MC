@@ -1,51 +1,29 @@
 ﻿@inherits AdminCompontentBase
-<MRow>
-    <MCol>
-        <MTextField Value="@T(MessageTask.Channel.Type.ToString())"
-                    Label="@T("DisplayName.ChannelType")"
-                    Outlined
-                    Disabled
-                    HideDetails="@("auto")">
-        </MTextField>
-    </MCol>
-</MRow>
-<MRow>
-    <MCol>
-        <MTextField @bind-Value="MessageTask.Channel.DisplayName"
-                    Label="@T("DisplayName.Channel")"
-                    Outlined
-                    Disabled
-                    HideDetails="@("auto")">
-        </MTextField>
-    </MCol>
-</MRow>
-@if (MessageTask.Channel.Type != ChannelTypes.Sms)
-{
-    <MRow>
-        <MCol>
-            <MTextField @bind-Value="MessageInfo.Title"
-                    Label="@T("DisplayName.MessageTemplateTitle")"
-                    Outlined
-                    Disabled
-                    HideDetails="@("auto")">
-            </MTextField>
-        </MCol>
-    </MRow>
-}
-<MRow>
-    <MCol>
-        <RichText Value="@MessageInfo.Content"></RichText>
-    </MCol>
-</MRow>
-@if (MessageTask.Channel.Type == ChannelTypes.WebsiteMessage)
-{
-    <MRow Class="mx-1 pt-6">
-        <MCheckbox Class="mt-1 mr-2" @bind-Value="MessageInfo.IsJump" Label="@T("DisplayName.MessageTemplateIsJump")" Disabled></MCheckbox>
-        <MTextField @bind-Value="MessageInfo.JumpUrl"
-                Label="@T("DisplayName.MessageTemplateJumpUrl")"
-                Outlined
-                Disabled
-                HideDetails="@("auto")">
-        </MTextField>
-    </MRow>
-}
+<div>
+    <dl class="mt-8">
+        <dt class="overline regular3--text">@T("DisplayName.ChannelType")</dt>
+        <dd class="body2 emphasis2--text mt-1">@T(MessageTask.Channel.Type.ToString())</dd>
+    </dl>
+    <dl class="mt-8">
+        <dt class="overline regular3--text">@T("DisplayName.Channel")</dt>
+        <dd class="body2 emphasis2--text mt-1">@MessageTask.Channel.DisplayName</dd>
+    </dl>
+    @if (MessageTask.Channel.Type != ChannelTypes.Sms)
+    {
+        <dl class="mt-8">
+            <dt class="overline regular3--text">@T("DisplayName.MessageTemplateTitle")</dt>
+            <dd class="body2 emphasis2--text mt-1">@MessageInfo.Title</dd>
+        </dl>
+    }
+    <dl class="mt-8">
+        <dt class="overline regular3--text">@T("DisplayName.MessageTemplateContent")</dt>
+        <dd class="body2 emphasis2--text mt-1"><RichText Value="@MessageInfo.Content"></RichText></dd>
+    </dl>
+    @if (MessageInfo.IsJump)
+    {
+        <dl class="mt-8">
+            <dt class="overline regular3--text">@T("DisplayName.MessageTemplateJumpUrl")</dt>
+            <dd class="body2 emphasis2--text mt-1">@MessageInfo.JumpUrl</dd>
+        </dl>
+    }
+</div>
