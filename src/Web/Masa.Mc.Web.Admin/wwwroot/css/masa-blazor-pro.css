@@ -914,3 +914,11 @@ tr:hover {
 .m-input--dense-48 .m-input__append-inner {
     margin-top: 14px !important;
 }
+
+.m-application .overflow-x-visible {
+    overflow-x: visible !important;
+}
+
+.m-application .overflow-y-visible {
+    overflow-y: visible !important;
+}

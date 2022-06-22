@@ -13,7 +13,6 @@ public partial class SmsTemplateCreateModal : AdminCompontentBase
     private bool _visible;
     private List<ChannelDto> _channelItems = new();
     private List<SmsTemplateDto> _templateItems = new();
-    private ChannelTypes _channelType;
 
     ChannelService ChannelService => McCaller.ChannelService;
 
@@ -21,14 +20,10 @@ public partial class SmsTemplateCreateModal : AdminCompontentBase
 
     MessageTemplateService MessageTemplateService => McCaller.MessageTemplateService;
 
-    public async Task OpenModalAsync(ChannelTypes? channelType)
+    public async Task OpenModalAsync()
     {
         _model.ChannelType = ChannelTypes.Sms;
-        if (channelType.HasValue)
-        {
-            _channelType = channelType.Value;
-            await HandleSelectChannelTypeAsync(_channelType);
-        }
+        await HandleSelectChannelTypeAsync(_model.ChannelType);
         await InvokeAsync(() =>
         {
             _visible = true;

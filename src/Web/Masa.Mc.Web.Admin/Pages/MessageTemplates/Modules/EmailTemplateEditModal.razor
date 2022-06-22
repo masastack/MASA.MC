@@ -1,65 +1,63 @@
 ﻿@inherits AdminCompontentBase
 <div @ref="Ref">
     <McModal Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.EditMessageTemplate")" Height="741">
-        <MForm Model="_model" EnableValidation @ref="_form" Class="full-height">
-            <div class="full-height flex-column">
-                <div class="flex-height-auto flex-grow-1 overflow-y">
-                    <MRow Class="mt-6">
-                        <MCol>
-                            <DefaultSelect Value="@_channelType"
-                                     Items="@(GetEnumList<ChannelTypes>())"
-                                     Label="@T("DisplayName.ChannelType")"
-                                     ItemText="item => T(item.ToString())"
-                                     ItemValue="item => item"
-                                     Disabled>
-                            </DefaultSelect>
-                        </MCol>
-                    </MRow>
-                    <MRow Class="mt-6">
-                        <MCol>
-                            <DefaultSelect @bind-Value="_model.ChannelId"
-                                     Items="@_channelItems"
-                                     Label="@T("DisplayName.Channel")"
-                                     ItemText="item => item.DisplayName"
-                                     ItemValue="item => item.Id">
-                            </DefaultSelect>
-                        </MCol>
-                    </MRow>
-                    <MRow Class="mt-6">
-                        <MCol>
-                            <DefaultTextField @bind-Value="_model.Title"
-                                              Label="@T("DisplayName.MessageTemplateTitle")">
-                            </DefaultTextField>
-                        </MCol>
-                    </MRow>
-                    <MRow Class="mt-6">
-                        <MCol>
-                            <DefaultMarkdown @bind-Html="_model.Content" @bind-Value="_model.Markdown"></DefaultMarkdown>
-                            <MInput @bind-Value="_model.Content" />
-                        </MCol>
-                    </MRow>
-                    <MRow Class="mt-6">
-                        <MCol>
-                            <div class="d-flex align-center justify-start">
-                                <span class="body2 regular--text mr-2">@T("Description.MessageTemplate.PerDayLimit.Tips") </span>
-                                <div style="width:80px;">
-                                    <MTextField @bind-Value="_model.PerDayLimit"
-                                                Type="number"
-                                                Dense
-                                                Outlined
-                                                HideDetails="@("auto")"></MTextField>
-                                </div>
-                                <span class="body2 regular--text ml-2">@T("Unit.Bar") </span>
+        <ChildContent>
+            <MForm Model="_model" EnableValidation @ref="_form" Class="full-height">
+                <MRow>
+                    <MCol Class="pt-0 mt-2">
+                        <DefaultSelect Value="@_model.ChannelType"
+                                       Items="@(GetEnumList<ChannelTypes>())"
+                                       Label="@T("DisplayName.ChannelType")"
+                                       ItemText="item => T(item.ToString())"
+                                       ItemValue="item => item"
+                                       Disabled>
+                        </DefaultSelect>
+                    </MCol>
+                </MRow>
+                <MRow Class="mt-6">
+                    <MCol>
+                        <DefaultSelect @bind-Value="_model.ChannelId"
+                                       Items="@_channelItems"
+                                       Label="@T("DisplayName.Channel")"
+                                       ItemText="item => item.DisplayName"
+                                       ItemValue="item => item.Id">
+                        </DefaultSelect>
+                    </MCol>
+                </MRow>
+                <MRow Class="mt-6">
+                    <MCol>
+                        <DefaultTextField @bind-Value="_model.Title"
+                                          Label="@T("DisplayName.MessageTemplateTitle")">
+                        </DefaultTextField>
+                    </MCol>
+                </MRow>
+                <MRow Class="mt-6">
+                    <MCol>
+                        <DefaultMarkdown @bind-Html="_model.Content" @bind-Value="_model.Markdown"></DefaultMarkdown>
+                        <MInput @bind-Value="_model.Content" />
+                    </MCol>
+                </MRow>
+                <MRow Class="mt-6">
+                    <MCol>
+                        <div class="d-flex align-center justify-start">
+                            <span class="body2 regular--text mr-2">@T("Description.MessageTemplate.PerDayLimit.Tips") </span>
+                            <div style="width:80px;">
+                                <MTextField @bind-Value="_model.PerDayLimit"
+                                            Type="number"
+                                            Dense
+                                            Outlined
+                                            HideDetails="@("auto")"></MTextField>
                             </div>
-                        </MCol>
-                    </MRow>
-                </div>
-                <div Class="d-flex">
-                    <MIcon Size="24" Color="error" OnClick="HandleDelAsync">mdi-delete</MIcon>
-                    <MSpacer></MSpacer>
-                    <MButton Color="primary" Class="btn-form" OnClick="HandleOk">@T("Save")</MButton>
-                </div>
-            </div>
-        </MForm>
+                            <span class="body2 regular--text ml-2">@T("Unit.Bar") </span>
+                        </div>
+                    </MCol>
+                </MRow>
+            </MForm>
+        </ChildContent>
+        <ActionContent>
+            <MIcon Size="24" Color="error" OnClick="HandleDelAsync" Class="align-self-center">mdi-delete</MIcon>
+            <MSpacer></MSpacer>
+            <MButton Color="primary" Class="btn-form" OnClick="HandleOk">@T("Save")</MButton>
+        </ActionContent>
     </McModal>
 </div>

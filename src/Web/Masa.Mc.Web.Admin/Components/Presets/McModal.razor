@@ -9,7 +9,7 @@
              Transition="dialog-transition"
              Width="@Width">
         <ChildContent>
-            <MCard Height="@Height" Style="padding:36px 42px;">
+            <MCard Height="@Height" Style="padding:36px 17px 36px 42px;">
                 <MCardTitle Class="h6 emphasis--text pa-0">
                     <MIcon Size=16 Color="primary" Class="pr-2">
                         mdi-circle
@@ -28,9 +28,13 @@
                     </MButton>
                 </MCardTitle>
 
-                <MCardText Class="pa-0 overflow-visible">
+                <MCardText Class="pa-0 overflow-y-auto pr-4 pt-3 mt-6">
                     @ChildContent
                 </MCardText>
+
+                <MCardActions Class="@($"pl-0 {ActionsClass}")" Style="@ActionsStyle">
+                    @ActionContent
+                </MCardActions>
             </MCard>
         </ChildContent>
     </MDialog>
@@ -60,6 +64,16 @@
 
     [Parameter]
     public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public RenderFragment ActionContent { get; set; }
+
+    [Parameter]
+    public string ActionsClass { get; set; }
+
+    [Parameter]
+    public string ActionsStyle { get; set; }
+
 
     protected virtual async Task HandleOnCancel()
     {

@@ -12,19 +12,15 @@ public partial class EmailTemplateCreateModal : AdminCompontentBase
     private MessageTemplateUpsertDto _model = new();
     private bool _visible;
     private List<ChannelDto> _channelItems = new();
-    private ChannelTypes _channelType;
 
     ChannelService ChannelService => McCaller.ChannelService;
 
     MessageTemplateService MessageTemplateService => McCaller.MessageTemplateService;
 
-    public async Task OpenModalAsync(ChannelTypes? channelType)
+    public async Task OpenModalAsync()
     {
-        if (channelType.HasValue)
-        {
-            _channelType = channelType.Value;
-            await HandleSelectChannelTypeAsync(_channelType);
-        }
+        _model.ChannelType = ChannelTypes.Email;
+        await HandleSelectChannelTypeAsync(_model.ChannelType);
         await InvokeAsync(() =>
         {
             _visible = true;

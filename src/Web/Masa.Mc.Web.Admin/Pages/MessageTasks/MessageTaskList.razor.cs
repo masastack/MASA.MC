@@ -7,10 +7,9 @@ public partial class MessageTaskList : AdminCompontentBase
 {
     private TemplateMessageEditModal _templateEditModal = default!;
     private OrdinaryMessageEditModal _ordinaryEditModal = default!;
-    private MessageTaskSendModal _sendModal = default!;
     private MessageTaskDetailModal _detailModal = default!;
     private SendTestMessageModal _sendTestModal = default!;
-    private GetMessageTaskInputDto _queryParam = new(8) { TimeType = MessageTaskTimeTypes.ModificationTime };
+    private GetMessageTaskInputDto _queryParam = new(20) { TimeType = MessageTaskTimeTypes.ModificationTime };
     private PaginatedListDto<MessageTaskDto> _entities = new();
     private List<ChannelDto> _channelItems = new();
     private bool advanced = true;
@@ -58,7 +57,7 @@ public partial class MessageTaskList : AdminCompontentBase
 
     private async Task HandleClearAsync()
     {
-        _queryParam = new(8) { TimeType = MessageTaskTimeTypes.ModificationTime };
+        _queryParam = new(20) { TimeType = MessageTaskTimeTypes.ModificationTime };
         await LoadData();
     }
 

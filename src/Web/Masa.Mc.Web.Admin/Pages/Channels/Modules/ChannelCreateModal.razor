@@ -64,9 +64,7 @@
                             </MContainer>
                         </MStepperContent>
                         <MStepperContent Step="2" Class="pa-0 full-height">
-                            <div class="full-height flex-column">
-                                <div class="flex-height-auto flex-grow-1">
-                                    <MRow Class="mt-6">
+                                    <MRow>
                                         <MCol>
                                             <DefaultTextField @bind-Value="_model.DisplayName"
                                                               Label="@T("DisplayName.ChannelDisplayName")">
@@ -92,17 +90,15 @@
                                             </MTextarea>
                                         </MCol>
                                     </MRow>
-                                </div>
-                                <div class="d-flex">
-                                    <MIcon Size="24" Color="emphasis2"  OnClick="()=> _step-- ">mdi-keyboard-backspace</MIcon>
-                                    <MSpacer></MSpacer>
-                                    <MButton Color="primary" Class="btn-form" OnClick="HandleOkAsync">@T("Submit")</MButton>
-                                </div>
-                            </div>
                         </MStepperContent>
                     </MStepperItems>
                 </MStepper>
             </MForm>
         </ChildContent>
+        <ActionContent>
+            <MIcon Size="24" Color="emphasis2" OnClick="()=> _step-- ">mdi-keyboard-backspace</MIcon>
+            <MSpacer></MSpacer>
+            <MButton Color="primary" Class="btn-form" OnClick="HandleOkAsync">@T("Submit")</MButton>
+        </ActionContent>
     </McModal>
 </div>

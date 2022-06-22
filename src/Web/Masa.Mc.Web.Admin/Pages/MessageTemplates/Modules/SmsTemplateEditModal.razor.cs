@@ -14,7 +14,6 @@ public partial class SmsTemplateEditModal : AdminCompontentBase
     private bool _visible;
     private List<ChannelDto> _channelItems = new();
     private List<SmsTemplateDto> _templateItems = new();
-    private ChannelTypes _channelType;
 
     ChannelService ChannelService => McCaller.ChannelService;
 
@@ -40,8 +39,8 @@ public partial class SmsTemplateEditModal : AdminCompontentBase
         var dto = await MessageTemplateService.GetAsync(_entityId);
         _model = dto.Adapt<MessageTemplateUpsertDto>();
         _templateItems = await SmsTemplateService.GetListByChannelIdAsync(_model.ChannelId);
-        _channelType = dto.Channel.Type;
-        await HandleSelectChannelTypeAsync(_channelType);
+        _model.ChannelType = dto.Channel.Type;
+        await HandleSelectChannelTypeAsync(_model.ChannelType);
     }
 
     private async Task HandleCancel()

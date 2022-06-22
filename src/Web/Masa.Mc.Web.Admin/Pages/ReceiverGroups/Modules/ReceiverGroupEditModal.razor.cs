@@ -40,9 +40,9 @@ public partial class ReceiverGroupEditModal : AdminCompontentBase
         await ResetForm();
     }
 
-    private async Task HandleOk(EditContext context)
+    private async Task HandleOk()
     {
-        if (!context.Validate())
+        if (!await _form.ValidateAsync())
         {
             return;
         }
