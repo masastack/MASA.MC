@@ -8,7 +8,7 @@
                     <DateRangePicker Class="btn-fill-line mt-6 justify-center" @bind-StartTime="_queryParam.StartTime" @bind-EndTime="_queryParam.EndTime" OnChange="LoadData" />
                     <div class="status-select">
                         <DefaultSelect @bind-Value="@_queryParam.Status"
-                                       Items="@(GetEnumList<MessageTaskHistoryStatuses>().Where(x=>x<MessageTaskHistoryStatuses.Success).ToList())"
+                                       Items="@(GetEnumList<MessageTaskHistoryStatuses>())"
                                        Label="@T("DisplayName.MessageTaskHistoryStatus")"
                                        ItemText="@(item => T($"DisplayName.MessageTaskHistoryStatus.{item.ToString()}"))"
                                        ItemValue="item => item"
