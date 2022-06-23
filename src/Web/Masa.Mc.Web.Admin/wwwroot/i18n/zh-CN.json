@@ -265,5 +265,6 @@
   "SendTestTask": "发送测试任务",
   "Description.MessageTaskHistory.SendTimeTips": "本任务将在{0}执行",
   "Retry": "重试",
-  "Current": "当前"
+  "Current": "当前",
+  "DisplayName.Notice.Title": "站内消息通知"
 }

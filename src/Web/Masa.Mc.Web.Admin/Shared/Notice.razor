@@ -25,9 +25,9 @@
         </ActivatorContent>
         <ChildContent>
             <MCard Width="400">
-                <MToolbar Color="blue darken-4"
-                          Dark>
-                    <MToolbarTitle Class="h7 fill--text">@T("WebsiteMessage")</MToolbarTitle>
+                <MToolbar Color="primary"
+                          Dark Style="box-shadow: none;">
+                    <MToolbarTitle Class="h7 fill--text">@T("DisplayName.Notice.Title")</MToolbarTitle>
 
                     <MSpacer></MSpacer>
 
@@ -45,15 +45,15 @@
                             </MListItemAvatar>
 
                             <MListItemContent>
-                                <MListItemTitle Class="btn emphasis--text">@item.Channel?.DisplayName</MListItemTitle>
-                                <MListItemSubtitle Class="caption regular2--text">@item.Title</MListItemSubtitle>
-                                <MListItemSubtitle Class="overline regular3--text">@item.SendTime.ToString(T("$MonthDayFormat"))</MListItemSubtitle>
+                                <MListItemTitle Class="btn emphasis--text">@item.Title</MListItemTitle>
+                                <MListItemSubtitle Class="caption regular2--text mt-1">@item.Abstract</MListItemSubtitle>
+                                <MListItemSubtitle Class="overline regular3--text mt-1">@item.SendTime.ToString(T("$MonthDayFormat"))</MListItemSubtitle>
                             </MListItemContent>
                         </MListItem>
                     }
                 </MList>
                 <MList Dense>
-                    <MListItem Link Href="/websiteMessages/websiteMessageManagement" Class="border-top-solid pt-2" Style="box-shadow: inset 0px 1px 0px #E9EDF7">
+                    <MListItem Link Href="/websiteMessages/websiteMessageManagement" Class="pt-2" Style="box-shadow: inset 0px 1px 0px #E9EDF7">
                         <MListItemIcon Class="mr-0">
                             <MIcon Size="16" Color="regular2" Class="pr-3">mdi-keyboard-backspace</MIcon>
                         </MListItemIcon>
