@@ -9,7 +9,6 @@
                 <MCol Cols="4">
                     <MHover>
                         <MCard @attributes="context.Attrs" Height="408" Width="408" Class="@($"d-flex flex-column justify-center align-center {context.Class} {(context.Hover ? "primary" : "fill-background")}")"
-                               Elevation="@(context.Hover ? 12 : 2)"
                                OnClick="_ordinaryCreateModal.OpenModalAsync">
                             @if (context.Hover)
                             {
@@ -27,7 +26,6 @@
                 <MCol Cols="4">
                     <MHover>
                         <MCard @attributes="context.Attrs" Height="408" Width="408" Class="@($"d-flex flex-column justify-center align-center {context.Class} {(context.Hover ? "primary" : "fill-background")}")"
-                               Elevation="@(context.Hover ? 12 : 2)"
                                OnClick="_templateCreateModal.OpenModalAsync">
                             @if (context.Hover)
                             {
