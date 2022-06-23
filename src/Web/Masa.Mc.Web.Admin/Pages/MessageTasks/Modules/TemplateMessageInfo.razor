@@ -1,10 +1,6 @@
 ﻿@inherits AdminCompontentBase
 <div class="template-message-info">
     <dl class="mt-8">
-        <dt class="overline regular3--text">@T("DisplayName.MessageTemplateTemplateId")</dt>
-        <dd class="body2 emphasis2--text mt-1">@MessageTemplate.DisplayName</dd>
-    </dl>
-    <dl class="mt-8">
         <dt class="overline regular3--text">@T("DisplayName.ChannelType")</dt>
         <dd class="body2 emphasis2--text mt-1">@MessageTask.Channel.Type.ToString()</dd>
     </dl>
@@ -23,28 +19,31 @@
         <dt class="overline regular3--text">@T("DisplayName.MessageTemplateContent")</dt>
         <dd class="body2 emphasis2--text mt-1"><RichText Value="@MessageTemplate.Content"></RichText></dd>
     </dl>
-    <div class="subtitle2 emphasis2--text mt-8">@T("DisplayName.VariableValueTransfer")</div>
-    <MSimpleTable Class="btn-fill-line mt-8">
-        <thead>
-            <tr>
-                <th class="text-left body2 regular3--text">
-                    @T("DisplayName.MessageTemplateItemCode")
-                </th>
-                <th class="text-left body2 regular3--text">
-                    @T("DisplayName.MessageTemplateItemValue")
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Variables)
-            {
-                <tr @key="item.Key" class="body regular--text">
-                    <td>@item.Key</td>
-                    <td>@item.Value</td>
+    @if (Variables.Any())
+    {
+        <div class="subtitle2 emphasis2--text mt-8">@T("DisplayName.VariableValueTransfer")</div>
+        <MSimpleTable Class="btn-fill-line mt-8">
+            <thead>
+                <tr>
+                    <th class="text-left body2 regular3--text">
+                        @T("DisplayName.MessageTemplateItemCode")
+                    </th>
+                    <th class="text-left body2 regular3--text">
+                        @T("DisplayName.MessageTemplateItemValue")
+                    </th>
                 </tr>
-            }
-        </tbody>
-    </MSimpleTable>
+            </thead>
+            <tbody>
+                @foreach (var item in Variables)
+                {
+                    <tr @key="item.Key" class="body regular--text">
+                        <td>@item.Key</td>
+                        <td>@item.Value</td>
+                    </tr>
+                }
+            </tbody>
+        </MSimpleTable>
+    }
     @if (MessageTask.Channel != null && MessageTask.Channel.Type == ChannelTypes.WebsiteMessage && MessageTemplate.IsJump)
     {
         <dl class="mt-8">

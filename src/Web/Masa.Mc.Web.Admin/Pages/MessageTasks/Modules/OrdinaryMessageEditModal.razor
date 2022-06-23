@@ -3,61 +3,7 @@
     <McModal Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.EditOrdinaryMessage")" Height="850">
         <ChildContent>
             <MForm Model="_model" EnableValidation @ref="_form" Class="full-height">
-                <ElevationTab @bind-TabIndex="_tabIndex" TabMinWidth="227" Tabs='new List<string> { T("DisplayName.MessageTaskReceiver"), T("DisplayName.MessageInfoContent"), T("DisplayName.MessageTaskSendingRule") }' Dense>
-                    <ElevationTabItem>
-                        @if (_model.ReceiverType == ReceiverTypes.Assign)
-                        {
-                            <MInput @bind-Value="_model.Receivers" />
-                            <MessageReceivers @bind-ReceiverType="_model.ReceiverType"
-                                          @bind-SelectReceivers="_selectReceivers"
-                                          @bind-ImportReceivers="_importReceivers"
-                                          @bind-SelectReceiverType="_model.SelectReceiverType"
-                                          ChannelType="_channelType" />
-                        }
-                        else
-                        {
-                            <MContainer Fluid Class="pt-9 px-1 full-height">
-                                <MRow Align="AlignTypes.Center" Justify="JustifyTypes.SpaceBetween">
-                                    <MCol>
-                                        <MHover Context="hoverContext">
-                                            <MCard @attributes="hoverContext.Attrs" Height="320" Width="320" Class="@($"d-flex flex-column justify-center align-center {hoverContext.Class} {(hoverContext.Hover ? "primary" : "fill-background")}")"
-                                               Elevation="@(hoverContext.Hover ? 12 : 2)"
-                                               OnClick="()=>HandleReceiverType(ReceiverTypes.Assign)">
-                                                @if (hoverContext.Hover)
-                                                {
-                                                    <MIcon Size=40 Color="#FFFFFF">mdi-account-supervisor-circle-outline</MIcon>
-                                                    <div class="h6 pt-10" style="color:#FAFAFA">@T("DisplayName.ReceiverType.Assign")</div>
-                                                }
-                                                else
-                                                {
-                                                    <MIcon Size=40 Color="#323D6F">mdi-account-supervisor-circle</MIcon>
-                                                    <div class="h6 pt-10 regular--text">@T("DisplayName.ReceiverType.Assign")</div>
-                                                }
-                                            </MCard>
-                                        </MHover>
-                                    </MCol>
-                                    <MCol>
-                                        <MHover Context="hoverContext">
-                                            <MCard @attributes="hoverContext.Attrs" Height="320" Width="320" Class="@($"d-flex flex-column justify-center align-center {hoverContext.Class} {(hoverContext.Hover ? "primary" : "fill-background")}")"
-                                               Elevation="@(hoverContext.Hover ? 12 : 2)"
-                                               OnClick="()=>HandleReceiverType(ReceiverTypes.Broadcast)">
-                                                @if (hoverContext.Hover)
-                                                {
-                                                    <MIcon Size=40 Color="#FFFFFF">mdi-email-outline</MIcon>
-                                                    <div class="h6 pt-10" style="color:#FAFAFA">@T("DisplayName.ReceiverType.Broadcast")</div>
-                                                }
-                                                else
-                                                {
-                                                    <MIcon Size=40 Color="#323D6F">mdi-email</MIcon>
-                                                    <div class="h6 pt-10 regular--text">@T("DisplayName.ReceiverType.Broadcast")</div>
-                                                }
-                                            </MCard>
-                                        </MHover>
-                                    </MCol>
-                                </MRow>
-                            </MContainer>
-                        }
-                    </ElevationTabItem>
+                <ElevationTab @bind-TabIndex="_tabIndex" TabMinWidth="227" Tabs='new List<string> { T("DisplayName.MessageInfoContent"), T("DisplayName.MessageTaskReceiver"), T("DisplayName.MessageTaskSendingRule") }' Dense>
                     <ElevationTabItem>
                         <MRow Class="mt-6">
                             <MCol>
@@ -125,6 +71,60 @@
                         }
                     </ElevationTabItem>
                     <ElevationTabItem>
+                        @if (_model.ReceiverType == ReceiverTypes.Assign)
+                        {
+                            <MInput @bind-Value="_model.Receivers" />
+                            <MessageReceivers @bind-ReceiverType="_model.ReceiverType"
+                                          @bind-SelectReceivers="_selectReceivers"
+                                          @bind-ImportReceivers="_importReceivers"
+                                          @bind-SelectReceiverType="_model.SelectReceiverType"
+                                          ChannelType="_channelType" />
+                        }
+                        else
+                        {
+                            <MContainer Fluid Class="pt-9 px-1 full-height">
+                                <MRow Align="AlignTypes.Center" Justify="JustifyTypes.SpaceBetween">
+                                    <MCol>
+                                        <MHover Context="hoverContext">
+                                            <MCard @attributes="hoverContext.Attrs" Height="320" Width="320" Class="@($"d-flex flex-column justify-center align-center {hoverContext.Class} {(hoverContext.Hover ? "primary" : "fill-background")}")"
+                                               Elevation="@(hoverContext.Hover ? 12 : 2)"
+                                               OnClick="()=>HandleReceiverType(ReceiverTypes.Assign)">
+                                                @if (hoverContext.Hover)
+                                                {
+                                                    <MIcon Size=40 Color="#FFFFFF">mdi-account-supervisor-circle-outline</MIcon>
+                                                    <div class="h6 pt-10" style="color:#FAFAFA">@T("DisplayName.ReceiverType.Assign")</div>
+                                                }
+                                                else
+                                                {
+                                                    <MIcon Size=40 Color="#323D6F">mdi-account-supervisor-circle</MIcon>
+                                                    <div class="h6 pt-10 regular--text">@T("DisplayName.ReceiverType.Assign")</div>
+                                                }
+                                            </MCard>
+                                        </MHover>
+                                    </MCol>
+                                    <MCol>
+                                        <MHover Context="hoverContext">
+                                            <MCard @attributes="hoverContext.Attrs" Height="320" Width="320" Class="@($"d-flex flex-column justify-center align-center {hoverContext.Class} {(hoverContext.Hover ? "primary" : "fill-background")}")"
+                                               Elevation="@(hoverContext.Hover ? 12 : 2)"
+                                               OnClick="()=>HandleReceiverType(ReceiverTypes.Broadcast)">
+                                                @if (hoverContext.Hover)
+                                                {
+                                                    <MIcon Size=40 Color="#FFFFFF">mdi-email-outline</MIcon>
+                                                    <div class="h6 pt-10" style="color:#FAFAFA">@T("DisplayName.ReceiverType.Broadcast")</div>
+                                                }
+                                                else
+                                                {
+                                                    <MIcon Size=40 Color="#323D6F">mdi-email</MIcon>
+                                                    <div class="h6 pt-10 regular--text">@T("DisplayName.ReceiverType.Broadcast")</div>
+                                                }
+                                            </MCard>
+                                        </MHover>
+                                    </MCol>
+                                </MRow>
+                            </MContainer>
+                        }
+                    </ElevationTabItem>
+                    <ElevationTabItem>
                         <MInput @bind-Value="_model.SendRules" />
                         <MessageSendingRules Class="mt-2" @bind-Value="_model.SendRules" />
                     </ElevationTabItem>
@@ -132,7 +132,13 @@
             </MForm>
         </ChildContent>
         <ActionContent>
-            @if (_tabIndex == 1)
+            @if (_tabIndex == 0)
+            {
+                <MSpacer></MSpacer>
+                <MButton Color="fill" Class="btn-form btn-fill-line rounded-3 emphasis2--text" OnClick="async() => await HandleOkAsync(true)">@T("Save")</MButton>
+                <MButton Color="primary" Class="btn-form ml-6" OnClick="()=> _tabIndex=1">@T("NextStep")</MButton>
+            }
+            @if (_tabIndex == 1 && _model.ReceiverType != default)
             {
                 <MIcon Size="24" Color="emphasis2" OnClick="()=> _tabIndex=0">mdi-keyboard-backspace</MIcon>
                 <MSpacer></MSpacer>
