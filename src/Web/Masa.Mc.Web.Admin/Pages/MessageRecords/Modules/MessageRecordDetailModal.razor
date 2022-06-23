@@ -24,8 +24,8 @@
                         </OppositeContent>
                         <ChildContent>
                             <div class="ml-n5">
-                                <div class="caption regular--text">@(_messageTaskHistory.SendRules.SendTime?.ToString(T("$DateFormat"))??_messageTaskHistory.SendTime?.ToString(T("$DateFormat")))</div>
-                                <div class="overline regular3--text">@(_messageTaskHistory.SendRules.SendTime?.ToString(T("$TimeFormat"))??_messageTaskHistory.SendTime?.ToString(T("$TimeFormat")))</div>
+                                <div class="caption regular--text">@(_messageTask.SendRules.SendTime?.ToString(T("$DateFormat"))??_messageTask.SendTime?.ToString(T("$DateFormat")))</div>
+                                <div class="overline regular3--text">@(_messageTask.SendRules.SendTime?.ToString(T("$TimeFormat"))??_messageTask.SendTime?.ToString(T("$TimeFormat")))</div>
                             </div>
                         </ChildContent>
                     </MTimelineItem>

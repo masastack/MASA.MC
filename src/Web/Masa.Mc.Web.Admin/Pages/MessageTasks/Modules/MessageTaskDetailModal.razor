@@ -80,13 +80,13 @@
                     }
                     @if (_info.EntityType == MessageEntityTypes.Template)
                     {
-                        <TemplateMessageInfo MessageTemplateId="_info.EntityId" MessageTask="_info" Variables="_historyInfo.Variables"></TemplateMessageInfo>
+                        <TemplateMessageInfo MessageTemplateId="_info.EntityId" MessageTask="_info" Variables="_info.Variables"></TemplateMessageInfo>
                     }
 
                     <div class="subtitle2 emphasis2--text mt-8">@T("DisplayName.MessageTaskReceiver")</div>
                     <dl class="mt-8">
                         <dt class="overline regular3--text">@T("DisplayName.ReceiverType")</dt>
-                        <dd class="body2 emphasis2--text mt-1">@T($"DisplayName.ReceiverType.{_historyInfo.ReceiverType.ToString()}")</dd>
+                        <dd class="body2 emphasis2--text mt-1">@T($"DisplayName.ReceiverType.{_info.ReceiverType.ToString()}")</dd>
                     </dl>
                 </div>
 

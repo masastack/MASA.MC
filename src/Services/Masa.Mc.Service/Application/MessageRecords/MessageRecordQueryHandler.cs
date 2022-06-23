@@ -6,13 +6,13 @@ namespace Masa.Mc.Service.Admin.Application.MessageRecords;
 public class MessageRecordQueryHandler
 {
     private readonly IMessageRecordRepository _repository;
-    private readonly IMessageTaskHistoryRepository _messageTaskHistoryRepository;
+    private readonly IMessageTaskRepository _messageTaskRepository;
 
     public MessageRecordQueryHandler(IMessageRecordRepository repository
-        , IMessageTaskHistoryRepository messageTaskHistoryRepository)
+        , IMessageTaskRepository messageTaskRepository)
     {
         _repository = repository;
-        _messageTaskHistoryRepository = messageTaskHistoryRepository;
+        _messageTaskRepository = messageTaskRepository;
     }
 
     [EventHandler]
@@ -66,10 +66,10 @@ public class MessageRecordQueryHandler
     {
         foreach (var item in dtos)
         {
-            var taskHistory = await _messageTaskHistoryRepository.FindAsync(x => x.Id == item.MessageTaskHistoryId);
-            if (taskHistory != null)
+            var task = await _messageTaskRepository.FindAsync(x => x.Id == item.MessageTaskHistoryId);
+            if (task != null)
             {
-                var expectSendTime= taskHistory.SendRules.GetProperty<DateTimeOffset?>(nameof(SendRuleDto.SendTime));
+                var expectSendTime= task.SendRules.GetProperty<DateTimeOffset?>(nameof(SendRuleDto.SendTime));
                 item.ExpectSendTime = expectSendTime;
             }
         }

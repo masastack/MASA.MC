@@ -26,7 +26,7 @@ public class SendWebsiteMessageEventHandler
     {
         var taskHistory = eto.MessageTaskHistory;
         var userIds = new List<string>();
-        if (taskHistory.ReceiverType == ReceiverTypes.Assign)
+        if (taskHistory.MessageTask.ReceiverType == ReceiverTypes.Assign)
         {
             foreach (var item in taskHistory.ReceiverUsers)
             {
@@ -40,12 +40,12 @@ public class SendWebsiteMessageEventHandler
         await _messageTaskHistoryRepository.UnitOfWork.SaveChangesAsync();
         await _messageTaskHistoryRepository.UnitOfWork.CommitAsync();
 
-        if (taskHistory.ReceiverType == ReceiverTypes.Broadcast)
+        if (taskHistory.MessageTask.ReceiverType == ReceiverTypes.Broadcast)
         {
             var singalRGroup = _hubContext.Clients.Group("Global");
             await singalRGroup.SendAsync(SignalRMethodConsts.CHECK_NOTIFICATION);
         }
-        if (taskHistory.ReceiverType == ReceiverTypes.Assign)
+        if (taskHistory.MessageTask.ReceiverType == ReceiverTypes.Assign)
         {
             var onlineClients = _hubContext.Clients.Users(userIds);
             await onlineClients.SendAsync(SignalRMethodConsts.GET_NOTIFICATION);

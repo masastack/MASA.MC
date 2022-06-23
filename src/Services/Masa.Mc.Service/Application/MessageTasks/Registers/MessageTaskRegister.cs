@@ -12,8 +12,7 @@ namespace Masa.Mc.Service.Admin.Application.MessageTasks.Registers
                 .Map(dest => dest.SendRules, src => ExtensionPropertyHelper.ConvertToType<SendRuleDto>(src.SendRules));
             config.ForType<MessageTaskUpsertDto, MessageTask>().MapToConstructor(true)
                 .Map(dest => dest.SendRules, src => ExtensionPropertyHelper.ObjMapToExtraProperty(src.SendRules));
-            config.ForType<MessageTaskHistory, MessageTaskHistoryDto>().MapToConstructor(true)
-                .Map(dest => dest.SendRules, src => ExtensionPropertyHelper.ConvertToType<SendRuleDto>(src.SendRules));
+            config.ForType<MessageTaskHistory, MessageTaskHistoryDto>().MapToConstructor(true);
         }
     }
 }
