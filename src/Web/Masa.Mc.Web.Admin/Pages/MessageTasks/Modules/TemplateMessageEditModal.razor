@@ -61,9 +61,9 @@
                                 <MRow Class="mt-6">
                                     <MCol>
                                         <DefaultTextField @bind-Value="_messageInfo.JumpUrl"
-                                                  Label="@T("DisplayName.MessageTemplateJumpUrl")">
+                                                  Label="@T("DisplayName.MessageTemplateJumpUrl")" Disabled>
                                             <PrependContent>
-                                                <MCheckbox Class="mt-0" @bind-Value="_messageInfo.IsJump"></MCheckbox>
+                                                <MCheckbox Class="mt-0" @bind-Value="_messageInfo.IsJump" Disabled></MCheckbox>
                                             </PrependContent>
                                         </DefaultTextField>
                                     </MCol>

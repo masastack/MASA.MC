@@ -51,5 +51,10 @@ public partial class SubjectAutoComplete : AdminCompontentBase
         var list = Items.Where(x => value.Contains(x.SubjectId)).ToList();
         SubjectSelect = list;
     }
+
+    public void ResetForm()
+    {
+        Items = new();
+    }
 }
 
