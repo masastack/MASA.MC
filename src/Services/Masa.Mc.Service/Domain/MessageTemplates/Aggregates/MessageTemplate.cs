@@ -102,6 +102,6 @@ public class MessageTemplate : FullAggregateRoot<Guid, Guid>
     public virtual void SetJump(bool isJump, string jumpUrl)
     {
         IsJump = isJump;
-        JumpUrl = isJump ? jumpUrl : string.Empty;
+        JumpUrl = jumpUrl;
     }
 }

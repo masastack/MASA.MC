@@ -7,7 +7,7 @@ public class ChannelUpsertDtoValidator : AbstractValidator<ChannelUpsertDto>
 {
     public ChannelUpsertDtoValidator()
     {
-        RuleFor(inputDto => inputDto.DisplayName).Required().Length(2, 50);
+        RuleFor(inputDto => inputDto.DisplayName).Required().ChineseLetterNumber().Length(2, 50);
         RuleFor(inputDto => inputDto.Code).Required().Length(2, 50);
         RuleFor(inputDto => inputDto.Type).IsInEnum();
         RuleFor(inputDto => inputDto.Description).Length(0, 255);

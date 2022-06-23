@@ -10,11 +10,14 @@
             </MListItemIcon>
         </MListItem>
     </MCardTitle>
-    <MCardText class="flex-grow-1 px-0 d-flex flex-column justify-center align-center">
-        <div class="h6 emphasis--text">@Channel.DisplayName</div>
-        <div class="caption regular3--text">@Channel.Code</div>
+    <MCardText class="flex-grow-1 px-0 d-flex flex-column justify-center align-center px-12 text-center">
+        <div class="h6 emphasis--text text-truncate full-width">@Channel.DisplayName</div>
+        <div class="caption regular3--text text-truncate full-width">@Channel.Code</div>
     </MCardText>
-    <div class="fill-hover caption px-2 py-1 regular2--text text-justify line-clamp-2 rounded-lg" style="height:44px">@Channel.Description</div>
+    @if (!string.IsNullOrEmpty(Channel.Description))
+    {
+        <div class="fill-hover caption px-2 py-1 regular2--text text-justify line-clamp-2 rounded-lg" style="height:44px;line-height:19px">@Channel.Description</div>
+    }
     <MCardActions class="px-3 pb-3">
         <MSpacer />
         <span class="caption regular3--text">@Channel.ModifierName @Channel.ModificationTime.Humanize(culture:new CultureInfo(I18n.CurrentLanguage)) </span>

@@ -1,33 +1,31 @@
 ﻿@inherits AdminCompontentBase
 <div @ref="Ref">
-    <McModal Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.EditReceiverGroup")" Height=900>
-        <MForm Model="_model" EnableValidation Class="full-height">
-            <div class="full-height flex-column">
-                <div class="flex-height-auto flex-grow-1">
-                    <MRow Class="mt-6">
-                        <MCol>
-                            <DefaultTextField @bind-Value="_model.DisplayName"
-                                              Label="@T("DisplayName.ReceiverGroupDisplayName")">
-                            </DefaultTextField>
-                        </MCol>
-                    </MRow>
-                    <ReceiverSelect @bind-Value="_model.Items"></ReceiverSelect>
-                    <MRow Class="mt-6">
-                        <MCol>
-                            <MTextarea @bind-Value="_model.Description"
-                                       Label="@T("DisplayName.ReceiverGroupDescription")"
-                                       Outlined
-                                       HideDetails="@("auto")">
-                            </MTextarea>
-                        </MCol>
-                    </MRow>
-                </div>
-                <div Class="d-flex mt-6">
-                    <MIcon Size="24" Color="error" OnClick="HandleDel">mdi-delete</MIcon>
-                    <MSpacer></MSpacer>
-                    <MButton Color="primary" Class="btn-form" OnClick="async() => await HandleOk(context)">@T("Save")</MButton>
-                </div>
-            </div>
-        </MForm>
+    <McModal Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.EditReceiverGroup")">
+        <ChildContent>
+            <MForm Model="_model" EnableValidation @ref="_form" Class="full-height">
+                <MRow>
+                    <MCol Class="pt-0 mt-2">
+                        <DefaultTextField @bind-Value="_model.DisplayName"
+                                          Label="@T("DisplayName.ReceiverGroupDisplayName")">
+                        </DefaultTextField>
+                    </MCol>
+                </MRow>
+                <ReceiverSelect @ref="_ReceiverSelect" @bind-Value="_model.Items"></ReceiverSelect>
+                <MRow Class="mt-6">
+                    <MCol>
+                        <MTextarea @bind-Value="_model.Description"
+                                   Label="@T("DisplayName.ReceiverGroupDescription")"
+                                   Outlined
+                                   HideDetails="@("auto")">
+                        </MTextarea>
+                    </MCol>
+                </MRow>
+            </MForm>
+        </ChildContent>
+        <ActionContent>
+            <MIcon Size="24" Color="error" Class="align-self-center" OnClick="HandleDel">mdi-delete</MIcon>
+            <MSpacer></MSpacer>
+            <MButton Color="primary" Class="btn-form" OnClick="async() => await HandleOk()">@T("Save")</MButton>
+        </ActionContent>
     </McModal>
 </div>

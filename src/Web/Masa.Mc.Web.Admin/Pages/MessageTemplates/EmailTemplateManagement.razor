@@ -11,24 +11,6 @@
                     <DateRangePicker @bind-StartTime="_queryParam.StartTime" @bind-EndTime="_queryParam.EndTime" OnChange="RefreshAsync" />
                 </MCol>
                 <MCol Md="2">
-                    <MSelect @bind-Value="@_queryParam.TemplateType"
-                         Items="@(GetEnumList<SmsTemplateTypes>())"
-                         Label="@T("DisplayName.MessageTemplateTemplateType")"
-                         ItemText="@(item => T($"DisplayName.SmsTemplateType.{item.ToString()}"))"
-                         ItemValue="item => (int)item"
-                         Dense
-                         Solo
-                         Clearable
-                         HideDetails="@("auto")"
-                         TItem="SmsTemplateTypes"
-                         TItemValue="int"
-                         TValue="int"
-                         Class="fill-card body2"
-                         OnClearClick="RefreshAsync"
-                         OnSelectedItemUpdate="RefreshAsync">
-                    </MSelect>
-                </MCol>
-                <MCol Md="2">
                     <MSelect @bind-Value="_queryParam.ChannelId"
                          Items="@_channelItems"
                          Label="@T("DisplayName.Channel")"
@@ -56,7 +38,7 @@
                 @(!advanced?"mdi-filter":"mdi-filter-off")
             </MIcon>
         </div>
-        <MButton Color="primary" Class="ml-6 rounded-lg btn small-btn" OnClick="()=> _createModal.OpenModalAsync(ChannelTypes.Email)">
+        <MButton Color="primary" Class="ml-6 rounded-lg btn small-btn" OnClick="()=> _createModal.OpenModalAsync()">
             <span>@T("Permission.Create")</span>
         </MButton>
     </div>

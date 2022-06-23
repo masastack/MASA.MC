@@ -6,12 +6,12 @@
                 <MStepper Value="_step" Class="full-height" Style="box-shadow:none">
                     <MStepperItems Class="full-height">
                         <MStepperContent Step="1" Class="pa-0">
-                            <MContainer Fluid Class="pt-15 px-1">
+                            <MContainer Fluid Class="pt-6 px-1">
+                                <div class="subtitle3 regular--text mb-8">@T("Description.Channel.Type.Required")</div>
                                 <MRow Align="AlignTypes.Center" Justify="JustifyTypes.Center">
                                     <MCol Md="4">
                                         <MHover>
                                             <MCard @attributes="context.Attrs" Height="208" Width="208" Class="@($"d-flex flex-column justify-center align-center {context.Class} {(context.Hover ? "primary" : "fill-background")}")"
-                                                   Elevation="@(context.Hover ? 12 : 2)"
                                                    OnClick="()=> HandleSelectType(ChannelTypes.Sms)">
                                                 @if (context.Hover)
                                                 {
@@ -29,7 +29,6 @@
                                     <MCol Md="4">
                                         <MHover>
                                             <MCard @attributes="context.Attrs" Height="208" Width="208" Class="@($"d-flex flex-column justify-center align-center {context.Class} {(context.Hover ? "primary" : "fill-background")}")"
-                                                   Elevation="@(context.Hover ? 12 : 2)"
                                                    OnClick="()=>HandleSelectType(ChannelTypes.Email)">
                                                 @if (context.Hover)
                                                 {
@@ -47,7 +46,6 @@
                                     <MCol Md="4">
                                         <MHover>
                                             <MCard @attributes="context.Attrs" Height="208" Width="208" Class="@($"d-flex flex-column justify-center align-center {context.Class} {(context.Hover ? "primary" : "fill-background")}")"
-                                                   Elevation="@(context.Hover ? 12 : 2)"
                                                    OnClick="()=>HandleSelectType(ChannelTypes.WebsiteMessage)">
                                                 @if (context.Hover)
                                                 {
@@ -66,9 +64,7 @@
                             </MContainer>
                         </MStepperContent>
                         <MStepperContent Step="2" Class="pa-0 full-height">
-                            <div class="full-height flex-column">
-                                <div class="flex-height-auto flex-grow-1">
-                                    <MRow Class="mt-6">
+                                    <MRow>
                                         <MCol>
                                             <DefaultTextField @bind-Value="_model.DisplayName"
                                                               Label="@T("DisplayName.ChannelDisplayName")">
@@ -94,17 +90,15 @@
                                             </MTextarea>
                                         </MCol>
                                     </MRow>
-                                </div>
-                                <div class="d-flex">
-                                    <MIcon Size="24" Color="emphasis2"  OnClick="()=> _step-- ">mdi-keyboard-backspace</MIcon>
-                                    <MSpacer></MSpacer>
-                                    <MButton Color="primary" Class="btn-form" OnClick="HandleOkAsync">@T("Submit")</MButton>
-                                </div>
-                            </div>
                         </MStepperContent>
                     </MStepperItems>
                 </MStepper>
             </MForm>
         </ChildContent>
+        <ActionContent>
+            <MIcon Size="24" Color="emphasis2" OnClick="()=> _step-- ">mdi-keyboard-backspace</MIcon>
+            <MSpacer></MSpacer>
+            <MButton Color="primary" Class="btn-form" OnClick="HandleOkAsync">@T("Submit")</MButton>
+        </ActionContent>
     </McModal>
 </div>

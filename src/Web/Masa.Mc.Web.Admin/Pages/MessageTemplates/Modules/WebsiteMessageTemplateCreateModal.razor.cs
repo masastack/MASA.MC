@@ -12,19 +12,15 @@ public partial class WebsiteMessageTemplateCreateModal : AdminCompontentBase
     private MessageTemplateUpsertDto _model = new();
     private bool _visible;
     private List<ChannelDto> _channelItems = new();
-    private ChannelTypes _channelType;
 
     ChannelService ChannelService => McCaller.ChannelService;
 
     MessageTemplateService MessageTemplateService => McCaller.MessageTemplateService;
 
-    public async Task OpenModalAsync(ChannelTypes? channelType)
+    public async Task OpenModalAsync()
     {
-        if (channelType.HasValue)
-        {
-            _channelType = channelType.Value;
-            await HandleSelectChannelTypeAsync(_channelType);
-        }
+        _model.ChannelType = ChannelTypes.WebsiteMessage;
+        await HandleSelectChannelTypeAsync(_model.ChannelType);
         await InvokeAsync(() =>
         {
             _visible = true;
@@ -32,10 +28,10 @@ public partial class WebsiteMessageTemplateCreateModal : AdminCompontentBase
         });
     }
 
-    private void HandleCancel()
+    private async Task HandleCancel()
     {
         _visible = false;
-        ResetForm();
+        await ResetForm();
     }
 
     private async Task HandleOkAsync()
@@ -50,21 +46,22 @@ public partial class WebsiteMessageTemplateCreateModal : AdminCompontentBase
         Loading = false;
         await SuccessMessageAsync(T("MessageTemplateCreateMessage"));
         _visible = false;
-        ResetForm();
+        await ResetForm();
         if (OnOk.HasDelegate)
         {
             await OnOk.InvokeAsync();
         }
     }
 
-    private void ResetForm()
+    private async Task ResetForm()
     {
         _model = new();
+        await _form.ResetValidationAsync();
     }
 
-    private void HandleVisibleChanged(bool val)
+    private async Task HandleVisibleChanged(bool val)
     {
-        if (!val) HandleCancel();
+        if (!val) await HandleCancel();
     }
 
     private async Task HandleSelectChannelTypeAsync(ChannelTypes Type)

@@ -14,7 +14,6 @@ public partial class SmsTemplateEditModal : AdminCompontentBase
     private bool _visible;
     private List<ChannelDto> _channelItems = new();
     private List<SmsTemplateDto> _templateItems = new();
-    private ChannelTypes _channelType;
 
     ChannelService ChannelService => McCaller.ChannelService;
 
@@ -40,14 +39,14 @@ public partial class SmsTemplateEditModal : AdminCompontentBase
         var dto = await MessageTemplateService.GetAsync(_entityId);
         _model = dto.Adapt<MessageTemplateUpsertDto>();
         _templateItems = await SmsTemplateService.GetListByChannelIdAsync(_model.ChannelId);
-        _channelType = dto.Channel.Type;
-        await HandleSelectChannelTypeAsync(_channelType);
+        _model.ChannelType = dto.Channel.Type;
+        await HandleSelectChannelTypeAsync(_model.ChannelType);
     }
 
-    private void HandleCancel()
+    private async Task HandleCancel()
     {
         _visible = false;
-        ResetForm();
+        await ResetForm();
     }
 
     private async Task HandleOkAsync()
@@ -61,7 +60,7 @@ public partial class SmsTemplateEditModal : AdminCompontentBase
         Loading = false;
         await SuccessMessageAsync(T("MessageTemplateEditMessage"));
         _visible = false;
-        ResetForm();
+        await ResetForm();
         if (OnOk.HasDelegate)
         {
             await OnOk.InvokeAsync();
@@ -80,21 +79,22 @@ public partial class SmsTemplateEditModal : AdminCompontentBase
         Loading = false;
         await SuccessMessageAsync(T("MessageTemplateDeleteMessage"));
         _visible = false;
-        ResetForm();
+        await ResetForm();
         if (OnOk.HasDelegate)
         {
             await OnOk.InvokeAsync();
         }
     }
 
-    private void ResetForm()
+    private async Task ResetForm()
     {
         _model = new();
+        await _form.ResetValidationAsync();
     }
 
-    private void HandleVisibleChanged(bool val)
+    private async Task HandleVisibleChanged(bool val)
     {
-        if (!val) HandleCancel();
+        if (!val) await HandleCancel();
     }
 
     private async Task HandleSelectChannelTypeAsync(ChannelTypes Type)
@@ -140,13 +140,5 @@ public partial class SmsTemplateEditModal : AdminCompontentBase
         await SmsTemplateService.SyncAsync(new SmsTemplateSyncInputDto(_model.ChannelId));
         _templateItems = await SmsTemplateService.GetListByChannelIdAsync(_model.ChannelId);
         Loading = false;
-    }
-
-    private void HandleTemplateItemChanged(MessageTemplateItemChangedEventArgs args)
-    {
-        string startstr = "${"; 
-        string endstr = "}";
-        _model.Title = _model.Title.Replace($"{startstr}{args.OldCode}{endstr}", $"{startstr}{args.NewCode}{endstr}");
-        _model.Content = _model.Content.Replace($"{startstr}{args.OldCode}{endstr}", $"{startstr}{args.NewCode}{endstr}");
     }
 }

@@ -23,6 +23,7 @@ public partial class ChannelCreateModal : AdminCompontentBase
     public async Task OpenModalAsync()
     {
         _model.Type = ChannelTypes.Sms;
+        _model.Color = _colors[0];
         await InvokeAsync(() =>
         {
             _visible = true;
@@ -30,25 +31,15 @@ public partial class ChannelCreateModal : AdminCompontentBase
         });
     }
 
-    private void HandleCancel()
+    private async Task HandleCancel()
     {
         _visible = false;
-        ResetForm();
+        await ResetForm();
     }
 
     private void HandleSelectType(ChannelTypes Type)
     {
         _model.Type = Type;
-        _step++;
-    }
-
-    private async Task HandleNextStepAsync()
-    {
-        if (_model.Type == default)
-        {
-            await WarningAsync(T("Description.Channel.Type.Required"));
-            return;
-        }
         _step++;
     }
 
@@ -64,21 +55,22 @@ public partial class ChannelCreateModal : AdminCompontentBase
         Loading = false;
         await SuccessMessageAsync(T("ChannelCreateMessage"));
         _visible = false;
-        ResetForm();
+        await ResetForm();
         if (OnOk.HasDelegate)
         {
             await OnOk.InvokeAsync();
         }
     }
 
-    private void ResetForm()
+    private async Task ResetForm()
     {
         _step = 1;
         _model = new();
+        await _form.ResetValidationAsync();
     }
 
-    private void HandleVisibleChanged(bool val)
+    private async Task HandleVisibleChanged(bool val)
     {
-        if (!val) HandleCancel();
+        if (!val) await HandleCancel();
     }
 }

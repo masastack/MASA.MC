@@ -13,7 +13,6 @@ public partial class WebsiteMessageTemplateEditModal : AdminCompontentBase
     private Guid _entityId;
     private bool _visible;
     private List<ChannelDto> _channelItems = new();
-    private ChannelTypes _channelType;
 
     ChannelService ChannelService => McCaller.ChannelService;
 
@@ -35,14 +34,14 @@ public partial class WebsiteMessageTemplateEditModal : AdminCompontentBase
     {
         var dto = await MessageTemplateService.GetAsync(_entityId);
         _model = dto.Adapt<MessageTemplateUpsertDto>();
-        _channelType = dto.Channel.Type;
-        await HandleSelectChannelType(_channelType);
+        _model.ChannelType = dto.Channel.Type;
+        await HandleSelectChannelType(_model.ChannelType);
     }
 
-    private void HandleCancel()
+    private async Task HandleCancel()
     {
         _visible = false;
-        ResetForm();
+        await ResetForm();
     }
 
     private async Task HandleOk()
@@ -57,7 +56,7 @@ public partial class WebsiteMessageTemplateEditModal : AdminCompontentBase
         Loading = false;
         await SuccessMessageAsync(T("MessageTemplateEditMessage"));
         _visible = false;
-        ResetForm();
+        await ResetForm();
         if (OnOk.HasDelegate)
         {
             await OnOk.InvokeAsync();
@@ -76,21 +75,22 @@ public partial class WebsiteMessageTemplateEditModal : AdminCompontentBase
         Loading = false;
         await SuccessMessageAsync(T("MessageTemplateDeleteMessage"));
         _visible = false;
-        ResetForm();
+        await ResetForm();
         if (OnOk.HasDelegate)
         {
             await OnOk.InvokeAsync();
         }
     }
 
-    private void ResetForm()
+    private async Task ResetForm()
     {
         _model = new();
+        await _form.ResetValidationAsync();
     }
 
-    private void HandleVisibleChanged(bool val)
+    private async Task HandleVisibleChanged(bool val)
     {
-        if (!val) HandleCancel();
+        if (!val) await HandleCancel();
     }
 
     private async Task HandleSelectChannelType(ChannelTypes Type)

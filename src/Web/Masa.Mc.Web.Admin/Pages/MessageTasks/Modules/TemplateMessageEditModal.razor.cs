@@ -56,10 +56,10 @@ public partial class TemplateMessageEditModal : AdminCompontentBase
         _messageInfo = await MessageTemplateService.GetAsync(_model.EntityId) ?? new();
     }
 
-    private void HandleCancel()
+    private async Task HandleCancel()
     {
         _visible = false;
-        ResetForm();
+        await ResetForm();
     }
 
     private async Task HandleOkAsync(bool isDraft)
@@ -76,42 +76,24 @@ public partial class TemplateMessageEditModal : AdminCompontentBase
         Loading = false;
         await SuccessMessageAsync(T("MessageTaskEditMessage"));
         _visible = false;
-        ResetForm();
+        await ResetForm();
         if (OnOk.HasDelegate)
         {
             await OnOk.InvokeAsync();
         }
     }
 
-    private async Task HandleDelAsync()
-    {
-        await ConfirmAsync(T("DeletionConfirmationMessage"), DeleteAsync);
-    }
-
-    private async Task DeleteAsync()
-    {
-        Loading = true;
-        await MessageTaskService.DeleteAsync(_entityId);
-        Loading = false;
-        await SuccessMessageAsync(T("MessageTaskDeleteMessage"));
-        _visible = false;
-        ResetForm();
-        if (OnOk.HasDelegate)
-        {
-            await OnOk.InvokeAsync();
-        }
-    }
-
-    private void ResetForm()
+    private async Task ResetForm()
     {
         _model = new();
         _selectReceivers = new();
         _importReceivers = new();
+        await _form.ResetValidationAsync();
     }
 
-    private void HandleVisibleChanged(bool val)
+    private async Task HandleVisibleChanged(bool val)
     {
-        if (!val) HandleCancel();
+        if (!val) await HandleCancel();
     }
 
     private void HandleTemplateSelected(MessageTemplateDto item)

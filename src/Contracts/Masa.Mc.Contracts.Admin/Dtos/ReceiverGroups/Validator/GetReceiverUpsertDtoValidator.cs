@@ -8,5 +8,6 @@ public class ReceiverGroupUpsertDtoValidator : AbstractValidator<ReceiverGroupUp
     public ReceiverGroupUpsertDtoValidator()
     {
         RuleFor(inputDto => inputDto.DisplayName).Required().Length(2, 50).ChineseLetterNumber();
+        RuleFor(inputDto => inputDto.Items).Required();
     }
 }

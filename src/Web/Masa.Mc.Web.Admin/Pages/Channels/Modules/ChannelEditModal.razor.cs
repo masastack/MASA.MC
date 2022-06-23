@@ -39,10 +39,10 @@ public partial class ChannelEditModal : AdminCompontentBase
         _model = dto.Adapt<ChannelUpsertDto>();
     }
 
-    private void HandleCancel()
+    private async Task HandleCancel()
     {
         _visible = false;
-        ResetForm();
+        await ResetForm();
     }
 
     private async Task HandleOk()
@@ -56,7 +56,7 @@ public partial class ChannelEditModal : AdminCompontentBase
         await ChannelService.UpdateAsync(_entityId, _model);
         Loading = false;
         _visible = false;
-        ResetForm();
+        await ResetForm();
         await SuccessMessageAsync(T("ChannelEditMessage"));
         if (OnOk.HasDelegate)
         {
@@ -75,19 +75,20 @@ public partial class ChannelEditModal : AdminCompontentBase
         Loading = false;
         await SuccessMessageAsync(T("ChannelDeleteMessage"));
         _visible = false;
-        ResetForm();
+        await ResetForm();
         if (OnOk.HasDelegate)
         {
             await OnOk.InvokeAsync();
         }
     }
-    private void ResetForm()
+    private async Task ResetForm()
     {
         _model = new();
+        await _form.ResetValidationAsync();
     }
 
-    private void HandleVisibleChanged(bool val)
+    private async Task HandleVisibleChanged(bool val)
     {
-        if (!val) HandleCancel();
+        if (!val) await HandleCancel();
     }
 }
