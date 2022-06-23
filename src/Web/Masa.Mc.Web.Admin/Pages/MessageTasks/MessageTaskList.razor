@@ -4,7 +4,7 @@
     <div class="fill rounded-2 d-flex justify-center align-center px-6 py-3 mb-6" style="height:56px">
         <MButton Ripple=false Plain IsActive Class="emphasis2--text h6 primary--text" OnClick="NavigateToSend"><MIcon Size=22 Left>mdi-message</MIcon>@T("Permission.SendMessage")</MButton>
     </div>
-    <div class="ma-0" style="height:40px">
+    <div class="ma-0 search-panel">
         @if (advanced)
         {
             <div class="fold">
@@ -73,7 +73,7 @@
                 </MRow>
             </div>
         }
-        <div class="d-flex float-right @(!advanced?"full-width":"")">
+        <div class="d-flex search-panel-right @(isAnimate?"animate__animated":"") @(!advanced?"animate__searchOpen":"animate__searchShrink")"> 
             <DefaultSearch @bind-Value="_queryParam.Filter" Clearable Class="rounded-2 search" Placeholder="@T("Search")" Dense OnEnter="RefreshAsync" OnClearClick="HandleClearAsync" />
             <div @onclick="ToggleAdvanced" class="ml-6 d-flex button fill">
                 <MIcon Class="ma-auto" Color="emphasis2" Size=20>

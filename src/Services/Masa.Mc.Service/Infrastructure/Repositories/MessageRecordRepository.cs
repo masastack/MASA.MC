@@ -32,4 +32,9 @@ public class MessageRecordRepository : Repository<McDbContext, MessageRecord>, I
     {
         return await Context.Set<MessageRecord>().AnyAsync(x => x.MessageTaskHistoryId == taskHistoryId && x.UserId == userId);
     }
+
+    public async Task<bool> AnyAsync(Expression<Func<MessageRecord, bool>> predicate)
+    {
+        return await Context.Set<MessageRecord>().AnyAsync(predicate);
+    }
 }

@@ -13,6 +13,7 @@ public partial class EmailTemplateManagement : AdminCompontentBase
     private PaginatedListDto<MessageTemplateDto> _entities = new();
     private List<ChannelDto> _channelItems = new();
     private bool advanced = true;
+    private bool isAnimate;
 
     ChannelService ChannelService => McCaller.ChannelService;
 
@@ -54,14 +55,6 @@ public partial class EmailTemplateManagement : AdminCompontentBase
         await LoadData();
     }
 
-    private async Task SearchKeyDown(KeyboardEventArgs eventArgs)
-    {
-        if (eventArgs.Key == "Enter")
-        {
-            await RefreshAsync();
-        }
-    }
-
     private async Task RefreshAsync()
     {
         _queryParam.Page = 1;
@@ -84,5 +77,6 @@ public partial class EmailTemplateManagement : AdminCompontentBase
     private void ToggleAdvanced()
     {
         advanced = !advanced;
+        isAnimate = true;
     }
 }

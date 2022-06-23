@@ -36,6 +36,8 @@ public class SendSmsMessageEventHandler
         using (_aliyunSmsAsyncLocal.Change(options))
         {
             var taskHistory = eto.MessageTaskHistory;
+            int okCount = 0;
+            int totalCount = taskHistory.ReceiverUsers.Count;
             foreach (var item in taskHistory.ReceiverUsers)
             {
                 var messageRecord = new MessageRecord(item.UserId, channel.Id, taskHistory.MessageTaskId, taskHistory.Id, item.Variables);
@@ -50,6 +52,7 @@ public class SendSmsMessageEventHandler
                     if (response.Success)
                     {
                         messageRecord.SetResult(true, string.Empty);
+                        okCount++;
                     }
                     else
                     {
@@ -62,7 +65,7 @@ public class SendSmsMessageEventHandler
                 }
                 await _messageRecordRepository.AddAsync(messageRecord);
             }
-            taskHistory.SetComplete();
+            taskHistory.SetResult(okCount == totalCount ? MessageTaskHistoryStatuses.Success : (okCount > 0 ? MessageTaskHistoryStatuses.PartialFailure : MessageTaskHistoryStatuses.Fail));
             await _messageTaskHistoryRepository.UpdateAsync(taskHistory);
         }
     }

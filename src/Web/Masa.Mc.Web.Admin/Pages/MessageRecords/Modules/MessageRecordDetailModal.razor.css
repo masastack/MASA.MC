@@ -1,0 +1,8 @@
+﻿.record-detail-left {
+    width: 428px;
+}
+
+.record-detail-right {
+    padding: 72px 114px;
+    width: calc(100% - 428px);
+}

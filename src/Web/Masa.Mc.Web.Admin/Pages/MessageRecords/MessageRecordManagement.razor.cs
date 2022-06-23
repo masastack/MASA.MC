@@ -13,6 +13,7 @@ public partial class MessageRecordManagement : AdminCompontentBase
     private List<ChannelDto> _channelItems = new();
     private bool advanced = true;
     private List<KeyValuePair<string, bool>> _successItems { get; set; } = new();
+    private bool isAnimate;
 
     ChannelService ChannelService => McCaller.ChannelService;
 
@@ -63,14 +64,6 @@ public partial class MessageRecordManagement : AdminCompontentBase
         await LoadData();
     }
 
-    private async Task SearchKeyDown(KeyboardEventArgs eventArgs)
-    {
-        if (eventArgs.Key == "Enter")
-        {
-            await RefreshAsync();
-        }
-    }
-
     private async Task RefreshAsync()
     {
         _queryParam.Page = 1;
@@ -93,5 +86,6 @@ public partial class MessageRecordManagement : AdminCompontentBase
     private void ToggleAdvanced()
     {
         advanced = !advanced;
+        isAnimate = true;
     }
 }
