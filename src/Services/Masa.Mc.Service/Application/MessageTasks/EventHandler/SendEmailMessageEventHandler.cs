@@ -43,7 +43,6 @@ public class SendEmailMessageEventHandler
         using (_emailAsyncLocal.Change(options))
         {
             var taskHistory = eto.MessageTaskHistory;
-            int errorCount = 0;
             int okCount = 0;
             int totalCount = taskHistory.ReceiverUsers.Count;
             foreach (var item in taskHistory.ReceiverUsers)
@@ -65,7 +64,6 @@ public class SendEmailMessageEventHandler
                 catch (Exception ex)
                 {
                     messageRecord.SetResult(false, ex.Message);
-                    errorCount++;
                 }
                 await _messageRecordRepository.AddAsync(messageRecord);
             }

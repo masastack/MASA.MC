@@ -36,7 +36,6 @@ public class SendSmsMessageEventHandler
         using (_aliyunSmsAsyncLocal.Change(options))
         {
             var taskHistory = eto.MessageTaskHistory;
-            int errorCount = 0;
             int okCount = 0;
             int totalCount = taskHistory.ReceiverUsers.Count;
             foreach (var item in taskHistory.ReceiverUsers)
@@ -58,13 +57,11 @@ public class SendSmsMessageEventHandler
                     else
                     {
                         messageRecord.SetResult(false, response.Message);
-                        errorCount++;
                     }
                 }
                 catch (Exception ex)
                 {
                     messageRecord.SetResult(false, ex.Message);
-                    errorCount++;
                 }
                 await _messageRecordRepository.AddAsync(messageRecord);
             }
