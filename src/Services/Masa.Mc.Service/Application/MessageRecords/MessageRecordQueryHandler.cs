@@ -69,8 +69,7 @@ public class MessageRecordQueryHandler
             var task = await _messageTaskRepository.FindAsync(x => x.Id == item.MessageTaskHistoryId);
             if (task != null)
             {
-                var expectSendTime= task.SendRules.GetProperty<DateTimeOffset?>(nameof(SendRuleDto.SendTime));
-                item.ExpectSendTime = expectSendTime;
+                item.ExpectSendTime = task.SendRules.SendTime;
             }
         }
     }

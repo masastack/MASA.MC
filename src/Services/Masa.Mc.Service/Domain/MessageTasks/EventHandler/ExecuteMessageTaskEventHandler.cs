@@ -31,13 +31,14 @@ public class ExecuteMessageTaskEventHandler
         await _messageTaskHistoryRepository.AddAsync(history);
         await _messageTaskHistoryRepository.UnitOfWork.SaveChangesAsync();
         var messageData = await _domainService.GetMessageDataAsync(eto.MessageTask.EntityType, eto.MessageTask.EntityId, eto.MessageTask.Variables);
-
+        history.SetSending();
         await SendMessagesAsync(eto.MessageTask.ChannelId, messageData, history);
     }
 
     private async Task SendMessagesAsync(Guid channelId, MessageData messageData, MessageTaskHistory messageTaskHistory)
     {
         var channel = await _channelRepository.FindAsync(x => x.Id == channelId);
+
         switch (channel.Type)
         {
             case ChannelTypes.Sms:

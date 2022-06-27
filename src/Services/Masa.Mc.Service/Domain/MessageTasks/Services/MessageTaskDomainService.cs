@@ -44,18 +44,15 @@ public class MessageTaskDomainService : DomainService
         }
     }
 
-    public virtual async Task SendAsync(Guid messageTaskId, ReceiverTypes receiverType, MessageTaskSelectReceiverTypes selectReceiverType, List<MessageTaskReceiver> receivers, ExtraPropertyDictionary sendRules, DateTimeOffset? sendTime, string sign, ExtraPropertyDictionary variables)
+    public virtual async Task SendAsync(Guid messageTaskId, List<MessageReceiverUser> receiverUsers)
     {
         var messageTask = await _repository.FindAsync(x => x.Id == messageTaskId);
         if (messageTask == null)
             throw new UserFriendlyException("messageTask not found");
         if (!messageTask.IsEnabled)
             throw new UserFriendlyException("cannot send when disabled");
-        //messageTask.SendTask(receiverType, receivers, selectReceiverType, sendRules, sign, variables);
-        await _repository.UpdateAsync(messageTask);
-        await _repository.UnitOfWork.SaveChangesAsync();
-        await EventBus.PublishAsync(new ExecuteMessageTaskEvent(messageTask, null));
-        //await EventBus.PublishAsync(new AddMessageTaskHistoryEvent(messageTask, receiverType, selectReceiverType, receivers, sendRules, sign, variables));
+
+        await EventBus.PublishAsync(new ExecuteMessageTaskEvent(messageTask, receiverUsers));
     }
 
     public virtual async Task<MessageData> GetMessageDataAsync(MessageEntityTypes entityType, Guid entityId, ExtraPropertyDictionary variables = null)

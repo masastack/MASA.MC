@@ -38,14 +38,6 @@ public class MessageTaskCommandHandler
     }
 
     [EventHandler]
-    public async Task SendAsync(SendMessageTaskCommand command)
-    {
-        var inputDto = command.inputDto;
-        var receivers = inputDto.Receivers.Adapt<List<MessageTaskReceiver>>();
-        await _domainService.SendAsync(inputDto.Id, inputDto.ReceiverType, inputDto.SelectReceiverType, receivers, ExtensionPropertyHelper.ObjMapToExtraProperty(inputDto.SendRules), inputDto.SendTime, inputDto.Sign, inputDto.Variables);
-    }
-
-    [EventHandler]
     public async Task SendTestAsync(SendTestMessageTaskCommand command)
     {
         var inputDto = command.inputDto;
@@ -56,8 +48,8 @@ public class MessageTaskCommandHandler
             throw new UserFriendlyException("please fill in the signature of the task first");
         if (entity.Variables.Any(x => string.IsNullOrEmpty(x.Value.ToString())))
             throw new UserFriendlyException("please fill in the signature template variable of the task first");
-        var receivers = inputDto.Receivers.Adapt<List<MessageTaskReceiver>>();
-        await _domainService.SendAsync(inputDto.Id, ReceiverTypes.Assign, entity.SelectReceiverType, receivers, new ExtraPropertyDictionary(), DateTimeOffset.Now, entity.Sign, entity.Variables);
+        var receiverUsers = inputDto.ReceiverUsers.Adapt<List<MessageReceiverUser>>();
+        await _domainService.SendAsync(inputDto.Id, receiverUsers);
     }
 
     [EventHandler]

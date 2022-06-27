@@ -73,7 +73,7 @@ public static class McDbContextModelBuilderExtensions
             b.Property(m => m.DisplayName).IsRequired().HasMaxLength(128);
             b.Property(m => m.Sign).HasMaxLength(128);
             b.Property(m => m.Receivers).HasConversion(new ReceiversValueConverter()).Metadata.SetValueComparer(new ReceiversValueComparer());
-            b.Property(m => m.SendRules).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
+            b.Property(m => m.SendRules).HasConversion(new JsonValueConverter<MessageTaskSendingRule>());
             b.Property(m => m.Variables).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
             b.Property(x => x.ReceiverUsers).HasConversion(new JsonValueConverter<List<MessageReceiverUser>>());
         });

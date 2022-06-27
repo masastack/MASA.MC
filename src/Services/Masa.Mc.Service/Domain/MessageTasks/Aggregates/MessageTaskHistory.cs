@@ -12,7 +12,7 @@ public class MessageTaskHistory : FullAggregateRoot<Guid, Guid>
 
     public string TaskHistoryNo { get; protected set; } = string.Empty;
 
-    public MessageTask MessageTask { get; protected set; }
+    public MessageTask MessageTask { get; protected set; } = default!;
 
     public MessageTaskHistoryStatuses Status { get; protected set; }
 
@@ -29,6 +29,22 @@ public class MessageTaskHistory : FullAggregateRoot<Guid, Guid>
         MessageTaskId = messageTaskId;
         TaskHistoryNo = taskHistoryNo;
         Status = MessageTaskHistoryStatuses.WaitSend;
+        ReceiverUsers = receiverUsers;
+    }
+
+    public MessageTaskHistory(Guid messageTaskId, string taskHistoryNo, MessageTaskHistoryStatuses status, DateTimeOffset? sendTime, DateTimeOffset? completionTime, DateTimeOffset? withdrawTime) : this(messageTaskId, taskHistoryNo, status, sendTime, completionTime, withdrawTime, new List<MessageReceiverUser>())
+    {
+
+    }
+
+    public MessageTaskHistory(Guid messageTaskId, string taskHistoryNo, MessageTaskHistoryStatuses status, DateTimeOffset? sendTime, DateTimeOffset? completionTime, DateTimeOffset? withdrawTime, List<MessageReceiverUser> receiverUsers)
+    {
+        MessageTaskId = messageTaskId;
+        TaskHistoryNo = taskHistoryNo;
+        Status = status;
+        SendTime = sendTime;
+        CompletionTime = completionTime;
+        WithdrawTime = withdrawTime;
         ReceiverUsers = receiverUsers;
     }
 
@@ -53,5 +69,6 @@ public class MessageTaskHistory : FullAggregateRoot<Guid, Guid>
     {
         Status = status;
         CompletionTime = DateTimeOffset.Now;
+        AddDomainEvent(new UpdateMessageTaskStatusEvent(MessageTaskId));
     }
 }

@@ -7,4 +7,5 @@ public interface IMessageTaskHistoryRepository : IRepository<MessageTaskHistory>
 {
     Task<IQueryable<MessageTaskHistory>> WithDetailsAsync();
     Task<MessageTaskHistory?> FindAsync(Expression<Func<MessageTaskHistory, bool>> predicate, bool include = true, CancellationToken cancellationToken = default(CancellationToken));
+    Task<bool> AnyAsync(Expression<Func<MessageTaskHistory, bool>> predicate);
 }
