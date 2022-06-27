@@ -16,6 +16,6 @@ public class MessageRecordDto : AuditEntityDto<Guid, Guid>
     public string FailureReason { get;  set; } = string.Empty;
     public bool IsDeleted { get;  set; }
     public ExtraPropertyDictionary ExtraProperties { get;  set; } = new();
-
     public ExtraPropertyDictionary Variables { get;  set; } = new();
+    public string DisplayName { get; set; } = string.Empty;
 }

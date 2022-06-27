@@ -94,6 +94,7 @@ public static class McDbContextModelBuilderExtensions
         builder.Entity<MessageRecord>(b =>
         {
             b.ToTable(MCConsts.DbTablePrefix + "MessageRecords", MCConsts.DbSchema);
+            b.Property(m => m.DisplayName).IsRequired().HasMaxLength(128);
             b.Property(m => m.ExtraProperties).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
             b.Property(m => m.Variables).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
             b.Ignore(m => m.MessageTask);

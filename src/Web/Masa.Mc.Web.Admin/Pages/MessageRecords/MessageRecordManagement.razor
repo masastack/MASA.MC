@@ -103,9 +103,6 @@
                 case ("ChannelDisplayName"):
                     <span class="body regular--text">@context.Item.Channel?.DisplayName</span>
                     break;
-                case ("MessageInfoTitle"):
-                    <span class="body regular--text">@(context.Item.ExtraProperties.GetProperty<string>("Title"))</span>
-                    break;
                 case (nameof(MessageRecordDto.ExpectSendTime)):
                     <DateTimeListItem Value="@context.Item.ExpectSendTime"></DateTimeListItem>
                     break;
