@@ -1,0 +1,21 @@
+﻿@inherits AdminCompontentBase
+@if (Value.IsSendingInterval)
+{
+    <dl class="mt-8">
+        <dt class="overline regular3--text">@T("DisplayName.SendingRule.SendingInterval")</dt>
+        <dd class="body2 emphasis2--text mt-1">@(string.Format(T("BatchSending.Tips"),Value.SendingInterval,Value.SendingCount))</dd>
+    </dl>
+}
+@if (Value.IsTiming)
+{
+    <dl class="mt-8">
+        <dt class="overline regular3--text">@T("DisplayName.SendingRule.IsTiming")</dt>
+        <dd class="body2 emphasis2--text mt-1">@Value.SendTime?.ToString(T("$DateTimeFormat"))</dd>
+    </dl>
+}
+
+
+@code {
+    [Parameter]
+    public SendRuleDto Value { get; set; } = new();
+}

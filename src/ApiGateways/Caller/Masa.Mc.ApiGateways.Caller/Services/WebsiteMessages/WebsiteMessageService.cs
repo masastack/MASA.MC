@@ -48,4 +48,9 @@ public class WebsiteMessageService : ServiceBase
     {
         await PostAsync(nameof(CheckAsync));
     }
+
+    public async Task<List<WebsiteMessageDto>> GetNoticeListAsync(GetNoticeListInputDto inputDto)
+    {
+        return await GetAsync<GetNoticeListInputDto, List<WebsiteMessageDto>>(nameof(GetNoticeListAsync), inputDto);
+    }
 }

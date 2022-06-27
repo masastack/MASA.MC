@@ -21,5 +21,29 @@ public partial class TemplateMessageInfo : AdminCompontentBase
     protected override async Task OnParametersSetAsync()
     {
         MessageTemplate = await MessageTemplateService.GetAsync(MessageTemplateId) ?? new();
+        await RenderMessageContent();
+    }
+
+    public async Task RenderMessageContent()
+    {
+        var startstr = "{{";
+        var endstr = "}}";
+        if (MessageTask.Channel.Type == ChannelTypes.Sms)
+        {
+            startstr = "${";
+            endstr = "}";
+            MessageTemplate.Content = $"【{MessageTemplate.Sign}】{MessageTemplate.Content}";
+        }
+        MessageTemplate.Title = await RenderAsync(MessageTemplate.Title, Variables, startstr, endstr);
+        MessageTemplate.Content = await RenderAsync(MessageTemplate.Content, Variables, startstr, endstr);
+    }
+
+    public Task<string> RenderAsync(string context, ExtraPropertyDictionary model, string startstr, string endstr)
+    {
+        foreach (var item in model)
+        {
+            context = context.Replace($"{startstr}{item.Key}{endstr}", item.Value.ToString());
+        }
+        return Task.FromResult(context);
     }
 }

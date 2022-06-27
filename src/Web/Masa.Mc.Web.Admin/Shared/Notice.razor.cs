@@ -8,7 +8,7 @@ public partial class Notice : AdminCompontentBase
     [Inject]
     public NoticeState NoticeState { get; set; } = default!;
 
-    private GetWebsiteMessageInputDto _queryParam = new(5);
+    private GetNoticeListInputDto _queryParam = new();
 
     WebsiteMessageService WebsiteMessageService => McCaller.WebsiteMessageService;
 
@@ -48,8 +48,8 @@ public partial class Notice : AdminCompontentBase
 
     async Task LoadData()
     {
-        var dtos = await WebsiteMessageService.GetListAsync(_queryParam);
-        NoticeState.SetNotices(dtos.Result);
+        var dtos = await WebsiteMessageService.GetNoticeListAsync(_queryParam);
+        NoticeState.SetNotices(dtos);
     }
 
     async Task Changed()

@@ -48,9 +48,10 @@
         Type="AlertTypes.Success">
         <div class="d-flex justify-space-between">
             <span>@(string.Format(T("Description.MessageReceiversImport.Tips"), Value.Count))</span>
-            <span>@T("View")</span>
+            <span @onclick="()=>_importReceiversDetailModal.OpenModal()">@T("View")</span>
         </div>
     </MAlert>
 }
+<ImportReceiversDetailModal @ref="_importReceiversDetailModal" Value="@Value" />
 
 

@@ -88,14 +88,25 @@
                         <dt class="overline regular3--text">@T("DisplayName.ReceiverType")</dt>
                         <dd class="body2 emphasis2--text mt-1">@T($"DisplayName.ReceiverType.{_info.ReceiverType.ToString()}")</dd>
                     </dl>
+                    <div class="subtitle2 emphasis2--text mt-8">@T("DisplayName.MessageTaskSendingRule")</div>
+                    @if (_info.Channel.Type == ChannelTypes.Sms)
+                    {
+                        <dl class="mt-8">
+                            <dt class="overline regular3--text">@T("DisplayName.MessageTemplateSign")</dt>
+                            <dd class="body2 emphasis2--text mt-1">@_info.Sign</dd>
+                        </dl>
+                    }
+                    <MessageSendingRulesInfo Value="_info.SendRules" />
                 </div>
-
-                <div Class="d-flex">
-                    <MSpacer></MSpacer>
-                    <MButton Rounded Color="primary" Class="medium-button px-6" OnClick="WithdrawnHistoryAsync">
-                        <span>@T("Withdraw")</span>
-                    </MButton>
-                </div>
+                @if (_info.Channel.Type == ChannelTypes.WebsiteMessage && _historyInfo.Status != MessageTaskHistoryStatuses.Withdrawn)
+                {
+                    <div Class="d-flex">
+                        <MSpacer></MSpacer>
+                        <MButton Rounded Color="primary" Class="medium-button px-6" OnClick="WithdrawnHistoryAsync">
+                            <span>@T("Withdraw")</span>
+                        </MButton>
+                    </div>
+                }
             </div>
         </div>
     </SheetDialog>

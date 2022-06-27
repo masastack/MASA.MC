@@ -28,6 +28,8 @@ public class MessageTaskQueryHandler
         if (entity == null)
             throw new UserFriendlyException("messageTask not found");
         query.Result = entity.Adapt<MessageTaskDto>();
+        query.Result.SendRules.IsTiming= entity.SendRules.IsTiming;
+        query.Result.SendRules.IsSendingInterval = entity.SendRules.IsSendingInterval;
     }
 
     [EventHandler]

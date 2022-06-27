@@ -108,13 +108,21 @@ public partial class MessageTaskList : AdminCompontentBase
     {
         if (!item.IsEnabled)
         {
-            await MessageTaskService.EnabledAsync(new EnabledMessageTaskInputDto { MessageTaskId = item.Id });
-            item.IsEnabled = true;
+            await ConfirmAsync(T("EnableConfirmationMessageTask"), async() =>
+            {
+                await MessageTaskService.EnabledAsync(new EnabledMessageTaskInputDto { MessageTaskId = item.Id });
+                item.IsEnabled = true;
+            });
+            
         }
         else
         {
-            await MessageTaskService.DisableAsync(new DisableMessageTaskInputDto { MessageTaskId = item.Id });
-            item.IsEnabled = false;
+            await ConfirmAsync(T("DisableConfirmationMessageTask"), async () =>
+            {
+                await MessageTaskService.DisableAsync(new DisableMessageTaskInputDto { MessageTaskId = item.Id });
+                item.IsEnabled = false;
+            });
+            
         }
     }
 }

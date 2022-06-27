@@ -194,6 +194,8 @@
   "MessageTaskEditMessage": "编辑消息任务成功.",
   "MessageTaskDeleteMessage": "删除消息任务成功.",
   "MessageTaskSendMessage": "发送消息任务成功.",
+  "EnableConfirmationMessageTask": "是否确认启用消息任务?",
+  "DisableConfirmationMessageTask": "是否确认禁用消息任务?",
   "DisplayName.MessageTaskList": "消息任务列表",
   "DisplayName.MessageInfoTitle": "消息标题",
   "DisplayName.MessageInfoContent": "消息内容",
@@ -274,5 +276,8 @@
   "Description.MessageTaskHistory.SendTimeTips": "本任务将在{0}执行",
   "Retry": "重试",
   "Current": "当前",
-  "DisplayName.Notice.Title": "站内消息通知"
+  "DisplayName.Notice.Title": "站内消息通知",
+  "Title": "标题",
+  "BatchSending.Tips": "每{0}秒，发送{1}条",
+  "DisplayName.SendingRule.SendingInterval": "分批次发送"
 }

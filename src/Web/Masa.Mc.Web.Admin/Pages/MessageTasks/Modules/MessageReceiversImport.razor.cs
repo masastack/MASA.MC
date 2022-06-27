@@ -20,8 +20,8 @@ public partial class MessageReceiversImport
     [Inject]
     IBlazorDownloadFileService BlazorDownloadFileService { get; set; } = default!;
 
-    private ImportResultDto<MessageTaskReceiverDto> _importResult;
-
+    private ImportResultDto<MessageTaskReceiverDto> _importResult = default!;
+    private ImportReceiversDetailModal _importReceiversDetailModal = default!;
     private int _progress = 0;
     private string _fileName = string.Empty;
     private bool _isUpload;

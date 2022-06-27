@@ -9,8 +9,7 @@ namespace Masa.Mc.Service.Admin.Application.MessageTasks.Registers
         {
             config.ForType<MessageTask, MessageTaskDto>().MapToConstructor(true)
                 .Map(dest => dest.Receivers, src => src.Receivers);
-            config.ForType<MessageTaskUpsertDto, MessageTask>().MapToConstructor(true)
-                .Map(dest => dest.SendRules, src => ExtensionPropertyHelper.ObjMapToExtraProperty(src.SendRules));
+            config.ForType<MessageTaskUpsertDto, MessageTask>().MapToConstructor(true);
             config.ForType<MessageTaskHistory, MessageTaskHistoryDto>().MapToConstructor(true);
         }
     }
