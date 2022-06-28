@@ -1,0 +1,90 @@
+﻿@inherits AdminCompontentBase
+<div class="import-receivers" @ref="Ref">
+    <McModal Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("View")" Height="800">
+        <ChildContent>
+            <MSimpleTable>
+                <thead>
+                    <tr>
+                        <th class="text-left body2 regular3--text">
+                            @T("PhoneNumber")
+                        </th>
+                        <th class="text-left body2 regular3--text">
+                            @T("Email")
+                        </th>
+                        @if (Value.Count > 0)
+                        {
+                            foreach (var item in Value[0].Variables)
+                            {
+                                <th class="text-left body2 regular3--text">
+                                    @item.Key
+                                </th>
+                            }
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in _items)
+                    {
+                        <tr class="body2 regular--text">
+                            <td class="body2 regular--text border-bottom-none">@item.PhoneNumber</td>
+                            <td class="body2 regular--text border-bottom-none">@item.Email</td>
+                            @foreach (var v in item.Variables)
+                            {
+                                <td class="body2 regular--text border-bottom-none">@v.Value</td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </MSimpleTable>
+        </ChildContent>
+        <ActionContent>
+            <McPagination Class="full-width" @bind-Page="_queryParam.Page" @bind-PageSize="_queryParam.PageSize" Total="Value.Count" OnChange="HandlePaginationChange" />
+        </ActionContent>
+    </McModal>
+</div>
+
+
+@code {
+    [Parameter]
+    public List<MessageTaskReceiverDto> Value { get; set; } = new();
+
+    private List<MessageTaskReceiverDto> _items { get; set; } = new();
+
+    private bool _visible;
+    private PaginatedOptionsDto _queryParam = new();
+
+    private void HandleVisibleChanged(bool val)
+    {
+        if (!val) HandleCancel();
+    }
+
+    public async Task OpenModal()
+    {
+        _visible = true;
+        await LoadData();
+    }
+
+    private void HandleCancel()
+    {
+        _visible = false;
+        ResetForm();
+    }
+
+    private async Task HandlePaginationChange(PaginationEventArgs args)
+    {
+        _queryParam.Page = args.Page;
+        _queryParam.PageSize = args.PageSize;
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        _items = Value.Skip((_queryParam.Page - 1) * _queryParam.PageSize).Take(_queryParam.PageSize <= 0 ? int.MaxValue : _queryParam.PageSize).ToList();
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private void ResetForm()
+    {
+        _queryParam = new();
+    }
+}

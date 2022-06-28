@@ -27,4 +27,9 @@ public class MessageTaskHistoryRepository : Repository<McDbContext, MessageTaskH
             ? await (await WithDetailsAsync()).Where(predicate).FirstOrDefaultAsync(cancellationToken)
             : await Context.Set<MessageTaskHistory>().Where(predicate).FirstOrDefaultAsync(cancellationToken);
     }
+
+    public async Task<bool> AnyAsync(Expression<Func<MessageTaskHistory, bool>> predicate)
+    {
+        return await Context.Set<MessageTaskHistory>().AnyAsync(predicate);
+    }
 }

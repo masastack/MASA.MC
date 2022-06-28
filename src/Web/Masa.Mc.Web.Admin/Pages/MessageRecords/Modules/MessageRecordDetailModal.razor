@@ -24,8 +24,8 @@
                         </OppositeContent>
                         <ChildContent>
                             <div class="ml-n5">
-                                <div class="caption regular--text">@(_messageTaskHistory.SendRules.SendTime?.ToString(T("$DateFormat"))??_messageTaskHistory.SendTime?.ToString(T("$DateFormat")))</div>
-                                <div class="overline regular3--text">@(_messageTaskHistory.SendRules.SendTime?.ToString(T("$TimeFormat"))??_messageTaskHistory.SendTime?.ToString(T("$TimeFormat")))</div>
+                                <div class="caption regular--text">@(_messageTask.SendRules.SendTime?.ToString(T("$DateFormat"))??_messageTask.SendTime?.ToString(T("$DateFormat")))</div>
+                                <div class="overline regular3--text">@(_messageTask.SendRules.SendTime?.ToString(T("$TimeFormat"))??_messageTask.SendTime?.ToString(T("$TimeFormat")))</div>
                             </div>
                         </ChildContent>
                     </MTimelineItem>
@@ -54,14 +54,20 @@
                                 <span>@T("DisplayName.MessageRecordSuccess.False")</span>
                             }
                         </dt>
-                        <dd class="body2 regular3--text">@T("Retry")</dd>
+                        @if (_messageRecord.Success == false)
+                        {
+                            <dd class="body2 regular3--text">@T("Retry")</dd>
+                        }
                     </dl>
-                    <dl class="d-flex justify-space-between item align-center mb-6">
-                        <dt class="d-inline-flex body2 regular--text">
-                            <span>@_messageRecord.FailureReason</span>
-                        </dt>
-                        <dd class="body2 regular3--text">@T("DisplayName.MessageRecordFailureReason")</dd>
-                    </dl>
+                    @if (_messageRecord.Success == false)
+                    {
+                        <dl class="d-flex justify-space-between item align-center mb-6">
+                            <dt class="d-inline-flex body2 regular--text">
+                                <span>@_messageRecord.FailureReason</span>
+                            </dt>
+                            <dd class="body2 regular3--text">@T("DisplayName.MessageRecordFailureReason")</dd>
+                        </dl>
+                    }
                     <dl class="d-flex justify-space-between item align-center">
                         <dt class="d-inline-flex body2 regular--text">
                             <span>@_messageTaskHistory.TaskHistoryNo</span>

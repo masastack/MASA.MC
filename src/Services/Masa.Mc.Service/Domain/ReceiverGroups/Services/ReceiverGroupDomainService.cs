@@ -14,6 +14,7 @@ public class ReceiverGroupDomainService : DomainService
 
     public virtual async Task CreateAsync(ReceiverGroup receiverGroup, List<ReceiverGroupItem> items = null)
     {
+        await ValidateAsync(receiverGroup.DisplayName);
         if (items != null)
         {
             SetItems(receiverGroup, items);
@@ -27,6 +28,7 @@ public class ReceiverGroupDomainService : DomainService
 
     public virtual async Task UpdateAsync(ReceiverGroup receiverGroup, List<ReceiverGroupItem> items = null)
     {
+        await ValidateAsync(receiverGroup.DisplayName, receiverGroup.Id);
         if (items != null)
         {
             SetItems(receiverGroup, items);
@@ -63,5 +65,14 @@ public class ReceiverGroupDomainService : DomainService
             receiverGroup.AddOrUpdateItem(item.SubjectId, item.Type, item.DisplayName, item.Avatar, item.PhoneNumber, item.Email);
         }
         receiverGroup.Items.RemoveAll(item => !items.Any(x => x.SubjectId == item.SubjectId && x.Type == item.Type));
+    }
+
+    private async Task ValidateAsync(string displayName, Guid? expectedId = null)
+    {
+        var receiverGroup = await _repository.FindAsync(d => d.DisplayName == displayName);
+        if (receiverGroup != null && receiverGroup.Id != expectedId)
+        {
+            throw new UserFriendlyException("ReceiverGroup name cannot be repeated");
+        }
     }
 }

@@ -12,11 +12,11 @@ public partial class ReceiverSelect : AdminCompontentBase
     public EventCallback<List<ReceiverGroupItemDto>> ValueChanged { get; set; }
 
     private ExternalUserCreateModal _createModal = default!;
+    private SubjectAutoComplete _subjectAutoComplete = default!;
     private List<Guid> _userIds = new List<Guid>();
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnParametersSet()
     {
-        await base.OnInitializedAsync();
         _userIds = Value.Select(x=>x.SubjectId).ToList();
     }
 
@@ -65,5 +65,6 @@ public partial class ReceiverSelect : AdminCompontentBase
     public void ResetForm()
     {
         _userIds = new();
+        _subjectAutoComplete.ResetForm();
     }
 }

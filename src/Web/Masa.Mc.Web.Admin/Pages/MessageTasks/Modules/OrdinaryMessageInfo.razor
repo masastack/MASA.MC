@@ -8,13 +8,10 @@
         <dt class="overline regular3--text">@T("DisplayName.Channel")</dt>
         <dd class="body2 emphasis2--text mt-1">@MessageTask.Channel.DisplayName</dd>
     </dl>
-    @if (MessageTask.Channel.Type != ChannelTypes.Sms)
-    {
-        <dl class="mt-8">
-            <dt class="overline regular3--text">@T("DisplayName.MessageTemplateTitle")</dt>
-            <dd class="body2 emphasis2--text mt-1">@MessageInfo.Title</dd>
-        </dl>
-    }
+    <dl class="mt-8">
+        <dt class="overline regular3--text">@T("Title")</dt>
+        <dd class="body2 emphasis2--text mt-1">@MessageInfo.Title</dd>
+    </dl>
     <dl class="mt-8">
         <dt class="overline regular3--text">@T("DisplayName.MessageTemplateContent")</dt>
         <dd class="body2 emphasis2--text mt-1"><RichText Value="@MessageInfo.Content"></RichText></dd>

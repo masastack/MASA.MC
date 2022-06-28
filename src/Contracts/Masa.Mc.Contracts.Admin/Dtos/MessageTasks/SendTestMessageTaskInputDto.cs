@@ -6,5 +6,5 @@ namespace Masa.Mc.Contracts.Admin.Dtos.MessageTasks;
 public class SendTestMessageTaskInputDto
 {
     public Guid Id { get; set; }
-    public List<MessageTaskReceiverDto> Receivers { get; set; } = new();
+    public List<MessageReceiverUserDto> ReceiverUsers { get; set; } = new();
 }

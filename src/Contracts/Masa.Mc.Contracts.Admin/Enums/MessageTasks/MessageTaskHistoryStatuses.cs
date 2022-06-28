@@ -3,7 +3,7 @@
 
 namespace Masa.Mc.Contracts.Admin.Enums.MessageTasks;
 
-public enum MessageTaskHistoryStatuses
+public enum MessageTaskStatuses
 {
     WaitSend = 1,
     Sending,

@@ -63,21 +63,20 @@
     <MDivider></MDivider>
     <MCardText class="flex-grow-1 px-0 d-flex flex-column">
         <div class="h8 emphasis--text" style="line-height: 24px;">@MessageTask.DisplayName</div>
-        <div class="caption regular3--text" style="line-height: 18px;">@MessageTask.SendTime</div>
+        <div class="caption regular3--text" style="line-height: 18px;">@((MessageTask.SendTime??MessageTask.SendRules.SendTime)?.ToString(T("$DateTimeFormat")))</div>
     </MCardText>
-    <div class="fill-hover caption px-2 py-1 regular2--text text-justify line-clamp-2 rounded-lg" style="height:192px">@MessageTask.Content</div>
+    <div class="fill-background caption px-2 py-1 regular2--text text-justify line-clamp-2 rounded-lg" style="height:192px">@MessageTask.Content</div>
     <MCardActions class="px-3 pb-3">
         <span class="body2 emphasis2--text">@T($"DisplayName.MessageEntityType.{((MessageEntityTypes)MessageTask.EntityType).ToString()}")</span>
-        @if (MessageTask.SendTime==null)
+        @if (MessageTask.IsDraft == false)
         {
             <span class="d-flex px-1" style="height: 8px">
                 <MDivider Vertical />
             </span>
-            <MIcon Class="regular3--text caption" Left Size=12>mdi-clock-outline</MIcon>
-            <span class="regular3--text caption">@T("DisplayName.MessageTaskHistoryStatus.WaitSend")</span>
+            <MessageTaskStatus Value="@MessageTask.Status"></MessageTaskStatus>
         }
         <MSpacer />
-        <span class="caption regular3--text">@MessageTask.ModificationTime.Humanize(culture:new CultureInfo(I18n.CurrentLanguage)) </span>
+        <span class="caption regular3--text">@MessageTask.ModificationTime.Humanize(culture:new CultureInfo(I18n.Culture)) </span>
     </MCardActions>
 </MCard>
 

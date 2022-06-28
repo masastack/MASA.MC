@@ -1,6 +1,6 @@
 ﻿@inherits AdminCompontentBase
 
-<div class="mt-9 rounded-xl d-flex flex-column align-center" style="height: 420px;border: 4px dashed #E2E7F4;">
+<div class="mt-9 rounded-xl d-flex flex-column align-center" style="height: 400px;border: 4px dashed #E2E7F4;">
     <MHover OpenDelay="200">
         <div @attributes="context.Attrs" class="@($"mt-8 {context.Class}")">
             <MProgressCircular Value="_progress" Size="258" Width="18" Color="@(_importResult?.HasError==true?"error":"gradient")">
@@ -48,9 +48,10 @@
         Type="AlertTypes.Success">
         <div class="d-flex justify-space-between">
             <span>@(string.Format(T("Description.MessageReceiversImport.Tips"), Value.Count))</span>
-            <span>@T("View")</span>
+            <span @onclick="()=>_importReceiversDetailModal.OpenModal()">@T("View")</span>
         </div>
     </MAlert>
 }
+<ImportReceiversDetailModal @ref="_importReceiversDetailModal" Value="@Value" />
 
 

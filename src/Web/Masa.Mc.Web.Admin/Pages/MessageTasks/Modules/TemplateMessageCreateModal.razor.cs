@@ -16,7 +16,8 @@ public partial class TemplateMessageCreateModal : AdminCompontentBase
     private List<ChannelDto> _channelItems = new();
     private List<MessageTaskReceiverDto> _selectReceivers = new();
     private List<MessageTaskReceiverDto> _importReceivers = new();
-    StringNumber _tabIndex = 0;
+    private List<string> _tabs = new();
+    private string _tab = "";
 
     MessageTaskService MessageTaskService => McCaller.MessageTaskService;
     MessageTemplateService MessageTemplateService => McCaller.MessageTemplateService;
@@ -25,6 +26,8 @@ public partial class TemplateMessageCreateModal : AdminCompontentBase
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
+        _tabs = new List<string> { T("DisplayName.MessageInfoContent"), T("DisplayName.MessageTaskReceiver"), T("DisplayName.MessageTaskSendingRule") };
+        _tab = _tabs[0];
         var inputDto = new GetMessageTemplateInputDto(999) { AuditStatus = MessageTemplateAuditStatuses.Adopt };
         _templateItems = (await MessageTemplateService.GetListAsync(inputDto)).Result;
     }
@@ -104,6 +107,10 @@ public partial class TemplateMessageCreateModal : AdminCompontentBase
         {
             _model.ReceiverType = ReceiverTypes.Assign;
         }
+        else
+        {
+            _model.ReceiverType = default;
+        }
     }
 
     private void HandleReceiverType(ReceiverTypes receiverType)
@@ -111,7 +118,7 @@ public partial class TemplateMessageCreateModal : AdminCompontentBase
         _model.ReceiverType = receiverType;
         if (receiverType == ReceiverTypes.Broadcast)
         {
-            _tabIndex = 1;
+            _tab = _tabs[2];
         }
     }
 }

@@ -12,17 +12,9 @@ public class MessageTaskHistory : FullAggregateRoot<Guid, Guid>
 
     public string TaskHistoryNo { get; protected set; } = string.Empty;
 
-    public MessageTask MessageTask { get; protected set; }
-
-    public ReceiverTypes ReceiverType { get; protected set; }
-
-    public MessageTaskSelectReceiverTypes SelectReceiverType { get; protected set; }
+    public MessageTask MessageTask { get; protected set; } = default!;
 
     public MessageTaskHistoryStatuses Status { get; protected set; }
-
-    public List<MessageTaskReceiver> Receivers { get; protected set; } = new();
-
-    public ExtraPropertyDictionary SendRules { get; protected set; } = new();
 
     public DateTimeOffset? SendTime { get; protected set; }
 
@@ -30,24 +22,30 @@ public class MessageTaskHistory : FullAggregateRoot<Guid, Guid>
 
     public DateTimeOffset? WithdrawTime { get; protected set; }
 
-    public string Sign { get; protected set; } = string.Empty;
+    public List<MessageReceiverUser> ReceiverUsers { get; protected set; } = new();
 
-    public ExtraPropertyDictionary Variables { get; protected set; } = new();
-
-    public ICollection<MessageReceiverUser> ReceiverUsers { get; protected set; } = new Collection<MessageReceiverUser>();
-
-    protected internal MessageTaskHistory(Guid messageTaskId, string taskHistoryNo, ReceiverTypes receiverType, MessageTaskSelectReceiverTypes selectReceiverType, List<MessageTaskReceiver> receivers, ExtraPropertyDictionary sendRules, DateTimeOffset? sendTime, string sign, ExtraPropertyDictionary variables)
+    public MessageTaskHistory(Guid messageTaskId, string taskHistoryNo, List<MessageReceiverUser> receiverUsers)
     {
         MessageTaskId = messageTaskId;
         TaskHistoryNo = taskHistoryNo;
-        ReceiverType = receiverType;
-        SelectReceiverType = selectReceiverType;
-        Receivers = receivers;
-        SendRules = sendRules;
-        SendTime = sendTime;
         Status = MessageTaskHistoryStatuses.WaitSend;
-        Sign = sign;
-        Variables = variables;
+        ReceiverUsers = receiverUsers;
+    }
+
+    public MessageTaskHistory(Guid messageTaskId, string taskHistoryNo, MessageTaskHistoryStatuses status, DateTimeOffset? sendTime, DateTimeOffset? completionTime, DateTimeOffset? withdrawTime) : this(messageTaskId, taskHistoryNo, status, sendTime, completionTime, withdrawTime, new List<MessageReceiverUser>())
+    {
+
+    }
+
+    public MessageTaskHistory(Guid messageTaskId, string taskHistoryNo, MessageTaskHistoryStatuses status, DateTimeOffset? sendTime, DateTimeOffset? completionTime, DateTimeOffset? withdrawTime, List<MessageReceiverUser> receiverUsers)
+    {
+        MessageTaskId = messageTaskId;
+        TaskHistoryNo = taskHistoryNo;
+        Status = status;
+        SendTime = sendTime;
+        CompletionTime = completionTime;
+        WithdrawTime = withdrawTime;
+        ReceiverUsers = receiverUsers;
     }
 
     public void SetSending()
@@ -62,7 +60,7 @@ public class MessageTaskHistory : FullAggregateRoot<Guid, Guid>
         Status = MessageTaskHistoryStatuses.Withdrawn;
     }
 
-    public void SetReceiverUsers(ICollection<MessageReceiverUser> receiverUsers)
+    public void SetReceiverUsers(List<MessageReceiverUser> receiverUsers)
     {
         ReceiverUsers = receiverUsers;
     }
@@ -71,5 +69,6 @@ public class MessageTaskHistory : FullAggregateRoot<Guid, Guid>
     {
         Status = status;
         CompletionTime = DateTimeOffset.Now;
+        AddDomainEvent(new UpdateMessageTaskStatusEvent(MessageTaskId));
     }
 }

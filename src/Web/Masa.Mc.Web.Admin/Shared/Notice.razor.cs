@@ -8,8 +8,7 @@ public partial class Notice : AdminCompontentBase
     [Inject]
     public NoticeState NoticeState { get; set; } = default!;
 
-    private GetWebsiteMessageInputDto _queryParam = new(5);
-    private bool isHubConnectionBuilder { get; set; }
+    private GetNoticeListInputDto _queryParam = new();
 
     WebsiteMessageService WebsiteMessageService => McCaller.WebsiteMessageService;
 
@@ -24,11 +23,14 @@ public partial class Notice : AdminCompontentBase
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender && !isHubConnectionBuilder)
+        if (firstRender)
         {
-            isHubConnectionBuilder = true;
             await LoadData();
+        }
 
+        if (!NoticeState.IsHubConnectionBuilder)
+        {
+            NoticeState.IsHubConnectionBuilder = true;
             await base.HubConnectionBuilder();
 
             base.HubConnection?.On(SignalRMethodConsts.GET_NOTIFICATION, async () =>
@@ -46,8 +48,8 @@ public partial class Notice : AdminCompontentBase
 
     async Task LoadData()
     {
-        var dtos = await WebsiteMessageService.GetListAsync(_queryParam);
-        NoticeState.SetNotices(dtos.Result);
+        var dtos = await WebsiteMessageService.GetNoticeListAsync(_queryParam);
+        NoticeState.SetNotices(dtos);
     }
 
     async Task Changed()

@@ -6,13 +6,13 @@ namespace Masa.Mc.Service.Admin.Application.MessageRecords;
 public class MessageRecordQueryHandler
 {
     private readonly IMessageRecordRepository _repository;
-    private readonly IMessageTaskHistoryRepository _messageTaskHistoryRepository;
+    private readonly IMessageTaskRepository _messageTaskRepository;
 
     public MessageRecordQueryHandler(IMessageRecordRepository repository
-        , IMessageTaskHistoryRepository messageTaskHistoryRepository)
+        , IMessageTaskRepository messageTaskRepository)
     {
         _repository = repository;
-        _messageTaskHistoryRepository = messageTaskHistoryRepository;
+        _messageTaskRepository = messageTaskRepository;
     }
 
     [EventHandler]
@@ -43,6 +43,7 @@ public class MessageRecordQueryHandler
     private async Task<Expression<Func<MessageRecord, bool>>> CreateFilteredPredicate(GetMessageRecordInputDto inputDto)
     {
         Expression<Func<MessageRecord, bool>> condition = x => true;
+        condition = condition.And(!string.IsNullOrEmpty(inputDto.Filter), x => x.DisplayName.Contains(inputDto.Filter));
         condition = condition.And(inputDto.MessageTaskHistoryId.HasValue, m => m.MessageTaskHistoryId == inputDto.MessageTaskHistoryId);
         condition = condition.And(inputDto.ChannelId.HasValue, m => m.ChannelId == inputDto.ChannelId);
         condition = condition.And(inputDto.Success.HasValue, m => m.Success == inputDto.Success);
@@ -66,10 +67,10 @@ public class MessageRecordQueryHandler
     {
         foreach (var item in dtos)
         {
-            var taskHistory = await _messageTaskHistoryRepository.FindAsync(x => x.Id == item.MessageTaskHistoryId);
-            if (taskHistory != null)
+            var task = await _messageTaskRepository.FindAsync(x => x.Id == item.MessageTaskHistoryId);
+            if (task != null)
             {
-                item.ExpectSendTime = taskHistory.SendRules.GetProperty<DateTimeOffset?>(nameof(SendRuleDto.SendTime));
+                item.ExpectSendTime = task.SendRules.SendTime;
             }
         }
     }

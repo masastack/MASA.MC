@@ -36,4 +36,6 @@ public class MessageTaskDto : AuditEntityDto<Guid, Guid>
     public ExtraPropertyDictionary Variables { get; set; } = new();
 
     public string Content { get; set; } = string.Empty;
+
+    public MessageTaskStatuses Status { get; set; }
 }

@@ -14,7 +14,7 @@
             OnCancel="HandleCancel">
         <ChildContent>
             <Masa.Mc.Web.Admin.Components.Modules.Subjects.UserAutoComplete @ref="_userRef" Value="_userIds" ValueChanged="HandleUserChange"></Masa.Mc.Web.Admin.Components.Modules.Subjects.UserAutoComplete>
-            <MInput @bind-Value="_input.Receivers" />
+            <MInput @bind-Value="_input.ReceiverUsers" />
         </ChildContent>
         <SaveContent Context="save">
             <MButton Class="btn-form-rounded caption" Color="primary" OnClick="save.Click">@(T("SendTestTask"))</MButton>

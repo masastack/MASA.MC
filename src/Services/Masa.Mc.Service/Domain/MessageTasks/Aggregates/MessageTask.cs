@@ -29,11 +29,15 @@ public class MessageTask : FullAggregateRoot<Guid, Guid>
 
     public List<MessageTaskReceiver> Receivers { get; protected set; } = new();
 
-    public ExtraPropertyDictionary SendRules { get; protected set; } = new();
+    public List<MessageReceiverUser> ReceiverUsers { get; protected set; } = new();
+
+    public MessageTaskSendingRule SendRules { get; protected set; } = new();
 
     public ExtraPropertyDictionary Variables { get; protected set; } = new();
 
-    public MessageTask(string displayName, Guid channelId, MessageEntityTypes entityType, Guid entityId, bool isDraft, string sign, ReceiverTypes receiverType, MessageTaskSelectReceiverTypes selectReceiverType, List<MessageTaskReceiver> receivers, ExtraPropertyDictionary sendRules)
+    public MessageTaskStatuses Status { get; protected set; }
+
+    public MessageTask(string displayName, Guid channelId, MessageEntityTypes entityType, Guid entityId, bool isDraft, string sign, ReceiverTypes receiverType, MessageTaskSelectReceiverTypes selectReceiverType, List<MessageTaskReceiver> receivers, MessageTaskSendingRule sendRules)
     {
         DisplayName = displayName;
         ChannelId = channelId;
@@ -44,16 +48,7 @@ public class MessageTask : FullAggregateRoot<Guid, Guid>
         SelectReceiverType = selectReceiverType;
         SetReceivers(receiverType, receivers);
         SendRules = sendRules ?? new();
-    }
-
-    public virtual void SendTask(ReceiverTypes receiverType, List<MessageTaskReceiver> receivers, MessageTaskSelectReceiverTypes selectReceiverType, ExtraPropertyDictionary sendRules, string sign, ExtraPropertyDictionary variables)
-    {
-        SetDraft(false);
-        SelectReceiverType = selectReceiverType;
-        SetReceivers(receiverType, receivers);
-        SendRules = sendRules ?? new();
-        Sign = sign;
-        Variables = variables;
+        Status = MessageTaskStatuses.WaitSend;
     }
 
     public virtual void SetEnabled()
@@ -98,5 +93,16 @@ public class MessageTask : FullAggregateRoot<Guid, Guid>
     public virtual void UpdateVariables(ExtraPropertyDictionary variables)
     {
         Variables = variables;
+    }
+
+    public void SetSending()
+    {
+        SendTime = DateTimeOffset.Now;
+        Status = MessageTaskStatuses.Sending;
+    }
+
+    public void SetResult(MessageTaskStatuses status)
+    {
+        Status = status;
     }
 }

@@ -1,0 +1,29 @@
+﻿@inherits AdminCompontentBase
+@switch (Value)
+{
+    case MessageTaskStatuses.WaitSend:
+        <MIcon Class="regular3--text caption" Left Size=12>mdi-clock-outline</MIcon>
+        <span class="regular3--text caption">@T("DisplayName.MessageTaskStatus.WaitSend")</span>
+        break;
+    case MessageTaskStatuses.Sending:
+        <MIcon Class="regular3--text caption" Left Size=12>mdi-dots-horizontal-circle-outline</MIcon>
+        <span class="regular3--text caption">@T("DisplayName.MessageTaskStatus.Sending")</span>
+        break;
+    case MessageTaskStatuses.Success:
+        <MIcon Class="regular3--text caption" Left Size=12>mdi-checkbox-marked-circle-outline</MIcon>
+        <span class="regular3--text caption">@T("DisplayName.MessageTaskStatus.Success")</span>
+        break;
+    case MessageTaskStatuses.Fail:
+        <MIcon Class="regular3--text caption" Left Size=12>mdi-close-circle-outline</MIcon>
+        <span class="regular3--text caption">@T("DisplayName.MessageTaskStatus.Fail")</span>
+        break;
+    case MessageTaskStatuses.PartialFailure:
+        <MIcon Class="regular3--text caption" Left Size=12>mdi-minus-circle-outline</MIcon>
+        <span class="regular3--text caption">@T("DisplayName.MessageTaskStatus.PartialFailure")</span>
+        break;
+}
+
+@code {
+    [Parameter]
+    public MessageTaskStatuses Value { get; set; }
+}

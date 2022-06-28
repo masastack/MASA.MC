@@ -41,6 +41,11 @@ public static class ExtraPropertiesExtensions
                 return (TProperty)TypeDescriptor.GetConverter(conversionType).ConvertFromInvariantString(value.ToString());
             }
 
+            if (conversionType == typeof(DateTimeOffset))
+            {
+                return (TProperty)TypeDescriptor.GetConverter(conversionType).ConvertFromInvariantString(value.ToString());
+            }
+
             return (TProperty)Convert.ChangeType(value?.ToString(), conversionType, CultureInfo.InvariantCulture);
         }
 

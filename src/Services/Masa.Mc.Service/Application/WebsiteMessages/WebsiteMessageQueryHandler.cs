@@ -52,6 +52,24 @@ public class WebsiteMessageQueryHandler
         query.Result = entityDtos;
     }
 
+    [EventHandler]
+    public async Task GetNoticeListAsync(GetNoticeListQuery query)
+    {
+        var noticeNum = query.PageSize;
+        var queryable = await _repository.WithDetailsAsync();
+        queryable = queryable.Where(x => x.UserId == Guid.Parse(TempCurrentUserConsts.ID));
+        var list = queryable.Where(x => !x.IsRead).OrderByDescending(x => x.CreationTime).Take(noticeNum).ToList();
+        if (list.Count < noticeNum)
+        {
+            var surplusNum = noticeNum - list.Count;
+            var surplusList = queryable.OrderByDescending(x => x.CreationTime).Take(surplusNum).ToList();
+            list.AddRange(surplusList);
+        }
+        var dtos = list.Adapt<List<WebsiteMessageDto>>();
+        FillListDtos(dtos);
+        query.Result = dtos;
+    }
+
     private async Task<Expression<Func<WebsiteMessage, bool>>> CreateFilteredPredicate(GetWebsiteMessageInputDto inputDto)
     {
         Expression<Func<WebsiteMessage, bool>> condition = w => w.UserId == Guid.Parse(TempCurrentUserConsts.ID);

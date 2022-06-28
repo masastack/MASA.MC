@@ -82,6 +82,13 @@ namespace Masa.Mc.Service.Admin.Migrations
                         .HasColumnType("nvarchar(64)")
                         .HasColumnName("Code");
 
+                    b.Property<string>("Color")
+                        .IsRequired()
+                        .ValueGeneratedOnUpdateSometimes()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)")
+                        .HasColumnName("Color");
+
                     b.Property<string>("DisplayName")
                         .IsRequired()
                         .ValueGeneratedOnUpdateSometimes()
@@ -114,8 +121,10 @@ namespace Masa.Mc.Service.Admin.Migrations
 
                     b.Property<string>("Color")
                         .IsRequired()
+                        .ValueGeneratedOnUpdateSometimes()
                         .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(128)")
+                        .HasColumnName("Color");
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
@@ -222,6 +231,11 @@ namespace Masa.Mc.Service.Admin.Migrations
 
                     b.Property<Guid>("Creator")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("DisplayName")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("ExtraProperties")
                         .IsRequired()
@@ -348,6 +362,10 @@ namespace Masa.Mc.Service.Admin.Migrations
                     b.Property<int>("ReceiverType")
                         .HasColumnType("int");
 
+                    b.Property<string>("ReceiverUsers")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Receivers")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -366,6 +384,9 @@ namespace Masa.Mc.Service.Admin.Migrations
                         .IsRequired()
                         .HasMaxLength(128)
                         .HasColumnType("nvarchar(128)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.Property<string>("Variables")
                         .IsRequired()
@@ -405,26 +426,8 @@ namespace Masa.Mc.Service.Admin.Migrations
                     b.Property<Guid>("Modifier")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("ReceiverType")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Receivers")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("SelectReceiverType")
-                        .HasColumnType("int");
-
-                    b.Property<string>("SendRules")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTimeOffset?>("SendTime")
                         .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("Sign")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
@@ -433,10 +436,6 @@ namespace Masa.Mc.Service.Admin.Migrations
                         .IsRequired()
                         .HasMaxLength(128)
                         .HasColumnType("nvarchar(128)");
-
-                    b.Property<string>("Variables")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTimeOffset?>("WithdrawTime")
                         .HasColumnType("datetimeoffset");

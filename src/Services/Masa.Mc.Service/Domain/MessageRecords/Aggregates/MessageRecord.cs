@@ -15,16 +15,17 @@ public class MessageRecord : FullAggregateRoot<Guid, Guid>
     public DateTimeOffset? SendTime { get; protected set; }
     public string FailureReason { get; protected set; } = string.Empty;
     public ExtraPropertyDictionary ExtraProperties { get; protected set; } = new();
-
     public ExtraPropertyDictionary Variables { get; protected set; } = new();
+    public string DisplayName { get; protected set; } = string.Empty;
 
-    public MessageRecord(Guid userId, Guid channelId, Guid messageTaskId, Guid messageTaskHistoryId, ExtraPropertyDictionary variables)
+    public MessageRecord(Guid userId, Guid channelId, Guid messageTaskId, Guid messageTaskHistoryId, ExtraPropertyDictionary variables, string displayName)
     {
         UserId = userId;
         ChannelId = channelId;
         MessageTaskId = messageTaskId;
         MessageTaskHistoryId = messageTaskHistoryId;
         Variables = variables;
+        DisplayName = displayName;
     }
 
     public void SetResult(bool success, string failureReason)

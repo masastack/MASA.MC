@@ -13,3 +13,4 @@ global using Masa.Mc.Web.Admin;
 global using Masa.Stack.Components;
 global using Masa.Utils.Data.Elasticsearch;
 global using Masa.Contrib.SearchEngine.AutoComplete;
+global using Masa.BuildingBlocks.Identity.IdentityModel;
