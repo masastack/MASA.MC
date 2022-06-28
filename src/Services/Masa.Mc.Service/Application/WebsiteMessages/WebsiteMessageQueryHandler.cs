@@ -56,7 +56,7 @@ public class WebsiteMessageQueryHandler
     public async Task GetNoticeListAsync(GetNoticeListQuery query)
     {
         var noticeNum = query.PageSize;
-        var queryable = await _repository.GetQueryableAsync();
+        var queryable = await _repository.WithDetailsAsync();
         queryable = queryable.Where(x => x.UserId == Guid.Parse(TempCurrentUserConsts.ID));
         var list = queryable.Where(x => !x.IsRead).OrderByDescending(x => x.CreationTime).Take(noticeNum).ToList();
         if (list.Count < noticeNum)

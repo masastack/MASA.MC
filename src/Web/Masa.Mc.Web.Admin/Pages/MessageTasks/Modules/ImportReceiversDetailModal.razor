@@ -1,21 +1,21 @@
 ﻿@inherits AdminCompontentBase
-<div @ref="Ref">
+<div class="import-receivers" @ref="Ref">
     <McModal Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("View")" Height="800">
         <ChildContent>
             <MSimpleTable>
                 <thead>
                     <tr>
-                        <th class="text-left">
+                        <th class="text-left body2 regular3--text">
                             @T("PhoneNumber")
                         </th>
-                        <th class="text-left">
+                        <th class="text-left body2 regular3--text">
                             @T("Email")
                         </th>
                         @if (Value.Count > 0)
                         {
                             foreach (var item in Value[0].Variables)
                             {
-                                <th class="text-left">
+                                <th class="text-left body2 regular3--text">
                                     @item.Key
                                 </th>
                             }
@@ -25,12 +25,12 @@
                 <tbody>
                     @foreach (var item in _items)
                     {
-                        <tr>
-                            <td>@item.PhoneNumber</td>
-                            <td>@item.Email</td>
+                        <tr class="body2 regular--text">
+                            <td class="body2 regular--text border-bottom-none">@item.PhoneNumber</td>
+                            <td class="body2 regular--text border-bottom-none">@item.Email</td>
                             @foreach (var v in item.Variables)
                             {
-                                <td>@v.Value</td>
+                                <td class="body2 regular--text border-bottom-none">@v.Value</td>
                             }
                         </tr>
                     }

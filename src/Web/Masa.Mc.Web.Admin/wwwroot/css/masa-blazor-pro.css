@@ -922,3 +922,7 @@ tr:hover {
 .m-application .overflow-y-visible {
     overflow-y: visible !important;
 }
+
+.border-bottom-none {
+    border-bottom: none !important;
+}
