@@ -15,13 +15,16 @@ public partial class OrdinaryMessageCreateModal : AdminCompontentBase
     private ChannelTypes _channelType;
     private List<MessageTaskReceiverDto> _selectReceivers = new();
     private List<MessageTaskReceiverDto> _importReceivers = new();
-    StringNumber _tabIndex = 0;
+    private List<string> _tabs = new();
+    private string _tab = "";
 
     MessageTaskService MessageTaskService => McCaller.MessageTaskService;
     ChannelService ChannelService => McCaller.ChannelService;
 
     protected override async Task OnInitializedAsync()
     {
+        _tabs = new List<string> { T("DisplayName.MessageInfoContent"), T("DisplayName.MessageTaskReceiver"), T("DisplayName.MessageTaskSendingRule") };
+        _tab = _tabs[0];
         await base.OnInitializedAsync();
     }
 
@@ -91,7 +94,7 @@ public partial class OrdinaryMessageCreateModal : AdminCompontentBase
         _model.ReceiverType = receiverType;
         if (receiverType == ReceiverTypes.Broadcast)
         {
-            _tabIndex = 2;
+            _tab = _tabs[2];
         }
     }
 }

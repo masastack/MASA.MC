@@ -1,6 +1,5 @@
 ﻿@inherits LayoutComponentBase
 @inject GlobalConfig GlobalConfig
-@implements IDisposable
 
 <McLayout NavItems="NavList"
         DefaultRoute="/channels/channelManagement"
@@ -10,11 +9,6 @@
 </McLayout>
 
 @code {
-    protected override void OnInitialized()
-    {
-        GlobalConfig.OnPageModeChanged += base.StateHasChanged;
-    }
-
     private List<Nav> NavList { get; set; } = new();
 
     protected override Task OnAfterRenderAsync(bool firstRender)
@@ -42,10 +36,5 @@
         }
 
         return base.OnAfterRenderAsync(firstRender);
-    }
-
-    public void Dispose()
-    {
-        GlobalConfig.OnPageModeChanged -= base.StateHasChanged;
     }
 }

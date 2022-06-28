@@ -119,38 +119,30 @@ public class MessageTaskService : ServiceBase
     {
         var list = new List<MessageTaskReceiverDto>();
 
-        //var subjectInputDto = new GetSubjectInputDto(filter);
-        //var subjectQuery = new GetSubjectListQuery(subjectInputDto);
-        //await eventBus.PublishAsync(subjectQuery);
-        //var subjectList = subjectQuery.Result;
-        //list.AddRange(subjectList.Select(x => new MessageTaskReceiverDto
-        //{
-        //    SubjectId = x.SubjectId,
-        //    DisplayName = x.Name ?? x.DisplayName,
-        //    Avatar = x.Avatar,
-        //    PhoneNumber = x.PhoneNumber,
-        //    Email = x.Email,
-        //    Type = (MessageTaskReceiverTypes)(int)x.SubjectType
-        //}));
-
-        //var receiverGroupInputDto = new GetReceiverGroupInputDto(filter, "", 1, 99);
-        //var receiverGroupQuery = new GetReceiverGroupListQuery(receiverGroupInputDto);
-        //await eventBus.PublishAsync(receiverGroupQuery);
-        //var receiverGroupList = receiverGroupQuery.Result.Result;
-        //list.AddRange(receiverGroupList.Select(x => new MessageTaskReceiverDto
-        //{
-        //    SubjectId = x.Id,
-        //    DisplayName = x.DisplayName,
-        //    Type = MessageTaskReceiverTypes.Group
-        //}));
-        list.Add(new MessageTaskReceiverDto
+        var subjectInputDto = new GetSubjectInputDto(filter);
+        var subjectQuery = new GetSubjectListQuery(subjectInputDto);
+        await eventBus.PublishAsync(subjectQuery);
+        var subjectList = subjectQuery.Result;
+        list.AddRange(subjectList.Select(x => new MessageTaskReceiverDto
         {
-            SubjectId = Guid.Parse(TempCurrentUserConsts.ID),
-            DisplayName = TempCurrentUserConsts.NAME,
-            PhoneNumber = TempCurrentUserConsts.PHONE_NUMBER,
-            Email = TempCurrentUserConsts.EMAIL,
-            Type = MessageTaskReceiverTypes.User
-        });
+            SubjectId = x.SubjectId,
+            DisplayName = x.Name ?? x.DisplayName,
+            Avatar = x.Avatar,
+            PhoneNumber = x.PhoneNumber,
+            Email = x.Email,
+            Type = (MessageTaskReceiverTypes)(int)x.SubjectType
+        }));
+
+        var receiverGroupInputDto = new GetReceiverGroupInputDto(filter, "", 1, 99);
+        var receiverGroupQuery = new GetReceiverGroupListQuery(receiverGroupInputDto);
+        await eventBus.PublishAsync(receiverGroupQuery);
+        var receiverGroupList = receiverGroupQuery.Result.Result;
+        list.AddRange(receiverGroupList.Select(x => new MessageTaskReceiverDto
+        {
+            SubjectId = x.Id,
+            DisplayName = x.DisplayName,
+            Type = MessageTaskReceiverTypes.Group
+        }));
 
         return list;
     }

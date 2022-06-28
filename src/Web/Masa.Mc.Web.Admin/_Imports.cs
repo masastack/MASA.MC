@@ -6,7 +6,6 @@ global using BlazorComponent.I18n;
 global using Masa.Blazor;
 global using Masa.Mc.Web.Admin.Global;
 global using Masa.Mc.Web.Admin.Global.Config;
-global using Masa.Mc.Web.Admin.Global.Nav.Model;
 global using Microsoft.AspNetCore.Components;
 global using Microsoft.AspNetCore.Components.Forms;
 global using Microsoft.AspNetCore.Components.Web;

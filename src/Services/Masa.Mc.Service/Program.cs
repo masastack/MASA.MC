@@ -1,12 +1,20 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
+using Masa.BuildingBlocks.Identity.IdentityModel;
+
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDaprClient();
-builder.Services.AddAuthClient(builder.Configuration.GetValue<string>("AuthClient:Url"));
 builder.Services.AddActors(options =>
 {
 });
+builder.Services.AddMasaIdentityModel(IdentityType.MultiEnvironment, options =>
+{
+    options.Environment = "environment";
+    options.UserName = "name";
+    options.UserId = "sub";
+});
+builder.Services.AddAuthClient(builder.Configuration.GetValue<string>("AuthClient:Url"));
 builder.Services.AddAliyunStorage(serviceProvider =>
 {
     var daprClient = serviceProvider.GetRequiredService<DaprClient>();

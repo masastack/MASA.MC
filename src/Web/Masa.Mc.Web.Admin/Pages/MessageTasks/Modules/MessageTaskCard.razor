@@ -76,7 +76,7 @@
             <MessageTaskStatus Value="@MessageTask.Status"></MessageTaskStatus>
         }
         <MSpacer />
-        <span class="caption regular3--text">@MessageTask.ModificationTime.Humanize(culture:new CultureInfo(I18n.CurrentLanguage)) </span>
+        <span class="caption regular3--text">@MessageTask.ModificationTime.Humanize(culture:new CultureInfo(I18n.Culture)) </span>
     </MCardActions>
 </MCard>
 

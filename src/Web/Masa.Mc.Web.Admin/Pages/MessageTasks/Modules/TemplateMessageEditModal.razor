@@ -3,7 +3,7 @@
     <McModal Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.EditTemplateMessage")" Height="850">
         <ChildContent>
             <MForm Model="_model" EnableValidation @ref="_form" Class="full-height">
-                <ElevationTab @bind-TabIndex="_tabIndex" TabMinWidth="227" Tabs='new List<string> { T("DisplayName.MessageInfoContent"), T("DisplayName.MessageTaskReceiver"), T("DisplayName.MessageTaskSendingRule") }' Dense>
+                <ElevationTab @bind-Tab="_tab" TabMinWidth="227" Tabs='_tabs' Dense>
                     <ElevationTabItem>
                         <MRow Class="mt-6">
                             <MCol>
@@ -145,23 +145,23 @@
             </MForm>
         </ChildContent>
         <ActionContent>
-            @if (_tabIndex == 0)
+            @if (_tab == _tabs[0])
             {
-                <MIcon Size="24" Color="emphasis2" OnClick="()=> _tabIndex=0">mdi-keyboard-backspace</MIcon>
+                <MIcon Size="24" Color="emphasis2" OnClick="()=> _tab=_tabs[0]">mdi-keyboard-backspace</MIcon>
                 <MSpacer></MSpacer>
                 <MButton Color="fill" Class="btn-form btn-fill-line rounded-3 emphasis2--text" OnClick="async() => await HandleOkAsync(true)">@T("Save")</MButton>
-                <MButton Color="primary" Class="btn-form ml-6" OnClick="()=> _tabIndex=1">@T("NextStep")</MButton>
+                <MButton Color="primary" Class="btn-form ml-6" OnClick="()=> _tab=_tabs[1]">@T("NextStep")</MButton>
             }
-            @if (_tabIndex == 1 && _model.ReceiverType != default)
+            @if (_tab == _tabs[1] && _model.ReceiverType != default)
             {
-                <MIcon Size="24" Color="emphasis2" OnClick="()=> _tabIndex=0">mdi-keyboard-backspace</MIcon>
+                <MIcon Size="24" Color="emphasis2" OnClick="()=> _tab=_tabs[0]">mdi-keyboard-backspace</MIcon>
                 <MSpacer></MSpacer>
                 <MButton Color="fill" Class="btn-form btn-fill-line rounded-3 emphasis2--text" OnClick="async() => await HandleOkAsync(true)">@T("Save")</MButton>
-                <MButton Color="primary" Class="btn-form ml-6" OnClick="()=> _tabIndex=2">@T("NextStep")</MButton>
+                <MButton Color="primary" Class="btn-form ml-6" OnClick="()=>_tab=_tabs[2]">@T("NextStep")</MButton>
             }
-            @if (_tabIndex == 2)
+            @if (_tab == _tabs[2])
             {
-                <MIcon Size="24" Color="emphasis2" OnClick="()=> _tabIndex=1">mdi-keyboard-backspace</MIcon>
+                <MIcon Size="24" Color="emphasis2" OnClick="()=> _tab=_tabs[1]">mdi-keyboard-backspace</MIcon>
                 <MSpacer></MSpacer>
                 <MButton Color="fill" Class="btn-form btn-fill-line rounded-3 emphasis2--text" OnClick="async() => await HandleOkAsync(true)">@T("Save")</MButton>
                 <MButton Color="primary" Class="btn-form ml-6" OnClick="async() => await HandleOkAsync(false)">@T("SaveSend")</MButton>
