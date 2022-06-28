@@ -1,22 +1,12 @@
 // Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
-using Masa.Stack.Components;
-
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddBlazorDownloadFile();
-//builder.Services.AddMasaBlazor(builder =>
-//{
-//    builder.UseTheme(option =>
-//    {
-//        option.Primary = "#4318FF";
-//        option.Accent = "#4318FF";
-//    }
-//    );
-//});
+
 builder.Services.AddResponseCompression(opts =>
 {
     opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
@@ -29,7 +19,7 @@ builder.Services.AddMasaIdentityModel(IdentityType.MultiEnvironment, options =>
     options.UserId = "sub";
 });
 builder.Services.AddAuthApiGateways(option => option.McServiceBaseAddress = builder.Configuration["McServiceBaseAddress"]);
-builder.Services.AddMasaStackComponentsForServer("wwwroot/i18n", "https://auth-service-develop.masastack.com/");
+builder.Services.AddMasaStackComponentsForServer("wwwroot/i18n", builder.Configuration["AuthServiceBaseAddress"]);
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddGlobalForServer();
 builder.Services.AddElasticsearchClient("auth", option => option.UseNodes("http://10.10.90.44:31920/").UseDefault())
