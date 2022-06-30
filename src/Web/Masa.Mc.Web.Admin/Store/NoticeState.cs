@@ -7,8 +7,6 @@ public class NoticeState
 {
     public bool IsRead => !Notices.Any(x => !x.IsRead);
 
-    public static bool IsHubConnectionBuilder { get; set; }
-
     public List<WebsiteMessageDto> Notices
     {
         get => _notices;
