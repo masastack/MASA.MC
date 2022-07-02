@@ -26,16 +26,21 @@ public class SendWebsiteMessageEventHandler
     {
         var taskHistory = eto.MessageTaskHistory;
         var userIds = new List<string>();
+        int okCount = 0;
+        int totalCount = taskHistory.ReceiverUsers.Count;
         if (taskHistory.MessageTask.ReceiverType == ReceiverTypes.Assign)
         {
             foreach (var item in taskHistory.ReceiverUsers)
             {
                 TemplateRenderer(eto.MessageData, item.Variables);
-                await _websiteMessageDomainService.CreateAsync(eto.MessageData, taskHistory, item);
-                userIds.Add(item.UserId.ToString());
+                if (await _websiteMessageDomainService.CreateAsync(eto.MessageData, taskHistory, item))
+                {
+                    userIds.Add(item.UserId.ToString());
+                    okCount++;
+                }
             }
         }
-        taskHistory.SetResult(MessageTaskHistoryStatuses.Success);
+        taskHistory.SetResult((okCount == totalCount || taskHistory.MessageTask.ReceiverType == ReceiverTypes.Broadcast) ? MessageTaskHistoryStatuses.Success : (okCount > 0 ? MessageTaskHistoryStatuses.PartialFailure : MessageTaskHistoryStatuses.Fail));
         await _messageTaskHistoryRepository.UpdateAsync(taskHistory);
         await _messageTaskHistoryRepository.UnitOfWork.SaveChangesAsync();
         await _messageTaskHistoryRepository.UnitOfWork.CommitAsync();

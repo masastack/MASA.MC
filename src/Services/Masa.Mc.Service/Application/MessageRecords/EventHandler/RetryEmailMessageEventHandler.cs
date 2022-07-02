@@ -10,18 +10,21 @@ public class RetryEmailMessageEventHandler
     private readonly IChannelRepository _channelRepository;
     private readonly IMessageRecordRepository _messageRecordRepository;
     private readonly MessageTaskDomainService _taskDomainService;
+    private readonly MessageTemplateDomainService _messageTemplateDomainService;
 
     public RetryEmailMessageEventHandler(IEmailAsyncLocal emailAsyncLocal
         , IEmailSender emailSender
         , IChannelRepository channelRepository
         , IMessageRecordRepository messageRecordRepository
-        , MessageTaskDomainService taskDomainService)
+        , MessageTaskDomainService taskDomainService
+        , MessageTemplateDomainService messageTemplateDomainService)
     {
         _emailAsyncLocal = emailAsyncLocal;
         _emailSender = emailSender;
         _channelRepository = channelRepository;
         _messageRecordRepository = messageRecordRepository;
         _taskDomainService = taskDomainService;
+        _messageTemplateDomainService = messageTemplateDomainService;
     }
 
     [EventHandler]
@@ -45,20 +48,30 @@ public class RetryEmailMessageEventHandler
         using (_emailAsyncLocal.Change(options))
         {
             var messageData = await _taskDomainService.GetMessageDataAsync(messageRecord.MessageTaskId);
-            try
+            var perDayLimit = messageData.GetDataValue<long>(nameof(MessageTemplate.PerDayLimit));
+            if (!await _messageTemplateDomainService.CheckSendUpperLimitAsync(perDayLimit, messageRecord.UserId))
             {
-                await _emailSender.SendAsync(
-                        messageRecord.GetDataValue<string>(nameof(MessageReceiverUser.Email)),
-                        messageData.GetDataValue<string>(nameof(MessageTemplate.Title)),
-                        messageData.GetDataValue<string>(nameof(MessageTemplate.Content))
-                    );
-                messageRecord.SetResult(true, string.Empty);
+                messageRecord.SetResult(false, "The maximum number of times to send per day has been reached");
+                throw new UserFriendlyException("The maximum number of times to send per day has been reached");
             }
-            catch (Exception ex)
+            else
             {
-                messageRecord.SetResult(false, ex.Message);
-                throw new UserFriendlyException("Resend message failed");
+                try
+                {
+                    await _emailSender.SendAsync(
+                            messageRecord.GetDataValue<string>(nameof(MessageReceiverUser.Email)),
+                            messageData.GetDataValue<string>(nameof(MessageTemplate.Title)),
+                            messageData.GetDataValue<string>(nameof(MessageTemplate.Content))
+                        );
+                    messageRecord.SetResult(true, string.Empty);
+                }
+                catch (Exception ex)
+                {
+                    messageRecord.SetResult(false, ex.Message);
+                    throw new UserFriendlyException("Resend message failed");
+                }
             }
+            
             await _messageRecordRepository.UpdateAsync(messageRecord);
         }
     }

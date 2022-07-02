@@ -11,13 +11,15 @@ public class SendEmailMessageEventHandler
     private readonly IChannelRepository _channelRepository;
     private readonly IMessageRecordRepository _messageRecordRepository;
     private readonly IMessageTaskHistoryRepository _messageTaskHistoryRepository;
+    private readonly MessageTemplateDomainService _messageTemplateDomainService;
 
     public SendEmailMessageEventHandler(IEmailAsyncLocal emailAsyncLocal
         , IEmailSender emailSender
         , ITemplateRenderer templateRenderer
         , IChannelRepository channelRepository
         , IMessageRecordRepository messageRecordRepository
-        , IMessageTaskHistoryRepository messageTaskHistoryRepository)
+        , IMessageTaskHistoryRepository messageTaskHistoryRepository
+        , MessageTemplateDomainService messageTemplateDomainService)
     {
         _emailAsyncLocal = emailAsyncLocal;
         _emailSender = emailSender;
@@ -25,6 +27,7 @@ public class SendEmailMessageEventHandler
         _channelRepository = channelRepository;
         _messageRecordRepository = messageRecordRepository;
         _messageTaskHistoryRepository = messageTaskHistoryRepository;
+        _messageTemplateDomainService = messageTemplateDomainService;
     }
 
     [EventHandler]
@@ -50,20 +53,30 @@ public class SendEmailMessageEventHandler
                 var messageRecord = new MessageRecord(item.UserId, channel.Id, taskHistory.MessageTaskId, taskHistory.Id, item.Variables, eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.Title)));
                 SetUserInfo(messageRecord, item);
                 TemplateRenderer(eto.MessageData, item.Variables);
-                try
+
+                var perDayLimit = eto.MessageData.GetDataValue<long>(nameof(MessageTemplate.PerDayLimit));
+                if (!await _messageTemplateDomainService.CheckSendUpperLimitAsync(perDayLimit, item.UserId))
                 {
-                    await _emailSender.SendAsync(
-                        item.Email,
-                        eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.Title)),
-                        eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.Content))
-                    );
-                    messageRecord.SetResult(true, string.Empty);
-                    okCount++;
+                    messageRecord.SetResult(false, "The maximum number of times to send per day has been reached");
                 }
-                catch (Exception ex)
+                else
                 {
-                    messageRecord.SetResult(false, ex.Message);
+                    try
+                    {
+                        await _emailSender.SendAsync(
+                            item.Email,
+                            eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.Title)),
+                            eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.Content))
+                        );
+                        messageRecord.SetResult(true, string.Empty);
+                        okCount++;
+                    }
+                    catch (Exception ex)
+                    {
+                        messageRecord.SetResult(false, ex.Message);
+                    }
                 }
+
                 await _messageRecordRepository.AddAsync(messageRecord);
             }
             taskHistory.SetResult(okCount == totalCount ? MessageTaskHistoryStatuses.Success : (okCount > 0 ? MessageTaskHistoryStatuses.PartialFailure : MessageTaskHistoryStatuses.Fail));
