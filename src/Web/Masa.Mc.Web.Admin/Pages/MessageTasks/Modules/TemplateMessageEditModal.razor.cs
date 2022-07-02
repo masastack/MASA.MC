@@ -160,4 +160,26 @@ public partial class TemplateMessageEditModal : AdminCompontentBase
         var inputDto = new GetMessageTemplateInputDto(999) { AuditStatus = MessageTemplateAuditStatuses.Adopt, ChannelId = _model.ChannelId };
         _templateItems = (await MessageTemplateService.GetListAsync(inputDto)).Result;
     }
+
+    private void HandleReceiverBack()
+    {
+        if (_model.ChannelType != ChannelTypes.WebsiteMessage || !_selectReceiverType)
+        {
+            _tab = _tabs[0];
+        }
+
+        if (_selectReceiverType)
+        {
+            _selectReceiverType = false;
+        }
+    }
+
+    private void HandleSendingRuleBack()
+    {
+        _tab = _tabs[1];
+        if (_model.ReceiverType == ReceiverTypes.Broadcast)
+        {
+            _selectReceiverType = false;
+        }
+    }
 }

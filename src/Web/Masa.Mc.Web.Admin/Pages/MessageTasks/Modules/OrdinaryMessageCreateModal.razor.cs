@@ -98,4 +98,26 @@ public partial class OrdinaryMessageCreateModal : AdminCompontentBase
             _tab = _tabs[2];
         }
     }
+
+    private void HandleReceiverBack()
+    {
+        if (_model.ChannelType != ChannelTypes.WebsiteMessage || !_selectReceiverType)
+        {
+            _tab = _tabs[0];
+        }
+
+        if (_selectReceiverType)
+        {
+            _selectReceiverType = false;
+        }
+    }
+
+    private void HandleSendingRuleBack()
+    {
+        _tab = _tabs[1];
+        if (_model.ReceiverType == ReceiverTypes.Broadcast)
+        {
+            _selectReceiverType = false;
+        }
+    }
 }

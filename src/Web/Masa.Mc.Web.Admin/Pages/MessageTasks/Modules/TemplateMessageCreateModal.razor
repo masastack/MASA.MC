@@ -87,7 +87,11 @@
 
                     </ElevationTabItem>
                     <ElevationTabItem>
-                        @if (_selectReceiverType && _model.ReceiverType!=ReceiverTypes.Broadcast)
+                        @if (_model.ChannelType == ChannelTypes.WebsiteMessage && !_selectReceiverType)
+                        {
+                            <ReceiverTypeSelect @bind-value="_model.ReceiverType" OnClick="HandleReceiverType" />
+                        }
+                        else
                         {
                             <MInput @bind-Value="_model.Receivers" />
                             <MessageReceivers @bind-ReceiverType="_model.ReceiverType"
@@ -96,10 +100,6 @@
                                           @bind-SelectReceiverType="_model.SelectReceiverType"
                                           ChannelType="_messageInfo.Channel?.Type"
                                           MessageTemplatesId="_model.EntityId" />
-                        }
-                        else
-                        {
-                            <ReceiverTypeSelect @bind-value="_model.ReceiverType" OnClick="HandleReceiverType" />
                         }
                     </ElevationTabItem>
                     <ElevationTabItem>
@@ -129,14 +129,14 @@
             }
             @if (_tab == _tabs[1])
             {
-                if (!_selectReceiverType)
+                if (_model.ChannelType == ChannelTypes.WebsiteMessage && !_selectReceiverType)
                 {
-                    <MIcon Size="24" Color="emphasis2" OnClick="()=> _tab=_tabs[0]">mdi-keyboard-backspace</MIcon>
+                    <MIcon Size="24" Color="emphasis2" OnClick="HandleReceiverBack">mdi-keyboard-backspace</MIcon>
                     <MSpacer></MSpacer>
                 }
                 else
                 {
-                    <MIcon Size="24" Color="emphasis2" OnClick="()=> _selectReceiverType=false">mdi-keyboard-backspace</MIcon>
+                    <MIcon Size="24" Color="emphasis2" OnClick="HandleReceiverBack">mdi-keyboard-backspace</MIcon>
                     <MSpacer></MSpacer>
                     <MButton Color="fill" Class="btn-form btn-fill-line rounded-3 emphasis2--text" OnClick="async() => await HandleOkAsync(true)">@T("Save")</MButton>
                     <MButton Color="primary" Class="btn-form ml-6" OnClick="()=> _tab=_tabs[2]">@T("NextStep")</MButton>
@@ -144,7 +144,7 @@
             }
             @if (_tab == _tabs[2])
             {
-                <MIcon Size="24" Color="emphasis2" OnClick="()=> _tab=_tabs[1]">mdi-keyboard-backspace</MIcon>
+                <MIcon Size="24" Color="emphasis2" OnClick="HandleSendingRuleBack">mdi-keyboard-backspace</MIcon>
                 <MSpacer></MSpacer>
                 <MButton Color="fill" Class="btn-form btn-fill-line rounded-3 emphasis2--text" OnClick="async() => await HandleOkAsync(true)">@T("Save")</MButton>
                 <MButton Color="primary" Class="btn-form ml-6" OnClick="async() => await HandleOkAsync(false)">@T("SaveSend")</MButton>
