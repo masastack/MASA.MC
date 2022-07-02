@@ -50,5 +50,7 @@ public class UpdateMessageTaskStatusEventHandler
             messageTask.SetResult(MessageTaskStatuses.Fail);
         }
         await _repository.UpdateAsync(messageTask);
+        await _repository.UnitOfWork.SaveChangesAsync();
+        await _repository.UnitOfWork.CommitAsync();
     }
 }
