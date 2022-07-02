@@ -56,7 +56,7 @@
                         </dt>
                         @if (_messageRecord.Success == false)
                         {
-                            <dd class="body2 regular3--text">@T("Retry")</dd>
+                            <a href="javascript:;" class="body2 primary--text text-decoration-none" @onclick="HandleRetry">@T("Retry")</a>
                         }
                     </dl>
                     @if (_messageRecord.Success == false)

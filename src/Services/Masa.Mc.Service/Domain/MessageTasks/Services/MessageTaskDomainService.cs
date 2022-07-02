@@ -75,4 +75,12 @@ public class MessageTaskDomainService : DomainService
         }
         return messageData;
     }
+
+    public virtual async Task<MessageData> GetMessageDataAsync(Guid messageTaskId, ExtraPropertyDictionary variables = null)
+    {
+        var messageTask = await _repository.FindAsync(x => x.Id == messageTaskId);
+        if (messageTask == null)
+            throw new UserFriendlyException("messageTask not found");
+        return await GetMessageDataAsync(messageTask.EntityType, messageTask.EntityId, variables);
+    }
 }

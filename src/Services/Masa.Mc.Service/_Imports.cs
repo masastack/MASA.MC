@@ -155,3 +155,5 @@ global using Masa.BuildingBlocks.SearchEngine.AutoComplete;
 global using Masa.BuildingBlocks.BasicAbility.Auth.Enum;
 global using Masa.Contrib.BasicAbility.Auth;
 global using Masa.BuildingBlocks.Identity.IdentityModel;
+global using Masa.Mc.Service.Admin.Application.MessageRecords.Commands;
+global using Masa.Mc.Service.Admin.Domain.MessageRecords.Events;

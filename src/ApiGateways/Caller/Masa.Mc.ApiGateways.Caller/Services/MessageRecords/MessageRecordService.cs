@@ -21,4 +21,9 @@ public class MessageRecordService : ServiceBase
     {
         return await GetAsync<MessageRecordDto>($"{id}");
     }
+
+    public async Task RetryAsync(RetryMessageRecordInputDto inputDto)
+    {
+        await PostAsync(nameof(RetryAsync), inputDto);
+    }
 }
