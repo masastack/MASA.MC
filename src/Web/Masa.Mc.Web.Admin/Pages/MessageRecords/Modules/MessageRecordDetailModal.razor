@@ -85,7 +85,7 @@
                 }
                 @if (_messageTask.EntityType == MessageEntityTypes.Template)
                 {
-                    <TemplateMessageInfo MessageTemplateId="_messageTask.EntityId" MessageTask="_messageTask" Variables="_messageRecord.Variables"></TemplateMessageInfo>
+                    <TemplateMessageInfo MessageTemplateId="_messageTask.EntityId" MessageTask="_messageTask" Variables="_messageRecord.Variables" IsRender></TemplateMessageInfo>
                 }
             </div>
 
