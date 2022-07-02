@@ -14,10 +14,12 @@ public partial class TemplateMessageEditModal : AdminCompontentBase
     private bool _visible;
     private List<MessageTemplateDto> _templateItems = new();
     private MessageTemplateDto _messageInfo = new();
+    private List<ChannelDto> _channelItems = new();
     private List<MessageTaskReceiverDto> _selectReceivers = new();
     private List<MessageTaskReceiverDto> _importReceivers = new();
     private List<string> _tabs = new();
     private string _tab = "";
+    private bool _selectReceiverType;
 
     MessageTaskService MessageTaskService => McCaller.MessageTaskService;
     MessageTemplateService MessageTemplateService => McCaller.MessageTemplateService;
@@ -28,8 +30,6 @@ public partial class TemplateMessageEditModal : AdminCompontentBase
         await base.OnInitializedAsync();
         _tabs = new List<string> { T("DisplayName.MessageInfoContent"), T("DisplayName.MessageTaskReceiver"), T("DisplayName.MessageTaskSendingRule") };
         _tab = _tabs[0];
-        var inputDto = new GetMessageTemplateInputDto(999) { AuditStatus = MessageTemplateAuditStatuses.Adopt };
-        _templateItems = (await MessageTemplateService.GetListAsync(inputDto)).Result;
     }
 
     public async Task OpenModalAsync(MessageTaskDto model)
@@ -56,7 +56,9 @@ public partial class TemplateMessageEditModal : AdminCompontentBase
         {
             _importReceivers = _model.Receivers;
         }
+        _channelItems = await ChannelService.GetListByTypeAsync(_model.ChannelType);
         _messageInfo = await MessageTemplateService.GetAsync(_model.EntityId) ?? new();
+        await HandleChannelChangeAsync();
     }
 
     private async Task HandleCancel()
@@ -69,7 +71,7 @@ public partial class TemplateMessageEditModal : AdminCompontentBase
     {
         _model.Receivers = _model.SelectReceiverType == MessageTaskSelectReceiverTypes.ManualSelection ? _selectReceivers : _importReceivers;
         _model.IsDraft = isDraft;
-        _model.ChannelType = _messageInfo.Channel?.Type;
+        _model.ChannelType = _messageInfo.Channel.Type;
         if (!await _form.ValidateAsync())
         {
             return;
@@ -133,9 +135,29 @@ public partial class TemplateMessageEditModal : AdminCompontentBase
     private void HandleReceiverType(ReceiverTypes receiverType)
     {
         _model.ReceiverType = receiverType;
+        _selectReceiverType = true;
         if (receiverType == ReceiverTypes.Broadcast)
         {
             _tab = _tabs[2];
         }
+    }
+
+    private async Task HandleChannelTypeChangeAsync()
+    {
+        _channelItems = await ChannelService.GetListByTypeAsync(_model.ChannelType);
+        if (_model.ChannelType != ChannelTypes.WebsiteMessage)
+        {
+            _model.ReceiverType = ReceiverTypes.Assign;
+        }
+        else
+        {
+            _model.ReceiverType = default;
+        }
+    }
+
+    private async Task HandleChannelChangeAsync()
+    {
+        var inputDto = new GetMessageTemplateInputDto(999) { AuditStatus = MessageTemplateAuditStatuses.Adopt, ChannelId = _model.ChannelId };
+        _templateItems = (await MessageTemplateService.GetListAsync(inputDto)).Result;
     }
 }

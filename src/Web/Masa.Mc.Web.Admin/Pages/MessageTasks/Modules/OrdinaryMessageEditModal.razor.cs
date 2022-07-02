@@ -13,11 +13,11 @@ public partial class OrdinaryMessageEditModal : AdminCompontentBase
     private Guid _entityId;
     private bool _visible;
     private List<ChannelDto> _channelItems = new();
-    private ChannelTypes _channelType;
     private List<MessageTaskReceiverDto> _selectReceivers = new();
     private List<MessageTaskReceiverDto> _importReceivers = new();
     private List<string> _tabs = new();
     private string _tab = "";
+    private bool _selectReceiverType;
 
     MessageTaskService MessageTaskService => McCaller.MessageTaskService;
     ChannelService ChannelService => McCaller.ChannelService;
@@ -47,7 +47,6 @@ public partial class OrdinaryMessageEditModal : AdminCompontentBase
         var dto = await MessageTaskService.GetAsync(_entityId);
         if (dto != null)
         {
-            _channelType = dto.Channel.Type;
             _model = dto.Adapt<MessageTaskUpsertDto>();
             if (_model.SelectReceiverType == MessageTaskSelectReceiverTypes.ManualSelection)
             {
@@ -57,7 +56,7 @@ public partial class OrdinaryMessageEditModal : AdminCompontentBase
             {
                 _importReceivers = _model.Receivers;
             }
-            _channelItems = await ChannelService.GetListByTypeAsync(_channelType);
+            _channelItems = await ChannelService.GetListByTypeAsync(_model.ChannelType);
             var messageInfo = await MessageInfoService.GetAsync(_model.EntityId);
             if (messageInfo != null) _model.MessageInfo = messageInfo.Adapt<MessageInfoUpsertDto>();
         }
@@ -80,7 +79,7 @@ public partial class OrdinaryMessageEditModal : AdminCompontentBase
         Loading = true;
         await MessageTaskService.UpdateAsync(_entityId, _model);
         Loading = false;
-        await SuccessMessageAsync(T("MessageTaskCreateMessage"));
+        await SuccessMessageAsync(T("MessageTaskEditMessage"));
         _visible = false;
         await ResetForm();
         if (OnOk.HasDelegate)
@@ -104,8 +103,8 @@ public partial class OrdinaryMessageEditModal : AdminCompontentBase
 
     private async Task HandleChannelTypeChangeAsync()
     {
-        _channelItems = await ChannelService.GetListByTypeAsync(_channelType);
-        if (_channelType != ChannelTypes.WebsiteMessage)
+        _channelItems = await ChannelService.GetListByTypeAsync(_model.ChannelType);
+        if (_model.ChannelType != ChannelTypes.WebsiteMessage)
         {
             _model.ReceiverType = ReceiverTypes.Assign;
         }
@@ -118,6 +117,7 @@ public partial class OrdinaryMessageEditModal : AdminCompontentBase
     private void HandleReceiverType(ReceiverTypes receiverType)
     {
         _model.ReceiverType = receiverType;
+        _selectReceiverType = true;
         if (receiverType == ReceiverTypes.Broadcast)
         {
             _tab = _tabs[2];

@@ -7,6 +7,35 @@
                     <ElevationTabItem>
                         <MRow Class="mt-6">
                             <MCol>
+                                <DefaultSelect @bind-Value="@_model.ChannelType"
+                                               Items="@(GetEnumList<ChannelTypes>())"
+                                               Label="@T("DisplayName.ChannelType")"
+                                               ItemText="item => T(item.ToString())"
+                                               ItemValue="item => item"
+                                               Disabled
+                                               TItem="ChannelTypes"
+                                               TItemValue="ChannelTypes"
+                                               TValue="ChannelTypes"
+                                               OnSelectedItemUpdate="HandleChannelTypeChangeAsync">
+                                </DefaultSelect>
+                            </MCol>
+                        </MRow>
+                        <MRow Class="mt-6">
+                            <MCol>
+                                <DefaultSelect @bind-Value="_model.ChannelId"
+                                               Items="@_channelItems"
+                                               Label="@T("DisplayName.Channel")"
+                                               ItemText="item => item.DisplayName"
+                                               ItemValue="item => item.Id"
+                                               TItem="ChannelDto"
+                                               TItemValue="Guid"
+                                               TValue="Guid"
+                                               OnSelectedItemUpdate="HandleChannelChangeAsync">
+                                </DefaultSelect>
+                            </MCol>
+                        </MRow>
+                        <MRow Class="mt-6">
+                            <MCol>
                                 <MAutocomplete Items="_templateItems" @bind-Value="_model.EntityId"
                                                Label="@T("DisplayName.MessageTemplateTemplateId")"
                                                ItemText="@(x=>string.IsNullOrEmpty(x.TemplateId)?x.DisplayName:$"{x.DisplayName}({x.TemplateId})")"
@@ -21,25 +50,6 @@
                         </MRow>
                         @if (_model.EntityId != default)
                         {
-                            <MRow Class="mt-6">
-                                <MCol>
-                                    <DefaultSelect Value="@_messageInfo.Channel?.Type"
-                                               Items="@(GetEnumList<ChannelTypes>())"
-                                               Label="@T("DisplayName.ChannelType")"
-                                               ItemText="item => T(item.ToString())"
-                                               ItemValue="item => item"
-                                               Disabled>
-                                    </DefaultSelect>
-                                </MCol>
-                            </MRow>
-                            <MRow Class="mt-6">
-                                <MCol>
-                                    <DefaultTextField Value="@_messageInfo.Channel?.DisplayName"
-                                                  Label="@T("DisplayName.Channel")"
-                                                  Disabled>
-                                    </DefaultTextField>
-                                </MCol>
-                            </MRow>
                             if (_messageInfo.Channel != null && _messageInfo.Channel.Type != ChannelTypes.Sms)
                             {
                                 <MRow Class="mt-6">
@@ -73,7 +83,7 @@
                         }
                     </ElevationTabItem>
                     <ElevationTabItem>
-                        @if (_model.ReceiverType == ReceiverTypes.Assign)
+                        @if (_selectReceiverType && _model.ReceiverType!=ReceiverTypes.Broadcast)
                         {
                             <MInput @bind-Value="_model.Receivers" />
                             <MessageReceivers @bind-ReceiverType="_model.ReceiverType"
@@ -85,46 +95,7 @@
                         }
                         else
                         {
-                            <MContainer Fluid Class="pt-9 px-1 full-height">
-                                <MRow Align="AlignTypes.Center" Justify="JustifyTypes.SpaceBetween">
-                                    <MCol>
-                                        <MHover Context="hoverContext">
-                                            <MCard @attributes="hoverContext.Attrs" Height="320" Width="320" Class="@($"d-flex flex-column justify-center align-center {hoverContext.Class} {(hoverContext.Hover ? "primary" : "fill-background")}")"
-                                               Elevation="@(hoverContext.Hover ? 12 : 2)"
-                                               OnClick="()=>HandleReceiverType(ReceiverTypes.Assign)">
-                                                @if (hoverContext.Hover)
-                                                {
-                                                    <MIcon Size=40 Color="#FFFFFF">mdi-account-supervisor-circle-outline</MIcon>
-                                                    <div class="h6 pt-10" style="color:#FAFAFA">@T("DisplayName.ReceiverType.Assign")</div>
-                                                }
-                                                else
-                                                {
-                                                    <MIcon Size=40 Color="#323D6F">mdi-account-supervisor-circle</MIcon>
-                                                    <div class="h6 pt-10 regular--text">@T("DisplayName.ReceiverType.Assign")</div>
-                                                }
-                                            </MCard>
-                                        </MHover>
-                                    </MCol>
-                                    <MCol>
-                                        <MHover Context="hoverContext">
-                                            <MCard @attributes="hoverContext.Attrs" Height="320" Width="320" Class="@($"d-flex flex-column justify-center align-center {hoverContext.Class} {(hoverContext.Hover ? "primary" : "fill-background")}")"
-                                               Elevation="@(hoverContext.Hover ? 12 : 2)"
-                                               OnClick="()=>HandleReceiverType(ReceiverTypes.Broadcast)">
-                                                @if (hoverContext.Hover)
-                                                {
-                                                    <MIcon Size=40 Color="#FFFFFF">mdi-email-outline</MIcon>
-                                                    <div class="h6 pt-10" style="color:#FAFAFA">@T("DisplayName.ReceiverType.Broadcast")</div>
-                                                }
-                                                else
-                                                {
-                                                    <MIcon Size=40 Color="#323D6F">mdi-email</MIcon>
-                                                    <div class="h6 pt-10 regular--text">@T("DisplayName.ReceiverType.Broadcast")</div>
-                                                }
-                                            </MCard>
-                                        </MHover>
-                                    </MCol>
-                                </MRow>
-                            </MContainer>
+                            <ReceiverTypeSelect @bind-value="_model.ReceiverType" OnClick="HandleReceiverType" />
                         }
                     </ElevationTabItem>
                     <ElevationTabItem>
@@ -152,12 +123,20 @@
                 <MButton Color="fill" Class="btn-form btn-fill-line rounded-3 emphasis2--text" OnClick="async() => await HandleOkAsync(true)">@T("Save")</MButton>
                 <MButton Color="primary" Class="btn-form ml-6" OnClick="()=> _tab=_tabs[1]">@T("NextStep")</MButton>
             }
-            @if (_tab == _tabs[1] && _model.ReceiverType != default)
+            @if (_tab == _tabs[1])
             {
-                <MIcon Size="24" Color="emphasis2" OnClick="()=> _tab=_tabs[0]">mdi-keyboard-backspace</MIcon>
-                <MSpacer></MSpacer>
-                <MButton Color="fill" Class="btn-form btn-fill-line rounded-3 emphasis2--text" OnClick="async() => await HandleOkAsync(true)">@T("Save")</MButton>
-                <MButton Color="primary" Class="btn-form ml-6" OnClick="()=>_tab=_tabs[2]">@T("NextStep")</MButton>
+                if (!_selectReceiverType)
+                {
+                    <MIcon Size="24" Color="emphasis2" OnClick="()=> _tab=_tabs[0]">mdi-keyboard-backspace</MIcon>
+                    <MSpacer></MSpacer>
+                }
+                else
+                {
+                    <MIcon Size="24" Color="emphasis2" OnClick="()=> _selectReceiverType=false">mdi-keyboard-backspace</MIcon>
+                    <MSpacer></MSpacer>
+                    <MButton Color="fill" Class="btn-form btn-fill-line rounded-3 emphasis2--text" OnClick="async() => await HandleOkAsync(true)">@T("Save")</MButton>
+                    <MButton Color="primary" Class="btn-form ml-6" OnClick="()=> _tab=_tabs[2]">@T("NextStep")</MButton>
+                }
             }
             @if (_tab == _tabs[2])
             {

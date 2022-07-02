@@ -1,0 +1,59 @@
+﻿@inherits AdminCompontentBase
+<MContainer Fluid Class="pt-9 px-1 full-height">
+    <MRow Align="AlignTypes.Center" Justify="JustifyTypes.SpaceBetween">
+        <MCol>
+            <MHover Context="hoverContext">
+                <MCard @attributes="hoverContext.Attrs" Height="320" Width="320" Class="@($"d-flex flex-column justify-center align-center {hoverContext.Class} {((hoverContext.Hover||Value==ReceiverTypes.Assign) ? "primary" : "fill-background")}")"
+                       OnClick="()=>HandleReceiverType(ReceiverTypes.Assign)">
+                    @if (hoverContext.Hover || Value == ReceiverTypes.Assign)
+                    {
+                        <MIcon Size=40 Color="#FFFFFF">mdi-account-supervisor-circle-outline</MIcon>
+                        <div class="h6 pt-10" style="color:#FAFAFA">@T("DisplayName.ReceiverType.Assign")</div>
+                    }
+                    else
+                    {
+                        <MIcon Size=40 Color="#323D6F">mdi-account-supervisor-circle</MIcon>
+                        <div class="h6 pt-10 regular--text">@T("DisplayName.ReceiverType.Assign")</div>
+                    }
+                </MCard>
+            </MHover>
+        </MCol>
+        <MCol>
+            <MHover Context="hoverContext">
+                <MCard @attributes="hoverContext.Attrs" Height="320" Width="320" Class="@($"d-flex flex-column justify-center align-center {hoverContext.Class} {((hoverContext.Hover||Value==ReceiverTypes.Broadcast) ? "primary" : "fill-background")}")"
+                       OnClick="()=>HandleReceiverType(ReceiverTypes.Broadcast)">
+                    @if (hoverContext.Hover || Value == ReceiverTypes.Broadcast)
+                    {
+                        <MIcon Size=40 Color="#FFFFFF">mdi-email-outline</MIcon>
+                        <div class="h6 pt-10" style="color:#FAFAFA">@T("DisplayName.ReceiverType.Broadcast")</div>
+                    }
+                    else
+                    {
+                        <MIcon Size=40 Color="#323D6F">mdi-email</MIcon>
+                        <div class="h6 pt-10 regular--text">@T("DisplayName.ReceiverType.Broadcast")</div>
+                    }
+                </MCard>
+            </MHover>
+        </MCol>
+    </MRow>
+</MContainer>
+
+@code {
+    [Parameter]
+    public ReceiverTypes Value { get; set; }
+
+    [Parameter]
+    public EventCallback<ReceiverTypes> OnClick { get; set; }
+
+    private async Task HandleReceiverType(ReceiverTypes receiverType)
+    {
+        if (OnClick.HasDelegate)
+        {
+            await OnClick.InvokeAsync(receiverType);
+        }
+        else
+        {
+            Value = receiverType;
+        }
+    }
+}

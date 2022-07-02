@@ -12,11 +12,11 @@ public partial class OrdinaryMessageCreateModal : AdminCompontentBase
     private MessageTaskUpsertDto _model = new() { EntityType = MessageEntityTypes.Ordinary };
     private bool _visible;
     private List<ChannelDto> _channelItems = new();
-    private ChannelTypes _channelType;
     private List<MessageTaskReceiverDto> _selectReceivers = new();
     private List<MessageTaskReceiverDto> _importReceivers = new();
     private List<string> _tabs = new();
     private string _tab = "";
+    private bool _selectReceiverType;
 
     MessageTaskService MessageTaskService => McCaller.MessageTaskService;
     ChannelService ChannelService => McCaller.ChannelService;
@@ -78,8 +78,8 @@ public partial class OrdinaryMessageCreateModal : AdminCompontentBase
 
     private async Task HandleChannelTypeChangeAsync()
     {
-        _channelItems = await ChannelService.GetListByTypeAsync(_channelType);
-        if (_channelType != ChannelTypes.WebsiteMessage)
+        _channelItems = await ChannelService.GetListByTypeAsync(_model.ChannelType);
+        if (_model.ChannelType != ChannelTypes.WebsiteMessage)
         {
             _model.ReceiverType = ReceiverTypes.Assign;
         }
@@ -92,6 +92,7 @@ public partial class OrdinaryMessageCreateModal : AdminCompontentBase
     private void HandleReceiverType(ReceiverTypes receiverType)
     {
         _model.ReceiverType = receiverType;
+        _selectReceiverType = true;
         if (receiverType == ReceiverTypes.Broadcast)
         {
             _tab = _tabs[2];

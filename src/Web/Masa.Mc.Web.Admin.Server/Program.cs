@@ -25,6 +25,7 @@ builder.Services.AddGlobalForServer();
 builder.Services.AddElasticsearchClient("auth", option => option.UseNodes("http://10.10.90.44:31920/").UseDefault())
                 .AddAutoComplete(option => option.UseIndexName("user_index"));
 builder.Services.AddSingleton<ChannelUpsertDtoValidator>();
+TypeAdapterConfig.GlobalSettings.Scan(Assembly.GetExecutingAssembly(), Assembly.Load("Masa.Mc.Contracts.Admin"));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -9,7 +9,7 @@ public class MessageTaskUpsertDto
 
     public Guid ChannelId { get; set; }
 
-    public ChannelTypes? ChannelType { get; set; }
+    public ChannelTypes ChannelType { get; set; }
 
     public MessageEntityTypes EntityType { get; set; }
 
