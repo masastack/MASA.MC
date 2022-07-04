@@ -199,6 +199,7 @@
   "DisplayName.MessageTaskList": "消息任务列表",
   "DisplayName.MessageInfoTitle": "消息标题",
   "DisplayName.MessageInfoContent": "消息内容",
+  "DisplayName.MessageTaskIsEnabled": "消息任务状态",
   "DisplayName.MessageTaskTimeType": "时间类型",
   "DisplayName.MessageTaskTimeType.ModificationTime": "最近修改时间",
   "DisplayName.MessageTaskTimeType.SendTime": "发送时间",
@@ -217,6 +218,7 @@
   "DisplayName.MessageTaskHistoryStatus.Success": "发送成功",
   "DisplayName.MessageTaskHistoryStatus.Fail": "发送失败",
   "DisplayName.MessageTaskHistoryStatus.PartialFailure": "部分失败",
+  "DisplayName.MessageTaskStatus": "发送状态",
   "DisplayName.MessageTaskStatus.WaitSend": "待发送",
   "DisplayName.MessageTaskStatus.Sending": "发送中",
   "DisplayName.MessageTaskStatus.Completed": "发送完成",
@@ -280,5 +282,6 @@
   "Title": "标题",
   "BatchSending.Tips": "每{0}秒，发送{1}条",
   "DisplayName.SendingRule.SendingInterval": "分批次发送",
-  "MessageRecordRetryMessage": "消息重发成功."
+  "MessageRecordRetryMessage": "消息重发成功.",
+  "SendStatus": "发送状态"
 }
