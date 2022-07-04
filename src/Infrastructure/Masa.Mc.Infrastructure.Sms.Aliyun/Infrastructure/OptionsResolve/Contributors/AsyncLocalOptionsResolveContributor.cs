@@ -47,7 +47,7 @@ public interface IAliyunSmsAsyncLocal
 {
     IAliyunSmsOptions CurrentOptions { get; }
 
-    IDisposable Change(IAliyunSmsOptions weChatMiniProgramOptions);
+    IDisposable Change(IAliyunSmsOptions aliyunSmsOptions);
 }
 
 public class AliyunSmsAsyncLocal : IAliyunSmsAsyncLocal

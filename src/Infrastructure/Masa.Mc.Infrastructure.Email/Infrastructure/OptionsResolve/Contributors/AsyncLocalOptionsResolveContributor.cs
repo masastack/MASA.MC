@@ -47,7 +47,7 @@ public interface IEmailAsyncLocal
 {
     IEmailOptions CurrentOptions { get; }
 
-    IDisposable Change(IEmailOptions weChatMiniProgramOptions);
+    IDisposable Change(IEmailOptions emailOptions);
 }
 
 public class EmailAsyncLocal : IEmailAsyncLocal
