@@ -209,7 +209,7 @@
   "DisplayName.SendingRule.IsTiming": "定时发送",
   "DisplayName.MessageTaskHistory": "任务历史",
   "DisplayName.MessageTaskHistoryStatus": "发送历史状态",
-  "DisplayName.MessageTaskHistoryTaskHistoryNo": "消息任务批次",
+  "DisplayName.MessageTaskHistoryNo": "消息任务批次",
   "DisplayName.MessageTaskHistoryStatus.WaitSend": "待发送",
   "DisplayName.MessageTaskHistoryStatus.Sending": "发送中",
   "DisplayName.MessageTaskHistoryStatus.Completed": "发送完成",

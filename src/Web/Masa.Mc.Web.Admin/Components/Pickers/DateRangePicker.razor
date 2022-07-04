@@ -1,22 +1,22 @@
 ﻿@inherits AdminCompontentBase
 
-<div class="d-flex fill fill-card @Class" style="height: 40px;width:100%">
+<div class="d-flex fill fill-card @Class" style="height: 40px;min-width: 240px">
     <MIcon Size=20 Color="emphasis2--text" Class="pl-2">mdi-calendar-month</MIcon>
     <MMenu @bind-Value="StartTimeVisible" CloseOnContentClick="false" OffsetY Transition="scale-transition">
         <ActivatorContent>
-            <div class="ml-5 text-btn my-auto hover-pointer" style="height:20px;" @attributes="@context.Attrs">
-                @(StartTime?.ToString(T("$DateFormat"))??T("StartTime"))
+            <div class="ml-2 text-btn my-auto hover-pointer text-center" style="height:20px;min-width:73px" @attributes="@context.Attrs">
+                @(StartTime?.ToString("yyyy-MM-dd")??T("StartTime"))
             </div>
         </ActivatorContent>
         <ChildContent>
             <MDatePicker Value=_StartTime Max=_EndTime ValueChanged=UpdateStartTimeAsync TValue="DateOnly?" OnInput="()=> StartTimeVisible = false"></MDatePicker>
         </ChildContent>
     </MMenu>
-    <MDivider Vertical Class="pa-2" Style="display:initial"></MDivider>
+    <MDivider Vertical Class="ma-2" Style="display:initial"></MDivider>
     <MMenu @bind-Value="EndTimeVisible" CloseOnContentClick="false" OffsetY Transition="scale-transition">
         <ActivatorContent>
-            <div class="ml-5 text-btn my-auto hover-pointer" style="height:20px;" @attributes="@context.Attrs">
-                @(EndTime?.ToString(T("$DateFormat"))??T("EndTime"))
+            <div class="text-btn my-auto hover-pointer text-center" style="height:20px;min-width:73px" @attributes="@context.Attrs">
+                @(EndTime?.ToString("yyyy-MM-dd")??T("EndTime"))
             </div>
         </ActivatorContent>
         <ChildContent>
