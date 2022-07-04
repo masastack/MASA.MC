@@ -7,9 +7,9 @@ public class MessageTaskUpsertDto
 {
     public string DisplayName { get; set; } = string.Empty;
 
-    public Guid ChannelId { get; set; }
+    public Guid? ChannelId { get; set; }
 
-    public ChannelTypes ChannelType { get; set; }
+    public ChannelTypes? ChannelType { get; set; }
 
     public MessageEntityTypes EntityType { get; set; }
 
@@ -22,8 +22,6 @@ public class MessageTaskUpsertDto
     public ReceiverTypes ReceiverType { get; set; }
 
     public MessageTaskSelectReceiverTypes SelectReceiverType { get; set; } = MessageTaskSelectReceiverTypes.ManualSelection;
-
-    //public DateTimeOffset? SendTime { get; set; } = DateTimeOffset.Now;
 
     public string Sign { get; set; } = string.Empty;
 

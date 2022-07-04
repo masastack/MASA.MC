@@ -7,7 +7,9 @@ public class MessageTask : FullAggregateRoot<Guid, Guid>
 {
     public string DisplayName { get; protected set; } = string.Empty;
 
-    public Guid ChannelId { get; protected set; }
+    public ChannelTypes? ChannelType { get; protected set; }
+
+    public Guid? ChannelId { get; protected set; }
 
     public AppChannel Channel { get; protected set; } = default!;
 
@@ -37,9 +39,10 @@ public class MessageTask : FullAggregateRoot<Guid, Guid>
 
     public MessageTaskStatuses Status { get; protected set; }
 
-    public MessageTask(string displayName, Guid channelId, MessageEntityTypes entityType, Guid entityId, bool isDraft, string sign, ReceiverTypes receiverType, MessageTaskSelectReceiverTypes selectReceiverType, List<MessageTaskReceiver> receivers, MessageTaskSendingRule sendRules)
+    public MessageTask(string displayName, ChannelTypes? channelType, Guid? channelId, MessageEntityTypes entityType, Guid entityId, bool isDraft, string sign, ReceiverTypes receiverType, MessageTaskSelectReceiverTypes selectReceiverType, List<MessageTaskReceiver> receivers, MessageTaskSendingRule sendRules)
     {
         DisplayName = displayName;
+        ChannelType = channelType;
         ChannelId = channelId;
         EntityType = entityType;
         EntityId = entityId;

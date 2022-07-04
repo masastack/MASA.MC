@@ -3,6 +3,6 @@
 
 namespace Masa.Mc.Service.Admin.Domain.MessageTasks.Events;
 
-public record ExecuteMessageTaskEvent(MessageTask MessageTask, List<MessageReceiverUser> ReceiverUsers) : DomainEvent
+public record ExecuteMessageTaskEvent(MessageTask MessageTask, List<MessageReceiverUser> ReceiverUsers, bool IsTest = false) : DomainEvent
 {
 }

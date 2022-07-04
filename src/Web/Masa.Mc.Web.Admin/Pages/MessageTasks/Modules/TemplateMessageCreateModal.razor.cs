@@ -50,7 +50,6 @@ public partial class TemplateMessageCreateModal : AdminCompontentBase
     {
         _model.Receivers = _model.SelectReceiverType == MessageTaskSelectReceiverTypes.ManualSelection ? _selectReceivers : _importReceivers;
         _model.IsDraft = isDraft;
-        _model.ChannelType = _messageInfo.Channel.Type;
         if (!await _form.ValidateAsync())
         {
             return;
@@ -124,7 +123,7 @@ public partial class TemplateMessageCreateModal : AdminCompontentBase
 
     private async Task HandleChannelTypeChangeAsync()
     {
-        _channelItems = await ChannelService.GetListByTypeAsync(_model.ChannelType);
+        _channelItems = _model.ChannelType.HasValue ? await ChannelService.GetListByTypeAsync(_model.ChannelType.Value) : new();
         if (_model.ChannelType != ChannelTypes.WebsiteMessage)
         {
             _model.ReceiverType = ReceiverTypes.Assign;

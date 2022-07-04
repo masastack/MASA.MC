@@ -3,7 +3,10 @@
     <MCardTitle class="px-0 py-1">
         <MListItem>
             <MListItemTitle Class="overflow-visible">
-                <ColorTag Color="@MessageTask.Channel?.Color" Height=24>@MessageTask.Channel?.DisplayName</ColorTag>
+                @if (MessageTask.Channel != null)
+                {
+                    <ColorTag Color="@MessageTask.Channel?.Color" Height=24>@MessageTask.Channel?.DisplayName</ColorTag>
+                }
             </MListItemTitle>
             <MListItemIcon Class="mr-n2">
                 <MMenu OffsetY>

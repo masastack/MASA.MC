@@ -7,22 +7,25 @@ public class UpdateOrdinaryMessageTaskCommandHandler
 {
     private readonly MessageTaskDomainService _domainService;
     private readonly IMessageTaskRepository _repository;
-    private readonly IEventBus _eventBus;
+    private readonly IMessageInfoRepository _messageInfoRepository;
 
-    public UpdateOrdinaryMessageTaskCommandHandler(MessageTaskDomainService domainService, IMessageTaskRepository repository, IEventBus eventBus)
+    public UpdateOrdinaryMessageTaskCommandHandler(MessageTaskDomainService domainService, IMessageTaskRepository repository, IMessageInfoRepository messageInfoRepositor)
     {
         _domainService = domainService;
         _repository = repository;
-        _eventBus = eventBus;
+        _messageInfoRepository = messageInfoRepositor;
     }
 
     [EventHandler(1)]
     public async Task UpdateMessageInfoAsync(UpdateOrdinaryMessageTaskCommand updateCommand)
     {
         var dto = updateCommand.MessageTask;
-        var updateMessageInfoCommand = new UpdateMessageInfoCommand(dto.EntityId, dto.MessageInfo);
-        await _eventBus.PublishAsync(updateMessageInfoCommand);
-        updateCommand.MessageTask.DisplayName = dto.MessageInfo.Title;
+        var messageInfo = await _messageInfoRepository.FindAsync(x => x.Id == dto.EntityId);
+        if (messageInfo == null)
+            throw new UserFriendlyException("messageInfo not found");
+        dto.Adapt(messageInfo);
+        await _messageInfoRepository.UpdateAsync(messageInfo);
+        updateCommand.MessageTask.DisplayName = messageInfo.Title;
     }
 
     [EventHandler(2)]

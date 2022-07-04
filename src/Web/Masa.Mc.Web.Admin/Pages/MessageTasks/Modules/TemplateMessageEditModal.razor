@@ -12,10 +12,9 @@
                                                Label="@T("DisplayName.ChannelType")"
                                                ItemText="item => T(item.ToString())"
                                                ItemValue="item => item"
-                                               Disabled
                                                TItem="ChannelTypes"
                                                TItemValue="ChannelTypes"
-                                               TValue="ChannelTypes"
+                                               TValue="ChannelTypes?"
                                                OnSelectedItemUpdate="HandleChannelTypeChangeAsync">
                                 </DefaultSelect>
                             </MCol>
@@ -29,7 +28,7 @@
                                                ItemValue="item => item.Id"
                                                TItem="ChannelDto"
                                                TItemValue="Guid"
-                                               TValue="Guid"
+                                               TValue="Guid?"
                                                OnSelectedItemUpdate="HandleChannelChangeAsync">
                                 </DefaultSelect>
                             </MCol>

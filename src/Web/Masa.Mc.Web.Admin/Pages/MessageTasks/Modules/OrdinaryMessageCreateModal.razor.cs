@@ -78,7 +78,7 @@ public partial class OrdinaryMessageCreateModal : AdminCompontentBase
 
     private async Task HandleChannelTypeChangeAsync()
     {
-        _channelItems = await ChannelService.GetListByTypeAsync(_model.ChannelType);
+        _channelItems = _model.ChannelType.HasValue ? await ChannelService.GetListByTypeAsync(_model.ChannelType.Value) : new();
         if (_model.ChannelType != ChannelTypes.WebsiteMessage)
         {
             _model.ReceiverType = ReceiverTypes.Assign;

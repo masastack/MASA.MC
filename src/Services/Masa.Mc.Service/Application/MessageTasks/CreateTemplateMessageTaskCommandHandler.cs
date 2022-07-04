@@ -18,9 +18,13 @@ public class CreateTemplateMessageTaskCommandHandler
     public async Task CheckMessageTemplateAsync(CreateTemplateMessageTaskCommand createCommand)
     {
         var messageTemplate = await _messageTemplateRepository.FindAsync(x => x.Id == createCommand.MessageTask.EntityId);
-        if (messageTemplate == null)
+        if (messageTemplate == null && !createCommand.MessageTask.IsDraft)
             throw new UserFriendlyException("messageTemplate not found");
-        createCommand.MessageTask.DisplayName = string.IsNullOrEmpty(messageTemplate.Title) ? messageTemplate.DisplayName : messageTemplate.Title;
+
+        if (messageTemplate != null)
+        {
+            createCommand.MessageTask.DisplayName = string.IsNullOrEmpty(messageTemplate.Title) ? messageTemplate.DisplayName : messageTemplate.Title;
+        }
     }
 
     [EventHandler(2)]

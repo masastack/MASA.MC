@@ -56,8 +56,13 @@ public partial class TemplateMessageEditModal : AdminCompontentBase
         {
             _importReceivers = _model.Receivers;
         }
-        _channelItems = await ChannelService.GetListByTypeAsync(_model.ChannelType);
-        _messageInfo = await MessageTemplateService.GetAsync(_model.EntityId) ?? new();
+        _channelItems = _model.ChannelType.HasValue ? await ChannelService.GetListByTypeAsync(_model.ChannelType.Value) : new();
+
+        if (_model.EntityId != default)
+        {
+            _messageInfo = await MessageTemplateService.GetAsync(_model.EntityId) ?? new();
+        }
+
         await HandleChannelChangeAsync();
     }
 
@@ -71,7 +76,6 @@ public partial class TemplateMessageEditModal : AdminCompontentBase
     {
         _model.Receivers = _model.SelectReceiverType == MessageTaskSelectReceiverTypes.ManualSelection ? _selectReceivers : _importReceivers;
         _model.IsDraft = isDraft;
-        _model.ChannelType = _messageInfo.Channel.Type;
         if (!await _form.ValidateAsync())
         {
             return;
@@ -144,7 +148,7 @@ public partial class TemplateMessageEditModal : AdminCompontentBase
 
     private async Task HandleChannelTypeChangeAsync()
     {
-        _channelItems = await ChannelService.GetListByTypeAsync(_model.ChannelType);
+        _channelItems = _model.ChannelType.HasValue ? await ChannelService.GetListByTypeAsync(_model.ChannelType.Value) : new();
         if (_model.ChannelType != ChannelTypes.WebsiteMessage)
         {
             _model.ReceiverType = ReceiverTypes.Assign;

@@ -7,7 +7,9 @@ public class MessageTaskDto : AuditEntityDto<Guid, Guid>
 {
     public string DisplayName { get; set; } = string.Empty;
 
-    public Guid ChannelId { get; set; }
+    public ChannelTypes? ChannelType { get; set; }
+
+    public Guid? ChannelId { get; set; }
 
     public ChannelDto Channel { get; set; } = new();
 

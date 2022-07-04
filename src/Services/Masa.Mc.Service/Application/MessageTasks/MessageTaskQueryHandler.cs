@@ -28,7 +28,7 @@ public class MessageTaskQueryHandler
         if (entity == null)
             throw new UserFriendlyException("messageTask not found");
         query.Result = entity.Adapt<MessageTaskDto>();
-        query.Result.SendRules.IsTiming= entity.SendRules.IsTiming;
+        query.Result.SendRules.IsTiming = entity.SendRules.IsTiming;
         query.Result.SendRules.IsSendingInterval = entity.SendRules.IsSendingInterval;
     }
 
@@ -108,8 +108,11 @@ public class MessageTaskQueryHandler
     {
         foreach (var item in dtos)
         {
-            var messageData = await _domainService.GetMessageDataAsync(item.EntityType, item.EntityId, item.Variables);
-            item.Content = HtmlHelper.CutString(messageData.GetDataValue<string>(nameof(MessageTemplate.Content)),280);
+            if (item.EntityId != default)
+            {
+                var messageData = await _domainService.GetMessageDataAsync(item.EntityType, item.EntityId, item.Variables);
+                item.Content = HtmlHelper.CutString(messageData.GetDataValue<string>(nameof(MessageTemplate.Content)), 280);
+            }
         }
     }
 }

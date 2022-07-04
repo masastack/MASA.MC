@@ -12,18 +12,21 @@ public class MessageTaskCommandHandler
     private readonly MessageTaskDomainService _domainService;
     private readonly ICsvImporter _importer;
     private readonly IMessageTemplateRepository _messageTemplateRepository;
+    private readonly IDomainEventBus _domainEventBus;
 
     public MessageTaskCommandHandler(IMessageTaskRepository repository
         , IMessageTaskHistoryRepository messageTaskHistoryRepository
         , MessageTaskDomainService domainService
         , ICsvImporter importer
-        , IMessageTemplateRepository messageTemplateRepository)
+        , IMessageTemplateRepository messageTemplateRepository
+        , IDomainEventBus domainEventBus)
     {
         _repository = repository;
         _messageTaskHistoryRepository = messageTaskHistoryRepository;
         _domainService = domainService;
         _importer = importer;
         _messageTemplateRepository = messageTemplateRepository;
+        _domainEventBus = domainEventBus;
     }
 
     [EventHandler]
@@ -44,12 +47,14 @@ public class MessageTaskCommandHandler
         var entity = await _repository.FindAsync(x => x.Id == inputDto.Id);
         if (entity == null)
             throw new UserFriendlyException("messageTask not found");
+        if (!entity.ChannelId.HasValue)
+            throw new UserFriendlyException("please select the configuration channel");
         if (entity.Channel.Type == ChannelTypes.Sms && string.IsNullOrEmpty(entity.Sign))
             throw new UserFriendlyException("please fill in the signature of the task first");
         if (entity.Variables.Any(x => string.IsNullOrEmpty(x.Value.ToString())))
             throw new UserFriendlyException("please fill in the signature template variable of the task first");
         var receiverUsers = inputDto.ReceiverUsers.Adapt<List<MessageReceiverUser>>();
-        await _domainService.SendAsync(inputDto.Id, receiverUsers);
+        await _domainEventBus.PublishAsync(new ExecuteMessageTaskEvent(entity, receiverUsers, true));
     }
 
     [EventHandler]

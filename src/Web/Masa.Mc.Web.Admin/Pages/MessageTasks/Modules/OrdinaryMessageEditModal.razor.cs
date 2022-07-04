@@ -56,7 +56,7 @@ public partial class OrdinaryMessageEditModal : AdminCompontentBase
             {
                 _importReceivers = _model.Receivers;
             }
-            _channelItems = await ChannelService.GetListByTypeAsync(_model.ChannelType);
+            _channelItems = _model.ChannelType.HasValue ? await ChannelService.GetListByTypeAsync(_model.ChannelType.Value) : new();
             var messageInfo = await MessageInfoService.GetAsync(_model.EntityId);
             if (messageInfo != null) _model.MessageInfo = messageInfo.Adapt<MessageInfoUpsertDto>();
         }
@@ -103,7 +103,7 @@ public partial class OrdinaryMessageEditModal : AdminCompontentBase
 
     private async Task HandleChannelTypeChangeAsync()
     {
-        _channelItems = await ChannelService.GetListByTypeAsync(_model.ChannelType);
+        _channelItems = _model.ChannelType.HasValue ? await ChannelService.GetListByTypeAsync(_model.ChannelType.Value) : new();
         if (_model.ChannelType != ChannelTypes.WebsiteMessage)
         {
             _model.ReceiverType = ReceiverTypes.Assign;

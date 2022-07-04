@@ -28,7 +28,7 @@ public class SendWebsiteMessageEventHandler
         var userIds = new List<string>();
         int okCount = 0;
         int totalCount = taskHistory.ReceiverUsers.Count;
-        if (taskHistory.MessageTask.ReceiverType == ReceiverTypes.Assign)
+        if (taskHistory.IsTest || taskHistory.MessageTask.ReceiverType == ReceiverTypes.Assign)
         {
             foreach (var item in taskHistory.ReceiverUsers)
             {

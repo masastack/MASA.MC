@@ -44,17 +44,6 @@ public class MessageTaskDomainService : DomainService
         }
     }
 
-    public virtual async Task SendAsync(Guid messageTaskId, List<MessageReceiverUser> receiverUsers)
-    {
-        var messageTask = await _repository.FindAsync(x => x.Id == messageTaskId);
-        if (messageTask == null)
-            throw new UserFriendlyException("messageTask not found");
-        if (!messageTask.IsEnabled)
-            throw new UserFriendlyException("cannot send when disabled");
-
-        await EventBus.PublishAsync(new ExecuteMessageTaskEvent(messageTask, receiverUsers));
-    }
-
     public virtual async Task<MessageData> GetMessageDataAsync(MessageEntityTypes entityType, Guid entityId, ExtraPropertyDictionary variables = null)
     {
         var messageData = new MessageData();
