@@ -124,10 +124,10 @@ public class ResolveMessageTaskEventHandler
     {
         return new MessageReceiverUser
         {
-            UserId = staff.User.Id,
-            DisplayName = staff.User.Name ?? staff.User.DisplayName ?? string.Empty,
-            PhoneNumber = staff.User.PhoneNumber ?? string.Empty,
-            Email = staff.User?.Email ?? string.Empty,
+            UserId = staff.Id,
+            DisplayName = staff.Name ?? staff.DisplayName ?? string.Empty,
+            PhoneNumber = staff.PhoneNumber ?? string.Empty,
+            Email = staff.Email ?? string.Empty,
             Variables = variables,
         };
     }
