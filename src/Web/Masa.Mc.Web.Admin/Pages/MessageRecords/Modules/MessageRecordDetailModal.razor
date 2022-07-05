@@ -1,6 +1,6 @@
 ﻿@inherits AdminCompontentBase
 <div @ref="Ref">
-    <SheetDialog Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.ViewMessageTask")">
+    <SheetDialog Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.ViewMessageRecord")">
         <div class="full-height d-flex">
             <div class="pa-12 record-detail-left">
                 @if (string.IsNullOrEmpty(_messageRecord.ExtraProperties.GetProperty<string>("Avatar")))
@@ -20,22 +20,28 @@
                 <MTimeline Dense=false Class="mt-9" Style="margin-left: -66px;">
                     <MTimelineItem Small FillDot Right>
                         <OppositeContent>
-                            <span class="caption regular2--text mr-n5">@T("DisplayName.MessageRecordExpectSendTime")</span>
+                            <span class="body2 regular--text mr-n5">@T("DisplayName.MessageRecordExpectSendTime")</span>
                         </OppositeContent>
+                        <IconContent>
+                            <MAvatar Color="primary" Size="16"></MAvatar>
+                        </IconContent>
                         <ChildContent>
                             <div class="ml-n5">
-                                <div class="caption regular--text">@(_messageTask.SendRules.SendTime?.ToString(T("$DateFormat"))??_messageTask.SendTime?.ToString(T("$DateFormat")))</div>
+                                <div class="btn emphasis--text">@(_messageTask.SendRules.SendTime?.ToString(T("$DateFormat"))??_messageTask.SendTime?.ToString(T("$DateFormat")))</div>
                                 <div class="overline regular3--text">@(_messageTask.SendRules.SendTime?.ToString(T("$TimeFormat"))??_messageTask.SendTime?.ToString(T("$TimeFormat")))</div>
                             </div>
                         </ChildContent>
                     </MTimelineItem>
-                    <MTimelineItem Small FillDot Right>
+                    <MTimelineItem Small FillDot Right Class="mt-5">
                         <OppositeContent>
-                            <span class="caption regular2--text mr-n5">@T("DisplayName.MessageRecordSendTime")</span>
+                            <span class="body2 regular--text mr-n5">@T("DisplayName.MessageRecordSendTime")</span>
                         </OppositeContent>
+                        <IconContent>
+                            <MAvatar Color="primary" Size="16"></MAvatar>
+                        </IconContent>
                         <ChildContent>
                             <div class="ml-n5">
-                                <div class="caption regular--text">@_messageRecord.SendTime?.ToString(T("$DateFormat"))</div>
+                                <div class="btn emphasis--text">@_messageRecord.SendTime?.ToString(T("$DateFormat"))</div>
                                 <div class="overline regular3--text">@_messageRecord.SendTime?.ToString(T("$TimeFormat"))</div>
                             </div>
                         </ChildContent>

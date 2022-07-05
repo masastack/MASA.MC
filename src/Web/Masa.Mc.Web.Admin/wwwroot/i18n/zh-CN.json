@@ -283,5 +283,7 @@
   "BatchSending.Tips": "每{0}秒，发送{1}条",
   "DisplayName.SendingRule.SendingInterval": "分批次发送",
   "MessageRecordRetryMessage": "消息重发成功.",
-  "SendStatus": "发送状态"
+  "SendStatus": "发送状态",
+  "Permission.ViewMessageRecord": "查看消息记录",
+  "MessageContent": "消息内容"
 }
