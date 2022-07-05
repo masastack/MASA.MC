@@ -15,6 +15,7 @@ public partial class ExternalUserCreateModal : AdminCompontentBase
 
     public async Task OpenModalAsync()
     {
+        ResetForm();
         await InvokeAsync(() =>
         {
             _visible = true;
@@ -25,7 +26,6 @@ public partial class ExternalUserCreateModal : AdminCompontentBase
     private void HandleCancel()
     {
         _visible = false;
-        ResetForm();
     }
 
     private async Task HandleOk()
@@ -38,8 +38,6 @@ public partial class ExternalUserCreateModal : AdminCompontentBase
         {
             await OnOk.InvokeAsync(user);
         }
-
-        ResetForm();
     }
 
     private void ResetForm()
