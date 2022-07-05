@@ -9,7 +9,7 @@ public partial class TemplateMessageEditModal : AdminCompontentBase
     public EventCallback OnOk { get; set; }
 
     private MForm _form;
-    private MessageTaskUpsertDto _model = new();
+    private MessageTaskUpsertModel _model = new();
     private Guid _entityId;
     private bool _visible;
     private List<MessageTemplateDto> _templateItems = new();
@@ -35,7 +35,7 @@ public partial class TemplateMessageEditModal : AdminCompontentBase
     public async Task OpenModalAsync(MessageTaskDto model)
     {
         _entityId = model.Id;
-        _model = model.Adapt<MessageTaskUpsertDto>();
+        _model = model.Adapt<MessageTaskUpsertModel>();
         await GetFormDataAsync();
         await InvokeAsync(() =>
         {
@@ -47,7 +47,7 @@ public partial class TemplateMessageEditModal : AdminCompontentBase
     private async Task GetFormDataAsync()
     {
         var dto = await MessageTaskService.GetAsync(_entityId);
-        _model = dto.Adapt<MessageTaskUpsertDto>();
+        _model = dto.Adapt<MessageTaskUpsertModel>();
         if (_model.SelectReceiverType == MessageTaskSelectReceiverTypes.ManualSelection)
         {
             _selectReceivers = _model.Receivers;
@@ -74,16 +74,24 @@ public partial class TemplateMessageEditModal : AdminCompontentBase
 
     private async Task HandleOkAsync(bool isDraft)
     {
-        _model.Receivers = _model.SelectReceiverType == MessageTaskSelectReceiverTypes.ManualSelection ? _selectReceivers : _importReceivers;
+        SetReceivers();
         _model.IsDraft = isDraft;
         if (!await _form.ValidateAsync())
         {
             return;
         }
         Loading = true;
-        await MessageTaskService.UpdateAsync(_entityId, _model);
+        var inputDto = _model.Adapt<MessageTaskUpsertDto>();
+        await MessageTaskService.UpdateAsync(_entityId, inputDto);
         Loading = false;
-        await SuccessMessageAsync(T("MessageTaskEditMessage"));
+        if (_model.IsDraft)
+        {
+            await SuccessMessageAsync(T("MessageTaskEditMessage"));
+        }
+        else
+        {
+            await SuccessMessageAsync(T("MessageTaskSendMessage"));
+        }
         _visible = false;
         await ResetForm();
         if (OnOk.HasDelegate)
@@ -185,5 +193,22 @@ public partial class TemplateMessageEditModal : AdminCompontentBase
         {
             _selectReceiverType = false;
         }
+    }
+
+    private async Task HandleNextStep(int currentStep)
+    {
+        _model.Step = currentStep;
+        SetReceivers();
+        _model.IsDraft = false;
+        if (!await _form.ValidateAsync())
+        {
+            return;
+        }
+        _tab = _tabs[currentStep];
+    }
+
+    private void SetReceivers()
+    {
+        _model.Receivers = _model.SelectReceiverType == MessageTaskSelectReceiverTypes.ManualSelection ? _selectReceivers : _importReceivers;
     }
 }

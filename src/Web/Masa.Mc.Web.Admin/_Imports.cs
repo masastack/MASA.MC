@@ -73,3 +73,6 @@ global using Masa.BuildingBlocks.SearchEngine.AutoComplete.Options;
 global using Masa.Stack.Components;
 global using Masa.Mc.Contracts.Admin.Enums.MessageRecords;
 global using Masa.Stack.Components.Models;
+global using Masa.Mc.Contracts.Admin.Dtos.MessageInfos.Validator;
+global using Masa.Mc.Contracts.Admin.Dtos.MessageTasks.Validator;
+global using Masa.Mc.Web.Admin.Model;

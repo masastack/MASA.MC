@@ -9,7 +9,7 @@ public partial class TemplateMessageCreateModal : AdminCompontentBase
     public EventCallback OnOk { get; set; }
 
     private MForm _form;
-    private MessageTaskUpsertDto _model = new() { EntityType = MessageEntityTypes.Template };
+    private MessageTaskUpsertModel _model = new() { EntityType = MessageEntityTypes.Template };
     private bool _visible;
     private List<MessageTemplateDto> _templateItems = new();
     private MessageTemplateDto _messageInfo = new();
@@ -48,16 +48,24 @@ public partial class TemplateMessageCreateModal : AdminCompontentBase
 
     private async Task HandleOkAsync(bool isDraft)
     {
-        _model.Receivers = _model.SelectReceiverType == MessageTaskSelectReceiverTypes.ManualSelection ? _selectReceivers : _importReceivers;
+        SetReceivers();
         _model.IsDraft = isDraft;
         if (!await _form.ValidateAsync())
         {
             return;
         }
         Loading = true;
-        await MessageTaskService.CreateAsync(_model);
+        var inputDto = _model.Adapt<MessageTaskUpsertDto>();
+        await MessageTaskService.CreateAsync(inputDto);
         Loading = false;
-        await SuccessMessageAsync(T("MessageTaskCreateMessage"));
+        if (_model.IsDraft)
+        {
+            await SuccessMessageAsync(T("MessageTaskCreateMessage"));
+        }
+        else
+        {
+            await SuccessMessageAsync(T("MessageTaskSendMessage"));
+        }
         _visible = false;
         await ResetForm();
         if (OnOk.HasDelegate)
@@ -160,5 +168,22 @@ public partial class TemplateMessageCreateModal : AdminCompontentBase
         {
             _selectReceiverType = false;
         }
+    }
+
+    private async Task HandleNextStep(int currentStep)
+    {
+        _model.Step = currentStep;
+        SetReceivers();
+        _model.IsDraft = false;
+        if (!await _form.ValidateAsync())
+        {
+            return;
+        }
+        _tab = _tabs[currentStep];
+    }
+
+    private void SetReceivers()
+    {
+        _model.Receivers = _model.SelectReceiverType == MessageTaskSelectReceiverTypes.ManualSelection ? _selectReceivers : _importReceivers;
     }
 }
