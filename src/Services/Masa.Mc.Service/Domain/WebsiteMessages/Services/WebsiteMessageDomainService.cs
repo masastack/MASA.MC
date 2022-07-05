@@ -20,7 +20,7 @@ public class WebsiteMessageDomainService : DomainService
         var linkUrl = messageData.GetDataValue<bool>(nameof(MessageTemplate.IsJump)) ? messageData.GetDataValue<string>(nameof(MessageTemplate.JumpUrl)) : string.Empty;
         var websiteMessage = new WebsiteMessage(taskHistory.MessageTask.ChannelId.Value, item.UserId, messageData.GetDataValue<string>(nameof(MessageTemplate.Title)), messageData.GetDataValue<string>(nameof(MessageTemplate.Content)), linkUrl, taskHistory.SendTime.Value);
 
-        var messageRecord = new MessageRecord(item.UserId, websiteMessage.ChannelId, taskHistory.MessageTaskId, taskHistory.Id, item.Variables, messageData.GetDataValue<string>(nameof(MessageTemplate.Title)));
+        var messageRecord = new MessageRecord(item.UserId, websiteMessage.ChannelId, taskHistory.MessageTaskId, taskHistory.Id, item.Variables, messageData.GetDataValue<string>(nameof(MessageTemplate.Title)), taskHistory.MessageTask.ExpectSendTime);
         SetExtraProperties(messageRecord, messageData, item);
 
         var perDayLimit = messageData.GetDataValue<long>(nameof(MessageTemplate.PerDayLimit));

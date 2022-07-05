@@ -27,6 +27,8 @@ public class MessageTask : FullAggregateRoot<Guid, Guid>
 
     public DateTimeOffset? SendTime { get; protected set; }
 
+    public DateTimeOffset? ExpectSendTime { get; protected set; }
+
     public string Sign { get; protected set; } = string.Empty;
 
     public List<MessageTaskReceiver> Receivers { get; protected set; } = new();
@@ -107,5 +109,10 @@ public class MessageTask : FullAggregateRoot<Guid, Guid>
     public void SetResult(MessageTaskStatuses status)
     {
         Status = status;
+    }
+
+    public void SetExpectSendTime()
+    {
+        ExpectSendTime = SendRules.SendTime.HasValue ? SendRules.SendTime.Value : DateTimeOffset.Now;
     }
 }

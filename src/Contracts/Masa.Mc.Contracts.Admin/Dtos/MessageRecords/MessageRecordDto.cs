@@ -10,6 +10,7 @@ public class MessageRecordDto : AuditEntityDto<Guid, Guid>
     public ChannelDto Channel { get; set; } = new();
     public Guid MessageTaskId { get;  set; }
     public Guid MessageTaskHistoryId { get;  set; }
+    public string MessageTaskHistoryNo { get; set; } = string.Empty;
     public bool? Success { get;  set; }
     public DateTimeOffset? SendTime { get;  set; }
     public DateTimeOffset? ExpectSendTime { get; set; }

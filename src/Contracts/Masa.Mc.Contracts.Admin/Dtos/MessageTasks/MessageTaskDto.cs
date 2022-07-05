@@ -27,6 +27,8 @@ public class MessageTaskDto : AuditEntityDto<Guid, Guid>
 
     public DateTimeOffset? SendTime { get; set; }
 
+    public DateTimeOffset? ExpectSendTime { get; set; }
+
     public string Sign { get; set; } = string.Empty;
 
     public MessageInfoDto MessageInfo { get; set; } = new();

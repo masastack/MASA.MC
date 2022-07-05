@@ -5,5 +5,6 @@ namespace Masa.Mc.Contracts.Admin.Enums.MessageRecords;
 
 public enum MessageRecordTimeTypes
 {
-    SendTime = 1
+    ExpectSendTime = 1,
+    SendTime
 }

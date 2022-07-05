@@ -25,6 +25,7 @@ public class MessageTaskDomainService : DomainService
     public virtual async Task CreateAsync(MessageTask messageTask)
     {
         messageTask.SetDraft(messageTask.IsDraft);
+        messageTask.SetExpectSendTime();
         await _repository.AddAsync(messageTask);
         if (!messageTask.IsDraft)
         {
@@ -36,6 +37,7 @@ public class MessageTaskDomainService : DomainService
     public virtual async Task UpdateAsync(MessageTask messageTask)
     {
         messageTask.SetDraft(messageTask.IsDraft);
+        messageTask.SetExpectSendTime();
         await _repository.UpdateAsync(messageTask);
         if (!messageTask.IsDraft)
         {
