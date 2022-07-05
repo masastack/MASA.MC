@@ -82,7 +82,7 @@ public class MessageTaskQueryHandler
     {
         var template = await _messageTemplateRepository.FindAsync(x => x.Id == query.MessageTemplateId);
         var record = new ExpandoObject();
-        var properties = typeof(ReceiverImportDto).GetProperties();
+        var properties = GetReceiverImportDtoType(query.ChannelType).GetProperties();
         foreach (var prop in properties)
         {
             var name = prop.Name;
@@ -113,6 +113,21 @@ public class MessageTaskQueryHandler
                 var messageData = await _domainService.GetMessageDataAsync(item.EntityType, item.EntityId, item.Variables);
                 item.Content = HtmlHelper.CutString(messageData.GetDataValue<string>(nameof(MessageTemplate.Content)), 280);
             }
+        }
+    }
+
+    private Type GetReceiverImportDtoType(ChannelTypes channelType)
+    {
+        switch (channelType)
+        {
+            case ChannelTypes.Sms:
+                return typeof(SmsReceiverImportDto);
+            case ChannelTypes.Email:
+                return typeof(EmailReceiverImportDto);
+            case ChannelTypes.WebsiteMessage:
+                return typeof(WebsiteMessageReceiverImportDto);
+            default:
+                throw new UserFriendlyException("Unknown channel type");
         }
     }
 }

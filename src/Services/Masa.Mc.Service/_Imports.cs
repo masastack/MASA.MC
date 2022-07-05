@@ -158,3 +158,5 @@ global using Masa.Mc.Service.Admin.Application.MessageRecords.Commands;
 global using Masa.Mc.Service.Admin.Domain.MessageRecords.Events;
 global using Masa.BuildingBlocks.ReadWriteSpliting.Cqrs.Commands;
 global using Masa.BuildingBlocks.ReadWriteSpliting.Cqrs.Queries;
+global using Masa.Mc.Contracts.Admin.Dtos.MessageTasks.Imports;
+global using Magicodes.ExporterAndImporter.Core.Models;

@@ -3,7 +3,7 @@
 
 namespace Masa.Mc.Service.Admin.Application.MessageTasks.Queries;
 
-public record GenerateReceiverImportTemplateQuery(Guid? MessageTemplateId) : Query<byte[]>
+public record GenerateReceiverImportTemplateQuery(Guid? MessageTemplateId, ChannelTypes ChannelType) : Query<byte[]>
 {
     public override byte[] Result { get; set; } = default!;
 }

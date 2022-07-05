@@ -101,9 +101,9 @@ public class MessageTaskService : ServiceBase
         await eventBus.PublishAsync(command);
     }
 
-    public async Task<byte[]> GenerateReceiverImportTemplateAsync(IEventBus eventBus, Guid? messageTemplatesId)
+    public async Task<byte[]> GenerateReceiverImportTemplateAsync(IEventBus eventBus, Guid? messageTemplatesId, ChannelTypes channelType)
     {
-        var query = new GenerateReceiverImportTemplateQuery(messageTemplatesId);
+        var query = new GenerateReceiverImportTemplateQuery(messageTemplatesId, channelType);
         await eventBus.PublishAsync(query);
         return query.Result;
     }

@@ -287,5 +287,6 @@
   "MessageRecordRetryMessage": "消息重发成功.",
   "SendStatus": "发送状态",
   "Permission.ViewMessageRecord": "查看消息记录",
-  "MessageContent": "消息内容"
+  "MessageContent": "消息内容",
+  "Description.ChannelType.Required": "请先选择渠道类型"
 }

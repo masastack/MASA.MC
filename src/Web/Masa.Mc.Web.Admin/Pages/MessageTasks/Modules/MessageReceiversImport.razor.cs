@@ -12,6 +12,9 @@ public partial class MessageReceiversImport
     public Guid? MessageTemplatesId { get; set; }
 
     [Parameter]
+    public ChannelTypes? ChannelType { get; set; }
+
+    [Parameter]
     public EventCallback<List<MessageTaskReceiverDto>> ValueChanged { get; set; }
 
     [Parameter]
@@ -31,6 +34,11 @@ public partial class MessageReceiversImport
 
     private async void HandleFileChange(IBrowserFile file)
     {
+        if (!ChannelType.HasValue)
+        {
+            await WarningAsync(T("Description.ChannelType.Required"));
+            return;
+        }
         var fileContent = await ReadFile(file);
         _isUpload = true;
         if (FileEncoderHelper.GetTextFileEncodingType(fileContent) != Encoding.UTF8)
@@ -45,7 +53,8 @@ public partial class MessageReceiversImport
             FileContent = fileContent,
             Size = file.Size,
             ContentType = "text/csv",
-            MessageTemplatesId = MessageTemplatesId
+            MessageTemplatesId = MessageTemplatesId,
+            ChannelType = ChannelType.Value
         };
         _importResult = await MessageTaskService.ImportReceiversAsync(dto);
         Value = _importResult.Data.ToList();
@@ -57,7 +66,12 @@ public partial class MessageReceiversImport
 
     private async Task Download()
     {
-        var contentBytes = await MessageTaskService.GenerateReceiverImportTemplateAsync(MessageTemplatesId);
+        if (!ChannelType.HasValue)
+        {
+            await WarningAsync(T("Description.ChannelType.Required"));
+            return;
+        }
+        var contentBytes = await MessageTaskService.GenerateReceiverImportTemplateAsync(MessageTemplatesId, ChannelType.Value);
         await BlazorDownloadFileService.DownloadFile("ReceiverImportTemplate.csv", contentBytes, "text/csv");
     }
 
