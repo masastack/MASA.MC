@@ -47,33 +47,35 @@ public class SendSmsMessageEventHandler
                 var messageRecord = new MessageRecord(item.UserId, channel.Id, taskHistory.MessageTaskId, taskHistory.Id, item.Variables, eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.DisplayName)), taskHistory.MessageTask.ExpectSendTime);
                 SetUserInfo(messageRecord, item);
 
-                var perDayLimit = eto.MessageData.GetDataValue<long>(nameof(MessageTemplate.PerDayLimit));
-                if (!await _messageTemplateDomainService.CheckSendUpperLimitAsync(perDayLimit, item.UserId))
+                if (taskHistory.MessageTask.EntityType == MessageEntityTypes.Template)
                 {
-                    messageRecord.SetResult(false, "The maximum number of times to send per day has been reached");
+                    var perDayLimit = eto.MessageData.GetDataValue<long>(nameof(MessageTemplate.PerDayLimit));
+                    if (!await _messageTemplateDomainService.CheckSendUpperLimitAsync(perDayLimit, item.UserId))
+                    {
+                        messageRecord.SetResult(false, "The maximum number of times to send per day has been reached");
+                        continue;
+                    }
                 }
-                else
+
+                var smsMessage = new SmsMessage(item.PhoneNumber, JsonSerializer.Serialize(item.Variables));
+                smsMessage.Properties.Add("SignName", eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.Sign)));
+                smsMessage.Properties.Add("TemplateCode", eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.TemplateId)));
+                try
                 {
-                    var smsMessage = new SmsMessage(item.PhoneNumber, JsonSerializer.Serialize(item.Variables));
-                    smsMessage.Properties.Add("SignName", eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.Sign)));
-                    smsMessage.Properties.Add("TemplateCode", eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.TemplateId)));
-                    try
+                    var response = await _smsSender.SendAsync(smsMessage) as SmsSendResponse;
+                    if (response.Success)
                     {
-                        var response = await _smsSender.SendAsync(smsMessage) as SmsSendResponse;
-                        if (response.Success)
-                        {
-                            messageRecord.SetResult(true, string.Empty);
-                            okCount++;
-                        }
-                        else
-                        {
-                            messageRecord.SetResult(false, response.Message);
-                        }
+                        messageRecord.SetResult(true, string.Empty);
+                        okCount++;
                     }
-                    catch (Exception ex)
+                    else
                     {
-                        messageRecord.SetResult(false, ex.Message);
+                        messageRecord.SetResult(false, response.Message);
                     }
+                }
+                catch (Exception ex)
+                {
+                    messageRecord.SetResult(false, ex.Message);
                 }
 
                 await _messageRecordRepository.AddAsync(messageRecord);

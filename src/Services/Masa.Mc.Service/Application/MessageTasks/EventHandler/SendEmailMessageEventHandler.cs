@@ -54,27 +54,29 @@ public class SendEmailMessageEventHandler
                 SetUserInfo(messageRecord, item);
                 TemplateRenderer(eto.MessageData, item.Variables);
 
-                var perDayLimit = eto.MessageData.GetDataValue<long>(nameof(MessageTemplate.PerDayLimit));
-                if (!await _messageTemplateDomainService.CheckSendUpperLimitAsync(perDayLimit, item.UserId))
+                if (taskHistory.MessageTask.EntityType == MessageEntityTypes.Template)
                 {
-                    messageRecord.SetResult(false, "The maximum number of times to send per day has been reached");
+                    var perDayLimit = eto.MessageData.GetDataValue<long>(nameof(MessageTemplate.PerDayLimit));
+                    if (!await _messageTemplateDomainService.CheckSendUpperLimitAsync(perDayLimit, item.UserId))
+                    {
+                        messageRecord.SetResult(false, "The maximum number of times to send per day has been reached");
+                        continue;
+                    }
                 }
-                else
+
+                try
                 {
-                    try
-                    {
-                        await _emailSender.SendAsync(
-                            item.Email,
-                            eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.Title)),
-                            eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.Content))
-                        );
-                        messageRecord.SetResult(true, string.Empty);
-                        okCount++;
-                    }
-                    catch (Exception ex)
-                    {
-                        messageRecord.SetResult(false, ex.Message);
-                    }
+                    await _emailSender.SendAsync(
+                        item.Email,
+                        eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.Title)),
+                        eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.Content))
+                    );
+                    messageRecord.SetResult(true, string.Empty);
+                    okCount++;
+                }
+                catch (Exception ex)
+                {
+                    messageRecord.SetResult(false, ex.Message);
                 }
 
                 await _messageRecordRepository.AddAsync(messageRecord);
