@@ -23,11 +23,14 @@ public class WebsiteMessageDomainService : DomainService
         var messageRecord = new MessageRecord(item.UserId, websiteMessage.ChannelId, taskHistory.MessageTaskId, taskHistory.Id, item.Variables, messageData.GetDataValue<string>(nameof(MessageTemplate.Title)), taskHistory.MessageTask.ExpectSendTime);
         SetExtraProperties(messageRecord, messageData, item);
 
-        var perDayLimit = messageData.GetDataValue<long>(nameof(MessageTemplate.PerDayLimit));
-        var sendNum = await _messageRecordRepository.GetCountAsync(x => x.SendTime.Value.Date == DateTime.Now.Date && x.UserId == item.UserId);
-        if (sendNum > perDayLimit)
+        if (taskHistory.MessageTask.EntityType == MessageEntityTypes.Template)
         {
-            messageRecord.SetResult(false, "The maximum number of times to send per day has been reached");
+            var perDayLimit = messageData.GetDataValue<long>(nameof(MessageTemplate.PerDayLimit));
+            var sendNum = await _messageRecordRepository.GetCountAsync(x => x.SendTime.Value.Date == DateTime.Now.Date && x.UserId == item.UserId);
+            if (sendNum > perDayLimit)
+            {
+                messageRecord.SetResult(false, "The maximum number of times to send per day has been reached");
+            }
         }
         else
         {

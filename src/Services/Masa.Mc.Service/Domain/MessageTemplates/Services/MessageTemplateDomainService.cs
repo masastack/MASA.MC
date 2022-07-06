@@ -63,10 +63,6 @@ public class MessageTemplateDomainService : DomainService
 
     public async Task<bool> CheckSendUpperLimitAsync(long perDayLimit, Guid userId)
     {
-        if (perDayLimit == 0)
-        {
-            return true;
-        }
         var sendNum = await _messageRecordRepository.GetCountAsync(x => x.SendTime.Value.Date == DateTime.Now.Date && x.UserId == userId);
         if (sendNum > perDayLimit)
         {
