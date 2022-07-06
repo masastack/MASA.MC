@@ -19,6 +19,7 @@ public class MessageTaskService : ServiceBase
         MapGet(GenerateReceiverImportTemplateAsync);
         MapPost(ImportReceiversAsync);
         MapGet(GetMessageTaskReceiverListAsync);
+        MapPost(ResolveReceiversCountAsync);
     }
 
     public async Task<PaginatedListDto<MessageTaskDto>> GetListAsync(IEventBus eventbus, [FromQuery] Guid? channelId, [FromQuery] MessageEntityTypes? entityType, [FromQuery] bool? isDraft, [FromQuery] bool? isEnabled, [FromQuery] MessageTaskTimeTypes? timeType, [FromQuery] DateTime? startTime, [FromQuery] DateTime? endTime, [FromQuery] MessageTaskStatuses? status, [FromQuery] string filter = "", [FromQuery] string sorting = "", [FromQuery] int page = 1, [FromQuery] int pagesize = 10)
@@ -145,5 +146,12 @@ public class MessageTaskService : ServiceBase
         }));
 
         return list;
+    }
+
+    public async Task<long> ResolveReceiversCountAsync(IEventBus eventBus, List<MessageTaskReceiverDto> dto)
+    {
+        var query = new ResolveReceiversCountQuery(dto);
+        await eventBus.PublishAsync(query);
+        return query.Result;
     }
 }

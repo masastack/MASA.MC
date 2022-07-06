@@ -58,14 +58,6 @@ public partial class SmsTemplateManagement : AdminCompontentBase
         await LoadData();
     }
 
-    private async Task SearchKeyDown(KeyboardEventArgs eventArgs)
-    {
-        if (eventArgs.Key == "Enter")
-        {
-            await RefreshAsync();
-        }
-    }
-
     private async Task RefreshAsync()
     {
         _queryParam.Page = 1;

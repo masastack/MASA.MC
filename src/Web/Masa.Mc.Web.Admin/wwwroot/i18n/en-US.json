@@ -188,5 +188,6 @@
   "View": "View",
   "UploadComplete": "Upload complete",
   "UploadFile": "Upload file",
-  "Permission.ViewMessageRecord": "View message record"
+  "Permission.ViewMessageRecord": "View message record",
+  "ReceiversCount": "Expect {0} people"
 }

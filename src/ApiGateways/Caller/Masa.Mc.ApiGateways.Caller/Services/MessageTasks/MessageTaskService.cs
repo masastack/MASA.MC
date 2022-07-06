@@ -76,4 +76,9 @@ public class MessageTaskService : ServiceBase
     {
         return await GetAsync<List<MessageTaskReceiverDto>>($"{nameof(GetMessageTaskReceiverListAsync)}?filter={filter}");
     }
+
+    public async Task<long> ResolveReceiversCountAsync(List<MessageTaskReceiverDto> dto)
+    {
+        return await PostAsync<List<MessageTaskReceiverDto>, long>(nameof(ResolveReceiversCountAsync), dto);
+    }
 }
