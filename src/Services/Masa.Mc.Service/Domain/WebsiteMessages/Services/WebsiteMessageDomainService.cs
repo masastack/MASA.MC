@@ -18,25 +18,13 @@ public class WebsiteMessageDomainService : DomainService
     {
         if (await _messageRecordRepository.IsExistsAsync(taskHistory.Id, item.UserId)) return false;
         var linkUrl = messageData.GetDataValue<bool>(nameof(MessageTemplate.IsJump)) ? messageData.GetDataValue<string>(nameof(MessageTemplate.JumpUrl)) : string.Empty;
-        var websiteMessage = new WebsiteMessage(taskHistory.MessageTask.ChannelId.Value, item.UserId, messageData.GetDataValue<string>(nameof(MessageTemplate.Title)), messageData.GetDataValue<string>(nameof(MessageTemplate.Content)), linkUrl, taskHistory.SendTime.Value);
+        var websiteMessage = new WebsiteMessage(taskHistory.MessageTask.ChannelId.Value, item.UserId, messageData.GetDataValue<string>(nameof(MessageTemplate.Title)), messageData.GetDataValue<string>(nameof(MessageTemplate.Content)), linkUrl, DateTimeOffset.Now);
 
         var messageRecord = new MessageRecord(item.UserId, websiteMessage.ChannelId, taskHistory.MessageTaskId, taskHistory.Id, item.Variables, messageData.GetDataValue<string>(nameof(MessageTemplate.Title)), taskHistory.MessageTask.ExpectSendTime);
         SetExtraProperties(messageRecord, messageData, item);
 
-        if (taskHistory.MessageTask.EntityType == MessageEntityTypes.Template)
-        {
-            var perDayLimit = messageData.GetDataValue<long>(nameof(MessageTemplate.PerDayLimit));
-            var sendNum = await _messageRecordRepository.GetCountAsync(x => x.SendTime.Value.Date == DateTime.Now.Date && x.UserId == item.UserId);
-            if (sendNum > perDayLimit)
-            {
-                messageRecord.SetResult(false, "The maximum number of times to send per day has been reached");
-            }
-        }
-        else
-        {
-            messageRecord.SetResult(true, string.Empty);
-            await _repository.AddAsync(websiteMessage);
-        }
+        messageRecord.SetResult(true, string.Empty);
+        await _repository.AddAsync(websiteMessage);
 
         await _messageRecordRepository.AddAsync(messageRecord);
 

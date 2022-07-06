@@ -60,6 +60,7 @@ public class SendEmailMessageEventHandler
                     if (!await _messageTemplateDomainService.CheckSendUpperLimitAsync(perDayLimit, item.UserId))
                     {
                         messageRecord.SetResult(false, "The maximum number of times to send per day has been reached");
+                        await _messageRecordRepository.AddAsync(messageRecord);
                         continue;
                     }
                 }
