@@ -40,7 +40,7 @@ builder.Services.AddAuthentication(options =>
     options.RequireHttpsMetadata = false;
     options.Audience = "";
 });
-builder.Services.AddMasaRedisCache(builder.Configuration.GetSection(nameof(RedisConfigurationOptions))).AddMasaMemoryCache();
+builder.Services.AddMasaRedisCache(builder.Configuration.GetSection("RedisConfig")).AddMasaMemoryCache();
 builder.Services.AddAliyunSms();
 builder.Services.AddEmail();
 builder.Services.AddCsv();

@@ -160,3 +160,4 @@ global using Masa.BuildingBlocks.ReadWriteSpliting.Cqrs.Commands;
 global using Masa.BuildingBlocks.ReadWriteSpliting.Cqrs.Queries;
 global using Masa.Mc.Contracts.Admin.Dtos.MessageTasks.Imports;
 global using Magicodes.ExporterAndImporter.Core.Models;
+global using Masa.Utils.Caching.Core.Interfaces;
