@@ -72,10 +72,21 @@ public partial class TemplateMessageEditModal : AdminCompontentBase
         await ResetForm();
     }
 
-    private async Task HandleOkAsync(bool isDraft)
+    private async Task HandleSaveAsync()
+    {
+        _model.IsDraft = true;
+        await HandleOkAsync();
+    }
+
+    private async Task HandleSendAsync()
+    {
+        _model.IsDraft = false;
+        await HandleOkAsync();
+    }
+
+    private async Task HandleOkAsync()
     {
         SetReceivers();
-        _model.IsDraft = isDraft;
         if (!await _form.ValidateAsync())
         {
             return;

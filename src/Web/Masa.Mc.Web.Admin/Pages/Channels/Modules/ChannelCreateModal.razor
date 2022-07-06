@@ -98,7 +98,7 @@
         <ActionContent>
             <MIcon Size="24" Color="emphasis2" OnClick="()=> _step-- ">mdi-keyboard-backspace</MIcon>
             <MSpacer></MSpacer>
-            <MButton Color="primary" Class="btn-form" OnClick="HandleOkAsync">@T("Submit")</MButton>
+            <MButton Color="primary" Class="btn-form" OnClick="async()=> await Throttle(HandleOkAsync)">@T("Submit")</MButton>
         </ActionContent>
     </McModal>
 </div>

@@ -119,7 +119,7 @@
             {
                 <MIcon Size="24" Color="emphasis2" OnClick="()=> _tab=_tabs[0]">mdi-keyboard-backspace</MIcon>
                 <MSpacer></MSpacer>
-                <MButton Color="fill" Class="btn-form btn-fill-line rounded-3 emphasis2--text" OnClick="async() => await HandleOkAsync(true)">@T("Save")</MButton>
+                <MButton Color="fill" Class="btn-form btn-fill-line rounded-3 emphasis2--text" OnClick="async() => await Throttle(HandleSaveAsync)">@T("Save")</MButton>
                 <MButton Color="primary" Class="btn-form ml-6" OnClick="()=> HandleNextStep(1)">@T("NextStep")</MButton>
             }
             @if (_tab == _tabs[1])
@@ -133,7 +133,7 @@
                 {
                     <MIcon Size="24" Color="emphasis2" OnClick="HandleReceiverBack">mdi-keyboard-backspace</MIcon>
                     <MSpacer></MSpacer>
-                    <MButton Color="fill" Class="btn-form btn-fill-line rounded-3 emphasis2--text" OnClick="async() => await HandleOkAsync(true)">@T("Save")</MButton>
+                    <MButton Color="fill" Class="btn-form btn-fill-line rounded-3 emphasis2--text" OnClick="async() => await Throttle(HandleSaveAsync)">@T("Save")</MButton>
                     <MButton Color="primary" Class="btn-form ml-6" OnClick="()=> HandleNextStep(2)">@T("NextStep")</MButton>
                 }
             }
@@ -141,8 +141,8 @@
             {
                 <MIcon Size="24" Color="emphasis2" OnClick="HandleSendingRuleBack">mdi-keyboard-backspace</MIcon>
                 <MSpacer></MSpacer>
-                <MButton Color="fill" Class="btn-form btn-fill-line rounded-3 emphasis2--text" OnClick="async() => await HandleOkAsync(true)">@T("Save")</MButton>
-                <MButton Color="primary" Class="btn-form ml-6" OnClick="async() => await HandleOkAsync(false)">@T("SaveSend")</MButton>
+                <MButton Color="fill" Class="btn-form btn-fill-line rounded-3 emphasis2--text" OnClick="async() => await Throttle(HandleSaveAsync)">@T("Save")</MButton>
+                <MButton Color="primary" Class="btn-form ml-6" OnClick="async() => await Throttle(HandleSendAsync)">@T("SaveSend")</MButton>
             }
         </ActionContent>
 
