@@ -7,15 +7,12 @@ public class WebsiteMessageCursorCommandHandler
 {
     private readonly WebsiteMessageCursorDomainService _domainService;
     private readonly IDistributedCacheClient _cacheClient;
-    private readonly IHubContext<NotificationsHub> _hubContext;
 
     public WebsiteMessageCursorCommandHandler(WebsiteMessageCursorDomainService domainService
-        , IDistributedCacheClient cacheClient
-        , IHubContext<NotificationsHub> hubContext)
+        , IDistributedCacheClient cacheClient)
     {
         _domainService = domainService;
         _cacheClient = cacheClient;
-        _hubContext = hubContext;
     }
 
     [EventHandler]
@@ -29,8 +26,5 @@ public class WebsiteMessageCursorCommandHandler
         }
         await _domainService.CheckAsync(currentUserId);
         await _cacheClient.RemoveAsync<int>($"{CacheKeys.MESSAGE_CURSOR_CHECK_COUNT}_{currentUserId}");
-
-        var onlineClients = _hubContext.Clients.Users(currentUserId.ToString());
-        await onlineClients.SendAsync(SignalRMethodConsts.GET_NOTIFICATION);
     }
 }
