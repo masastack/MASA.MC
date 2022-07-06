@@ -45,6 +45,11 @@ public static class FluentValidationExtensions
         return ruleBuilder.Matches(RegularHelper.CHINESE_LETTER_NUMBER);
     }
 
+    public static IRuleBuilderOptions<T, string> ChineseLetterNumberSymbol<T>(this IRuleBuilder<T, string> ruleBuilder)
+    {
+        return ruleBuilder.Matches(RegularHelper.CHINESE_LETTER_NUMBER_SYMBOL);
+    }
+
     public static IRuleBuilderOptions<T, string> Phone<T>(this IRuleBuilder<T, string> ruleBuilder)
     {
         return ruleBuilder.Matches<T>(RegularHelper.PHONE);
