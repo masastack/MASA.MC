@@ -35,6 +35,11 @@ public static class FluentValidationExtensions
         return ruleBuilder.Matches(RegularHelper.LETTER_NUMBER);
     }
 
+    public static IRuleBuilderOptions<T, string> LetterNumberSymbol<T>(this IRuleBuilder<T, string> ruleBuilder)
+    {
+        return ruleBuilder.Matches(RegularHelper.LETTER_NUMBER_SYMBOL);
+    }
+
     public static IRuleBuilderOptions<T, string> ChineseLetter<T>(this IRuleBuilder<T, string> ruleBuilder)
     {
         return ruleBuilder.Matches(RegularHelper.CHINESE_LETTER);
