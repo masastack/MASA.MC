@@ -2,6 +2,15 @@
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
 var builder = WebApplication.CreateBuilder(args);
+
+#if DEBUG
+builder.Services.AddDaprStarter(opt =>
+{
+    opt.DaprHttpPort = 20602;
+    opt.DaprGrpcPort = 20601;
+});
+#endif
+
 builder.Services.AddDaprClient();
 builder.Services.AddActors(options =>
 {
@@ -16,10 +25,11 @@ builder.Services.AddAuthClient(builder.Configuration.GetValue<string>("AuthClien
 builder.Services.AddAliyunStorage(serviceProvider =>
 {
     var daprClient = serviceProvider.GetRequiredService<DaprClient>();
-    var accessId = daprClient.GetSecretAsync("localsecretstore", "access_id").Result.First().Value;
-    var accessSecret = daprClient.GetSecretAsync("localsecretstore", "access_secret").Result.First().Value;
-    var endpoint = daprClient.GetSecretAsync("localsecretstore", "endpoint").Result.First().Value;
-    var roleArn = daprClient.GetSecretAsync("localsecretstore", "roleArn").Result.First().Value;
+    var aliyunOssConfig = daprClient.GetSecretAsync("localsecretstore", "aliyun-oss").Result;
+    var accessId = aliyunOssConfig["access_id"];
+    var accessSecret = aliyunOssConfig["access_secret"];
+    var endpoint = aliyunOssConfig["endpoint"];
+    var roleArn = aliyunOssConfig["role_arn"];
     return new AliyunStorageOptions(accessId, accessSecret, endpoint, roleArn, "SessionTest")
     {
         Sts = new AliyunStsOptions()
@@ -29,7 +39,7 @@ builder.Services.AddAliyunStorage(serviceProvider =>
     };
 });
 builder.Services.AddAuthorization();
-builder.Services.AddAuthentication(options =>
+builder.Services.AddAuthentication(options => 
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -49,10 +59,6 @@ builder.Services.AddTransient<Microsoft.AspNetCore.SignalR.IUserIdProvider, McUs
 builder.Services.AddSignalR();
 builder.Services.AddTransient<NotificationsHub>();
 TypeAdapterConfig.GlobalSettings.Scan(Assembly.GetExecutingAssembly(), Assembly.Load("Masa.Mc.Contracts.Admin"));
-
-#if DEBUG
-builder.Services.AddDaprStarter(builder.Configuration.GetSection(nameof(DaprOptions)));
-#endif
 
 var app = builder.Services
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
