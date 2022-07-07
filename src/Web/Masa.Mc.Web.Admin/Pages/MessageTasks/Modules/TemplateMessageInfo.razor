@@ -13,10 +13,10 @@
         <dd class="body2 emphasis2--text mt-1">@(string.IsNullOrEmpty(MessageTemplate.Title)?MessageTemplate.DisplayName:MessageTemplate.Title)</dd>
     </dl>
     <dl class="mt-8">
-        <dt class="overline regular3--text">@T("DisplayName.MessageTemplateContent")</dt>
+        <dt class="overline regular3--text">@T("MessageContent")</dt>
         <dd class="body2 emphasis2--text mt-1"><RichText Value="@MessageTemplate.Content"></RichText></dd>
     </dl>
-    @if (Variables.Any())
+    @if (!IsRender && Variables.Any())
     {
         <div class="subtitle2 emphasis2--text mt-8">@T("DisplayName.VariableValueTransfer")</div>
         <MSimpleTable Class="btn-fill-line mt-8">

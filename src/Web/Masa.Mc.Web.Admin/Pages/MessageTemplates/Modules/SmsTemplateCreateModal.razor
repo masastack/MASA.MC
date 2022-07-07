@@ -85,7 +85,7 @@
         </ChildContent>
         <ActionContent>
             <MSpacer></MSpacer>
-            <MButton Color="primary" Class="btn-form" OnClick="HandleOkAsync">@T("Submit")</MButton>
+            <MButton Color="primary" Class="btn-form" OnClick="async() => await Throttle(HandleOkAsync)">@T("Submit")</MButton>
         </ActionContent>
     </McModal>
 </div>

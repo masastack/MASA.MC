@@ -11,13 +11,17 @@ public class SendEmailMessageEventHandler
     private readonly IChannelRepository _channelRepository;
     private readonly IMessageRecordRepository _messageRecordRepository;
     private readonly IMessageTaskHistoryRepository _messageTaskHistoryRepository;
+    private readonly MessageTemplateDomainService _messageTemplateDomainService;
+    private readonly MessageRecordDomainService _messageRecordDomainService;
 
     public SendEmailMessageEventHandler(IEmailAsyncLocal emailAsyncLocal
         , IEmailSender emailSender
         , ITemplateRenderer templateRenderer
         , IChannelRepository channelRepository
         , IMessageRecordRepository messageRecordRepository
-        , IMessageTaskHistoryRepository messageTaskHistoryRepository)
+        , IMessageTaskHistoryRepository messageTaskHistoryRepository
+        , MessageTemplateDomainService messageTemplateDomainService
+        , MessageRecordDomainService messageRecordDomainService)
     {
         _emailAsyncLocal = emailAsyncLocal;
         _emailSender = emailSender;
@@ -25,6 +29,8 @@ public class SendEmailMessageEventHandler
         _channelRepository = channelRepository;
         _messageRecordRepository = messageRecordRepository;
         _messageTaskHistoryRepository = messageTaskHistoryRepository;
+        _messageTemplateDomainService = messageTemplateDomainService;
+        _messageRecordDomainService = messageRecordDomainService;
     }
 
     [EventHandler]
@@ -47,9 +53,21 @@ public class SendEmailMessageEventHandler
             int totalCount = taskHistory.ReceiverUsers.Count;
             foreach (var item in taskHistory.ReceiverUsers)
             {
-                var messageRecord = new MessageRecord(item.UserId, channel.Id, taskHistory.MessageTaskId, taskHistory.Id, item.Variables, eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.Title)));
-                SetUserInfo(messageRecord, item);
+                var messageRecord = new MessageRecord(item.UserId, channel.Id, taskHistory.MessageTaskId, taskHistory.Id, item.Variables, eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.Title)), taskHistory.MessageTask.ExpectSendTime);
+                _messageRecordDomainService.SetUserInfo(messageRecord, item);
                 TemplateRenderer(eto.MessageData, item.Variables);
+
+                if (taskHistory.MessageTask.EntityType == MessageEntityTypes.Template)
+                {
+                    var perDayLimit = eto.MessageData.GetDataValue<long>(nameof(MessageTemplate.PerDayLimit));
+                    if (!await _messageTemplateDomainService.CheckSendUpperLimitAsync(perDayLimit, item.UserId))
+                    {
+                        messageRecord.SetResult(false, "The maximum number of times to send per day has been reached");
+                        await _messageRecordRepository.AddAsync(messageRecord);
+                        continue;
+                    }
+                }
+
                 try
                 {
                     await _emailSender.SendAsync(
@@ -64,6 +82,7 @@ public class SendEmailMessageEventHandler
                 {
                     messageRecord.SetResult(false, ex.Message);
                 }
+
                 await _messageRecordRepository.AddAsync(messageRecord);
             }
             taskHistory.SetResult(okCount == totalCount ? MessageTaskHistoryStatuses.Success : (okCount > 0 ? MessageTaskHistoryStatuses.PartialFailure : MessageTaskHistoryStatuses.Fail));
@@ -75,12 +94,5 @@ public class SendEmailMessageEventHandler
     {
         messageData.SetDataValue(nameof(MessageTemplate.Title), await _templateRenderer.RenderAsync(messageData.GetDataValue<string>(nameof(MessageTemplate.Title)), Variables));
         messageData.SetDataValue(nameof(MessageTemplate.Content), await _templateRenderer.RenderAsync(messageData.GetDataValue<string>(nameof(MessageTemplate.Content)), Variables));
-    }
-
-    private void SetUserInfo(MessageRecord messageRecord, MessageReceiverUser item)
-    {
-        messageRecord.SetDataValue(nameof(item.DisplayName), item.DisplayName);
-        messageRecord.SetDataValue(nameof(item.Email), item.Email);
-        messageRecord.SetDataValue(nameof(item.PhoneNumber), item.PhoneNumber);
     }
 }

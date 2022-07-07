@@ -44,7 +44,7 @@
                 </div>
                 <div Class="d-flex pt-6">
                     <MSpacer></MSpacer>
-                    <MButton Color="primary" Class="small-button" OnClick="async() => await HandleOkAsync()">@T("Send")</MButton>
+                    <MButton Color="primary" Class="small-button" OnClick="async() => await Throttle(HandleOkAsync)">@T("Send")</MButton>
                 </div>
             </div>
         </MForm>

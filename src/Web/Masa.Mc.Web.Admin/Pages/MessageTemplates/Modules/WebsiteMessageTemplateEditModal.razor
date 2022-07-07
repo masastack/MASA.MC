@@ -37,16 +37,12 @@
                         <MInput @bind-Value="_model.Content" />
                     </MCol>
                 </MRow>
-                <MRow Class="mt-6">
-                    <MCol>
-                        <DefaultTextField @bind-Value="_model.JumpUrl"
-                                          Label="@T("DisplayName.MessageTemplateJumpUrl")">
-                            <PrependContent>
-                                <MCheckbox Class="mt-0" @bind-Value="_model.IsJump"></MCheckbox>
-                            </PrependContent>
-                        </DefaultTextField>
-                    </MCol>
-                </MRow>
+                <div class="mt-9 d-flex">
+                    <MCheckbox Class="mt-2" @bind-Value="_model.IsJump"></MCheckbox>
+                    <DefaultTextField @bind-Value="_model.JumpUrl" Class="ml-2"
+                                      Label="@T("DisplayName.MessageTemplateJumpUrl")" Disabled="!_model.IsJump">
+                    </DefaultTextField>
+                </div>
                 <MRow Class="mt-6">
                     <MCol>
                         <div class="d-flex align-center justify-start">
@@ -67,7 +63,7 @@
         <ActionContent>
             <MIcon Size="24" Color="error" Class="align-self-center" OnClick="HandleDelAsync">mdi-delete</MIcon>
             <MSpacer></MSpacer>
-            <MButton Color="primary" Class="btn-form" OnClick="HandleOk">@T("Save")</MButton>
+            <MButton Color="primary" Class="btn-form" OnClick="async() => await Throttle(HandleOk)">@T("Save")</MButton>
         </ActionContent>
     </McModal>
 </div>

@@ -7,7 +7,9 @@ public class MessageTaskDto : AuditEntityDto<Guid, Guid>
 {
     public string DisplayName { get; set; } = string.Empty;
 
-    public Guid ChannelId { get; set; }
+    public ChannelTypes? ChannelType { get; set; }
+
+    public Guid? ChannelId { get; set; }
 
     public ChannelDto Channel { get; set; } = new();
 
@@ -25,6 +27,8 @@ public class MessageTaskDto : AuditEntityDto<Guid, Guid>
 
     public DateTimeOffset? SendTime { get; set; }
 
+    public DateTimeOffset? ExpectSendTime { get; set; }
+
     public string Sign { get; set; } = string.Empty;
 
     public MessageInfoDto MessageInfo { get; set; } = new();
@@ -38,4 +42,6 @@ public class MessageTaskDto : AuditEntityDto<Guid, Guid>
     public string Content { get; set; } = string.Empty;
 
     public MessageTaskStatuses Status { get; set; }
+
+    public MessageTaskSources Source { get; set; }
 }

@@ -14,6 +14,9 @@ public partial class TemplateMessageInfo : AdminCompontentBase
     [Parameter]
     public ExtraPropertyDictionary Variables { get; set; } = new();
 
+    [Parameter]
+    public bool IsRender { get; set; }
+
     public MessageTemplateDto MessageTemplate { get; set; } = new();
 
     MessageTemplateService MessageTemplateService => McCaller.MessageTemplateService;
@@ -21,7 +24,10 @@ public partial class TemplateMessageInfo : AdminCompontentBase
     protected override async Task OnParametersSetAsync()
     {
         MessageTemplate = await MessageTemplateService.GetAsync(MessageTemplateId) ?? new();
-        await RenderMessageContent();
+        if (IsRender)
+        {
+            await RenderMessageContent();
+        }
     }
 
     public async Task RenderMessageContent()

@@ -7,7 +7,7 @@ public class MessageTaskUpsertDto
 {
     public string DisplayName { get; set; } = string.Empty;
 
-    public Guid ChannelId { get; set; }
+    public Guid? ChannelId { get; set; }
 
     public ChannelTypes? ChannelType { get; set; }
 
@@ -23,8 +23,6 @@ public class MessageTaskUpsertDto
 
     public MessageTaskSelectReceiverTypes SelectReceiverType { get; set; } = MessageTaskSelectReceiverTypes.ManualSelection;
 
-    //public DateTimeOffset? SendTime { get; set; } = DateTimeOffset.Now;
-
     public string Sign { get; set; } = string.Empty;
 
     public List<MessageTaskReceiverDto> Receivers { get; set; } = new();
@@ -34,4 +32,6 @@ public class MessageTaskUpsertDto
     public MessageInfoUpsertDto MessageInfo { get; set; } = new();
 
     public ExtraPropertyDictionary Variables { get; set; } = new();
+
+    public MessageTaskSources Source { get; set; } = MessageTaskSources.Management;
 }

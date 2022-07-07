@@ -24,7 +24,7 @@ public class UpdateMessageTaskStatusEventHandler
             return;
         }
 
-        var totalCount = await _historyRepository.GetCountAsync(x => x.MessageTaskId == eto.MessageTaskId);
+        var totalCount = await _historyRepository.GetCountAsync(x => x.MessageTaskId == eto.MessageTaskId && !x.IsTest);
 
         if (messageTask.SendRules.IsSendingInterval)
         {
@@ -35,13 +35,13 @@ public class UpdateMessageTaskStatusEventHandler
             }
         }
 
-        var okCount = await _historyRepository.GetCountAsync(x => x.MessageTaskId == eto.MessageTaskId && x.Status == MessageTaskHistoryStatuses.Success);
-        var errorCount = await _historyRepository.GetCountAsync(x => x.MessageTaskId == eto.MessageTaskId && (x.Status == MessageTaskHistoryStatuses.Fail || x.Status == MessageTaskHistoryStatuses.PartialFailure));
+        var okCount = await _historyRepository.GetCountAsync(x => x.MessageTaskId == eto.MessageTaskId && !x.IsTest && x.Status == MessageTaskHistoryStatuses.Success);
+
         if (totalCount == okCount)
         {
             messageTask.SetResult(MessageTaskStatuses.Success);
         }
-        else if (okCount > 0)
+        else if (await _historyRepository.AnyAsync(x => x.MessageTaskId == eto.MessageTaskId && !x.IsTest && x.Status == MessageTaskHistoryStatuses.PartialFailure))
         {
             messageTask.SetResult(MessageTaskStatuses.PartialFailure);
         }
@@ -50,5 +50,7 @@ public class UpdateMessageTaskStatusEventHandler
             messageTask.SetResult(MessageTaskStatuses.Fail);
         }
         await _repository.UpdateAsync(messageTask);
+        await _repository.UnitOfWork.SaveChangesAsync();
+        await _repository.UnitOfWork.CommitAsync();
     }
 }

@@ -9,15 +9,15 @@ public partial class OrdinaryMessageEditModal : AdminCompontentBase
     public EventCallback OnOk { get; set; }
 
     private MForm _form;
-    private MessageTaskUpsertDto _model = new() { ReceiverType = ReceiverTypes.Assign, EntityType = MessageEntityTypes.Ordinary };
+    private MessageTaskUpsertModel _model = new() { EntityType = MessageEntityTypes.Ordinary };
     private Guid _entityId;
     private bool _visible;
     private List<ChannelDto> _channelItems = new();
-    private ChannelTypes _channelType;
     private List<MessageTaskReceiverDto> _selectReceivers = new();
     private List<MessageTaskReceiverDto> _importReceivers = new();
     private List<string> _tabs = new();
     private string _tab = "";
+    private bool _selectReceiverType;
 
     MessageTaskService MessageTaskService => McCaller.MessageTaskService;
     ChannelService ChannelService => McCaller.ChannelService;
@@ -33,7 +33,7 @@ public partial class OrdinaryMessageEditModal : AdminCompontentBase
     public async Task OpenModalAsync(MessageTaskDto model)
     {
         _entityId = model.Id;
-        _model = model.Adapt<MessageTaskUpsertDto>();
+        _model = model.Adapt<MessageTaskUpsertModel>();
         await GetFormDataAsync();
         await InvokeAsync(() =>
         {
@@ -47,8 +47,7 @@ public partial class OrdinaryMessageEditModal : AdminCompontentBase
         var dto = await MessageTaskService.GetAsync(_entityId);
         if (dto != null)
         {
-            _channelType = dto.Channel.Type;
-            _model = dto.Adapt<MessageTaskUpsertDto>();
+            _model = dto.Adapt<MessageTaskUpsertModel>();
             if (_model.SelectReceiverType == MessageTaskSelectReceiverTypes.ManualSelection)
             {
                 _selectReceivers = _model.Receivers;
@@ -57,7 +56,7 @@ public partial class OrdinaryMessageEditModal : AdminCompontentBase
             {
                 _importReceivers = _model.Receivers;
             }
-            _channelItems = await ChannelService.GetListByTypeAsync(_channelType);
+            _channelItems = _model.ChannelType.HasValue ? await ChannelService.GetListByTypeAsync(_model.ChannelType.Value) : new();
             var messageInfo = await MessageInfoService.GetAsync(_model.EntityId);
             if (messageInfo != null) _model.MessageInfo = messageInfo.Adapt<MessageInfoUpsertDto>();
         }
@@ -69,18 +68,37 @@ public partial class OrdinaryMessageEditModal : AdminCompontentBase
         await ResetForm();
     }
 
-    private async Task HandleOkAsync(bool isDraft)
+    private async Task HandleSaveAsync()
     {
-        _model.Receivers = _model.SelectReceiverType == MessageTaskSelectReceiverTypes.ManualSelection ? _selectReceivers : _importReceivers;
-        _model.IsDraft = isDraft;
+        _model.IsDraft = true;
+        await HandleOkAsync();
+    }
+
+    private async Task HandleSendAsync()
+    {
+        _model.IsDraft = false;
+        await HandleOkAsync();
+    }
+
+    private async Task HandleOkAsync()
+    {
+        SetReceivers();
         if (!await _form.ValidateAsync())
         {
             return;
         }
         Loading = true;
-        await MessageTaskService.UpdateAsync(_entityId, _model);
+        var inputDto = _model.Adapt<MessageTaskUpsertDto>();
+        await MessageTaskService.UpdateAsync(_entityId, inputDto);
         Loading = false;
-        await SuccessMessageAsync(T("MessageTaskCreateMessage"));
+        if (_model.IsDraft)
+        {
+            await SuccessMessageAsync(T("MessageTaskEditMessage"));
+        }
+        else
+        {
+            await SuccessMessageAsync(T("MessageTaskSendMessage"));
+        }
         _visible = false;
         await ResetForm();
         if (OnOk.HasDelegate)
@@ -91,7 +109,7 @@ public partial class OrdinaryMessageEditModal : AdminCompontentBase
 
     private async Task ResetForm()
     {
-        _model = new() { ReceiverType = ReceiverTypes.Assign, EntityType = MessageEntityTypes.Ordinary };
+        _model = new() { EntityType = MessageEntityTypes.Ordinary };
         _selectReceivers = new();
         _importReceivers = new();
         await _form.ResetValidationAsync();
@@ -104,8 +122,8 @@ public partial class OrdinaryMessageEditModal : AdminCompontentBase
 
     private async Task HandleChannelTypeChangeAsync()
     {
-        _channelItems = await ChannelService.GetListByTypeAsync(_channelType);
-        if (_channelType != ChannelTypes.WebsiteMessage)
+        _channelItems = _model.ChannelType.HasValue ? await ChannelService.GetListByTypeAsync(_model.ChannelType.Value) : new();
+        if (_model.ChannelType != ChannelTypes.WebsiteMessage)
         {
             _model.ReceiverType = ReceiverTypes.Assign;
         }
@@ -118,9 +136,49 @@ public partial class OrdinaryMessageEditModal : AdminCompontentBase
     private void HandleReceiverType(ReceiverTypes receiverType)
     {
         _model.ReceiverType = receiverType;
+        _selectReceiverType = true;
         if (receiverType == ReceiverTypes.Broadcast)
         {
             _tab = _tabs[2];
         }
+    }
+
+    private void HandleReceiverBack()
+    {
+        if (_model.ChannelType != ChannelTypes.WebsiteMessage || !_selectReceiverType)
+        {
+            _tab = _tabs[0];
+        }
+
+        if (_selectReceiverType)
+        {
+            _selectReceiverType = false;
+        }
+    }
+
+    private void HandleSendingRuleBack()
+    {
+        _tab = _tabs[1];
+        if (_model.ReceiverType == ReceiverTypes.Broadcast)
+        {
+            _selectReceiverType = false;
+        }
+    }
+
+    private async Task HandleNextStep(int currentStep)
+    {
+        _model.Step = currentStep;
+        SetReceivers();
+        _model.IsDraft = false;
+        if (!await _form.ValidateAsync())
+        {
+            return;
+        }
+        _tab = _tabs[currentStep];
+    }
+
+    private void SetReceivers()
+    {
+        _model.Receivers = _model.SelectReceiverType == MessageTaskSelectReceiverTypes.ManualSelection ? _selectReceivers : _importReceivers;
     }
 }

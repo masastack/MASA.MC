@@ -104,6 +104,7 @@ public static class McDbContextModelBuilderExtensions
         {
             b.ToTable(MCConsts.DbTablePrefix + "MessageReceiverUsers", MCConsts.DbSchema);
             b.Property(m => m.DisplayName).IsRequired().HasMaxLength(128);
+            b.Property(m => m.Account).HasMaxLength(128);
             b.Property(m => m.PhoneNumber).HasMaxLength(128);
             b.Property(m => m.Email).HasMaxLength(128);
             b.Property(m => m.Variables).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());

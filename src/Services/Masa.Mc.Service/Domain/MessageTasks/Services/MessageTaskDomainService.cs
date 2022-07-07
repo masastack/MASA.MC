@@ -25,6 +25,7 @@ public class MessageTaskDomainService : DomainService
     public virtual async Task CreateAsync(MessageTask messageTask)
     {
         messageTask.SetDraft(messageTask.IsDraft);
+        messageTask.SetExpectSendTime();
         await _repository.AddAsync(messageTask);
         if (!messageTask.IsDraft)
         {
@@ -36,23 +37,13 @@ public class MessageTaskDomainService : DomainService
     public virtual async Task UpdateAsync(MessageTask messageTask)
     {
         messageTask.SetDraft(messageTask.IsDraft);
+        messageTask.SetExpectSendTime();
         await _repository.UpdateAsync(messageTask);
         if (!messageTask.IsDraft)
         {
             await _repository.UnitOfWork.SaveChangesAsync();
             await EventBus.PublishAsync(new ResolveMessageTaskEvent(messageTask.Id));
         }
-    }
-
-    public virtual async Task SendAsync(Guid messageTaskId, List<MessageReceiverUser> receiverUsers)
-    {
-        var messageTask = await _repository.FindAsync(x => x.Id == messageTaskId);
-        if (messageTask == null)
-            throw new UserFriendlyException("messageTask not found");
-        if (!messageTask.IsEnabled)
-            throw new UserFriendlyException("cannot send when disabled");
-
-        await EventBus.PublishAsync(new ExecuteMessageTaskEvent(messageTask, receiverUsers));
     }
 
     public virtual async Task<MessageData> GetMessageDataAsync(MessageEntityTypes entityType, Guid entityId, ExtraPropertyDictionary variables = null)
@@ -74,5 +65,13 @@ public class MessageTaskDomainService : DomainService
             messageData.SetDataValue(nameof(MessageTemplate.Content), await _templateRenderer.RenderAsync(messageData.GetDataValue<string>(nameof(MessageTemplate.Content)), variables));
         }
         return messageData;
+    }
+
+    public virtual async Task<MessageData> GetMessageDataAsync(Guid messageTaskId, ExtraPropertyDictionary variables = null)
+    {
+        var messageTask = await _repository.FindAsync(x => x.Id == messageTaskId);
+        if (messageTask == null)
+            throw new UserFriendlyException("messageTask not found");
+        return await GetMessageDataAsync(messageTask.EntityType, messageTask.EntityId, variables);
     }
 }

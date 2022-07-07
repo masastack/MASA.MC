@@ -6,4 +6,6 @@ namespace Masa.Mc.Contracts.Admin.Dtos.MessageTemplates;
 public class ImportReceiversDto: UploadFileDto
 {
     public Guid? MessageTemplatesId { get; set; }
+
+    public ChannelTypes ChannelType { get; set; }
 }

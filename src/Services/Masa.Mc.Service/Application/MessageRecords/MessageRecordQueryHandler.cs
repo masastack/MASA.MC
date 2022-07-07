@@ -6,13 +6,13 @@ namespace Masa.Mc.Service.Admin.Application.MessageRecords;
 public class MessageRecordQueryHandler
 {
     private readonly IMessageRecordRepository _repository;
-    private readonly IMessageTaskRepository _messageTaskRepository;
+    private readonly IMessageTaskHistoryRepository _messageTaskHistoryRepository;
 
     public MessageRecordQueryHandler(IMessageRecordRepository repository
-        , IMessageTaskRepository messageTaskRepository)
+        , IMessageTaskHistoryRepository messageTaskHistoryRepository)
     {
         _repository = repository;
-        _messageTaskRepository = messageTaskRepository;
+        _messageTaskHistoryRepository = messageTaskHistoryRepository;
     }
 
     [EventHandler]
@@ -48,6 +48,11 @@ public class MessageRecordQueryHandler
         condition = condition.And(inputDto.ChannelId.HasValue, m => m.ChannelId == inputDto.ChannelId);
         condition = condition.And(inputDto.Success.HasValue, m => m.Success == inputDto.Success);
         condition = condition.And(inputDto.UserId.HasValue, m => m.UserId == inputDto.UserId);
+        if (inputDto.TimeType == MessageRecordTimeTypes.ExpectSendTime)
+        {
+            condition = condition.And(inputDto.StartTime.HasValue, m => m.ExpectSendTime >= inputDto.StartTime);
+            condition = condition.And(inputDto.EndTime.HasValue, m => m.ExpectSendTime <= inputDto.EndTime);
+        }
         if (inputDto.TimeType == MessageRecordTimeTypes.SendTime)
         {
             condition = condition.And(inputDto.StartTime.HasValue, m => m.SendTime >= inputDto.StartTime);
@@ -65,13 +70,12 @@ public class MessageRecordQueryHandler
 
     private async Task FillMessageRecordDtos(List<MessageRecordDto> dtos)
     {
+        var messageTaskHistoryIds = dtos.Select(x => x.MessageTaskHistoryId).ToList();
+        var messageTaskHistoryList = await _messageTaskHistoryRepository.GetListAsync(x => messageTaskHistoryIds.Contains(x.Id));
         foreach (var item in dtos)
         {
-            var task = await _messageTaskRepository.FindAsync(x => x.Id == item.MessageTaskHistoryId);
-            if (task != null)
-            {
-                item.ExpectSendTime = task.SendRules.SendTime;
-            }
+            var messageTaskHistory = messageTaskHistoryList.FirstOrDefault(x => x.Id == item.MessageTaskHistoryId);
+            if (messageTaskHistory != null) item.MessageTaskHistoryNo = messageTaskHistory.TaskHistoryNo;
         }
     }
 }

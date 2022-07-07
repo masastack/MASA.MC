@@ -7,7 +7,9 @@ public class MessageTask : FullAggregateRoot<Guid, Guid>
 {
     public string DisplayName { get; protected set; } = string.Empty;
 
-    public Guid ChannelId { get; protected set; }
+    public ChannelTypes? ChannelType { get; protected set; }
+
+    public Guid? ChannelId { get; protected set; }
 
     public AppChannel Channel { get; protected set; } = default!;
 
@@ -25,6 +27,8 @@ public class MessageTask : FullAggregateRoot<Guid, Guid>
 
     public DateTimeOffset? SendTime { get; protected set; }
 
+    public DateTimeOffset? ExpectSendTime { get; protected set; }
+
     public string Sign { get; protected set; } = string.Empty;
 
     public List<MessageTaskReceiver> Receivers { get; protected set; } = new();
@@ -37,9 +41,12 @@ public class MessageTask : FullAggregateRoot<Guid, Guid>
 
     public MessageTaskStatuses Status { get; protected set; }
 
-    public MessageTask(string displayName, Guid channelId, MessageEntityTypes entityType, Guid entityId, bool isDraft, string sign, ReceiverTypes receiverType, MessageTaskSelectReceiverTypes selectReceiverType, List<MessageTaskReceiver> receivers, MessageTaskSendingRule sendRules)
+    public MessageTaskSources Source { get; protected set; }
+
+    public MessageTask(string displayName, ChannelTypes? channelType, Guid? channelId, MessageEntityTypes entityType, Guid entityId, bool isDraft, string sign, ReceiverTypes receiverType, MessageTaskSelectReceiverTypes selectReceiverType, List<MessageTaskReceiver> receivers, MessageTaskSendingRule sendRules, MessageTaskSources source)
     {
         DisplayName = displayName;
+        ChannelType = channelType;
         ChannelId = channelId;
         EntityType = entityType;
         EntityId = entityId;
@@ -49,6 +56,7 @@ public class MessageTask : FullAggregateRoot<Guid, Guid>
         SetReceivers(receiverType, receivers);
         SendRules = sendRules ?? new();
         Status = MessageTaskStatuses.WaitSend;
+        Source = source;
     }
 
     public virtual void SetEnabled()
@@ -104,5 +112,10 @@ public class MessageTask : FullAggregateRoot<Guid, Guid>
     public void SetResult(MessageTaskStatuses status)
     {
         Status = status;
+    }
+
+    public void SetExpectSendTime()
+    {
+        ExpectSendTime = SendRules.SendTime.HasValue ? SendRules.SendTime.Value : DateTimeOffset.Now;
     }
 }

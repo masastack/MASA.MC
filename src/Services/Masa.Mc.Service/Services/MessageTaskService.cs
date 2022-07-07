@@ -19,11 +19,12 @@ public class MessageTaskService : ServiceBase
         MapGet(GenerateReceiverImportTemplateAsync);
         MapPost(ImportReceiversAsync);
         MapGet(GetMessageTaskReceiverListAsync);
+        MapPost(ResolveReceiversCountAsync);
     }
 
-    public async Task<PaginatedListDto<MessageTaskDto>> GetListAsync(IEventBus eventbus, [FromQuery] Guid? channelId, [FromQuery] MessageEntityTypes? entityType, [FromQuery] bool? isDraft, [FromQuery] bool? isEnabled, [FromQuery] MessageTaskTimeTypes? timeType, [FromQuery] DateTime? startTime, [FromQuery] DateTime? endTime, [FromQuery] string filter = "", [FromQuery] string sorting = "", [FromQuery] int page = 1, [FromQuery] int pagesize = 10)
+    public async Task<PaginatedListDto<MessageTaskDto>> GetListAsync(IEventBus eventbus, [FromQuery] Guid? channelId, [FromQuery] MessageEntityTypes? entityType, [FromQuery] bool? isDraft, [FromQuery] bool? isEnabled, [FromQuery] MessageTaskTimeTypes? timeType, [FromQuery] DateTime? startTime, [FromQuery] DateTime? endTime, [FromQuery] MessageTaskStatuses? status, MessageTaskSources? source, [FromQuery] string filter = "", [FromQuery] string sorting = "", [FromQuery] int page = 1, [FromQuery] int pagesize = 10)
     {
-        var inputDto = new GetMessageTaskInputDto(filter, channelId, entityType, isDraft, isEnabled, timeType, startTime, endTime, sorting, page, pagesize);
+        var inputDto = new GetMessageTaskInputDto(filter, channelId, entityType, isDraft, isEnabled, timeType, startTime, endTime, status, source, sorting, page, pagesize);
         var query = new GetMessageTaskListQuery(inputDto);
         await eventbus.PublishAsync(query);
         return query.Result;
@@ -101,9 +102,9 @@ public class MessageTaskService : ServiceBase
         await eventBus.PublishAsync(command);
     }
 
-    public async Task<byte[]> GenerateReceiverImportTemplateAsync(IEventBus eventBus, Guid? messageTemplatesId)
+    public async Task<byte[]> GenerateReceiverImportTemplateAsync(IEventBus eventBus, Guid? messageTemplatesId, ChannelTypes channelType)
     {
-        var query = new GenerateReceiverImportTemplateQuery(messageTemplatesId);
+        var query = new GenerateReceiverImportTemplateQuery(messageTemplatesId, channelType);
         await eventBus.PublishAsync(query);
         return query.Result;
     }
@@ -145,5 +146,12 @@ public class MessageTaskService : ServiceBase
         }));
 
         return list;
+    }
+
+    public async Task<long> ResolveReceiversCountAsync(IEventBus eventBus, List<MessageTaskReceiverDto> dto)
+    {
+        var query = new ResolveReceiversCountQuery(dto);
+        await eventBus.PublishAsync(query);
+        return query.Result;
     }
 }

@@ -9,21 +9,15 @@ public class MessageTaskCommandHandler
 {
     private readonly IMessageTaskRepository _repository;
     private readonly IMessageTaskHistoryRepository _messageTaskHistoryRepository;
-    private readonly MessageTaskDomainService _domainService;
-    private readonly ICsvImporter _importer;
-    private readonly IMessageTemplateRepository _messageTemplateRepository;
+    private readonly IDomainEventBus _domainEventBus;
 
     public MessageTaskCommandHandler(IMessageTaskRepository repository
         , IMessageTaskHistoryRepository messageTaskHistoryRepository
-        , MessageTaskDomainService domainService
-        , ICsvImporter importer
-        , IMessageTemplateRepository messageTemplateRepository)
+        , IDomainEventBus domainEventBus)
     {
         _repository = repository;
         _messageTaskHistoryRepository = messageTaskHistoryRepository;
-        _domainService = domainService;
-        _importer = importer;
-        _messageTemplateRepository = messageTemplateRepository;
+        _domainEventBus = domainEventBus;
     }
 
     [EventHandler]
@@ -44,12 +38,14 @@ public class MessageTaskCommandHandler
         var entity = await _repository.FindAsync(x => x.Id == inputDto.Id);
         if (entity == null)
             throw new UserFriendlyException("messageTask not found");
+        if (!entity.ChannelId.HasValue)
+            throw new UserFriendlyException("please select the configuration channel");
         if (entity.Channel.Type == ChannelTypes.Sms && string.IsNullOrEmpty(entity.Sign))
             throw new UserFriendlyException("please fill in the signature of the task first");
         if (entity.Variables.Any(x => string.IsNullOrEmpty(x.Value.ToString())))
             throw new UserFriendlyException("please fill in the signature template variable of the task first");
         var receiverUsers = inputDto.ReceiverUsers.Adapt<List<MessageReceiverUser>>();
-        await _domainService.SendAsync(inputDto.Id, receiverUsers);
+        await _domainEventBus.PublishAsync(new ExecuteMessageTaskEvent(entity, receiverUsers, true));
     }
 
     [EventHandler]
@@ -72,103 +68,5 @@ public class MessageTaskCommandHandler
             throw new UserFriendlyException("the task has a sending task history and cannot be disabled.");
         entity.SetDisable();
         await _repository.UpdateAsync(entity);
-    }
-
-    [EventHandler]
-    public async Task ImportReceiversAsync(ImportReceiversCommand command)
-    {
-        var template = await _messageTemplateRepository.FindAsync(x => x.Id == command.Dto.MessageTemplatesId);
-        var file = command.Dto;
-        var stream = new MemoryStream(file.FileContent);
-        if (template == null)
-        {
-            command.Result = await ImportMessageTaskReceiver(stream);
-        }
-        else
-        {
-            command.Result = await DynamicImportMessageTaskReceiver(stream, template.Items.ToList());
-        }
-    }
-
-    private async Task<ImportResultDto<MessageTaskReceiverDto>> ImportMessageTaskReceiver(Stream stream)
-    {
-        var import = await _importer.Import<ReceiverImportDto>(stream);
-        List<MessageTaskReceiverDto> importDtos = new();
-        if (import.Data != null)
-        {
-            importDtos = import.Data.Select(x => new MessageTaskReceiverDto
-            {
-                DisplayName = x.DisplayName,
-                PhoneNumber = x.PhoneNumber,
-                Email = x.Email,
-                Type = MessageTaskReceiverTypes.User
-            }).ToList();
-        }
-        var result = new ImportResultDto<MessageTaskReceiverDto>
-        {
-            HasError = import.HasError,
-            RowErrors = import.RowErrors,
-            TemplateErrors = import.TemplateErrors,
-            ErrorMsg = import.Exception?.Message ?? string.Empty,
-            Data = importDtos
-        };
-        return result;
-    }
-
-    private async Task<ImportResultDto<MessageTaskReceiverDto>> DynamicImportMessageTaskReceiver(Stream stream, List<MessageTemplateItem> items)
-    {
-        var dynamicImport = await _importer.DynamicImport<ReceiverImportDto>(stream);
-        List<MessageTaskReceiverDto> importDtos = CheckDynamicImportDtos(dynamicImport, items);
-        var result = new ImportResultDto<MessageTaskReceiverDto>
-        {
-            HasError = dynamicImport.HasError,
-            RowErrors = dynamicImport.RowErrors,
-            TemplateErrors = dynamicImport.TemplateErrors,
-            ErrorMsg = dynamicImport.Exception?.Message ?? string.Empty,
-            Data = importDtos
-        };
-        return result;
-    }
-
-    private List<MessageTaskReceiverDto> CheckDynamicImportDtos(ImportResult<dynamic> dynamicImportDtos, List<MessageTemplateItem> items)
-    {
-        List<MessageTaskReceiverDto> importDtos = new();
-        if (dynamicImportDtos.Data == null || !dynamicImportDtos.Data.Any())
-        {
-            dynamicImportDtos.Exception = new Exception("no valid data detected");
-            return importDtos;
-        }
-        foreach (var item in dynamicImportDtos.Data)
-        {
-            var obj = item as ExpandoObject;
-            var receiver = new MessageTaskReceiverDto
-            {
-                DisplayName = obj.GetOrDefault(GetImporterHeaderDisplayName(nameof(ReceiverImportDto.DisplayName)))?.ToString() ?? string.Empty,
-                PhoneNumber = obj.GetOrDefault(GetImporterHeaderDisplayName(nameof(ReceiverImportDto.PhoneNumber)))?.ToString() ?? string.Empty,
-                Email = obj.GetOrDefault(GetImporterHeaderDisplayName(nameof(ReceiverImportDto.Email)))?.ToString() ?? string.Empty,
-                Type = MessageTaskReceiverTypes.User,
-            };
-            if (string.IsNullOrEmpty(receiver.PhoneNumber) && string.IsNullOrEmpty(receiver.Email))
-            {
-                dynamicImportDtos.Exception = new Exception("fill in at least one mobile phone number and email address");
-                return new();
-            }
-            foreach (var t in items)
-            {
-                receiver.Variables.TryAdd(t.Code, obj.GetOrDefault(t.Code)?.ToString() ?? string.Empty);
-            }
-            importDtos.Add(receiver);
-        }
-        return importDtos;
-    }
-
-    private string GetImporterHeaderDisplayName(string name)
-    {
-        var fieldAttribute = typeof(ReceiverImportDto).GetProperty(name)?.GetCustomAttribute<Magicodes.ExporterAndImporter.Core.ImporterHeaderAttribute>();
-        if (fieldAttribute != null)
-        {
-            name = fieldAttribute.Name;
-        }
-        return name;
     }
 }

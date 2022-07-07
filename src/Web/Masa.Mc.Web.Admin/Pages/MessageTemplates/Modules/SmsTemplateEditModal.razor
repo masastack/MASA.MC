@@ -83,7 +83,7 @@
         <ActionContent>
             <MIcon Size="24" Color="error" Class="align-self-center" OnClick="HandleDelAsync">mdi-delete</MIcon>
             <MSpacer></MSpacer>
-            <MButton Color="primary" Class="btn-form" OnClick="HandleOkAsync">@T("Save")</MButton>
+            <MButton Color="primary" Class="btn-form" OnClick="async() => await Throttle(HandleOkAsync)">@T("Save")</MButton>
         </ActionContent>
     </McModal>
 </div>

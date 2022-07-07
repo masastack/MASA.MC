@@ -6,16 +6,20 @@ namespace Masa.Mc.Service.Admin.Domain.MessageTemplates.Services;
 public class MessageTemplateDomainService : DomainService
 {
     private readonly IMessageTemplateRepository _repository;
+    private readonly IMessageRecordRepository _messageRecordRepository;
 
-    public MessageTemplateDomainService(IDomainEventBus eventBus, IMessageTemplateRepository repository) : base(eventBus)
+    public MessageTemplateDomainService(IDomainEventBus eventBus
+        , IMessageTemplateRepository repository
+        , IMessageRecordRepository messageRecordRepository) : base(eventBus)
     {
         _repository = repository;
+        _messageRecordRepository = messageRecordRepository;
     }
 
     public virtual async Task CreateAsync(MessageTemplate messageTemplate)
     {
         await ValidateTemplateAsync(messageTemplate.TemplateId);
-        if(!messageTemplate.Items.Any()) ParseTemplateItem(messageTemplate);
+        if (!messageTemplate.Items.Any()) ParseTemplateItem(messageTemplate);
         await _repository.AddAsync(messageTemplate);
     }
 
@@ -36,14 +40,14 @@ public class MessageTemplateDomainService : DomainService
         return await _repository.RemoveAsync(template);
     }
 
-    public void ParseTemplateItem(MessageTemplate messageTemplate, string startstr="{{", string endstr="}}")
+    public void ParseTemplateItem(MessageTemplate messageTemplate, string startstr = "{{", string endstr = "}}")
     {
         var titleParam = UtilHelper.MidStrEx(messageTemplate.Title, startstr, endstr);
         var contentParam = UtilHelper.MidStrEx(messageTemplate.Content, startstr, endstr);
         var paramList = titleParam.Union(contentParam).ToList();
         foreach (var item in paramList)
         {
-            messageTemplate.AddOrUpdateItem(item,string.Empty, string.Empty, string.Empty);
+            messageTemplate.AddOrUpdateItem(item, string.Empty, string.Empty, string.Empty);
         }
     }
 
@@ -55,5 +59,15 @@ public class MessageTemplateDomainService : DomainService
         {
             throw new UserFriendlyException("Message templateId cannot be repeated");
         }
+    }
+
+    public async Task<bool> CheckSendUpperLimitAsync(long perDayLimit, Guid userId)
+    {
+        var sendNum = await _messageRecordRepository.GetCountAsync(x => x.SendTime.Value.Date == DateTime.Now.Date && x.UserId == userId);
+        if (sendNum > perDayLimit)
+        {
+            return false;
+        }
+        return true;
     }
 }

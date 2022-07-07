@@ -25,6 +25,10 @@ public class SmsTemplateCommandHandler
     public async Task SyncAsync(SyncSmsTemplateCommand command)
     {
         var channel = await _channelRepository.FindAsync(x => x.Id == command.ChannelId);
+        if (channel == null)
+        {
+            return;
+        }
         var options = new AliyunSmsOptions
         {
             AccessKeyId = channel.GetDataValue<string>(nameof(SmsChannelOptions.AccessKeyId)),

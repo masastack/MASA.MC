@@ -7,18 +7,24 @@ public class WebsiteMessageCreatedEventHandler
 {
     private readonly IMessageTaskHistoryRepository _messageTaskHistoryRepository;
     private readonly MessageTaskDomainService _messageTaskDomainService;
-    private readonly WebsiteMessageDomainService _websiteMessageDomainService;
     private readonly IHubContext<NotificationsHub> _hubContext;
+    private readonly IMessageRecordRepository _messageRecordRepository;
+    private readonly IWebsiteMessageRepository _websiteMessageRepository;
+    private readonly MessageRecordDomainService _messageRecordDomainService;
 
     public WebsiteMessageCreatedEventHandler(IMessageTaskHistoryRepository messageTaskHistoryRepository
         , MessageTaskDomainService messageTaskDomainService
-        , WebsiteMessageDomainService websiteMessageDomainService
-        , IHubContext<NotificationsHub> hubContext)
+        , IHubContext<NotificationsHub> hubContext
+        , IMessageRecordRepository messageRecordRepository
+        , IWebsiteMessageRepository websiteMessageRepository
+        , MessageRecordDomainService messageRecordDomainService)
     {
         _messageTaskHistoryRepository = messageTaskHistoryRepository;
         _messageTaskDomainService = messageTaskDomainService;
-        _websiteMessageDomainService = websiteMessageDomainService;
         _hubContext = hubContext;
+        _messageRecordRepository = messageRecordRepository;
+        _websiteMessageRepository = websiteMessageRepository;
+        _messageRecordDomainService = messageRecordDomainService;
     }
 
     [EventHandler]
@@ -34,10 +40,19 @@ public class WebsiteMessageCreatedEventHandler
             {
                 UserId = Guid.Parse(TempCurrentUserConsts.ID),
                 DisplayName = TempCurrentUserConsts.NAME,
+                Account = TempCurrentUserConsts.USER_NAME,
                 Email = TempCurrentUserConsts.EMAIL,
                 PhoneNumber = TempCurrentUserConsts.PHONE_NUMBER
             };
-            await _websiteMessageDomainService.CreateAsync(messageData, taskHistory, receiverUser);
+
+            var messageRecord = new MessageRecord(receiverUser.UserId, taskHistory.MessageTask.ChannelId.Value, taskHistory.MessageTaskId, taskHistory.Id, taskHistory.MessageTask.Variables, messageData.GetDataValue<string>(nameof(MessageTemplate.Title)), taskHistory.MessageTask.ExpectSendTime);
+            _messageRecordDomainService.SetUserInfo(messageRecord, receiverUser);
+            messageRecord.SetResult(true, string.Empty);
+
+            var linkUrl = messageData.GetDataValue<bool>(nameof(MessageTemplate.IsJump)) ? messageData.GetDataValue<string>(nameof(MessageTemplate.JumpUrl)) : string.Empty;
+            var websiteMessage = new WebsiteMessage(messageRecord.ChannelId, receiverUser.UserId, messageData.GetDataValue<string>(nameof(MessageTemplate.Title)), messageData.GetDataValue<string>(nameof(MessageTemplate.Content)), linkUrl, DateTimeOffset.Now);
+            await _messageRecordRepository.AddAsync(messageRecord);
+            await _websiteMessageRepository.AddAsync(websiteMessage);
         }
         var onlineClients = _hubContext.Clients.User(@event.UserId.ToString());
         await onlineClients.SendAsync(SignalRMethodConsts.GET_NOTIFICATION);

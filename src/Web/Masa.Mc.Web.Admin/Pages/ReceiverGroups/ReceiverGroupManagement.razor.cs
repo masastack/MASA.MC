@@ -9,7 +9,7 @@ public partial class ReceiverGroupManagement : AdminCompontentBase
 
     private ReceiverGroupEditModal _editModal;
     private ReceiverGroupCreateModal _createModal;
-    private GetReceiverGroupInputDto _queryParam = new(15);
+    private GetReceiverGroupInputDto _queryParam = new(10);
     private PaginatedListDto<ReceiverGroupDto> _entities = new();
 
     ReceiverGroupService ReceiverGroupService => McCaller.ReceiverGroupService;

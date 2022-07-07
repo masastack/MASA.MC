@@ -11,9 +11,9 @@
                                 <MRow Align="AlignTypes.Center" Justify="JustifyTypes.Center">
                                     <MCol Md="4">
                                         <MHover>
-                                            <MCard @attributes="context.Attrs" Height="208" Width="208" Class="@($"d-flex flex-column justify-center align-center {context.Class} {(context.Hover ? "primary" : "fill-background")}")"
+                                            <MCard @attributes="context.Attrs" Height="208" Width="208" Class="@($"d-flex flex-column justify-center align-center {context.Class} {((context.Hover||_model.Type==ChannelTypes.Sms) ? "primary" : "fill-background")}")"
                                                    OnClick="()=> HandleSelectType(ChannelTypes.Sms)">
-                                                @if (context.Hover)
+                                                @if (context.Hover || _model.Type == ChannelTypes.Sms)
                                                 {
                                                     <MIcon Size=33 Color="#FFFFFF">mdi-cellphone</MIcon>
                                                     <div class="h6 pt-10" style="color:#FAFAFA">@T("Sms")</div>
@@ -28,9 +28,9 @@
                                     </MCol>
                                     <MCol Md="4">
                                         <MHover>
-                                            <MCard @attributes="context.Attrs" Height="208" Width="208" Class="@($"d-flex flex-column justify-center align-center {context.Class} {(context.Hover ? "primary" : "fill-background")}")"
+                                            <MCard @attributes="context.Attrs" Height="208" Width="208" Class="@($"d-flex flex-column justify-center align-center {context.Class} {((context.Hover||_model.Type==ChannelTypes.Email) ? "primary" : "fill-background")}")"
                                                    OnClick="()=>HandleSelectType(ChannelTypes.Email)">
-                                                @if (context.Hover)
+                                                @if (context.Hover || _model.Type == ChannelTypes.Email)
                                                 {
                                                     <MIcon Size=33 Color="#FFFFFF">mdi-email-outline</MIcon>
                                                     <div class="h6 pt-10" style="color:#FAFAFA">@T("Email")</div>
@@ -45,9 +45,9 @@
                                     </MCol>
                                     <MCol Md="4">
                                         <MHover>
-                                            <MCard @attributes="context.Attrs" Height="208" Width="208" Class="@($"d-flex flex-column justify-center align-center {context.Class} {(context.Hover ? "primary" : "fill-background")}")"
+                                            <MCard @attributes="context.Attrs" Height="208" Width="208" Class="@($"d-flex flex-column justify-center align-center {context.Class} {((context.Hover||_model.Type==ChannelTypes.WebsiteMessage) ? "primary" : "fill-background")}")"
                                                    OnClick="()=>HandleSelectType(ChannelTypes.WebsiteMessage)">
-                                                @if (context.Hover)
+                                                @if (context.Hover || _model.Type == ChannelTypes.WebsiteMessage)
                                                 {
                                                     <MIcon Size=33 Color="#FFFFFF">mdi-bell-outline</MIcon>
                                                     <div class="h6 pt-10" style="color:#FAFAFA">@T("WebsiteMessage")</div>
@@ -64,32 +64,32 @@
                             </MContainer>
                         </MStepperContent>
                         <MStepperContent Step="2" Class="pa-0 full-height">
-                                    <MRow>
-                                        <MCol>
-                                            <DefaultTextField @bind-Value="_model.DisplayName"
-                                                              Label="@T("DisplayName.ChannelDisplayName")">
-                                            </DefaultTextField>
-                                        </MCol>
-                                        <MCol>
-                                            <DefaultTextField @bind-Value="_model.Code"
-                                                              Label="@T("DisplayName.ChannelCode")">
-                                            </DefaultTextField>
-                                        </MCol>
-                                    </MRow>
-                                    <ChannelExtraProperties @ref="_channelExtraPropertiesRef" @bind-Value="_model.ExtraProperties" @bind-Type="_model.Type" />
-                                    <div class="flex-column justify-space-between mt-9" Style="height: 80px;">
-                                        <div class="subtitle3 regular--text">@T("DisplayName.Color.Lable")</div>
-                                        <ColorGroup @bind-Value="_model.Color" Colors='_colors' />
-                                    </div>
-                                    <MRow Class="mt-6">
-                                        <MCol>
-                                            <MTextarea @bind-Value="_model.Description"
-                                                       Label="@T("DisplayName.ChannelDescription")"
-                                                       Outlined
-                                                       HideDetails="@("auto")">
-                                            </MTextarea>
-                                        </MCol>
-                                    </MRow>
+                            <MRow>
+                                <MCol>
+                                    <DefaultTextField @bind-Value="_model.DisplayName"
+                                                      Label="@T("DisplayName.ChannelDisplayName")">
+                                    </DefaultTextField>
+                                </MCol>
+                                <MCol>
+                                    <DefaultTextField @bind-Value="_model.Code"
+                                                      Label="@T("DisplayName.ChannelCode")">
+                                    </DefaultTextField>
+                                </MCol>
+                            </MRow>
+                            <ChannelExtraProperties @ref="_channelExtraPropertiesRef" @bind-Value="_model.ExtraProperties" @bind-Type="_model.Type" />
+                            <div class="flex-column justify-space-between mt-9" Style="height: 80px;">
+                                <div class="subtitle3 regular--text">@T("DisplayName.Color.Lable")</div>
+                                <ColorGroup @bind-Value="_model.Color" Colors='_colors' />
+                            </div>
+                            <MRow Class="mt-6">
+                                <MCol>
+                                    <MTextarea @bind-Value="_model.Description"
+                                               Label="@T("DisplayName.ChannelDescription")"
+                                               Outlined
+                                               HideDetails="@("auto")">
+                                    </MTextarea>
+                                </MCol>
+                            </MRow>
                         </MStepperContent>
                     </MStepperItems>
                 </MStepper>
@@ -98,7 +98,7 @@
         <ActionContent>
             <MIcon Size="24" Color="emphasis2" OnClick="()=> _step-- ">mdi-keyboard-backspace</MIcon>
             <MSpacer></MSpacer>
-            <MButton Color="primary" Class="btn-form" OnClick="HandleOkAsync">@T("Submit")</MButton>
+            <MButton Color="primary" Class="btn-form" OnClick="async()=> await Throttle(HandleOkAsync)">@T("Submit")</MButton>
         </ActionContent>
     </McModal>
 </div>

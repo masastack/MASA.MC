@@ -53,9 +53,9 @@ public partial class Notice : AdminCompontentBase
         await InvokeAsync(StateHasChanged);
     }
 
-    public override async void Dispose()
+    public override void Dispose()
     {
         NoticeState.OnNoticeChanged -= Changed;
-        await base.HubConnection.DisposeAsync();
+        base.Dispose();
     }
 }

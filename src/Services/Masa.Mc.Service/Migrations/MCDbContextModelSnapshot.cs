@@ -46,9 +46,11 @@ namespace Masa.Mc.Service.Admin.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("RowVersion")
+                        .IsConcurrencyToken()
                         .IsRequired()
                         .HasMaxLength(36)
-                        .HasColumnType("nvarchar(36)");
+                        .HasColumnType("nvarchar(36)")
+                        .HasColumnName("RowVersion");
 
                     b.Property<int>("State")
                         .HasColumnType("int");
@@ -237,6 +239,9 @@ namespace Masa.Mc.Service.Admin.Migrations
                         .HasMaxLength(128)
                         .HasColumnType("nvarchar(128)");
 
+                    b.Property<DateTimeOffset?>("ExpectSendTime")
+                        .HasColumnType("datetimeoffset");
+
                     b.Property<string>("ExtraProperties")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -286,6 +291,11 @@ namespace Masa.Mc.Service.Admin.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("Account")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
                     b.Property<string>("DisplayName")
                         .IsRequired()
                         .HasMaxLength(128)
@@ -324,8 +334,11 @@ namespace Masa.Mc.Service.Admin.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("ChannelId")
+                    b.Property<Guid?>("ChannelId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<int?>("ChannelType")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
@@ -343,6 +356,9 @@ namespace Masa.Mc.Service.Admin.Migrations
 
                     b.Property<int>("EntityType")
                         .HasColumnType("int");
+
+                    b.Property<DateTimeOffset?>("ExpectSendTime")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -385,6 +401,9 @@ namespace Masa.Mc.Service.Admin.Migrations
                         .HasMaxLength(128)
                         .HasColumnType("nvarchar(128)");
 
+                    b.Property<int>("Source")
+                        .HasColumnType("int");
+
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
@@ -415,6 +434,9 @@ namespace Masa.Mc.Service.Admin.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsTest")
                         .HasColumnType("bit");
 
                     b.Property<Guid>("MessageTaskId")
@@ -842,9 +864,7 @@ namespace Masa.Mc.Service.Admin.Migrations
                 {
                     b.HasOne("Masa.Mc.Service.Admin.Domain.Channels.Aggregates.AppChannel", "Channel")
                         .WithMany()
-                        .HasForeignKey("ChannelId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ChannelId");
 
                     b.Navigation("Channel");
                 });

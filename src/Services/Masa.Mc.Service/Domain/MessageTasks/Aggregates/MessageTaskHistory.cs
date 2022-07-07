@@ -22,14 +22,17 @@ public class MessageTaskHistory : FullAggregateRoot<Guid, Guid>
 
     public DateTimeOffset? WithdrawTime { get; protected set; }
 
+    public bool IsTest { get; protected set; }
+
     public List<MessageReceiverUser> ReceiverUsers { get; protected set; } = new();
 
-    public MessageTaskHistory(Guid messageTaskId, string taskHistoryNo, List<MessageReceiverUser> receiverUsers)
+    public MessageTaskHistory(Guid messageTaskId, string taskHistoryNo, List<MessageReceiverUser> receiverUsers, bool isTest)
     {
         MessageTaskId = messageTaskId;
         TaskHistoryNo = taskHistoryNo;
         Status = MessageTaskHistoryStatuses.WaitSend;
         ReceiverUsers = receiverUsers;
+        IsTest = isTest;
     }
 
     public MessageTaskHistory(Guid messageTaskId, string taskHistoryNo, MessageTaskHistoryStatuses status, DateTimeOffset? sendTime, DateTimeOffset? completionTime, DateTimeOffset? withdrawTime) : this(messageTaskId, taskHistoryNo, status, sendTime, completionTime, withdrawTime, new List<MessageReceiverUser>())

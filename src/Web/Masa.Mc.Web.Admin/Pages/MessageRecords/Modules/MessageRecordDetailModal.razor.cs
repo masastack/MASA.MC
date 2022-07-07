@@ -55,4 +55,16 @@ public partial class MessageRecordDetailModal : AdminCompontentBase
     {
         if (!val) HandleCancel();
     }
+
+    private async Task HandleRetry()
+    {
+        var inputDto = new RetryMessageRecordInputDto { MessageRecordId = _entityId };
+        await MessageRecordService.RetryAsync(inputDto);
+        await SuccessMessageAsync(T("MessageRecordRetryMessage"));
+        await GetFormDataAsync();
+        if (OnOk.HasDelegate)
+        {
+            await OnOk.InvokeAsync();
+        }
+    }
 }

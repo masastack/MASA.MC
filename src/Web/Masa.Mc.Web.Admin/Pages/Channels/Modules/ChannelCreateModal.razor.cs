@@ -22,7 +22,6 @@ public partial class ChannelCreateModal : AdminCompontentBase
 
     public async Task OpenModalAsync()
     {
-        _model.Type = ChannelTypes.Sms;
         _model.Color = _colors[0];
         await InvokeAsync(() =>
         {

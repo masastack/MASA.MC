@@ -7,73 +7,83 @@
     <div class="ma-0 search-panel">
         @if (advanced)
         {
-            <div class="fold">
-                <MRow>
-                    <MCol Md="2">
-                        <MSelect @bind-Value="@_queryParam.TimeType"
-                             Items="@(GetEnumList<MessageTaskTimeTypes>())"
-                             Label="@T("DisplayName.MessageTaskTimeType")"
-                             ItemText="@(item => T($"DisplayName.MessageTaskTimeType.{item.ToString()}"))"
-                             ItemValue="item => item"
-                             Dense
-                             Solo
-                             Clearable
-                             HideDetails="@("auto")"
-                             TItem="MessageTaskTimeTypes"
-                             TItemValue="MessageTaskTimeTypes"
-                             TValue="MessageTaskTimeTypes?"
-                             Class="fill-card body2"
-                             OnClearClick="RefreshAsync"
-                             OnSelectedItemUpdate="RefreshAsync">
-                        </MSelect>
-                    </MCol>
-                    <MCol Md="3">
-                        <DateRangePicker @bind-StartTime="_queryParam.StartTime" @bind-EndTime="_queryParam.EndTime" OnChange="RefreshAsync" />
-                    </MCol>
-                    <MCol Md="2">
-                        <MSelect @bind-Value="_queryParam.ChannelId"
-                             Items="@_channelItems"
-                             Label="@T("DisplayName.Channel")"
-                             ItemText="item => item.DisplayName"
-                             ItemValue="item => item.Id"
-                             Dense
-                             Solo
-                             Clearable
-                             HideDetails="@("auto")"
-                             TItem="ChannelDto"
-                             TItemValue="Guid"
-                             TValue="Guid?"
-                             Class="fill-card body2"
-                             OnClearClick="RefreshAsync"
-                             OnSelectedItemUpdate="RefreshAsync">
-                        </MSelect>
-                    </MCol>
-                    <MCol Md="2">
-                        <MSelect @bind-Value="@_queryParam.EntityType"
-                             Items="@(GetEnumList<MessageEntityTypes>())"
-                             Label="@T("DisplayName.MessageTaskEntityType")"
-                             ItemText="@(item => T($"DisplayName.MessageEntityType.{item.ToString()}"))"
-                             ItemValue="item => item"
-                             Dense
-                             Solo
-                             Clearable
-                             HideDetails="@("auto")"
-                             TItem="MessageEntityTypes"
-                             TItemValue="MessageEntityTypes"
-                             TValue="MessageEntityTypes?"
-                             Class="fill-card body2"
-                             OnClearClick="RefreshAsync"
-                             OnSelectedItemUpdate="RefreshAsync">
-                        </MSelect>
-                    </MCol>
-                    <MCol Md="2">
-                        <BooleanSelect @bind-Value="_queryParam.IsEnabled" Placeholder="@T("IsEnabled")" OnClearClick="RefreshAsync"
-                                   OnSelectedItemUpdate="RefreshAsync" />
-                    </MCol>
-                </MRow>
+            <div class="fold d-inline-flex">
+                <MSelect @bind-Value="@_queryParam.TimeType"
+                     Items="@(GetEnumList<MessageTaskTimeTypes>())"
+                     Label="@T("DisplayName.MessageTaskTimeType")"
+                     ItemText="@(item => T($"DisplayName.MessageTaskTimeType.{item.ToString()}"))"
+                     ItemValue="item => item"
+                     Dense
+                     Solo
+                     Clearable
+                     HideDetails="@("auto")"
+                     TItem="MessageTaskTimeTypes"
+                     TItemValue="MessageTaskTimeTypes"
+                     TValue="MessageTaskTimeTypes?"
+                     Class="fill-card body2"
+                     OnClearClick="RefreshAsync"
+                     OnSelectedItemUpdate="RefreshAsync">
+                </MSelect>
+
+                <DateRangePicker @bind-StartTime="_queryParam.StartTime" @bind-EndTime="_queryParam.EndTime" Class="ml-6" OnChange="RefreshAsync" />
+
+                <MSelect @bind-Value="_queryParam.ChannelId"
+                     Items="@_channelItems"
+                     Label="@T("DisplayName.Channel")"
+                     ItemText="item => item.DisplayName"
+                     ItemValue="item => item.Id"
+                     Dense
+                     Solo
+                     Clearable
+                     HideDetails="@("auto")"
+                     TItem="ChannelDto"
+                     TItemValue="Guid"
+                     TValue="Guid?"
+                     Class="fill-card body2 ml-6"
+                     OnClearClick="RefreshAsync"
+                     OnSelectedItemUpdate="RefreshAsync">
+                </MSelect>
+
+                <MSelect @bind-Value="@_queryParam.Status"
+                     Items="@(GetEnumList<MessageTaskStatuses>())"
+                     Label="@T("DisplayName.MessageTaskStatus")"
+                     ItemText="@(item => T($"DisplayName.MessageTaskStatus.{item.ToString()}"))"
+                     ItemValue="item => item"
+                     Dense
+                     Solo
+                     Clearable
+                     HideDetails="@("auto")"
+                     TItem="MessageTaskStatuses"
+                     TItemValue="MessageTaskStatuses"
+                     TValue="MessageTaskStatuses?"
+                     Class="fill-card body2 ml-6"
+                     OnClearClick="RefreshAsync"
+                     OnSelectedItemUpdate="RefreshAsync">
+                </MSelect>
+
+                <MSelect @bind-Value="@_queryParam.EntityType"
+                     Items="@(GetEnumList<MessageEntityTypes>())"
+                     Label="@T("DisplayName.MessageTaskEntityType")"
+                     ItemText="@(item => T($"DisplayName.MessageEntityType.{item.ToString()}"))"
+                     ItemValue="item => item"
+                     Dense
+                     Solo
+                     Clearable
+                     HideDetails="@("auto")"
+                     TItem="MessageEntityTypes"
+                     TItemValue="MessageEntityTypes"
+                     TValue="MessageEntityTypes?"
+                     Class="fill-card body2 ml-6"
+                     OnClearClick="RefreshAsync"
+                     OnSelectedItemUpdate="RefreshAsync">
+                </MSelect>
+
+                <BooleanSelect @bind-Value="_queryParam.IsEnabled" Placeholder="@T("DisplayName.MessageTaskIsEnabled")" Class="ml-6" OnClearClick="RefreshAsync"
+                           OnSelectedItemUpdate="RefreshAsync" />
+
             </div>
         }
-        <div class="d-flex search-panel-right @(isAnimate?"animate__animated":"") @(!advanced?"animate__searchOpen":"animate__searchShrink")"> 
+        <div class="d-flex search-panel-right @(isAnimate?"animate__animated":"") @(!advanced?"animate__searchOpen":"animate__searchShrink")">
             <DefaultSearch @bind-Value="_queryParam.Filter" Clearable Class="rounded-2 search" Placeholder="@T("Search")" Dense OnEnter="RefreshAsync" OnClearClick="HandleClearAsync" />
             <div @onclick="ToggleAdvanced" class="ml-6 d-flex button fill">
                 <MIcon Class="ma-auto" Color="emphasis2" Size=20>
@@ -81,7 +91,7 @@
                 </MIcon>
             </div>
             <div class="ml-6 d-flex button fill">
-                <MIcon Class="ma-auto" Color="@(_queryParam.IsDraft==true?"primary":"emphasis2")" Size=20 OnClick="HandleIsDraft">
+                <MIcon IfElse="true" Class="ma-auto" Color="@(_queryParam.IsDraft==true?"primary":"emphasis2")" Size=20 OnClick="HandleIsDraft">
                     mdi-file
                 </MIcon>
             </div>

@@ -9,6 +9,7 @@ public class MessageRecordService : ServiceBase
     {
         MapGet(GetAsync, "{id}");
         MapGet(GetListAsync, string.Empty);
+        MapPost(RetryAsync);
     }
 
     public async Task<PaginatedListDto<MessageRecordDto>> GetListAsync(IEventBus eventbus, Guid? channelId, [FromQuery] bool? success, [FromQuery] MessageRecordTimeTypes? timeType,
@@ -25,5 +26,11 @@ public class MessageRecordService : ServiceBase
         var query = new GetMessageRecordQuery(id);
         await eventBus.PublishAsync(query);
         return query.Result;
+    }
+
+    public async Task RetryAsync(IEventBus eventBus, RetryMessageRecordInputDto inputDto)
+    {
+        var command = new RetryMessageRecordCommand(inputDto);
+        await eventBus.PublishAsync(command);
     }
 }

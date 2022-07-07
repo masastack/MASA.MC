@@ -13,6 +13,8 @@ public class GetMessageTaskInputDto : PaginatedOptionsDto
     public MessageTaskTimeTypes? TimeType { get; set; }
     public DateTime? StartTime { get; set; }
     public DateTime? EndTime { get; set; }
+    public MessageTaskStatuses? Status { get; set; }
+    public MessageTaskSources? Source { get; set; }
 
     public GetMessageTaskInputDto()
     {
@@ -23,7 +25,7 @@ public class GetMessageTaskInputDto : PaginatedOptionsDto
     {
     }
 
-    public GetMessageTaskInputDto(string filter, Guid? channelId, MessageEntityTypes? entityType, bool? isDraft, bool? isEnabled, MessageTaskTimeTypes? timeType, DateTime? startTime, DateTime? endTime, string sorting, int page, int pageSize) : base(sorting, page, pageSize)
+    public GetMessageTaskInputDto(string filter, Guid? channelId, MessageEntityTypes? entityType, bool? isDraft, bool? isEnabled, MessageTaskTimeTypes? timeType, DateTime? startTime, DateTime? endTime, MessageTaskStatuses? status, MessageTaskSources? source, string sorting, int page, int pageSize) : base(sorting, page, pageSize)
     {
         Filter = filter;
         ChannelId = channelId;
@@ -33,5 +35,7 @@ public class GetMessageTaskInputDto : PaginatedOptionsDto
         TimeType = timeType;
         StartTime = startTime;
         EndTime = endTime;
+        Status = status;
+        Source = source;
     }
 }

@@ -9,6 +9,7 @@ public abstract class AdminCompontentBase : BDomComponentBase
     private GlobalConfig? _globalConfig;
     private NavigationManager? _navigationManager;
     private McCaller? _mcCaller;
+    private bool _flag;
 
     [Inject]
     public McCaller McCaller
@@ -138,5 +139,26 @@ public abstract class AdminCompontentBase : BDomComponentBase
     public override void Dispose()
     {
         HubConnection?.DisposeAsync();
+    }
+
+    public async Task Throttle(Func<Task> callback, int wait = 500, bool immediate = true)
+    {
+        if (immediate)
+        {
+            if (!_flag)
+            {
+                _flag = true;
+                await callback.Invoke();
+                await Task.Delay(wait);
+                _flag = false;
+            }
+        }
+        else if (!_flag)
+        {
+            _flag = true;
+            await Task.Delay(wait);
+            _flag = false;
+            await callback.Invoke();
+        }
     }
 }

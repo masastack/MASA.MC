@@ -9,6 +9,8 @@ public class MessageTaskReceiverDto
 
     public string DisplayName { get; set; } = string.Empty;
 
+    public string Account { get; set; } = string.Empty;
+
     public string Avatar { get; set; } = string.Empty;
 
     public string PhoneNumber { get; set; } = string.Empty;
