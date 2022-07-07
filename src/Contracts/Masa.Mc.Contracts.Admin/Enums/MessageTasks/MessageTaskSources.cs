@@ -6,5 +6,5 @@ namespace Masa.Mc.Contracts.Admin.Enums.MessageTasks;
 public enum MessageTaskSources
 {
     Management = 1,
-    SDK,
+    Sdk,
 }
