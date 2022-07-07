@@ -127,6 +127,7 @@ public class MessageTaskQueryHandler
         condition = condition.And(inputDto.IsEnabled.HasValue, x => x.IsEnabled == inputDto.IsEnabled);
         condition = condition.And(inputDto.IsDraft.HasValue, x => x.IsDraft == inputDto.IsDraft);
         condition = condition.And(inputDto.Status.HasValue, x => x.Status == inputDto.Status);
+        condition = condition.And(inputDto.Source.HasValue, x => x.Source == inputDto.Source);
         if (inputDto.TimeType == MessageTaskTimeTypes.ModificationTime)
         {
             condition = condition.And(inputDto.StartTime.HasValue, x => x.ModificationTime >= inputDto.StartTime);

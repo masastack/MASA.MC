@@ -32,4 +32,6 @@ public class MessageTaskUpsertDto
     public MessageInfoUpsertDto MessageInfo { get; set; } = new();
 
     public ExtraPropertyDictionary Variables { get; set; } = new();
+
+    public MessageTaskSources Source { get; set; } = MessageTaskSources.Management;
 }

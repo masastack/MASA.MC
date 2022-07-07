@@ -9,7 +9,7 @@ public partial class MessageTaskList : AdminCompontentBase
     private OrdinaryMessageEditModal _ordinaryEditModal = default!;
     private MessageTaskDetailModal _detailModal = default!;
     private SendTestMessageModal _sendTestModal = default!;
-    private GetMessageTaskInputDto _queryParam = new(20) { TimeType = MessageTaskTimeTypes.ModificationTime };
+    private GetMessageTaskInputDto _queryParam = new(20) { TimeType = MessageTaskTimeTypes.ModificationTime, Source = MessageTaskSources.Management };
     private PaginatedListDto<MessageTaskDto> _entities = new();
     private List<ChannelDto> _channelItems = new();
     private bool advanced = true;
@@ -57,7 +57,7 @@ public partial class MessageTaskList : AdminCompontentBase
 
     private async Task HandleClearAsync()
     {
-        _queryParam = new(20) { TimeType = MessageTaskTimeTypes.ModificationTime };
+        _queryParam = new(20) { TimeType = MessageTaskTimeTypes.ModificationTime, Source = MessageTaskSources.Management };
         await LoadData();
     }
 
@@ -108,12 +108,12 @@ public partial class MessageTaskList : AdminCompontentBase
     {
         if (!item.IsEnabled)
         {
-            await ConfirmAsync(T("EnableConfirmationMessageTask"), async() =>
+            await ConfirmAsync(T("EnableConfirmationMessageTask"), async () =>
             {
                 await MessageTaskService.EnabledAsync(new EnabledMessageTaskInputDto { MessageTaskId = item.Id });
                 item.IsEnabled = true;
             });
-            
+
         }
         else
         {
@@ -122,7 +122,7 @@ public partial class MessageTaskList : AdminCompontentBase
                 await MessageTaskService.DisableAsync(new DisableMessageTaskInputDto { MessageTaskId = item.Id });
                 item.IsEnabled = false;
             });
-            
+
         }
     }
 }

@@ -42,4 +42,6 @@ public class MessageTaskDto : AuditEntityDto<Guid, Guid>
     public string Content { get; set; } = string.Empty;
 
     public MessageTaskStatuses Status { get; set; }
+
+    public MessageTaskSources Source { get; set; }
 }

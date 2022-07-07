@@ -41,7 +41,9 @@ public class MessageTask : FullAggregateRoot<Guid, Guid>
 
     public MessageTaskStatuses Status { get; protected set; }
 
-    public MessageTask(string displayName, ChannelTypes? channelType, Guid? channelId, MessageEntityTypes entityType, Guid entityId, bool isDraft, string sign, ReceiverTypes receiverType, MessageTaskSelectReceiverTypes selectReceiverType, List<MessageTaskReceiver> receivers, MessageTaskSendingRule sendRules)
+    public MessageTaskSources Source { get; protected set; }
+
+    public MessageTask(string displayName, ChannelTypes? channelType, Guid? channelId, MessageEntityTypes entityType, Guid entityId, bool isDraft, string sign, ReceiverTypes receiverType, MessageTaskSelectReceiverTypes selectReceiverType, List<MessageTaskReceiver> receivers, MessageTaskSendingRule sendRules, MessageTaskSources source)
     {
         DisplayName = displayName;
         ChannelType = channelType;
@@ -54,6 +56,7 @@ public class MessageTask : FullAggregateRoot<Guid, Guid>
         SetReceivers(receiverType, receivers);
         SendRules = sendRules ?? new();
         Status = MessageTaskStatuses.WaitSend;
+        Source = source;
     }
 
     public virtual void SetEnabled()
