@@ -25,7 +25,7 @@ builder.Services.AddAuthClient(builder.Configuration.GetValue<string>("AuthClien
 builder.Services.AddAliyunStorage(serviceProvider =>
 {
     var daprClient = serviceProvider.GetRequiredService<DaprClient>();
-    var aliyunOssConfig = daprClient.GetSecretAsync("localsecretstore", "aliyun-oss").Result;
+    var aliyunOssConfig = daprClient.GetSecretAsync("localsecretstore", "ali-masa-cdn-dev").Result;
     var accessId = aliyunOssConfig["access_id"];
     var accessSecret = aliyunOssConfig["access_secret"];
     var endpoint = aliyunOssConfig["endpoint"];

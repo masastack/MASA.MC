@@ -17,7 +17,7 @@ public class OssService : ServiceBase
         var stsToken = response.SessionToken;
         var accessId = response.AccessKeyId;
         var accessSecret = response.AccessKeySecret;
-        var bucket = (await daprClient.GetSecretAsync("localsecretstore", "aliyun-oss"))["bucket"];
+        var bucket = (await daprClient.GetSecretAsync("localsecretstore", "ali-masa-cdn-dev"))["bucket"];
         return await Task.FromResult(new GetSecurityTokenDto(region, accessId, accessSecret, stsToken, bucket));
     }
 }
