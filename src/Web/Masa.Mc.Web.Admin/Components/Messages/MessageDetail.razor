@@ -28,7 +28,7 @@
         <div class="detail-box pt-4">
             <span class="h7 emphasis2--text">@_entity.Title</span>
             <div class="body2 regular2--text pt-2">
-                <span>@_entity.SendTime.ToString(T("$DateTimeFormat"))</span>
+                <span>@_entity.SendTime.ToLocalTime().ToString(T("$DateTimeFormat"))</span>
             </div>
             <div class="content body regular2--text">
                 @((MarkupString)_entity.Content)

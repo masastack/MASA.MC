@@ -34,20 +34,22 @@ public class RetryWebsiteMessageEventHandler
         }
         var messageData = await _taskDomainService.GetMessageDataAsync(messageRecord.MessageTaskId);
 
-        var perDayLimit = messageData.GetDataValue<long>(nameof(MessageTemplate.PerDayLimit));
-        if (!await _messageTemplateDomainService.CheckSendUpperLimitAsync(perDayLimit, messageRecord.UserId))
+        if (messageData.MessageType == MessageEntityTypes.Template)
         {
-            messageRecord.SetResult(false, "The maximum number of times to send per day has been reached");
-            throw new UserFriendlyException("The maximum number of times to send per day has been reached");
+            var perDayLimit = messageData.GetDataValue<long>(nameof(MessageTemplate.PerDayLimit));
+            if (!await _messageTemplateDomainService.CheckSendUpperLimitAsync(perDayLimit, messageRecord.UserId))
+            {
+                messageRecord.SetResult(false, "The maximum number of times to send per day has been reached");
+                await _messageRecordRepository.UpdateAsync(messageRecord);
+                throw new UserFriendlyException("The maximum number of times to send per day has been reached");
+            }
         }
-        else
-        {
-            var linkUrl = messageData.GetDataValue<bool>(nameof(MessageTemplate.IsJump)) ? messageData.GetDataValue<string>(nameof(MessageTemplate.JumpUrl)) : string.Empty;
-            var websiteMessage = new WebsiteMessage(messageRecord.ChannelId, messageRecord.UserId, messageData.GetDataValue<string>(nameof(MessageTemplate.Title)), messageData.GetDataValue<string>(nameof(MessageTemplate.Content)), linkUrl, DateTimeOffset.Now);
-            await _repository.AddAsync(websiteMessage);
 
-            messageRecord.SetResult(true, string.Empty);
-        }
+        var linkUrl = messageData.GetDataValue<bool>(nameof(MessageTemplate.IsJump)) ? messageData.GetDataValue<string>(nameof(MessageTemplate.JumpUrl)) : string.Empty;
+        var websiteMessage = new WebsiteMessage(messageRecord.ChannelId, messageRecord.UserId, messageData.GetDataValue<string>(nameof(MessageTemplate.Title)), messageData.GetDataValue<string>(nameof(MessageTemplate.Content)), linkUrl, DateTimeOffset.Now);
+        await _repository.AddAsync(websiteMessage);
+
+        messageRecord.SetResult(true, string.Empty);
 
         await _messageRecordRepository.UpdateAsync(messageRecord);
         await _messageRecordRepository.UnitOfWork.SaveChangesAsync();

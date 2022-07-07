@@ -91,7 +91,7 @@
                             </MListItemSubtitle>
                         </MListItemContent>
                         <MListItemAction Class="align-self-start">
-                            <MListItemActionText Class="caption regular2--text">@item.SendTime.ToString(T("$DateTimeFormat"))</MListItemActionText>
+                            <MListItemActionText Class="caption regular2--text">@item.SendTime.ToLocalTime().ToString(T("$DateTimeFormat"))</MListItemActionText>
                         </MListItemAction>
                     </MListItem>
                 }
