@@ -90,7 +90,7 @@ public class ImportReceiversCommandHandler
 
     private MessageTaskReceiverDto GetMessageTaskReceiverDto(ChannelTypes channelType, ExpandoObject obj)
     {
-        var receiver = new MessageTaskReceiverDto();
+        var receiver = new MessageTaskReceiverDto { Type = MessageTaskReceiverTypes.User };
         switch (channelType)
         {
             case ChannelTypes.Sms:

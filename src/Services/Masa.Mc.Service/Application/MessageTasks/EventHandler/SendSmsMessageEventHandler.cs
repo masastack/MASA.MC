@@ -11,13 +11,15 @@ public class SendSmsMessageEventHandler
     private readonly IMessageRecordRepository _messageRecordRepository;
     private readonly IMessageTaskHistoryRepository _messageTaskHistoryRepository;
     private readonly MessageTemplateDomainService _messageTemplateDomainService;
+    private readonly MessageRecordDomainService _messageRecordDomainService;
 
     public SendSmsMessageEventHandler(IAliyunSmsAsyncLocal aliyunSmsAsyncLocal
         , ISmsSender smsSender
         , IChannelRepository channelRepository
         , IMessageRecordRepository messageRecordRepository
         , IMessageTaskHistoryRepository messageTaskHistoryRepository
-        , MessageTemplateDomainService messageTemplateDomainService)
+        , MessageTemplateDomainService messageTemplateDomainService
+        , MessageRecordDomainService messageRecordDomainService)
     {
         _aliyunSmsAsyncLocal = aliyunSmsAsyncLocal;
         _smsSender = smsSender;
@@ -25,6 +27,7 @@ public class SendSmsMessageEventHandler
         _messageRecordRepository = messageRecordRepository;
         _messageTaskHistoryRepository = messageTaskHistoryRepository;
         _messageTemplateDomainService = messageTemplateDomainService;
+        _messageRecordDomainService = messageRecordDomainService;
     }
 
     [EventHandler]
@@ -43,9 +46,8 @@ public class SendSmsMessageEventHandler
             int totalCount = taskHistory.ReceiverUsers.Count;
             foreach (var item in taskHistory.ReceiverUsers)
             {
-
                 var messageRecord = new MessageRecord(item.UserId, channel.Id, taskHistory.MessageTaskId, taskHistory.Id, item.Variables, eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.DisplayName)), taskHistory.MessageTask.ExpectSendTime);
-                SetUserInfo(messageRecord, item);
+                _messageRecordDomainService.SetUserInfo(messageRecord, item);
 
                 if (taskHistory.MessageTask.EntityType == MessageEntityTypes.Template)
                 {
@@ -84,12 +86,5 @@ public class SendSmsMessageEventHandler
             taskHistory.SetResult(okCount == totalCount ? MessageTaskHistoryStatuses.Success : (okCount > 0 ? MessageTaskHistoryStatuses.PartialFailure : MessageTaskHistoryStatuses.Fail));
             await _messageTaskHistoryRepository.UpdateAsync(taskHistory);
         }
-    }
-
-    private void SetUserInfo(MessageRecord messageRecord, MessageReceiverUser item)
-    {
-        messageRecord.SetDataValue(nameof(item.DisplayName), item.DisplayName);
-        messageRecord.SetDataValue(nameof(item.Email), item.Email);
-        messageRecord.SetDataValue(nameof(item.PhoneNumber), item.PhoneNumber);
     }
 }

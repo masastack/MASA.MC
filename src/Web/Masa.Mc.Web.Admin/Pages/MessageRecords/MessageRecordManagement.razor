@@ -83,8 +83,15 @@
                             }
                         </MListItemAvatar>
                         <MListItemContent>
-                            <MListItemTitle class="subtitle emphasis--text">@(context.Item.ExtraProperties.GetProperty<string>("DisplayName"))</MListItemTitle>
-                            <MListItemSubtitle class="caption regular2--text">@(context.Item.ExtraProperties.GetProperty<string>("PhoneNumber"))</MListItemSubtitle>
+                            @if (string.IsNullOrEmpty(context.Item.ExtraProperties.GetProperty<string>("Account")))
+                            {
+                                <MListItemTitle class="subtitle emphasis--text">@(context.Item.ExtraProperties.GetProperty<string>("DisplayName"))</MListItemTitle>
+                                <MListItemSubtitle class="caption regular2--text">@(context.Item.ExtraProperties.GetProperty<string>("PhoneNumber"))</MListItemSubtitle>
+                            }
+                            else
+                            {
+                                <MListItemTitle class="subtitle emphasis--text">@(context.Item.ExtraProperties.GetProperty<string>("Account"))</MListItemTitle>
+                            }
                         </MListItemContent>
                     </MListItem>
                     break;

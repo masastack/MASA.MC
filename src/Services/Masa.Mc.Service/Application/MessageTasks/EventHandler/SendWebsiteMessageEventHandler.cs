@@ -7,18 +7,27 @@ public class SendWebsiteMessageEventHandler
 {
     private readonly IHubContext<NotificationsHub> _hubContext;
     private readonly IMessageTaskHistoryRepository _messageTaskHistoryRepository;
+    private readonly IMessageRecordRepository _messageRecordRepository;
+    private readonly IWebsiteMessageRepository _websiteMessageRepository;
     private readonly ITemplateRenderer _templateRenderer;
-    private readonly WebsiteMessageDomainService _websiteMessageDomainService;
+    private readonly MessageTemplateDomainService _messageTemplateDomainService;
+    private readonly MessageRecordDomainService _messageRecordDomainService;
 
     public SendWebsiteMessageEventHandler(IHubContext<NotificationsHub> hubContext
         , IMessageTaskHistoryRepository messageTaskHistoryRepository
+        , IMessageRecordRepository messageRecordRepository
+        , IWebsiteMessageRepository websiteMessageRepository
         , ITemplateRenderer templateRenderer
-        , WebsiteMessageDomainService websiteMessageDomainService)
+        , MessageTemplateDomainService messageTemplateDomainService
+        , MessageRecordDomainService messageRecordDomainService)
     {
         _hubContext = hubContext;
         _messageTaskHistoryRepository = messageTaskHistoryRepository;
+        _messageRecordRepository = messageRecordRepository;
+        _websiteMessageRepository = websiteMessageRepository;
         _templateRenderer = templateRenderer;
-        _websiteMessageDomainService = websiteMessageDomainService;
+        _messageTemplateDomainService = messageTemplateDomainService;
+        _messageRecordDomainService = messageRecordDomainService;
     }
 
     [EventHandler(1)]
@@ -33,11 +42,29 @@ public class SendWebsiteMessageEventHandler
             foreach (var item in taskHistory.ReceiverUsers)
             {
                 TemplateRenderer(eto.MessageData, item.Variables);
-                if (await _websiteMessageDomainService.CreateAsync(eto.MessageData, taskHistory, item))
+                var messageRecord = new MessageRecord(item.UserId, taskHistory.MessageTask.ChannelId.Value, taskHistory.MessageTaskId, taskHistory.Id, item.Variables, eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.Title)), taskHistory.MessageTask.ExpectSendTime);
+                _messageRecordDomainService.SetUserInfo(messageRecord, item);
+
+                if (taskHistory.MessageTask.EntityType == MessageEntityTypes.Template)
                 {
-                    userIds.Add(item.UserId.ToString());
-                    okCount++;
+                    var perDayLimit = eto.MessageData.GetDataValue<long>(nameof(MessageTemplate.PerDayLimit));
+                    if (!await _messageTemplateDomainService.CheckSendUpperLimitAsync(perDayLimit, item.UserId))
+                    {
+                        messageRecord.SetResult(false, "The maximum number of times to send per day has been reached");
+                        await _messageRecordRepository.AddAsync(messageRecord);
+                        continue;
+                    }
                 }
+
+                messageRecord.SetResult(true, string.Empty);
+
+                var linkUrl = eto.MessageData.GetDataValue<bool>(nameof(MessageTemplate.IsJump)) ? eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.JumpUrl)) : string.Empty;
+                var websiteMessage = new WebsiteMessage(messageRecord.ChannelId, item.UserId, eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.Title)), eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.Content)), linkUrl, DateTimeOffset.Now);
+                await _messageRecordRepository.AddAsync(messageRecord);
+                await _websiteMessageRepository.AddAsync(websiteMessage);
+
+                userIds.Add(item.UserId.ToString());
+                okCount++;
             }
         }
         taskHistory.SetResult((okCount == totalCount || taskHistory.MessageTask.ReceiverType == ReceiverTypes.Broadcast) ? MessageTaskHistoryStatuses.Success : (okCount > 0 ? MessageTaskHistoryStatuses.PartialFailure : MessageTaskHistoryStatuses.Fail));

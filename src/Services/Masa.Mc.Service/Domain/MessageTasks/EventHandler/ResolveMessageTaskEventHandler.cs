@@ -37,6 +37,7 @@ public class ResolveMessageTaskEventHandler
             {
                 UserId = x.SubjectId,
                 DisplayName = x.DisplayName,
+                Account = x.Account,
                 PhoneNumber = x.PhoneNumber,
                 Email = x.Email,
                 Variables = x.Variables.Count == 0 ? eto.MessageTask.Variables : x.Variables,
@@ -126,6 +127,7 @@ public class ResolveMessageTaskEventHandler
         {
             UserId = staff.Id,
             DisplayName = staff.Name ?? staff.DisplayName ?? string.Empty,
+            Account = staff.Account,
             PhoneNumber = staff.PhoneNumber ?? string.Empty,
             Email = staff.Email ?? string.Empty,
             Variables = variables,
