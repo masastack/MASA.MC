@@ -54,7 +54,7 @@ builder.Services.AddAuthentication(options =>
 });
 builder.Services.AddMasaRedisCache(builder.Configuration.GetSection("RedisConfig")).AddMasaMemoryCache();
 builder.Services.AddAliyunSms();
-builder.Services.AddEmail();
+builder.Services.AddMailKit();
 builder.Services.AddCsv();
 builder.Services.AddSingleton<ITemplateRenderer, TextTemplateRenderer>();
 builder.Services.AddTransient<Microsoft.AspNetCore.SignalR.IUserIdProvider, McUserIdProvider>();
