@@ -1,8 +1,9 @@
 ﻿@inherits LayoutComponentBase
 @inject GlobalConfig GlobalConfig
+@inject NavigationManager Navigation
 
-<McLayout NavItems="NavList"
-        DefaultRoute="/channels/channelManagement"
+<McLayout AppId="Masa_Mc_Web" OnSignOut="SignOut"
+        UserCenterRoute="/user"
         Logo="https://cdn.masastack.com/stack/images/logo/MASAStack/logo-h-en.png"
         MiniLogo="/_content/Masa.Mc.Web.Admin/img/mainLayout/logo.svg">
     @Body
@@ -15,26 +16,14 @@
     {
         if (firstRender)
         {
-            NavList = new List<Nav>()
-            {
-                new Nav("channelManagement", "Permission.ChannelManagement", "mdi-email-outline", "channels/channelManagement", 1),
-                new Nav("messageManagement", "Permission.MessageManagement", "fas fa-tasks", 1, new List<Nav>
-                {
-                    new Nav("sendMessage", "Permission.SendMessage", "messageTasks/sendMessage", 2, "messageManagement"),
-                    new Nav("messageRecord", "Permission.MessageRecord", "messageRecords/messageRecordManagement", 2, "messageManagement"),
-                }),
-                new Nav("messageTemplateManagement", "Permission.MessageTemplateManagement", "mdi-collage", 1, new List<Nav>
-                {
-                    new Nav("sms", "Sms", "messageTemplates/smsTemplateManagement", 2, "messageTemplateManagement"),
-                    new Nav("email", "Email", "messageTemplates/emailTemplateManagement", 2, "messageTemplateManagement"),
-                    new Nav("websiteMessage", "WebsiteMessage", "messageTemplates/websiteMessageTemplateManagement", 2, "messageTemplateManagement"),
-                }),
-                new Nav("receiverGroupManagement", "Permission.ReceiverGroupManagement", "fas fa-object-ungroup", "receiverGroups/receiverGroupManagement", 1),
-            };
-
             StateHasChanged();
         }
 
         return base.OnAfterRenderAsync(firstRender);
+    }
+
+    private void SignOut()
+    {
+        Navigation.NavigateTo("/Logout",true);
     }
 }
