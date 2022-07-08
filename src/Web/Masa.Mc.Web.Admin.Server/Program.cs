@@ -26,6 +26,9 @@ builder.Services.AddElasticsearchClient("auth", option => option.UseNodes("http:
                 .AddAutoComplete(option => option.UseIndexName("user_index"));
 builder.Services.AddSingleton<ChannelUpsertDtoValidator>();
 TypeAdapterConfig.GlobalSettings.Scan(Assembly.GetExecutingAssembly(), Assembly.Load("Masa.Mc.Contracts.Admin"));
+
+builder.Services.AddMasaOpenIdConnect(builder.Configuration);
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
