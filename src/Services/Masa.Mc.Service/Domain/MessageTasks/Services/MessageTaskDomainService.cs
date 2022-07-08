@@ -52,12 +52,12 @@ public class MessageTaskDomainService : DomainService
         if (entityType == MessageEntityTypes.Ordinary)
         {
             var messageInfo = await _messageInfoRepository.FindAsync(x => x.Id == entityId);
-            messageData = new MessageData { ExtraProperties = ExtensionPropertyHelper.ObjMapToExtraProperty(messageInfo) };
+            messageData = new MessageData { MessageType = MessageEntityTypes.Ordinary, ExtraProperties = ExtensionPropertyHelper.ObjMapToExtraProperty(messageInfo) };
         }
         if (entityType == MessageEntityTypes.Template)
         {
             var messageTemplate = await _messageTemplateRepository.FindAsync(x => x.Id == entityId);
-            messageData = new MessageData { ExtraProperties = ExtensionPropertyHelper.ObjMapToExtraProperty(messageTemplate) };
+            messageData = new MessageData { MessageType = MessageEntityTypes.Template, ExtraProperties = ExtensionPropertyHelper.ObjMapToExtraProperty(messageTemplate) };
         }
         if (variables != null)
         {

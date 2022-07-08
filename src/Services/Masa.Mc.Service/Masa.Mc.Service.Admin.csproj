@@ -15,6 +15,7 @@
 		<PackageReference Include="Masa.BuildingBlocks.Dispatcher.Events" Version="0.5.0-preview.4" />
 		<PackageReference Include="Masa.BuildingBlocks.SearchEngine.AutoComplete" Version="0.5.0-preview.4" />
 		<PackageReference Include="Masa.Contrib.BasicAbility.Auth" Version="0.5.0-preview.4" />
+		<PackageReference Include="Masa.Contrib.BasicAbility.Tsc" Version="0.5.0-preview.4" />
 		<PackageReference Include="Masa.Contrib.Configuration" Version="0.5.0-preview.4" />
 		<PackageReference Include="Masa.Contrib.Data.Contracts.EF" Version="0.5.0-preview.4" />
 		<PackageReference Include="Masa.Contrib.Data.EntityFrameworkCore.SqlServer" Version="0.5.0-preview.4" />

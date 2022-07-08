@@ -3,6 +3,8 @@
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.AddObservability();
+
 #if DEBUG
 builder.Services.AddDaprStarter(opt =>
 {

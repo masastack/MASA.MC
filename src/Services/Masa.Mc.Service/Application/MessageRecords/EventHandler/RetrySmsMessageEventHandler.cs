@@ -44,37 +44,40 @@ public class RetrySmsMessageEventHandler
         using (_aliyunSmsAsyncLocal.Change(options))
         {
             var messageData = await _taskDomainService.GetMessageDataAsync(messageRecord.MessageTaskId);
-            var perDayLimit = messageData.GetDataValue<long>(nameof(MessageTemplate.PerDayLimit));
-            if (!await _messageTemplateDomainService.CheckSendUpperLimitAsync(perDayLimit, messageRecord.UserId))
+
+            if (messageData.MessageType == MessageEntityTypes.Template)
             {
-                messageRecord.SetResult(false, "The maximum number of times to send per day has been reached");
-                throw new UserFriendlyException("The maximum number of times to send per day has been reached");
-            }
-            else
-            {
-                var smsMessage = new SmsMessage(messageRecord.GetDataValue<string>(nameof(MessageReceiverUser.PhoneNumber)), JsonSerializer.Serialize(messageRecord.Variables));
-                smsMessage.Properties.Add("SignName", messageData.GetDataValue<string>(nameof(MessageTemplate.Sign)));
-                smsMessage.Properties.Add("TemplateCode", messageData.GetDataValue<string>(nameof(MessageTemplate.TemplateId)));
-                try
+                var perDayLimit = messageData.GetDataValue<long>(nameof(MessageTemplate.PerDayLimit));
+                if (!await _messageTemplateDomainService.CheckSendUpperLimitAsync(perDayLimit, messageRecord.UserId))
                 {
-                    var response = await _smsSender.SendAsync(smsMessage) as SmsSendResponse;
-                    if (response.Success)
-                    {
-                        messageRecord.SetResult(true, string.Empty);
-                    }
-                    else
-                    {
-                        messageRecord.SetResult(false, response.Message);
-                        throw new UserFriendlyException("Resend message failed");
-                    }
+                    messageRecord.SetResult(false, "The maximum number of times to send per day has been reached");
+                    await _messageRecordRepository.UpdateAsync(messageRecord);
+                    throw new UserFriendlyException("The maximum number of times to send per day has been reached");
                 }
-                catch (Exception ex)
+            }
+
+            var smsMessage = new SmsMessage(messageRecord.GetDataValue<string>(nameof(MessageReceiverUser.PhoneNumber)), JsonSerializer.Serialize(messageRecord.Variables));
+            smsMessage.Properties.Add("SignName", messageData.GetDataValue<string>(nameof(MessageTemplate.Sign)));
+            smsMessage.Properties.Add("TemplateCode", messageData.GetDataValue<string>(nameof(MessageTemplate.TemplateId)));
+            try
+            {
+                var response = await _smsSender.SendAsync(smsMessage) as SmsSendResponse;
+                if (response.Success)
                 {
-                    messageRecord.SetResult(false, ex.Message);
+                    messageRecord.SetResult(true, string.Empty);
+                }
+                else
+                {
+                    messageRecord.SetResult(false, response.Message);
                     throw new UserFriendlyException("Resend message failed");
                 }
             }
-            
+            catch (Exception ex)
+            {
+                messageRecord.SetResult(false, ex.Message);
+                throw new UserFriendlyException("Resend message failed");
+            }
+
             await _messageRecordRepository.UpdateAsync(messageRecord);
         }
     }

@@ -102,10 +102,10 @@
                     <span class="body regular--text">@context.Item.Channel?.DisplayName</span>
                     break;
                 case (nameof(MessageRecordDto.ExpectSendTime)):
-                    <DateTimeListItem Value="@context.Item.ExpectSendTime"></DateTimeListItem>
+                    <DateTimeListItem Value="@context.Item.ExpectSendTime?.ToLocalTime()"></DateTimeListItem>
                     break;
                 case (nameof(MessageRecordDto.SendTime)):
-                    <DateTimeListItem Value="@context.Item.SendTime"></DateTimeListItem>
+                    <DateTimeListItem Value="@context.Item.SendTime?.ToLocalTime()"></DateTimeListItem>
                     break;
                 case nameof(MessageRecordDto.Success):
                     <MessageRecordStatusTag Value="@context.Item.Success" />

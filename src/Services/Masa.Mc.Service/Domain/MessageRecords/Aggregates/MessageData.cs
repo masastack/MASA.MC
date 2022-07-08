@@ -5,6 +5,8 @@ namespace Masa.Mc.Service.Admin.Domain.MessageRecords.Aggregates;
 
 public class MessageData
 {
+    public MessageEntityTypes MessageType { get; set; }
+
     public ExtraPropertyDictionary ExtraProperties { get; set; } = new();
 
     public virtual T GetDataValue<T>(string name)

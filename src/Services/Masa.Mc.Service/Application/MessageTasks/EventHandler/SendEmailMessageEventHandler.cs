@@ -13,6 +13,7 @@ public class SendEmailMessageEventHandler
     private readonly IMessageTaskHistoryRepository _messageTaskHistoryRepository;
     private readonly MessageTemplateDomainService _messageTemplateDomainService;
     private readonly MessageRecordDomainService _messageRecordDomainService;
+    private readonly ILogger<SendEmailMessageEventHandler> _logger;
 
     public SendEmailMessageEventHandler(IEmailAsyncLocal emailAsyncLocal
         , IEmailSender emailSender
@@ -21,7 +22,8 @@ public class SendEmailMessageEventHandler
         , IMessageRecordRepository messageRecordRepository
         , IMessageTaskHistoryRepository messageTaskHistoryRepository
         , MessageTemplateDomainService messageTemplateDomainService
-        , MessageRecordDomainService messageRecordDomainService)
+        , MessageRecordDomainService messageRecordDomainService
+        , ILogger<SendEmailMessageEventHandler> logger)
     {
         _emailAsyncLocal = emailAsyncLocal;
         _emailSender = emailSender;
@@ -31,6 +33,7 @@ public class SendEmailMessageEventHandler
         _messageTaskHistoryRepository = messageTaskHistoryRepository;
         _messageTemplateDomainService = messageTemplateDomainService;
         _messageRecordDomainService = messageRecordDomainService;
+        _logger = logger;
     }
 
     [EventHandler]
@@ -80,6 +83,7 @@ public class SendEmailMessageEventHandler
                 }
                 catch (Exception ex)
                 {
+                    _logger.LogError(ex, "SendEmailMessageEventHandler");
                     messageRecord.SetResult(false, ex.Message);
                 }
 

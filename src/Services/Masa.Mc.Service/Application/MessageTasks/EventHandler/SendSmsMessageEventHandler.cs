@@ -12,6 +12,7 @@ public class SendSmsMessageEventHandler
     private readonly IMessageTaskHistoryRepository _messageTaskHistoryRepository;
     private readonly MessageTemplateDomainService _messageTemplateDomainService;
     private readonly MessageRecordDomainService _messageRecordDomainService;
+    private readonly ILogger<SendSmsMessageEventHandler> _logger;
 
     public SendSmsMessageEventHandler(IAliyunSmsAsyncLocal aliyunSmsAsyncLocal
         , ISmsSender smsSender
@@ -19,7 +20,8 @@ public class SendSmsMessageEventHandler
         , IMessageRecordRepository messageRecordRepository
         , IMessageTaskHistoryRepository messageTaskHistoryRepository
         , MessageTemplateDomainService messageTemplateDomainService
-        , MessageRecordDomainService messageRecordDomainService)
+        , MessageRecordDomainService messageRecordDomainService
+        , ILogger<SendSmsMessageEventHandler> logger)
     {
         _aliyunSmsAsyncLocal = aliyunSmsAsyncLocal;
         _smsSender = smsSender;
@@ -28,6 +30,7 @@ public class SendSmsMessageEventHandler
         _messageTaskHistoryRepository = messageTaskHistoryRepository;
         _messageTemplateDomainService = messageTemplateDomainService;
         _messageRecordDomainService = messageRecordDomainService;
+        _logger = logger;
     }
 
     [EventHandler]
@@ -78,6 +81,7 @@ public class SendSmsMessageEventHandler
                 }
                 catch (Exception ex)
                 {
+                    _logger.LogError(ex, "SendSmsMessageEventHandler");
                     messageRecord.SetResult(false, ex.Message);
                 }
 

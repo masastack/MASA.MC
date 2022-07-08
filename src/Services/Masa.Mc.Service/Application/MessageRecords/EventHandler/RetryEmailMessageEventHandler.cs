@@ -48,30 +48,33 @@ public class RetryEmailMessageEventHandler
         using (_emailAsyncLocal.Change(options))
         {
             var messageData = await _taskDomainService.GetMessageDataAsync(messageRecord.MessageTaskId);
-            var perDayLimit = messageData.GetDataValue<long>(nameof(MessageTemplate.PerDayLimit));
-            if (!await _messageTemplateDomainService.CheckSendUpperLimitAsync(perDayLimit, messageRecord.UserId))
+
+            if (messageData.MessageType == MessageEntityTypes.Template)
             {
-                messageRecord.SetResult(false, "The maximum number of times to send per day has been reached");
-                throw new UserFriendlyException("The maximum number of times to send per day has been reached");
-            }
-            else
-            {
-                try
+                var perDayLimit = messageData.GetDataValue<long>(nameof(MessageTemplate.PerDayLimit));
+                if (!await _messageTemplateDomainService.CheckSendUpperLimitAsync(perDayLimit, messageRecord.UserId))
                 {
-                    await _emailSender.SendAsync(
-                            messageRecord.GetDataValue<string>(nameof(MessageReceiverUser.Email)),
-                            messageData.GetDataValue<string>(nameof(MessageTemplate.Title)),
-                            messageData.GetDataValue<string>(nameof(MessageTemplate.Content))
-                        );
-                    messageRecord.SetResult(true, string.Empty);
-                }
-                catch (Exception ex)
-                {
-                    messageRecord.SetResult(false, ex.Message);
-                    throw new UserFriendlyException("Resend message failed");
+                    messageRecord.SetResult(false, "The maximum number of times to send per day has been reached");
+                    await _messageRecordRepository.UpdateAsync(messageRecord);
+                    throw new UserFriendlyException("The maximum number of times to send per day has been reached");
                 }
             }
-            
+
+            try
+            {
+                await _emailSender.SendAsync(
+                        messageRecord.GetDataValue<string>(nameof(MessageReceiverUser.Email)),
+                        messageData.GetDataValue<string>(nameof(MessageTemplate.Title)),
+                        messageData.GetDataValue<string>(nameof(MessageTemplate.Content))
+                    );
+                messageRecord.SetResult(true, string.Empty);
+            }
+            catch (Exception ex)
+            {
+                messageRecord.SetResult(false, ex.Message);
+                throw new UserFriendlyException("Resend message failed");
+            }
+
             await _messageRecordRepository.UpdateAsync(messageRecord);
         }
     }
