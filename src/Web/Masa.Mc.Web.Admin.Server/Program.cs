@@ -14,12 +14,7 @@ builder.Services.AddResponseCompression(opts =>
     opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
         new[] { "application/octet-stream" });
 });
-builder.Services.AddMasaIdentityModel(IdentityType.MultiEnvironment, options =>
-{
-    options.Environment = "environment";
-    options.UserName = "name";
-    options.UserId = "sub";
-});
+
 builder.Services.AddAuthApiGateways(option => option.McServiceBaseAddress = builder.Configuration["McServiceBaseAddress"]);
 builder.Services.AddMasaStackComponentsForServer("wwwroot/i18n", builder.Configuration["AuthServiceBaseAddress"], builder.Configuration["McServiceBaseAddress"]);
 builder.Services.AddHttpContextAccessor();

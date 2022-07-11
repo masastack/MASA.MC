@@ -9,11 +9,15 @@ public class WebsiteMessageQueryHandler
 {
     private readonly IWebsiteMessageRepository _repository;
     private readonly IChannelRepository _channelRepository;
+    private readonly IUserContext _userContext;
 
-    public WebsiteMessageQueryHandler(IWebsiteMessageRepository repository, IChannelRepository channelRepository)
+    public WebsiteMessageQueryHandler(IWebsiteMessageRepository repository
+        , IChannelRepository channelRepository
+        , IUserContext userContext)
     {
         _repository = repository;
         _channelRepository = channelRepository;
+        _userContext = userContext;
     }
 
     [EventHandler]
@@ -72,7 +76,8 @@ public class WebsiteMessageQueryHandler
 
     private async Task<Expression<Func<WebsiteMessage, bool>>> CreateFilteredPredicate(GetWebsiteMessageInputDto inputDto)
     {
-        Expression<Func<WebsiteMessage, bool>> condition = w => w.UserId == Guid.Parse(TempCurrentUserConsts.ID);
+        var userId = _userContext.GetUserId<Guid>(); 
+        Expression<Func<WebsiteMessage, bool>> condition = w => w.UserId == userId;
         switch (inputDto.FilterType)
         {
             case WebsiteMessageFilterType.MessageTitle:
