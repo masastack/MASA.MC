@@ -1,14 +1,27 @@
-﻿<CascadingAuthenticationState>
-    <Microsoft.AspNetCore.Components.Routing.Router AppAssembly="@typeof(App).Assembly">
-        <Found Context="routeData">
-            <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
-            <FocusOnNavigate RouteData="@routeData" Selector="h1" />
-        </Found>
-        <NotFound>
-            <PageTitle>Not found</PageTitle>
-            <LayoutView Layout="@typeof(MainLayout)">
-                <p role="alert">Sorry, there's nothing at this address.</p>
-            </LayoutView>
-        </NotFound>
-    </Microsoft.AspNetCore.Components.Routing.Router>
-</CascadingAuthenticationState>
+﻿@using System.Reflection
+
+<Router AppAssembly="@typeof(App).Assembly"
+        AdditionalAssemblies="additionalAssemblies">
+    <Found Context="routeData">
+        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+        <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+    </Found>
+    <NotFound>
+        <PageTitle>Not found</PageTitle>
+        <LayoutView Layout="@typeof(MainLayout)">
+            <p role="alert">Sorry, there's nothing at this address.</p>
+        </LayoutView>
+    </NotFound>
+</Router>
+
+@code {
+
+    private List<Assembly> additionalAssemblies = new();
+
+    public App()
+    {
+        var masaStackComponentsAssembly = typeof(Masa.Stack.Components.UserCenter).Assembly;
+        additionalAssemblies.Add(masaStackComponentsAssembly);
+    }
+
+}

@@ -8,14 +8,12 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IServiceCollection AddGlobalForServer(this IServiceCollection services)
         {
             services.AddScoped<GlobalConfig>();
-            services.AddScoped<NoticeState>();
             return services;
         }
 
         public static async Task<IServiceCollection> AddGlobalForWasmAsync(this IServiceCollection services, string baseUri)
         {
             services.AddScoped<GlobalConfig>();
-            services.AddScoped<NoticeState>();
             return services;
         }
     }

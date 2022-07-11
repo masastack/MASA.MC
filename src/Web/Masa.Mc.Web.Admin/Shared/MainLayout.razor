@@ -2,24 +2,21 @@
 @inject GlobalConfig GlobalConfig
 @inject NavigationManager Navigation
 
-<McLayout AppId="Masa_Mc_Web" OnSignOut="SignOut"
-        UserCenterRoute="/user"
+<Layout AppId="Masa_Mc_Web" OnSignOut="SignOut" OnErrorAsync="OnError"
         Logo="https://cdn.masastack.com/stack/images/logo/MASAStack/logo-h-en.png"
         MiniLogo="/_content/Masa.Mc.Web.Admin/img/mainLayout/logo.svg">
     @Body
-</McLayout>
+</Layout>
 
 @code {
-    private List<Nav> NavList { get; set; } = new();
+    [Inject]
+    public IPopupService PopupService { get; set; } = default!;
 
-    protected override Task OnAfterRenderAsync(bool firstRender)
+    private Task OnError(Exception exception)
     {
-        if (firstRender)
-        {
-            StateHasChanged();
-        }
-
-        return base.OnAfterRenderAsync(firstRender);
+        PopupService.AlertAsync(exception.Message, AlertTypes.Error);
+        GlobalConfig.Loading = false;
+        return Task.CompletedTask;
     }
 
     private void SignOut()
