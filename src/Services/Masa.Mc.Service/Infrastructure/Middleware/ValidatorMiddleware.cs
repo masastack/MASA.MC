@@ -15,6 +15,8 @@ public class ValidatorMiddleware<TEvent> : IMiddleware<TEvent>
         _logger = logger;
     }
 
+    public bool SupportRecursive => throw new NotImplementedException();
+
     public async Task HandleAsync(TEvent action, EventHandlerDelegate next)
     {
         var typeName = action.GetType().FullName;
