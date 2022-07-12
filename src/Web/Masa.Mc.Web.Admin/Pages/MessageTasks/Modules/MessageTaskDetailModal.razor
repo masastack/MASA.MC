@@ -1,7 +1,7 @@
 ﻿@inherits AdminCompontentBase
 <div @ref="Ref">
     <SheetDialog Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.ViewMessageTask")">
-        <div class="full-height d-flex">
+        <div class="full-height d-flex overflow-y">
             <div class="pa-12 task-detail-left full-height flex-column">
                 <div class="flex-height-auto flex-grow-1">
                     <div class="subtitle2 emphasis2--text">@T("DisplayName.MessageTaskHistory")</div>
@@ -65,7 +65,7 @@
             </div>
             <MDivider Vertical Class="my-9"></MDivider>
             <div class="task-detail-right full-height flex-column">
-                <div class="flex-height-auto flex-grow-1 overflow-y">
+                <div class="flex-height-auto flex-grow-1">
                     @if (_info.SendRules.SendTime.HasValue || _info.SendTime.HasValue)
                     {
                         <MButton Color="primary" Class="rounded-lg btn small-btn info full-width mb-8">
