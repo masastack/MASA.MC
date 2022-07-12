@@ -50,7 +50,8 @@ public class WebsiteMessageQueryHandler
     [EventHandler]
     public async Task GetChannelListAsync(GetChannelListWebsiteMessageQuery query)
     {
-        var entities = await _repository.GetChannelListAsync(Guid.Parse(TempCurrentUserConsts.ID));
+        var userId = _userContext.GetUserId<Guid>();
+        var entities = await _repository.GetChannelListAsync(userId);
         var entityDtos = entities.Adapt<List<WebsiteMessageChannelDto>>();
         await FillChannelListDtos(entityDtos);
         query.Result = entityDtos;
@@ -61,7 +62,8 @@ public class WebsiteMessageQueryHandler
     {
         var noticeNum = query.PageSize;
         var queryable = await _repository.WithDetailsAsync();
-        queryable = queryable.Where(x => x.UserId == Guid.Parse(TempCurrentUserConsts.ID));
+        var userId = _userContext.GetUserId<Guid>();
+        queryable = queryable.Where(x => x.UserId == userId);
         var list = queryable.Where(x => !x.IsRead).OrderByDescending(x => x.CreationTime).Take(noticeNum).ToList();
         if (list.Count < noticeNum)
         {
@@ -124,7 +126,8 @@ public class WebsiteMessageQueryHandler
 
     private async Task FillDetailDto(WebsiteMessageDto dto)
     {
-        Expression<Func<WebsiteMessage, bool>> condition = w => w.UserId == Guid.Parse(TempCurrentUserConsts.ID);
+        var userId = _userContext.GetUserId<Guid>();
+        Expression<Func<WebsiteMessage, bool>> condition = w => w.UserId == userId;
         var prev = await GetPrevWebsiteMessage(dto.CreationTime, condition);
         var next = await GetNextWebsiteMessage(dto.CreationTime, condition);
         dto.PrevId = prev != null ? prev.Id : default;
