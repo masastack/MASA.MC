@@ -7,12 +7,15 @@ public class WebsiteMessageCursorCommandHandler
 {
     private readonly WebsiteMessageCursorDomainService _domainService;
     private readonly IDistributedCacheClient _cacheClient;
+    private readonly ILogger<WebsiteMessageCursorCommandHandler> _logger;
 
     public WebsiteMessageCursorCommandHandler(WebsiteMessageCursorDomainService domainService
-        , IDistributedCacheClient cacheClient)
+        , IDistributedCacheClient cacheClient
+        , ILogger<WebsiteMessageCursorCommandHandler> logger)
     {
         _domainService = domainService;
         _cacheClient = cacheClient;
+        _logger = logger;
     }
 
     [EventHandler]
@@ -24,7 +27,15 @@ public class WebsiteMessageCursorCommandHandler
         {
             return;
         }
-        await _domainService.CheckAsync(currentUserId);
-        await _cacheClient.RemoveAsync<int>($"{CacheKeys.MESSAGE_CURSOR_CHECK_COUNT}_{currentUserId}");
+        try
+        {
+            await _domainService.CheckAsync(currentUserId);
+            await _cacheClient.RemoveAsync<int>($"{CacheKeys.MESSAGE_CURSOR_CHECK_COUNT}_{currentUserId}");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogInformation(ex, "CheckAsync");
+            await _cacheClient.RemoveAsync<int>($"{CacheKeys.MESSAGE_CURSOR_CHECK_COUNT}_{currentUserId}");
+        }
     }
 }
