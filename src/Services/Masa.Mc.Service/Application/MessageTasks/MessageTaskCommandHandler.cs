@@ -45,7 +45,11 @@ public class MessageTaskCommandHandler
         if (entity.Variables.Any(x => string.IsNullOrEmpty(x.Value.ToString())))
             throw new UserFriendlyException("please fill in the signature template variable of the task first");
         var receiverUsers = inputDto.ReceiverUsers.Adapt<List<MessageReceiverUser>>();
-        await _domainEventBus.PublishAsync(new ExecuteMessageTaskEvent(entity, receiverUsers, true));
+        var taskHistoryNo = $"SJ{UtilConvert.GetGuidToNumber()}";
+        var history = new MessageTaskHistory(entity.Id, taskHistoryNo, receiverUsers, true);
+        await _messageTaskHistoryRepository.AddAsync(history);
+        await _messageTaskHistoryRepository.UnitOfWork.SaveChangesAsync();
+        await _domainEventBus.PublishAsync(new ExecuteMessageTaskEvent(entity.Id, true));
     }
 
     [EventHandler]

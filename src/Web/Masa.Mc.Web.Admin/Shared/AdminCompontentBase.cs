@@ -75,6 +75,12 @@ public abstract class AdminCompontentBase : BDomComponentBase
         set => GlobalConfig.Loading = value;
     }
 
+    public string LoadingText
+    {
+        get => GlobalConfig.LoadingText;
+        set => GlobalConfig.LoadingText = value;
+    }
+
     public string T(string key) => I18n.T(key);
 
     public HubConnection? HubConnection { get; set; }
@@ -145,19 +151,19 @@ public abstract class AdminCompontentBase : BDomComponentBase
     {
         if (immediate)
         {
-            if (!_flag)
+            if (!GlobalConfig.ThrottleFlag)
             {
-                _flag = true;
+                GlobalConfig.ThrottleFlag = true;
                 await callback.Invoke();
                 await Task.Delay(wait);
-                _flag = false;
+                GlobalConfig.ThrottleFlag = false;
             }
         }
-        else if (!_flag)
+        else if (!GlobalConfig.ThrottleFlag)
         {
-            _flag = true;
+            GlobalConfig.ThrottleFlag = true;
             await Task.Delay(wait);
-            _flag = false;
+            GlobalConfig.ThrottleFlag = false;
             await callback.Invoke();
         }
     }

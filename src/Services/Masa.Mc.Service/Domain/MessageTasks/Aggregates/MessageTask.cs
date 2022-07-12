@@ -118,4 +118,14 @@ public class MessageTask : FullAggregateRoot<Guid, Guid>
     {
         ExpectSendTime = SendRules.SendTime.HasValue ? SendRules.SendTime.Value : DateTimeOffset.Now;
     }
+
+    public bool IsTiming()
+    {
+        return SendRules.IsTiming && SendRules.SendTime.HasValue;
+    }
+
+    public bool IsSendingInterval()
+    {
+        return SendRules.IsSendingInterval && SendRules.SendingInterval > 0 && SendRules.SendingCount > 0;
+    }
 }

@@ -167,3 +167,5 @@ global using OpenTelemetry.Metrics;
 global using OpenTelemetry.Resources;
 global using OpenTelemetry.Trace;
 global using Masa.Mc.Service.Admin.Infrastructure.Extensions;
+global using Masa.Mc.Infrastructure.MailKit;
+

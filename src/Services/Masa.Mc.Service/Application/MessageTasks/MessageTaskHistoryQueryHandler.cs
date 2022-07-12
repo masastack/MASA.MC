@@ -28,7 +28,7 @@ public class MessageTaskHistoryQueryHandler
         var queryable = await CreateFilteredQueryAsync(options);
         var totalCount = await queryable.CountAsync();
         var totalPages = (int)Math.Ceiling(totalCount / (decimal)options.PageSize);
-        if (string.IsNullOrEmpty(options.Sorting)) options.Sorting = "modificationTime desc";
+        if (string.IsNullOrEmpty(options.Sorting)) options.Sorting = "sendTime asc";
         queryable = queryable.OrderBy(options.Sorting).PageBy(options.Page, options.PageSize);
         var entities = await queryable.ToListAsync();
         var entityDtos = entities.Adapt<List<MessageTaskHistoryDto>>();

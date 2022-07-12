@@ -23,10 +23,14 @@ namespace Masa.Mc.Web.Admin.Global
                 if (_Loading != value)
                 {
                     _Loading = value;
-                    OnLoadingChanged?.Invoke(_Loading);
+                    OnLoadingChanged?.Invoke(_Loading, LoadingText);
                 }
             }
         }
+
+        public string LoadingText = string.Empty;
+
+        public bool ThrottleFlag { get; set; }
 
         #endregion
 
@@ -34,7 +38,7 @@ namespace Masa.Mc.Web.Admin.Global
         #region event
 
         public delegate void GlobalConfigChanged();
-        public delegate void LoadingChanged(bool Loading);
+        public delegate void LoadingChanged(bool loading, string loadingText);
 
         public event GlobalConfigChanged? OnCurrentNavChanged;
         public event LoadingChanged? OnLoadingChanged;

@@ -24,16 +24,12 @@ public class UpdateMessageTaskStatusEventHandler
             return;
         }
 
-        var totalCount = await _historyRepository.GetCountAsync(x => x.MessageTaskId == eto.MessageTaskId && !x.IsTest);
-
-        if (messageTask.SendRules.IsSendingInterval)
+        if (await _historyRepository.AnyAsync(x => x.MessageTaskId == eto.MessageTaskId && !x.IsTest && x.Status == MessageTaskHistoryStatuses.WaitSend))
         {
-            var sendNum = (long)Math.Ceiling(messageTask.ReceiverUsers.Count * 1M / messageTask.SendRules.SendingCount);
-            if (totalCount < sendNum)
-            {
-                return;
-            }
+            return;
         }
+
+        var totalCount = await _historyRepository.GetCountAsync(x => x.MessageTaskId == eto.MessageTaskId && !x.IsTest);
 
         var okCount = await _historyRepository.GetCountAsync(x => x.MessageTaskId == eto.MessageTaskId && !x.IsTest && x.Status == MessageTaskHistoryStatuses.Success);
 
