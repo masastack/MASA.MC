@@ -1,6 +1,10 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
+using Masa.BuildingBlocks.BasicAbility.Scheduler.Enum;
+using Masa.BuildingBlocks.BasicAbility.Scheduler.Request;
+using Masa.Mc.Service.Admin.Jobs;
+
 namespace Masa.Mc.Service.Admin.Domain.MessageTasks.EventHandler;
 
 public class ResolveMessageTaskEventHandler
@@ -11,12 +15,14 @@ public class ResolveMessageTaskEventHandler
     private readonly IReceiverGroupRepository _receiverGroupRepository;
     private readonly IDomainEventBus _eventBus;
     private readonly IAuthClient _authClient;
+    private readonly ISchedulerClient _schedulerClient;
     public ResolveMessageTaskEventHandler(IChannelRepository channelRepository
         , IMessageTaskRepository messageTaskRepository
         , IMessageTaskHistoryRepository messageTaskHistoryRepository
         , IReceiverGroupRepository receiverGroupRepository
         , IDomainEventBus eventBus
-        , IAuthClient authClient)
+        , IAuthClient authClient
+        , ISchedulerClient schedulerClient)
     {
         _channelRepository = channelRepository;
         _messageTaskRepository = messageTaskRepository;
@@ -24,6 +30,7 @@ public class ResolveMessageTaskEventHandler
         _receiverGroupRepository = receiverGroupRepository;
         _eventBus = eventBus;
         _authClient = authClient;
+        _schedulerClient = schedulerClient;
     }
 
     [EventHandler(1)]
@@ -134,12 +141,27 @@ public class ResolveMessageTaskEventHandler
             var history = new MessageTaskHistory(eto.MessageTask.Id, taskHistoryNo, eto.MessageTask.ReceiverUsers, false, eto.MessageTask.SendRules.SendTime);
             await _messageTaskHistoryRepository.AddAsync(history);
             await _messageTaskHistoryRepository.UnitOfWork.SaveChangesAsync();
-
-            if (!eto.MessageTask.IsTiming())
-            {
-                await _eventBus.PublishAsync(new ExecuteMessageTaskEvent(eto.MessageTask.Id));
-            }
         }
+    }
+
+    [EventHandler(7)]
+    public async Task AddSchedulerJobAsync(ResolveMessageTaskEvent eto)
+    {
+        var request = new AddSchedulerJobRequest
+        {
+            ProjectIdentity = "Masa_Mc",
+            Name = nameof(MessageTaskExecuteJob),
+            JobType = JobTypes.JobApp,
+            JobAppConfig = new SchedulerJobAppConfig
+            {
+                JobAppIdentity = "Masa_Mc_Service",
+                JobEntryAssembly = "Masa.Mc.Service.Admin.dll",
+                JobEntryMethod = "Masa.Mc.Service.Admin.Jobs.MessageTaskExecuteJob.ExcuteAsync",
+                JobParams = eto.MessageTaskId.ToString(),
+            }
+        };
+        var jobId = await _schedulerClient.SchedulerJobService.AddAsync(request);
+        await _schedulerClient.SchedulerJobService.StartAsync(new BaseSchedulerJobRequest { JobId = jobId });
     }
 
     private MessageReceiverUser MapToMessageReceiverUser(StaffModel staff, ExtraPropertyDictionary variables)
