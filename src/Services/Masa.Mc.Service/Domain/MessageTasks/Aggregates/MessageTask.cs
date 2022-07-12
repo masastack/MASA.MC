@@ -123,4 +123,9 @@ public class MessageTask : FullAggregateRoot<Guid, Guid>
     {
         return SendRules.IsTiming && SendRules.SendTime.HasValue;
     }
+
+    public bool IsSendingInterval()
+    {
+        return SendRules.IsSendingInterval && SendRules.SendingInterval > 0 && SendRules.SendingCount > 0;
+    }
 }

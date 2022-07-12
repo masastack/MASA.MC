@@ -32,4 +32,9 @@ public class MessageTaskHistoryRepository : Repository<McDbContext, MessageTaskH
     {
         return await Context.Set<MessageTaskHistory>().AnyAsync(predicate);
     }
+
+    public async Task<MessageTaskHistory?> FindWaitSendAsync(Guid messageTaskId, bool isTest, CancellationToken cancellationToken = default(CancellationToken))
+    {
+        return await Context.Set<MessageTaskHistory>().Where(x => x.IsTest == isTest && x.MessageTaskId == messageTaskId && x.Status == MessageTaskHistoryStatuses.WaitSend).OrderBy(x => x.CreationTime).FirstOrDefaultAsync(cancellationToken);
+    }
 }

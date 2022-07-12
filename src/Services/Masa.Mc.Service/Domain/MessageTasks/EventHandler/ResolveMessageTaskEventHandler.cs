@@ -112,13 +112,30 @@ public class ResolveMessageTaskEventHandler
     }
 
     [EventHandler(6)]
-    public async Task CheckSendAsync(ResolveMessageTaskEvent eto)
+    public async Task CreateMessageTaskHistoryAsync(ResolveMessageTaskEvent eto)
     {
-        if (eto.MessageTask == null) return;
+        if (eto.MessageTask.IsSendingInterval())
+        {
+            var totalCount = eto.MessageTask.ReceiverUsers.Count;
+            var sendingCount = (int)eto.MessageTask.SendRules.SendingCount;
+            var historyNum = (long)Math.Ceiling((double)totalCount / sendingCount);
+            for (int i = 0; i < historyNum; i++)
+            {
+                var taskHistoryNo = $"SJ{UtilConvert.GetGuidToNumber()}";
+                var sendTime = eto.MessageTask.SendRules.SendTime?.AddSeconds(historyNum & i);
+                var receiverUsers = eto.MessageTask.ReceiverUsers.Skip(i * sendingCount).Take(sendingCount).ToList();
+                var history = new MessageTaskHistory(eto.MessageTask.Id, taskHistoryNo, receiverUsers, false, sendTime);
+                await _messageTaskHistoryRepository.AddAsync(history);
+            }
+        }
+        else
+        {
+            var taskHistoryNo = $"SJ{UtilConvert.GetGuidToNumber()}";
+            var history = new MessageTaskHistory(eto.MessageTask.Id, taskHistoryNo, eto.MessageTask.ReceiverUsers, false);
+            await _messageTaskHistoryRepository.AddAsync(history);
 
-        eto.MessageTask.SetSending();
-
-        await _eventBus.PublishAsync(new ExecuteMessageTaskEvent(eto.MessageTask, eto.MessageTask.ReceiverUsers));
+            await _eventBus.PublishAsync(new ExecuteMessageTaskEvent(eto.MessageTask.Id));
+        }
     }
 
     private MessageReceiverUser MapToMessageReceiverUser(StaffModel staff, ExtraPropertyDictionary variables)
