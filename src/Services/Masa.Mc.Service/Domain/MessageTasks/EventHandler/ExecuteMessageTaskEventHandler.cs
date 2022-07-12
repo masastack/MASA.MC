@@ -29,6 +29,12 @@ public class ExecuteMessageTaskEventHandler
         var history = await _messageTaskHistoryRepository.FindWaitSendAsync(eto.MessageTaskId, eto.IsTest);
         var messageData = await _domainService.GetMessageDataAsync(history.MessageTask.EntityType, history.MessageTask.EntityId, history.MessageTask.Variables);
         history.SetSending();
+        if (!history.MessageTask.SendTime.HasValue)
+        {
+            history.MessageTask.SetSending();
+        }
+        await _messageTaskHistoryRepository.UpdateAsync(history);
+        await _messageTaskHistoryRepository.UnitOfWork.SaveChangesAsync();
         await SendMessagesAsync(history.MessageTask.ChannelId.Value, messageData, history);
     }
 

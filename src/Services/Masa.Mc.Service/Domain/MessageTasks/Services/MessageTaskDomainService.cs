@@ -27,7 +27,7 @@ public class MessageTaskDomainService : DomainService
         messageTask.SetDraft(messageTask.IsDraft);
         messageTask.SetExpectSendTime();
         await _repository.AddAsync(messageTask);
-        if (!messageTask.IsDraft && !messageTask.IsTiming())
+        if (!messageTask.IsDraft)
         {
             await _repository.UnitOfWork.SaveChangesAsync();
             await EventBus.PublishAsync(new ResolveMessageTaskEvent(messageTask.Id));
@@ -39,7 +39,7 @@ public class MessageTaskDomainService : DomainService
         messageTask.SetDraft(messageTask.IsDraft);
         messageTask.SetExpectSendTime();
         await _repository.UpdateAsync(messageTask);
-        if (!messageTask.IsDraft && !messageTask.IsTiming())
+        if (!messageTask.IsDraft)
         {
             await _repository.UnitOfWork.SaveChangesAsync();
             await EventBus.PublishAsync(new ResolveMessageTaskEvent(messageTask.Id));

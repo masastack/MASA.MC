@@ -66,10 +66,10 @@
             <MDivider Vertical Class="my-9"></MDivider>
             <div class="task-detail-right full-height flex-column">
                 <div class="flex-height-auto flex-grow-1">
-                    @if (_info.SendRules.SendTime.HasValue || _info.SendTime.HasValue)
+                    @if (_historyInfo.SendTime.HasValue)
                     {
                         <MButton Color="primary" Class="rounded-lg btn small-btn info full-width mb-8">
-                            <span>@T(string.Format(T("Description.MessageTaskHistory.SendTimeTips"),(_info.SendRules.SendTime??_info.SendTime)?.ToLocalTime().ToString(T("$DateTimeFormat"))))</span>
+                            <span>@T(string.Format(T("Description.MessageTaskHistory.SendTimeTips"),_historyInfo.SendTime?.ToLocalTime().ToString(T("$DateTimeFormat"))))</span>
                         </MButton>
                     }
 

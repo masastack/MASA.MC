@@ -122,7 +122,7 @@ public class ResolveMessageTaskEventHandler
             for (int i = 0; i < historyNum; i++)
             {
                 var taskHistoryNo = $"SJ{UtilConvert.GetGuidToNumber()}";
-                var sendTime = eto.MessageTask.SendRules.SendTime?.AddSeconds(historyNum & i);
+                var sendTime = eto.MessageTask.SendRules.SendTime?.AddSeconds(eto.MessageTask.SendRules.SendingInterval * i);
                 var receiverUsers = eto.MessageTask.ReceiverUsers.Skip(i * sendingCount).Take(sendingCount).ToList();
                 var history = new MessageTaskHistory(eto.MessageTask.Id, taskHistoryNo, receiverUsers, false, sendTime);
                 await _messageTaskHistoryRepository.AddAsync(history);
@@ -131,10 +131,14 @@ public class ResolveMessageTaskEventHandler
         else
         {
             var taskHistoryNo = $"SJ{UtilConvert.GetGuidToNumber()}";
-            var history = new MessageTaskHistory(eto.MessageTask.Id, taskHistoryNo, eto.MessageTask.ReceiverUsers, false);
+            var history = new MessageTaskHistory(eto.MessageTask.Id, taskHistoryNo, eto.MessageTask.ReceiverUsers, false, eto.MessageTask.SendRules.SendTime);
             await _messageTaskHistoryRepository.AddAsync(history);
+            await _messageTaskHistoryRepository.UnitOfWork.SaveChangesAsync();
 
-            await _eventBus.PublishAsync(new ExecuteMessageTaskEvent(eto.MessageTask.Id));
+            if (!eto.MessageTask.IsTiming())
+            {
+                await _eventBus.PublishAsync(new ExecuteMessageTaskEvent(eto.MessageTask.Id));
+            }
         }
     }
 
