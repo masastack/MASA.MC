@@ -25,7 +25,7 @@
                      OnSelectedItemUpdate="RefreshAsync">
                 </MSelect>
 
-                <DateRangePicker @bind-StartTime="_queryParam.StartTime" @bind-EndTime="_queryParam.EndTime" Class="ml-6" OnChange="RefreshAsync" />
+                <Masa.Mc.Web.Admin.Components.Pickers.DateRangePicker @bind-StartTime="_queryParam.StartTime" @bind-EndTime="_queryParam.EndTime" Class="ml-6" OnChange="RefreshAsync" />
 
                 <MSelect @bind-Value="_queryParam.ChannelId"
                      Items="@_channelItems"

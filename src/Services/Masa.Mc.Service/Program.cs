@@ -1,6 +1,8 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
+using Masa.Contrib.Dispatcher.IntegrationEvents;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddObservability();
@@ -100,7 +102,7 @@ var app = builder.Services
     .AddDomainEventBus(dispatcherOptions =>
     {
         dispatcherOptions
-        .UseDaprEventBus<IntegrationEventLogService>(options => options.UseEventLog<McDbContext>())
+        .UseIntegrationEventBus<IntegrationEventLogService>(options => options.UseDapr().UseEventLog<McDbContext>())
         .UseEventBus(eventBusBuilder =>
         {
             eventBusBuilder.UseMiddleware(typeof(ValidatorMiddleware<>));
@@ -112,16 +114,14 @@ var app = builder.Services
         .UseRepository<McDbContext>();
     })
     .AddServices(builder);
-app.UseMasaExceptionHandling(opt =>
+app.UseMasaExceptionHandler(opt =>
 {
-    opt.CustomExceptionHandler = exception =>
+    opt.ExceptionHandler = context =>
     {
-        Exception friendlyException = exception;
-        if (exception is ValidationException validationException)
+        if (context.Exception is ValidationException validationException)
         {
-            friendlyException = new UserFriendlyException(validationException.Errors.Select(err => err.ToString()).FirstOrDefault()!);
+            context.ToResult(validationException.Errors.Select(err => err.ToString()).FirstOrDefault()!);
         }
-        return (friendlyException, false);
     };
 });
 // Configure the HTTP request pipeline.
