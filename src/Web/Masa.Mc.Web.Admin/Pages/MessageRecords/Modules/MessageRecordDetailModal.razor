@@ -62,7 +62,7 @@
                         </dt>
                         @if (_messageRecord.Success == false)
                         {
-                            <a href="javascript:;" class="body2 primary--text text-decoration-none" @onclick="HandleRetry">@T("Retry")</a>
+                            <a href="javascript:;" class="body2 primary--text text-decoration-none" @onclick="async() => await Throttle(HandleRetry)">@T("Retry")</a>
                         }
                     </dl>
                     @if (_messageRecord.Success == false)

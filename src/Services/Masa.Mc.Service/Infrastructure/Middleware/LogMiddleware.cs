@@ -13,7 +13,7 @@ public class LogMiddleware<TEvent> : IMiddleware<TEvent>
         _logger = logger;
     }
 
-    public bool SupportRecursive => throw new NotImplementedException();
+    public bool SupportRecursive => true;
 
     public async Task HandleAsync(TEvent action, EventHandlerDelegate next)
     {

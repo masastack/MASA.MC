@@ -289,5 +289,6 @@
   "Permission.ViewMessageRecord": "查看消息记录",
   "MessageContent": "消息内容",
   "Description.ChannelType.Required": "请先选择渠道类型",
-  "ReceiversCount": "预计{0}人"
+  "ReceiversCount": "预计{0}人",
+  "SendingMessage": "正在发送消息"
 }

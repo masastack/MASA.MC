@@ -2,7 +2,10 @@
 @inject GlobalConfig GlobalConfig;
 
 <MOverlay ZIndex=9999999 Value="IsLoading">
-    <MProgressCircular Indeterminate Size="64"></MProgressCircular>
+    <div class="d-flex flex-column">
+        <MProgressCircular Indeterminate Size="64" Class="align-self-center"></MProgressCircular>
+        <div class="mt-1">@LoadingText</div>
+    </div>
 </MOverlay>
 
 @code {
@@ -10,11 +13,15 @@
     public bool IsLoading { get; set; }
 
     [Parameter]
+    public string LoadingText { get; set; } = string.Empty;
+
+    [Parameter]
     public EventCallback<bool> LoadingChanged { get; set; }
 
-    void Loading(bool Loading)
+    void Loading(bool loading,string loadingText)
     {
-        IsLoading = Loading;
+        IsLoading = loading;
+        LoadingText = loadingText;
         base.StateHasChanged();
     }
 

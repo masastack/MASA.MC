@@ -53,6 +53,7 @@ public partial class McLayout
     private async Task CustomErrorHandleAsync(Exception exception)
     {
         GlobalConfig.Loading = false;
+        GlobalConfig.ThrottleFlag = false;
         await PopupService.ToastErrorAsync(exception.Message);
     }
 }

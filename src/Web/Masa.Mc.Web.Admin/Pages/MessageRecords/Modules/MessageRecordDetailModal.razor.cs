@@ -58,8 +58,11 @@ public partial class MessageRecordDetailModal : AdminCompontentBase
 
     private async Task HandleRetry()
     {
+        LoadingText = T("SendingMessage");
+        Loading = true;
         var inputDto = new RetryMessageRecordInputDto { MessageRecordId = _entityId };
         await MessageRecordService.RetryAsync(inputDto);
+        Loading = false;
         await SuccessMessageAsync(T("MessageRecordRetryMessage"));
         await GetFormDataAsync();
         if (OnOk.HasDelegate)
