@@ -163,7 +163,7 @@ public class ResolveMessageTaskEventHandler
         var cronExpression = eto.MessageTask.SendRules.CronExpression;
         var request = new AddSchedulerJobRequest
         {
-            ProjectIdentity = ProjectConsts.PROJECT_IDENTITY,
+            ProjectIdentity = MasaStackConsts.MC_SYSTEM_ID,
             Name = nameof(MessageTaskExecuteJob),
             JobType = JobTypes.Http,
             CronExpression = cronExpression,
