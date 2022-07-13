@@ -18,6 +18,7 @@
 		<PackageReference Include="Masa.Contrib.BasicAbility.Scheduler" Version="0.5.0-preview.6" />
 		<PackageReference Include="Masa.Contrib.BasicAbility.Tsc" Version="0.5.0-preview.6" />
 		<PackageReference Include="Masa.Contrib.Configuration" Version="0.5.0-preview.6" />
+		<PackageReference Include="Masa.Contrib.Configuration.ConfigurationApi.Dcc" Version="0.5.0-preview.6" />
 		<PackageReference Include="Masa.Contrib.Data.Contracts.EF" Version="0.5.0-preview.6" />
 		<PackageReference Include="Masa.Contrib.Data.EntityFrameworkCore.SqlServer" Version="0.5.0-preview.6" />
 		<PackageReference Include="Masa.Contrib.Dispatcher.Events" Version="0.5.0-preview.6" />
