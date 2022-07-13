@@ -45,7 +45,7 @@ public class WebsiteMessageCreatedEventHandler
                 PhoneNumber = TempCurrentUserConsts.PHONE_NUMBER
             };
 
-            var messageRecord = new MessageRecord(receiverUser.UserId, taskHistory.MessageTask.ChannelId.Value, taskHistory.MessageTaskId, taskHistory.Id, taskHistory.MessageTask.Variables, messageData.GetDataValue<string>(nameof(MessageTemplate.Title)), taskHistory.MessageTask.ExpectSendTime);
+            var messageRecord = new MessageRecord(receiverUser.UserId, taskHistory.MessageTask.ChannelId.Value, taskHistory.MessageTaskId, taskHistory.Id, taskHistory.MessageTask.Variables, messageData.GetDataValue<string>(nameof(MessageTemplate.Title)), taskHistory.SendTime);
             _messageRecordDomainService.SetUserInfo(messageRecord, receiverUser);
             messageRecord.SetResult(true, string.Empty);
 
