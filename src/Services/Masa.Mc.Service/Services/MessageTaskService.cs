@@ -158,7 +158,6 @@ public class MessageTaskService : ServiceBase
 
     public async Task ExecuteAsync(IEventBus eventBus, Guid messageTaskId)
     {
-        Console.WriteLine("ExecuteAsync:" + messageTaskId.ToString());
         var query = new ExecuteMessageTaskEvent(messageTaskId);
         await eventBus.PublishAsync(query);
     }

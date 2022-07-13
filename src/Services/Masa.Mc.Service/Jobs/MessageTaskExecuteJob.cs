@@ -55,8 +55,6 @@ public class MessageTaskExecuteJob : ISchedulerJob
 
             await eventBus.PublishAsync(new ExecuteMessageTaskEvent(Guid.Parse(messageTaskId)));
 
-            Console.WriteLine("messageTaskId:" + messageTaskId);
-
             return "Success";
         }
         catch (Exception ex)

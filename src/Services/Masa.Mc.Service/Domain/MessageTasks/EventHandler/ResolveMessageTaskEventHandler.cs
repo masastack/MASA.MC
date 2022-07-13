@@ -160,7 +160,6 @@ public class ResolveMessageTaskEventHandler
     {
         var httpContext = _httpContextAccessor.HttpContext!;
         var requestUrl = $"{httpContext.Request.Scheme}://{httpContext.Request.Host}/api/message-task/execute/{eto.MessageTaskId}";
-        Console.WriteLine("AddSchedulerJobAsync:" + requestUrl);
         var cronExpression = eto.MessageTask.SendRules.CronExpression;
         var request = new AddSchedulerJobRequest
         {
@@ -176,7 +175,6 @@ public class ResolveMessageTaskEventHandler
         };
 
         var jobId = await _schedulerClient.SchedulerJobService.AddAsync(request);
-        Console.WriteLine("jobId:" + jobId);
         eto.MessageTask.SetJobId(jobId);
         await _messageTaskRepository.UpdateAsync(eto.MessageTask);
         await _messageTaskHistoryRepository.UnitOfWork.SaveChangesAsync();
