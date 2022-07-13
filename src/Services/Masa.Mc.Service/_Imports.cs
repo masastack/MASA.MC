@@ -170,4 +170,8 @@ global using Masa.Mc.Service.Admin.Infrastructure.Extensions;
 global using Masa.Mc.Infrastructure.MailKit;
 global using Masa.BuildingBlocks.BasicAbility.Scheduler;
 global using Masa.BuildingBlocks.BasicAbility.Scheduler.Model;
-
+global using Masa.BuildingBlocks.BasicAbility.Scheduler.Enum;
+global using Masa.BuildingBlocks.BasicAbility.Scheduler.Request;
+global using Masa.Mc.Service.Admin.Jobs;
+global using Masa.Contrib.Dispatcher.IntegrationEvents;
+global using Masa.Mc.Infrastructure.Common.Utils;

@@ -101,7 +101,7 @@ var app = builder.Services
     .AddDomainEventBus(dispatcherOptions =>
     {
         dispatcherOptions
-        .UseDaprEventBus<IntegrationEventLogService>(options => options.UseEventLog<McDbContext>())
+        .UseIntegrationEventBus<IntegrationEventLogService>(options => options.UseDapr().UseEventLog<McDbContext>())
         .UseEventBus(eventBusBuilder =>
         {
             eventBusBuilder.UseMiddleware(typeof(ValidatorMiddleware<>));
@@ -113,16 +113,14 @@ var app = builder.Services
         .UseRepository<McDbContext>();
     })
     .AddServices(builder);
-app.UseMasaExceptionHandling(opt =>
+app.UseMasaExceptionHandler(opt =>
 {
-    opt.CustomExceptionHandler = exception =>
+    opt.ExceptionHandler = context =>
     {
-        Exception friendlyException = exception;
-        if (exception is ValidationException validationException)
+        if (context.Exception is ValidationException validationException)
         {
-            friendlyException = new UserFriendlyException(validationException.Errors.Select(err => err.ToString()).FirstOrDefault()!);
+            context.ToResult(validationException.Errors.Select(err => err.ToString()).FirstOrDefault()!);
         }
-        return (friendlyException, false);
     };
 });
 // Configure the HTTP request pipeline.

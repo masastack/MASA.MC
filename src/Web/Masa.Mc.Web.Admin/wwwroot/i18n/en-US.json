@@ -189,5 +189,9 @@
   "UploadComplete": "Upload complete",
   "UploadFile": "Upload file",
   "Permission.ViewMessageRecord": "View message record",
-  "ReceiversCount": "Expect {0} people"
+  "ReceiversCount": "Expect {0} people",
+  "DisplayName.SendingRule.CronExpression": "Cron expression",
+  "DisplayName.SendingRule.IsCustom": "Is custom",
+  "DisplayName.SendingRule.SendingCount": "Sending count",
+  "DisplayName.SendingRule.SendingCount.Tips": "0 is unlimited"
 }

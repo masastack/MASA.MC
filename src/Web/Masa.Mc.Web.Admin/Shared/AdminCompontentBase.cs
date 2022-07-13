@@ -9,7 +9,6 @@ public abstract class AdminCompontentBase : BDomComponentBase
     private GlobalConfig? _globalConfig;
     private NavigationManager? _navigationManager;
     private McCaller? _mcCaller;
-    private bool _flag;
 
     [Inject]
     public McCaller McCaller

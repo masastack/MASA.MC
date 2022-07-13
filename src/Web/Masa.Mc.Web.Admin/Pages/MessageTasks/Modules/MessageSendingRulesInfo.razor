@@ -1,16 +1,16 @@
 ﻿@inherits AdminCompontentBase
-@if (Value.IsSendingInterval)
+@if (Value.IsCustom)
 {
     <dl class="mt-8">
-        <dt class="overline regular3--text">@T("DisplayName.SendingRule.SendingInterval")</dt>
-        <dd class="body2 emphasis2--text mt-1">@(string.Format(T("BatchSending.Tips"),Value.SendingInterval,Value.SendingCount))</dd>
+        <dt class="overline regular3--text">@T("DisplayName.SendingRule.CronExpression")</dt>
+        <dd class="body2 emphasis2--text mt-1">@Value.CronExpression</dd>
     </dl>
 }
-@if (Value.IsTiming)
+@if (Value.SendingCount>0)
 {
     <dl class="mt-8">
-        <dt class="overline regular3--text">@T("DisplayName.SendingRule.IsTiming")</dt>
-        <dd class="body2 emphasis2--text mt-1">@Value.SendTime?.ToString(T("$DateTimeFormat"))</dd>
+        <dt class="overline regular3--text">@T("DisplayName.SendingRule.SendingCount")</dt>
+        <dd class="body2 emphasis2--text mt-1">@Value.SendingCount</dd>
     </dl>
 }
 

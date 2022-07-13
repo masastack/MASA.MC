@@ -290,5 +290,9 @@
   "MessageContent": "消息内容",
   "Description.ChannelType.Required": "请先选择渠道类型",
   "ReceiversCount": "预计{0}人",
-  "SendingMessage": "正在发送消息"
+  "SendingMessage": "正在发送消息",
+  "DisplayName.SendingRule.CronExpression": "Cron 表达式",
+  "DisplayName.SendingRule.IsCustom": "自定义设置",
+  "DisplayName.SendingRule.SendingCount": "每次发送条数",
+  "DisplayName.SendingRule.SendingCount.Tips": "0为不限制"
 }
