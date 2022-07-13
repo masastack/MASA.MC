@@ -96,7 +96,7 @@
                             <dd class="body2 emphasis2--text mt-1">@_info.Sign</dd>
                         </dl>
                     }
-                    @if (_info.SendRules.IsSendingInterval || _info.SendRules.IsTiming)
+                    @if (_info.SendRules.IsCustom)
                     {
                         <MessageSendingRulesInfo Value="_info.SendRules" />
                     }

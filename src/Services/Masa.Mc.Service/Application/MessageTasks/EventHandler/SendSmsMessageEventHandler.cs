@@ -49,7 +49,7 @@ public class SendSmsMessageEventHandler
             int totalCount = taskHistory.ReceiverUsers.Count;
             foreach (var item in taskHistory.ReceiverUsers)
             {
-                var messageRecord = new MessageRecord(item.UserId, channel.Id, taskHistory.MessageTaskId, taskHistory.Id, item.Variables, eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.DisplayName)), taskHistory.MessageTask.ExpectSendTime);
+                var messageRecord = new MessageRecord(item.UserId, channel.Id, taskHistory.MessageTaskId, taskHistory.Id, item.Variables, eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.DisplayName)), taskHistory.SendTime);
                 _messageRecordDomainService.SetUserInfo(messageRecord, item);
 
                 if (taskHistory.MessageTask.EntityType == MessageEntityTypes.Template)

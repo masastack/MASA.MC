@@ -26,6 +26,7 @@ builder.Services.AddMasaIdentityModel(IdentityType.MultiEnvironment, options =>
     options.UserId = "sub";
 });
 builder.Services.AddAuthClient(builder.Configuration.GetValue<string>("AuthClient:Url"));
+builder.Services.AddSchedulerClient(builder.Configuration.GetValue<string>("SchedulerClient:Url"));
 builder.Services.AddAliyunStorage(serviceProvider =>
 {
     var daprClient = serviceProvider.GetRequiredService<DaprClient>();
