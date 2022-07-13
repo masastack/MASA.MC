@@ -28,7 +28,7 @@
                         <ChildContent>
                             <div class="ml-n5">
                                 <div class="btn emphasis--text">@(_messageTask.ExpectSendTime?.ToLocalTime().ToString(T("$DateFormat")))</div>
-                                <div class="overline regular3--text">@(_messageTask.ExpectSendTime?.ToLocalTime().ToString(T("$TimeFormat"))))</div>
+                                <div class="overline regular3--text">@(_messageTask.ExpectSendTime?.ToLocalTime().ToString(T("$TimeFormat")))</div>
                             </div>
                         </ChildContent>
                     </MTimelineItem>
@@ -62,7 +62,7 @@
                         </dt>
                         @if (_messageRecord.Success == false)
                         {
-                            <a href="javascript:;" class="body2 primary--text text-decoration-none" @onclick="HandleRetry">@T("Retry")</a>
+                            <a href="javascript:;" class="body2 primary--text text-decoration-none" @onclick="async() => await Throttle(HandleRetry)">@T("Retry")</a>
                         }
                     </dl>
                     @if (_messageRecord.Success == false)

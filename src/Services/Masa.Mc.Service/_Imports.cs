@@ -81,7 +81,6 @@ global using Masa.Mc.Service.Admin.Domain.ReceiverGroups.Events;
 global using Masa.Contrib.Isolation.UoW.EF;
 global using Masa.Contrib.Isolation.MultiEnvironment;
 global using Masa.Contrib.Data.EntityFrameworkCore;
-global using Masa.Contrib.Data.EntityFrameworkCore.SqlServer;
 global using Masa.Mc.Contracts.Admin.Enums.MessageTasks;
 global using Masa.Mc.Service.Admin.Domain.MessageTasks.Aggregates;
 global using Masa.Mc.Contracts.Admin.Dtos.MessageTasks;

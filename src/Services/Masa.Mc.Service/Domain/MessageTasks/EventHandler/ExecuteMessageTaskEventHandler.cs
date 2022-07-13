@@ -26,13 +26,16 @@ public class ExecuteMessageTaskEventHandler
     [EventHandler]
     public async Task HandleEventAsync(ExecuteMessageTaskEvent eto)
     {
-        var taskHistoryNo = $"SJ{UtilConvert.GetGuidToNumber()}";
-        var history = new MessageTaskHistory(eto.MessageTask.Id, taskHistoryNo, eto.ReceiverUsers, eto.IsTest);
-        await _messageTaskHistoryRepository.AddAsync(history);
-        await _messageTaskHistoryRepository.UnitOfWork.SaveChangesAsync();
-        var messageData = await _domainService.GetMessageDataAsync(eto.MessageTask.EntityType, eto.MessageTask.EntityId, eto.MessageTask.Variables);
+        var history = await _messageTaskHistoryRepository.FindWaitSendAsync(eto.MessageTaskId, eto.IsTest);
+        var messageData = await _domainService.GetMessageDataAsync(history.MessageTask.EntityType, history.MessageTask.EntityId, history.MessageTask.Variables);
         history.SetSending();
-        await SendMessagesAsync(eto.MessageTask.ChannelId.Value, messageData, history);
+        if (!history.MessageTask.SendTime.HasValue)
+        {
+            history.MessageTask.SetSending();
+        }
+        await _messageTaskHistoryRepository.UpdateAsync(history);
+        await _messageTaskHistoryRepository.UnitOfWork.SaveChangesAsync();
+        await SendMessagesAsync(history.MessageTask.ChannelId.Value, messageData, history);
     }
 
     private async Task SendMessagesAsync(Guid channelId, MessageData messageData, MessageTaskHistory messageTaskHistory)
