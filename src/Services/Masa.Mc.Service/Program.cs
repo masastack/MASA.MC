@@ -1,8 +1,6 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
-using Masa.Contrib.Dispatcher.IntegrationEvents;
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddObservability();
@@ -44,18 +42,27 @@ builder.Services.AddAliyunStorage(serviceProvider =>
     };
 });
 builder.Services.AddAuthorization();
-builder.Services.AddAuthentication(options => 
+builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 })
-.AddJwtBearer(options =>
+.AddJwtBearer("Bearer", options =>
 {
-    options.Authority = "";
+    options.Authority = builder.GetMasaConfiguration().ConfigurationApi.GetDefault().GetValue<string>("AppSettings:IdentityServerUrl");
     options.RequireHttpsMetadata = false;
-    options.Audience = "";
+    options.TokenValidationParameters.ValidateAudience = false;
+    options.MapInboundClaims = false;
 });
-builder.Services.AddMasaRedisCache(builder.Configuration.GetSection("RedisConfig")).AddMasaMemoryCache();
+
+builder.AddMasaConfiguration(configurationBuilder =>
+{
+    configurationBuilder.UseDcc();
+});
+builder.Services.AddDccClient();
+var redisConfigOption = builder.GetMasaConfiguration().ConfigurationApi.GetDefault()
+        .GetSection("RedisConfig").Get<RedisConfigurationOptions>();
+builder.Services.AddMasaRedisCache(redisConfigOption).AddMasaMemoryCache();
 builder.Services.AddAliyunSms();
 builder.Services.AddMailKit();
 builder.Services.AddCsv();
