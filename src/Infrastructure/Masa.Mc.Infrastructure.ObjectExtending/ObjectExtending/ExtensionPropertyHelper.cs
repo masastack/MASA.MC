@@ -1,7 +1,7 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
-namespace Masa.Mc.Infrastructure.ObjectExtending.ObjectExtending;
+namespace System.Collections.Concurrent;
 
 public static class ExtensionPropertyHelper
 {
