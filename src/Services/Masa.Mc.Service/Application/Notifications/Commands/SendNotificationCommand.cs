@@ -1,8 +1,8 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
-namespace Masa.Mc.Service.Admin.Application.WebsiteMessages.Commands;
+namespace Masa.Mc.Service.Admin.Application.Notifications.Commands;
 
-public record SendGetNotificationCommand(IReadOnlyList<string> UserIds) : Command
+public record SendNotificationCommand(SendNotificationDto dto) : Command
 {
 }
