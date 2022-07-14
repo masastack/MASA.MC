@@ -1,6 +1,9 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
+using Masa.Mc.Service.Admin;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddObservability();
@@ -50,6 +53,10 @@ builder.Services.AddAuthentication(options =>
     options.TokenValidationParameters.ValidateAudience = false;
     options.MapInboundClaims = false;
 });
+
+//builder.Services.TryAddEnumerable(
+//    ServiceDescriptor.Singleton<IPostConfigureOptions<JwtBearerOptions>,
+//        ConfigureJwtBearerOptions>());
 builder.AddMasaConfiguration(configurationBuilder =>
 {
     configurationBuilder.UseDcc();
@@ -62,7 +69,6 @@ builder.Services.AddAliyunSms();
 builder.Services.AddMailKit();
 builder.Services.AddCsv();
 builder.Services.AddSingleton<ITemplateRenderer, TextTemplateRenderer>();
-builder.Services.AddTransient<Microsoft.AspNetCore.SignalR.IUserIdProvider, McUserIdProvider>();
 builder.Services.AddSignalR();
 builder.Services.AddTransient<NotificationsHub>();
 TypeAdapterConfig.GlobalSettings.Scan(Assembly.GetExecutingAssembly(), Assembly.Load("Masa.Mc.Contracts.Admin"));

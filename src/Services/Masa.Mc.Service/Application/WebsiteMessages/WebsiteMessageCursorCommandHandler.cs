@@ -8,20 +8,23 @@ public class WebsiteMessageCursorCommandHandler
     private readonly WebsiteMessageCursorDomainService _domainService;
     private readonly IDistributedCacheClient _cacheClient;
     private readonly ILogger<WebsiteMessageCursorCommandHandler> _logger;
+    private readonly IUserContext _userContext;
 
     public WebsiteMessageCursorCommandHandler(WebsiteMessageCursorDomainService domainService
         , IDistributedCacheClient cacheClient
-        , ILogger<WebsiteMessageCursorCommandHandler> logger)
+        , ILogger<WebsiteMessageCursorCommandHandler> logger
+        , IUserContext userContext)
     {
         _domainService = domainService;
         _cacheClient = cacheClient;
         _logger = logger;
+        _userContext = userContext;
     }
 
     [EventHandler]
     public virtual async Task CheckAsync(CheckWebsiteMessageCursorCommand command)
     {
-        var currentUserId = Guid.Parse(TempCurrentUserConsts.ID);
+        var currentUserId = _userContext.GetUserId<Guid>();
         var checkCount = await _cacheClient.HashIncrementAsync($"{CacheKeys.MESSAGE_CURSOR_CHECK_COUNT}_{currentUserId}");
         if (checkCount > 1)
         {

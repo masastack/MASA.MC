@@ -1,8 +1,6 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
-using Masa.Mc.Contracts.Admin.Enums.WebsiteMessages;
-
 namespace Masa.Mc.Service.Admin.Application.WebsiteMessages;
 
 public class WebsiteMessageQueryHandler
@@ -63,7 +61,6 @@ public class WebsiteMessageQueryHandler
         var noticeNum = query.PageSize;
         var queryable = await _repository.WithDetailsAsync();
         var userId = _userContext.GetUserId<Guid>();
-        Console.WriteLine($"userId:{ userId}");
         queryable = queryable.Where(x => x.UserId == userId);
         var list = queryable.Where(x => !x.IsRead).OrderByDescending(x => x.CreationTime).Take(noticeNum).ToList();
         if (list.Count < noticeNum)
