@@ -77,11 +77,11 @@ public class SendWebsiteMessageEventHandler
 
         if (taskHistory.MessageTask.ReceiverType == ReceiverTypes.Broadcast)
         {
-            await _mcClient.NotificationService.SendNotificationAsync(new SendNotificationModel { MethodName = SignalRMethodConsts.CHECK_NOTIFICATION, GroupId = "Global" });
+            await _mcClient.WebsiteMessageService.SendCheckNotificationAsync();
         }
         if (taskHistory.MessageTask.ReceiverType == ReceiverTypes.Assign)
         {
-            await _mcClient.NotificationService.SendNotificationAsync(new SendNotificationModel { MethodName = SignalRMethodConsts.CHECK_NOTIFICATION, UserIds = userIds });
+            await _mcClient.WebsiteMessageService.SendGetNotificationAsync(userIds);
         }
     }
 
