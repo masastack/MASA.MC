@@ -1,11 +1,14 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
+using Masa.BuildingBlocks.BasicAbility.Mc;
+using Masa.BuildingBlocks.BasicAbility.Mc.Model;
+
 namespace Masa.Mc.Service.Admin.Application.MessageTasks.EventHandler;
 
 public class SendWebsiteMessageEventHandler
 {
-    private readonly IHubContext<NotificationsHub> _hubContext;
+    private readonly IMcClient _mcClient;
     private readonly IMessageTaskHistoryRepository _messageTaskHistoryRepository;
     private readonly IMessageRecordRepository _messageRecordRepository;
     private readonly IWebsiteMessageRepository _websiteMessageRepository;
@@ -13,7 +16,7 @@ public class SendWebsiteMessageEventHandler
     private readonly MessageTemplateDomainService _messageTemplateDomainService;
     private readonly MessageRecordDomainService _messageRecordDomainService;
 
-    public SendWebsiteMessageEventHandler(IHubContext<NotificationsHub> hubContext
+    public SendWebsiteMessageEventHandler(IMcClient mcClient
         , IMessageTaskHistoryRepository messageTaskHistoryRepository
         , IMessageRecordRepository messageRecordRepository
         , IWebsiteMessageRepository websiteMessageRepository
@@ -21,7 +24,7 @@ public class SendWebsiteMessageEventHandler
         , MessageTemplateDomainService messageTemplateDomainService
         , MessageRecordDomainService messageRecordDomainService)
     {
-        _hubContext = hubContext;
+        _mcClient = mcClient;
         _messageTaskHistoryRepository = messageTaskHistoryRepository;
         _messageRecordRepository = messageRecordRepository;
         _websiteMessageRepository = websiteMessageRepository;
@@ -74,13 +77,11 @@ public class SendWebsiteMessageEventHandler
 
         if (taskHistory.MessageTask.ReceiverType == ReceiverTypes.Broadcast)
         {
-            var singalRGroup = _hubContext.Clients.Group("Global");
-            await singalRGroup.SendAsync(SignalRMethodConsts.CHECK_NOTIFICATION);
+            await _mcClient.WebsiteMessageService.SendCheckNotificationAsync();
         }
         if (taskHistory.MessageTask.ReceiverType == ReceiverTypes.Assign)
         {
-            var onlineClients = _hubContext.Clients.Users(userIds);
-            await onlineClients.SendAsync(SignalRMethodConsts.GET_NOTIFICATION);
+            await _mcClient.WebsiteMessageService.SendGetNotificationAsync(userIds);
         }
     }
 
