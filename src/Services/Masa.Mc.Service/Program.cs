@@ -14,16 +14,13 @@ builder.Services.AddDaprStarter(opt =>
 #endif
 
 builder.Services.AddDaprClient();
-builder.Services.AddActors(options =>
-{
-});
+
 builder.Services.AddMasaIdentityModel(IdentityType.MultiEnvironment, options =>
 {
     options.Environment = "environment";
     options.UserName = "name";
     options.UserId = "sub";
 });
-builder.Services.AddAuthClient(builder.Configuration.GetValue<string>("AuthClient:Url"));
 builder.Services.AddAliyunStorage(serviceProvider =>
 {
     var daprClient = serviceProvider.GetRequiredService<DaprClient>();
@@ -52,7 +49,14 @@ builder.Services.AddAuthentication(options =>
     options.RequireHttpsMetadata = false;
     options.Audience = "";
 });
-builder.Services.AddMasaRedisCache(builder.Configuration.GetSection("RedisConfig")).AddMasaMemoryCache();
+builder.AddMasaConfiguration(configurationBuilder =>
+{
+    configurationBuilder.UseDcc();
+});
+var configuration = builder.GetMasaConfiguration().ConfigurationApi.GetDefault();
+builder.Services.AddAuthClient(configuration.GetValue<string>("AppSettings:AuthClient:Url"));
+builder.Services.AddSchedulerClient(configuration.GetValue<string>("AppSettings:SchedulerClient:Url"));
+builder.Services.AddMasaRedisCache(configuration.GetSection("RedisConfig").Get<RedisConfigurationOptions>()).AddMasaMemoryCache();
 builder.Services.AddAliyunSms();
 builder.Services.AddMailKit();
 builder.Services.AddCsv();
@@ -100,28 +104,26 @@ var app = builder.Services
     .AddDomainEventBus(dispatcherOptions =>
     {
         dispatcherOptions
-        .UseDaprEventBus<IntegrationEventLogService>(options => options.UseEventLog<McDbContext>())
+        .UseIntegrationEventBus<IntegrationEventLogService>(options => options.UseDapr().UseEventLog<McDbContext>())
         .UseEventBus(eventBusBuilder =>
         {
             eventBusBuilder.UseMiddleware(typeof(ValidatorMiddleware<>));
             eventBusBuilder.UseMiddleware(typeof(LogMiddleware<>));
         })
         .UseIsolationUoW<McDbContext>(
-            isolationBuilder => isolationBuilder.UseMultiEnvironment("env"),
+            isolationBuilder => isolationBuilder.UseMultiEnvironment("env_key"),
             dbOptions => dbOptions.UseSqlServer().UseFilter())
         .UseRepository<McDbContext>();
     })
     .AddServices(builder);
-app.UseMasaExceptionHandling(opt =>
+app.UseMasaExceptionHandler(opt =>
 {
-    opt.CustomExceptionHandler = exception =>
+    opt.ExceptionHandler = context =>
     {
-        Exception friendlyException = exception;
-        if (exception is ValidationException validationException)
+        if (context.Exception is ValidationException validationException)
         {
-            friendlyException = new UserFriendlyException(validationException.Errors.Select(err => err.ToString()).FirstOrDefault()!);
+            context.ToResult(validationException.Errors.Select(err => err.ToString()).FirstOrDefault()!);
         }
-        return (friendlyException, false);
     };
 });
 // Configure the HTTP request pipeline.
@@ -139,7 +141,6 @@ app.UseCloudEvents();
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapSubscribeHandler();
-    endpoints.MapActorsHandlers();
     endpoints.MapHub<NotificationsHub>("/signalr-hubs/notifications");
 });
 

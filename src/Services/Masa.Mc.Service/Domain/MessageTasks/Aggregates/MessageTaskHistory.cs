@@ -26,6 +26,8 @@ public class MessageTaskHistory : FullAggregateRoot<Guid, Guid>
 
     public List<MessageReceiverUser> ReceiverUsers { get; protected set; } = new();
 
+    public Guid SchedulerTaskId { get; protected set; }
+
     public MessageTaskHistory(Guid messageTaskId, string taskHistoryNo, List<MessageReceiverUser> receiverUsers, bool isTest, DateTimeOffset? sendTime = null)
     {
         MessageTaskId = messageTaskId;

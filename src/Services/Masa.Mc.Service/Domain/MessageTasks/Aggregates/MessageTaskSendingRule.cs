@@ -5,9 +5,7 @@ namespace Masa.Mc.Service.Admin.Domain.MessageTasks.Aggregates;
 
 public class MessageTaskSendingRule
 {
-    public bool IsSendingInterval { get; set; }
-    public long SendingInterval { get; set; }
+    public bool IsCustom { get; set; }
+    public string CronExpression { get; set; } = string.Empty;
     public long SendingCount { get; set; }
-    public bool IsTiming { get; set; }
-    public DateTimeOffset? SendTime { get; set; }
 }

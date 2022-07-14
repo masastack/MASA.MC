@@ -8,8 +8,6 @@ public class SendRuleDtoValidator : AbstractValidator<SendRuleDto>
 {
     public SendRuleDtoValidator()
     {
-        RuleFor(dto => dto.SendingInterval).Required().When(x => x.IsSendingInterval);
-        RuleFor(dto => dto.SendingCount).Required().When(x => x.IsSendingInterval);
-        RuleFor(dto => dto.SendTime).Required().When(x => x.IsTiming);
+        RuleFor(dto => dto.CronExpression).Required().Must(x => CronExpression.IsValidExpression(x)).When(x => x.IsCustom);
     }
 }

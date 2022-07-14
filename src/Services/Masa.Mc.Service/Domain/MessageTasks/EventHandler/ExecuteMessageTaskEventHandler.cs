@@ -10,29 +10,45 @@ public class ExecuteMessageTaskEventHandler
     private readonly IMessageTaskHistoryRepository _messageTaskHistoryRepository;
     private readonly IDomainEventBus _eventBus;
     private readonly MessageTaskDomainService _domainService;
+    private readonly ISchedulerClient _schedulerClient;
+
     public ExecuteMessageTaskEventHandler(IChannelRepository channelRepository
         , IMessageTaskRepository messageTaskRepository
         , IMessageTaskHistoryRepository messageTaskHistoryRepository
         , IDomainEventBus eventBus
-        , MessageTaskDomainService domainService)
+        , MessageTaskDomainService domainService
+        , ISchedulerClient schedulerClient)
     {
         _channelRepository = channelRepository;
         _messageTaskRepository = messageTaskRepository;
         _messageTaskHistoryRepository = messageTaskHistoryRepository;
         _eventBus = eventBus;
         _domainService = domainService;
+        _schedulerClient = schedulerClient;
     }
 
     [EventHandler]
     public async Task HandleEventAsync(ExecuteMessageTaskEvent eto)
     {
         var history = await _messageTaskHistoryRepository.FindWaitSendAsync(eto.MessageTaskId, eto.IsTest);
+
+        if (history == null)
+        {
+            var messageTask = await _messageTaskRepository.FindAsync(x => x.Id == eto.MessageTaskId, false);
+            if (messageTask == null) return;
+
+            await _schedulerClient.SchedulerJobService.RemoveAsync(new BaseSchedulerJobRequest { JobId = messageTask.SchedulerJobId });
+            return;
+        }
+
         var messageData = await _domainService.GetMessageDataAsync(history.MessageTask.EntityType, history.MessageTask.EntityId, history.MessageTask.Variables);
         history.SetSending();
+
         if (!history.MessageTask.SendTime.HasValue)
         {
             history.MessageTask.SetSending();
         }
+
         await _messageTaskHistoryRepository.UpdateAsync(history);
         await _messageTaskHistoryRepository.UnitOfWork.SaveChangesAsync();
         await SendMessagesAsync(history.MessageTask.ChannelId.Value, messageData, history);

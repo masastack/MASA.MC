@@ -43,6 +43,8 @@ public class MessageTask : FullAggregateRoot<Guid, Guid>
 
     public MessageTaskSources Source { get; protected set; }
 
+    public Guid SchedulerJobId { get; protected set; }
+
     public MessageTask(string displayName, ChannelTypes? channelType, Guid? channelId, MessageEntityTypes entityType, Guid entityId, bool isDraft, string sign, ReceiverTypes receiverType, MessageTaskSelectReceiverTypes selectReceiverType, List<MessageTaskReceiver> receivers, MessageTaskSendingRule sendRules, MessageTaskSources source)
     {
         DisplayName = displayName;
@@ -116,16 +118,20 @@ public class MessageTask : FullAggregateRoot<Guid, Guid>
 
     public void SetExpectSendTime()
     {
-        ExpectSendTime = SendRules.SendTime.HasValue ? SendRules.SendTime.Value : DateTimeOffset.Now;
+        if (!SendRules.IsCustom || string.IsNullOrEmpty(SendRules.CronExpression))
+        {
+            ExpectSendTime = DateTimeOffset.Now;
+        }
+        else
+        {
+            var cronExpression = new CronExpression(SendRules.CronExpression);
+            var nextExcuteTime = cronExpression.GetNextValidTimeAfter(DateTimeOffset.Now);
+            ExpectSendTime = nextExcuteTime;
+        }
     }
 
-    public bool IsTiming()
+    public void SetJobId(Guid jobId)
     {
-        return SendRules.IsTiming && SendRules.SendTime.HasValue;
-    }
-
-    public bool IsSendingInterval()
-    {
-        return SendRules.IsSendingInterval && SendRules.SendingInterval > 0 && SendRules.SendingCount > 0;
+        SchedulerJobId = jobId;
     }
 }

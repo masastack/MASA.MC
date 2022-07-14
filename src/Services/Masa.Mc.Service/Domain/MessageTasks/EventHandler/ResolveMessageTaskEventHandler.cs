@@ -1,6 +1,8 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
+using HttpMethods = Masa.BuildingBlocks.BasicAbility.Scheduler.Enum.HttpMethods;
+
 namespace Masa.Mc.Service.Admin.Domain.MessageTasks.EventHandler;
 
 public class ResolveMessageTaskEventHandler
@@ -11,12 +13,17 @@ public class ResolveMessageTaskEventHandler
     private readonly IReceiverGroupRepository _receiverGroupRepository;
     private readonly IDomainEventBus _eventBus;
     private readonly IAuthClient _authClient;
+    private readonly ISchedulerClient _schedulerClient;
+    private readonly IHttpContextAccessor _httpContextAccessor;
+
     public ResolveMessageTaskEventHandler(IChannelRepository channelRepository
         , IMessageTaskRepository messageTaskRepository
         , IMessageTaskHistoryRepository messageTaskHistoryRepository
         , IReceiverGroupRepository receiverGroupRepository
         , IDomainEventBus eventBus
-        , IAuthClient authClient)
+        , IAuthClient authClient
+        , ISchedulerClient schedulerClient
+        , IHttpContextAccessor httpContextAccessor)
     {
         _channelRepository = channelRepository;
         _messageTaskRepository = messageTaskRepository;
@@ -24,6 +31,8 @@ public class ResolveMessageTaskEventHandler
         _receiverGroupRepository = receiverGroupRepository;
         _eventBus = eventBus;
         _authClient = authClient;
+        _schedulerClient = schedulerClient;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     [EventHandler(1)]
@@ -114,31 +123,65 @@ public class ResolveMessageTaskEventHandler
     [EventHandler(6)]
     public async Task CreateMessageTaskHistoryAsync(ResolveMessageTaskEvent eto)
     {
-        if (eto.MessageTask.IsSendingInterval())
+        var sendTime = DateTimeOffset.Now;
+        if (eto.MessageTask.SendRules.IsCustom)
         {
             var totalCount = eto.MessageTask.ReceiverUsers.Count;
             var sendingCount = (int)eto.MessageTask.SendRules.SendingCount;
+            if (sendingCount == 0)
+            {
+                sendingCount = totalCount;
+            }
             var historyNum = (long)Math.Ceiling((double)totalCount / sendingCount);
+            var cronExpression = new CronExpression(eto.MessageTask.SendRules.CronExpression);
             for (int i = 0; i < historyNum; i++)
             {
-                var taskHistoryNo = $"SJ{UtilConvert.GetGuidToNumber()}";
-                var sendTime = eto.MessageTask.SendRules.SendTime?.AddSeconds(eto.MessageTask.SendRules.SendingInterval * i);
-                var receiverUsers = eto.MessageTask.ReceiverUsers.Skip(i * sendingCount).Take(sendingCount).ToList();
-                var history = new MessageTaskHistory(eto.MessageTask.Id, taskHistoryNo, receiverUsers, false, sendTime);
-                await _messageTaskHistoryRepository.AddAsync(history);
+                var nextExcuteTime = cronExpression.GetNextValidTimeAfter(sendTime);
+                if (nextExcuteTime.HasValue)
+                {
+                    sendTime = nextExcuteTime.Value;
+                    var taskHistoryNo = $"SJ{UtilConvert.GetGuidToNumber()}";
+                    var receiverUsers = eto.MessageTask.ReceiverUsers.Skip(i * sendingCount).Take(sendingCount).ToList();
+                    var history = new MessageTaskHistory(eto.MessageTask.Id, taskHistoryNo, receiverUsers, false, sendTime);
+                    await _messageTaskHistoryRepository.AddAsync(history);
+                }
             }
         }
         else
         {
             var taskHistoryNo = $"SJ{UtilConvert.GetGuidToNumber()}";
-            var history = new MessageTaskHistory(eto.MessageTask.Id, taskHistoryNo, eto.MessageTask.ReceiverUsers, false, eto.MessageTask.SendRules.SendTime);
+            var history = new MessageTaskHistory(eto.MessageTask.Id, taskHistoryNo, eto.MessageTask.ReceiverUsers, false, sendTime);
             await _messageTaskHistoryRepository.AddAsync(history);
-            await _messageTaskHistoryRepository.UnitOfWork.SaveChangesAsync();
+        }
+    }
 
-            if (!eto.MessageTask.IsTiming())
+    [EventHandler(7)]
+    public async Task AddSchedulerJobAsync(ResolveMessageTaskEvent eto)
+    {
+        var httpContext = _httpContextAccessor.HttpContext!;
+        var requestUrl = $"{httpContext.Request.Scheme}://{httpContext.Request.Host}/api/message-task/execute/{eto.MessageTaskId}";
+        var cronExpression = eto.MessageTask.SendRules.CronExpression;
+        var request = new AddSchedulerJobRequest
+        {
+            ProjectIdentity = MasaStackConsts.MC_SYSTEM_ID,
+            Name = nameof(MessageTaskExecuteJob),
+            JobType = JobTypes.Http,
+            CronExpression = cronExpression,
+            HttpConfig = new SchedulerJobHttpConfig
             {
-                await _eventBus.PublishAsync(new ExecuteMessageTaskEvent(eto.MessageTask.Id));
+                HttpMethod = HttpMethods.POST,
+                RequestUrl = requestUrl
             }
+        };
+
+        var jobId = await _schedulerClient.SchedulerJobService.AddAsync(request);
+        eto.MessageTask.SetJobId(jobId);
+        await _messageTaskRepository.UpdateAsync(eto.MessageTask);
+        await _messageTaskHistoryRepository.UnitOfWork.SaveChangesAsync();
+
+        if (string.IsNullOrEmpty(cronExpression) && jobId != default)
+        {
+            await _schedulerClient.SchedulerJobService.StartAsync(new BaseSchedulerJobRequest { JobId = jobId });
         }
     }
 
@@ -188,5 +231,10 @@ public class ResolveMessageTaskEventHandler
         }
         return userList.Select(x => MapToMessageReceiverUser(x, variables))
             .ToList();
+    }
+
+    private void CalculateCron(MessageTaskSendingRule sendRules)
+    {
+
     }
 }

@@ -62,7 +62,7 @@ public class WebsiteMessageQueryHandler
         if (list.Count < noticeNum)
         {
             var surplusNum = noticeNum - list.Count;
-            var surplusList = queryable.OrderByDescending(x => x.CreationTime).Take(surplusNum).ToList();
+            var surplusList = queryable.Where(x => x.IsRead).OrderByDescending(x => x.CreationTime).Take(surplusNum).ToList();
             list.AddRange(surplusList);
         }
         var dtos = list.Adapt<List<WebsiteMessageDto>>();
