@@ -2,6 +2,7 @@
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
 using Masa.BuildingBlocks.BasicAbility.Mc;
+using Masa.BuildingBlocks.BasicAbility.Mc.Model;
 
 namespace Masa.Mc.Service.Admin.Application.MessageTasks.EventHandler;
 
@@ -76,11 +77,11 @@ public class SendWebsiteMessageEventHandler
 
         if (taskHistory.MessageTask.ReceiverType == ReceiverTypes.Broadcast)
         {
-            await _mcClient.WebsiteMessageService.SendCheckNotificationAsync();
+            await _mcClient.NotificationService.SendNotificationAsync(new SendNotificationModel { MethodName = SignalRMethodConsts.CHECK_NOTIFICATION, GroupId = "Global" });
         }
         if (taskHistory.MessageTask.ReceiverType == ReceiverTypes.Assign)
         {
-            await _mcClient.WebsiteMessageService.SendGetNotificationAsync(userIds);
+            await _mcClient.NotificationService.SendNotificationAsync(new SendNotificationModel { MethodName = SignalRMethodConsts.CHECK_NOTIFICATION, UserIds = userIds });
         }
     }
 
