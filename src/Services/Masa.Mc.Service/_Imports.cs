@@ -174,5 +174,3 @@ global using Masa.Contrib.Dispatcher.IntegrationEvents;
 global using Masa.Mc.Infrastructure.Common.Utils;
 global using Masa.Contrib.Configuration.ConfigurationApi.Dcc;
 global using Masa.BuildingBlocks.Configuration;
-global using Masa.Mc.Contracts.Admin.Dtos.Notifications;
-global using Masa.Mc.Service.Admin.Application.Notifications.Commands;
