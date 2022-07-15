@@ -77,7 +77,6 @@ public class WebsiteMessageQueryHandler
     private async Task<Expression<Func<WebsiteMessage, bool>>> CreateFilteredPredicate(GetWebsiteMessageInputDto inputDto)
     {
         var userId = _userContext.GetUserId<Guid>();
-        Console.WriteLine($"userId:{ userId}");
         Expression<Func<WebsiteMessage, bool>> condition = w => w.UserId == userId;
         switch (inputDto.FilterType)
         {
