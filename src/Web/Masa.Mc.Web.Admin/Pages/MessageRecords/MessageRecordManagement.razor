@@ -83,15 +83,10 @@
                             }
                         </MListItemAvatar>
                         <MListItemContent>
-                            @if (string.IsNullOrEmpty(context.Item.ExtraProperties.GetProperty<string>("Account")))
-                            {
-                                <MListItemTitle class="subtitle emphasis--text">@(context.Item.ExtraProperties.GetProperty<string>("DisplayName"))</MListItemTitle>
-                                <MListItemSubtitle class="caption regular2--text">@(context.Item.ExtraProperties.GetProperty<string>("PhoneNumber"))</MListItemSubtitle>
-                            }
-                            else
-                            {
-                                <MListItemTitle class="subtitle emphasis--text">@(context.Item.ExtraProperties.GetProperty<string>("Account"))</MListItemTitle>
-                            }
+                            <MListItemTitle class="subtitle emphasis--text">
+                                @(!string.IsNullOrEmpty(context.Item.ExtraProperties.GetProperty<string>("DisplayName"))?context.Item.ExtraProperties.GetProperty<string>("DisplayName"):!string.IsNullOrEmpty(context.Item.ExtraProperties.GetProperty<string>("PhoneNumber"))?context.Item.ExtraProperties.GetProperty<string>("PhoneNumber"):context.Item.ExtraProperties.GetProperty<string>("Account"))
+                            </MListItemTitle>
+                            <MListItemSubtitle class="caption regular2--text">@(!string.IsNullOrEmpty(context.Item.ExtraProperties.GetProperty<string>("DisplayName"))&&!string.IsNullOrEmpty(context.Item.ExtraProperties.GetProperty<string>("PhoneNumber"))?context.Item.ExtraProperties.GetProperty<string>("PhoneNumber"):context.Item.ExtraProperties.GetProperty<string>("Account"))</MListItemSubtitle>
                         </MListItemContent>
                     </MListItem>
                     break;

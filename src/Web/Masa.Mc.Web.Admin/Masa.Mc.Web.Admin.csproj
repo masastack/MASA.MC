@@ -23,8 +23,8 @@
     <PackageReference Include="Masa.Blazor" Version="0.5.0-rc.5" />
     <PackageReference Include="Masa.Contrib.Identity.IdentityModel" Version="0.5.0-preview.6" />
     <PackageReference Include="Masa.Contrib.SearchEngine.AutoComplete.ElasticSearch" Version="0.5.0-preview.6" />
-    <PackageReference Include="Masa.Stack.Components" Version="0.0.53" />
-    <PackageReference Include="Masa.Utils.Data.Elasticsearch" Version="0.5.0-preview.5" />
+    <PackageReference Include="Masa.Stack.Components" Version="0.0.54" />
+    <PackageReference Include="Masa.Utils.Data.Elasticsearch" Version="0.5.0-preview.6" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="7.0.0-preview.4.22251.1" />
   </ItemGroup>

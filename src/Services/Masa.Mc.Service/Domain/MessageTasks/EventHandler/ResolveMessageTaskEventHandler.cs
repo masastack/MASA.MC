@@ -232,9 +232,4 @@ public class ResolveMessageTaskEventHandler
         return userList.Select(x => MapToMessageReceiverUser(x, variables))
             .ToList();
     }
-
-    private void CalculateCron(MessageTaskSendingRule sendRules)
-    {
-
-    }
 }
