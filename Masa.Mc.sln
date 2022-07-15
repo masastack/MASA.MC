@@ -60,7 +60,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Masa.Mc.Infrastructure.Sign
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Masa.Mc.Infrastructure.ExporterAndImporter.Csv", "src\Infrastructure\Masa.Mc.Infrastructure.ExporterAndImporter.Csv\Masa.Mc.Infrastructure.ExporterAndImporter.Csv.csproj", "{52353216-56EB-4F38-A6BA-7A23801569C3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Masa.Mc.Infrastructure.MailKit", "src\Infrastructure\Masa.Mc.Infrastructure.MailKit\Masa.Mc.Infrastructure.MailKit.csproj", "{3FDC5EC6-5B52-46E4-82D8-E9B39F017D7F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Masa.Mc.Infrastructure.MailKit", "src\Infrastructure\Masa.Mc.Infrastructure.MailKit\Masa.Mc.Infrastructure.MailKit.csproj", "{3FDC5EC6-5B52-46E4-82D8-E9B39F017D7F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

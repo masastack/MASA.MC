@@ -2,7 +2,6 @@
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
 using Masa.BuildingBlocks.BasicAbility.Mc;
-using Masa.BuildingBlocks.BasicAbility.Mc.Model;
 
 namespace Masa.Mc.Service.Admin.Application.MessageTasks.EventHandler;
 

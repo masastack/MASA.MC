@@ -38,17 +38,19 @@ builder.Services.AddAliyunStorage(serviceProvider =>
     };
 });
 builder.Services.AddAuthorization();
-builder.Services.AddAuthentication(options => 
+builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 })
-.AddJwtBearer(options =>
+.AddJwtBearer("Bearer", options =>
 {
-    options.Authority = "";
+    options.Authority = builder.GetMasaConfiguration().ConfigurationApi.GetDefault().GetValue<string>("AppSettings:IdentityServerUrl");
     options.RequireHttpsMetadata = false;
-    options.Audience = "";
+    options.TokenValidationParameters.ValidateAudience = false;
+    options.MapInboundClaims = false;
 });
+
 builder.AddMasaConfiguration(configurationBuilder =>
 {
     configurationBuilder.UseDcc();

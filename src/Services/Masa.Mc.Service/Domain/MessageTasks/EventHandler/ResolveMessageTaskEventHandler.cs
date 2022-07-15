@@ -166,7 +166,7 @@ public class ResolveMessageTaskEventHandler
             {
                 JobAppIdentity = MessageTaskExecuteJobConsts.JOB_APP_IDENTITY,
                 JobEntryAssembly = MessageTaskExecuteJobConsts.JOB_ENTRY_ASSEMBLY,
-                JobEntryMethod = MessageTaskExecuteJobConsts.JOB_ENTRY_METHOD,
+                JobEntryClassName = MessageTaskExecuteJobConsts.JOB_ENTRY_METHOD,
                 JobParams = eto.MessageTaskId.ToString(),
             }
         };
@@ -228,10 +228,5 @@ public class ResolveMessageTaskEventHandler
         }
         return userList.Select(x => MapToMessageReceiverUser(x, variables))
             .ToList();
-    }
-
-    private void CalculateCron(MessageTaskSendingRule sendRules)
-    {
-
     }
 }

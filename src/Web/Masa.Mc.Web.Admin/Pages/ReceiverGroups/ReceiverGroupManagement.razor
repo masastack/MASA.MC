@@ -28,7 +28,7 @@
                     <DateTimeListItem Value="@context.Item.ModificationTime"></DateTimeListItem>
                     break;
                 case (nameof(ReceiverGroupDto.Modifier)):
-                    <span class="body2 regular--text">@TempCurrentUserConsts.NAME</span>
+                    <span class="body2 regular--text"></span>
                     break;
                 case "Action":
                     <MIcon Small Color="emphasis2" OnClick="async()=>await _editModal.OpenModalAsync(context.Item)">mdi-pencil</MIcon>
@@ -39,7 +39,7 @@
             }
         </ItemColContent>
         <FooterContent>
-            <McPagination Class="mt-3 mx-6 pb-6" @bind-Page="_queryParam.Page" @bind-PageSize="_queryParam.PageSize" Total="_entities.Total" OnChange="HandlePaginationChange" />
+            <Pagination Class="mt-3 mx-6 pb-6" Page="@_queryParam.Page" PageSize="@_queryParam.PageSize" Total="_entities.Total" PageChanged="HandlePageChanged" PageSizeChanged="HandlePageSizeChanged" />
         </FooterContent>
     </DefaultDataTable>
 </MCard>

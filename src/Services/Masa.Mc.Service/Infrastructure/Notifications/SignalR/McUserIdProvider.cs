@@ -7,6 +7,6 @@ public class McUserIdProvider : IUserIdProvider
 {
     string IUserIdProvider.GetUserId(HubConnectionContext connection)
     {
-        return TempCurrentUserConsts.ID;
+        return connection.User?.FindFirst("sub")?.Value;
     }
 }

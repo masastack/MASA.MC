@@ -12,12 +12,7 @@ builder.Services.AddResponseCompression(opts =>
     opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
         new[] { "application/octet-stream" });
 });
-builder.Services.AddMasaIdentityModel(IdentityType.MultiEnvironment, options =>
-{
-    options.Environment = "environment";
-    options.UserName = "name";
-    options.UserId = "sub";
-});
+
 builder.Services.AddAuthApiGateways(option => option.McServiceBaseAddress = builder.Configuration["McServiceBaseAddress"]);
 builder.Services.AddMasaStackComponentsForServer("wwwroot/i18n", builder.Configuration["AuthServiceBaseAddress"], builder.Configuration["McServiceBaseAddress"]);
 builder.Services.AddHttpContextAccessor();
@@ -26,6 +21,11 @@ builder.Services.AddElasticsearchClient("auth", option => option.UseNodes("http:
                 .AddAutoComplete(option => option.UseIndexName("user_index"));
 builder.Services.AddSingleton<ChannelUpsertDtoValidator>();
 TypeAdapterConfig.GlobalSettings.Scan(Assembly.GetExecutingAssembly(), Assembly.Load("Masa.Mc.Contracts.Admin"));
+
+builder.Services.AddMasaOpenIdConnect(builder.Configuration);
+
+StaticWebAssetsLoader.UseStaticWebAssets(builder.Environment, builder.Configuration);
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
