@@ -54,9 +54,6 @@ builder.Services.AddAuthentication(options =>
     options.MapInboundClaims = false;
 });
 
-//builder.Services.TryAddEnumerable(
-//    ServiceDescriptor.Singleton<IPostConfigureOptions<JwtBearerOptions>,
-//        ConfigureJwtBearerOptions>());
 builder.AddMasaConfiguration(configurationBuilder =>
 {
     configurationBuilder.UseDcc();
