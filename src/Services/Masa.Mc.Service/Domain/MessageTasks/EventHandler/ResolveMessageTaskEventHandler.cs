@@ -149,18 +149,12 @@ public class ResolveMessageTaskEventHandler
             var taskHistoryNo = $"SJ{UtilConvert.GetGuidToNumber()}";
             var history = new MessageTaskHistory(eto.MessageTask.Id, taskHistoryNo, eto.MessageTask.ReceiverUsers, false, sendTime);
             await _messageTaskHistoryRepository.AddAsync(history);
-            await _messageTaskHistoryRepository.UnitOfWork.SaveChangesAsync();
-            await _eventBus.PublishAsync(new ExecuteMessageTaskEvent(eto.MessageTask.Id));
         }
     }
 
     [EventHandler(7)]
     public async Task AddSchedulerJobAsync(ResolveMessageTaskEvent eto)
     {
-        if (!eto.MessageTask.SendRules.IsCustom)
-        {
-            return;
-        }
         var cronExpression = eto.MessageTask.SendRules.CronExpression;
         var request = new AddSchedulerJobRequest
         {
