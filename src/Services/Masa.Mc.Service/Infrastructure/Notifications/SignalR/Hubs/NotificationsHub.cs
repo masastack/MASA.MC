@@ -3,7 +3,6 @@
 
 namespace Masa.Mc.Service.Admin.Infrastructure.Notifications.SignalR.Hubs;
 
-[Authorize]
 public class NotificationsHub: Hub
 {
     public override async Task OnConnectedAsync()
