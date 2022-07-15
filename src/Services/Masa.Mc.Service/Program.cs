@@ -63,6 +63,7 @@ builder.AddMasaConfiguration(configurationBuilder =>
 });
 var configuration = builder.GetMasaConfiguration().ConfigurationApi.GetDefault();
 builder.Services.AddAuthClient(configuration.GetValue<string>("AppSettings:AuthClient:Url"));
+builder.Services.AddMcClient(configuration.GetValue<string>("AppSettings:McClient:Url"));
 builder.Services.AddSchedulerClient(configuration.GetValue<string>("AppSettings:SchedulerClient:Url"));
 builder.Services.AddMasaRedisCache(configuration.GetSection("RedisConfig").Get<RedisConfigurationOptions>()).AddMasaMemoryCache();
 builder.Services.AddAliyunSms();

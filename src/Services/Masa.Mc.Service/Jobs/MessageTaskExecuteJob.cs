@@ -21,21 +21,24 @@ public class MessageTaskExecuteJob : ISchedulerJob
     {
         try
         {
-            var serviceCollection = new ServiceCollection();
+            var builder = WebApplication.CreateBuilder();
+            var serviceCollection = builder.Services;
+
             var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-
             env = string.IsNullOrWhiteSpace(env) ? "Development" : env;
-
             var assemblyPath = Assembly.GetExecutingAssembly().Location;
             var path = Path.GetDirectoryName(assemblyPath);
-
-            IConfiguration config = new ConfigurationBuilder()
-            .SetBasePath(path)
+            builder.Configuration.SetBasePath(path)
             .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-            .AddJsonFile($"appsettings.{env}.json", optional: true, reloadOnChange: true)
-            .Build();
+            .AddJsonFile($"appsettings.{env}.json", optional: true, reloadOnChange: true);
 
-            var connectstr = config.GetValue<string>("ConnectionStrings:DefaultConnection");
+            builder.AddMasaConfiguration(configurationBuilder =>
+            {
+                configurationBuilder.UseDcc();
+            });
+            var configuration = builder.GetMasaConfiguration().ConfigurationApi.GetDefault();
+            serviceCollection.AddMcClient(configuration.GetValue<string>("AppSettings:McClient:Url"));
+            serviceCollection.AddSchedulerClient(configuration.GetValue<string>("AppSettings:SchedulerClient:Url"));
             serviceCollection.AddAliyunSms();
             serviceCollection.AddMailKit();
             serviceCollection.AddSignalR();
@@ -51,7 +54,7 @@ public class MessageTaskExecuteJob : ISchedulerJob
                 })
                 .UseIsolationUoW<McDbContext>(
                     isolationBuilder => isolationBuilder.UseMultiEnvironment("env_key"),
-                    dbOptions => dbOptions.UseSqlServer(connectstr).UseFilter())
+                    dbOptions => dbOptions.UseSqlServer().UseFilter())
                 .UseRepository<McDbContext>();
             });
 

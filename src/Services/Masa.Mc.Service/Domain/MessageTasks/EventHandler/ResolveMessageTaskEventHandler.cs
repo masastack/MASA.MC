@@ -14,7 +14,6 @@ public class ResolveMessageTaskEventHandler
     private readonly IDomainEventBus _eventBus;
     private readonly IAuthClient _authClient;
     private readonly ISchedulerClient _schedulerClient;
-    private readonly IHttpContextAccessor _httpContextAccessor;
 
     public ResolveMessageTaskEventHandler(IChannelRepository channelRepository
         , IMessageTaskRepository messageTaskRepository
@@ -22,8 +21,7 @@ public class ResolveMessageTaskEventHandler
         , IReceiverGroupRepository receiverGroupRepository
         , IDomainEventBus eventBus
         , IAuthClient authClient
-        , ISchedulerClient schedulerClient
-        , IHttpContextAccessor httpContextAccessor)
+        , ISchedulerClient schedulerClient)
     {
         _channelRepository = channelRepository;
         _messageTaskRepository = messageTaskRepository;
@@ -32,7 +30,6 @@ public class ResolveMessageTaskEventHandler
         _eventBus = eventBus;
         _authClient = authClient;
         _schedulerClient = schedulerClient;
-        _httpContextAccessor = httpContextAccessor;
     }
 
     [EventHandler(1)]
@@ -158,22 +155,22 @@ public class ResolveMessageTaskEventHandler
     [EventHandler(7)]
     public async Task AddSchedulerJobAsync(ResolveMessageTaskEvent eto)
     {
-        var httpContext = _httpContextAccessor.HttpContext!;
-        var requestUrl = $"{httpContext.Request.Scheme}://{httpContext.Request.Host}/api/message-task/execute/{eto.MessageTaskId}";
         var cronExpression = eto.MessageTask.SendRules.CronExpression;
         var request = new AddSchedulerJobRequest
         {
             ProjectIdentity = MasaStackConsts.MC_SYSTEM_ID,
             Name = nameof(MessageTaskExecuteJob),
-            JobType = JobTypes.Http,
+            JobType = JobTypes.JobApp,
             CronExpression = cronExpression,
-            HttpConfig = new SchedulerJobHttpConfig
+            JobAppConfig = new SchedulerJobAppConfig
             {
-                HttpMethod = HttpMethods.POST,
-                RequestUrl = requestUrl
+                JobAppIdentity = MessageTaskExecuteJobConsts.JOB_APP_IDENTITY,
+                JobEntryAssembly = MessageTaskExecuteJobConsts.JOB_ENTRY_ASSEMBLY,
+                JobEntryMethod = MessageTaskExecuteJobConsts.JOB_ENTRY_METHOD,
+                JobParams = eto.MessageTaskId.ToString(),
             }
         };
-
+        
         var jobId = await _schedulerClient.SchedulerJobService.AddAsync(request);
         eto.MessageTask.SetJobId(jobId);
         await _messageTaskRepository.UpdateAsync(eto.MessageTask);
