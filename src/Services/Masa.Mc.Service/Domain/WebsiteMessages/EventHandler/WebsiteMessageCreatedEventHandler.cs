@@ -11,13 +11,15 @@ public class WebsiteMessageCreatedEventHandler
     private readonly IMessageRecordRepository _messageRecordRepository;
     private readonly IWebsiteMessageRepository _websiteMessageRepository;
     private readonly MessageRecordDomainService _messageRecordDomainService;
+    private readonly IAuthClient _authClient;
 
     public WebsiteMessageCreatedEventHandler(IMessageTaskHistoryRepository messageTaskHistoryRepository
         , MessageTaskDomainService messageTaskDomainService
         , IHubContext<NotificationsHub> hubContext
         , IMessageRecordRepository messageRecordRepository
         , IWebsiteMessageRepository websiteMessageRepository
-        , MessageRecordDomainService messageRecordDomainService)
+        , MessageRecordDomainService messageRecordDomainService
+        , IAuthClient authClient)
     {
         _messageTaskHistoryRepository = messageTaskHistoryRepository;
         _messageTaskDomainService = messageTaskDomainService;
@@ -25,11 +27,17 @@ public class WebsiteMessageCreatedEventHandler
         _messageRecordRepository = messageRecordRepository;
         _websiteMessageRepository = websiteMessageRepository;
         _messageRecordDomainService = messageRecordDomainService;
+        _authClient = authClient;
     }
 
     [EventHandler]
     public async Task HandleEvent(AddWebsiteMessageDomainEvent @event)
     {
+        var currentUser = await _authClient.UserService.GetCurrentUserAsync();
+        if (currentUser == null)
+        {
+            return;
+        }
         var checkStatus = new List<MessageTaskHistoryStatuses> { MessageTaskHistoryStatuses.Sending, MessageTaskHistoryStatuses.Success, MessageTaskHistoryStatuses.Fail, MessageTaskHistoryStatuses.PartialFailure };
         var checkTime = @event.CheckTime;
         var taskHistorys = (await _messageTaskHistoryRepository.WithDetailsAsync()).Where(x => x.CompletionTime >= checkTime && x.MessageTask.ReceiverType == ReceiverTypes.Broadcast && checkStatus.Contains(x.Status)).ToList();
@@ -38,11 +46,11 @@ public class WebsiteMessageCreatedEventHandler
             var messageData = await _messageTaskDomainService.GetMessageDataAsync(taskHistory.MessageTask.EntityType, taskHistory.MessageTask.EntityId, taskHistory.MessageTask.Variables);
             var receiverUser = new MessageReceiverUser()
             {
-                UserId = Guid.Parse(TempCurrentUserConsts.ID),
-                DisplayName = TempCurrentUserConsts.NAME,
-                Account = TempCurrentUserConsts.USER_NAME,
-                Email = TempCurrentUserConsts.EMAIL,
-                PhoneNumber = TempCurrentUserConsts.PHONE_NUMBER
+                UserId = currentUser.Id,
+                DisplayName = currentUser.DisplayName,
+                Account = currentUser.Account,
+                Email = currentUser.Email,
+                PhoneNumber = currentUser.PhoneNumber
             };
 
             var messageRecord = new MessageRecord(receiverUser.UserId, taskHistory.MessageTask.ChannelId.Value, taskHistory.MessageTaskId, taskHistory.Id, taskHistory.MessageTask.Variables, messageData.GetDataValue<string>(nameof(MessageTemplate.Title)), taskHistory.SendTime);

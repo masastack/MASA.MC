@@ -8,7 +8,7 @@
         <div class="fold">
             <MRow>
                 <MCol Md="3">
-                    <DateRangePicker @bind-StartTime="_queryParam.StartTime" @bind-EndTime="_queryParam.EndTime" OnChange="RefreshAsync" />
+                    <Masa.Mc.Web.Admin.Components.Pickers.DateRangePicker @bind-StartTime="_queryParam.StartTime" @bind-EndTime="_queryParam.EndTime" OnChange="RefreshAsync" />
                 </MCol>
                 <MCol Md="2">
                     <MSelect @bind-Value="_queryParam.ChannelId"
@@ -55,7 +55,7 @@
                     <span class="body regular--text">@context.Item.Channel?.DisplayName</span>
                     break;
                 case (nameof(MessageTemplateDto.Modifier)):
-                    <span class="body2 regular--text">@TempCurrentUserConsts.NAME</span>
+                    <span class="body2 regular--text"></span>
                     break;
                 case (nameof(MessageTemplateDto.ModificationTime)):
                     <DateTimeListItem Value="@context.Item.ModificationTime"></DateTimeListItem>
@@ -94,7 +94,7 @@
             }
         </ItemColContent>
         <FooterContent>
-            <McPagination Class="mt-3 mx-6 pb-6" @bind-Page="_queryParam.Page" @bind-PageSize="_queryParam.PageSize" Total="_entities.Total" OnChange="HandlePaginationChange" />
+            <Pagination Class="mt-3 mx-6 pb-6" Page="@_queryParam.Page" PageSize="@_queryParam.PageSize" Total="_entities.Total" PageChanged="HandlePageChanged" PageSizeChanged="HandlePageSizeChanged"/>
         </FooterContent>
     </DefaultDataTable>
 </MCard>

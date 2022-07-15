@@ -21,7 +21,7 @@
                  OnSelectedItemUpdate="RefreshAsync">
             </MSelect>
 
-            <DateRangePicker @bind-StartTime="_queryParam.StartTime" @bind-EndTime="_queryParam.EndTime" Class="ml-6" OnChange="RefreshAsync" />
+            <Masa.Mc.Web.Admin.Components.Pickers.DateRangePicker @bind-StartTime="_queryParam.StartTime" @bind-EndTime="_queryParam.EndTime" Class="ml-6" OnChange="RefreshAsync" />
 
             <MSelect @bind-Value="_queryParam.ChannelId"
                  Items="@_channelItems"
@@ -83,15 +83,10 @@
                             }
                         </MListItemAvatar>
                         <MListItemContent>
-                            @if (string.IsNullOrEmpty(context.Item.ExtraProperties.GetProperty<string>("Account")))
-                            {
-                                <MListItemTitle class="subtitle emphasis--text">@(context.Item.ExtraProperties.GetProperty<string>("DisplayName"))</MListItemTitle>
-                                <MListItemSubtitle class="caption regular2--text">@(context.Item.ExtraProperties.GetProperty<string>("PhoneNumber"))</MListItemSubtitle>
-                            }
-                            else
-                            {
-                                <MListItemTitle class="subtitle emphasis--text">@(context.Item.ExtraProperties.GetProperty<string>("Account"))</MListItemTitle>
-                            }
+                            <MListItemTitle class="subtitle emphasis--text">
+                                @(!string.IsNullOrEmpty(context.Item.ExtraProperties.GetProperty<string>("DisplayName"))?context.Item.ExtraProperties.GetProperty<string>("DisplayName"):!string.IsNullOrEmpty(context.Item.ExtraProperties.GetProperty<string>("PhoneNumber"))?context.Item.ExtraProperties.GetProperty<string>("PhoneNumber"):context.Item.ExtraProperties.GetProperty<string>("Account"))
+                            </MListItemTitle>
+                            <MListItemSubtitle class="caption regular2--text">@(!string.IsNullOrEmpty(context.Item.ExtraProperties.GetProperty<string>("DisplayName"))&&!string.IsNullOrEmpty(context.Item.ExtraProperties.GetProperty<string>("PhoneNumber"))?context.Item.ExtraProperties.GetProperty<string>("PhoneNumber"):context.Item.ExtraProperties.GetProperty<string>("Account"))</MListItemSubtitle>
                         </MListItemContent>
                     </MListItem>
                     break;
@@ -119,7 +114,7 @@
             }
         </ItemColContent>
         <FooterContent>
-            <McPagination Class="mt-3 mx-6 pb-6" @bind-Page="_queryParam.Page" @bind-PageSize="_queryParam.PageSize" Total="_entities.Total" OnChange="HandlePaginationChange" />
+            <Pagination Class="mt-3 mx-6 pb-6" Page="@_queryParam.Page" PageSize="@_queryParam.PageSize" Total="_entities.Total" PageChanged="HandlePageChanged" PageSizeChanged="HandlePageSizeChanged" />
         </FooterContent>
     </DefaultDataTable>
 </MCard>

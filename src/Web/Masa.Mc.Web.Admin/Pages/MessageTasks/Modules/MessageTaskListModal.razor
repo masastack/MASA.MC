@@ -35,7 +35,7 @@
                         </MSelect>
                     </MCol>
                     <MCol Cols="2" Class="mr-4">
-                        <DateRangePicker @bind-StartTime="_queryParam.StartTime" @bind-EndTime="_queryParam.EndTime" OnChange="RefreshAsync" />
+                        <Masa.Mc.Web.Admin.Components.Pickers.DateRangePicker @bind-StartTime="_queryParam.StartTime" @bind-EndTime="_queryParam.EndTime" OnChange="RefreshAsync" />
                     </MCol>
                     <MCol Cols="2">
                         <MSelect @bind-Value="_queryParam.ChannelId"

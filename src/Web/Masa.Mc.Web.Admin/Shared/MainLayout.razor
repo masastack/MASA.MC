@@ -1,41 +1,27 @@
 ﻿@inherits LayoutComponentBase
 @inject GlobalConfig GlobalConfig
+@inject NavigationManager Navigation
 
-<McLayout NavItems="NavList"
-        DefaultRoute="/channels/channelManagement"
+<Layout AppId="@MasaStackConsts.MC_SYSTEM_WEB_APP_ID" OnSignOut="SignOut" OnErrorAsync="OnError"
         Logo="https://cdn.masastack.com/stack/images/logo/MASAStack/logo-h-en.png"
         MiniLogo="/_content/Masa.Mc.Web.Admin/img/mainLayout/logo.svg">
     @Body
     <MLoading />
-</McLayout>
+</Layout>
 
 @code {
-    private List<Nav> NavList { get; set; } = new();
+    [Inject]
+    public IPopupService PopupService { get; set; } = default!;
 
-    protected override Task OnAfterRenderAsync(bool firstRender)
+    private Task OnError(Exception exception)
     {
-        if (firstRender)
-        {
-            NavList = new List<Nav>()
-            {
-                new Nav("channelManagement", "Permission.ChannelManagement", "mdi-email-outline", "channels/channelManagement", 1),
-                new Nav("messageManagement", "Permission.MessageManagement", "fas fa-tasks", 1, new List<Nav>
-                {
-                    new Nav("sendMessage", "Permission.SendMessage", "messageTasks/sendMessage", 2, "messageManagement"),
-                    new Nav("messageRecord", "Permission.MessageRecord", "messageRecords/messageRecordManagement", 2, "messageManagement"),
-                }),
-                new Nav("messageTemplateManagement", "Permission.MessageTemplateManagement", "mdi-collage", 1, new List<Nav>
-                {
-                    new Nav("sms", "Sms", "messageTemplates/smsTemplateManagement", 2, "messageTemplateManagement"),
-                    new Nav("email", "Email", "messageTemplates/emailTemplateManagement", 2, "messageTemplateManagement"),
-                    new Nav("websiteMessage", "WebsiteMessage", "messageTemplates/websiteMessageTemplateManagement", 2, "messageTemplateManagement"),
-                }),
-                new Nav("receiverGroupManagement", "Permission.ReceiverGroupManagement", "fas fa-object-ungroup", "receiverGroups/receiverGroupManagement", 1),
-            };
+        PopupService.AlertAsync(exception.Message, AlertTypes.Error);
+        GlobalConfig.Loading = false;
+        return Task.CompletedTask;
+    }
 
-            StateHasChanged();
-        }
-
-        return base.OnAfterRenderAsync(firstRender);
+    private void SignOut()
+    {
+        Navigation.NavigateTo("/Logout",true);
     }
 }

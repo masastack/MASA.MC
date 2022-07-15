@@ -62,10 +62,15 @@ public partial class ReceiverGroupManagement : AdminCompontentBase
         await LoadData();
     }
 
-    private async Task HandlePaginationChange(PaginationEventArgs args)
+    private async Task HandlePageChanged(int page)
     {
-        _queryParam.Page = args.Page;
-        _queryParam.PageSize = args.PageSize;
+        _queryParam.Page = page;
+        await LoadData();
+    }
+
+    private async Task HandlePageSizeChanged(int pageSize)
+    {
+        _queryParam.PageSize = pageSize;
         await LoadData();
     }
 
