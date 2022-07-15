@@ -5,7 +5,7 @@ namespace Masa.Mc.Service.Admin.Jobs;
 
 public class MessageTaskExecuteJobConsts
 {
-    public const string JOB_APP_IDENTITY = "Masa_Mc_Service";
+    public const string JOB_APP_IDENTITY = "masa-mc-job";
     public const string JOB_ENTRY_ASSEMBLY = "Masa.Mc.Service.Admin.dll";
     public const string JOB_ENTRY_METHOD = "Masa.Mc.Service.Admin.Jobs.MessageTaskExecuteJob";
 }

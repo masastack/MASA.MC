@@ -80,6 +80,7 @@ public class SendWebsiteMessageEventHandler
         }
         if (taskHistory.MessageTask.ReceiverType == ReceiverTypes.Assign)
         {
+            Console.WriteLine($"userIds:{JsonSerializer.Serialize(userIds)}");
             await _mcClient.WebsiteMessageService.SendGetNotificationAsync(userIds);
         }
     }

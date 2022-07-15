@@ -64,7 +64,7 @@ public class MessageTaskExecuteJob : ISchedulerJob
             var eventBus = provider.GetRequiredService<IDomainEventBus>();
 
             var messageId = context.ExcuteParameters[0];
-            await eventBus.PublishAsync(new ExecuteMessageTaskEvent(Guid.Parse(messageId)));
+            await eventBus.PublishAsync(new ExecuteMessageTaskEvent(Guid.Parse(messageId), false, context.JobId, context.TaskId));
             return "Success";
         }
         catch (Exception ex)

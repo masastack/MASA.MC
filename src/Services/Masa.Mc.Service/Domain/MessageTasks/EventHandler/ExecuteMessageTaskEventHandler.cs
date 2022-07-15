@@ -40,7 +40,7 @@ public class ExecuteMessageTaskEventHandler
             await _schedulerClient.SchedulerJobService.RemoveAsync(new BaseSchedulerJobRequest { JobId = messageTask.SchedulerJobId });
             return;
         }
-
+        history.SetTaskId(eto.TaskId);
         var messageData = await _domainService.GetMessageDataAsync(history.MessageTask.EntityType, history.MessageTask.EntityId, history.MessageTask.Variables);
         history.SetSending();
 
