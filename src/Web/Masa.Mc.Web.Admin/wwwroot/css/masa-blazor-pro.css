@@ -926,3 +926,7 @@ tr:hover {
 .border-bottom-none {
     border-bottom: none !important;
 }
+
+.masa-stack-components .page-select {
+    margin-top: 2px;
+}
