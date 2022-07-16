@@ -1,8 +1,6 @@
 // Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
-using Microsoft.AspNetCore.Hosting.StaticWebAssets;
-
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
