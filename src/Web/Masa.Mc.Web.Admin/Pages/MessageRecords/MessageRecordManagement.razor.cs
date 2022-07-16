@@ -11,7 +11,7 @@ public partial class MessageRecordManagement : AdminCompontentBase
     private GetMessageRecordInputDto _queryParam = new() { TimeType = MessageRecordTimeTypes.ExpectSendTime };
     private PaginatedListDto<MessageRecordDto> _entities = new();
     private List<ChannelDto> _channelItems = new();
-    private bool advanced = true;
+    private bool advanced = false;
     private List<KeyValuePair<string, bool>> _successItems { get; set; } = new();
     private bool isAnimate;
 

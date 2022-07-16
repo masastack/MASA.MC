@@ -12,7 +12,7 @@ public partial class SmsTemplateManagement : AdminCompontentBase
     private GetMessageTemplateInputDto _queryParam = new() { ChannelType = ChannelTypes.Sms };
     private PaginatedListDto<MessageTemplateDto> _entities = new();
     private List<ChannelDto> _channelItems = new();
-    private bool advanced = true;
+    private bool advanced = false;
     private bool isAnimate;
 
     ChannelService ChannelService => McCaller.ChannelService;

@@ -1,10 +1,6 @@
-﻿.fold {
-    width: calc(100% - 350px) !important;
-}
-
-@-webkit-keyframes searchOpen {
+﻿@-webkit-keyframes searchOpen {
     0% {
-        width: 300px;
+        width: 422px;
     }
 
     100% {
@@ -14,7 +10,7 @@
 
 @keyframes searchOpen {
     0% {
-        width: 300px;
+        width: 422px;
     }
 
     100% {
@@ -33,7 +29,7 @@
     }
 
     100% {
-        width: 300px;
+        width: 422px;
     }
 }
 
@@ -43,7 +39,7 @@
     }
 
     100% {
-        width: 300px;
+        width: 422px;
     }
 }
 

@@ -846,56 +846,6 @@ tr:hover {
     color: #4318FF !important;
 }
 
-@-webkit-keyframes searchOpen {
-    0% {
-        width: 362px;
-    }
-
-    100% {
-        width: 100%;
-    }
-}
-
-@keyframes searchOpen {
-    0% {
-        width: 362px;
-    }
-
-    100% {
-        width: 100%;
-    }
-}
-
-.animate__searchOpen {
-    -webkit-animation-name: searchOpen;
-    animation-name: searchOpen;
-}
-
-@-webkit-keyframes searchShrink {
-    0% {
-        width: 100%;
-    }
-
-    100% {
-        width: 362px;
-    }
-}
-
-@keyframes searchShrink {
-    0% {
-        width: 100%;
-    }
-
-    100% {
-        width: 362px;
-    }
-}
-
-.animate__searchShrink {
-    -webkit-animation-name: searchShrink;
-    animation-name: searchShrink;
-}
-
 .search-panel {
     height: 40px !important;
     position: relative !important;
