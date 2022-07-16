@@ -46,4 +46,10 @@ public class MessageRecord : FullAggregateRoot<Guid, Guid>
     {
         ExtraProperties.SetProperty(name, value);
     }
+
+    public void SetWithdraw()
+    {
+        Success = false;
+        FailureReason = "Recall message";
+    }
 }

@@ -37,7 +37,7 @@ public class UpdateMessageTaskStatusEventHandler
         {
             messageTask.SetResult(MessageTaskStatuses.Success);
         }
-        else if (await _historyRepository.AnyAsync(x => x.MessageTaskId == eto.MessageTaskId && !x.IsTest && x.Status == MessageTaskHistoryStatuses.PartialFailure))
+        else if (await _historyRepository.AnyAsync(x => x.MessageTaskId == eto.MessageTaskId && !x.IsTest && (x.Status == MessageTaskHistoryStatuses.PartialFailure || x.Status == MessageTaskHistoryStatuses.Success)))
         {
             messageTask.SetResult(MessageTaskStatuses.PartialFailure);
         }
@@ -46,7 +46,5 @@ public class UpdateMessageTaskStatusEventHandler
             messageTask.SetResult(MessageTaskStatuses.Fail);
         }
         await _repository.UpdateAsync(messageTask);
-        await _repository.UnitOfWork.SaveChangesAsync();
-        await _repository.UnitOfWork.CommitAsync();
     }
 }

@@ -27,7 +27,7 @@ public class WebsiteMessageRepository : Repository<McDbContext, WebsiteMessage>,
             ? await (await WithDetailsAsync()).Where(predicate).FirstOrDefaultAsync(cancellationToken)
             : await Context.Set<WebsiteMessage>().Where(predicate).FirstOrDefaultAsync(cancellationToken);
     }
-
+    
     public async Task<List<WebsiteMessage>> GetChannelListAsync(Guid userId)
     {
         var set = Context.Set<WebsiteMessage>().AsNoTracking().Where(x => x.UserId == userId);
@@ -36,5 +36,15 @@ public class WebsiteMessageRepository : Repository<McDbContext, WebsiteMessage>,
             .Distinct()
             .SelectMany(x => sorted.Where(y => y.ChannelId == x).Take(1));
         return await Task.FromResult(list.OrderByDescending(x => x.CreationTime).ToList());
+    }
+
+    public async Task UpdateManyAsync(IEnumerable<WebsiteMessage> entities, bool autoSave = false, CancellationToken cancellationToken = default(CancellationToken))
+    {
+        var dbContext = Context.Set<WebsiteMessage>();
+        await Context.BulkUpdateAsync(entities.ToList());
+        if (autoSave)
+        {
+            await Context.SaveChangesAsync(cancellationToken);
+        }
     }
 }

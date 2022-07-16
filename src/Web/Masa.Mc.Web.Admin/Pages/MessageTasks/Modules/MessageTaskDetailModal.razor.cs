@@ -95,23 +95,6 @@ public partial class MessageTaskDetailModal : AdminCompontentBase
         await LoadData();
     }
 
-    private async Task HandleDatePickersAsync()
-    {
-        _datePickersShow = false;
-        if (_dates.Count > 0) _queryParam.StartTime = _dates[0].ToDateTime(new TimeOnly(0, 0, 0));
-        if (_dates.Count > 1) _queryParam.EndTime = _dates[1].ToDateTime(new TimeOnly(23, 59, 59));
-        await LoadData();
-    }
-
-    private async Task HandleDatePickersCancel()
-    {
-        _datePickersShow = false;
-        _queryParam.StartTime = null;
-        _queryParam.EndTime = null;
-        _dates = new();
-        await LoadData();
-    }
-
     private async Task LoadData()
     {
         StateHasChanged();
@@ -139,26 +122,10 @@ public partial class MessageTaskDetailModal : AdminCompontentBase
         {
             HistoryId = _historyInfo.Id
         };
+        Loading = true;
         await MessageTaskHistoryService.WithdrawnAsync(inputDto);
+        Loading = false;
         await SuccessMessageAsync(T("MessageTaskHistoryWithdrawnMessage"));
         await GetFormDataAsync();
-    }
-
-    private async Task HandleIsEnabledChanged(bool IsEnabled)
-    {
-        if (IsEnabled)
-        {
-            await MessageTaskService.EnabledAsync(new EnabledMessageTaskInputDto { MessageTaskId = _entityId });
-            _info.IsEnabled = true;
-        }
-        else
-        {
-            await MessageTaskService.DisableAsync(new DisableMessageTaskInputDto { MessageTaskId = _entityId });
-            _info.IsEnabled = false;
-        }
-        if (OnOk.HasDelegate)
-        {
-            await OnOk.InvokeAsync();
-        }
     }
 }

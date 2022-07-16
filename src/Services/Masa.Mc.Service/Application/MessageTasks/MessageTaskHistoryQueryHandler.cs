@@ -49,7 +49,7 @@ public class MessageTaskHistoryQueryHandler
 
     private async Task<IQueryable<MessageTaskHistory>> CreateFilteredQueryAsync(GetMessageTaskHistoryInputDto inputDto)
     {
-        var query = await _repository.WithDetailsAsync()!;
+        var query = await _repository.GetQueryableAsync()!;
         var condition = await CreateFilteredPredicate(inputDto);
         return query.Where(condition);
     }
