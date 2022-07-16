@@ -127,5 +127,9 @@ public partial class MessageTaskDetailModal : AdminCompontentBase
         Loading = false;
         await SuccessMessageAsync(T("MessageTaskHistoryWithdrawnMessage"));
         await GetFormDataAsync();
+        if (OnOk.HasDelegate)
+        {
+            await OnOk.InvokeAsync();
+        }
     }
 }
