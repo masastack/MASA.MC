@@ -97,20 +97,17 @@ public class MessageTaskQueryHandler
 
     private async Task<long> ResolveAuthUsersCount(ReceiverGroupItemTypes type, Guid subjectId)
     {
-        var count = 0;
+        long count = 0;
         switch (type)
         {
             case ReceiverGroupItemTypes.Organization:
-                var departmentUsers = await _authClient.UserService.GetListByDepartmentAsync(subjectId);
-                count = departmentUsers.Count;
+                count = await _authClient.UserService.GetTotalByDepartmentAsync(subjectId);
                 break;
             case ReceiverGroupItemTypes.Role:
-                var roleUsers = await _authClient.UserService.GetListByRoleAsync(subjectId);
-                count = roleUsers.Count;
+                count = await _authClient.UserService.GetTotalByRoleAsync(subjectId);
                 break;
             case ReceiverGroupItemTypes.Team:
-                var teamUsers = await _authClient.UserService.GetListByTeamAsync(subjectId);
-                count = teamUsers.Count;
+                count = await _authClient.UserService.GetTotalByTeamAsync(subjectId);
                 break;
             default:
                 break;
