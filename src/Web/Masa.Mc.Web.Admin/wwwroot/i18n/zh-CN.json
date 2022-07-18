@@ -276,7 +276,7 @@
   "UploadComplete": "上传完成",
   "UploadFile": "上传文件",
   "Test": "测试",
-  "SendTestTask": "发送测试任务",
+  "SendTestTask": "发送测试消息",
   "Description.MessageTaskHistory.SendTimeTips": "本任务将在{0}执行",
   "Retry": "重试",
   "Current": "当前",
