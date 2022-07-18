@@ -21,19 +21,26 @@
     <link href="_content/Masa.Mc.Web.Admin/css/standard.css" rel="stylesheet" />
     <link href="Masa.Mc.Web.Admin.Server.styles.css" rel="stylesheet" />
     <link href="https://cdn.masastack.com/npm/vditor/3.8.12/dist/index.css" rel="stylesheet" />
-    
+
     <component type="typeof(HeadOutlet)" render-mode="ServerPrerendered" />
 </head>
 
 <body>
     @RenderBody()
-    <script src="_framework/blazor.server.js"></script>
+    <script src="_framework/blazor.server.js" autostart="false"></script>
     <script src="_content/BlazorComponent/js/blazor-component.js"></script>
     <script src="_content/Masa.Stack.Components/js/components.js"></script>
     <script src="https://cdn.masastack.com/npm/echarts/5.1.1/echarts.min.js"></script>
     <script src="https://cdn.masastack.com/npm/vditor/3.8.12/dist/index.min.js"></script>
     <script src="https://cdn.masastack.com/npm/aliyun/aliyun-oss-sdk.min.js"></script>
     <script src="_content/Masa.Mc.Web.Admin/js/oss/upload.js"></script>
+    <script>
+      Blazor.start().then(function () {
+        var customScript = document.createElement('script');
+        customScript.setAttribute('src', '_content/Masa.Mc.Web.Admin/js/util.js');
+        document.head.appendChild(customScript);
+      });
+    </script>
 </body>
 
 </html>

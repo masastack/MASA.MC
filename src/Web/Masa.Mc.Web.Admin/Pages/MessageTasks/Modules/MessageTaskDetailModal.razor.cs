@@ -54,10 +54,11 @@ public partial class MessageTaskDetailModal : AdminCompontentBase
         if (_historys.Result.Any()) _historyInfo = _historys.Result[0];
     }
 
-    private void HandleCancel()
+    private async Task HandleCancel()
     {
         _visible = false;
         ResetForm();
+        await JsInvokeAsync("util.scrollTop", null, $"{Id}_dialog-box");
     }
 
     private async Task HandleDelAsync()
@@ -84,9 +85,9 @@ public partial class MessageTaskDetailModal : AdminCompontentBase
 
     }
 
-    private void HandleVisibleChanged(bool val)
+    private async Task HandleVisibleChanged(bool val)
     {
-        if (!val) HandleCancel();
+        if (!val) await HandleCancel();
     }
 
     private async Task Refresh()

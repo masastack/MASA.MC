@@ -90,11 +90,19 @@
                     @(!advanced?"mdi-filter":"mdi-filter-off")
                 </MIcon>
             </div>
-            <div class="ml-6 d-flex button fill">
-                <MIcon IfElse="true" Class="ma-auto" Color="@(_queryParam.IsDraft==true?"primary":"emphasis2")" Size=20 OnClick="HandleIsDraft">
-                    mdi-file
-                </MIcon>
-            </div>
+            <MTooltip Bottom>
+                <ActivatorContent>
+                    <div class="ml-6 d-flex button fill" @onclick="HandleIsDraft" @attributes="@context.Attrs">
+                        <MIcon IfElse="true" Class="ma-auto" Color="@(_queryParam.IsDraft==true?"primary":"emphasis2")" Size=20>
+                            mdi-file
+                        </MIcon>
+                    </div>
+                </ActivatorContent>
+                <ChildContent>
+                    <span>@(_queryParam.IsDraft==true?T("All"):T("Draft"))</span>
+                </ChildContent>
+            </MTooltip>
+            
         </div>
     </div>
     <MRow Class="mt-3">
