@@ -181,7 +181,7 @@ public class MessageTaskQueryHandler
             if (item.EntityId != default)
             {
                 var messageData = await _domainService.GetMessageDataAsync(item.EntityType, item.EntityId, item.Variables);
-                item.Content = HtmlHelper.CutString(messageData.GetDataValue<string>(nameof(MessageTemplate.Content)), 280);
+                item.Content = HtmlHelper.CutString(messageData.GetDataValue<string>(nameof(MessageTemplate.Content)), 500);
             }
 
             item.ModifierName = userInfos.FirstOrDefault(x => x.Id == item.Modifier)?.DisplayName ?? string.Empty;
