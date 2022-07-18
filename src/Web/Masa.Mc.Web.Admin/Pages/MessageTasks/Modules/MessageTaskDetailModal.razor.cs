@@ -54,10 +54,11 @@ public partial class MessageTaskDetailModal : AdminCompontentBase
         if (_historys.Result.Any()) _historyInfo = _historys.Result[0];
     }
 
-    private void HandleCancel()
+    private async Task HandleCancel()
     {
         _visible = false;
         ResetForm();
+        await JsInvokeAsync("util.scrollTop", null, $"{Id}_dialog-box");
     }
 
     private async Task HandleDelAsync()
@@ -84,31 +85,14 @@ public partial class MessageTaskDetailModal : AdminCompontentBase
 
     }
 
-    private void HandleVisibleChanged(bool val)
+    private async Task HandleVisibleChanged(bool val)
     {
-        if (!val) HandleCancel();
+        if (!val) await HandleCancel();
     }
 
     private async Task Refresh()
     {
         _queryParam.Page = 1;
-        await LoadData();
-    }
-
-    private async Task HandleDatePickersAsync()
-    {
-        _datePickersShow = false;
-        if (_dates.Count > 0) _queryParam.StartTime = _dates[0].ToDateTime(new TimeOnly(0, 0, 0));
-        if (_dates.Count > 1) _queryParam.EndTime = _dates[1].ToDateTime(new TimeOnly(23, 59, 59));
-        await LoadData();
-    }
-
-    private async Task HandleDatePickersCancel()
-    {
-        _datePickersShow = false;
-        _queryParam.StartTime = null;
-        _queryParam.EndTime = null;
-        _dates = new();
         await LoadData();
     }
 
@@ -139,23 +123,11 @@ public partial class MessageTaskDetailModal : AdminCompontentBase
         {
             HistoryId = _historyInfo.Id
         };
+        Loading = true;
         await MessageTaskHistoryService.WithdrawnAsync(inputDto);
+        Loading = false;
         await SuccessMessageAsync(T("MessageTaskHistoryWithdrawnMessage"));
         await GetFormDataAsync();
-    }
-
-    private async Task HandleIsEnabledChanged(bool IsEnabled)
-    {
-        if (IsEnabled)
-        {
-            await MessageTaskService.EnabledAsync(new EnabledMessageTaskInputDto { MessageTaskId = _entityId });
-            _info.IsEnabled = true;
-        }
-        else
-        {
-            await MessageTaskService.DisableAsync(new DisableMessageTaskInputDto { MessageTaskId = _entityId });
-            _info.IsEnabled = false;
-        }
         if (OnOk.HasDelegate)
         {
             await OnOk.InvokeAsync();

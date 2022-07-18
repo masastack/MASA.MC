@@ -64,6 +64,15 @@ public class MessageTaskHistory : FullAggregateRoot<Guid, Guid>
     {
         WithdrawTime = DateTimeOffset.Now;
         Status = MessageTaskHistoryStatuses.Withdrawn;
+
+        AddDomainEvent(new WithdrawMessageRecordEvent(Id));
+
+        if (MessageTask.ChannelType == ChannelTypes.WebsiteMessage)
+        {
+            AddDomainEvent(new WithdrawWebsiteMessageEvent(Id));
+        }
+
+        AddDomainEvent(new UpdateMessageTaskStatusEvent(MessageTaskId));
     }
 
     public void SetReceiverUsers(List<MessageReceiverUser> receiverUsers)

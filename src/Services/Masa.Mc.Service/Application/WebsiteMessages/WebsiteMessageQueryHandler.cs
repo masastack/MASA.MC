@@ -61,7 +61,7 @@ public class WebsiteMessageQueryHandler
         var noticeNum = query.PageSize;
         var queryable = await _repository.WithDetailsAsync();
         var userId = _userContext.GetUserId<Guid>();
-        queryable = queryable.Where(x => x.UserId == userId);
+        queryable = queryable.Where(x => x.UserId == userId && !x.IsWithdrawn);
         var list = queryable.Where(x => !x.IsRead).OrderByDescending(x => x.CreationTime).Take(noticeNum).ToList();
         if (list.Count < noticeNum)
         {
@@ -77,7 +77,7 @@ public class WebsiteMessageQueryHandler
     private async Task<Expression<Func<WebsiteMessage, bool>>> CreateFilteredPredicate(GetWebsiteMessageInputDto inputDto)
     {
         var userId = _userContext.GetUserId<Guid>();
-        Expression<Func<WebsiteMessage, bool>> condition = w => w.UserId == userId;
+        Expression<Func<WebsiteMessage, bool>> condition = w => w.UserId == userId && !w.IsWithdrawn;
         switch (inputDto.FilterType)
         {
             case WebsiteMessageFilterType.MessageTitle:

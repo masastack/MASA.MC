@@ -1,7 +1,7 @@
 ﻿@inherits AdminCompontentBase
 
 <MAutocomplete Value="Value"
-               ValueChanged="HandleValueChanged"
+               ValueChanged="ValueChanged"
                TValue="List<Guid>"
                TItem="MessageTaskReceiverDto"
                TItemValue="Guid"
@@ -64,7 +64,7 @@
                     }
                 </MListItemContent>
                 <MListItemAction>
-                    <MCheckbox Value="@Value.Contains(data.Item.SubjectId)"></MCheckbox>
+                    <MCheckbox Value="@SelectedValues.Contains(data.Item.SubjectId)"></MCheckbox>
                 </MListItemAction>
             </ItemContent>
         </MListItem>

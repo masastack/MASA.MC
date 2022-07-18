@@ -12,6 +12,9 @@ public partial class SubjectAutoComplete : AdminCompontentBase
     [Parameter]
     public EventCallback<SubjectDto> OnSelectedItemUpdate { get; set; }
 
+    [Parameter]
+    public List<Guid> SelectedValues { get; set; } = new();
+
     public List<SubjectDto> Items { get; set; } = new();
 
     public List<SubjectDto> SubjectSelect { get; set; } = new();
@@ -40,16 +43,6 @@ public partial class SubjectAutoComplete : AdminCompontentBase
         if (!string.IsNullOrEmpty(subject.PhoneNumber)) return subject.PhoneNumber;
         if (!string.IsNullOrEmpty(subject.Email)) return subject.Email;
         return "";
-    }
-
-    private async Task HandleValueChanged(List<Guid> value)
-    {
-        if (ValueChanged.HasDelegate)
-        {
-            await ValueChanged.InvokeAsync(value);
-        }
-        var list = Items.Where(x => value.Contains(x.SubjectId)).ToList();
-        SubjectSelect = list;
     }
 
     public void ResetForm()

@@ -37,4 +37,14 @@ public class MessageRecordRepository : Repository<McDbContext, MessageRecord>, I
     {
         return await Context.Set<MessageRecord>().AnyAsync(predicate);
     }
+
+    public async Task UpdateManyAsync(IEnumerable<MessageRecord> entities, bool autoSave = false, CancellationToken cancellationToken = default(CancellationToken))
+    {
+        var dbContext = Context.Set<MessageRecord>();
+        await Context.BulkUpdateAsync(entities.ToList());
+        if (autoSave)
+        {
+            await Context.SaveChangesAsync(cancellationToken);
+        }
+    }
 }

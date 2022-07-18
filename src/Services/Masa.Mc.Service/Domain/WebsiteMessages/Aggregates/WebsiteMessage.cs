@@ -23,6 +23,10 @@ public class WebsiteMessage : FullAggregateRoot<Guid, Guid>
 
     public DateTimeOffset? ReadTime { get; set; }
 
+    public bool IsWithdrawn { get; protected set; }
+
+    public Guid MessageTaskHistoryId { get; protected set; }
+
     public WebsiteMessage(Guid channelId, Guid userId, string title, string content, string linkUrl, DateTimeOffset sendTime) : this(channelId, userId, title, content, linkUrl, sendTime, false, null)
     {
     }
@@ -43,5 +47,10 @@ public class WebsiteMessage : FullAggregateRoot<Guid, Guid>
     {
         IsRead = true;
         ReadTime = DateTimeOffset.Now;
+    }
+
+    public void SetWithdraw()
+    {
+        IsWithdrawn = true;
     }
 }

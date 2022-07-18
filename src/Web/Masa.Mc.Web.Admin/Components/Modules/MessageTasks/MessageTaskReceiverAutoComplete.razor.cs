@@ -10,9 +10,10 @@ public partial class MessageTaskReceiverAutoComplete : AdminCompontentBase
     [Parameter]
     public EventCallback<MessageTaskReceiverDto> OnSelectedItemUpdate { get; set; }
 
-    public List<MessageTaskReceiverDto> Items { get; set; } = new();
+    [Parameter]
+    public List<Guid> SelectedValues { get; set; } = new();
 
-    public List<MessageTaskReceiverDto> SubjectSelect { get; set; } = new();
+    public List<MessageTaskReceiverDto> Items { get; set; } = new();
 
     public string Search { get; set; } = "";
 
@@ -38,18 +39,6 @@ public partial class MessageTaskReceiverAutoComplete : AdminCompontentBase
         if (!string.IsNullOrEmpty(subject.PhoneNumber)) return subject.PhoneNumber;
         if (!string.IsNullOrEmpty(subject.Email)) return subject.Email;
         return "";
-    }
-
-    private async Task HandleValueChanged(List<Guid> value)
-    {
-        value = value ?? new();
-        var list = Items.Where(x => value.Contains(x.SubjectId)).ToList();
-        SubjectSelect = list;
-
-        if (ValueChanged.HasDelegate)
-        {
-            await ValueChanged.InvokeAsync(value);
-        }
     }
 }
 

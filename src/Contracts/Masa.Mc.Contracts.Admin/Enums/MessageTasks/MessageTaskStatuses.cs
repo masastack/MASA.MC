@@ -3,12 +3,11 @@
 
 namespace Masa.Mc.Contracts.Admin.Enums.MessageTasks;
 
-public enum MessageTaskHistoryStatuses
+public enum MessageTaskStatuses
 {
     WaitSend = 1,
-    Sending,
-    Withdrawn,
-    Success,
-    Fail,
-    PartialFailure
+    Sending = 2,
+    Success = 4,
+    Fail = 5,
+    PartialFailure = 6
 }

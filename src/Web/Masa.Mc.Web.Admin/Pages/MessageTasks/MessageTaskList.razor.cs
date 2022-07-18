@@ -12,7 +12,7 @@ public partial class MessageTaskList : AdminCompontentBase
     private GetMessageTaskInputDto _queryParam = new(20) { TimeType = MessageTaskTimeTypes.ModificationTime, Source = MessageTaskSources.Management };
     private PaginatedListDto<MessageTaskDto> _entities = new();
     private List<ChannelDto> _channelItems = new();
-    private bool advanced = true;
+    private bool advanced = false;
     private bool isAnimate;
 
     ChannelService ChannelService => McCaller.ChannelService;

@@ -174,3 +174,4 @@ global using Masa.Contrib.Dispatcher.IntegrationEvents;
 global using Masa.Mc.Infrastructure.Common.Utils;
 global using Masa.Contrib.Configuration.ConfigurationApi.Dcc;
 global using Masa.BuildingBlocks.Configuration;
+global using EFCore.BulkExtensions;
