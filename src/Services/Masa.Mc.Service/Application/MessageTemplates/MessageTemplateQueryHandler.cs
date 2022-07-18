@@ -6,10 +6,13 @@ namespace Masa.Mc.Service.Admin.Application.MessageTemplates;
 public class MessageTemplateQueryHandler
 {
     private readonly IMessageTemplateRepository _repository;
+    private readonly IAuthClient _authClient;
 
-    public MessageTemplateQueryHandler(IMessageTemplateRepository repository)
+    public MessageTemplateQueryHandler(IMessageTemplateRepository repository
+        , IAuthClient authClient)
     {
         _repository = repository;
+        _authClient = authClient;
     }
 
     [EventHandler]
@@ -39,6 +42,7 @@ public class MessageTemplateQueryHandler
             dto.Channel = x.Channel.Adapt<ChannelDto>();
             return dto;
         }).ToList();
+        await FillMessageTemplateDtos(entityDtos);
         var result = new PaginatedListDto<MessageTemplateDto>(totalCount, totalPages, entityDtos);
         query.Result = result;
     }
@@ -62,5 +66,15 @@ public class MessageTemplateQueryHandler
         var query = await _repository.GetWithDetailQueryAsync()!;
         var condition = await CreateFilteredPredicate(inputDto);
         return query.Where(condition);
+    }
+
+    private async Task FillMessageTemplateDtos(List<MessageTemplateDto> dtos)
+    {
+        var modifierUserIds = dtos.Where(x => x.Modifier != default).Select(x => x.Modifier).Distinct().ToArray();
+        var userInfos = await _authClient.UserService.GetUserPortraitsAsync(modifierUserIds);
+        foreach (var item in dtos)
+        {
+            item.ModifierName = userInfos.FirstOrDefault(x => x.Id == item.Modifier)?.DisplayName ?? string.Empty;
+        }
     }
 }

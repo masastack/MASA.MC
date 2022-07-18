@@ -30,4 +30,6 @@ public class MessageTemplateDto : AuditEntityDto<Guid, Guid>
     public bool IsStatic { get; set; }
     public List<MessageTemplateItemDto> Items { get; set; }
     public ChannelDto Channel { get; set; }
+
+    public string ModifierName { get; set; } = string.Empty;
 }

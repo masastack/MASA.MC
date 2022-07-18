@@ -6,10 +6,13 @@ namespace Masa.Mc.Service.Admin.Application.ReceiverGroups;
 public class ReceiverGroupQueryHandler
 {
     private readonly IReceiverGroupRepository _repository;
+    private readonly IAuthClient _authClient;
 
-    public ReceiverGroupQueryHandler(IReceiverGroupRepository repository)
+    public ReceiverGroupQueryHandler(IReceiverGroupRepository repository
+        , IAuthClient authClient)
     {
         _repository = repository;
+        _authClient = authClient;
     }
 
     [EventHandler]
@@ -32,6 +35,7 @@ public class ReceiverGroupQueryHandler
         queryable = queryable.OrderBy(options.Sorting).PageBy(options.Page, options.PageSize);
         var entities = await queryable.ToListAsync();
         var entityDtos = entities.Adapt<List<ReceiverGroupDto>>();
+        await FillReceiverGroupDtos(entityDtos);
         var result = new PaginatedListDto<ReceiverGroupDto>(totalCount, totalPages, entityDtos);
         query.Result = result;
     }
@@ -48,5 +52,15 @@ public class ReceiverGroupQueryHandler
         var query = await _repository.WithDetailsAsync()!;
         var condition = await CreateFilteredPredicate(inputDto);
         return query.Where(condition);
+    }
+
+    private async Task FillReceiverGroupDtos(List<ReceiverGroupDto> dtos)
+    {
+        var modifierUserIds = dtos.Where(x => x.Modifier != default).Select(x => x.Modifier).Distinct().ToArray();
+        var userInfos = await _authClient.UserService.GetUserPortraitsAsync(modifierUserIds);
+        foreach (var item in dtos)
+        {
+            item.ModifierName = userInfos.FirstOrDefault(x => x.Id == item.Modifier)?.DisplayName ?? string.Empty;
+        }
     }
 }

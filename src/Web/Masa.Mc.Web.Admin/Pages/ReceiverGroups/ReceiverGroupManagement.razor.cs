@@ -20,7 +20,7 @@ public partial class ReceiverGroupManagement : AdminCompontentBase
         Headers = new()
         {
             new() { Text = T($"{_prefix}{nameof(ReceiverGroupDto.DisplayName)}"), Value = nameof(ReceiverGroupDto.DisplayName), Sortable = false },
-            new() { Text = T($"{nameof(ReceiverGroupDto.Modifier)}"), Value = nameof(ReceiverGroupDto.Modifier), Sortable = false },
+            new() { Text = T("Modifier"), Value = nameof(MessageTemplateDto.ModifierName), Sortable = false },
             new() { Text = T($"{nameof(MessageRecordDto.ModificationTime)}"), Value = nameof(ReceiverGroupDto.ModificationTime), Sortable = false },
             new() { Text = T("Action"), Value = "Action", Sortable = false },
         };

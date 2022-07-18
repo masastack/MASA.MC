@@ -20,7 +20,11 @@
     }
     <MCardActions class="px-3 pb-3">
         <MSpacer />
-        <span class="caption regular3--text">@Channel.ModifierName @Channel.ModificationTime.Humanize(culture:I18n.Culture) </span>
+        <span class="caption regular3--text">@Channel.ModificationTime.Humanize(culture:I18n.Culture) </span>
+        <span class="d-flex px-1" style="height: 8px">
+            <MDivider Vertical />
+        </span>
+        <span class="caption regular2--text">@Channel.ModifierName</span>
     </MCardActions>
 </MCard>
 

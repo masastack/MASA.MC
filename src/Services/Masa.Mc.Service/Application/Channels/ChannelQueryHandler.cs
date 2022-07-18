@@ -39,6 +39,7 @@ public class ChannelQueryHandler
             }
         });
         var dtos = resultList.Result.Adapt<List<ChannelDto>>();
+        await FillChannelDtos(dtos);
         var result = new PaginatedListDto<ChannelDto>(resultList.Total, resultList.TotalPages, dtos);
         query.Result = result;
     }
@@ -68,14 +69,13 @@ public class ChannelQueryHandler
         return await Task.FromResult(condition); ;
     }
 
-    //Waiting for auth release repair
-    //private async Task FillChannelDtos(List<ChannelDto> dtos)
-    //{
-    //    var modifierUserIds = dtos.Where(x => x.Modifier != default).Select(x => x.Modifier).Distinct().ToArray();
-    //    var userInfos = await _authClient.UserService.GetUserPortraitsAsync(modifierUserIds);
-    //    foreach (var item in dtos)
-    //    {
-    //        item.ModifierName = userInfos.FirstOrDefault(x => x.Id == item.Modifier)?.DisplayName ?? string.Empty;
-    //    }
-    //}
+    private async Task FillChannelDtos(List<ChannelDto> dtos)
+    {
+        var modifierUserIds = dtos.Where(x => x.Modifier != default).Select(x => x.Modifier).Distinct().ToArray();
+        var userInfos = await _authClient.UserService.GetUserPortraitsAsync(modifierUserIds);
+        foreach (var item in dtos)
+        {
+            item.ModifierName = userInfos.FirstOrDefault(x => x.Id == item.Modifier)?.DisplayName ?? string.Empty;
+        }
+    }
 }

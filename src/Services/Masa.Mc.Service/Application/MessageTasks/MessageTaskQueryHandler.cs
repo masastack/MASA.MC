@@ -174,6 +174,8 @@ public class MessageTaskQueryHandler
 
     private async Task FillMessageTaskListDtos(List<MessageTaskDto> dtos)
     {
+        var modifierUserIds = dtos.Where(x => x.Modifier != default).Select(x => x.Modifier).Distinct().ToArray();
+        var userInfos = await _authClient.UserService.GetUserPortraitsAsync(modifierUserIds);
         foreach (var item in dtos)
         {
             if (item.EntityId != default)
@@ -181,6 +183,8 @@ public class MessageTaskQueryHandler
                 var messageData = await _domainService.GetMessageDataAsync(item.EntityType, item.EntityId, item.Variables);
                 item.Content = HtmlHelper.CutString(messageData.GetDataValue<string>(nameof(MessageTemplate.Content)), 280);
             }
+
+            item.ModifierName = userInfos.FirstOrDefault(x => x.Id == item.Modifier)?.DisplayName ?? string.Empty;
         }
     }
 
