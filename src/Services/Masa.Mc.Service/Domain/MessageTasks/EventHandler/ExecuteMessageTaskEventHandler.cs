@@ -11,15 +11,13 @@ public class ExecuteMessageTaskEventHandler
     private readonly IDomainEventBus _eventBus;
     private readonly MessageTaskDomainService _domainService;
     private readonly ISchedulerClient _schedulerClient;
-    private readonly IUserContext _userContext;
 
     public ExecuteMessageTaskEventHandler(IChannelRepository channelRepository
         , IMessageTaskRepository messageTaskRepository
         , IMessageTaskHistoryRepository messageTaskHistoryRepository
         , IDomainEventBus eventBus
         , MessageTaskDomainService domainService
-        , ISchedulerClient schedulerClient
-        , IUserContext userContext)
+        , ISchedulerClient schedulerClient)
     {
         _channelRepository = channelRepository;
         _messageTaskRepository = messageTaskRepository;
@@ -27,7 +25,6 @@ public class ExecuteMessageTaskEventHandler
         _eventBus = eventBus;
         _domainService = domainService;
         _schedulerClient = schedulerClient;
-        _userContext = userContext;
     }
 
     [EventHandler]
@@ -40,7 +37,7 @@ public class ExecuteMessageTaskEventHandler
             var messageTask = await _messageTaskRepository.FindAsync(x => x.Id == eto.MessageTaskId, false);
             if (messageTask == null) return;
 
-            var userId = _userContext.GetUserId<Guid>();
+            Guid userId = Guid.Empty;
             await _schedulerClient.SchedulerJobService.RemoveAsync(new BaseSchedulerJobRequest { JobId = messageTask.SchedulerJobId, OperatorId = userId });
             return;
         }
