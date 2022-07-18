@@ -77,4 +77,9 @@ public class MessageTaskHistory : FullAggregateRoot<Guid, Guid>
         CompletionTime = DateTimeOffset.Now;
         AddDomainEvent(new UpdateMessageTaskStatusEvent(MessageTaskId));
     }
+
+    public void SetTaskId(Guid taskId)
+    {
+        SchedulerTaskId = taskId;
+    }
 }

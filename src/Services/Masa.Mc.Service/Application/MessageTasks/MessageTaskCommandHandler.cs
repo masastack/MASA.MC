@@ -1,8 +1,6 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
-using Magicodes.ExporterAndImporter.Core.Models;
-
 namespace Masa.Mc.Service.Admin.Application.MessageTasks;
 
 public class MessageTaskCommandHandler
@@ -10,14 +8,17 @@ public class MessageTaskCommandHandler
     private readonly IMessageTaskRepository _repository;
     private readonly IMessageTaskHistoryRepository _messageTaskHistoryRepository;
     private readonly IDomainEventBus _domainEventBus;
+    private readonly ISchedulerClient _schedulerClient;
 
     public MessageTaskCommandHandler(IMessageTaskRepository repository
         , IMessageTaskHistoryRepository messageTaskHistoryRepository
-        , IDomainEventBus domainEventBus)
+        , IDomainEventBus domainEventBus
+        , ISchedulerClient schedulerClient)
     {
         _repository = repository;
         _messageTaskHistoryRepository = messageTaskHistoryRepository;
         _domainEventBus = domainEventBus;
+        _schedulerClient = schedulerClient;
     }
 
     [EventHandler]
@@ -60,6 +61,11 @@ public class MessageTaskCommandHandler
             throw new UserFriendlyException("messageTask not found");
         entity.SetEnabled();
         await _repository.UpdateAsync(entity);
+
+        if (entity.SchedulerJobId != default)
+        {
+            await _schedulerClient.SchedulerJobService.EnableAsync(new BaseSchedulerJobRequest { JobId = entity.SchedulerJobId });
+        }
     }
 
     [EventHandler]
@@ -72,5 +78,10 @@ public class MessageTaskCommandHandler
             throw new UserFriendlyException("the task has a sending task history and cannot be disabled.");
         entity.SetDisable();
         await _repository.UpdateAsync(entity);
+
+        if (entity.SchedulerJobId != default)
+        {
+            await _schedulerClient.SchedulerJobService.DisableAsync(new BaseSchedulerJobRequest { JobId = entity.SchedulerJobId });
+        }
     }
 }

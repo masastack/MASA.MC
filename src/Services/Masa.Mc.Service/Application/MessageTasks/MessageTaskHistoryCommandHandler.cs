@@ -6,10 +6,13 @@ namespace Masa.Mc.Service.Admin.Application.MessageTasks;
 public class MessageTaskHistoryCommandHandler
 {
     private readonly IMessageTaskHistoryRepository _repository;
+    private readonly ISchedulerClient _schedulerClient;
 
-    public MessageTaskHistoryCommandHandler(IMessageTaskHistoryRepository repository)
+    public MessageTaskHistoryCommandHandler(IMessageTaskHistoryRepository repository
+        , ISchedulerClient schedulerClient)
     {
         _repository = repository;
+        _schedulerClient = schedulerClient;
     }
 
     [EventHandler]
@@ -22,5 +25,10 @@ public class MessageTaskHistoryCommandHandler
             throw new UserFriendlyException("withdrawn");
         entity.SetWithdraw();
         await _repository.UpdateAsync(entity);
+
+        if (entity.SchedulerTaskId != default)
+        {
+            await _schedulerClient.SchedulerTaskService.StopAsync(new BaseSchedulerTaskRequest { TaskId = entity.SchedulerTaskId });
+        }
     }
 }

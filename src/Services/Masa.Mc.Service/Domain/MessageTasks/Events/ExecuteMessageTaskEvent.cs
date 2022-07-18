@@ -3,6 +3,6 @@
 
 namespace Masa.Mc.Service.Admin.Domain.MessageTasks.Events;
 
-public record ExecuteMessageTaskEvent(Guid MessageTaskId, bool IsTest = false) : DomainEvent
+public record ExecuteMessageTaskEvent(Guid MessageTaskId, bool IsTest = false, Guid JobId = default, Guid TaskId = default) : DomainEvent
 {
 }
