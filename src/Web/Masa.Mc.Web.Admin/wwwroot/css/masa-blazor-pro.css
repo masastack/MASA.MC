@@ -882,5 +882,5 @@ tr:hover {
 }
 
 .page-content {
-    height: calc(100vh - 180px)
+    height: calc(100% - 24px)
 }
