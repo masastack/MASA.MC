@@ -17,6 +17,7 @@
     {
         PopupService.AlertAsync(exception.Message, AlertTypes.Error);
         GlobalConfig.Loading = false;
+        GlobalConfig.ThrottleFlag = false;
         return Task.CompletedTask;
     }
 

@@ -47,3 +47,7 @@
     -webkit-animation-name: searchShrink;
     animation-name: searchShrink;
 }
+
+::deep .page-select {
+    border: none;
+}

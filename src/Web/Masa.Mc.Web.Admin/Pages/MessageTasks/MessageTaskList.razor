@@ -1,122 +1,128 @@
 ﻿@inherits AdminCompontentBase
 @page "/messageTasks/list"
-<div class="full-height flex-column">
-    <div class="fill rounded-2 d-flex justify-center align-center px-6 py-3 mb-6" style="height:56px">
-        <MButton Ripple=false Plain IsActive Class="emphasis2--text h6 primary--text" OnClick="NavigateToSend"><MIcon Size=22 Left>mdi-message</MIcon>@T("Permission.SendMessage")</MButton>
-    </div>
-    <div class="ma-0 search-panel">
-        @if (advanced)
-        {
-            <div class="fold d-inline-flex">
-                <MSelect @bind-Value="@_queryParam.TimeType"
-                     Items="@(GetEnumList<MessageTaskTimeTypes>())"
-                     Label="@T("DisplayName.MessageTaskTimeType")"
-                     ItemText="@(item => T($"DisplayName.MessageTaskTimeType.{item.ToString()}"))"
-                     ItemValue="item => item"
-                     Dense
-                     Solo
-                     Clearable
-                     HideDetails="@("auto")"
-                     TItem="MessageTaskTimeTypes"
-                     TItemValue="MessageTaskTimeTypes"
-                     TValue="MessageTaskTimeTypes?"
-                     Class="fill-card body2"
-                     OnClearClick="RefreshAsync"
-                     OnSelectedItemUpdate="RefreshAsync">
-                </MSelect>
-
-                <Masa.Mc.Web.Admin.Components.Pickers.DateRangePicker @bind-StartTime="_queryParam.StartTime" @bind-EndTime="_queryParam.EndTime" Class="ml-6" OnChange="RefreshAsync" />
-
-                <MSelect @bind-Value="_queryParam.ChannelId"
-                     Items="@_channelItems"
-                     Label="@T("DisplayName.Channel")"
-                     ItemText="item => item.DisplayName"
-                     ItemValue="item => item.Id"
-                     Dense
-                     Solo
-                     Clearable
-                     HideDetails="@("auto")"
-                     TItem="ChannelDto"
-                     TItemValue="Guid"
-                     TValue="Guid?"
-                     Class="fill-card body2 ml-6"
-                     OnClearClick="RefreshAsync"
-                     OnSelectedItemUpdate="RefreshAsync">
-                </MSelect>
-
-                <MSelect @bind-Value="@_queryParam.Status"
-                     Items="@(GetEnumList<MessageTaskStatuses>())"
-                     Label="@T("DisplayName.MessageTaskStatus")"
-                     ItemText="@(item => T($"DisplayName.MessageTaskStatus.{item.ToString()}"))"
-                     ItemValue="item => item"
-                     Dense
-                     Solo
-                     Clearable
-                     HideDetails="@("auto")"
-                     TItem="MessageTaskStatuses"
-                     TItemValue="MessageTaskStatuses"
-                     TValue="MessageTaskStatuses?"
-                     Class="fill-card body2 ml-6"
-                     OnClearClick="RefreshAsync"
-                     OnSelectedItemUpdate="RefreshAsync">
-                </MSelect>
-
-                <MSelect @bind-Value="@_queryParam.EntityType"
-                     Items="@(GetEnumList<MessageEntityTypes>())"
-                     Label="@T("DisplayName.MessageTaskEntityType")"
-                     ItemText="@(item => T($"DisplayName.MessageEntityType.{item.ToString()}"))"
-                     ItemValue="item => item"
-                     Dense
-                     Solo
-                     Clearable
-                     HideDetails="@("auto")"
-                     TItem="MessageEntityTypes"
-                     TItemValue="MessageEntityTypes"
-                     TValue="MessageEntityTypes?"
-                     Class="fill-card body2 ml-6"
-                     OnClearClick="RefreshAsync"
-                     OnSelectedItemUpdate="RefreshAsync">
-                </MSelect>
-
-                <BooleanSelect @bind-Value="_queryParam.IsEnabled" Placeholder="@T("DisplayName.MessageTaskIsEnabled")" Class="ml-6" Style="width:130px;flex: none;" OnClearClick="RefreshAsync"
-                           OnSelectedItemUpdate="RefreshAsync" />
-
-            </div>
-        }
-        <div class="d-flex search-panel-right @(!isAnimate?"full-width":"") @(isAnimate?"animate__animated":"") @(!advanced?"animate__searchOpen":"animate__searchShrink")">
-            <DefaultSearch @bind-Value="_queryParam.Filter" Clearable Class="rounded-2 search" Placeholder="@T("Search")" Dense OnEnter="RefreshAsync" OnClearClick="HandleClearAsync" />
-            <div @onclick="ToggleAdvanced" class="ml-6 d-flex button fill">
-                <MIcon Class="ma-auto" Color="emphasis2" Size=20>
-                    @(!advanced?"mdi-filter":"mdi-filter-off")
-                </MIcon>
-            </div>
-            <MTooltip Bottom>
-                <ActivatorContent>
-                    <div class="ml-6 d-flex button fill" @onclick="HandleIsDraft" @attributes="@context.Attrs">
-                        <MIcon IfElse="true" Class="ma-auto" Color="@(_queryParam.IsDraft==true?"primary":"emphasis2")" Size=20>
-                            mdi-file
-                        </MIcon>
-                    </div>
-                </ActivatorContent>
-                <ChildContent>
-                    <span>@(_queryParam.IsDraft==true?T("All"):T("Draft"))</span>
-                </ChildContent>
-            </MTooltip>
-            
+<AutoHeight Overflow>
+    <HeaderContent>
+        <div class="fill rounded-2 d-flex justify-center align-center px-6 py-3 mb-6" style="height:56px">
+            <MButton Ripple=false Plain IsActive Class="emphasis2--text h6 primary--text" OnClick="NavigateToSend"><MIcon Size=22 Left>mdi-message</MIcon>@T("Permission.SendMessage")</MButton>
         </div>
-    </div>
-    <MRow Class="mt-3">
-        @foreach (var _entitie in _entities.Result)
-        {
-            <MCol Md="3">
-                <MessageTaskCard Height="375" MessageTask="_entitie" OnEdit="()=>HandleEditAsync(_entitie)" OnView="()=>_detailModal.OpenModalAsync(_entitie)" OnTest="()=>_sendTestModal.OpenModalAsync(_entitie.Id,_entitie.Channel?.Type)" OnDelete="()=>HandleDelAsync(_entitie.Id)" OnIsEnabled="()=>HandleIsEnabled(_entitie)" />
-            </MCol>
-        }
-    </MRow>
-    <div class="mt-6 fill rounded-2 pa-0">
-        <Pagination Page="@_queryParam.Page" PageSize="@_queryParam.PageSize" Total="_entities.Total" PageChanged="HandlePageChanged" PageSizeChanged="HandlePageSizeChanged" />
-    </div>
-</div>
+        <div class="ma-0 search-panel">
+            @if (advanced)
+            {
+                <div class="fold d-inline-flex">
+                    <MSelect @bind-Value="@_queryParam.TimeType"
+                         Items="@(GetEnumList<MessageTaskTimeTypes>())"
+                         Label="@T("DisplayName.MessageTaskTimeType")"
+                         ItemText="@(item => T($"DisplayName.MessageTaskTimeType.{item.ToString()}"))"
+                         ItemValue="item => item"
+                         Dense
+                         Solo
+                         Clearable
+                         HideDetails="@("auto")"
+                         TItem="MessageTaskTimeTypes"
+                         TItemValue="MessageTaskTimeTypes"
+                         TValue="MessageTaskTimeTypes?"
+                         Class="fill-card body2"
+                         OnClearClick="RefreshAsync"
+                         OnSelectedItemUpdate="RefreshAsync">
+                    </MSelect>
+
+                    <Masa.Mc.Web.Admin.Components.Pickers.DateRangePicker @bind-StartTime="_queryParam.StartTime" @bind-EndTime="_queryParam.EndTime" Class="ml-6" OnChange="RefreshAsync" />
+
+                    <MSelect @bind-Value="_queryParam.ChannelId"
+                         Items="@_channelItems"
+                         Label="@T("DisplayName.Channel")"
+                         ItemText="item => item.DisplayName"
+                         ItemValue="item => item.Id"
+                         Dense
+                         Solo
+                         Clearable
+                         HideDetails="@("auto")"
+                         TItem="ChannelDto"
+                         TItemValue="Guid"
+                         TValue="Guid?"
+                         Class="fill-card body2 ml-6"
+                         OnClearClick="RefreshAsync"
+                         OnSelectedItemUpdate="RefreshAsync">
+                    </MSelect>
+
+                    <MSelect @bind-Value="@_queryParam.Status"
+                         Items="@(GetEnumList<MessageTaskStatuses>())"
+                         Label="@T("DisplayName.MessageTaskStatus")"
+                         ItemText="@(item => T($"DisplayName.MessageTaskStatus.{item.ToString()}"))"
+                         ItemValue="item => item"
+                         Dense
+                         Solo
+                         Clearable
+                         HideDetails="@("auto")"
+                         TItem="MessageTaskStatuses"
+                         TItemValue="MessageTaskStatuses"
+                         TValue="MessageTaskStatuses?"
+                         Class="fill-card body2 ml-6"
+                         OnClearClick="RefreshAsync"
+                         OnSelectedItemUpdate="RefreshAsync">
+                    </MSelect>
+
+                    <MSelect @bind-Value="@_queryParam.EntityType"
+                         Items="@(GetEnumList<MessageEntityTypes>())"
+                         Label="@T("DisplayName.MessageTaskEntityType")"
+                         ItemText="@(item => T($"DisplayName.MessageEntityType.{item.ToString()}"))"
+                         ItemValue="item => item"
+                         Dense
+                         Solo
+                         Clearable
+                         HideDetails="@("auto")"
+                         TItem="MessageEntityTypes"
+                         TItemValue="MessageEntityTypes"
+                         TValue="MessageEntityTypes?"
+                         Class="fill-card body2 ml-6"
+                         OnClearClick="RefreshAsync"
+                         OnSelectedItemUpdate="RefreshAsync">
+                    </MSelect>
+
+                    <BooleanSelect @bind-Value="_queryParam.IsEnabled" Placeholder="@T("DisplayName.MessageTaskIsEnabled")" Class="ml-6" Style="width:130px;flex: none;" OnClearClick="RefreshAsync"
+                               OnSelectedItemUpdate="RefreshAsync" />
+
+                </div>
+            }
+            <div class="d-flex search-panel-right @(!isAnimate?"full-width":"") @(isAnimate?"animate__animated":"") @(!advanced?"animate__searchOpen":"animate__searchShrink")">
+                <DefaultSearch @bind-Value="_queryParam.Filter" Clearable Class="rounded-2 search" Placeholder="@T("Search")" Dense OnEnter="RefreshAsync" OnClearClick="HandleClearAsync" />
+                <div @onclick="ToggleAdvanced" class="ml-6 d-flex button fill">
+                    <MIcon Class="ma-auto" Color="emphasis2" Size=20>
+                        @(!advanced?"mdi-filter":"mdi-filter-off")
+                    </MIcon>
+                </div>
+                <MTooltip Bottom>
+                    <ActivatorContent>
+                        <div class="ml-6 d-flex button fill" @onclick="HandleIsDraft" @attributes="@context.Attrs">
+                            <MIcon Class="ma-auto" Color="@(_queryParam.IsDraft==true?"primary":"emphasis2")" Size=20>
+                                mdi-file
+                            </MIcon>
+                        </div>
+                    </ActivatorContent>
+                    <ChildContent>
+                        <span>@(_queryParam.IsDraft==true?T("All"):T("Draft"))</span>
+                    </ChildContent>
+                </MTooltip>
+            </div>
+        </div>
+    </HeaderContent>
+    <AutoHeightContent>
+        <MRow Class="mt-3" Style="height:0px">
+            @foreach (var _entitie in _entities.Result)
+            {
+                <MCol Md="3">
+                    <MessageTaskCard Height="375" MessageTask="_entitie" OnEdit="()=>HandleEditAsync(_entitie)" OnView="()=>_detailModal.OpenModalAsync(_entitie)" OnTest="()=>_sendTestModal.OpenModalAsync(_entitie.Id,_entitie.Channel?.Type)" OnDelete="()=>HandleDelAsync(_entitie.Id)" OnIsEnabled="()=>HandleIsEnabled(_entitie)" />
+                </MCol>
+            }
+        </MRow>
+    </AutoHeightContent>
+    <FooterContent>
+        <div class="mt-6 fill rounded-2 pa-0">
+            <Pagination Page="@_queryParam.Page" PageSize="@_queryParam.PageSize" Total="_entities.Total" PageChanged="HandlePageChanged" PageSizeChanged="HandlePageSizeChanged" />
+        </div>
+    </FooterContent>
+</AutoHeight>
+
 <TemplateMessageEditModal @ref="_templateEditModal" OnOk="HandleOk" />
 <OrdinaryMessageEditModal @ref="_ordinaryEditModal" OnOk="HandleOk" />
 <MessageTaskDetailModal @ref="_detailModal" OnOk="HandleOk" />

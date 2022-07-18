@@ -193,5 +193,6 @@
   "DisplayName.SendingRule.CronExpression": "Cron expression",
   "DisplayName.SendingRule.IsCustom": "Is custom",
   "DisplayName.SendingRule.SendingCount": "Sending count",
-  "DisplayName.SendingRule.SendingCount.Tips": "0 is unlimited"
+  "DisplayName.SendingRule.SendingCount.Tips": "0 is unlimited",
+  "DisplayName.MessageTaskDetail.ReceiverType": "Type"
 }
