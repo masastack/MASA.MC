@@ -15,7 +15,7 @@ public class MessageTaskHistoryQueryHandler
     [EventHandler]
     public async Task GetAsync(GetMessageTaskHistoryQuery query)
     {
-        var entity = await _repository.FindAsync(x => x.Id == query.MessageTaskHistoryId);
+        var entity = await _repository.FindAsync(x => x.Id == query.MessageTaskHistoryId, false);
         if (entity == null)
             throw new UserFriendlyException("messageTaskHistory not found");
         query.Result = entity.Adapt<MessageTaskHistoryDto>();
