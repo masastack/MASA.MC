@@ -86,7 +86,7 @@
         {
             await InternalValueChanged(false);
         }
-        await JsInvokeAsync("scrollTop",_cardTextRef.Ref);
+        await JsInvokeAsync("util.scrollTop",_cardTextRef.Ref);
     }
 
     private async Task InternalValueChanged(bool value)
