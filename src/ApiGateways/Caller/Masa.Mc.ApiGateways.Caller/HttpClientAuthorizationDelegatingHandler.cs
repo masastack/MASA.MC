@@ -19,6 +19,7 @@ public class HttpClientAuthorizationDelegatingHandler : DelegatingHandler
         if (_httpContextAccessor.HttpContext != null)
         {
             var accessToken = await _httpContextAccessor.HttpContext.GetTokenAsync("access_token");
+            Console.WriteLine("accessToken:" + accessToken);
             request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
         }
         return await base.SendAsync(request, cancellationToken);
