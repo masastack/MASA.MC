@@ -9,16 +9,19 @@ public class MessageTaskCommandHandler
     private readonly IMessageTaskHistoryRepository _messageTaskHistoryRepository;
     private readonly IDomainEventBus _domainEventBus;
     private readonly ISchedulerClient _schedulerClient;
+    private readonly IUserContext _userContext;
 
     public MessageTaskCommandHandler(IMessageTaskRepository repository
         , IMessageTaskHistoryRepository messageTaskHistoryRepository
         , IDomainEventBus domainEventBus
-        , ISchedulerClient schedulerClient)
+        , ISchedulerClient schedulerClient
+        , IUserContext userContext)
     {
         _repository = repository;
         _messageTaskHistoryRepository = messageTaskHistoryRepository;
         _domainEventBus = domainEventBus;
         _schedulerClient = schedulerClient;
+        _userContext = userContext;
     }
 
     [EventHandler]
@@ -64,7 +67,8 @@ public class MessageTaskCommandHandler
 
         if (entity.SchedulerJobId != default)
         {
-            await _schedulerClient.SchedulerJobService.EnableAsync(new BaseSchedulerJobRequest { JobId = entity.SchedulerJobId });
+            var userId = _userContext.GetUserId<Guid>();
+            await _schedulerClient.SchedulerJobService.EnableAsync(new BaseSchedulerJobRequest { JobId = entity.SchedulerJobId, OperatorId = userId });
         }
     }
 
@@ -81,7 +85,8 @@ public class MessageTaskCommandHandler
 
         if (entity.SchedulerJobId != default)
         {
-            await _schedulerClient.SchedulerJobService.DisableAsync(new BaseSchedulerJobRequest { JobId = entity.SchedulerJobId });
+            var userId = _userContext.GetUserId<Guid>();
+            await _schedulerClient.SchedulerJobService.DisableAsync(new BaseSchedulerJobRequest { JobId = entity.SchedulerJobId, OperatorId = userId });
         }
     }
 }
