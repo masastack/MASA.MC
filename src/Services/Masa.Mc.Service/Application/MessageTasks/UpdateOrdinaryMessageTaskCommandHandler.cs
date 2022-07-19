@@ -23,7 +23,7 @@ public class UpdateOrdinaryMessageTaskCommandHandler
         var messageInfo = await _messageInfoRepository.FindAsync(x => x.Id == dto.EntityId);
         if (messageInfo == null)
             throw new UserFriendlyException("messageInfo not found");
-        dto.Adapt(messageInfo);
+        dto.MessageInfo.Adapt(messageInfo);
         await _messageInfoRepository.UpdateAsync(messageInfo);
         updateCommand.MessageTask.DisplayName = messageInfo.Title;
     }
