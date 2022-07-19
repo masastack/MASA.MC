@@ -52,7 +52,7 @@ public class SendSmsMessageEventHandler
                 var messageRecord = new MessageRecord(item.UserId, channel.Id, taskHistory.MessageTaskId, taskHistory.Id, item.Variables, eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.DisplayName)), taskHistory.SendTime);
                 _messageRecordDomainService.SetUserInfo(messageRecord, item);
 
-                if (taskHistory.MessageTask.EntityType == MessageEntityTypes.Template)
+                if (eto.MessageData.MessageType == MessageEntityTypes.Template)
                 {
                     var perDayLimit = eto.MessageData.GetDataValue<long>(nameof(MessageTemplate.PerDayLimit));
                     if (!await _messageTemplateDomainService.CheckSendUpperLimitAsync(perDayLimit, item.UserId))
