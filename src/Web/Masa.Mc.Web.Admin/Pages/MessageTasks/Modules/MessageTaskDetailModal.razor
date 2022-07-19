@@ -1,115 +1,131 @@
 ﻿@inherits AdminCompontentBase
 <div @ref="Ref">
     <SheetDialog Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.ViewMessageTask")">
-        <div id="@($"{Id}_dialog-box")" class="full-height d-flex overflow-y">
-            <div class="pa-12 task-detail-left full-height flex-column">
-                <div class="flex-height-auto flex-grow-1">
-                    <div class="subtitle2 emphasis2--text">@T("DisplayName.MessageTaskHistory")</div>
-                    <Masa.Mc.Web.Admin.Components.Pickers.DateRangePicker Class="btn-fill-line mt-6 justify-center" @bind-StartTime="_queryParam.StartTime" @bind-EndTime="_queryParam.EndTime" OnChange="LoadData" />
-                    <div class="status-select">
-                        <DefaultSelect @bind-Value="@_queryParam.Status"
-                                       Items="@(GetEnumList<MessageTaskHistoryStatuses>())"
-                                       Label="@T("DisplayName.MessageTaskHistoryStatus")"
-                                       ItemText="@(item => T($"DisplayName.MessageTaskHistoryStatus.{item.ToString()}"))"
-                                       ItemValue="item => item"
-                                       Clearable
-                                       Class="mt-6 justify-center"
-                                       TItem="MessageTaskHistoryStatuses"
-                                       TItemValue="MessageTaskHistoryStatuses"
-                                       TValue="MessageTaskHistoryStatuses?"
-                                       OnClearClick="Refresh"
-                                       OnSelectedItemUpdate="Refresh">
-                        </DefaultSelect>
-                    </div>
-                    @if (_historys.Result.Any())
-                    {
-                        <div class="task-history-box">
-                            <MTimeline Dense=false Class="mt-9">
-                                @foreach (var item in _historys.Result)
-                                {
-                                    <MTimelineItem Color="fill" Small FillDot Right @onclick="()=>HandleItemSelect(item)">
-                                        <OppositeContent>
-                                            @if (_historyInfo.Id == item.Id)
-                                            {
-                                                <div class="btn emphasis--text mr-n5">@T($"DisplayName.MessageTaskHistoryStatus.{((MessageTaskHistoryStatuses)item.Status).ToString()}")</div>
-                                                <div class="overline regular3--text">@T("Current")</div>
-                                            }
-                                            else
-                                            {
-                                                <div class="caption regular2--text mr-n5">@T($"DisplayName.MessageTaskHistoryStatus.{((MessageTaskHistoryStatuses)item.Status).ToString()}")</div>
-                                            }
-                                        </OppositeContent>
-                                        <IconContent>
-                                            <MessageTaskHistoryStatusIcon Size="@(_historyInfo.Id == item.Id?20:16)" Value="@item.Status" />
-                                        </IconContent>
-                                        <ChildContent>
-                                            <div class="ml-n5">
+        <div id="@($"{Id}_dialog-box")" class="full-height d-flex">
+            <div class="px-12 py-6 task-detail-left full-height flex-column">
+                <AutoHeight Overflow>
+                    <HeaderContent>
+                        <div class="subtitle2 emphasis2--text">@T("DisplayName.MessageTaskHistory")</div>
+                        <Masa.Mc.Web.Admin.Components.Pickers.DateRangePicker Class="btn-fill-line mt-6" IconClass="mr-9" @bind-StartTime="_queryParam.StartTime" @bind-EndTime="_queryParam.EndTime" OnChange="LoadData" />
+                        <div class="status-select">
+                            <MSelect @bind-Value="@_queryParam.Status"
+                                     Items="@(GetEnumList<MessageTaskHistoryStatuses>())"
+                                     Label="@T("DisplayName.MessageTaskHistoryStatus")"
+                                     ItemText="@(item => T($"DisplayName.MessageTaskHistoryStatus.{item.ToString()}"))"
+                                     ItemValue="item => item"
+                                     Dense
+                                     Solo
+                                     Outlined
+                                     Clearable
+                                     HideDetails="@("auto")"
+                                     Class="mt-6 justify-center"
+                                     TItem="MessageTaskHistoryStatuses"
+                                     TItemValue="MessageTaskHistoryStatuses"
+                                     TValue="MessageTaskHistoryStatuses?"
+                                     OnClearClick="Refresh"
+                                     OnSelectedItemUpdate="Refresh">
+                            </MSelect>
+                        </div>
+                    </HeaderContent>
+                    <AutoHeightContent>
+                        @if (_historys.Result.Any())
+                        {
+                            <div class="task-history-box">
+                                <MTimeline Dense=false Class="mt-9">
+                                    @foreach (var item in _historys.Result)
+                                    {
+                                        <MTimelineItem Color="fill" Small FillDot Right @onclick="()=>HandleItemSelect(item)">
+                                            <OppositeContent>
                                                 @if (_historyInfo.Id == item.Id)
                                                 {
-                                                    <div class="btn emphasis--text">@item.TaskHistoryNo</div>
+                                                    <div class="btn emphasis--text mr-n5">@T($"DisplayName.MessageTaskHistoryStatus.{((MessageTaskHistoryStatuses)item.Status).ToString()}")</div>
                                                 }
                                                 else
                                                 {
-                                                    <div class="caption regular--text">@item.TaskHistoryNo</div>
+                                                    <div class="caption regular2--text mr-n5">@T($"DisplayName.MessageTaskHistoryStatus.{((MessageTaskHistoryStatuses)item.Status).ToString()}")</div>
                                                 }
-                                                <div class="overline regular3--text">@item.SendTime?.ToLocalTime().ToString(T("$DateTimeFormat"))</div>
-                                            </div>
-                                        </ChildContent>
-                                    </MTimelineItem>
-                                }
-                            </MTimeline>
-                        </div>
-                    }
-                </div>
-                <McPagination Class="mt-5 d-flex" @bind-Page="_queryParam.Page" @bind-PageSize="_queryParam.PageSize" Total="_historys.Total" OnChange="HandlePaginationChange" />
+                                            </OppositeContent>
+                                            <IconContent>
+                                                <MessageTaskHistoryStatusIcon Size="@(_historyInfo.Id == item.Id?20:16)" Value="@item.Status" />
+                                            </IconContent>
+                                            <ChildContent>
+                                                <div class="ml-n5">
+                                                    @if (_historyInfo.Id == item.Id)
+                                                    {
+                                                        <div class="btn emphasis--text">@item.TaskHistoryNo</div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="caption regular--text">@item.TaskHistoryNo</div>
+                                                    }
+                                                    <div class="overline regular3--text">@item.SendTime?.ToLocalTime().ToString(T("$DateTimeFormat"))</div>
+                                                </div>
+                                            </ChildContent>
+                                        </MTimelineItem>
+                                    }
+                                </MTimeline>
+                            </div>
+                        }
+                    </AutoHeightContent>
+                    <FooterContent>
+                        <Pagination Class="mt-5 d-flex" Page="@_queryParam.Page" PageSize="@_queryParam.PageSize" Total="_historys.Total" PageChanged="HandlePageChanged" PageSizeChanged="HandlePageSizeChanged" />
+                    </FooterContent>
+                </AutoHeight>
             </div>
-            <MDivider Vertical Class="my-9"></MDivider>
+            <span class="d-flex py-16" style="height: 100%">
+                <MDivider Vertical />
+            </span>
             <div class="task-detail-right full-height flex-column">
-                <div class="flex-height-auto flex-grow-1">
-                    @if (_historyInfo.SendTime.HasValue)
-                    {
-                        <MButton Color="primary" Class="rounded-lg btn small-btn info full-width mb-8">
-                            <span>@T(string.Format(T("Description.MessageTaskHistory.SendTimeTips"),_historyInfo.SendTime?.ToLocalTime().ToString(T("$DateTimeFormat"))))</span>
-                        </MButton>
-                    }
+                <AutoHeight Overflow>
+                    <HeaderContent>
+                        @if (_historyInfo.SendTime.HasValue)
+                        {
+                            <MButton Color="primary" Class="rounded-lg btn small-btn info full-width mb-8">
+                                <span>@T(string.Format(T("Description.MessageTaskHistory.SendTimeTips"),_historyInfo.SendTime?.ToLocalTime().ToString(T("$DateTimeFormat"))))</span>
+                            </MButton>
+                        }
+                    </HeaderContent>
+                    <AutoHeightContent>
+                        <div class="subtitle2 emphasis2--text">@T("DisplayName.MessageInfoContent")</div>
+                        @if (_info.EntityType == MessageEntityTypes.Ordinary)
+                        {
+                            <OrdinaryMessageInfo MessageInfoId="_info.EntityId" MessageTask="_info"></OrdinaryMessageInfo>
+                        }
+                        @if (_info.EntityType == MessageEntityTypes.Template)
+                        {
+                            <TemplateMessageInfo MessageTemplateId="_info.EntityId" MessageTask="_info" Variables="_info.Variables"></TemplateMessageInfo>
+                        }
 
-                    <div class="subtitle2 emphasis2--text">@T("DisplayName.MessageInfoContent")</div>
-                    @if (_info.EntityType == MessageEntityTypes.Ordinary)
-                    {
-                        <OrdinaryMessageInfo MessageInfoId="_info.EntityId" MessageTask="_info"></OrdinaryMessageInfo>
-                    }
-                    @if (_info.EntityType == MessageEntityTypes.Template)
-                    {
-                        <TemplateMessageInfo MessageTemplateId="_info.EntityId" MessageTask="_info" Variables="_info.Variables"></TemplateMessageInfo>
-                    }
-
-                    <div class="subtitle2 emphasis2--text mt-8">@T("DisplayName.MessageTaskReceiver")</div>
-                    <dl class="mt-8">
-                        <dt class="overline regular3--text">@T("DisplayName.MessageTaskDetail.ReceiverType")</dt>
-                        <dd class="body2 emphasis2--text mt-1">@T($"DisplayName.ReceiverType.{_info.ReceiverType.ToString()}")</dd>
-                    </dl>
-                    <div class="subtitle2 emphasis2--text mt-8">@T("DisplayName.MessageTaskSendingRule")</div>
-                    @if (_info.Channel.Type == ChannelTypes.Sms)
-                    {
+                        <div class="subtitle2 emphasis2--text mt-8">@T("DisplayName.MessageTaskReceiver")</div>
                         <dl class="mt-8">
-                            <dt class="overline regular3--text">@T("DisplayName.MessageTemplateSign")</dt>
-                            <dd class="body2 emphasis2--text mt-1">@_info.Sign</dd>
+                            <dt class="overline regular3--text">@T("DisplayName.MessageTaskDetail.ReceiverType")</dt>
+                            <dd class="body2 emphasis2--text mt-1">@T($"DisplayName.ReceiverType.{_info.ReceiverType.ToString()}")</dd>
                         </dl>
-                    }
-                    @if (_info.SendRules.IsCustom)
-                    {
-                        <MessageSendingRulesInfo Value="_info.SendRules" />
-                    }
-                </div>
-                @if (_info.Channel.Type == ChannelTypes.WebsiteMessage && _historyInfo.Status != MessageTaskHistoryStatuses.Withdrawn)
-                {
-                    <div Class="d-flex">
-                        <MSpacer></MSpacer>
-                        <MButton Rounded Color="primary" Class="medium-button px-6" OnClick="WithdrawnHistoryAsync">
-                            <span>@T("Withdraw")</span>
-                        </MButton>
-                    </div>
-                }
+                        <div class="subtitle2 emphasis2--text mt-8">@T("DisplayName.MessageTaskSendingRule")</div>
+                        @if (_info.Channel.Type == ChannelTypes.Sms)
+                        {
+                            <dl class="mt-8">
+                                <dt class="overline regular3--text">@T("DisplayName.MessageTemplateSign")</dt>
+                                <dd class="body2 emphasis2--text mt-1">@_info.Sign</dd>
+                            </dl>
+                        }
+                        @if (_info.SendRules.IsCustom)
+                        {
+                            <MessageSendingRulesInfo Value="_info.SendRules" />
+                        }
+                    </AutoHeightContent>
+                    <FooterContent>
+                        @if (_info.Channel.Type == ChannelTypes.WebsiteMessage && _historyInfo.Status != MessageTaskHistoryStatuses.Withdrawn)
+                        {
+                            <div Class="d-flex">
+                                <MSpacer></MSpacer>
+                                <MButton Rounded Color="primary" Class="px-6" Width="100" OnClick="WithdrawnHistoryAsync">
+                                    <span>@T("Withdraw")</span>
+                                </MButton>
+                            </div>
+                        }
+                    </FooterContent>
+                </AutoHeight>
             </div>
         </div>
     </SheetDialog>

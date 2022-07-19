@@ -15,7 +15,6 @@ public partial class MessageTaskDetailModal : AdminCompontentBase
     private Guid _entityId;
     private bool _visible;
     private GetMessageTaskHistoryInputDto _queryParam = new();
-    private bool _datePickersShow;
     private List<DateOnly> _dates = new List<DateOnly> { };
     private string DateRangeText => string.Join(" ~ ", _dates.Select(date => date.ToString("yyyy-MM-dd")));
     private PaginatedListDto<MessageTaskHistoryDto> _historys = new();
@@ -110,10 +109,15 @@ public partial class MessageTaskDetailModal : AdminCompontentBase
         _historyInfo = item;
     }
 
-    private async Task HandlePaginationChange(PaginationEventArgs args)
+    private async Task HandlePageChanged(int page)
     {
-        _queryParam.Page = args.Page;
-        _queryParam.PageSize = args.PageSize;
+        _queryParam.Page = page;
+        await LoadData();
+    }
+
+    private async Task HandlePageSizeChanged(int pageSize)
+    {
+        _queryParam.PageSize = pageSize;
         await LoadData();
     }
 

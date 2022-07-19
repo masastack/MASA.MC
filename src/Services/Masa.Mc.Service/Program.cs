@@ -49,6 +49,7 @@ builder.Services.AddAuthentication(options =>
     Console.WriteLine("options.Authority:" + options.Authority);
     options.RequireHttpsMetadata = false;
     options.TokenValidationParameters.ValidateAudience = false;
+    options.TokenValidationParameters.ValidateIssuer = false;
     options.MapInboundClaims = false;
 });
 

@@ -19,7 +19,7 @@
     @if (!IsRender && Variables.Any())
     {
         <div class="subtitle2 emphasis2--text mt-8">@T("DisplayName.VariableValueTransfer")</div>
-        <MSimpleTable Class="btn-fill-line mt-8">
+        <MSimpleTable Class="btn-fill-line mt-8" Style="position:relative">
             <thead>
                 <tr>
                     <th class="text-left body2 regular3--text">
@@ -30,6 +30,9 @@
                     </th>
                 </tr>
             </thead>
+            <span class="d-flex px-4" style="width: 100%;position: absolute;">
+                <MDivider />
+            </span>
             <tbody>
                 @foreach (var item in Variables)
                 {

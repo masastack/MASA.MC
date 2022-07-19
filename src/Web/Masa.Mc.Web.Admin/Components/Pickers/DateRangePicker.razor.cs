@@ -20,6 +20,9 @@ public partial class DateRangePicker
     [Parameter]
     public EventCallback OnChange { get; set; }
 
+    [Parameter]
+    public string IconClass { get; set; }
+
     private bool StartTimeVisible { get; set; }
 
     private bool EndTimeVisible { get; set; }
