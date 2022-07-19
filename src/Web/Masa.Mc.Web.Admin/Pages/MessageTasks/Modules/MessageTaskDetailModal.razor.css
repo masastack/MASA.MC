@@ -39,14 +39,6 @@
         box-shadow: none;
     }
 
-    .task-history-box ::deep .btn {
-        font-weight: 550 !important;
-    }
-
-    .task-history-box ::deep .caption {
-        font-weight: 500 !important;
-    }
-
     .task-history-box ::deep .m-timeline-item__dot {
         background: transparent !important;
     }
