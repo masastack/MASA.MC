@@ -888,3 +888,7 @@ tr:hover {
 .masa .warning-disabled--text {
     color: #FBACA3 !important;
 }
+
+.m-alert__wrapper {
+    width: 100%;
+}
