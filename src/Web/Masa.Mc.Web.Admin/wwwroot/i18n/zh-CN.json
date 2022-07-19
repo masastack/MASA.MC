@@ -295,5 +295,6 @@
   "DisplayName.SendingRule.IsCustom": "自定义设置",
   "DisplayName.SendingRule.SendingCount": "每次发送条数",
   "DisplayName.SendingRule.SendingCount.Tips": "0为不限制",
-  "DisplayName.MessageTaskDetail.ReceiverType": "类型"
+  "DisplayName.MessageTaskDetail.ReceiverType": "类型",
+  "TemplateTemplate": "模板"
 }

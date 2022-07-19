@@ -36,7 +36,7 @@
                         <MRow Class="mt-6">
                             <MCol>
                                 <MAutocomplete Items="_templateItems" @bind-Value="_model.EntityId"
-                                               Label="@T("DisplayName.MessageTemplateTemplateId")"
+                                               Label="@T("TemplateTemplate")"
                                                ItemText="@(x=>string.IsNullOrEmpty(x.TemplateId)?x.DisplayName:$"{x.DisplayName}({x.TemplateId})")"
                                                ItemValue="x=>x.Id"
                                                Outlined

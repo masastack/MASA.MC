@@ -7,12 +7,15 @@ public class ChannelQueryHandler
 {
     private readonly IChannelRepository _repository;
     private readonly IAuthClient _authClient;
+    private readonly IUserContext _userContext;
 
     public ChannelQueryHandler(IChannelRepository repository
-        , IAuthClient authClient)
+        , IAuthClient authClient
+        , IUserContext userContext)
     {
         _repository = repository;
         _authClient = authClient;
+        _userContext = userContext;
     }
 
     [EventHandler]
@@ -27,6 +30,8 @@ public class ChannelQueryHandler
     [EventHandler]
     public async Task GetListAsync(GetChannelListQuery query)
     {
+        var userId = _userContext.GetUserId<Guid>();
+        Console.WriteLine($"GetListAsync:userId:{userId}");
         var options = query.Input;
         var condition = await CreateFilteredPredicate(options);
         var resultList = await _repository.GetPaginatedListAsync(condition, new PaginatedOptions

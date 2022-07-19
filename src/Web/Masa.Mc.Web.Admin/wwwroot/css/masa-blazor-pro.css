@@ -892,3 +892,7 @@ tr:hover {
 .m-alert__wrapper {
     width: 100%;
 }
+
+.m-input--selection-controls__ripple:before {
+    opacity: 0;
+}
