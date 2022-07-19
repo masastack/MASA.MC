@@ -146,7 +146,7 @@
   "Description.MessageTemplate.ChannelId.Required": "请选择渠道",
   "Description.MessageTemplate.TemplateId.Required": "请选择模板Id",
   "Description.MessageTemplate.Sign.Required": "请输入签名",
-  "Description.MessageTemplate.PerDayLimit.Tips": "此模版每日给同一用户最多发送",
+  "Description.MessageTemplate.PerDayLimit.Tips": "此模板每日给同一用户最多发送",
   "DisplayName.MessageTemplateItem": "变量字典",
   "DisplayName.MessageTemplateItemCode": "变量",
   "DisplayName.MessageTemplateItemValue": "值",
