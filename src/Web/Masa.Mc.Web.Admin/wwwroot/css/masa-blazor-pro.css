@@ -884,3 +884,7 @@ tr:hover {
 .page-content {
     height: calc(100% - 24px)
 }
+
+.masa .warning-disabled--text {
+    color: #FBACA3 !important;
+}
