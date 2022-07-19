@@ -880,3 +880,7 @@ tr:hover {
 .masa-stack-components .page-select {
     margin-top: 2px;
 }
+
+.page-content {
+    height: calc(100vh - 180px)
+}

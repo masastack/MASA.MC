@@ -43,8 +43,8 @@
         </MButton>
     </div>
 </div>
-<MCard>
-    <DefaultDataTable Headers="Headers" Items="_entities.Result" TItem="MessageTemplateDto" ItemsPerPage="_queryParam.PageSize" HideDefaultFooter Class="mt-6">
+<MCard Class="page-content">
+    <DefaultDataTable Headers="Headers" Items="_entities.Result" TItem="MessageTemplateDto" ItemsPerPage="_queryParam.PageSize" HideDefaultFooter Class="mt-6 d-flex full-height flex-column">
         <HeaderColContent Context="header">
             <span class="text-btn">@header.Text</span>
         </HeaderColContent>

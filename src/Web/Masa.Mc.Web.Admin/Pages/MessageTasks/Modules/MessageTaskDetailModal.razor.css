@@ -15,6 +15,10 @@
     text-align: center;
 }
 
+.status-select ::deep .m-label--active {
+    text-align: left !important;
+}
+
 .task-detail-left {
     width: 428px;
 }
