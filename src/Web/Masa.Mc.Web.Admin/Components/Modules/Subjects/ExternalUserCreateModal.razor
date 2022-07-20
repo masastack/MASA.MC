@@ -17,8 +17,8 @@
             <DefaultTextField Class="mt-6" Label="@T("PhoneNumber")" @bind-Value="_model.PhoneNumber"></DefaultTextField>
             <DefaultTextField Class="mt-6" Label="@T("Email")" @bind-Value="_model.Email"></DefaultTextField>
         </ChildContent>
-        <SaveContent Context="save">
-            <MButton OnClick="save.Click" Class="btn-form-full" Color="primary" >@(T("Submit"))</MButton>
+        <SaveContent>
+            <MButton OnClick="async()=>await HandleOk() " Class="btn-form-full" Color="primary" >@(T("Submit"))</MButton>
         </SaveContent>
     </PModal>
 </div>
