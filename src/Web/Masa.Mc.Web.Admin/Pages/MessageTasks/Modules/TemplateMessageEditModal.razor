@@ -76,7 +76,7 @@
                                 }
                                 <MRow Class="mt-6">
                                     <MCol>
-                                        <RichText Value="@_messageInfo.Content"></RichText>
+                                        <DefaultRichText Value="@_messageInfo.Content" Label="@T("DisplayName.MessageTemplateContent")"></DefaultRichText>
                                     </MCol>
                                 </MRow>
                                 if (_messageInfo.Channel != null && _messageInfo.Channel.Type == ChannelTypes.WebsiteMessage)
