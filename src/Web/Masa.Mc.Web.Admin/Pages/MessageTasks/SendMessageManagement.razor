@@ -1,0 +1,11 @@
+﻿@inherits AdminCompontentBase
+@page "/messageTasks/sendMessage"
+<PageTitle>@T("Permission.SendMessage")</PageTitle>
+@if (_isSend)
+{
+    <SendMessage @ref="_sendMessage" OnNavigateToList="()=>_isSend=false" />
+}
+else
+{
+    <MessageTaskList @ref="_messageTaskList" OnNavigateToSend="()=>_isSend=true" />
+}
