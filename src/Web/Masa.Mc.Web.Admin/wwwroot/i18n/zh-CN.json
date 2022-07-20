@@ -297,5 +297,6 @@
   "DisplayName.SendingRule.SendingCount": "每次发送条数",
   "DisplayName.SendingRule.SendingCount.Tips": "0为不限制",
   "DisplayName.MessageTaskDetail.ReceiverType": "类型",
-  "TemplateTemplate": "模板"
+  "TemplateTemplate": "模板",
+  "ChannelOptions.Tips": "请仔细核对填写数据，填写错误会导致消息发送失败"
 }

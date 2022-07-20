@@ -34,10 +34,10 @@ public partial class MessageTemplateItems : AdminCompontentBase
         var _prefix = "DisplayName.MessageTemplateItem";
         _headers = new List<DataTableHeader<MessageTemplateItemDto>>
         {
-          new (){ Text= T($"{_prefix}{nameof(MessageTemplateItemDto.Code)}"),Value= nameof(MessageTemplateItemDto.Code),Sortable=false},
-          new (){ Text= T($"{_prefix}{nameof(MessageTemplateItemDto.MappingCode)}"), Value= nameof(MessageTemplateItemDto.MappingCode),Sortable=false},
-          new (){ Text= T($"{_prefix}{nameof(MessageTemplateItemDto.DisplayText)}"), Value= nameof(MessageTemplateItemDto.DisplayText),Sortable=false},
-          new (){ Text= T("Action"), Value= "actions",Sortable=false,Width=64 }
+          new (){ Text= T($"{_prefix}{nameof(MessageTemplateItemDto.Code)}"),Value= nameof(MessageTemplateItemDto.Code),Sortable=false,Width=175},
+          new (){ Text= T($"{_prefix}{nameof(MessageTemplateItemDto.MappingCode)}"), Value= nameof(MessageTemplateItemDto.MappingCode),Sortable=false,Width=175},
+          new (){ Text= T($"{_prefix}{nameof(MessageTemplateItemDto.DisplayText)}"), Value= nameof(MessageTemplateItemDto.DisplayText),Sortable=false,Width=166},
+          new (){ Text= T("Action"), Value= "actions",Sortable=false,Width=108,Align="center" }
         };
     }
 
@@ -78,7 +78,7 @@ public partial class MessageTemplateItems : AdminCompontentBase
             MappingCode = item.MappingCode,
             DisplayText = item.DisplayText
         };
-        _dialog = true;
+        //_dialog = true;
     }
 
     public void DeleteItem(MessageTemplateItemDto item)

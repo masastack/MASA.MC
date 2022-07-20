@@ -3,14 +3,16 @@
     <MRow Class="mt-6">
         <MCol>
             <DefaultTextField @bind-Value="_model.AccessKeyId"
-                              Label="@T("SmsChannelOptions.AccessKeyId")">
+                              Label="@T("SmsChannelOptions.AccessKeyId")"
+                              Hint="@T("ChannelOptions.Tips")">
             </DefaultTextField>
         </MCol>
     </MRow>
     <MRow Class="mt-6">
         <MCol>
             <DefaultTextField @bind-Value="_model.AccessKeySecret"
-                              Label="@T("SmsChannelOptions.AccessKeySecret")">
+                              Label="@T("SmsChannelOptions.AccessKeySecret")"
+                              Hint="@T("ChannelOptions.Tips")">
             </DefaultTextField>
         </MCol>
     </MRow>

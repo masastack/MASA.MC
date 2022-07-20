@@ -920,3 +920,10 @@ tr:hover {
     border-radius: 10px;
     background-color: #A3AED0;
 }
+
+.m-text-field__details {
+    font-weight: 400;
+    font-size: 10px;
+    line-height: 15px;
+    color: #A3AED0;
+}
