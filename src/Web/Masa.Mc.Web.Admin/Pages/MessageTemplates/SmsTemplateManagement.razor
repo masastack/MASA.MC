@@ -109,14 +109,17 @@
                 <ItemColContent>
                     @switch (context.Header.Value)
                     {
+                        case (nameof(MessageTemplateDto.TemplateId)):
+                            <div class="body regular--text text-truncate" style="max-width:190px">@context.Item.TemplateId</div>
+                            break;
                         case ("ChannelDisplayName"):
-                            <span class="body regular--text">@context.Item.Channel?.DisplayName</span>
+                            <div class="body regular--text text-truncate" style="max-width:150px">@context.Item.Channel?.DisplayName</div>
+                            break;
+                        case (nameof(MessageTemplateDto.DisplayName)):
+                            <div class="body regular--text text-truncate" style="max-width:290px">@context.Item.DisplayName</div>
                             break;
                         case nameof(MessageTemplateDto.TemplateType):
                             <span class="body regular--text">@T($"DisplayName.SmsTemplateType.{((SmsTemplateTypes)context.Item.TemplateType).ToString()}")</span>
-                            break;
-                        case (nameof(MessageTemplateDto.Modifier)):
-                            <span class="body2 regular--text"></span>
                             break;
                         case (nameof(MessageTemplateDto.ModificationTime)):
                             <DateTimeListItem Value="@context.Item.ModificationTime"></DateTimeListItem>
