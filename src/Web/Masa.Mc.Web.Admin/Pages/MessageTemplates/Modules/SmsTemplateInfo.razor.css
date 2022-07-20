@@ -2,3 +2,11 @@
     height:48px;
     line-height:48px;
 }
+
+    .item dt {
+        padding-right: 24px;
+    }
+
+    .item dd {
+        width: 62px;
+    }

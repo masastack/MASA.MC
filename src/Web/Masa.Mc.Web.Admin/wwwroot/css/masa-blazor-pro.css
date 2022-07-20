@@ -896,3 +896,27 @@ tr:hover {
 .m-input--selection-controls__ripple:before {
     opacity: 0;
 }
+
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    background-color: #F6F8FD;
+}
+
+/*定义滚动条轨道
+
+内阴影+圆角*/
+
+::-webkit-scrollbar-track {
+    border-radius: 4px;
+    background-color: #F6F8FD;
+}
+
+/*定义滑块
+
+内阴影+圆角*/
+
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: #A3AED0;
+}

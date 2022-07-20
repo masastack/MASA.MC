@@ -72,7 +72,7 @@
                     @switch (context.Header.Value)
                     {
                         case ("Receiver"):
-                            <MListItem Class="px-0">
+                            <MListItem Class="px-0 text-truncate">
                                 <MListItemAvatar Class="mr-3">
                                     @if (string.IsNullOrEmpty(context.Item.ExtraProperties.GetProperty<string>("Avatar")))
                                     {
@@ -94,25 +94,25 @@
                             </MListItem>
                             break;
                         case (nameof(MessageTaskReceiverDto.Email)):
-                            <span class="body regular--text">@(context.Item.ExtraProperties.GetProperty<string>(nameof(MessageTaskReceiverDto.Email)))</span>
+                            <span class="body regular--text text-truncate">@(context.Item.ExtraProperties.GetProperty<string>(nameof(MessageTaskReceiverDto.Email)))</span>
                             break;
                         case ("ChannelDisplayName"):
-                            <span class="body regular--text">@context.Item.Channel?.DisplayName</span>
+                            <span class="body regular--text text-truncate">@context.Item.Channel?.DisplayName</span>
                             break;
                         case (nameof(MessageRecordDto.ExpectSendTime)):
-                            <DateTimeListItem Value="@context.Item.ExpectSendTime?.ToLocalTime()"></DateTimeListItem>
+                            <DateTimeListItem Class="text-truncate" Value="@context.Item.ExpectSendTime?.ToLocalTime()"></DateTimeListItem>
                             break;
                         case (nameof(MessageRecordDto.SendTime)):
-                            <DateTimeListItem Value="@context.Item.SendTime?.ToLocalTime()"></DateTimeListItem>
+                            <DateTimeListItem Class="text-truncate" Value="@context.Item.SendTime?.ToLocalTime()"></DateTimeListItem>
                             break;
                         case nameof(MessageRecordDto.Success):
-                            <MessageRecordStatusTag Value="@context.Item.Success" />
+                            <MessageRecordStatusTag Class="text-truncate" Value="@context.Item.Success" />
                             break;
                         case "Action":
                             <MIcon Small Color="emphasis2" OnClick="async()=>await _detailModal.OpenModalAsync(context.Item)">mdi-eye</MIcon>
                             break;
                         default:
-                            <span class="body regular--text">@context.Value</span>
+                            <span class="body regular--text text-truncate">@context.Value</span>
                             break;
                     }
                 </ItemColContent>
