@@ -2,7 +2,7 @@
 <div class="template-message-info">
     <dl class="mt-8">
         <dt class="overline regular3--text">@T("DisplayName.ChannelType")</dt>
-        <dd class="body2 emphasis2--text mt-1">@MessageTask.Channel.Type.ToString()</dd>
+        <dd class="body2 emphasis2--text mt-1">@T(MessageTask.Channel.Type.ToString())</dd>
     </dl>
     <dl class="mt-8">
         <dt class="overline regular3--text">@T("DisplayName.Channel")</dt>
@@ -19,7 +19,7 @@
     @if (!IsRender && Variables.Any())
     {
         <div class="subtitle2 emphasis2--text mt-8">@T("DisplayName.VariableValueTransfer")</div>
-        <MSimpleTable Class="btn-fill-line mt-8">
+        <MSimpleTable Class="btn-fill-line mt-8" Style="position:relative">
             <thead>
                 <tr>
                     <th class="text-left body2 regular3--text">
@@ -30,6 +30,9 @@
                     </th>
                 </tr>
             </thead>
+            <span class="d-flex px-4" style="width: 100%;position: absolute;">
+                <MDivider />
+            </span>
             <tbody>
                 @foreach (var item in Variables)
                 {

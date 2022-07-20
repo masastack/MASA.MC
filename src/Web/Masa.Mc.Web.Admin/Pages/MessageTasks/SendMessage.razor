@@ -12,7 +12,7 @@
                                OnClick="_ordinaryCreateModal.OpenModalAsync">
                             @if (context.Hover)
                             {
-                                <MIcon Size=33 Color="#FFFFFF">mdi-email-outline</MIcon>
+                                <MIcon Size=33 Color="#FFFFFF">mdi-email</MIcon>
                                 <div class="h6 pt-10" style="color:#FAFAFA">@T("DisplayName.MessageEntityType.Ordinary")</div>
                             }
                             else
@@ -29,7 +29,7 @@
                                OnClick="_templateCreateModal.OpenModalAsync">
                             @if (context.Hover)
                             {
-                                <MIcon Size=33 Color="#FFFFFF">mdi-email-outline</MIcon>
+                                <MIcon Size=33 Color="#FFFFFF">mdi-email</MIcon>
                                 <div class="h6 pt-10" style="color:#FAFAFA">@T("DisplayName.MessageEntityType.Template")</div>
                             }
                             else
@@ -44,7 +44,7 @@
         </MContainer>
     </MCard>
 
-    <div class="mt-6 fill rounded-2 d-flex justify-center align-center px-6 py-3 mb-6" style="height:56px">
+    <div class="mt-6 fill rounded-2 d-flex justify-center align-center px-6 py-3" style="height:56px">
         <MButton Ripple=false Plain IsActive Class="emphasis2--text h6" OnClick="NavigateToList"><MIcon Left>fas fa-tasks</MIcon>@T("DisplayName.MessageTaskList")</MButton>
     </div>
 </div>

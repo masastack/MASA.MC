@@ -5,7 +5,7 @@
             <MListItemTitle Class="overflow-visible">
                 @if (MessageTask.Channel != null)
                 {
-                    <ColorTag Color="@MessageTask.Channel?.Color" Height=24>@MessageTask.Channel?.DisplayName</ColorTag>
+                    <ColorTag Color="@(MessageTask.IsEnabled?MessageTask.Channel?.Color:"regular3")" Height=24>@MessageTask.Channel?.DisplayName</ColorTag>
                 }
             </MListItemTitle>
             <MListItemIcon Class="mr-n2">
@@ -18,7 +18,7 @@
                             <MListItem>
                                 <MListItemContent>
                                     <MListItemTitle>
-                                        <BooleanButtonGroup Value="@MessageTask.IsEnabled" StyleType="StyleTypes.Slider" ValueChanged="HandleOnIsEnabled" />
+                                        <BooleanButtonGroup Value="@MessageTask.IsEnabled" StyleType="StyleTypes.Slider" Style="width:146px" ValueChanged="HandleOnIsEnabled" />
                                     </MListItemTitle>
                                 </MListItemContent>
                             </MListItem>
@@ -65,12 +65,12 @@
     </MCardTitle>
     <MDivider></MDivider>
     <MCardText class="flex-grow-1 px-0 d-flex flex-column">
-        <div class="h8 emphasis--text" style="line-height: 24px;">@MessageTask.DisplayName</div>
+        <div class="@($"h8 {(MessageTask.IsEnabled?"emphasis--text":"regular3--text")}")" style="line-height: 24px;">@MessageTask.DisplayName</div>
         <div class="caption regular3--text" style="line-height: 18px;">@((MessageTask.SendTime?.ToLocalTime()??MessageTask.ExpectSendTime?.ToLocalTime())?.ToString(T("$DateTimeFormat")))</div>
     </MCardText>
-    <div class="fill-background caption px-2 py-1 regular2--text text-justify line-clamp-2 rounded-lg" style="height:192px">@MessageTask.Content</div>
+    <div class="@($"message-content fill-background caption px-2 py-1 text-justify rounded-lg {(MessageTask.IsEnabled?"regular2--text":"regular3--text")}")">@MessageTask.Content</div>
     <MCardActions class="px-3 pb-3">
-        <span class="body2 emphasis2--text">@T($"DisplayName.MessageEntityType.{((MessageEntityTypes)MessageTask.EntityType).ToString()}")</span>
+        <span class="@($"body2 {(MessageTask.IsEnabled?"emphasis2--text":"regular3--text")}")">@T($"DisplayName.MessageEntityType.{((MessageEntityTypes)MessageTask.EntityType).ToString()}")</span>
         @if (MessageTask.IsDraft == false)
         {
             <span class="d-flex px-1" style="height: 8px">
@@ -83,7 +83,7 @@
         <span class="d-flex px-1" style="height: 8px">
             <MDivider Vertical />
         </span>
-        <span class="caption regular2--text">@MessageTask.ModifierName</span>
+        <span class="@($"caption {(MessageTask.IsEnabled?"regular2--text":"regular3--text")}")">@MessageTask.ModifierName</span>
     </MCardActions>
 </MCard>
 

@@ -12,7 +12,7 @@
   "Type": "类型",
   "Copy": "复制",
   "CreationTime": "创建时间",
-  "ModificationTime": "修改时间",
+  "ModificationTime": "更新时间",
   "State": "状态",
   "Enable": "启用",
   "IsEnabled": "启用/禁用",
@@ -146,7 +146,7 @@
   "Description.MessageTemplate.ChannelId.Required": "请选择渠道",
   "Description.MessageTemplate.TemplateId.Required": "请选择模板Id",
   "Description.MessageTemplate.Sign.Required": "请输入签名",
-  "Description.MessageTemplate.PerDayLimit.Tips": "此模版每日给同一用户最多发送",
+  "Description.MessageTemplate.PerDayLimit.Tips": "此模板每日给同一用户最多发送",
   "DisplayName.MessageTemplateItem": "变量字典",
   "DisplayName.MessageTemplateItemCode": "变量",
   "DisplayName.MessageTemplateItemValue": "值",
@@ -203,7 +203,7 @@
   "DisplayName.MessageTaskTimeType": "时间类型",
   "DisplayName.MessageTaskTimeType.ModificationTime": "最近修改时间",
   "DisplayName.MessageTaskTimeType.SendTime": "发送时间",
-  "DisplayName.VariableValueTransfer": "消息变量",
+  "DisplayName.VariableValueTransfer": "变量传值",
   "DisplayName.SendingRule.Timeout": "超时时间",
   "DisplayName.SendingRule.RetryInterval": "重试间隔",
   "DisplayName.SendingRule.RetryCount": "重试次数",
@@ -295,5 +295,7 @@
   "DisplayName.SendingRule.CronExpression": "Cron 表达式",
   "DisplayName.SendingRule.IsCustom": "自定义设置",
   "DisplayName.SendingRule.SendingCount": "每次发送条数",
-  "DisplayName.SendingRule.SendingCount.Tips": "0为不限制"
+  "DisplayName.SendingRule.SendingCount.Tips": "0为不限制",
+  "DisplayName.MessageTaskDetail.ReceiverType": "类型",
+  "TemplateTemplate": "模板"
 }

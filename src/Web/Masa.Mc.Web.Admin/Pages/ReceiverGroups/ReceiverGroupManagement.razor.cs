@@ -21,7 +21,7 @@ public partial class ReceiverGroupManagement : AdminCompontentBase
         {
             new() { Text = T($"{_prefix}{nameof(ReceiverGroupDto.DisplayName)}"), Value = nameof(ReceiverGroupDto.DisplayName), Sortable = false },
             new() { Text = T("Modifier"), Value = nameof(MessageTemplateDto.ModifierName), Sortable = false },
-            new() { Text = T($"{nameof(MessageRecordDto.ModificationTime)}"), Value = nameof(ReceiverGroupDto.ModificationTime), Sortable = false },
+            new() { Text = T("ModificationTime"), Value = nameof(ReceiverGroupDto.ModificationTime), Sortable = false },
             new() { Text = T("Action"), Value = "Action", Sortable = false },
         };
     }

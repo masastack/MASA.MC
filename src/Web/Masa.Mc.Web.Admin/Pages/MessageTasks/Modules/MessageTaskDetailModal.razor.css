@@ -2,14 +2,17 @@
     width: 100%;
     text-align: center;
 }
+
 .status-select ::deep input::-ms-input-placeholder {
     width: 100%;
     text-align: center;
 }
+
 .status-select ::deep input::-webkit-input-placeholder {
     width: 100%;
     text-align: center;
 }
+
 .status-select ::deep label {
     width: 100%;
     text-align: center;
@@ -22,14 +25,28 @@
 .task-detail-left {
     width: 428px;
 }
+
 .task-detail-right {
-    padding: 72px 114px;
+    padding: 48px 114px;
     width: calc(100% - 428px);
 }
 
 .task-history-box {
-    margin-left: -66px;
+    margin-left: -104px;
 }
-.task-history-box ::deep .m-timeline-item__dot {
-    box-shadow: none;
-}
+
+    .task-history-box ::deep .m-timeline-item__dot {
+        box-shadow: none;
+    }
+
+    .task-history-box ::deep .m-timeline-item__dot {
+        background: transparent !important;
+    }
+
+    .task-history-box ::deep .m-timeline-item__inner-dot {
+        background-color: transparent !important;
+    }
+
+    .task-history-box ::deep .m-icon {
+        background: #ffff !important;
+    }

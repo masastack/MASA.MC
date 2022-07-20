@@ -15,20 +15,11 @@ public partial class OrdinaryMessageEditModal : AdminCompontentBase
     private List<ChannelDto> _channelItems = new();
     private List<MessageTaskReceiverDto> _selectReceivers = new();
     private List<MessageTaskReceiverDto> _importReceivers = new();
-    private List<string> _tabs = new();
-    private string _tab = "";
     private bool _selectReceiverType;
 
     MessageTaskService MessageTaskService => McCaller.MessageTaskService;
     ChannelService ChannelService => McCaller.ChannelService;
     MessageInfoService MessageInfoService => McCaller.MessageInfoService;
-
-    protected override async Task OnInitializedAsync()
-    {
-        _tabs = new List<string> { T("DisplayName.MessageInfoContent"), T("DisplayName.MessageTaskReceiver"), T("DisplayName.MessageTaskSendingRule") };
-        _tab = _tabs[0];
-        await base.OnInitializedAsync();
-    }
 
     public async Task OpenModalAsync(MessageTaskDto model)
     {
@@ -139,7 +130,7 @@ public partial class OrdinaryMessageEditModal : AdminCompontentBase
         _selectReceiverType = true;
         if (receiverType == ReceiverTypes.Broadcast)
         {
-            _tab = _tabs[2];
+            _model.Step = 3;
         }
     }
 
@@ -147,7 +138,7 @@ public partial class OrdinaryMessageEditModal : AdminCompontentBase
     {
         if (_model.ChannelType != ChannelTypes.WebsiteMessage || !_selectReceiverType)
         {
-            _tab = _tabs[0];
+            _model.Step = 1;
         }
 
         if (_selectReceiverType)
@@ -158,23 +149,22 @@ public partial class OrdinaryMessageEditModal : AdminCompontentBase
 
     private void HandleSendingRuleBack()
     {
-        _tab = _tabs[1];
+        _model.Step = 2;
         if (_model.ReceiverType == ReceiverTypes.Broadcast)
         {
             _selectReceiverType = false;
         }
     }
 
-    private async Task HandleNextStep(int currentStep)
+    private async Task HandleNextStep()
     {
-        _model.Step = currentStep;
         SetReceivers();
         _model.IsDraft = false;
         if (!await _form.ValidateAsync())
         {
             return;
         }
-        _tab = _tabs[currentStep];
+        _model.Step++;
     }
 
     private void SetReceivers()

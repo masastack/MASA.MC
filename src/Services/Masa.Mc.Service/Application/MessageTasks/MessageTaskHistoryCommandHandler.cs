@@ -7,12 +7,15 @@ public class MessageTaskHistoryCommandHandler
 {
     private readonly IMessageTaskHistoryRepository _repository;
     private readonly ISchedulerClient _schedulerClient;
+    private readonly IUserContext _userContext;
 
     public MessageTaskHistoryCommandHandler(IMessageTaskHistoryRepository repository
-        , ISchedulerClient schedulerClient)
+        , ISchedulerClient schedulerClient
+        , IUserContext userContext)
     {
         _repository = repository;
         _schedulerClient = schedulerClient;
+        _userContext = userContext;
     }
 
     [EventHandler]
@@ -28,7 +31,8 @@ public class MessageTaskHistoryCommandHandler
 
         if (entity.SchedulerTaskId != default)
         {
-            await _schedulerClient.SchedulerTaskService.StopAsync(new BaseSchedulerTaskRequest { TaskId = entity.SchedulerTaskId });
+            var userId = _userContext.GetUserId<Guid>();
+            await _schedulerClient.SchedulerTaskService.StopAsync(new BaseSchedulerTaskRequest { TaskId = entity.SchedulerTaskId, OperatorId = userId });
         }
     }
 }

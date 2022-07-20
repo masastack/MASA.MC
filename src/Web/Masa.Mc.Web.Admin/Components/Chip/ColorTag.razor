@@ -1,4 +1,4 @@
-﻿<span class="@($"rounded-r-xl fill--text ml-n6 caption {Color}")" style="@($"padding: 2px 16px;height:{Height}px;")">@ChildContent</span>
+﻿<div class="@($"d-inline-flex rounded-r-xl fill--text ml-n6 caption text-truncate {Color} {Class}")" style="@($"padding: 2px 16px;height:{Height}px;max-width: 160px;")">@ChildContent</div>
 
 @code {
     [Parameter]
@@ -9,6 +9,9 @@
 
     [Parameter]
     public string Color { get; set; }
+
+    [Parameter]
+    public string Class { get; set; }
 
     protected override void OnParametersSet()
     {

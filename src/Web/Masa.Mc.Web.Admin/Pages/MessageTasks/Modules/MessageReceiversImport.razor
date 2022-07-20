@@ -3,7 +3,7 @@
 <div class="mt-9 rounded-xl d-flex flex-column align-center" style="height: 400px;border: 4px dashed #E2E7F4;">
     <MHover OpenDelay="200">
         <div @attributes="context.Attrs" class="@($"mt-8 {context.Class}")">
-            <MProgressCircular Value="_progress" Size="258" Width="18" Color="@(_importResult?.HasError==true?"error":"gradient")">
+            <MProgressCircular Value="_progress" Size="258" Width="18" Color="@(_importResult?.HasError==true?"warning-disabled":"gradient")">
                 <div class="upload-btn">
                     <MImage Width=80 Height=80 Class="d-flex justify-center align-center" ContentClass="text-center"
                             Src="@(_isUpload?(_importResult?.HasError==true?"_content/Masa.Mc.Web.Admin/img/upload/upload-error.png":"_content/Masa.Mc.Web.Admin/img/upload/upload-complete.png"):context.Hover?"_content/Masa.Mc.Web.Admin/img/upload/upload-active.png":"_content/Masa.Mc.Web.Admin/img/upload/upload.png")">
@@ -37,17 +37,19 @@
 
 @if (_importResult != null && _importResult.HasError)
 {
-    <MAlert Class="mt-9 body2" Dense
+    <MAlert Class="mt-9 body2  d-flex align-center" Dense
         Text
-        Type="AlertTypes.Error">
+        Icon="@("mdi-close")"
+        Type="AlertTypes.Error" Style="border: 1px solid #FF5252;height: 56px;">
         @T("Description.MessageReceiversImport.ErrorMsg")
     </MAlert>
 }
 @if (Value != null && Value.Any())
 {
-    <MAlert Class="mt-9 body2" Dense
+    <MAlert Class="mt-9 body2 d-flex align-center" Dense
         Text
-        Type="AlertTypes.Success">
+        Icon="@("mdi-check")"
+        Type="AlertTypes.Success" Style="height: 56px;">
         <div class="d-flex justify-space-between">
             <span>@(string.Format(T("Description.MessageReceiversImport.Tips"), Value.Count))</span>
             <span @onclick="()=>_importReceiversDetailModal.OpenModal()">@T("View")</span>

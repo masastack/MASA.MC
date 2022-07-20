@@ -882,5 +882,17 @@ tr:hover {
 }
 
 .page-content {
-    height: calc(100vh - 180px)
+    height: calc(100% - 24px)
+}
+
+.masa .warning-disabled--text {
+    color: #FBACA3 !important;
+}
+
+.m-alert__wrapper {
+    width: 100%;
+}
+
+.m-input--selection-controls__ripple:before {
+    opacity: 0;
 }

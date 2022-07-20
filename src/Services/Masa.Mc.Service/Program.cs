@@ -48,6 +48,7 @@ builder.Services.AddAuthentication(options =>
     options.Authority = builder.GetMasaConfiguration().ConfigurationApi.GetDefault().GetValue<string>("AppSettings:IdentityServerUrl");
     options.RequireHttpsMetadata = false;
     options.TokenValidationParameters.ValidateAudience = false;
+    options.TokenValidationParameters.ValidateIssuer = false;
     options.MapInboundClaims = false;
 });
 
@@ -68,6 +69,11 @@ builder.Services.AddTransient<Microsoft.AspNetCore.SignalR.IUserIdProvider, McUs
 builder.Services.AddSignalR();
 builder.Services.AddTransient<NotificationsHub>();
 TypeAdapterConfig.GlobalSettings.Scan(Assembly.GetExecutingAssembly(), Assembly.Load("Masa.Mc.Contracts.Admin"));
+
+
+builder.Services.AddHealthChecks()
+    .AddCheck("self", () => HealthCheckResult.Healthy("A healthy result."))
+    .AddDbContextCheck<McDbContext>();
 
 var app = builder.Services
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -98,12 +104,10 @@ var app = builder.Services
             }
         });
     })
-    .AddTransient(typeof(IMiddleware<>), typeof(LogMiddleware<>))
     .AddFluentValidation(options =>
     {
         options.RegisterValidatorsFromAssemblyContaining<Program>();
     })
-    .AddTransient(typeof(IMiddleware<>), typeof(ValidatorMiddleware<>))
     .AddDomainEventBus(dispatcherOptions =>
     {
         dispatcherOptions
@@ -111,7 +115,6 @@ var app = builder.Services
         .UseEventBus(eventBusBuilder =>
         {
             eventBusBuilder.UseMiddleware(typeof(ValidatorMiddleware<>));
-            eventBusBuilder.UseMiddleware(typeof(LogMiddleware<>));
         })
         .UseIsolationUoW<McDbContext>(
             isolationBuilder => isolationBuilder.UseMultiEnvironment("env_key"),
