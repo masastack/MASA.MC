@@ -1,6 +1,6 @@
 ﻿@inherits AdminCompontentBase
 
-<div class="mt-9 rounded-xl d-flex flex-column align-center" style="height: 400px;border: 4px dashed #E2E7F4;">
+<div class="mt-8 rounded-xl d-flex flex-column align-center" style="height: 380px;border: 4px dashed #E2E7F4;">
     <MHover OpenDelay="200">
         <div @attributes="context.Attrs" class="@($"mt-8 {context.Class}")">
             <MProgressCircular Value="_progress" Size="258" Width="18" Color="@(_importResult?.HasError==true?"warning-disabled":"gradient")">
