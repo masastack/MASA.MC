@@ -38,7 +38,7 @@ public partial class TemplateMessageInfo : AdminCompontentBase
         {
             startstr = "${";
             endstr = "}";
-            MessageTemplate.Content = $"【{MessageTemplate.Sign}】{MessageTemplate.Content}";
+            MessageTemplate.Content = $"【{MessageTask.Sign}】{MessageTemplate.Content}";
         }
         MessageTemplate.Title = await RenderAsync(MessageTemplate.Title, Variables, startstr, endstr);
         MessageTemplate.Content = await RenderAsync(MessageTemplate.Content, Variables, startstr, endstr);

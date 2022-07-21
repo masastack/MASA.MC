@@ -45,9 +45,9 @@ public class ChannelCommandHandler
         var entity = await _repository.FindAsync(x => x.Id == createCommand.ChannelId);
         if (entity == null)
             throw new UserFriendlyException("channel not found");
-        if (await _messageTaskRepository.FindAsync(x => x.ChannelId == createCommand.ChannelId, false) != null)
+        if (await _messageTaskRepository.FindAsync(x => x.ChannelId == createCommand.ChannelId && (x.Status == MessageTaskStatuses.WaitSend || x.Status == MessageTaskStatuses.Sending), false) != null)
         {
-            throw new UserFriendlyException("There are channels in use and cannot be deleted");
+            throw new UserFriendlyException("If there is a message task to be sent / being sent, it cannot be deleted");
         }
         await _domainService.DeleteAsync(entity);
     }

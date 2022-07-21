@@ -161,7 +161,7 @@ public class ResolveMessageTaskEventHandler
         var request = new AddSchedulerJobRequest
         {
             ProjectIdentity = MasaStackConsts.MC_SYSTEM_ID,
-            Name = nameof(MessageTaskExecuteJob),
+            Name = eto.MessageTask.DisplayName,
             JobType = JobTypes.JobApp,
             CronExpression = cronExpression,
             OperatorId = userId,

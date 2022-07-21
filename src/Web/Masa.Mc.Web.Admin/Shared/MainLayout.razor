@@ -21,8 +21,9 @@
         return Task.CompletedTask;
     }
 
-    private void SignOut()
+    private bool SignOut()
     {
         Navigation.NavigateTo("/Logout",true);
+        return true;
     }
 }
