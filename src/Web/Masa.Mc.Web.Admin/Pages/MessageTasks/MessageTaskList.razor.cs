@@ -5,6 +5,9 @@ namespace Masa.Mc.Web.Admin.Pages.MessageTasks;
 
 public partial class MessageTaskList : AdminCompontentBase
 {
+    [Parameter]
+    public EventCallback OnNavigateToSend { get; set; }
+
     private TemplateMessageEditModal _templateEditModal = default!;
     private OrdinaryMessageEditModal _ordinaryEditModal = default!;
     private MessageTaskDetailModal _detailModal = default!;
@@ -84,9 +87,13 @@ public partial class MessageTaskList : AdminCompontentBase
         }
     }
 
-    private void NavigateToSend()
+    private async Task NavigateToSend()
     {
-        NavigationManager.NavigateTo("/messageTasks/sendMessage");
+        if (OnNavigateToSend.HasDelegate)
+        {
+            await OnNavigateToSend.InvokeAsync();
+        }
+        //NavigationManager.NavigateTo("/messageTasks/sendMessage");
     }
 
     private async Task HandleDelAsync(Guid _entityId)

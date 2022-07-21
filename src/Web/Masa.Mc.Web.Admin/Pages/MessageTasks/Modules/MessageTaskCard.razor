@@ -5,7 +5,7 @@
             <MListItemTitle Class="overflow-visible">
                 @if (MessageTask.Channel != null)
                 {
-                    <ColorTag Color="@(MessageTask.IsEnabled?MessageTask.Channel?.Color:"regular3")" Height=24>@MessageTask.Channel?.DisplayName</ColorTag>
+                    <ColorTag Color="@(MessageTask.IsEnabled?MessageTask.Channel?.Color:"regular3")">@MessageTask.Channel?.DisplayName</ColorTag>
                 }
             </MListItemTitle>
             <MListItemIcon Class="mr-n2">

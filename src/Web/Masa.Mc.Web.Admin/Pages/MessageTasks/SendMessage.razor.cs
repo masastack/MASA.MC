@@ -5,11 +5,18 @@ namespace Masa.Mc.Web.Admin.Pages.MessageTasks;
 
 public partial class SendMessage : AdminCompontentBase
 {
+    [Parameter]
+    public EventCallback OnNavigateToList { get; set; }
+
     private OrdinaryMessageCreateModal _ordinaryCreateModal = default!;
     private TemplateMessageCreateModal _templateCreateModal = default!;
 
-    private void NavigateToList()
+    private async Task NavigateToList()
     {
-        NavigationManager.NavigateTo("/messageTasks/list");
+        if (OnNavigateToList.HasDelegate)
+        {
+            await OnNavigateToList.InvokeAsync();
+        }
+        //NavigationManager.NavigateTo("/messageTasks/list");
     }
 }

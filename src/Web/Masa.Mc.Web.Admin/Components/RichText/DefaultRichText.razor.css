@@ -1,0 +1,15 @@
+﻿.content {
+    position: relative;
+    color: #333;
+    font-size: 15px;
+    line-height: 30px;
+    width:100%;
+}
+
+    .content ::deep p {
+        margin: 10px 0;
+    }
+
+    .content ::deep img {
+        max-width: 100%;
+    }

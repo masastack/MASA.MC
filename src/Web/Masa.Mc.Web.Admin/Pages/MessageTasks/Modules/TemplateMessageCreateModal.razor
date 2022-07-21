@@ -1,6 +1,6 @@
 ﻿@inherits AdminCompontentBase
 <div @ref="Ref">
-    <McModal Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.SendTemplateMessage")" Height="800">
+    <McModal Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.SendTemplateMessage")" Height="870">
         <ChildContent>
             <MForm Model="_model" EnableValidation @ref="_form" Class="full-height mt-n2">
                 <MStepper Value="_model.Step" Elevation=0 Class="d-flex flex-column full-height">
@@ -77,7 +77,7 @@
                                 }
                                 <MRow Class="mt-6">
                                     <MCol>
-                                        <RichText Value="@_messageInfo.Content"></RichText>
+                                        <DefaultRichText Value="@_messageInfo.Content" Label="@T("DisplayName.MessageTemplateContent")"></DefaultRichText>
                                     </MCol>
                                 </MRow>
                                 if (_messageInfo.Channel != null && _messageInfo.Channel.Type == ChannelTypes.WebsiteMessage && _messageInfo.IsJump)

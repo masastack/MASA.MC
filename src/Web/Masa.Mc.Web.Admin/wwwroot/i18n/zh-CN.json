@@ -100,7 +100,7 @@
   "EmailChannelOptions.UserName": "邮箱账号",
   "EmailChannelOptions.Password": "密码",
   "EmailChannelOptions.Smtp": "SMTP服务器",
-  "EmailChannelOptions.Ssl": "Ssl",
+  "EmailChannelOptions.Ssl": "SSL",
   "EmailChannelOptions.Port": "端口",
   "WebsiteMessageChannelOptions.Environment": "环境",
   "SmsChannelOptions.AccessKeyId": "AccessKeyId",
@@ -115,7 +115,7 @@
   "ChannelEditMessage": "编辑渠道数据成功.",
   "ChannelDeleteMessage": "删除渠道数据成功.",
   "Permission.MessageTemplateManagement": "消息模板",
-  "Permission.CreateMessageTemplate": "添加消息模板",
+  "Permission.CreateMessageTemplate": "新增消息模板",
   "Permission.EditMessageTemplate": "编辑消息模板",
   "DisplayName.MessageTemplate": "消息模板",
   "DisplayName.MessageTemplateId": "模板ID",
@@ -128,7 +128,7 @@
   "DisplayName.MessageTemplateSign": "签名",
   "DisplayName.MessageTemplateModificationTime": "修改时间",
   "DisplayName.MessageTemplateStatus": "模板状态",
-  "DisplayName.MessageTemplateAuditStatus": "审核状态",
+  "DisplayName.MessageTemplateAuditStatus": "服务商审核状态",
   "DisplayName.MessageTemplateTemplateId": "模板ID",
   "DisplayName.MessageTemplateIsJump": "是否跳转",
   "DisplayName.MessageTemplateJumpUrl": "跳转地址",
@@ -297,5 +297,6 @@
   "DisplayName.SendingRule.SendingCount": "每次发送条数",
   "DisplayName.SendingRule.SendingCount.Tips": "0为不限制",
   "DisplayName.MessageTaskDetail.ReceiverType": "类型",
-  "TemplateTemplate": "模板"
+  "TemplateTemplate": "模板",
+  "ChannelOptions.Tips": "请仔细核对填写数据，填写错误会导致消息发送失败"
 }

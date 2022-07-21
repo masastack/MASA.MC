@@ -3,7 +3,8 @@
     <MRow Class="mt-6">
         <MCol>
             <DefaultTextField @bind-Value="_model.UserName"
-                              Label="@T("EmailChannelOptions.UserName")">
+                              Label="@T("EmailChannelOptions.UserName")"
+                              Hint="@T("ChannelOptions.Tips")">
             </DefaultTextField>
         </MCol>
         <MCol>
@@ -15,7 +16,8 @@
     <MRow Class="mt-6">
         <MCol>
             <DefaultTextField @bind-Value="_model.Smtp"
-                              Label="@T("EmailChannelOptions.Smtp")">
+                              Label="@T("EmailChannelOptions.Smtp")"
+                              Hint="@T("ChannelOptions.Tips")">
             </DefaultTextField>
         </MCol>
         <MCol>

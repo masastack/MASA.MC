@@ -68,15 +68,47 @@
             </MToolbar>
         </TopContent>
         <ItemColContent>
-            @if (context.Header.Value == "actions")
+            @switch (context.Header.Value)
             {
-                <MIcon Small
-                   Class="mr-2"
-                   OnClick="()=>EditItem(context.Item)">mdi-pencil</MIcon>
-            }
-            else
-            {
-                @context.Value
+                case (nameof(MessageTemplateItemDto.Code)):
+                    if (Value.IndexOf(context.Item)==_editedIndex)
+                    {
+                        <MTextField @bind-Value="_editedItem.Code" Dense Outlined HideDetails="@("auto")"></MTextField>
+                    }
+                    else
+                    {
+                        @context.Value
+                    }
+                    break;
+                case (nameof(MessageTemplateItemDto.DisplayText)):
+                    if (Value.IndexOf(context.Item)==_editedIndex)
+                    {
+                        <MTextField @bind-Value="_editedItem.DisplayText" Dense Outlined HideDetails="@("auto")"></MTextField>
+                    }
+                    else
+                    {
+                        @context.Value
+                    }
+                    break;
+                case "actions":
+                    if (Value.IndexOf(context.Item)==_editedIndex)
+                    {
+                        <MIcon Small Color="warning"
+                            OnClick="CloseDelete">mdi-close</MIcon>
+                        <MIcon Small Color="green"
+                            Class="ml-6"
+                            OnClick="SaveAsync">mdi-check</MIcon>
+                    }
+                    else
+                    {
+                        <MIcon Small
+                            Class="mr-2"
+                            OnClick="()=>EditItem(context.Item)">mdi-pencil</MIcon>
+                    }
+                    break;
+                default:
+                    @context.Value
+                    break;
             }
         </ItemColContent>
     </MDataTable>

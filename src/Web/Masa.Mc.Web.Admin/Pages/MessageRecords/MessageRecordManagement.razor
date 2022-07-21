@@ -72,7 +72,7 @@
                     @switch (context.Header.Value)
                     {
                         case ("Receiver"):
-                            <MListItem Class="px-0">
+                            <MListItem Class="px-0 text-truncate">
                                 <MListItemAvatar Class="mr-3">
                                     @if (string.IsNullOrEmpty(context.Item.ExtraProperties.GetProperty<string>("Avatar")))
                                     {
@@ -94,25 +94,34 @@
                             </MListItem>
                             break;
                         case (nameof(MessageTaskReceiverDto.Email)):
-                            <span class="body regular--text">@(context.Item.ExtraProperties.GetProperty<string>(nameof(MessageTaskReceiverDto.Email)))</span>
+                            <div class="body regular--text text-truncate" style="max-width:157px">@(context.Item.ExtraProperties.GetProperty<string>(nameof(MessageTaskReceiverDto.Email)))</div>
                             break;
                         case ("ChannelDisplayName"):
-                            <span class="body regular--text">@context.Item.Channel?.DisplayName</span>
+                            <div class="body regular--text text-truncate" style="max-width:80px">@context.Item.Channel?.DisplayName</div>
+                            break;
+                        case (nameof(MessageRecordDto.DisplayName)):
+                            <div class="body regular--text text-truncate" style="max-width:120px">@context.Item.DisplayName</div>
+                            break;
+                        case (nameof(MessageRecordDto.MessageTaskHistoryNo)):
+                            <div class="body regular--text text-truncate" style="max-width:180px">@context.Item.MessageTaskHistoryNo</div>
                             break;
                         case (nameof(MessageRecordDto.ExpectSendTime)):
-                            <DateTimeListItem Value="@context.Item.ExpectSendTime?.ToLocalTime()"></DateTimeListItem>
+                            <DateTimeListItem Class="text-truncate" Value="@context.Item.ExpectSendTime?.ToLocalTime()"></DateTimeListItem>
                             break;
                         case (nameof(MessageRecordDto.SendTime)):
-                            <DateTimeListItem Value="@context.Item.SendTime?.ToLocalTime()"></DateTimeListItem>
+                            <DateTimeListItem Class="text-truncate" Value="@context.Item.SendTime?.ToLocalTime()"></DateTimeListItem>
                             break;
                         case nameof(MessageRecordDto.Success):
-                            <MessageRecordStatusTag Value="@context.Item.Success" />
+                            <MessageRecordStatusTag Class="text-truncate" Value="@context.Item.Success" />
                             break;
                         case "Action":
                             <MIcon Small Color="emphasis2" OnClick="async()=>await _detailModal.OpenModalAsync(context.Item)">mdi-eye</MIcon>
                             break;
+                        case (nameof(MessageRecordDto.FailureReason)):
+                            <div class="body regular--text text-truncate" style="max-width:57px">@(context.Item.FailureReason)</div>
+                            break;
                         default:
-                            <span class="body regular--text">@context.Value</span>
+                            <div class="body regular--text text-truncate">@context.Value</div>
                             break;
                     }
                 </ItemColContent>
