@@ -173,24 +173,26 @@
 .ml300 {
     margin-left: 300px;
 }
+
 .commodity:hover {
     height: calc(100% + 10px);
 }
-.commodity:hover .content {
-    transition-property: margin-top;
-    transition-duration: 0.5s;
-    box-shadow: 0px 18px 40px rgba(112, 144, 176, 0.12) !important;
-    margin-top: -4px;
-}
+
+    .commodity:hover .content {
+        transition-property: margin-top;
+        transition-duration: 0.5s;
+        box-shadow: 0px 18px 40px rgba(112, 144, 176, 0.12) !important;
+        margin-top: -4px;
+    }
 
 .order:hover {
     background-color: #6946FF !important;
 }
 
-.order:hover .white-order {
-    color: #FFFFFF !important;
-    caret-color: #FFFFFF !important;
-}
+    .order:hover .white-order {
+        color: #FFFFFF !important;
+        caret-color: #FFFFFF !important;
+    }
 
 .favorite:hover {
     background: #F6F8FD !important;
@@ -218,7 +220,7 @@
 }
 
 .m-text-field.m-input--dense:not(.m-text-field--outlined) .m-text-field__prefix, .m-text-field.m-input--dense:not(.m-text-field--outlined) .m-text-field__suffix, .m-text-field.m-input--dense:not(.m-text-field--outlined) input {
-   padding-top:0;
+    padding-top: 0;
 }
 
 .max-height {
@@ -458,7 +460,7 @@ input::-webkit-input-placeholder {
 }
 
 .user .m-data-table-header__icon {
-    margin-top:1px;
+    margin-top: 1px;
 }
 
 .neutral-lighten-icon .m-icon {
@@ -522,7 +524,7 @@ tr:hover {
 }
 
 .pagetabs .m-item-group.m-slide-group.m-tabs-bar {
-    margin-top:4px;
+    margin-top: 4px;
 }
 
 .m-page-tabs .m-page_tab {
@@ -541,7 +543,7 @@ tr:hover {
 
 .m-page_tab .m-icon {
     color: #A3AED0 !important;
-    font-size:16px !important;
+    font-size: 16px !important;
 }
 
 .m-page_tab_active {
@@ -553,12 +555,12 @@ tr:hover {
     line-height: 16px;
     letter-spacing: 0.1px;
     /* text/1-1强调 */
-    color: #1B2559 !important;                                                                                                                                                               
-}
-
-.m-page_tab_active > .m-icon {
     color: #1B2559 !important;
 }
+
+    .m-page_tab_active > .m-icon {
+        color: #1B2559 !important;
+    }
 
 .m-page-tabs > .m-tabs-bar {
     border-bottom-left-radius: 20px !important;
@@ -800,6 +802,7 @@ tr:hover {
     color: #FF5252 !important;
     caret-color: #FF5252 !important;
 }
+
 .btn-form {
     width: 140px !important;
     height: 56px !important;
@@ -926,4 +929,8 @@ tr:hover {
     font-size: 10px;
     line-height: 15px;
     color: #A3AED0;
+}
+
+.m-stepper__wrapper {
+    overflow: visible;
 }
