@@ -40,11 +40,17 @@ public class MessageTemplateDomainService : DomainService
         return await _repository.RemoveAsync(template);
     }
 
-    public void ParseTemplateItem(MessageTemplate messageTemplate, string startstr = "{{", string endstr = "}}")
+    public async void ParseTemplateItem(MessageTemplate messageTemplate, string startstr = "{{", string endstr = "}}")
     {
+        if (!string.IsNullOrEmpty(messageTemplate.TemplateId))
+        {
+            return;
+        }
+
         var titleParam = UtilHelper.MidStrEx(messageTemplate.Title, startstr, endstr);
         var contentParam = UtilHelper.MidStrEx(messageTemplate.Content, startstr, endstr);
         var paramList = titleParam.Union(contentParam).ToList();
+        messageTemplate.Items.Clear();
         foreach (var item in paramList)
         {
             messageTemplate.AddOrUpdateItem(item, string.Empty, string.Empty, string.Empty);
