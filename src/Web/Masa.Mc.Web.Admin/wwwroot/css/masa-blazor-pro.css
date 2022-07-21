@@ -934,3 +934,11 @@ tr:hover {
 .m-stepper__wrapper {
     overflow: visible;
 }
+
+.m-dialog {
+    border-radius: 20px !important;
+}
+
+    .m-dialog .m-sheet.m-card {
+        border-radius: 20px !important;
+    }
