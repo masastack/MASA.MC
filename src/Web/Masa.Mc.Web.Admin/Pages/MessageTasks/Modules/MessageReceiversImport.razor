@@ -1,6 +1,7 @@
 ﻿@inherits AdminCompontentBase
-
-<div class="mt-8 rounded-xl d-flex flex-column align-center" style="height: 380px;border: 4px dashed #E2E7F4;">
+<AutoHeight Overflow>
+    <AutoHeightContent>
+<div class="mt-8 rounded-xl d-flex flex-column align-center" style="border: 4px dashed #E2E7F4;">
     <MHover OpenDelay="200">
         <div @attributes="context.Attrs" class="@($"mt-8 {context.Class}")">
             <MProgressCircular Value="_progress" Size="258" Width="18" Color="@(_importResult?.HasError==true?"warning-disabled":"gradient")">
@@ -56,6 +57,8 @@
         </div>
     </MAlert>
 }
+</AutoHeightContent>
+</AutoHeight>
 <ImportReceiversDetailModal @ref="_importReceiversDetailModal" Value="Value" ChannelType="ChannelType" />
 
 
