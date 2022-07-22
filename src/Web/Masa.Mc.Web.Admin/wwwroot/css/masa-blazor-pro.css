@@ -3,18 +3,21 @@
 }
 
 /*scrollbar*/
+::-webkit-scrollbar-track {
+    border-radius: 15px;
+    margin: 5px 0;
+}
+
 ::-webkit-scrollbar {
-    width: 8px;
+    width: 5px;
+    height: 5px;
+    margin: 5px 0;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #A3AED0;
-    border-radius: 4px;
-}
-
-::-webkit-scrollbar-track {
-    background: #F0F3FA;
-    border-radius: 6px;
+    margin: 5px 0;
+    border-radius: 15px;
+    background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0.44, rgb(170 168 168)), color-stop(0.72, rgb(170 168 168)), color-stop(0.86, rgb(170 168 168)));
 }
 
 .border-b-solid {
@@ -55,7 +58,7 @@
 
 .m-card {
     box-shadow: 0px 0px 0px 0px rgb(0 0 0 / 20%), 0px 0px 0px 0px rgb(0 0 0 / 14%), 0px 0px 0px 0px rgb(0 0 0 / 12%) !important;
-    border-radius: 20px !important;
+    border-radius: 20px;
 }
 
     .m-card.line {
@@ -65,12 +68,6 @@
 .m-card__text {
     padding: 16px 24px;
     height: 100%;
-}
-
-.m-input fieldset {
-    border-radius: 10px !important;
-    border: 1px solid #E9EDF7 !important;
-    box-sizing: border-box !important;
 }
 
 .m-input .m-input__icon .mdi-menu-down {
@@ -143,13 +140,6 @@
 
 .m-btn--is-elevated {
     box-shadow: none !important;
-}
-
-.m-menu__content {
-    border: 0.5px solid #E9EDF7;
-    box-sizing: border-box;
-    border-radius: 10px !important;
-    box-shadow: 0 18px 40px 0 rgb(112 144 176 / 12%) !important;
 }
 
 .hide-shadow {
@@ -328,7 +318,7 @@
     pointer-events: none;
 }
 
-.font-14-medium .m-label {
+.btn .m-label {
     color: #323D6F;
     font-family: Roboto;
     font-style: normal;
@@ -509,10 +499,6 @@ input::-webkit-input-placeholder {
     color: #7681AB;
 }
 
-tr:hover {
-    background-color: #F6F8FD !important;
-}
-
 .invoice-list-avatar {
     width: 32px;
     height: 32px;
@@ -587,6 +573,7 @@ tr:hover {
 .m-dialog--drawer .m-card {
     border-radius: 0;
 }
+
 
 /*mc*/
 .rounded-2 {
