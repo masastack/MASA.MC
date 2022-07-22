@@ -942,3 +942,14 @@ tr:hover {
     .m-dialog .m-sheet.m-card {
         border-radius: 20px !important;
     }
+
+.vertical-divider {
+    width: 0px;
+    height: 8px;
+    border: 1px solid #E2E7F4;
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+    margin-left: 8px;
+    margin-right: 8px;
+}
