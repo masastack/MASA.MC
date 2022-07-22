@@ -3,12 +3,12 @@
     {
         @if (Value == item)
         {
-            <div class="@($"pa-5 rounded-circle d-inline-block {item}")" style="margin-right:10px"></div>
+            <div class="@($"rounded-circle d-inline-block {item}")" style="@($"margin-right:10px;width:{Size}px;height:{Size}px;")"></div>
         }
         else
         {
-            <div class="@($"pa-1 rounded-circle d-inline-block {item}")" style="margin-right:10px" @onclick="()=>OnClickHandler(item)">
-                <div class="pa-4 rounded-circle white"></div>
+            <div class="@($"rounded-circle d-inline-block {item}")" style="@($"margin-right:10px;padding: 2px;width:{Size}px;height:{Size}px;")" @onclick="()=>OnClickHandler(item)">
+                <div class="full-width full-height rounded-circle white"></div>
             </div>
         }
     }
@@ -21,6 +21,9 @@
 
     [Parameter]
     public string Value { get; set; } = string.Empty;
+
+    [Parameter]
+    public int Size { get; set; } = 20;
 
     [Parameter]
     public EventCallback<string> ValueChanged { get; set; }
