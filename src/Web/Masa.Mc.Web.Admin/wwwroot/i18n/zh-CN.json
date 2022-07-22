@@ -102,6 +102,7 @@
   "EmailChannelOptions.Smtp": "SMTP服务器",
   "EmailChannelOptions.Ssl": "SSL",
   "EmailChannelOptions.Port": "端口",
+  "EmailChannelOptions.FromNickName": "发件人昵称",
   "WebsiteMessageChannelOptions.Environment": "环境",
   "SmsChannelOptions.AccessKeyId": "AccessKeyId",
   "SmsChannelOptions.AccessKeySecret": "AccessKeySecret",
