@@ -1,0 +1,33 @@
+﻿<div>
+    @foreach (var item in Colors)
+    {
+        @if (Value == item)
+        {
+            <div class="@($"pa-5 rounded-circle d-inline-block {item}")" style="margin-right:10px"></div>
+        }
+        else
+        {
+            <div class="@($"pa-1 rounded-circle d-inline-block {item}")" style="margin-right:10px" @onclick="()=>OnClickHandler(item)">
+                <div class="pa-4 rounded-circle white"></div>
+            </div>
+        }
+    }
+</div>
+
+@code {
+    [EditorRequired]
+    [Parameter]
+    public List<string> Colors { get; set; } = new();
+
+    [Parameter]
+    public string Value { get; set; } = string.Empty;
+
+    [Parameter]
+    public EventCallback<string> ValueChanged { get; set; }
+
+    private async Task OnClickHandler(string color)
+    {
+        Value = color;
+        await ValueChanged.InvokeAsync(color);
+    }
+}
