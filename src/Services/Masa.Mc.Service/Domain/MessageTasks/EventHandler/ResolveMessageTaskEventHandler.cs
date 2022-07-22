@@ -131,6 +131,12 @@ public class ResolveMessageTaskEventHandler
                 sendingCount = totalCount;
             }
             var historyNum = (long)Math.Ceiling((double)totalCount / sendingCount);
+
+            if (eto.MessageTask.ReceiverType == ReceiverTypes.Broadcast)
+            {
+                historyNum = 1;
+            }
+            
             var cronExpression = new CronExpression(eto.MessageTask.SendRules.CronExpression);
             for (int i = 0; i < historyNum; i++)
             {
@@ -161,7 +167,7 @@ public class ResolveMessageTaskEventHandler
         var request = new AddSchedulerJobRequest
         {
             ProjectIdentity = MasaStackConsts.MC_SYSTEM_ID,
-            Name = nameof(MessageTaskExecuteJob),
+            Name = eto.MessageTask.DisplayName,
             JobType = JobTypes.JobApp,
             CronExpression = cronExpression,
             OperatorId = userId,

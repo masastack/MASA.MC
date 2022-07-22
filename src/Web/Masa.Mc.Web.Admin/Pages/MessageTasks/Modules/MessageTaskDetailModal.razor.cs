@@ -81,7 +81,8 @@ public partial class MessageTaskDetailModal : AdminCompontentBase
 
     private void ResetForm()
     {
-
+        _info = new();
+        _historyInfo = new();
     }
 
     private async Task HandleVisibleChanged(bool val)

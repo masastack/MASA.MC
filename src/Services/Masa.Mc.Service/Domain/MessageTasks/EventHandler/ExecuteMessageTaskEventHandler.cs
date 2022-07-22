@@ -38,7 +38,7 @@ public class ExecuteMessageTaskEventHandler
             if (messageTask == null) return;
 
             Guid userId = Guid.Empty;
-            await _schedulerClient.SchedulerJobService.RemoveAsync(new BaseSchedulerJobRequest { JobId = messageTask.SchedulerJobId, OperatorId = userId });
+            await _schedulerClient.SchedulerJobService.DisableAsync(new BaseSchedulerJobRequest { JobId = messageTask.SchedulerJobId, OperatorId = userId });
             return;
         }
         history.SetTaskId(eto.TaskId);

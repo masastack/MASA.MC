@@ -1,6 +1,6 @@
 ﻿@inherits AdminCompontentBase
 <div @ref="Ref">
-    <McModal Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.EditTemplateMessage")" Height="870">
+    <McModal Value="@_visible" ValueChanged="HandleVisibleChanged" Class="full-height" Title="@T("Permission.EditTemplateMessage")">
         <ChildContent>
             <MForm Model="_model" EnableValidation @ref="_form" Class="full-height mt-n2">
                 <MStepper Value="_model.Step" Elevation=0 Class="d-flex flex-column full-height">

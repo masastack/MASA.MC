@@ -101,7 +101,7 @@ public partial class SmsTemplateCreateModal : AdminCompontentBase
         string startstr = "\\${";
         string endstr = "}";
         var paramList = UtilHelper.MidStrEx(content, startstr, endstr);
-        return paramList.Select(x => new MessageTemplateItemDto { Code = x, MappingCode = x }).ToList();
+        return paramList.Distinct().Select(x => new MessageTemplateItemDto { Code = x, MappingCode = x }).ToList();
     }
 
     private async Task SyncAsync()
