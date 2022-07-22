@@ -3,21 +3,18 @@
 }
 
 /*scrollbar*/
-::-webkit-scrollbar-track {
-    border-radius: 15px;
-    margin: 5px 0;
-}
-
 ::-webkit-scrollbar {
-    width: 5px;
-    height: 5px;
-    margin: 5px 0;
+    width: 8px;
 }
 
 ::-webkit-scrollbar-thumb {
-    margin: 5px 0;
-    border-radius: 15px;
-    background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0.44, rgb(170 168 168)), color-stop(0.72, rgb(170 168 168)), color-stop(0.86, rgb(170 168 168)));
+    background: #A3AED0;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-track {
+    background: #F0F3FA;
+    border-radius: 6px;
 }
 
 .border-b-solid {
