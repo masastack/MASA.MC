@@ -10,3 +10,7 @@
     .item dd {
         width: 62px;
     }
+
+.template-content {
+    width: calc(100% - 24px);
+}
