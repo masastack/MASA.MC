@@ -1,6 +1,6 @@
 ﻿@inherits AdminCompontentBase
 <div @ref="Ref">
-    <McModal Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.CreateChannel")" Width="770" Height="792">
+    <McModal Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.CreateChannel")" ContentStyle="height: 597px;">
         <ChildContent>
             <MForm Model="_model" @ref="_form" EnableValidation Context="form" Class="full-height">
                 <MStepper Value="_step" Class="full-height overflow-visible" Style="box-shadow:none">

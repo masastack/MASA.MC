@@ -28,7 +28,7 @@
                     </MButton>
                 </MCardTitle>
 
-                <MCardText @ref="_cardTextRef" Class="pa-0 overflow-y-auto pr-4 pt-3 mt-6">
+                <MCardText @ref="_cardTextRef" Class="pa-0 overflow-y-auto pr-4 pt-3 mt-6" Style="@ContentStyle">
                     @ChildContent
                 </MCardText>
 
@@ -58,6 +58,9 @@
 
     [Parameter]
     public StringNumber Height { get; set; }
+
+    [Parameter]
+    public string? ContentStyle { get; set; }
 
     [Parameter]
     public EventCallback<ModalActionEventArgs> OnCancel { get; set; }
