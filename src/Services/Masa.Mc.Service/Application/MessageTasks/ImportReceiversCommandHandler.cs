@@ -100,7 +100,8 @@ public class ImportReceiversCommandHandler
                 receiver.Email = obj?.GetOrDefault(GetImporterHeaderDisplayName(typeof(EmailReceiverImportDto), nameof(EmailReceiverImportDto.Email)))?.ToString() ?? string.Empty;
                 break;
             case ChannelTypes.WebsiteMessage:
-                receiver.Account = obj?.GetOrDefault(GetImporterHeaderDisplayName(typeof(WebsiteMessageReceiverImportDto), nameof(WebsiteMessageReceiverImportDto.Account)))?.ToString() ?? string.Empty;
+                var subjectId = obj?.GetOrDefault(GetImporterHeaderDisplayName(typeof(WebsiteMessageReceiverImportDto), nameof(WebsiteMessageReceiverImportDto.UserId)));
+                receiver.SubjectId = subjectId == null ? default : Guid.Parse(subjectId.ToString());
                 break;
             default:
                 throw new UserFriendlyException("Unknown channel type");
@@ -119,7 +120,6 @@ public class ImportReceiversCommandHandler
                 ValidateEmailImportDtos();
                 break;
             case ChannelTypes.WebsiteMessage:
-                ValidateWebsiteMessageImportDtos();
                 break;
             default:
                 break;
@@ -145,17 +145,6 @@ public class ImportReceiversCommandHandler
         if (_importDtos.Any(x => string.IsNullOrEmpty(x.Email)))
         {
             _importResult.Exception = new Exception("Email cannot be empty");
-            _importDtos = new();
-        }
-    }
-
-    private void ValidateWebsiteMessageImportDtos()
-    {
-        _importDtos = _importDtos.GroupBy(x => x.Account).Select(x => x.First()).ToList();
-
-        if (_importDtos.Any(x => string.IsNullOrEmpty(x.Account)))
-        {
-            _importResult.Exception = new Exception("Account cannot be empty");
             _importDtos = new();
         }
     }

@@ -53,6 +53,7 @@
   "PhoneNumber": "手机号码",
   "IdCard": "身份证号",
   "Account": "账号",
+  "UserId": "用户Id",
   "Password": "密码",
   "CompanyName": "公司名称",
   "Address": "地区",

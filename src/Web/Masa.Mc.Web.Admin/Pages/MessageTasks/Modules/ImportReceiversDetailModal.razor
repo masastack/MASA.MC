@@ -8,7 +8,7 @@
                         @if (ChannelType == ChannelTypes.WebsiteMessage)
                         {
                             <th class="text-left body2 regular3--text">
-                                @T("Account")
+                                @T("UserId")
                             </th>
                         }
                         @if (ChannelType == ChannelTypes.Sms)
@@ -40,7 +40,7 @@
                         <tr class="body2 regular--text">
                             @if (ChannelType == ChannelTypes.WebsiteMessage)
                             {
-                                <td class="body2 regular--text border-bottom-none">@item.Account</td>
+                                <td class="body2 regular--text border-bottom-none">@item.SubjectId</td>
                             }
                             @if (ChannelType == ChannelTypes.Sms)
                             {
