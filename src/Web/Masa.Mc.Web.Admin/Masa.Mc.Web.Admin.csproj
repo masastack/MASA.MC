@@ -21,9 +21,9 @@
     <PackageReference Include="Humanizer" Version="2.14.1" />
     <PackageReference Include="Mapster" Version="7.3.0" />
     <PackageReference Include="Masa.Blazor" Version="0.5.0-rc.6" />
-    <PackageReference Include="Masa.Contrib.Identity.IdentityModel" Version="0.5.0-rc.2" />
-    <PackageReference Include="Masa.Contrib.SearchEngine.AutoComplete.ElasticSearch" Version="0.5.0-rc.2" />
-    <PackageReference Include="Masa.Stack.Components" Version="0.0.60" />
+    <PackageReference Include="Masa.Contrib.Identity.IdentityModel" Version="0.5.0-rc.3" />
+    <PackageReference Include="Masa.Contrib.SearchEngine.AutoComplete.ElasticSearch" Version="0.5.0-rc.3" />
+    <PackageReference Include="Masa.Stack.Components" Version="0.0.65" />
     <PackageReference Include="Masa.Utils.Data.Elasticsearch" Version="0.5.0-rc.1" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="7.0.0-preview.4.22251.1" />
