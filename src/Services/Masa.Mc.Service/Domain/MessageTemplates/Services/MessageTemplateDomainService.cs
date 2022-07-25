@@ -19,14 +19,14 @@ public class MessageTemplateDomainService : DomainService
     public virtual async Task CreateAsync(MessageTemplate messageTemplate)
     {
         await ValidateTemplateAsync(messageTemplate.TemplateId);
-        if (!messageTemplate.Items.Any()) ParseTemplateItem(messageTemplate);
+        ParseTemplateItem(messageTemplate);
         await _repository.AddAsync(messageTemplate);
     }
 
     public virtual async Task UpdateAsync(MessageTemplate messageTemplate)
     {
         await ValidateTemplateAsync(messageTemplate.TemplateId, messageTemplate.Id);
-        if (!messageTemplate.Items.Any()) ParseTemplateItem(messageTemplate);
+        ParseTemplateItem(messageTemplate);
         await _repository.UpdateAsync(messageTemplate);
     }
 
@@ -40,11 +40,17 @@ public class MessageTemplateDomainService : DomainService
         return await _repository.RemoveAsync(template);
     }
 
-    public void ParseTemplateItem(MessageTemplate messageTemplate, string startstr = "{{", string endstr = "}}")
+    public async void ParseTemplateItem(MessageTemplate messageTemplate, string startstr = "{{", string endstr = "}}")
     {
+        if (!string.IsNullOrEmpty(messageTemplate.TemplateId))
+        {
+            return;
+        }
+
         var titleParam = UtilHelper.MidStrEx(messageTemplate.Title, startstr, endstr);
         var contentParam = UtilHelper.MidStrEx(messageTemplate.Content, startstr, endstr);
         var paramList = titleParam.Union(contentParam).ToList();
+        messageTemplate.Items.Clear();
         foreach (var item in paramList)
         {
             messageTemplate.AddOrUpdateItem(item, string.Empty, string.Empty, string.Empty);
