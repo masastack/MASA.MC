@@ -7,21 +7,27 @@ public class MessageTaskCommandHandler
 {
     private readonly IMessageTaskRepository _repository;
     private readonly IMessageTaskHistoryRepository _messageTaskHistoryRepository;
-    private readonly IDomainEventBus _domainEventBus;
+    private readonly IEventBus _eventBus;
     private readonly ISchedulerClient _schedulerClient;
     private readonly IUserContext _userContext;
+    private readonly IChannelRepository _channelRepository;
+    private readonly IMessageTemplateRepository _messageTemplateRepository;
 
     public MessageTaskCommandHandler(IMessageTaskRepository repository
         , IMessageTaskHistoryRepository messageTaskHistoryRepository
-        , IDomainEventBus domainEventBus
+        , IEventBus eventBus
         , ISchedulerClient schedulerClient
-        , IUserContext userContext)
+        , IUserContext userContext
+        , IChannelRepository channelRepository
+        , IMessageTemplateRepository messageTemplateRepository)
     {
         _repository = repository;
         _messageTaskHistoryRepository = messageTaskHistoryRepository;
-        _domainEventBus = domainEventBus;
+        _eventBus = eventBus;
         _schedulerClient = schedulerClient;
         _userContext = userContext;
+        _channelRepository = channelRepository;
+        _messageTemplateRepository = messageTemplateRepository;
     }
 
     [EventHandler]
@@ -53,7 +59,7 @@ public class MessageTaskCommandHandler
         var history = new MessageTaskHistory(entity.Id, taskHistoryNo, receiverUsers, true);
         await _messageTaskHistoryRepository.AddAsync(history);
         await _messageTaskHistoryRepository.UnitOfWork.SaveChangesAsync();
-        await _domainEventBus.PublishAsync(new ExecuteMessageTaskEvent(entity.Id, true));
+        await _eventBus.PublishAsync(new ExecuteMessageTaskEvent(entity.Id, true));
     }
 
     [EventHandler]
@@ -88,5 +94,33 @@ public class MessageTaskCommandHandler
             var userId = _userContext.GetUserId<Guid>();
             await _schedulerClient.SchedulerJobService.DisableAsync(new BaseSchedulerJobRequest { JobId = entity.SchedulerJobId, OperatorId = userId });
         }
+    }
+
+    [EventHandler]
+    public async Task SendOrdinaryMessageAsync(SendOrdinaryMessageTaskCommand command)
+    {
+        var channel = await _channelRepository.FindAsync(x=>x.Code== command.inputDto.ChannelCode);
+        if (channel == null)
+            throw new UserFriendlyException("Channel code not found");
+        var taskUpsertDto = (MessageTaskUpsertDto)command.inputDto;
+        taskUpsertDto.ChannelId = channel.Id;
+        var ordinaryCommand = new CreateOrdinaryMessageTaskCommand(taskUpsertDto);
+        await _eventBus.PublishAsync(ordinaryCommand);
+    }
+
+    [EventHandler]
+    public async Task SendTemplateMessageAsync(SendTemplateMessageTaskCommand command)
+    {
+        var channel = await _channelRepository.FindAsync(x => x.Code == command.inputDto.ChannelCode);
+        if (channel == null)
+            throw new UserFriendlyException("Channel code not found");
+        var template = await _messageTemplateRepository.FindAsync(x => x.Code == command.inputDto.TemplateCode);
+        if (template == null)
+            throw new UserFriendlyException("Template code not found");
+        var taskUpsertDto = (MessageTaskUpsertDto)command.inputDto;
+        taskUpsertDto.ChannelId = channel.Id;
+        taskUpsertDto.EntityId = template.Id;
+        var templateCommand = new CreateTemplateMessageTaskCommand(taskUpsertDto);
+        await _eventBus.PublishAsync(templateCommand);
     }
 }

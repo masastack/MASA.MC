@@ -12,6 +12,7 @@ public class MessageTemplateDto : AuditEntityDto<Guid, Guid>
     public Guid ChannelId { get; set; }
     public string DisplayName { get; set; } = string.Empty;
     public string Title { get; set; } = string.Empty;
+    public string Code { get; set; } = string.Empty;
     public string Content { get; set; } = string.Empty;
     public string Markdown { get; set; } = string.Empty;
     public string Example { get; set; } = string.Empty;

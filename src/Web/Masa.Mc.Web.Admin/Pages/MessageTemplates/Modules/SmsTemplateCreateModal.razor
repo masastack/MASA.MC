@@ -1,10 +1,17 @@
 ﻿@inherits AdminCompontentBase
 <div @ref="Ref">
-    <McModal Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.CreateMessageTemplate")" ContentStyle="height: 400px;">
+    <McModal Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.CreateMessageTemplate")" ContentStyle="height: 568px;">
         <ChildContent>
             <MForm Model="_model" EnableValidation @ref="_form" Class="full-height">
                 <MRow>
                     <MCol Class="pt-0 mt-2">
+                        <DefaultTextField @bind-Value="_model.Code"
+                                          Label="@T("DisplayName.MessageTemplateCode")">
+                        </DefaultTextField>
+                    </MCol>
+                </MRow>
+                <MRow Class="mt-6">
+                    <MCol>
                         <DefaultSelect Value="@_model.ChannelType"
                                        Items="@(GetEnumList<ChannelTypes>())"
                                        Label="@T("DisplayName.ChannelType")"
@@ -38,7 +45,7 @@
                 <MRow Class="mt-6">
                     <MCol>
                         <MAutocomplete Items="_templateItems" @bind-Value="_model.TemplateId"
-                                       Label="@T("DisplayName.MessageTemplateTemplateId")"
+                                       Label="@T("SelectTemplate")"
                                        ItemText="@(x=>$"{x.TemplateName}({x.TemplateCode})")"
                                        ItemValue="x=>x.TemplateCode"
                                        Dense

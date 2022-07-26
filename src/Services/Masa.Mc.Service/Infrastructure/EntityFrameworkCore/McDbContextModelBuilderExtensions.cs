@@ -25,11 +25,13 @@ public static class McDbContextModelBuilderExtensions
         {
             b.ToTable(MCConsts.DbTablePrefix + "MessageTemplates", MCConsts.DbSchema);
             b.Property(m => m.DisplayName).IsRequired().HasMaxLength(128);
+            b.Property(c => c.Code).IsRequired().HasMaxLength(64);
             b.Property(m => m.TemplateId).IsRequired().HasMaxLength(128);
             b.Property(m => m.JumpUrl).HasMaxLength(256);
             b.Property(m => m.Sign).HasMaxLength(128);
             b.HasMany(m => m.Items).WithOne().HasForeignKey(m => m.MessageTemplateId).IsRequired();
             b.HasIndex(m => m.ChannelId);
+            b.HasIndex(c => c.Code);
         });
 
         builder.Entity<MessageTemplateItem>(b =>

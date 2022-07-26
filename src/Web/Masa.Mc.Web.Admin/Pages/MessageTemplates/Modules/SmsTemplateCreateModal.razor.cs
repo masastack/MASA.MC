@@ -23,6 +23,10 @@ public partial class SmsTemplateCreateModal : AdminCompontentBase
     public async Task OpenModalAsync()
     {
         _model.ChannelType = ChannelTypes.Sms;
+        if (string.IsNullOrEmpty(_model.Code))
+        {
+            _model.Code = $"SMS_{UtilConvert.GetGuidToNumber()}";
+        }
         await HandleSelectChannelTypeAsync(_model.ChannelType);
         await InvokeAsync(() =>
         {

@@ -21,6 +21,8 @@ public class MessageTaskService : ServiceBase
         MapGet(GetMessageTaskReceiverListAsync);
         MapPost(ResolveReceiversCountAsync);
         MapPost(ExecuteAsync, "execute/{messageTaskId}");
+        MapPost(SendOrdinaryMessageAsync);
+        MapPost(SendTemplateMessageAsync);
     }
 
     public async Task<PaginatedListDto<MessageTaskDto>> GetListAsync(IEventBus eventbus, [FromQuery] Guid? channelId, [FromQuery] MessageEntityTypes? entityType, [FromQuery] bool? isDraft, [FromQuery] bool? isEnabled, [FromQuery] MessageTaskTimeTypes? timeType, [FromQuery] DateTime? startTime, [FromQuery] DateTime? endTime, [FromQuery] MessageTaskStatuses? status, MessageTaskSources? source, [FromQuery] string filter = "", [FromQuery] string sorting = "", [FromQuery] int page = 1, [FromQuery] int pagesize = 10)
@@ -160,5 +162,17 @@ public class MessageTaskService : ServiceBase
     {
         var query = new ExecuteMessageTaskEvent(messageTaskId);
         await eventBus.PublishAsync(query);
+    }
+
+    public async Task SendOrdinaryMessageAsync(IEventBus eventBus, SendOrdinaryMessageTaskInputDto inputDto)
+    {
+        var command = new SendOrdinaryMessageTaskCommand(inputDto);
+        await eventBus.PublishAsync(command);
+    }
+
+    public async Task SendTemplateMessageAsync(IEventBus eventBus, SendTemplateMessageTaskInputDto inputDto)
+    {
+        var command = new SendTemplateMessageTaskCommand(inputDto);
+        await eventBus.PublishAsync(command);
     }
 }

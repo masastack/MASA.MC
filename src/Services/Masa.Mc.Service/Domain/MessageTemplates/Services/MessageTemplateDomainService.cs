@@ -59,9 +59,9 @@ public class MessageTemplateDomainService : DomainService
 
     protected async Task ValidateTemplateAsync(MessageTemplate expectedTemplate, Guid? expectedId = null)
     {
-        if (await _repository.AnyAsync(d => d.ChannelId == expectedTemplate.ChannelId && d.DisplayName == expectedTemplate.DisplayName && d.Id != expectedId))
+        if (await _repository.AnyAsync(d => d.Code == expectedTemplate.Code && d.Id != expectedId))
         {
-            throw new UserFriendlyException("The message template name of the same channel cannot be duplicate");
+            throw new UserFriendlyException("Template code cannot be repeated");
         }
 
         if (string.IsNullOrEmpty(expectedTemplate.TemplateId)) return;

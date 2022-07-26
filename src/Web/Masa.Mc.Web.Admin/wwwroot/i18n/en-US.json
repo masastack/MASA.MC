@@ -56,6 +56,7 @@
   "DisplayName.MessageTemplateTemplateType": "Template type",
   "DisplayName.MessageTemplateDisplayName": "Template theme",
   "DisplayName.MessageTemplateTitle": "Template title",
+  "DisplayName.MessageTemplateCode": "Template code",
   "DisplayName.MessageTemplateContent": "Template content",
   "DisplayName.MessageTemplateExample": "Template example",
   "DisplayName.MessageTemplateSign": "Sign",
@@ -196,5 +197,6 @@
   "DisplayName.SendingRule.SendingCount": "Sending count",
   "DisplayName.SendingRule.SendingCount.Tips": "0 is unlimited",
   "DisplayName.MessageTaskDetail.ReceiverType": "Type",
-  "ChannelOptions.Tips": "Please check the filled data carefully. If you fill in the wrong data, the message will fail to be sent"
+  "ChannelOptions.Tips": "Please check the filled data carefully. If you fill in the wrong data, the message will fail to be sent",
+  "SelectTemplate": "Select template"
 }

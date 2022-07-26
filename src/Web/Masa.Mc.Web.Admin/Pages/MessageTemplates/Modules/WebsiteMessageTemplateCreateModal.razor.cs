@@ -20,6 +20,10 @@ public partial class WebsiteMessageTemplateCreateModal : AdminCompontentBase
     public async Task OpenModalAsync()
     {
         _model.ChannelType = ChannelTypes.WebsiteMessage;
+        if (string.IsNullOrEmpty(_model.Code))
+        {
+            _model.Code = $"WM_{UtilConvert.GetGuidToNumber()}";
+        }
         await HandleSelectChannelTypeAsync(_model.ChannelType);
         await InvokeAsync(() =>
         {

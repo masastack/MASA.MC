@@ -7,6 +7,7 @@ public class MessageTemplate : FullAggregateRoot<Guid, Guid>
     public Guid ChannelId { get; protected set; }
     public string DisplayName { get; protected set; } = string.Empty;
     public string Title { get; protected set; } = string.Empty;
+    public string Code { get; protected set; } = string.Empty;
     public string Content { get; protected set; } = string.Empty;
     public string Markdown { get; protected set; } = string.Empty;
     public string Example { get; protected set; } = string.Empty;
@@ -28,6 +29,7 @@ public class MessageTemplate : FullAggregateRoot<Guid, Guid>
         Guid channelId,
         string displayName,
         string title,
+        string code,
         string content,
         string markdown,
         string example,
@@ -44,6 +46,7 @@ public class MessageTemplate : FullAggregateRoot<Guid, Guid>
     {
         ChannelId = channelId;
         DisplayName = displayName;
+        Code = code;
         Example = example;
         TemplateId = templateId;
         Sign = sign;
