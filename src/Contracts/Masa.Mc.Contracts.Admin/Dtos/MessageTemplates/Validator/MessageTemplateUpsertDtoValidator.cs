@@ -8,6 +8,7 @@ public class MessageTemplateUpsertDtoValidator : AbstractValidator<MessageTempla
     public MessageTemplateUpsertDtoValidator()
     {
         RuleFor(inputDto => inputDto.DisplayName).Required().Length(2, 50);
+        RuleFor(inputDto => inputDto.Code).Required().LetterNumberSymbol().Length(2, 50);
         RuleFor(inputDto => inputDto.ChannelId).Required();
         RuleFor(inputDto => inputDto.Status).IsInEnum();
         RuleFor(inputDto => inputDto.AuditStatus).IsInEnum();

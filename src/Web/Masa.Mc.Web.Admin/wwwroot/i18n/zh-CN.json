@@ -125,6 +125,7 @@
   "DisplayName.MessageTemplateTemplateType": "模板类型",
   "DisplayName.MessageTemplateDisplayName": "模板名称",
   "DisplayName.MessageTemplateTitle": "模板标题",
+  "DisplayName.MessageTemplateCode": "模板Id",
   "DisplayName.MessageTemplateContent": "模板内容",
   "DisplayName.MessageTemplateExample": "模板示例",
   "DisplayName.MessageTemplateSign": "签名",
@@ -300,5 +301,6 @@
   "DisplayName.SendingRule.SendingCount.Tips": "0为不限制",
   "DisplayName.MessageTaskDetail.ReceiverType": "类型",
   "TemplateTemplate": "模板",
-  "ChannelOptions.Tips": "请仔细核对填写数据，填写错误会导致消息发送失败"
+  "ChannelOptions.Tips": "请仔细核对填写数据，填写错误会导致消息发送失败",
+  "SelectTemplate": "选择模板"
 }

@@ -20,6 +20,10 @@ public partial class EmailTemplateCreateModal : AdminCompontentBase
     public async Task OpenModalAsync()
     {
         _model.ChannelType = ChannelTypes.Email;
+        if (string.IsNullOrEmpty(_model.Code))
+        {
+            _model.Code = $"Email_{UtilConvert.GetGuidToNumber()}";
+        }
         await HandleSelectChannelTypeAsync(_model.ChannelType);
         await InvokeAsync(() =>
         {
