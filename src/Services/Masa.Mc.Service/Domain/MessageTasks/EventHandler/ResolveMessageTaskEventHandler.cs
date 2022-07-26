@@ -131,6 +131,12 @@ public class ResolveMessageTaskEventHandler
                 sendingCount = totalCount;
             }
             var historyNum = (long)Math.Ceiling((double)totalCount / sendingCount);
+
+            if (eto.MessageTask.ReceiverType == ReceiverTypes.Broadcast)
+            {
+                historyNum = 1;
+            }
+            
             var cronExpression = new CronExpression(eto.MessageTask.SendRules.CronExpression);
             for (int i = 0; i < historyNum; i++)
             {

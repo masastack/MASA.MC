@@ -43,5 +43,10 @@ public class MessageTemplateRepository : Repository<McDbContext, MessageTemplate
                     };
         return query;
     }
+
+    public async Task<bool> AnyAsync(Expression<Func<MessageTemplate, bool>> predicate)
+    {
+        return await Context.Set<MessageTemplate>().AnyAsync(predicate);
+    }
 }
 

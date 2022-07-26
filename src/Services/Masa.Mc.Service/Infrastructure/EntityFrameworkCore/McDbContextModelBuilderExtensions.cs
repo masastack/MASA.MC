@@ -17,6 +17,8 @@ public static class McDbContextModelBuilderExtensions
             b.Property(c => c.Type).HasColumnName(nameof(Channel.Type));
             b.Property(c => c.Description).HasMaxLength(512);
             b.Property(c => c.ExtraProperties).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
+            b.HasIndex(c => c.Code);
+            b.HasIndex(c => c.Type);
         });
 
         builder.Entity<MessageTemplate>(b =>
@@ -27,6 +29,7 @@ public static class McDbContextModelBuilderExtensions
             b.Property(m => m.JumpUrl).HasMaxLength(256);
             b.Property(m => m.Sign).HasMaxLength(128);
             b.HasMany(m => m.Items).WithOne().HasForeignKey(m => m.MessageTemplateId).IsRequired();
+            b.HasIndex(m => m.ChannelId);
         });
 
         builder.Entity<MessageTemplateItem>(b =>
@@ -43,6 +46,7 @@ public static class McDbContextModelBuilderExtensions
             b.ToTable(MCConsts.DbTablePrefix + "SmsTemplates", MCConsts.DbSchema);
             b.Property(s => s.TemplateName).IsRequired().HasMaxLength(128);
             b.Property(s => s.TemplateCode).IsRequired().HasMaxLength(128);
+            b.HasIndex(s => s.ChannelId);
         });
 
         builder.Entity<ReceiverGroup>(b =>
@@ -98,6 +102,8 @@ public static class McDbContextModelBuilderExtensions
             b.Property(m => m.ExtraProperties).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
             b.Property(m => m.Variables).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
             b.Ignore(m => m.MessageTask);
+            b.HasIndex(m => m.UserId);
+            b.HasIndex(m => m.MessageTaskHistoryId);
         });
 
         builder.Entity<MessageReceiverUser>(b =>
@@ -115,11 +121,13 @@ public static class McDbContextModelBuilderExtensions
             b.ToTable(MCConsts.DbTablePrefix + "WebsiteMessages", MCConsts.DbSchema);
             b.Property(w => w.Title).IsRequired().HasMaxLength(128);
             b.Property(m => m.LinkUrl).HasMaxLength(256);
+            b.HasIndex(m => new { m.UserId, m.ChannelId });
         });
 
         builder.Entity<WebsiteMessageCursor>(b =>
         {
             b.ToTable(MCConsts.DbTablePrefix + "WebsiteMessageCursors", MCConsts.DbSchema);
+            b.HasIndex(w => w.UserId);
         });
     }
 }

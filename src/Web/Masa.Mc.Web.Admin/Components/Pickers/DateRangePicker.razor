@@ -9,7 +9,7 @@
             </div>
         </ActivatorContent>
         <ChildContent>
-            <MDatePicker Value=_StartTime Max=_EndTime ValueChanged=UpdateStartTimeAsync TValue="DateOnly?" OnInput="()=> StartTimeVisible = false"></MDatePicker>
+            <DatePicker Value=_StartTime Max=_EndTime ValueChanged=UpdateStartTimeAsync TValue="DateOnly?" OnInput="()=> StartTimeVisible = false"></DatePicker>
         </ChildContent>
     </MMenu>
     <MDivider Vertical Class="ma-2" Style="display:initial"></MDivider>
@@ -20,7 +20,7 @@
             </div>
         </ActivatorContent>
         <ChildContent>
-            <MDatePicker Value=_EndTime Min=_StartTime ValueChanged=UpdateEndTimeAsync TValue="DateOnly?" OnInput="()=> EndTimeVisible = false"></MDatePicker>
+            <DatePicker Value=_EndTime Min=_StartTime ValueChanged=UpdateEndTimeAsync TValue="DateOnly?" OnInput="()=> EndTimeVisible = false"></DatePicker>
         </ChildContent>
     </MMenu>
 </div>

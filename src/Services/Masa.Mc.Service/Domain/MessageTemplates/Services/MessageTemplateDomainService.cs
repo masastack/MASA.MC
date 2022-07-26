@@ -18,14 +18,14 @@ public class MessageTemplateDomainService : DomainService
 
     public virtual async Task CreateAsync(MessageTemplate messageTemplate)
     {
-        await ValidateTemplateAsync(messageTemplate.TemplateId);
+        await ValidateTemplateAsync(messageTemplate);
         ParseTemplateItem(messageTemplate);
         await _repository.AddAsync(messageTemplate);
     }
 
     public virtual async Task UpdateAsync(MessageTemplate messageTemplate)
     {
-        await ValidateTemplateAsync(messageTemplate.TemplateId, messageTemplate.Id);
+        await ValidateTemplateAsync(messageTemplate, messageTemplate.Id);
         ParseTemplateItem(messageTemplate);
         await _repository.UpdateAsync(messageTemplate);
     }
@@ -57,15 +57,20 @@ public class MessageTemplateDomainService : DomainService
         }
     }
 
-    protected async Task ValidateTemplateAsync(string templateId, Guid? expectedId = null)
+    protected async Task ValidateTemplateAsync(MessageTemplate expectedTemplate, Guid? expectedId = null)
     {
-        if (string.IsNullOrEmpty(templateId)) return;
-        var template = await _repository.FindAsync(d => d.TemplateId == templateId);
-        if (template != null && template.Id != expectedId)
+        if (await _repository.AnyAsync(d => d.ChannelId == expectedTemplate.ChannelId && d.DisplayName == expectedTemplate.DisplayName && d.Id != expectedId))
+        {
+            throw new UserFriendlyException("The message template name of the same channel cannot be duplicate");
+        }
+
+        if (string.IsNullOrEmpty(expectedTemplate.TemplateId)) return;
+        if (await _repository.AnyAsync(d => d.TemplateId == expectedTemplate.TemplateId && d.Id != expectedId))
         {
             throw new UserFriendlyException("Message templateId cannot be repeated");
         }
     }
+
 
     public async Task<bool> CheckSendUpperLimitAsync(long perDayLimit, Guid userId)
     {

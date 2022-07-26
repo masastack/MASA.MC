@@ -5,7 +5,7 @@ namespace Masa.Mc.Contracts.Admin.Dtos.MessageTasks.Imports;
 
 public class WebsiteMessageReceiverImportDto
 {
-    [ImporterHeader(Name = "账号", IsAllowRepeat = false)]
-    [Required(ErrorMessage = "账号是必填的")]
-    public string Account { get; set; } = string.Empty;
+    [ImporterHeader(Name = "用户Id", IsAllowRepeat = false)]
+    [Required(ErrorMessage = "用户Id是必填的")]
+    public Guid UserId { get; set; }
 }

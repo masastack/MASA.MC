@@ -1,6 +1,8 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
+using static AlibabaCloud.SDK.Dysmsapi20170525.Models.QuerySmsTemplateListResponseBody;
+
 namespace Masa.Mc.Service.Admin.Application.MessageTemplates;
 
 public class SmsTemplateCommandHandler
@@ -36,16 +38,28 @@ public class SmsTemplateCommandHandler
         };
         using (_aliyunSmsAsyncLocal.Change(options))
         {
-            var aliyunSmsTemplateListResponse = await _smsTemplateService.GetSmsTemplateListAsync() as SmsTemplateListResponse;
-            if (!aliyunSmsTemplateListResponse.Success)
-            {
-                throw new UserFriendlyException(aliyunSmsTemplateListResponse.Message);
-            }
-            var aliyunSmsTemplateList = aliyunSmsTemplateListResponse.Data.Body.SmsTemplateList;
+            var aliyunSmsTemplateList = new List<QuerySmsTemplateListResponseBodySmsTemplateList>();
+            await GetAliyunSmsTemplateList(aliyunSmsTemplateList, 1);
             var removeList = await _smsTemplateRepository.GetListAsync(x => x.ChannelId == channel.Id);
             await _smsTemplateRepository.RemoveRangeAsync(removeList);
             var smsTemplateList = aliyunSmsTemplateList.Select(item => new SmsTemplate(channel.Id, item.TemplateCode, item.TemplateName, AliyunSmsTemplateTypeMapToSmsTemplateType(item.TemplateType), AliyunSmsTemplateAuditStatusMapToAuditStatus(item.AuditStatus), item.TemplateContent, item.Reason.RejectInfo));
             await _smsTemplateRepository.AddRangeAsync(smsTemplateList);
+        }
+    }
+
+    private async Task GetAliyunSmsTemplateList(List<QuerySmsTemplateListResponseBodySmsTemplateList> smsTemplateList, int page = 1)
+    {
+        var aliyunSmsTemplateListResponse = await _smsTemplateService.GetSmsTemplateListAsync(page, 50) as SmsTemplateListResponse;
+        if (!aliyunSmsTemplateListResponse.Success)
+        {
+            throw new UserFriendlyException(aliyunSmsTemplateListResponse.Message);
+        }
+        var aliyunSmsTemplateList = aliyunSmsTemplateListResponse.Data.Body.SmsTemplateList;
+        if (aliyunSmsTemplateList != null && aliyunSmsTemplateList.Any())
+        {
+            smsTemplateList.AddRange(aliyunSmsTemplateList);
+            page++;
+            await GetAliyunSmsTemplateList(smsTemplateList, page);
         }
     }
 

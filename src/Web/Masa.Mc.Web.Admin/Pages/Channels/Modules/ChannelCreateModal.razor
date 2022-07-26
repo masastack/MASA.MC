@@ -1,6 +1,6 @@
 ﻿@inherits AdminCompontentBase
 <div @ref="Ref">
-    <McModal Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.CreateChannel")" Width="770" Height="792">
+    <McModal Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.CreateChannel")" ContentStyle="height: 597px;">
         <ChildContent>
             <MForm Model="_model" @ref="_form" EnableValidation Context="form" Class="full-height">
                 <MStepper Value="_step" Class="full-height overflow-visible" Style="box-shadow:none">
@@ -79,7 +79,7 @@
                             <ChannelExtraProperties @ref="_channelExtraPropertiesRef" @bind-Value="_model.ExtraProperties" @bind-Type="_model.Type" />
                             <div class="flex-column justify-space-between mt-9" Style="height: 80px;">
                                 <div class="subtitle3 regular--text">@T("DisplayName.Color.Lable")</div>
-                                <ColorGroup @bind-Value="_model.Color" Colors='_colors' />
+                                <ColorsGroup @bind-Value="_model.Color" Colors='_colors' />
                             </div>
                             <MRow Class="mt-6">
                                 <MCol>

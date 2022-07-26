@@ -16,7 +16,7 @@
             {
                 <MHover>
                     <MListItem @attributes="context.Attrs" Class="@($"pa-4 {context.Class} {(context.Hover ? "on-hover" : "")}")">
-                        <MListItemAvatar Size=40 Class="ma-0" Color="primary">
+                        <MListItemAvatar Size=40 Class="ma-0" Color="primary" Style="z-index:2">
                             @if (item.Type != MessageTaskReceiverTypes.User)
                             {
                                 <MIcon Size=24 Color="fill">mdi-animation</MIcon>
@@ -33,7 +33,7 @@
                                 }
                             }
                         </MListItemAvatar>
-                        <MListItemContent Class="ml-2 pa-0">
+                        <MListItemContent Class="ml-2 pa-0" Style="z-index:2">
                             <MListItemTitle>
                                 <span class="btn emphasis2--text">@(item.DisplayName)</span>
                                 <div class="d-inline-flex mx-2" style="height: 8px">
@@ -52,10 +52,10 @@
                                 </MListItemSubtitle>
                             }
                         </MListItemContent>
-                        <MOverlay Absolute Opacity="0.2" Class="justify-end align-center"
+                        <MOverlay Color="#F6F8FD" Opacity=1 Absolute ZIndex=1 Class="justify-end align-center"
                           Value="@(context.Hover)">
                             <MButton Icon OnClick="()=>RemoveValue(item)">
-                                <MIcon>mdi-close</MIcon>
+                                <MIcon Color="#1B2559">mdi-close</MIcon>
                             </MButton>
                         </MOverlay>
                     </MListItem>

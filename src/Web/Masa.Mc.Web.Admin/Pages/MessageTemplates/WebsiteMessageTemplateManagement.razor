@@ -56,10 +56,10 @@
                     @switch (context.Header.Value)
                     {
                         case ("ChannelDisplayName"):
-                            <span class="body regular--text text-truncate" style="max-width:300px">@context.Item.Channel?.DisplayName</span>
+                            <div class="body regular--text text-truncate" style="max-width:300px">@context.Item.Channel?.DisplayName</div>
                             break;
                         case (nameof(MessageTemplateDto.Title)):
-                            <div class="body regular--text text-truncate" style="max-width:410px">@context.Item.Title</div>
+                            <div class="body regular--text text-truncate" style="max-width:400px">@context.Item.Title</div>
                             break;
                         case (nameof(MessageTemplateDto.Modifier)):
                             <span class="body2 regular--text"></span>

@@ -73,21 +73,21 @@
                 case (nameof(MessageTemplateItemDto.Code)):
                     if (Value.IndexOf(context.Item)==_editedIndex)
                     {
-                        <MTextField @bind-Value="_editedItem.Code" Dense Outlined HideDetails="@("auto")"></MTextField>
+                        <MTextField Class="mr-6" @bind-Value="_editedItem.Code" Dense Outlined HideDetails="@("auto")"></MTextField>
                     }
                     else
                     {
-                        @context.Value
+                        <div class="text-truncate mr-6" style="max-width:172px">@context.Value</div>
                     }
                     break;
                 case (nameof(MessageTemplateItemDto.DisplayText)):
                     if (Value.IndexOf(context.Item)==_editedIndex)
                     {
-                        <MTextField @bind-Value="_editedItem.DisplayText" Dense Outlined HideDetails="@("auto")"></MTextField>
+                        <MTextField  @bind-Value="_editedItem.DisplayText" Dense Outlined HideDetails="@("auto")"></MTextField>
                     }
                     else
                     {
-                        @context.Value
+                        <div class="text-truncate" style="max-width:172px">@context.Value</div>
                     }
                     break;
                 case "actions":
@@ -107,7 +107,7 @@
                     }
                     break;
                 default:
-                    @context.Value
+                    <div class="text-truncate mr-6" style="max-width:172px">@context.Value</div>
                     break;
             }
         </ItemColContent>
