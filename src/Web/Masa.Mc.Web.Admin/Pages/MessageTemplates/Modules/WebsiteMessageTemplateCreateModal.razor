@@ -5,14 +5,14 @@
             <MForm Model="_model" EnableValidation @ref="_form" Class="full-height">
                 <MRow>
                     <MCol Class="pt-0 mt-2">
-                        <DefaultTextField @bind-Value="_model.Code"
+                        <STextField @bind-Value="_model.Code"
                                           Label="@T("DisplayName.MessageTemplateCode")">
-                        </DefaultTextField>
+                        </STextField>
                     </MCol>
                 </MRow>
                 <MRow Class="mt-6">
                     <MCol>
-                        <DefaultSelect Value="@_model.ChannelType"
+                        <SSelect Value="@_model.ChannelType"
                                        Items="@(GetEnumList<ChannelTypes>())"
                                        Label="@T("DisplayName.ChannelType")"
                                        ItemText="item => T(item.ToString())"
@@ -22,24 +22,24 @@
                                        TItemValue="ChannelTypes"
                                        TValue="ChannelTypes"
                                        ValueChanged="HandleSelectChannelTypeAsync">
-                        </DefaultSelect>
+                        </SSelect>
                     </MCol>
                 </MRow>
                 <MRow Class="mt-6">
                     <MCol>
-                        <DefaultSelect @bind-Value="_model.ChannelId"
+                        <SSelect @bind-Value="_model.ChannelId"
                                        Items="@_channelItems"
                                        Label="@T("DisplayName.Channel")"
                                        ItemText="item => item.DisplayName"
                                        ItemValue="item => item.Id">
-                        </DefaultSelect>
+                        </SSelect>
                     </MCol>
                 </MRow>
                 <MRow Class="mt-6">
                     <MCol>
-                        <DefaultTextField @bind-Value="_model.Title"
+                        <STextField @bind-Value="_model.Title"
                                           Label="@T("DisplayName.MessageTemplateTitle")">
-                        </DefaultTextField>
+                        </STextField>
                     </MCol>
                 </MRow>
                 <MRow Class="mt-6">
@@ -50,12 +50,12 @@
                 </MRow>
                 <MRow Class="mt-6">
                     <MCol>
-                        <DefaultTextField @bind-Value="_model.JumpUrl"
+                        <STextField @bind-Value="_model.JumpUrl"
                                           Label="@T("DisplayName.MessageTemplateJumpUrl")">
                             <PrependContent>
                                 <MCheckbox Class="mt-0" @bind-Value="_model.IsJump"></MCheckbox>
                             </PrependContent>
-                        </DefaultTextField>
+                        </STextField>
                     </MCol>
                 </MRow>
                 <MRow Class="mt-6">

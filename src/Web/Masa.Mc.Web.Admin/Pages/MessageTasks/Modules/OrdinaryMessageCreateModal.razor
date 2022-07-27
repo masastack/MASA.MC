@@ -21,7 +21,7 @@
                         <MStepperContent Class="full-height pa-0" Step="1">
                             <MRow Class="mt-6">
                                 <MCol>
-                                    <DefaultSelect @bind-Value="@_model.ChannelType"
+                                    <SSelect @bind-Value="@_model.ChannelType"
                                                    Items="@(GetEnumList<ChannelTypes>().Where(x=>x!=ChannelTypes.Sms).ToList())"
                                                    Label="@T("DisplayName.ChannelType")"
                                                    ItemText="item => T(item.ToString())"
@@ -30,26 +30,26 @@
                                                    TItemValue="ChannelTypes"
                                                    TValue="ChannelTypes?"
                                                    OnSelectedItemUpdate="HandleChannelTypeChangeAsync">
-                                    </DefaultSelect>
+                                    </SSelect>
                                 </MCol>
                             </MRow>
                             <MRow Class="mt-6">
                                 <MCol>
-                                    <DefaultSelect @bind-Value="_model.ChannelId"
+                                    <SSelect @bind-Value="_model.ChannelId"
                                                    Items="@_channelItems"
                                                    Label="@T("DisplayName.Channel")"
                                                    ItemText="item => item.DisplayName"
                                                    ItemValue="item => item.Id">
-                                    </DefaultSelect>
+                                    </SSelect>
                                 </MCol>
                             </MRow>
                             @if (_model.ChannelType != ChannelTypes.Sms)
                             {
                                 <MRow Class="mt-6">
                                     <MCol>
-                                        <DefaultTextField @bind-Value="_model.MessageInfo.Title"
+                                        <STextField @bind-Value="_model.MessageInfo.Title"
                                                       Label="@T("DisplayName.MessageInfoTitle")">
-                                        </DefaultTextField>
+                                        </STextField>
                                     </MCol>
                                 </MRow>
                             }
@@ -63,7 +63,7 @@
                             {
                                 <MRow Class="mt-6">
                                     <MCol>
-                                        <DefaultTextField @bind-Value="_model.MessageInfo.JumpUrl"
+                                        <STextField @bind-Value="_model.MessageInfo.JumpUrl"
                                                       Label="@T("DisplayName.MessageTemplateJumpUrl")">
                                             <PrependContent>
                                                 <MCheckbox Class="mt-0" @bind-Value="_model.MessageInfo.IsJump"></MCheckbox>
@@ -71,7 +71,7 @@
                                             <PrependInnerContent>
                                                 <MIcon Size=16 Class="mt-2">fas fa-link</MIcon>
                                             </PrependInnerContent>
-                                        </DefaultTextField>
+                                        </STextField>
                                     </MCol>
                                 </MRow>
                             }
@@ -79,9 +79,9 @@
                             {
                                 <MRow Class="mt-6">
                                     <MCol>
-                                        <DefaultTextField @bind-Value="_model.Sign"
+                                        <STextField @bind-Value="_model.Sign"
                                                       Label="@T("DisplayName.MessageTemplateSign")">
-                                        </DefaultTextField>
+                                        </STextField>
                                     </MCol>
                                 </MRow>
                             }

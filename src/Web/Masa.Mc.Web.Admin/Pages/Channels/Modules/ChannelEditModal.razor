@@ -5,27 +5,27 @@
             <MForm Model="_model" EnableValidation @ref="_form" Class="full-height">
                 <MRow>
                     <MCol Class="pt-0 mt-2">
-                        <DefaultTextField @bind-Value="_model.DisplayName"
+                        <STextField @bind-Value="_model.DisplayName"
                                           Label="@T("DisplayName.ChannelDisplayName")">
-                        </DefaultTextField>
+                        </STextField>
                     </MCol>
                     <MCol>
-                        <DefaultTextField @bind-Value="_model.Code"
+                        <STextField @bind-Value="_model.Code"
                                           Disabled
                                           Label="@T("DisplayName.ChannelCode")">
-                        </DefaultTextField>
+                        </STextField>
                     </MCol>
                 </MRow>
                 <MRow Class="mt-6">
                     <MCol>
-                        <DefaultSelect @bind-Value="@_model.Type"
+                        <SSelect @bind-Value="@_model.Type"
                                        Items="@channelTypeItems"
                                        Label="@T("DisplayName.ChannelType")"
                                        Readonly
                                        ItemText="item => T(item.ToString())"
                                        ItemValue="item => item"
                                        Disabled>
-                        </DefaultSelect>
+                        </SSelect>
                     </MCol>
                 </MRow>
                 <ChannelExtraProperties @ref="_channelExtraPropertiesRef" @bind-Value="_model.ExtraProperties" @bind-Type="_model.Type" />

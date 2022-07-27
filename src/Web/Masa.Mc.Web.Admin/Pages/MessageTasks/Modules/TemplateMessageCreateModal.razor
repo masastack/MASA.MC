@@ -21,7 +21,7 @@
                         <MStepperContent Class="full-height pa-0" Step="1">
                             <MRow Class="mt-6">
                                 <MCol>
-                                    <DefaultSelect @bind-Value="@_model.ChannelType"
+                                    <SSelect @bind-Value="@_model.ChannelType"
                                                    Items="@(GetEnumList<ChannelTypes>())"
                                                    Label="@T("DisplayName.ChannelType")"
                                                    ItemText="item => T(item.ToString())"
@@ -30,12 +30,12 @@
                                                    TItemValue="ChannelTypes"
                                                    TValue="ChannelTypes?"
                                                    OnSelectedItemUpdate="HandleChannelTypeChangeAsync">
-                                    </DefaultSelect>
+                                    </SSelect>
                                 </MCol>
                             </MRow>
                             <MRow Class="mt-6">
                                 <MCol>
-                                    <DefaultSelect @bind-Value="_model.ChannelId"
+                                    <SSelect @bind-Value="_model.ChannelId"
                                                    Items="@_channelItems"
                                                    Label="@T("DisplayName.Channel")"
                                                    ItemText="item => item.DisplayName"
@@ -44,7 +44,7 @@
                                                    TItemValue="Guid"
                                                    TValue="Guid?"
                                                    OnSelectedItemUpdate="HandleChannelChangeAsync">
-                                    </DefaultSelect>
+                                    </SSelect>
                                 </MCol>
                             </MRow>
                             <MRow Class="mt-6">
@@ -68,10 +68,10 @@
                                 {
                                     <MRow Class="mt-6">
                                         <MCol>
-                                            <DefaultTextField @bind-Value="_messageInfo.Title"
+                                            <STextField @bind-Value="_messageInfo.Title"
                                                       Label="@T("DisplayName.MessageTemplateTitle")"
                                                       Disabled>
-                                            </DefaultTextField>
+                                            </STextField>
                                         </MCol>
                                     </MRow>
                                 }
@@ -84,12 +84,12 @@
                                 {
                                     <MRow Class="mt-6">
                                         <MCol>
-                                            <DefaultTextField @bind-Value="_messageInfo.JumpUrl"
+                                            <STextField @bind-Value="_messageInfo.JumpUrl"
                                                       Label="@T("DisplayName.MessageTemplateJumpUrl")" Disabled>
                                                 <PrependInnerContent>
                                                     <MIcon Size=16 Class="mt-2">fas fa-link</MIcon>
                                                 </PrependInnerContent>
-                                            </DefaultTextField>
+                                            </STextField>
                                         </MCol>
                                     </MRow>
                                 }
@@ -122,9 +122,9 @@
                             {
                                 <MRow Class="mt-6">
                                     <MCol>
-                                        <DefaultTextField @bind-Value="_model.Sign"
+                                        <STextField @bind-Value="_model.Sign"
                                                       Label="@T("DisplayName.MessageTemplateSign")">
-                                        </DefaultTextField>
+                                        </STextField>
                                     </MCol>
                                 </MRow>
                             }

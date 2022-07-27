@@ -5,25 +5,25 @@
             <MForm Model="_model" EnableValidation @ref="_form" Class="full-height">
                 <MRow>
                     <MCol Class="pt-0 mt-2">
-                        <DefaultTextField @bind-Value="_model.Code"
+                        <STextField @bind-Value="_model.Code"
                                           Label="@T("DisplayName.MessageTemplateCode")">
-                        </DefaultTextField>
+                        </STextField>
                     </MCol>
                 </MRow>
                 <MRow Class="mt-6">
                     <MCol>
-                        <DefaultSelect Value="@_model.ChannelType"
+                        <SSelect Value="@_model.ChannelType"
                                        Items="@(GetEnumList<ChannelTypes>())"
                                        Label="@T("DisplayName.ChannelType")"
                                        ItemText="item => T(item.ToString())"
                                        ItemValue="item => item"
                                        Disabled>
-                        </DefaultSelect>
+                        </SSelect>
                     </MCol>
                 </MRow>
                 <MRow Class="mt-6">
                     <MCol>
-                        <DefaultSelect @bind-Value="_model.ChannelId"
+                        <SSelect @bind-Value="_model.ChannelId"
                                        Items="@_channelItems"
                                        Label="@T("DisplayName.Channel")"
                                        ItemText="item => item.DisplayName"
@@ -32,14 +32,14 @@
                                        TItemValue="Guid"
                                        TValue="Guid"
                                        OnSelectedItemUpdate="HandleChannelChangeAsync">
-                        </DefaultSelect>
+                        </SSelect>
                     </MCol>
                 </MRow>
                 <MRow Class="mt-6">
                     <MCol>
-                        <DefaultTextField @bind-Value="_model.Sign"
+                        <STextField @bind-Value="_model.Sign"
                                           Label="@T("DisplayName.MessageTemplateSign")">
-                        </DefaultTextField>
+                        </STextField>
                     </MCol>
                 </MRow>
                 <MRow Class="mt-6">

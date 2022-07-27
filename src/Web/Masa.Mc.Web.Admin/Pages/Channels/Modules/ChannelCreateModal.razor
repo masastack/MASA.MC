@@ -66,14 +66,14 @@
                         <MStepperContent Step="2" Class="pa-0 full-height overflow-visible">
                             <MRow>
                                 <MCol>
-                                    <DefaultTextField @bind-Value="_model.DisplayName"
+                                    <STextField @bind-Value="_model.DisplayName"
                                                       Label="@T("DisplayName.ChannelDisplayName")">
-                                    </DefaultTextField>
+                                    </STextField>
                                 </MCol>
                                 <MCol>
-                                    <DefaultTextField @bind-Value="_model.Code"
+                                    <STextField @bind-Value="_model.Code"
                                                       Label="@T("DisplayName.ChannelCode")">
-                                    </DefaultTextField>
+                                    </STextField>
                                 </MCol>
                             </MRow>
                             <ChannelExtraProperties @ref="_channelExtraPropertiesRef" @bind-Value="_model.ExtraProperties" @bind-Type="_model.Type" />

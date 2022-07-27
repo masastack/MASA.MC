@@ -1,11 +1,11 @@
 ﻿@inherits AdminCompontentBase
 <div @ref="Ref">
-    <SheetDialog Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.ViewMessageRecord")">
+    <SSheetDialog Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.ViewMessageRecord")">
         <div class="full-height d-flex">
             <div class="pa-12 record-detail-left">
                 @if (string.IsNullOrEmpty(_messageRecord.ExtraProperties.GetProperty<string>("Avatar")))
                 {
-                    <EmptyAvatar Size=48 Value="@(_messageRecord.ExtraProperties.GetProperty<string>("DisplayName"))" />
+                    <SEmptyAvatar Size=48 Value="@(_messageRecord.ExtraProperties.GetProperty<string>("DisplayName"))" />
                 }
                 else
                 {
@@ -96,5 +96,5 @@
             </div>
 
         </div>
-    </SheetDialog>
+    </SSheetDialog>
 </div>

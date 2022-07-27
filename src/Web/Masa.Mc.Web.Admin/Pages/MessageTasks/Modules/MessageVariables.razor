@@ -5,12 +5,12 @@
         @foreach (var item in _items)
         {
             <MCol Md="6">
-                <DefaultTextField @bind-Value="item.Value"
+                <STextField @bind-Value="item.Value"
                         Label="@item.Name"
                         Disabled="ReadOnly"
                         Clearable="!ReadOnly"
                         TValue="string"
-                        OnChange="HandleChangeAsync"></DefaultTextField>
+                        OnChange="HandleChangeAsync"></STextField>
             </MCol>
         }
     </MRow>

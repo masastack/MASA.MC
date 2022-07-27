@@ -60,7 +60,7 @@
             </MSimpleTable>
         </ChildContent>
         <ActionContent>
-            <McPagination Class="full-width" @bind-Page="_queryParam.Page" @bind-PageSize="_queryParam.PageSize" Total="Value.Count" OnChange="HandlePaginationChange" />
+            <SPagination Class="full-width" Page="@_queryParam.Page" PageSize="@_queryParam.PageSize" Total="Value.Count" PageChanged="HandlePageChanged" PageSizeChanged="HandlePageSizeChanged"/>
         </ActionContent>
     </McModal>
 </div>
@@ -95,10 +95,15 @@
         ResetForm();
     }
 
-    private async Task HandlePaginationChange(PaginationEventArgs args)
+    private async Task HandlePageChanged(int page)
     {
-        _queryParam.Page = args.Page;
-        _queryParam.PageSize = args.PageSize;
+        _queryParam.Page = page;
+        await LoadData();
+    }
+
+    private async Task HandlePageSizeChanged(int pageSize)
+    {
+        _queryParam.PageSize = pageSize;
         await LoadData();
     }
 

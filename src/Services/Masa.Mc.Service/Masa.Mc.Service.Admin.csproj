@@ -40,10 +40,10 @@
 		<PackageReference Include="Masa.Contrib.ReadWriteSpliting.Cqrs" Version="0.5.0-rc.3" />
 		<PackageReference Include="Masa.Contrib.Service.MinimalAPIs" Version="0.5.0-rc.3" />
 		<PackageReference Include="Masa.Contrib.Storage.ObjectStorage.Aliyun" Version="0.5.0-rc.3" />
-		<PackageReference Include="Masa.Utils.Caching.DistributedMemory" Version="0.5.0-rc.1" />
-		<PackageReference Include="Masa.Utils.Caching.Redis" Version="0.5.0-rc.1" />
-		<PackageReference Include="Masa.Utils.Development.Dapr.AspNetCore" Version="0.5.0-rc.1" />
-		<PackageReference Include="Masa.Utils.Extensions.Expressions" Version="0.5.0-rc.1" />
+		<PackageReference Include="Masa.Utils.Caching.DistributedMemory" Version="0.5.0" />
+		<PackageReference Include="Masa.Utils.Caching.Redis" Version="0.5.0" />
+		<PackageReference Include="Masa.Utils.Development.Dapr.AspNetCore" Version="0.5.0" />
+		<PackageReference Include="Masa.Utils.Extensions.Expressions" Version="0.5.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.1" />
 		<PackageReference Include="Masa.Contrib.Data.UoW.EF" Version="0.5.0-rc.3" />
 		<PackageReference Include="Masa.Contrib.Dispatcher.IntegrationEvents.Dapr" Version="0.5.0-rc.3" />

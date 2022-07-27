@@ -13,9 +13,9 @@
             OnSave="HandleOk"
             OnCancel="HandleCancel">
         <ChildContent>
-            <DefaultTextField Label="@T("User.DisplayName")" @bind-Value="_model.DisplayName"></DefaultTextField>
-            <DefaultTextField Class="mt-6" Label="@T("PhoneNumber")" @bind-Value="_model.PhoneNumber"></DefaultTextField>
-            <DefaultTextField Class="mt-6" Label="@T("Email")" @bind-Value="_model.Email"></DefaultTextField>
+            <STextField Label="@T("User.DisplayName")" @bind-Value="_model.DisplayName"></STextField>
+            <STextField Class="mt-6" Label="@T("PhoneNumber")" @bind-Value="_model.PhoneNumber"></STextField>
+            <STextField Class="mt-6" Label="@T("Email")" @bind-Value="_model.Email"></STextField>
         </ChildContent>
         <SaveContent>
             <MButton OnClick="async()=>await HandleOk() " Class="btn-form-full" Color="primary" >@(T("Submit"))</MButton>

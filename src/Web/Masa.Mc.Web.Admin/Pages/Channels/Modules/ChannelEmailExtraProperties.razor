@@ -2,31 +2,31 @@
 <MForm Model="_model" @ref="Form" EnableValidation>
     <MRow Class="mt-6">
         <MCol>
-            <DefaultTextField @bind-Value="_model.UserName"
+            <STextField @bind-Value="_model.UserName"
                               Label="@T("EmailChannelOptions.UserName")"
                               Hint="@T("ChannelOptions.Tips")">
-            </DefaultTextField>
+            </STextField>
         </MCol>
         <MCol>
-            <DefaultTextField @bind-Value="_model.Password"
+            <STextField @bind-Value="_model.Password"
                               Label="@T("EmailChannelOptions.Password")">
-            </DefaultTextField>
+            </STextField>
         </MCol>
     </MRow>
     <MRow Class="mt-6">
         <MCol>
-            <DefaultTextField @bind-Value="_model.Smtp"
+            <STextField @bind-Value="_model.Smtp"
                               Label="@T("EmailChannelOptions.Smtp")"
                               Hint="@T("ChannelOptions.Tips")">
-            </DefaultTextField>
+            </STextField>
         </MCol>
         <MCol>
             <MRow Class="pl-3">
                 <MCol Style="border: 1px solid #E2E7F4;border-radius: 8px;height: 48px;margin-top: 12px;padding-top: 4px;"><MCheckbox Dense @bind-Value="_model.Ssl" Label="@T("EmailChannelOptions.Ssl")" OnChange="HandleChangeAsync"></MCheckbox></MCol>
                 <MCol>
-                    <DefaultTextField @bind-Value="_model.Port"
+                    <STextField @bind-Value="_model.Port"
                                       Label="@T("EmailChannelOptions.Port")">
-                    </DefaultTextField>
+                    </STextField>
                 </MCol>
             </MRow>
         </MCol>

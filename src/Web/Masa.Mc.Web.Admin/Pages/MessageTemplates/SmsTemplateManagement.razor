@@ -102,7 +102,7 @@
     </HeaderContent>
     <AutoHeightContent>
         <MCard Class="page-content">
-            <DefaultDataTable Headers="Headers" Items="_entities.Result" TItem="MessageTemplateDto" ItemsPerPage="_queryParam.PageSize" HideDefaultFooter Class="mt-6 d-flex full-height flex-column">
+            <SDataTable Headers="Headers" Items="_entities.Result" TItem="MessageTemplateDto" ItemsPerPage="_queryParam.PageSize" HideDefaultFooter Class="mt-6 d-flex full-height flex-column">
                 <HeaderColContent Context="header">
                     <span class="text-btn">@header.Text</span>
                 </HeaderColContent>
@@ -110,7 +110,7 @@
                     @switch (context.Header.Value)
                     {
                         case (nameof(MessageTemplateDto.Code)):
-                            <div class="body regular--text text-truncate" style="max-width:260px">@context.Value</div>
+                            <div class="body regular--text text-truncate" style="max-width:250px">@context.Value</div>
                             break;
                         case ("ChannelDisplayName"):
                             <div class="body regular--text text-truncate" style="max-width:150px">@context.Item.Channel?.DisplayName</div>
@@ -136,9 +136,9 @@
                     }
                 </ItemColContent>
                 <FooterContent>
-                    <Pagination Class="mt-3 mx-6 pb-6" Page="@_queryParam.Page" PageSize="@_queryParam.PageSize" Total="_entities.Total" PageChanged="HandlePageChanged" PageSizeChanged="HandlePageSizeChanged" />
+                    <SPagination Class="mt-3 mx-6 pb-6" Page="@_queryParam.Page" PageSize="@_queryParam.PageSize" Total="_entities.Total" PageChanged="HandlePageChanged" PageSizeChanged="HandlePageSizeChanged" />
                 </FooterContent>
-            </DefaultDataTable>
+            </SDataTable>
         </MCard>
     </AutoHeightContent>
 </AutoHeight>

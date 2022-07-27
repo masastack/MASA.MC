@@ -5,9 +5,9 @@
             <MForm Model="_model" EnableValidation @ref="_form" Class="full-height">
                 <MRow>
                     <MCol Class="pt-0 mt-2">
-                        <DefaultTextField @bind-Value="_model.DisplayName"
+                        <STextField @bind-Value="_model.DisplayName"
                                           Label="@T("DisplayName.ReceiverGroupDisplayName")">
-                        </DefaultTextField>
+                        </STextField>
                     </MCol>
                 </MRow>
                 <ReceiverSelect @ref="_ReceiverSelect" @bind-Value="_model.Items"></ReceiverSelect>
