@@ -28,6 +28,6 @@ public class CreateOrdinaryMessageTaskCommandHandler
     public async Task CreateOrdinaryMessageTaskAsync(CreateOrdinaryMessageTaskCommand createCommand)
     {
         var entity = createCommand.MessageTask.Adapt<MessageTask>();
-        await _domainService.CreateAsync(entity);
+        await _domainService.CreateAsync(entity, createCommand.MessageTask.OperatorId);
     }
 }

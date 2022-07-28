@@ -34,4 +34,6 @@ public class MessageTaskUpsertDto
     public ExtraPropertyDictionary Variables { get; set; } = new();
 
     public MessageTaskSources Source { get; set; } = MessageTaskSources.Management;
+
+    public Guid OperatorId { get; set; } = default;
 }

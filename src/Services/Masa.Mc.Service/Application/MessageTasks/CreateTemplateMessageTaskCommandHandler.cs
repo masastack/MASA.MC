@@ -31,6 +31,6 @@ public class CreateTemplateMessageTaskCommandHandler
     public async Task CreateTemplateMessageTaskAsync(CreateTemplateMessageTaskCommand createCommand)
     {
         var entity = createCommand.MessageTask.Adapt<MessageTask>();
-        await _domainService.CreateAsync(entity);
+        await _domainService.CreateAsync(entity, createCommand.MessageTask.OperatorId);
     }
 }

@@ -22,7 +22,7 @@ public class MessageTaskDomainService : DomainService
         _templateRenderer = templateRenderer;
     }
 
-    public virtual async Task CreateAsync(MessageTask messageTask)
+    public virtual async Task CreateAsync(MessageTask messageTask, Guid operatorId = default)
     {
         messageTask.SetDraft(messageTask.IsDraft);
         messageTask.SetExpectSendTime();
