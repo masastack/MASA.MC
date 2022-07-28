@@ -1,6 +1,6 @@
 ﻿@inherits AdminCompontentBase
 <div @ref="Ref">
-    <McModal Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.CreateReceiverGroup")" ContentStyle="height: 728px;">
+    <SSimpleModal Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.CreateReceiverGroup")" BodyStyle="height: 728px;" SaveText="@T("Submit")" OnCancel="HandleCancel" OnSave="async() => await Throttle(HandleOk)">
         <ChildContent>
             <MForm Model="_model" EnableValidation @ref="_form" Class="full-height">
                 <MRow>
@@ -24,9 +24,5 @@
                 </MRow>
             </MForm>
         </ChildContent>
-        <ActionContent>
-            <MSpacer></MSpacer>
-            <MButton Color="primary" Class="btn-form" OnClick="async() => await Throttle(HandleOk)">@T("Submit")</MButton>
-        </ActionContent>
-    </McModal>
+    </SSimpleModal>
 </div>
