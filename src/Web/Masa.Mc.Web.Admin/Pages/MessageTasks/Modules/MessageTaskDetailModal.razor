@@ -1,6 +1,6 @@
 ﻿@inherits AdminCompontentBase
 <div @ref="Ref">
-    <SheetDialog Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.ViewMessageTask")">
+    <SSheetDialog Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.ViewMessageTask")">
         <div id="@($"{Id}_dialog-box")" class="full-height d-flex">
             <div class="px-12 py-6 task-detail-left full-height flex-column">
                 <AutoHeight Overflow>
@@ -68,7 +68,7 @@
                         }
                     </AutoHeightContent>
                     <FooterContent>
-                        <Pagination Class="mt-5 d-flex" Page="@_queryParam.Page" PageSize="@_queryParam.PageSize" Total="_historys.Total" PageChanged="HandlePageChanged" PageSizeChanged="HandlePageSizeChanged" />
+                        <SPagination Class="mt-5 d-flex" Page="@_queryParam.Page" PageSize="@_queryParam.PageSize" Total="_historys.Total" PageChanged="HandlePageChanged" PageSizeChanged="HandlePageSizeChanged" />
                     </FooterContent>
                 </AutoHeight>
             </div>
@@ -128,5 +128,5 @@
                 </AutoHeight>
             </div>
         </div>
-    </SheetDialog>
+    </SSheetDialog>
 </div>

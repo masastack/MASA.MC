@@ -136,7 +136,7 @@ public class ResolveMessageTaskEventHandler
             {
                 historyNum = 1;
             }
-            
+
             var cronExpression = new CronExpression(eto.MessageTask.SendRules.CronExpression);
             for (int i = 0; i < historyNum; i++)
             {
@@ -170,7 +170,7 @@ public class ResolveMessageTaskEventHandler
             Name = eto.MessageTask.DisplayName,
             JobType = JobTypes.JobApp,
             CronExpression = cronExpression,
-            OperatorId = userId,
+            OperatorId = userId == default ? eto.OperatorId : userId,
             JobAppConfig = new SchedulerJobAppConfig
             {
                 JobAppIdentity = MessageTaskExecuteJobConsts.JOB_APP_IDENTITY,

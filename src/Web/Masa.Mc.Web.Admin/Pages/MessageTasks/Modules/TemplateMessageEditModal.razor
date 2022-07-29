@@ -1,6 +1,6 @@
 ﻿@inherits AdminCompontentBase
 <div @ref="Ref">
-    <McModal Value="@_visible" ValueChanged="HandleVisibleChanged" Class="full-height" Title="@T("Permission.EditTemplateMessage")">
+    <SSimpleModal Value="@_visible" ValueChanged="HandleVisibleChanged" Class="full-height" Title="@T("Permission.EditTemplateMessage")" OnDelete="HandleReceiverBack" OnCancel="HandleCancel" OnSave="HandleSaveAsync">
         <ChildContent>
             <MForm Model="_model" EnableValidation @ref="_form" Class="full-height mt-n2">
                 <MStepper Value="_model.Step" Elevation=0 Class="d-flex flex-column full-height">
@@ -21,7 +21,7 @@
                         <MStepperContent Class="full-height pa-0" Step="1">
                             <MRow Class="mt-6">
                                 <MCol>
-                                    <DefaultSelect @bind-Value="@_model.ChannelType"
+                                    <SSelect @bind-Value="@_model.ChannelType"
                                                    Items="@(GetEnumList<ChannelTypes>())"
                                                    Label="@T("DisplayName.ChannelType")"
                                                    ItemText="item => T(item.ToString())"
@@ -30,12 +30,12 @@
                                                    TItemValue="ChannelTypes"
                                                    TValue="ChannelTypes?"
                                                    OnSelectedItemUpdate="HandleChannelTypeChangeAsync">
-                                    </DefaultSelect>
+                                    </SSelect>
                                 </MCol>
                             </MRow>
                             <MRow Class="mt-6">
                                 <MCol>
-                                    <DefaultSelect @bind-Value="_model.ChannelId"
+                                    <SSelect @bind-Value="_model.ChannelId"
                                                    Items="@_channelItems"
                                                    Label="@T("DisplayName.Channel")"
                                                    ItemText="item => item.DisplayName"
@@ -44,7 +44,7 @@
                                                    TItemValue="Guid"
                                                    TValue="Guid?"
                                                    OnSelectedItemUpdate="HandleChannelChangeAsync">
-                                    </DefaultSelect>
+                                    </SSelect>
                                 </MCol>
                             </MRow>
                             <MRow Class="mt-6">
@@ -67,10 +67,10 @@
                                 {
                                     <MRow Class="mt-6">
                                         <MCol>
-                                            <DefaultTextField @bind-Value="_messageInfo.Title"
+                                            <STextField @bind-Value="_messageInfo.Title"
                                                       Label="@T("DisplayName.MessageTemplateTitle")"
                                                       Disabled>
-                                            </DefaultTextField>
+                                            </STextField>
                                         </MCol>
                                     </MRow>
                                 }
@@ -83,12 +83,12 @@
                                 {
                                     <MRow Class="mt-6">
                                         <MCol>
-                                            <DefaultTextField @bind-Value="_messageInfo.JumpUrl"
+                                            <STextField @bind-Value="_messageInfo.JumpUrl"
                                                       Label="@T("DisplayName.MessageTemplateJumpUrl")" Disabled>
                                                 <PrependContent>
                                                     <MCheckbox Class="mt-0" @bind-Value="_messageInfo.IsJump" Disabled></MCheckbox>
                                                 </PrependContent>
-                                            </DefaultTextField>
+                                            </STextField>
                                         </MCol>
                                     </MRow>
                                 }
@@ -117,9 +117,9 @@
                             {
                                 <MRow Class="mt-6">
                                     <MCol>
-                                        <DefaultTextField @bind-Value="_model.Sign"
+                                        <STextField @bind-Value="_model.Sign"
                                                       Label="@T("DisplayName.MessageTemplateSign")">
-                                        </DefaultTextField>
+                                        </STextField>
                                     </MCol>
                                 </MRow>
                             }
@@ -129,36 +129,32 @@
                 </MStepper>
             </MForm>
         </ChildContent>
-        <ActionContent>
-            @if (_model.Step == 1)
-            {
-                <MSpacer></MSpacer>
-                <MButton Color="fill" Class="btn-form btn-fill-line rounded-3 emphasis2--text" OnClick="async() => await Throttle(HandleSaveAsync)">@T("Save")</MButton>
-                <MButton Color="primary" Class="btn-form ml-6" OnClick="()=> HandleNextStep()">@T("NextStep")</MButton>
-            }
+        <DeleteContent Context="delete">
             @if (_model.Step == 2)
             {
-                if (_model.ChannelType == ChannelTypes.WebsiteMessage && !_selectReceiverType)
-                {
-                    <MIcon Size="24" Color="emphasis2" OnClick="HandleReceiverBack">mdi-keyboard-backspace</MIcon>
-                    <MSpacer></MSpacer>
-                }
-                else
-                {
-                    <MIcon Size="24" Color="emphasis2" OnClick="HandleReceiverBack">mdi-keyboard-backspace</MIcon>
-                    <MSpacer></MSpacer>
-                    <MButton Color="fill" Class="btn-form btn-fill-line rounded-3 emphasis2--text" OnClick="async() => await Throttle(HandleSaveAsync)">@T("Save")</MButton>
-                    <MButton Color="primary" Class="btn-form ml-6" OnClick="()=> HandleNextStep()">@T("NextStep")</MButton>
-                }
+                <MIcon Size="24" Color="emphasis2" OnClick="HandleReceiverBack">mdi-keyboard-backspace</MIcon>
             }
             @if (_model.Step == 3)
             {
                 <MIcon Size="24" Color="emphasis2" OnClick="HandleSendingRuleBack">mdi-keyboard-backspace</MIcon>
-                <MSpacer></MSpacer>
+            }
+        </DeleteContent>
+        <SaveContent Context="save">
+            @if (_model.Step == 1)
+            {
+                <MButton Color="fill" Class="btn-form btn-fill-line rounded-3 emphasis2--text" OnClick="async() => await Throttle(HandleSaveAsync)">@T("Save")</MButton>
+                <MButton Color="primary" Class="btn-form ml-6" OnClick="()=> HandleNextStep()">@T("NextStep")</MButton>
+            }
+            @if (_model.Step == 2 && (_model.ChannelType != ChannelTypes.WebsiteMessage || _selectReceiverType))
+            {
+                <MButton Color="fill" Class="btn-form btn-fill-line rounded-3 emphasis2--text" OnClick="async() => await Throttle(HandleSaveAsync)">@T("Save")</MButton>
+                <MButton Color="primary" Class="btn-form ml-6" OnClick="()=> HandleNextStep()">@T("NextStep")</MButton>
+            }
+            @if (_model.Step == 3)
+            {
                 <MButton Color="fill" Class="btn-form btn-fill-line rounded-3 emphasis2--text" OnClick="async() => await Throttle(HandleSaveAsync)">@T("Save")</MButton>
                 <MButton Color="primary" Class="btn-form ml-6" OnClick="async() => await Throttle(HandleSendAsync)">@T("SaveSend")</MButton>
             }
-        </ActionContent>
-
-    </McModal>
+        </SaveContent>
+    </SSimpleModal>
 </div>

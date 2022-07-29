@@ -72,13 +72,31 @@ public class MessageTemplateDomainService : DomainService
     }
 
 
-    public async Task<bool> CheckSendUpperLimitAsync(long perDayLimit, Guid userId)
+    public async Task<bool> CheckSendUpperLimitAsync(Guid messageTemplateId, long perDayLimit, Guid userId)
     {
-        var sendNum = await _messageRecordRepository.GetCountAsync(x => x.SendTime.Value.Date == DateTime.Now.Date && x.UserId == userId);
+        var sendNum = await _messageRecordRepository.GetCountAsync(x => x.SendTime.Value.Date == DateTime.Now.Date && x.UserId == userId && x.MessageEntityId == messageTemplateId);
         if (sendNum > perDayLimit)
         {
             return false;
         }
         return true;
+    }
+
+    public ExtraPropertyDictionary ConvertVariables(List<MessageTemplateItem> Items, ExtraPropertyDictionary variables)
+    {
+        var newVariables = new ExtraPropertyDictionary();
+
+        if (variables == null)
+        {
+            return newVariables;
+        }
+
+        foreach (var item in Items)
+        {
+            var key = string.IsNullOrEmpty(item.MappingCode) ? item.Code : item.MappingCode;
+            var value = variables.FirstOrDefault(x => x.Key == item.Code).Value;
+            newVariables[key] = value;
+        }
+        return newVariables;
     }
 }

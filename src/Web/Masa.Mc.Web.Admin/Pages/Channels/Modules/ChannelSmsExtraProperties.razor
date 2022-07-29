@@ -2,18 +2,18 @@
 <MForm Model="_model" @ref="Form" EnableValidation>
     <MRow Class="mt-6">
         <MCol>
-            <DefaultTextField @bind-Value="_model.AccessKeyId"
+            <STextField @bind-Value="_model.AccessKeyId"
                               Label="@T("SmsChannelOptions.AccessKeyId")"
                               Hint="@T("ChannelOptions.Tips")">
-            </DefaultTextField>
+            </STextField>
         </MCol>
     </MRow>
     <MRow Class="mt-6">
         <MCol>
-            <DefaultTextField @bind-Value="_model.AccessKeySecret"
+            <STextField @bind-Value="_model.AccessKeySecret"
                               Label="@T("SmsChannelOptions.AccessKeySecret")"
                               Hint="@T("ChannelOptions.Tips")">
-            </DefaultTextField>
+            </STextField>
         </MCol>
     </MRow>
 </MForm>

@@ -1,31 +1,31 @@
 ﻿@inherits AdminCompontentBase
 <div @ref="Ref">
-    <McModal Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.EditChannel")" ContentStyle="height: 597px;">
+    <SSimpleModal Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.EditChannel")" BodyStyle="height: 597px;" SaveText="@T("Save")" OnCancel="HandleCancel" OnDelete="HandleDel" OnSave="async() => await Throttle(HandleOk)">
         <ChildContent>
             <MForm Model="_model" EnableValidation @ref="_form" Class="full-height">
                 <MRow>
                     <MCol Class="pt-0 mt-2">
-                        <DefaultTextField @bind-Value="_model.DisplayName"
+                        <STextField @bind-Value="_model.DisplayName"
                                           Label="@T("DisplayName.ChannelDisplayName")">
-                        </DefaultTextField>
+                        </STextField>
                     </MCol>
                     <MCol>
-                        <DefaultTextField @bind-Value="_model.Code"
+                        <STextField @bind-Value="_model.Code"
                                           Disabled
                                           Label="@T("DisplayName.ChannelCode")">
-                        </DefaultTextField>
+                        </STextField>
                     </MCol>
                 </MRow>
                 <MRow Class="mt-6">
                     <MCol>
-                        <DefaultSelect @bind-Value="@_model.Type"
+                        <SSelect @bind-Value="@_model.Type"
                                        Items="@channelTypeItems"
                                        Label="@T("DisplayName.ChannelType")"
                                        Readonly
                                        ItemText="item => T(item.ToString())"
                                        ItemValue="item => item"
                                        Disabled>
-                        </DefaultSelect>
+                        </SSelect>
                     </MCol>
                 </MRow>
                 <ChannelExtraProperties @ref="_channelExtraPropertiesRef" @bind-Value="_model.ExtraProperties" @bind-Type="_model.Type" />
@@ -44,10 +44,5 @@
                 </MRow>
             </MForm>
         </ChildContent>
-        <ActionContent>
-            <MIcon Size="24" Color="error" Class="align-self-center" OnClick="HandleDel">mdi-delete</MIcon>
-            <MSpacer></MSpacer>
-            <MButton Color="primary" Class="btn-form" OnClick="async() => await Throttle(HandleOk)">@T("Save")</MButton>
-        </ActionContent>
-    </McModal>
+    </SSimpleModal>
 </div>

@@ -28,7 +28,6 @@ global using Masa.Mc.Infrastructure.Common.Helper;
 global using Masa.Mc.Contracts.Admin.Dtos.ReceiverGroups;
 global using Masa.Mc.Web.Admin.Pages.ReceiverGroups.Modules;
 global using Masa.Mc.Contracts.Admin.Enums.ReceiverGroups;
-global using Masa.Mc.Web.Admin.Components.Pagination;
 global using Masa.Mc.ApiGateways.Caller;
 global using Masa.Mc.ApiGateways.Caller.Services.Channels;
 global using Masa.Mc.ApiGateways.Caller.Services.MessageTemplates;

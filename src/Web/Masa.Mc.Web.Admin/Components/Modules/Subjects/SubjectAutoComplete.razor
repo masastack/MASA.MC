@@ -35,7 +35,7 @@
                 {
                     @if (string.IsNullOrEmpty(data.Item.Avatar))
                     {
-                        <EmptyAvatar Value="@(string.IsNullOrEmpty(data.Item.DisplayName)?data.Item.Name:data.Item.DisplayName)" />
+                        <SEmptyAvatar Value="@(string.IsNullOrEmpty(data.Item.DisplayName)?data.Item.Name:data.Item.DisplayName)" />
                     }
                     else
                     {

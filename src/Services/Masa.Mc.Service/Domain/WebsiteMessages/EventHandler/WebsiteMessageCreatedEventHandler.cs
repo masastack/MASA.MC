@@ -54,6 +54,7 @@ public class WebsiteMessageCreatedEventHandler
             };
 
             var messageRecord = new MessageRecord(receiverUser.UserId, taskHistory.MessageTask.ChannelId.Value, taskHistory.MessageTaskId, taskHistory.Id, taskHistory.MessageTask.Variables, messageData.GetDataValue<string>(nameof(MessageTemplate.Title)), taskHistory.SendTime);
+            messageRecord.SetMessageEntity(taskHistory.MessageTask.EntityType, taskHistory.MessageTask.EntityId);
             _messageRecordDomainService.SetUserInfo(messageRecord, receiverUser);
             messageRecord.SetResult(true, string.Empty);
 

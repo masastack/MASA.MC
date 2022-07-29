@@ -21,6 +21,8 @@ public class SendTemplateMessageTaskInputDto
 
     public ExtraPropertyDictionary Variables { get; set; } = new();
 
+    public Guid OperatorId { get; set; } = default;
+
     public static implicit operator MessageTaskUpsertDto(SendTemplateMessageTaskInputDto dto)
     {
         return new MessageTaskUpsertDto
@@ -35,7 +37,8 @@ public class SendTemplateMessageTaskInputDto
             Receivers = dto.Receivers,
             SendRules = dto.SendRules,
             Variables = dto.Variables,
-            Source = MessageTaskSources.Sdk
+            Source = MessageTaskSources.Sdk,
+            OperatorId = dto.OperatorId,
         };
     }
 }

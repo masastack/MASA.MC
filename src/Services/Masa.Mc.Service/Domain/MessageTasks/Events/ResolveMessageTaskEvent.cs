@@ -3,7 +3,7 @@
 
 namespace Masa.Mc.Service.Admin.Domain.MessageTasks.Events;
 
-public record ResolveMessageTaskEvent(Guid MessageTaskId) : DomainEvent
+public record ResolveMessageTaskEvent(Guid MessageTaskId, Guid OperatorId = default) : DomainEvent
 {
     public MessageTask MessageTask { get; set; }
 }

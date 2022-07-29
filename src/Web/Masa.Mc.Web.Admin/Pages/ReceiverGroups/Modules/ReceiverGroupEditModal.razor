@@ -1,13 +1,13 @@
 ﻿@inherits AdminCompontentBase
 <div @ref="Ref">
-    <McModal Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.EditReceiverGroup")" ContentStyle="height: 728px;">
+    <SSimpleModal Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.EditReceiverGroup")" BodyStyle="height: 728px;" SaveText="@T("Save")" OnCancel="HandleCancel" OnDelete="HandleDel" OnSave="async() => await Throttle(HandleOk)">
         <ChildContent>
             <MForm Model="_model" EnableValidation @ref="_form" Class="full-height">
                 <MRow>
                     <MCol Class="pt-0 mt-2">
-                        <DefaultTextField @bind-Value="_model.DisplayName"
+                        <STextField @bind-Value="_model.DisplayName"
                                           Label="@T("DisplayName.ReceiverGroupDisplayName")">
-                        </DefaultTextField>
+                        </STextField>
                     </MCol>
                 </MRow>
                 <ReceiverSelect @ref="_ReceiverSelect" @bind-Value="_model.Items"></ReceiverSelect>
@@ -24,10 +24,5 @@
                 </MRow>
             </MForm>
         </ChildContent>
-        <ActionContent>
-            <MIcon Size="24" Color="error" Class="align-self-center" OnClick="HandleDel">mdi-delete</MIcon>
-            <MSpacer></MSpacer>
-            <MButton Color="primary" Class="btn-form" OnClick="async() => await Throttle(HandleOk)">@T("Save")</MButton>
-        </ActionContent>
-    </McModal>
+    </SSimpleModal>
 </div>

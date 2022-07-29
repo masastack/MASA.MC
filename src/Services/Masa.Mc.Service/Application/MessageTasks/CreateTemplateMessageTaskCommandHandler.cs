@@ -24,6 +24,10 @@ public class CreateTemplateMessageTaskCommandHandler
         if (messageTemplate != null)
         {
             createCommand.MessageTask.DisplayName = string.IsNullOrEmpty(messageTemplate.Title) ? messageTemplate.DisplayName : messageTemplate.Title;
+            if (!createCommand.MessageTask.IsDraft && string.IsNullOrEmpty(createCommand.MessageTask.Sign))
+            {
+                createCommand.MessageTask.Sign = messageTemplate.Sign;
+            }
         }
     }
 
@@ -31,6 +35,6 @@ public class CreateTemplateMessageTaskCommandHandler
     public async Task CreateTemplateMessageTaskAsync(CreateTemplateMessageTaskCommand createCommand)
     {
         var entity = createCommand.MessageTask.Adapt<MessageTask>();
-        await _domainService.CreateAsync(entity);
+        await _domainService.CreateAsync(entity, createCommand.MessageTask.OperatorId);
     }
 }

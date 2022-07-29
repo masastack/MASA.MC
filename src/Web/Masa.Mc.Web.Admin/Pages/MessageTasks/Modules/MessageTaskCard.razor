@@ -65,7 +65,7 @@
     </MCardTitle>
     <MDivider></MDivider>
     <MCardText class="flex-grow-1 px-0 d-flex flex-column">
-        <div class="@($"h8 {(MessageTask.IsEnabled?"emphasis--text":"regular3--text")}")" style="line-height: 24px;">@MessageTask.DisplayName</div>
+        <div class="@($"h8 text-truncate {(MessageTask.IsEnabled?"emphasis--text":"regular3--text")}")" style="line-height: 24px;">@MessageTask.DisplayName</div>
         <div class="caption regular3--text" style="line-height: 18px;">@((MessageTask.SendTime?.ToLocalTime()??MessageTask.ExpectSendTime?.ToLocalTime())?.ToString(T("$DateTimeFormat")))</div>
     </MCardText>
     <div class="@($"message-content fill-background caption px-2 py-1 text-justify rounded-lg {(MessageTask.IsEnabled?"regular2--text":"regular3--text")}")">@MessageTask.Content</div>

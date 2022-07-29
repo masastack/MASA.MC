@@ -64,7 +64,7 @@
     </HeaderContent>
     <AutoHeightContent>
         <MCard Class="page-content">
-            <DefaultDataTable Width="@("120%")" FixedRight Headers="Headers" Items="_entities.Result" TItem="MessageRecordDto" ItemsPerPage="_queryParam.PageSize" HideDefaultFooter Class="mt-6 d-flex full-height flex-column">
+            <SDataTable Width="@("120%")" FixedRight Headers="Headers" Items="_entities.Result" TItem="MessageRecordDto" ItemsPerPage="_queryParam.PageSize" HideDefaultFooter Class="mt-6 d-flex full-height flex-column">
                 <HeaderColContent Context="header">
                     <span class="text-btn">@header.Text</span>
                 </HeaderColContent>
@@ -76,7 +76,7 @@
                                 <MListItemAvatar Class="mr-3">
                                     @if (string.IsNullOrEmpty(context.Item.ExtraProperties.GetProperty<string>("Avatar")))
                                     {
-                                        <EmptyAvatar Size=40 Value="@(context.Item.ExtraProperties.GetProperty<string>("DisplayName"))" />
+                                        <SEmptyAvatar Size=40 Value="@(context.Item.ExtraProperties.GetProperty<string>("DisplayName"))" />
                                     }
                                     else
                                     {
@@ -126,9 +126,9 @@
                     }
                 </ItemColContent>
                 <FooterContent>
-                    <Pagination Class="mt-3 mx-6 pb-6" Page="@_queryParam.Page" PageSize="@_queryParam.PageSize" Total="_entities.Total" PageChanged="HandlePageChanged" PageSizeChanged="HandlePageSizeChanged" />
+                    <SPagination Class="mt-3 mx-6 pb-6" Page="@_queryParam.Page" PageSize="@_queryParam.PageSize" Total="_entities.Total" PageChanged="HandlePageChanged" PageSizeChanged="HandlePageSizeChanged" />
                 </FooterContent>
-            </DefaultDataTable>
+            </SDataTable>
         </MCard>
     </AutoHeightContent>
 </AutoHeight>

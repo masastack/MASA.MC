@@ -1,6 +1,6 @@
 ﻿@inherits AdminCompontentBase
 <div @ref="Ref">
-    <McModal Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.CreateChannel")" ContentStyle="height: 597px;">
+    <SSimpleModal Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.CreateChannel")" BodyStyle="height: 597px;" SaveText="@T("Submit")" OnDelete="()=> _step-- " OnCancel="HandleCancel" OnSave="async() => await Throttle(HandleOkAsync)">
         <ChildContent>
             <MForm Model="_model" @ref="_form" EnableValidation Context="form" Class="full-height">
                 <MStepper Value="_step" Class="full-height overflow-visible" Style="box-shadow:none">
@@ -66,14 +66,14 @@
                         <MStepperContent Step="2" Class="pa-0 full-height overflow-visible">
                             <MRow>
                                 <MCol>
-                                    <DefaultTextField @bind-Value="_model.DisplayName"
-                                                      Label="@T("DisplayName.ChannelDisplayName")">
-                                    </DefaultTextField>
+                                    <STextField @bind-Value="_model.DisplayName"
+                                                Label="@T("DisplayName.ChannelDisplayName")">
+                                    </STextField>
                                 </MCol>
                                 <MCol>
-                                    <DefaultTextField @bind-Value="_model.Code"
-                                                      Label="@T("DisplayName.ChannelCode")">
-                                    </DefaultTextField>
+                                    <STextField @bind-Value="_model.Code"
+                                                Label="@T("DisplayName.ChannelCode")">
+                                    </STextField>
                                 </MCol>
                             </MRow>
                             <ChannelExtraProperties @ref="_channelExtraPropertiesRef" @bind-Value="_model.ExtraProperties" @bind-Type="_model.Type" />
@@ -95,13 +95,17 @@
                 </MStepper>
             </MForm>
         </ChildContent>
-        <ActionContent>
+        <DeleteContent Context="delete">
             @if (_step == 2)
             {
-                <MIcon Size="24" Color="emphasis2" OnClick="()=> _step-- ">mdi-keyboard-backspace</MIcon>
-                <MSpacer></MSpacer>
-                <MButton Color="primary" Class="btn-form" OnClick="async()=> await Throttle(HandleOkAsync)">@T("Submit")</MButton>
+                <MIcon Size="24" Color="emphasis2" OnClick="delete.Click">mdi-keyboard-backspace</MIcon>
             }
-        </ActionContent>
-    </McModal>
+        </DeleteContent>
+        <SaveContent Context="save">
+            @if (_step == 2)
+            {
+                <MButton Color="primary" Class="btn-form" OnClick="save.Click">@T("Submit")</MButton>
+            }
+        </SaveContent>
+    </SSimpleModal>
 </div>

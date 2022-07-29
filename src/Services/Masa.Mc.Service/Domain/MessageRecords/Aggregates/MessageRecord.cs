@@ -18,6 +18,8 @@ public class MessageRecord : FullAggregateRoot<Guid, Guid>
     public ExtraPropertyDictionary ExtraProperties { get; protected set; } = new();
     public ExtraPropertyDictionary Variables { get; protected set; } = new();
     public string DisplayName { get; protected set; } = string.Empty;
+    public MessageEntityTypes MessageEntityType { get; protected set; }
+    public Guid MessageEntityId { get; protected set; }
 
     public MessageRecord(Guid userId, Guid channelId, Guid messageTaskId, Guid messageTaskHistoryId, ExtraPropertyDictionary variables, string displayName, DateTimeOffset? expectSendTime)
     {
@@ -51,5 +53,11 @@ public class MessageRecord : FullAggregateRoot<Guid, Guid>
     {
         Success = false;
         FailureReason = "Recall message";
+    }
+
+    public void SetMessageEntity(MessageEntityTypes messageEntityType, Guid messageEntityId)
+    {
+        MessageEntityType = messageEntityType;
+        MessageEntityId = messageEntityId;
     }
 }

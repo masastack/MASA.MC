@@ -34,24 +34,9 @@ public partial class ChannelManagement : AdminCompontentBase
         await LoadData();
     }
 
-    private async Task SearchKeyDown(KeyboardEventArgs eventArgs)
-    {
-        if (eventArgs.Key == "Enter")
-        {
-            await RefreshAsync();
-        }
-    }
-
     private async Task RefreshAsync()
     {
         _queryParam.Page = 1;
-        await LoadData();
-    }
-
-    private async Task HandlePaginationChange(PaginationEventArgs args)
-    {
-        _queryParam.Page = args.Page;
-        _queryParam.PageSize = args.PageSize;
         await LoadData();
     }
 
