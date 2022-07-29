@@ -23,7 +23,6 @@ public class SendTemplateMessageTaskInputDto
 
     public Guid OperatorId { get; set; } = default;
 
-
     public static implicit operator MessageTaskUpsertDto(SendTemplateMessageTaskInputDto dto)
     {
         return new MessageTaskUpsertDto

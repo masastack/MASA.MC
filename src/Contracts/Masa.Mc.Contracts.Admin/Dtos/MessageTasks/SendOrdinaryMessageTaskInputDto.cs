@@ -21,7 +21,6 @@ public class SendOrdinaryMessageTaskInputDto
 
     public Guid OperatorId { get; set; } = default;
 
-
     public static implicit operator MessageTaskUpsertDto(SendOrdinaryMessageTaskInputDto dto)
     {
         return new MessageTaskUpsertDto
