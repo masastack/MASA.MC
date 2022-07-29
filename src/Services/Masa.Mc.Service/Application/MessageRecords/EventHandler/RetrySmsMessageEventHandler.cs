@@ -48,7 +48,7 @@ public class RetrySmsMessageEventHandler
             if (messageData.MessageType == MessageEntityTypes.Template)
             {
                 var perDayLimit = messageData.GetDataValue<long>(nameof(MessageTemplate.PerDayLimit));
-                if (!await _messageTemplateDomainService.CheckSendUpperLimitAsync(perDayLimit, messageRecord.UserId))
+                if (!await _messageTemplateDomainService.CheckSendUpperLimitAsync(messageRecord.MessageEntityId, perDayLimit, messageRecord.UserId))
                 {
                     messageRecord.SetResult(false, "The maximum number of times to send per day has been reached");
                     await _messageRecordRepository.UpdateAsync(messageRecord);
@@ -56,7 +56,8 @@ public class RetrySmsMessageEventHandler
                 }
             }
 
-            var smsMessage = new SmsMessage(messageRecord.GetDataValue<string>(nameof(MessageReceiverUser.PhoneNumber)), JsonSerializer.Serialize(messageRecord.Variables));
+            var variables = _messageTemplateDomainService.ConvertVariables(messageData.TemplateItems, messageRecord.Variables);
+            var smsMessage = new SmsMessage(messageRecord.GetDataValue<string>(nameof(MessageReceiverUser.PhoneNumber)), JsonSerializer.Serialize(variables));
             smsMessage.Properties.Add("SignName", messageData.GetDataValue<string>(nameof(MessageTemplate.Sign)));
             smsMessage.Properties.Add("TemplateCode", messageData.GetDataValue<string>(nameof(MessageTemplate.TemplateId)));
             try

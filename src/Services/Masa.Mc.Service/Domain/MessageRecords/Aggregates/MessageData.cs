@@ -9,6 +9,8 @@ public class MessageData
 
     public ExtraPropertyDictionary ExtraProperties { get; set; } = new();
 
+    public List<MessageTemplateItem> TemplateItems = new();
+
     public virtual T GetDataValue<T>(string name)
     {
         return ExtraProperties.GetProperty<T>(name);

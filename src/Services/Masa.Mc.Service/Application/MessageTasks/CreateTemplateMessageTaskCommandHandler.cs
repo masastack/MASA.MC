@@ -24,6 +24,10 @@ public class CreateTemplateMessageTaskCommandHandler
         if (messageTemplate != null)
         {
             createCommand.MessageTask.DisplayName = string.IsNullOrEmpty(messageTemplate.Title) ? messageTemplate.DisplayName : messageTemplate.Title;
+            if (!createCommand.MessageTask.IsDraft && string.IsNullOrEmpty(createCommand.MessageTask.Sign))
+            {
+                createCommand.MessageTask.Sign = messageTemplate.Sign;
+            }
         }
     }
 

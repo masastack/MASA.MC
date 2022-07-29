@@ -9,21 +9,29 @@ public class MessageTaskDomainService : DomainService
     private readonly IMessageInfoRepository _messageInfoRepository;
     private readonly IMessageTemplateRepository _messageTemplateRepository;
     private readonly ITemplateRenderer _templateRenderer;
+    private readonly IChannelRepository _channelRepository;
 
     public MessageTaskDomainService(IDomainEventBus eventBus
         , IMessageTaskRepository repository
         , IMessageInfoRepository messageInfoRepository
         , IMessageTemplateRepository messageTemplateRepository
-        , ITemplateRenderer templateRenderer) : base(eventBus)
+        , ITemplateRenderer templateRenderer
+        , IChannelRepository channelRepository) : base(eventBus)
     {
         _repository = repository;
         _messageInfoRepository = messageInfoRepository;
         _messageTemplateRepository = messageTemplateRepository;
         _templateRenderer = templateRenderer;
+        _channelRepository = channelRepository;
     }
 
     public virtual async Task CreateAsync(MessageTask messageTask, Guid operatorId = default)
     {
+        if (!messageTask.IsDraft)
+        {
+            await ValidateChannelAsync(messageTask);
+        }
+
         messageTask.SetDraft(messageTask.IsDraft);
         messageTask.SetExpectSendTime();
         await _repository.AddAsync(messageTask);
@@ -36,6 +44,11 @@ public class MessageTaskDomainService : DomainService
 
     public virtual async Task UpdateAsync(MessageTask messageTask)
     {
+        if (!messageTask.IsDraft)
+        {
+            await ValidateChannelAsync(messageTask);
+        }
+
         messageTask.SetDraft(messageTask.IsDraft);
         messageTask.SetExpectSendTime();
         await _repository.UpdateAsync(messageTask);
@@ -58,6 +71,7 @@ public class MessageTaskDomainService : DomainService
         {
             var messageTemplate = await _messageTemplateRepository.FindAsync(x => x.Id == entityId);
             messageData = new MessageData { MessageType = MessageEntityTypes.Template, ExtraProperties = ExtensionPropertyHelper.ObjMapToExtraProperty(messageTemplate) };
+            messageData.TemplateItems = messageTemplate.Items.ToList();
         }
         if (variables != null)
         {
@@ -71,7 +85,16 @@ public class MessageTaskDomainService : DomainService
     {
         var messageTask = await _repository.FindAsync(x => x.Id == messageTaskId);
         if (messageTask == null)
-            throw new UserFriendlyException("messageTask not found");
+            throw new UserFriendlyException("MessageTask not found");
         return await GetMessageDataAsync(messageTask.EntityType, messageTask.EntityId, variables);
+    }
+
+    protected async Task ValidateChannelAsync(MessageTask messageTask)
+    {
+        var channel = await _channelRepository.FindAsync(x => x.Id == messageTask.ChannelId);
+        if (channel == null)
+            throw new UserFriendlyException("Channel not found");
+        if (channel.Type != messageTask.ChannelType)
+            throw new UserFriendlyException("Channel type does not match the channel");
     }
 }
