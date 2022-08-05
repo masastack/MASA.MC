@@ -1,5 +1,5 @@
 ﻿@inherits AdminCompontentBase
-<MRow Class="mt-6">
+<MRow Class="row-box">
     <MCol Class="d-flex align-self-stretch">
         <SubjectAutoComplete @ref="_subjectAutoComplete" Class="d-flex" @bind-Value="_userIds" SelectedValues="Value.Select(x=>x.SubjectId).ToList()" OnSelectedItemUpdate="HandleSubjectSelected"></SubjectAutoComplete>
         <MButton Color="fill" Class="d-flex ml-6 rounded-lg btn small-btn pa-0 btn-fill-line" OnClick="_createModal.OpenModalAsync">

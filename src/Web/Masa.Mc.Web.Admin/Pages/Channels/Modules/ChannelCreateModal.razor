@@ -64,24 +64,30 @@
                             </MContainer>
                         </MStepperContent>
                         <MStepperContent Step="2" Class="pa-0 full-height overflow-visible">
-                            <MRow>
-                                <MCol>
+                            <MRow Class="row-box">
+                                <MCol Md="6">
                                     <STextField @bind-Value="_model.DisplayName"
                                                 Label="@T("DisplayName.ChannelDisplayName")">
                                     </STextField>
                                 </MCol>
-                                <MCol>
+                                <MCol Md="6">
                                     <STextField @bind-Value="_model.Code"
                                                 Label="@T("DisplayName.ChannelCode")">
                                     </STextField>
                                 </MCol>
                             </MRow>
                             <ChannelExtraProperties @ref="_channelExtraPropertiesRef" @bind-Value="_model.ExtraProperties" @bind-Type="_model.Type" />
-                            <div class="flex-column justify-space-between mt-9" Style="height: 80px;">
-                                <div class="subtitle3 regular--text">@T("DisplayName.Color.Lable")</div>
-                                <ColorsGroup @bind-Value="_model.Color" Colors='_colors' />
-                            </div>
-                            <MRow Class="mt-6">
+                            <MRow Class="row-box">
+                                <MCol>
+                                    <div class="subtitle3 regular--text">@T("DisplayName.Color.Lable")</div>
+                                </MCol>
+                            </MRow>
+                            <MRow Class="row-box">
+                                <MCol>
+                                    <ColorsGroup @bind-Value="_model.Color" Colors='_colors' />
+                                </MCol>
+                            </MRow>
+                            <MRow Class="row-box">
                                 <MCol>
                                     <MTextarea @bind-Value="_model.Description"
                                                Label="@T("DisplayName.ChannelDescription")"

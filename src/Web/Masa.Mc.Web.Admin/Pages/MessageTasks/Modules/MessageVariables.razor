@@ -1,7 +1,7 @@
 ﻿@inherits AdminCompontentBase
 <div class="@CssProvider.GetClass()" style="@CssProvider.GetStyle()" id="@Id" @ref="Ref" @attributes="Attributes">
     <div class="subtitle2 emphasis2--text">@T("DisplayName.VariableValueTransfer")</div>
-    <MRow Class="mt-6">
+    <MRow Class="row-box">
         @foreach (var item in _items)
         {
             <MCol Md="6">

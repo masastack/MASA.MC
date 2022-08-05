@@ -3,14 +3,14 @@
     <SSimpleModal Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.CreateMessageTemplate")" BodyStyle="height: 568px;" SaveText="@T("Submit")" OnCancel="HandleCancel" OnSave="async() => await Throttle(HandleOkAsync)">
         <ChildContent>
             <MForm Model="_model" EnableValidation @ref="_form" Class="full-height">
-                <MRow>
-                    <MCol Class="pt-0 mt-2">
+                <MRow Class="row-box">
+                    <MCol>
                         <STextField @bind-Value="_model.Code"
                                           Label="@T("DisplayName.MessageTemplateCode")">
                         </STextField>
                     </MCol>
                 </MRow>
-                <MRow Class="mt-6">
+                <MRow Class="row-box">
                     <MCol>
                         <SSelect Value="@_model.ChannelType"
                                        Items="@(GetEnumList<ChannelTypes>())"
@@ -21,7 +21,7 @@
                         </SSelect>
                     </MCol>
                 </MRow>
-                <MRow Class="mt-6">
+                <MRow Class="row-box">
                     <MCol>
                         <SSelect @bind-Value="_model.ChannelId"
                                        Items="@_channelItems"
@@ -35,14 +35,14 @@
                         </SSelect>
                     </MCol>
                 </MRow>
-                <MRow Class="mt-6">
+                <MRow Class="row-box">
                     <MCol>
                         <STextField @bind-Value="_model.Sign"
                                           Label="@T("DisplayName.MessageTemplateSign")">
                         </STextField>
                     </MCol>
                 </MRow>
-                <MRow Class="mt-6">
+                <MRow Class="row-box">
                     <MCol>
                         <MAutocomplete Items="_templateItems" @bind-Value="_model.TemplateId"
                                        Label="@T("SelectTemplate")"
@@ -66,14 +66,14 @@
                 </MRow>
                 @if (!string.IsNullOrEmpty(_model.DisplayName))
                 {
-                    <MRow Class="mt-6">
+                    <MRow Class="row-box">
                         <MCol>
                             <SmsTemplateInfo MessageTemplate="_model" />
                             <MInput @bind-Value="_model.Items" />
                         </MCol>
                     </MRow>
                 }
-                <MRow Class="mt-6">
+                <MRow Class="row-box">
                     <MCol>
                         <div class="d-flex align-center justify-start">
                             <span class="body2 regular--text mr-2">@T("Description.MessageTemplate.PerDayLimit.Tips") </span>

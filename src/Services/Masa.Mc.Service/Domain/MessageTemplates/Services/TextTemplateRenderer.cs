@@ -9,7 +9,7 @@ public class TextTemplateRenderer : ITemplateRenderer
     {
         foreach (var item in model)
         {
-            context = context.Replace($"{startstr}{item.Key}{endstr}", item.Value.ToString());
+            context = context.Replace($"{startstr}{item.Key}{endstr}", item.Value?.ToString()??string.Empty);
         }
         return Task.FromResult(context);
     }

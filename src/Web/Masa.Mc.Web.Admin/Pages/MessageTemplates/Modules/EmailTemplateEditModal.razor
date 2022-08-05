@@ -3,14 +3,14 @@
     <SSimpleModal Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.EditMessageTemplate")" BodyStyle="height: 533px;" SaveText="@T("Save")" OnCancel="HandleCancel" OnDelete="HandleDelAsync" OnSave="async() => await Throttle(HandleOk)">
         <ChildContent>
             <MForm Model="_model" EnableValidation @ref="_form" Class="full-height">
-                <MRow>
-                    <MCol Class="pt-0 mt-2">
+                <MRow Class="row-box">
+                    <MCol>
                         <STextField @bind-Value="_model.Code"
                                           Label="@T("DisplayName.MessageTemplateCode")">
                         </STextField>
                     </MCol>
                 </MRow>
-                <MRow Class="mt-6">
+                <MRow Class="row-box">
                     <MCol>
                         <SSelect Value="@_model.ChannelType"
                                        Items="@(GetEnumList<ChannelTypes>())"
@@ -21,7 +21,7 @@
                         </SSelect>
                     </MCol>
                 </MRow>
-                <MRow Class="mt-6">
+                <MRow Class="row-box">
                     <MCol>
                         <SSelect @bind-Value="_model.ChannelId"
                                        Items="@_channelItems"
@@ -31,20 +31,20 @@
                         </SSelect>
                     </MCol>
                 </MRow>
-                <MRow Class="mt-6">
+                <MRow Class="row-box">
                     <MCol>
                         <STextField @bind-Value="_model.Title"
                                           Label="@T("DisplayName.MessageTemplateTitle")">
                         </STextField>
                     </MCol>
                 </MRow>
-                <MRow Class="mt-6">
+                <MRow Class="row-box">
                     <MCol>
                         <DefaultMarkdown @bind-Html="_model.Content" @bind-Value="_model.Markdown"></DefaultMarkdown>
                         <MInput @bind-Value="_model.Content" />
                     </MCol>
                 </MRow>
-                <MRow Class="mt-6">
+                <MRow Class="row-box">
                     <MCol>
                         <div class="d-flex align-center justify-start">
                             <span class="body2 regular--text mr-2">@T("Description.MessageTemplate.PerDayLimit.Tips") </span>

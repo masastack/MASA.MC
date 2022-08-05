@@ -109,20 +109,11 @@
                 <ItemColContent>
                     @switch (context.Header.Value)
                     {
-                        case (nameof(MessageTemplateDto.Code)):
-                            <div class="body regular--text text-truncate" style="max-width:250px">@context.Value</div>
-                            break;
                         case ("ChannelDisplayName"):
-                            <div class="body regular--text text-truncate" style="max-width:150px">@context.Item.Channel?.DisplayName</div>
-                            break;
-                        case (nameof(MessageTemplateDto.DisplayName)):
-                            <div class="body regular--text text-truncate" style="max-width:270px">@context.Item.DisplayName</div>
+                            <DefaultGenericColumnRender Value="@context.Item.Channel?.DisplayName" Width="@context.Header.Width"></DefaultGenericColumnRender>
                             break;
                         case nameof(MessageTemplateDto.TemplateType):
-                            <span class="body regular--text">@T($"DisplayName.SmsTemplateType.{((SmsTemplateTypes)context.Item.TemplateType).ToString()}")</span>
-                            break;
-                        case (nameof(MessageTemplateDto.ModificationTime)):
-                            <DateTimeListItem Value="@context.Item.ModificationTime"></DateTimeListItem>
+                            <DefaultGenericColumnRender Value="@T($"DisplayName.SmsTemplateType.{((SmsTemplateTypes)context.Item.TemplateType).ToString()}")" Width="@context.Header.Width"></DefaultGenericColumnRender>
                             break;
                         case nameof(MessageTemplateDto.AuditStatus):
                             <MessageTemplateStatusTag Value="@context.Item.AuditStatus" />
@@ -131,7 +122,7 @@
                             <MIcon Small Color="emphasis2" OnClick="async()=>await _editModal.OpenModalAsync(context.Item)">mdi-pencil</MIcon>
                             break;
                         default:
-                            <span class="body regular--text">@context.Value</span>
+                            <DefaultGenericColumnRender Value="@context.Value" Width="@context.Header.Width"></DefaultGenericColumnRender>
                             break;
                     }
                 </ItemColContent>

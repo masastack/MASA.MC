@@ -1,18 +1,16 @@
 ﻿@inherits AdminCompontentBase
-<MForm Model="_model" @ref="Form" EnableValidation>
-    <MRow Class="mt-6">
-        <MCol>
+<MForm Model="_model" @ref="Form" EnableValidation Class="my-3">
+    <MRow Class="row-box">
+        <MCol Md="12">
             <STextField @bind-Value="_model.AccessKeyId"
-                              Label="@T("SmsChannelOptions.AccessKeyId")"
-                              Hint="@T("ChannelOptions.Tips")">
+                        Label="@T("SmsChannelOptions.AccessKeyId")"
+                        Hint="@T("ChannelOptions.Tips")">
             </STextField>
         </MCol>
-    </MRow>
-    <MRow Class="mt-6">
-        <MCol>
+        <MCol Md="12">
             <STextField @bind-Value="_model.AccessKeySecret"
-                              Label="@T("SmsChannelOptions.AccessKeySecret")"
-                              Hint="@T("ChannelOptions.Tips")">
+                        Label="@T("SmsChannelOptions.AccessKeySecret")"
+                        Hint="@T("ChannelOptions.Tips")">
             </STextField>
         </MCol>
     </MRow>

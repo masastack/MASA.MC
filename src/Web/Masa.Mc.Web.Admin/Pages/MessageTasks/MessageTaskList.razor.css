@@ -1,6 +1,6 @@
 ﻿@-webkit-keyframes searchOpen {
     0% {
-        width: 365px;
+        width: 428px;
     }
 
     100% {
@@ -10,7 +10,7 @@
 
 @keyframes searchOpen {
     0% {
-        width: 365px;
+        width: 428px;
     }
 
     100% {
@@ -29,7 +29,7 @@
     }
 
     100% {
-        width: 365px;
+        width: 428px;
     }
 }
 
@@ -39,7 +39,7 @@
     }
 
     100% {
-        width: 365px;
+        width: 428px;
     }
 }
 

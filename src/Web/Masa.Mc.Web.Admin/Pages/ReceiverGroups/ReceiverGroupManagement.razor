@@ -23,20 +23,11 @@
                         case (nameof(ReceiverGroupDto.DisplayName)):
                             <span class="h8 emphasis--text">@context.Value</span>
                             break;
-                        case (nameof(ReceiverGroupDto.Description)):
-                            <span class="body regular--text">@context.Value</span>
-                            break;
-                        case (nameof(ReceiverGroupDto.ModificationTime)):
-                            <DateTimeListItem Value="@context.Item.ModificationTime"></DateTimeListItem>
-                            break;
-                        case (nameof(ReceiverGroupDto.Modifier)):
-                            <span class="body2 regular--text"></span>
-                            break;
                         case "Action":
                             <MIcon Small Color="emphasis2" OnClick="async()=>await _editModal.OpenModalAsync(context.Item)">mdi-pencil</MIcon>
                             break;
                         default:
-                            <span class="body regular--text">@context.Value</span>
+                            <DefaultGenericColumnRender Value="@context.Value" Width="@context.Header.Width"></DefaultGenericColumnRender>
                             break;
                     }
                 </ItemColContent>

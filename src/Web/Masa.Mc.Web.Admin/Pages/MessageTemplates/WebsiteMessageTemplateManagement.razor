@@ -55,20 +55,8 @@
                 <ItemColContent>
                     @switch (context.Header.Value)
                     {
-                        case (nameof(MessageTemplateDto.Code)):
-                            <div class="body regular--text text-truncate" style="max-width:230px">@context.Value</div>
-                            break;
                         case ("ChannelDisplayName"):
-                            <div class="body regular--text text-truncate" style="max-width:190px">@context.Item.Channel?.DisplayName</div>
-                            break;
-                        case (nameof(MessageTemplateDto.Title)):
-                            <div class="body regular--text text-truncate" style="max-width:400px">@context.Item.Title</div>
-                            break;
-                        case (nameof(MessageTemplateDto.Modifier)):
-                            <span class="body2 regular--text"></span>
-                            break;
-                        case (nameof(MessageTemplateDto.ModificationTime)):
-                            <DateTimeListItem Value="@context.Item.ModificationTime"></DateTimeListItem>
+                            <DefaultGenericColumnRender Value="@context.Item.Channel?.DisplayName" Width="@context.Header.Width"></DefaultGenericColumnRender>
                             break;
                         case nameof(MessageTemplateDto.AuditStatus):
                             string color = string.Empty;
@@ -99,7 +87,7 @@
                             <MIcon Small Color="emphasis2" OnClick="async()=>await _editModal.OpenModalAsync(context.Item)">mdi-pencil</MIcon>
                             break;
                         default:
-                            <span class="body regular--text">@context.Value</span>
+                            <DefaultGenericColumnRender Value="@context.Value" Width="@context.Header.Width"></DefaultGenericColumnRender>
                             break;
                     }
                 </ItemColContent>
