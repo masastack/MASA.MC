@@ -3,27 +3,31 @@
     <MRow Class="row-box">
         <MCol Md="6">
             <STextField @bind-Value="_model.UserName"
-                              Label="@T("EmailChannelOptions.UserName")"
-                              Hint="@T("ChannelOptions.Tips")">
+                        Label="@T("EmailChannelOptions.UserName")"
+                        Hint="@T("ChannelOptions.Tips")">
             </STextField>
         </MCol>
         <MCol Md="6">
             <STextField @bind-Value="_model.Password"
-                              Label="@T("EmailChannelOptions.Password")">
+                        Label="@T("EmailChannelOptions.Password")">
             </STextField>
         </MCol>
         <MCol Md="6">
             <STextField @bind-Value="_model.Smtp"
-                              Label="@T("EmailChannelOptions.Smtp")"
-                              Hint="@T("ChannelOptions.Tips")">
+                        Label="@T("EmailChannelOptions.Smtp")"
+                        Hint="@T("ChannelOptions.Tips")">
             </STextField>
         </MCol>
         <MCol Md="6">
-            <MRow Class="pl-3">
-                <MCol Style="border: 1px solid #E2E7F4;border-radius: 8px;height: 48px;margin-top: 12px;padding-top: 4px;"><MCheckbox Dense @bind-Value="_model.Ssl" Label="@T("EmailChannelOptions.Ssl")" OnChange="HandleChangeAsync"></MCheckbox></MCol>
+            <MRow>
+                <MCol>
+                    <div class="outlined-box-medium pt-1">
+                        <MCheckbox Dense @bind-Value="_model.Ssl" Label="@T("EmailChannelOptions.Ssl")" OnChange="HandleChangeAsync"></MCheckbox>
+                    </div>
+                </MCol>
                 <MCol>
                     <STextField @bind-Value="_model.Port"
-                                      Label="@T("EmailChannelOptions.Port")">
+                                Label="@T("EmailChannelOptions.Port")">
                     </STextField>
                 </MCol>
             </MRow>

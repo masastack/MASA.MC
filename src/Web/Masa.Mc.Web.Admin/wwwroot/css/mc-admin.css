@@ -247,6 +247,12 @@
     padding: 4px !important;
 }
 
+.medium-btn {
+    min-width: 100px !important;
+    height: 48px !important;
+    padding: 4px !important;
+}
+
 .linear--text {
     color: #A18BFF !important;
 }
@@ -365,15 +371,11 @@
     border-radius: 20px !important;
 }
 
-.row-box .col {
+.row-box > .col {
     padding-top: 18px;
     padding-bottom: 18px;
 }
 
-.row-padding {
-    padding-top: 18px;
-    padding-bottom: 18px;
-}
 
 @-webkit-keyframes searchOpen {
     0% {
@@ -425,11 +427,18 @@
     animation-name: searchShrink;
 }
 
-.m-stepper__header {
+/*.m-stepper__header {
     height: 48px !important;
     margin: -8px 0 18px 0;
 }
 
 .m-stepper__step {
     padding: 0 !important;
+}*/
+
+.outlined-box-medium {
+    border: 1px solid #E2E7F4;
+    border-radius: 8px;
+    height: 48px;
+    padding-left: 6px;
 }

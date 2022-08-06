@@ -13,7 +13,7 @@
                             <Masa.Mc.Web.Admin.Components.Pickers.DateRangePicker @bind-StartTime="_queryParam.StartTime" @bind-EndTime="_queryParam.EndTime" OnChange="RefreshAsync" />
                         </MCol>
                         <MCol Md="2">
-                            <MSelect @bind-Value="_queryParam.ChannelId"
+                            <SSelect Small @bind-Value="_queryParam.ChannelId"
                                  Items="@_channelItems"
                                  Label="@T("DisplayName.Channel")"
                                  ItemText="item => item.DisplayName"
@@ -28,7 +28,7 @@
                                  Class="fill-card body2"
                                  OnClearClick="RefreshAsync"
                                  OnSelectedItemUpdate="RefreshAsync">
-                            </MSelect>
+                            </SSelect>
                         </MCol>
                     </MRow>
                 </div>
@@ -40,9 +40,7 @@
                         @(!advanced?"mdi-filter":"mdi-filter-off")
                     </MIcon>
                 </div>
-                <MButton Color="primary" Class="ml-6 rounded-lg btn small-btn" OnClick="()=> _createModal.OpenModalAsync()">
-                    <span>@T("Permission.Create")</span>
-                </MButton>
+                <SButton Small Color="primary" BorderRadiusClass="rounded-lg" Class="ml-6" OnClick="()=> _createModal.OpenModalAsync()">@T("Permission.Create")</SButton>
             </div>
         </div>
     </HeaderContent>
@@ -84,7 +82,7 @@
                             </MChip>
                             break;
                         case "Action":
-                            <MIcon Small Color="emphasis2" OnClick="async()=>await _editModal.OpenModalAsync(context.Item)">mdi-pencil</MIcon>
+                            <SIcon Small Color="emphasis2" Tooltip="@(T("Edit"))" OnClick="async()=>await _editModal.OpenModalAsync(context.Item)">mdi-pencil</SIcon>
                             break;
                         default:
                             <DefaultGenericColumnRender Value="@context.Value" Width="@context.Header.Width"></DefaultGenericColumnRender>

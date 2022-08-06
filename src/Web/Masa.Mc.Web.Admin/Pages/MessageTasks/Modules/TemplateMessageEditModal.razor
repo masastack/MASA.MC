@@ -2,9 +2,9 @@
 <div @ref="Ref">
     <SSimpleModal Value="@_visible" ValueChanged="HandleVisibleChanged" Class="full-height" Title="@T("Permission.EditTemplateMessage")" OnDelete="HandleReceiverBack" OnCancel="HandleCancel" OnSave="HandleSaveAsync">
         <ChildContent>
-            <MForm Model="_model" EnableValidation @ref="_form" Class="full-height">
+            <MForm Model="_model" EnableValidation @ref="_form" Class="full-height mt-n2 pt-3">
                 <MStepper Value="_model.Step" Elevation=0 Class="d-flex flex-column full-height">
-                    <MStepperHeader Style="box-shadow:none !important">
+                    <MStepperHeader Class="ma-n6" Style="box-shadow:none !important">
                         <MStepperStep Step="1" Complete="_model.Step>1">
                             @T("DisplayName.MessageInfoContent")
                         </MStepperStep>
@@ -19,7 +19,7 @@
                     </MStepperHeader>
                     <MStepperItems Class="flex-grow-1">
                         <MStepperContent Class="full-height pa-0" Step="1">
-                            <MRow Class="row-box">
+                            <MRow Class="mt-6">
                                 <MCol>
                                     <SSelect @bind-Value="@_model.ChannelType"
                                                    Items="@(GetEnumList<ChannelTypes>())"
@@ -33,7 +33,7 @@
                                     </SSelect>
                                 </MCol>
                             </MRow>
-                            <MRow Class="row-box">
+                            <MRow Class="mt-6">
                                 <MCol>
                                     <SSelect @bind-Value="_model.ChannelId"
                                                    Items="@_channelItems"
@@ -47,9 +47,9 @@
                                     </SSelect>
                                 </MCol>
                             </MRow>
-                            <MRow Class="row-box">
+                            <MRow Class="mt-6">
                                 <MCol>
-                                    <DefaultAutoComplete Medium Items="_templateItems" @bind-Value="_model.EntityId"
+                                    <DefaultAutoComplete Items="_templateItems" @bind-Value="_model.EntityId"
                                                    Label="@T("TemplateTemplate")"
                                                    ItemText="@(x=>string.IsNullOrEmpty(x.TemplateId)?x.DisplayName:$"{x.DisplayName}({x.TemplateId})")"
                                                    ItemValue="x=>x.Id"
@@ -65,7 +65,7 @@
                             {
                                 if (_messageInfo.Channel != null && _messageInfo.Channel.Type != ChannelTypes.Sms)
                                 {
-                                    <MRow Class="row-box">
+                                    <MRow Class="mt-6">
                                         <MCol>
                                             <STextField @bind-Value="_messageInfo.Title"
                                                       Label="@T("DisplayName.MessageTemplateTitle")"
@@ -74,14 +74,14 @@
                                         </MCol>
                                     </MRow>
                                 }
-                                <MRow Class="row-box">
+                                <MRow Class="mt-6">
                                     <MCol>
                                         <DefaultRichText Value="@_messageInfo.Content" Label="@T("DisplayName.MessageTemplateContent")"></DefaultRichText>
                                     </MCol>
                                 </MRow>
                                 if (_messageInfo.Channel != null && _messageInfo.Channel.Type == ChannelTypes.WebsiteMessage)
                                 {
-                                    <MRow Class="row-box">
+                                    <MRow Class="mt-6">
                                         <MCol>
                                             <STextField @bind-Value="_messageInfo.JumpUrl"
                                                       Label="@T("DisplayName.MessageTemplateJumpUrl")" Disabled>
@@ -115,7 +115,7 @@
                             <MInput @bind-Value="_model.SendRules" />
                             @if (_messageInfo.Channel != null && _messageInfo.Channel.Type == ChannelTypes.Sms)
                             {
-                                <MRow Class="row-box">
+                                <MRow Class="mt-6">
                                     <MCol>
                                         <STextField @bind-Value="_model.Sign"
                                                       Label="@T("DisplayName.MessageTemplateSign")">

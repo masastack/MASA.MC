@@ -2,9 +2,9 @@
 <div @ref="Ref">
     <SSimpleModal Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.CreateReceiverGroup")" BodyStyle="height: 728px;" SaveText="@T("Submit")" OnCancel="HandleCancel" OnSave="async() => await Throttle(HandleOk)">
         <ChildContent>
-            <MForm Model="_model" EnableValidation @ref="_form" Class="full-height">
-                <MRow Class="row-box">
-                    <MCol>
+            <MForm Model="_model" EnableValidation @ref="_form" Class="full-height pt-3">
+                <MRow>
+                    <MCol Class="pt-0 mt-2">
                         <STextField @bind-Value="_model.DisplayName"
                                           Label="@T("DisplayName.ReceiverGroupDisplayName")">
                         </STextField>
@@ -12,7 +12,7 @@
                 </MRow>
                 <ReceiverSelect @ref="_ReceiverSelect" @bind-Value="_model.Items"></ReceiverSelect>
                 <MInput @bind-Value="_model.Items" />
-                <MRow Class="row-box">
+                <MRow Class="mt-6">
                     <MCol>
                         <MTextarea @bind-Value="_model.Description"
                                    Label="@T("DisplayName.ReceiverGroupDescription")"
