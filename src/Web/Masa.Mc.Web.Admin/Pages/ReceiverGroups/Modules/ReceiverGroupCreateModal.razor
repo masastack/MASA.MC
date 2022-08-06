@@ -1,6 +1,6 @@
 ﻿@inherits AdminCompontentBase
 <div @ref="Ref">
-    <SSimpleModal Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.CreateReceiverGroup")" BodyStyle="height: 728px;" SaveText="@T("Submit")" OnCancel="HandleCancel" OnSave="async() => await Throttle(HandleOk)">
+    <SSimpleModal Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.CreateReceiverGroup")" HeaderClass="mr-4" BodyStyle="height: 728px;" SaveText="@T("Submit")" OnCancel="HandleCancel" OnSave="async() => await Throttle(HandleOk)">
         <ChildContent>
             <MForm Model="_model" EnableValidation @ref="_form" Class="full-height pt-3">
                 <MRow>
