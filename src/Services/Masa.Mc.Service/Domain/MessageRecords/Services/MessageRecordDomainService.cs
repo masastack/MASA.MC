@@ -16,4 +16,5 @@ public class MessageRecordDomainService : DomainService
         messageRecord.SetDataValue(nameof(item.Email), item.Email);
         messageRecord.SetDataValue(nameof(item.PhoneNumber), item.PhoneNumber);
     }
+
 }
