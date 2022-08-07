@@ -28,6 +28,7 @@ public class UpdateMessageRecordUserEventHandler
         {
             return;
         }
+
         var userInfo = ResolveUserInfo(user);
         messageRecords.SetUserInfo(user.Id, userInfo.DisplayName, userInfo.Account, userInfo.Email, userInfo.PhoneNumber);
 

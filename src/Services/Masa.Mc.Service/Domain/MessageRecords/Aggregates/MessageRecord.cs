@@ -38,7 +38,7 @@ public class MessageRecord : FullAggregateRoot<Guid, Guid>
         Success = success;
         FailureReason = failureReason;
 
-        if (Success == true && UserId == default)
+        if (UserId == default)
         {
             AddDomainEvent(new UpdateMessageRecordUserEvent(Id));
         }
