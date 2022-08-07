@@ -37,6 +37,7 @@ public class MessageTaskExecuteJob : ISchedulerJob
                 configurationBuilder.UseDcc();
             });
             var configuration = builder.GetMasaConfiguration().ConfigurationApi.GetDefault();
+            serviceCollection.AddAuthClient(configuration.GetValue<string>("AppSettings:AuthClient:Url"));
             serviceCollection.AddMcClient(configuration.GetValue<string>("AppSettings:McClient:Url"));
             serviceCollection.AddSchedulerClient(configuration.GetValue<string>("AppSettings:SchedulerClient:Url"));
             serviceCollection.AddAliyunSms();
