@@ -31,12 +31,18 @@ public class MessageTaskExecuteJob : ISchedulerJob
             builder.Configuration.SetBasePath(path)
             .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
             .AddJsonFile($"appsettings.{env}.json", optional: true, reloadOnChange: true);
-
+            builder.Services.AddMasaIdentityModel(IdentityType.MultiEnvironment, options =>
+            {
+                options.Environment = "environment";
+                options.UserName = "name";
+                options.UserId = "sub";
+            });
             builder.AddMasaConfiguration(configurationBuilder =>
             {
                 configurationBuilder.UseDcc();
             });
             var configuration = builder.GetMasaConfiguration().ConfigurationApi.GetDefault();
+
             serviceCollection.AddAuthClient(configuration.GetValue<string>("AppSettings:AuthClient:Url"));
             serviceCollection.AddMcClient(configuration.GetValue<string>("AppSettings:McClient:Url"));
             serviceCollection.AddSchedulerClient(configuration.GetValue<string>("AppSettings:SchedulerClient:Url"));

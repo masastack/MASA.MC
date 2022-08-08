@@ -3,6 +3,7 @@
 
 namespace Masa.Mc.Service.Admin.Domain.MessageRecords.Events;
 
-public record UpdateMessageRecordUserEvent(Guid MessageRecordId) : DomainEvent
+public record UpdateMessageRecordUserEvent(Guid MessageRecordId) : IntegrationDomainEvent
 {
+    public override string Topic { get; set; } = nameof(UpdateMessageRecordUserEvent);
 }

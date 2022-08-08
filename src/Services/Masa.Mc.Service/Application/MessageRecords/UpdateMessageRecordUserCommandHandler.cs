@@ -1,17 +1,17 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
-namespace Masa.Mc.Service.Admin.Domain.MessageRecords.EventHandler;
+namespace Masa.Mc.Service.Admin.Application.MessageRecords;
 
-public class UpdateMessageRecordUserEventHandler
+public class UpdateMessageRecordUserCommandHandler
 {
     private readonly IMessageRecordRepository _repository;
     private readonly IAuthClient _authClient;
-    private readonly ILogger<UpdateMessageRecordUserEventHandler> _logger;
+    private readonly ILogger<UpdateMessageRecordUserCommandHandler> _logger;
 
-    public UpdateMessageRecordUserEventHandler(IMessageRecordRepository repository
+    public UpdateMessageRecordUserCommandHandler(IMessageRecordRepository repository
         , IAuthClient authClient
-        , ILogger<UpdateMessageRecordUserEventHandler> logger)
+        , ILogger<UpdateMessageRecordUserCommandHandler> logger)
     {
         _repository = repository;
         _authClient = authClient;
