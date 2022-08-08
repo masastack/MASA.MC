@@ -1,8 +1,8 @@
 ﻿@inherits AdminCompontentBase
 <div @ref="Ref">
-    <SSimpleModal Value="@_visible" ValueChanged="HandleVisibleChanged" Class="full-height" Title="@T("Permission.EditTemplateMessage")" OnDelete="HandleReceiverBack" OnCancel="HandleCancel" OnSave="HandleSaveAsync">
+    <SSimpleModal Value="@_visible" ValueChanged="HandleVisibleChanged" Class="full-height" HeaderClass="mr-4" Title="@T("Permission.EditTemplateMessage")" OnDelete="HandleReceiverBack" OnCancel="HandleCancel" OnSave="HandleSaveAsync">
         <ChildContent>
-            <MForm Model="_model" EnableValidation @ref="_form" Class="full-height mt-n2">
+            <MForm Model="_model" EnableValidation @ref="_form" Class="full-height mt-n2 pt-3">
                 <MStepper Value="_model.Step" Elevation=0 Class="d-flex flex-column full-height">
                     <MStepperHeader Class="ma-n6" Style="box-shadow:none !important">
                         <MStepperStep Step="1" Complete="_model.Step>1">
@@ -49,7 +49,7 @@
                             </MRow>
                             <MRow Class="mt-6">
                                 <MCol>
-                                    <MAutocomplete Items="_templateItems" @bind-Value="_model.EntityId"
+                                    <DefaultAutoComplete Items="_templateItems" @bind-Value="_model.EntityId"
                                                    Label="@T("TemplateTemplate")"
                                                    ItemText="@(x=>string.IsNullOrEmpty(x.TemplateId)?x.DisplayName:$"{x.DisplayName}({x.TemplateId})")"
                                                    ItemValue="x=>x.Id"
@@ -58,7 +58,7 @@
                                                    TItem="MessageTemplateDto"
                                                    TItemValue="Guid"
                                                    TValue="Guid"
-                                                   OnSelectedItemUpdate="HandleTemplateSelected"></MAutocomplete>
+                                                   OnSelectedItemUpdate="HandleTemplateSelected"></DefaultAutoComplete>
                                 </MCol>
                             </MRow>
                             @if (_model.EntityId != default)

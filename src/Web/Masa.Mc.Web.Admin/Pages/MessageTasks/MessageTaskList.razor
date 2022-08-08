@@ -8,7 +8,7 @@
             @if (advanced)
             {
                 <div class="fold d-inline-flex">
-                    <MSelect @bind-Value="@_queryParam.TimeType"
+                    <SSelect Small @bind-Value="@_queryParam.TimeType"
                          Items="@(GetEnumList<MessageTaskTimeTypes>())"
                          Label="@T("DisplayName.MessageTaskTimeType")"
                          ItemText="@(item => T($"DisplayName.MessageTaskTimeType.{item.ToString()}"))"
@@ -23,11 +23,11 @@
                          Class="fill-card body2"
                          OnClearClick="RefreshAsync"
                          OnSelectedItemUpdate="RefreshAsync">
-                    </MSelect>
+                    </SSelect>
 
                     <Masa.Mc.Web.Admin.Components.Pickers.DateRangePicker @bind-StartTime="_queryParam.StartTime" @bind-EndTime="_queryParam.EndTime" Class="ml-6" OnChange="RefreshAsync" />
 
-                    <MSelect @bind-Value="_queryParam.ChannelId"
+                    <SSelect Small @bind-Value="_queryParam.ChannelId"
                          Items="@_channelItems"
                          Label="@T("DisplayName.Channel")"
                          ItemText="item => item.DisplayName"
@@ -42,9 +42,9 @@
                          Class="fill-card body2 ml-6"
                          OnClearClick="RefreshAsync"
                          OnSelectedItemUpdate="RefreshAsync">
-                    </MSelect>
+                    </SSelect>
 
-                    <MSelect @bind-Value="@_queryParam.Status"
+                    <SSelect Small @bind-Value="@_queryParam.Status"
                          Items="@(GetEnumList<MessageTaskStatuses>())"
                          Label="@T("DisplayName.MessageTaskStatus")"
                          ItemText="@(item => T($"DisplayName.MessageTaskStatus.{item.ToString()}"))"
@@ -59,9 +59,9 @@
                          Class="fill-card body2 ml-6"
                          OnClearClick="RefreshAsync"
                          OnSelectedItemUpdate="RefreshAsync">
-                    </MSelect>
+                    </SSelect>
 
-                    <MSelect @bind-Value="@_queryParam.EntityType"
+                    <SSelect Small @bind-Value="@_queryParam.EntityType"
                          Items="@(GetEnumList<MessageEntityTypes>())"
                          Label="@T("DisplayName.MessageTaskEntityType")"
                          ItemText="@(item => T($"DisplayName.MessageEntityType.{item.ToString()}"))"
@@ -76,7 +76,7 @@
                          Class="fill-card body2 ml-6"
                          OnClearClick="RefreshAsync"
                          OnSelectedItemUpdate="RefreshAsync">
-                    </MSelect>
+                    </SSelect>
 
                     <BooleanSelect @bind-Value="_queryParam.IsEnabled" Placeholder="@T("DisplayName.MessageTaskIsEnabled")" Class="ml-6" Style="width:130px;flex: none;" OnClearClick="RefreshAsync"
                                OnSelectedItemUpdate="RefreshAsync" />

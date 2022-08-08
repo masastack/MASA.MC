@@ -6,10 +6,12 @@ namespace Masa.Mc.Service.Admin.Application.WebsiteMessages;
 public class WebsiteMessageCommandHandler
 {
     private readonly IWebsiteMessageRepository _repository;
+    private readonly IUserContext _userContext;
 
-    public WebsiteMessageCommandHandler(IWebsiteMessageRepository repository)
+    public WebsiteMessageCommandHandler(IWebsiteMessageRepository repository, IUserContext userContext)
     {
         _repository = repository;
+        _userContext = userContext;
     }
 
     [EventHandler]
@@ -45,7 +47,8 @@ public class WebsiteMessageCommandHandler
 
     private async Task<Expression<Func<WebsiteMessage, bool>>> CreateFilteredPredicate(GetWebsiteMessageInputDto inputDto)
     {
-        Expression<Func<WebsiteMessage, bool>> condition = channel => true;
+        var userId = _userContext.GetUserId<Guid>();
+        Expression<Func<WebsiteMessage, bool>> condition = w => w.UserId == userId && !w.IsWithdrawn;
         switch (inputDto.FilterType)
         {
             case WebsiteMessageFilterType.MessageTitle:

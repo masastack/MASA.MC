@@ -1,16 +1,16 @@
 ﻿@inherits AdminCompontentBase
 <div @ref="Ref">
-    <SSimpleModal Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.EditMessageTemplate")" BodyStyle="height: 704px;" SaveText="@T("Save")" OnCancel="HandleCancel" OnDelete="HandleDelAsync" OnSave="async() => await Throttle(HandleOkAsync)">
+    <SSimpleModal Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.EditMessageTemplate")" HeaderClass="mr-4" BodyStyle="height: 704px;" SaveText="@T("Save")" OnCancel="HandleCancel" OnDelete="HandleDelAsync" OnSave="async() => await Throttle(HandleOkAsync)">
         <ChildContent>
             <MForm Model="_model" EnableValidation @ref="_form" Class="full-height">
-                <MRow>
-                    <MCol Class="pt-0 mt-2">
+                <MRow Class="row-box">
+                    <MCol>
                         <STextField @bind-Value="_model.Code"
                                           Label="@T("DisplayName.MessageTemplateCode")">
                         </STextField>
                     </MCol>
                 </MRow>
-                <MRow Class="mt-6">
+                <MRow Class="row-box">
                     <MCol>
                         <SSelect Value="@_model.ChannelType"
                                        Items="@(GetEnumList<ChannelTypes>())"
@@ -21,7 +21,7 @@
                         </SSelect>
                     </MCol>
                 </MRow>
-                <MRow Class="mt-6">
+                <MRow Class="row-box">
                     <MCol>
                         <SSelect @bind-Value="_model.ChannelId"
                                        Items="@_channelItems"
@@ -35,16 +35,16 @@
                         </SSelect>
                     </MCol>
                 </MRow>
-                <MRow Class="mt-6">
+                <MRow Class="row-box">
                     <MCol>
                         <STextField @bind-Value="_model.Sign"
                                           Label="@T("DisplayName.MessageTemplateSign")">
                         </STextField>
                     </MCol>
                 </MRow>
-                <MRow Class="mt-6">
+                <MRow Class="row-box">
                     <MCol>
-                        <MAutocomplete Items="_templateItems" @bind-Value="_model.TemplateId"
+                        <DefaultAutoComplete Items="_templateItems" @bind-Value="_model.TemplateId"
                                        Label="@T("SelectTemplate")"
                                        ItemText="@(x=>$"{x.TemplateName}({x.TemplateCode})")"
                                        ItemValue="x=>x.TemplateCode"
@@ -57,20 +57,20 @@
                                        TValue="string"
                                        OnSelectedItemUpdate="HandleTemplateSelected">
                             <AppendOuterContent>
-                                <MButton Outlined Class="btn small-btn btn-fill-line mt-n2" Color="fill" OnClick="SyncAsync">
+                                <MButton Outlined Class="btn medium-btn btn-fill-line mt-n2" Color="fill" OnClick="SyncAsync">
                                     <span class="emphasis2--text">@T("SyncTemplate")</span>
                                 </MButton>
                             </AppendOuterContent>
-                        </MAutocomplete>
+                        </DefaultAutoComplete>
                     </MCol>
                 </MRow>
-                <MRow Class="mt-6">
+                <MRow Class="row-box">
                     <MCol>
                         <SmsTemplateInfo MessageTemplate="_model" />
                         <MInput @bind-Value="_model.Items" />
                     </MCol>
                 </MRow>
-                <MRow Class="mt-6">
+                <MRow Class="row-box">
                     <MCol>
                         <div class="d-flex align-center justify-start">
                             <span class="body2 regular--text mr-2">@T("Description.MessageTemplate.PerDayLimit.Tips") </span>

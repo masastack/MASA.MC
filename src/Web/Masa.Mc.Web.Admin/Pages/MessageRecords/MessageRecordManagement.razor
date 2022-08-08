@@ -8,7 +8,7 @@
             @if (advanced)
             {
                 <div class="fold d-inline-flex">
-                    <MSelect @bind-Value="@_queryParam.TimeType"
+                    <SSelect Small @bind-Value="@_queryParam.TimeType"
                          Items="@(GetEnumList<MessageRecordTimeTypes>())"
                          Label="@T("DisplayName.MessageRecordTimeTypes")"
                          ItemText="@(item => T($"DisplayName.MessageRecordTimeTypes.{item.ToString()}"))"
@@ -21,11 +21,11 @@
                          TValue="MessageRecordTimeTypes?"
                          Class="fill-card body2"
                          OnSelectedItemUpdate="RefreshAsync">
-                    </MSelect>
+                    </SSelect>
 
                     <Masa.Mc.Web.Admin.Components.Pickers.DateRangePicker @bind-StartTime="_queryParam.StartTime" @bind-EndTime="_queryParam.EndTime" Class="ml-6" OnChange="RefreshAsync" />
 
-                    <MSelect @bind-Value="_queryParam.ChannelId"
+                    <SSelect Small @bind-Value="_queryParam.ChannelId"
                          Items="@_channelItems"
                          Label="@T("DisplayName.Channel")"
                          ItemText="item => item.DisplayName"
@@ -40,7 +40,7 @@
                          Class="fill-card body2 ml-6"
                          OnClearClick="RefreshAsync"
                          OnSelectedItemUpdate="RefreshAsync">
-                    </MSelect>
+                    </SSelect>
 
                     <UserSelect @bind-Value="_queryParam.UserId" Placeholder="@T("DisplayName.MessageRecordUserId")" Class="ml-6" OnClearClick="RefreshAsync"
                             OnSelectedItemUpdate="RefreshAsync" />
@@ -94,22 +94,10 @@
                             </MListItem>
                             break;
                         case (nameof(MessageTaskReceiverDto.Email)):
-                            <div class="body regular--text text-truncate" style="max-width:157px">@(context.Item.ExtraProperties.GetProperty<string>(nameof(MessageTaskReceiverDto.Email)))</div>
+                            <DefaultGenericColumnRender Value="@(context.Item.ExtraProperties.GetProperty<string>(nameof(MessageTaskReceiverDto.Email)))" Width="@context.Header.Width"></DefaultGenericColumnRender>
                             break;
                         case ("ChannelDisplayName"):
-                            <div class="body regular--text text-truncate" style="max-width:80px">@context.Item.Channel?.DisplayName</div>
-                            break;
-                        case (nameof(MessageRecordDto.DisplayName)):
-                            <div class="body regular--text text-truncate" style="max-width:120px">@context.Item.DisplayName</div>
-                            break;
-                        case (nameof(MessageRecordDto.MessageTaskHistoryNo)):
-                            <div class="body regular--text text-truncate" style="max-width:180px">@context.Item.MessageTaskHistoryNo</div>
-                            break;
-                        case (nameof(MessageRecordDto.ExpectSendTime)):
-                            <DateTimeListItem Class="text-truncate" Value="@context.Item.ExpectSendTime?.ToLocalTime()"></DateTimeListItem>
-                            break;
-                        case (nameof(MessageRecordDto.SendTime)):
-                            <DateTimeListItem Class="text-truncate" Value="@context.Item.SendTime?.ToLocalTime()"></DateTimeListItem>
+                            <DefaultGenericColumnRender Value="@context.Item.Channel?.DisplayName" Width="@context.Header.Width"></DefaultGenericColumnRender>
                             break;
                         case nameof(MessageRecordDto.Success):
                             <MessageRecordStatusTag Class="text-truncate" Value="@context.Item.Success" />
@@ -117,11 +105,8 @@
                         case "Action":
                             <MIcon Small Color="emphasis2" OnClick="async()=>await _detailModal.OpenModalAsync(context.Item)">mdi-eye</MIcon>
                             break;
-                        case (nameof(MessageRecordDto.FailureReason)):
-                            <div class="body regular--text text-truncate" style="max-width:57px">@(context.Item.FailureReason)</div>
-                            break;
                         default:
-                            <div class="body regular--text text-truncate">@context.Value</div>
+                            <DefaultGenericColumnRender Value="@context.Value" Width="@context.Header.Width"></DefaultGenericColumnRender>
                             break;
                     }
                 </ItemColContent>

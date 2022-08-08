@@ -1,0 +1,31 @@
+﻿@if (Value is DateTime dateTime)
+{
+    <DateTimeListItem Value="@dateTime" />
+}
+else if (Value is DateTimeOffset dateTimeOffset)
+{
+    <DateTimeListItem Value="@dateTimeOffset.ToOffset(TimezoneOffset)" />
+}
+else
+{
+    if(Width != null)
+    {
+        <div class="body regular--text" style="@($"max-width:{(Width.IsT0? Width.AsT0 : Width.AsT1 + "px")}")">
+            <EllipsisText>
+                @Value
+            </EllipsisText>
+        </div>
+    }
+    else
+    {
+        <div class="body regular--text">@Value</div>
+    }
+}
+
+@code {
+    [Parameter]
+    public object Value { get; set; }
+
+    [Parameter]
+    public StringNumber? Width { get; set; }
+}

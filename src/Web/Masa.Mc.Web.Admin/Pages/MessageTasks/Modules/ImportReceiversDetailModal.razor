@@ -1,68 +1,72 @@
 ﻿@inherits AdminCompontentBase
 <div class="import-receivers" @ref="Ref">
-    <McModal Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("View")" Height="800">
+    <SSimpleModal Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("View")" Height="800">
         <ChildContent>
-            <MSimpleTable>
-                <thead>
-                    <tr>
-                        @if (ChannelType == ChannelTypes.WebsiteMessage)
-                        {
-                            <th class="text-left body2 regular3--text">
-                                @T("UserId")
-                            </th>
-                        }
-                        @if (ChannelType == ChannelTypes.Sms)
-                        {
-                            <th class="text-left body2 regular3--text">
-                                @T("PhoneNumber")
-                            </th>
-                        }
-                        @if (ChannelType == ChannelTypes.Email)
-                        {
-                            <th class="text-left body2 regular3--text">
-                                @T("Email")
-                            </th>
-                        }
-                        @if (Value.Count > 0)
-                        {
-                            foreach (var item in Value[0].Variables)
+            <AutoHeight>
+                <AutoHeightContent>
+                    <MSimpleTable>
+                        <thead>
+                            <tr>
+                                @if (ChannelType == ChannelTypes.WebsiteMessage)
+                                {
+                                    <th class="text-left body2 regular3--text">
+                                        @T("UserId")
+                                    </th>
+                                }
+                                @if (ChannelType == ChannelTypes.Sms)
+                                {
+                                    <th class="text-left body2 regular3--text">
+                                        @T("PhoneNumber")
+                                    </th>
+                                }
+                                @if (ChannelType == ChannelTypes.Email)
+                                {
+                                    <th class="text-left body2 regular3--text">
+                                        @T("Email")
+                                    </th>
+                                }
+                                @if (Value.Count > 0)
+                                {
+                                    foreach (var item in Value[0].Variables)
+                                    {
+                                        <th class="text-left body2 regular3--text">
+                                            @item.Key
+                                        </th>
+                                    }
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in _items)
                             {
-                                <th class="text-left body2 regular3--text">
-                                    @item.Key
-                                </th>
+                                <tr class="body2 regular--text">
+                                    @if (ChannelType == ChannelTypes.WebsiteMessage)
+                                    {
+                                        <td class="body2 regular--text border-bottom-none">@item.SubjectId</td>
+                                    }
+                                    @if (ChannelType == ChannelTypes.Sms)
+                                    {
+                                        <td class="body2 regular--text border-bottom-none">@item.PhoneNumber</td>
+                                    }
+                                    @if (ChannelType == ChannelTypes.Email)
+                                    {
+                                        <td class="body2 regular--text border-bottom-none">@item.Email</td>
+                                    }
+                                    @foreach (var v in item.Variables)
+                                    {
+                                        <td class="body2 regular--text border-bottom-none">@v.Value</td>
+                                    }
+                                </tr>
                             }
-                        }
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in _items)
-                    {
-                        <tr class="body2 regular--text">
-                            @if (ChannelType == ChannelTypes.WebsiteMessage)
-                            {
-                                <td class="body2 regular--text border-bottom-none">@item.SubjectId</td>
-                            }
-                            @if (ChannelType == ChannelTypes.Sms)
-                            {
-                                <td class="body2 regular--text border-bottom-none">@item.PhoneNumber</td>
-                            }
-                            @if (ChannelType == ChannelTypes.Email)
-                            {
-                                <td class="body2 regular--text border-bottom-none">@item.Email</td>
-                            }
-                            @foreach (var v in item.Variables)
-                            {
-                                <td class="body2 regular--text border-bottom-none">@v.Value</td>
-                            }
-                        </tr>
-                    }
-                </tbody>
-            </MSimpleTable>
+                        </tbody>
+                    </MSimpleTable>
+                </AutoHeightContent>
+                <FooterContent>
+                    <SPagination Class="full-width" Page="@_queryParam.Page" PageSize="@_queryParam.PageSize" Total="Value.Count" PageChanged="HandlePageChanged" PageSizeChanged="HandlePageSizeChanged" />
+                </FooterContent>
+            </AutoHeight>
         </ChildContent>
-        <ActionContent>
-            <SPagination Class="full-width" Page="@_queryParam.Page" PageSize="@_queryParam.PageSize" Total="Value.Count" PageChanged="HandlePageChanged" PageSizeChanged="HandlePageSizeChanged"/>
-        </ActionContent>
-    </McModal>
+    </SSimpleModal>
 </div>
 
 
