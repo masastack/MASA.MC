@@ -3,7 +3,7 @@
 
 namespace Masa.Mc.Web.Admin.Components.AutoComplete;
 
-public class DefaultAutoComplete<TItem, TItemValue, TValue> : SAutoComplete<TItem, TItemValue, TValue>
+public class DefaultAutoComplete<TItem, TItemValue, TValue> : MAutocomplete<TItem, TItemValue, TValue>
 {
     [Parameter]
     public bool Small { get; set; }

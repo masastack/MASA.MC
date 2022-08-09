@@ -24,7 +24,7 @@
     <PackageReference Include="MASA.Blazor.Experimental.Components" Version="0.5.0" />
     <PackageReference Include="Masa.BuildingBlocks.Authentication.Identity" Version="$(MasaContribPackageVersion)" />
     <PackageReference Include="Masa.Contrib.SearchEngine.AutoComplete.ElasticSearch" Version="$(MasaContribPackageVersion)" />
-    <PackageReference Include="Masa.Stack.Components" Version="0.0.94" />
+    <PackageReference Include="Masa.Stack.Components" Version="0.0.97" />
     <PackageReference Include="Masa.Utils.Data.Elasticsearch" Version="$(MasaUtilsPackageVersion)" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="7.0.0-preview.4.22251.1" />
