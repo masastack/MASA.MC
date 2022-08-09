@@ -56,10 +56,10 @@ public class WebsiteMessageCreatedEventHandler
             var messageRecord = new MessageRecord(receiverUser.UserId, taskHistory.MessageTask.ChannelId.Value, taskHistory.MessageTaskId, taskHistory.Id, taskHistory.MessageTask.Variables, messageData.GetDataValue<string>(nameof(MessageTemplate.Title)), taskHistory.SendTime);
             messageRecord.SetMessageEntity(taskHistory.MessageTask.EntityType, taskHistory.MessageTask.EntityId);
             _messageRecordDomainService.SetUserInfo(messageRecord, receiverUser);
-            messageRecord.SetResult(true, string.Empty);
+            messageRecord.SetResult(true, string.Empty, taskHistory.SendTime);
 
             var linkUrl = messageData.GetDataValue<bool>(nameof(MessageTemplate.IsJump)) ? messageData.GetDataValue<string>(nameof(MessageTemplate.JumpUrl)) : string.Empty;
-            var websiteMessage = new WebsiteMessage(messageRecord.ChannelId, receiverUser.UserId, messageData.GetDataValue<string>(nameof(MessageTemplate.Title)), messageData.GetDataValue<string>(nameof(MessageTemplate.Content)), linkUrl, DateTimeOffset.Now);
+            var websiteMessage = new WebsiteMessage(messageRecord.ChannelId, receiverUser.UserId, messageData.GetDataValue<string>(nameof(MessageTemplate.Title)), messageData.GetDataValue<string>(nameof(MessageTemplate.Content)), linkUrl, taskHistory.SendTime ?? DateTimeOffset.Now);
             await _messageRecordRepository.AddAsync(messageRecord);
             await _websiteMessageRepository.AddAsync(websiteMessage);
         }

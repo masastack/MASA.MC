@@ -32,9 +32,9 @@ public class MessageRecord : FullAggregateRoot<Guid, Guid>
         ExpectSendTime = expectSendTime;
     }
 
-    public void SetResult(bool success, string failureReason)
+    public void SetResult(bool success, string failureReason, DateTimeOffset? sendTime = null)
     {
-        SendTime = DateTimeOffset.Now;
+        SendTime = sendTime ?? DateTimeOffset.Now;
         Success = success;
         FailureReason = failureReason;
     }
