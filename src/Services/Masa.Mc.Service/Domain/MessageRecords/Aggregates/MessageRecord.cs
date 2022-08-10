@@ -40,13 +40,10 @@ public class MessageRecord : FullAggregateRoot<Guid, Guid>
         Success = success;
         FailureReason = failureReason;
 
-        if (UserId == default)
+        if (UserId == default && Id == default)
         {
-            if (Id == default)
-            {
-                Id = IdGeneratorFactory.SequentialGuidGenerator.NewId();
-                AddDomainEvent(new UpdateMessageRecordUserEvent(Id));
-            }
+            Id = IdGeneratorFactory.SequentialGuidGenerator.NewId();
+            AddDomainEvent(new UpdateMessageRecordUserEvent(Id));
         }
     }
 

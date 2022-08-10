@@ -1,17 +1,17 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
-namespace Masa.Mc.Service.Admin.Application.MessageRecords;
+namespace Masa.Mc.Service.Admin.Domain.MessageRecords.EventHandler;
 
-public class UpdateMessageRecordUserCommandHandler
+public class UpdateMessageRecordUserEventHandler
 {
     private readonly IMessageRecordRepository _repository;
     private readonly IAuthClient _authClient;
-    private readonly ILogger<UpdateMessageRecordUserCommandHandler> _logger;
+    private readonly ILogger<UpdateMessageRecordUserEventHandler> _logger;
 
-    public UpdateMessageRecordUserCommandHandler(IMessageRecordRepository repository
+    public UpdateMessageRecordUserEventHandler(IMessageRecordRepository repository
         , IAuthClient authClient
-        , ILogger<UpdateMessageRecordUserCommandHandler> logger)
+        , ILogger<UpdateMessageRecordUserEventHandler> logger)
     {
         _repository = repository;
         _authClient = authClient;
@@ -19,25 +19,25 @@ public class UpdateMessageRecordUserCommandHandler
     }
 
     [EventHandler]
-    public async Task HandleEventAsync(UpdateMessageRecordUserCommand cmd)
+    public async Task HandleEventAsync(UpdateMessageRecordUserEvent eto)
     {
-        var messageRecords = await _repository.FindAsync(x => x.Id == cmd.MessageRecordId);
-        if (messageRecords == null)
+        var messageRecord = await _repository.FindAsync(x => x.Id == eto.MessageRecordId);
+        if (messageRecord == null)
         {
-            _logger.LogInformation($"UpdateMessageRecordUserCommandHandler:messageRecords is {cmd.MessageRecordId}");
+            _logger.LogInformation($"UpdateMessageRecordUserEventHandler:messageRecords is null");
             return;
         }
 
-        var user = await GetMessageRecordsUser(messageRecords);
+        var user = await GetMessageRecordsUser(messageRecord);
         if (user == null)
         {
-            _logger.LogInformation($"UpdateMessageRecordUserCommandHandler:user is null");
+            _logger.LogInformation($"UpdateMessageRecordUserEventHandler:user is null");
             return;
         }
 
         var userInfo = ResolveUserInfo(user);
-        messageRecords.SetUserInfo(user.Id, userInfo.DisplayName, userInfo.Account, userInfo.Email, userInfo.PhoneNumber);
-        await _repository.UpdateAsync(messageRecords);
+        messageRecord.SetUserInfo(user.Id, userInfo.DisplayName, userInfo.Account, userInfo.Email, userInfo.PhoneNumber);
+        await _repository.UpdateAsync(messageRecord);
     }
 
     private MessageReceiverUser ResolveUserInfo(UserModel user)
