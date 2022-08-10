@@ -78,6 +78,7 @@ public partial class OrdinaryMessageCreateModal : AdminCompontentBase
         _model = new() { EntityType = MessageEntityTypes.Ordinary };
         _selectReceivers = new();
         _importReceivers = new();
+        _selectReceiverType = false;
         await _form.ResetValidationAsync();
     }
 

@@ -81,6 +81,7 @@ public partial class TemplateMessageCreateModal : AdminCompontentBase
         _model = new() { EntityType = MessageEntityTypes.Template };
         _selectReceivers = new();
         _importReceivers = new();
+        _selectReceiverType = false;
         await _form.ResetValidationAsync();
     }
 

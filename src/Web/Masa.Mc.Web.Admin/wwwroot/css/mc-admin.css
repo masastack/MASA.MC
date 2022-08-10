@@ -343,9 +343,9 @@
     color: #A3AED0;
 }
 
-.m-stepper__wrapper {
+/*.m-stepper__wrapper {
     overflow: visible;
-}
+}*/
 
 .m-dialog {
     border-radius: 20px !important;

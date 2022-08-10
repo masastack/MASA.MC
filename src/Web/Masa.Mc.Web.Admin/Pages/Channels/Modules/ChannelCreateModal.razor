@@ -3,8 +3,8 @@
     <SSimpleModal Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.CreateChannel")" HeaderClass="mr-4" BodyStyle="height: 597px;" SaveText="@T("Submit")" OnDelete="()=> _step-- " OnCancel="HandleCancel" OnSave="async() => await Throttle(HandleOkAsync)">
         <ChildContent>
             <MForm Model="_model" @ref="_form" EnableValidation Context="form" Class="full-height">
-                <MStepper Value="_step" Class="full-height overflow-visible" Style="box-shadow:none">
-                    <MStepperItems Class="full-height overflow-visible">
+                <MStepper Value="_step" Class="full-height" Style="box-shadow:none">
+                    <MStepperItems Class="full-height">
                         <MStepperContent Step="1" Class="pa-0">
                             <MContainer Fluid Class="pt-6 px-1">
                                 <div class="subtitle3 regular--text mb-8">@T("Description.Channel.Type.Required")</div>
@@ -63,7 +63,7 @@
                                 </MRow>
                             </MContainer>
                         </MStepperContent>
-                        <MStepperContent Step="2" Class="pa-0 full-height overflow-visible">
+                        <MStepperContent Step="2" Class="pa-0 full-height">
                             <MRow Class="row-box">
                                 <MCol Md="6">
                                     <STextField @bind-Value="_model.DisplayName"

@@ -103,6 +103,7 @@ public partial class OrdinaryMessageEditModal : AdminCompontentBase
         _model = new() { EntityType = MessageEntityTypes.Ordinary };
         _selectReceivers = new();
         _importReceivers = new();
+        _selectReceiverType = false;
         await _form.ResetValidationAsync();
     }
 
