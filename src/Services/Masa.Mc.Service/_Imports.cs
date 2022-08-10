@@ -156,7 +156,6 @@ global using Masa.BuildingBlocks.ReadWriteSpliting.Cqrs.Queries;
 global using Masa.Mc.Contracts.Admin.Dtos.MessageTasks.Imports;
 global using Magicodes.ExporterAndImporter.Core.Models;
 global using Masa.Utils.Caching.Core.Interfaces;
-global using Masa.Mc.Service.Admin.Domain.MessageRecords.Services;
 global using Masa.Contrib.StackSdks.Tsc;
 global using OpenTelemetry.Logs;
 global using OpenTelemetry.Metrics;

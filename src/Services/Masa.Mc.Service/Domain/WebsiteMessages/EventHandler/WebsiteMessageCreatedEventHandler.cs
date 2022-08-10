@@ -10,7 +10,6 @@ public class WebsiteMessageCreatedEventHandler
     private readonly IHubContext<NotificationsHub> _hubContext;
     private readonly IMessageRecordRepository _messageRecordRepository;
     private readonly IWebsiteMessageRepository _websiteMessageRepository;
-    private readonly MessageRecordDomainService _messageRecordDomainService;
     private readonly IAuthClient _authClient;
 
     public WebsiteMessageCreatedEventHandler(IMessageTaskHistoryRepository messageTaskHistoryRepository
@@ -18,7 +17,6 @@ public class WebsiteMessageCreatedEventHandler
         , IHubContext<NotificationsHub> hubContext
         , IMessageRecordRepository messageRecordRepository
         , IWebsiteMessageRepository websiteMessageRepository
-        , MessageRecordDomainService messageRecordDomainService
         , IAuthClient authClient)
     {
         _messageTaskHistoryRepository = messageTaskHistoryRepository;
@@ -26,7 +24,6 @@ public class WebsiteMessageCreatedEventHandler
         _hubContext = hubContext;
         _messageRecordRepository = messageRecordRepository;
         _websiteMessageRepository = websiteMessageRepository;
-        _messageRecordDomainService = messageRecordDomainService;
         _authClient = authClient;
     }
 
@@ -47,15 +44,15 @@ public class WebsiteMessageCreatedEventHandler
             var receiverUser = new MessageReceiverUser()
             {
                 UserId = currentUser.Id,
-                DisplayName = currentUser.DisplayName,
+                DisplayName = currentUser.DisplayName ?? string.Empty,
                 Account = currentUser.Account,
-                Email = currentUser.Email,
-                PhoneNumber = currentUser.PhoneNumber
+                Email = currentUser.Email ?? string.Empty,
+                PhoneNumber = currentUser.PhoneNumber ?? string.Empty
             };
 
             var messageRecord = new MessageRecord(receiverUser.UserId, taskHistory.MessageTask.ChannelId.Value, taskHistory.MessageTaskId, taskHistory.Id, taskHistory.MessageTask.Variables, messageData.GetDataValue<string>(nameof(MessageTemplate.Title)), taskHistory.SendTime);
             messageRecord.SetMessageEntity(taskHistory.MessageTask.EntityType, taskHistory.MessageTask.EntityId);
-            _messageRecordDomainService.SetUserInfo(messageRecord, receiverUser);
+            messageRecord.SetUserInfo(receiverUser.UserId, receiverUser.DisplayName, receiverUser.Account, receiverUser.Email, receiverUser.PhoneNumber);
             messageRecord.SetResult(true, string.Empty, taskHistory.SendTime);
 
             var linkUrl = messageData.GetDataValue<bool>(nameof(MessageTemplate.IsJump)) ? messageData.GetDataValue<string>(nameof(MessageTemplate.JumpUrl)) : string.Empty;

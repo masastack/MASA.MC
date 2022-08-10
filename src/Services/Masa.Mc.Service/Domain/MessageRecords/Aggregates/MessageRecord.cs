@@ -1,6 +1,8 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
+using Masa.BuildingBlocks.Data;
+
 namespace Masa.Mc.Service.Admin.Domain.MessageRecords.Aggregates;
 
 public class MessageRecord : FullAggregateRoot<Guid, Guid>
@@ -40,7 +42,11 @@ public class MessageRecord : FullAggregateRoot<Guid, Guid>
 
         if (UserId == default)
         {
-            AddDomainEvent(new UpdateMessageRecordUserEvent(Id));
+            if (Id == default)
+            {
+                Id = IdGeneratorFactory.SequentialGuidGenerator.NewId();
+                AddDomainEvent(new UpdateMessageRecordUserEvent(Id));
+            }
         }
     }
 

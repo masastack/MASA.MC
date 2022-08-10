@@ -37,6 +37,7 @@ public class MessageTaskExecuteJob : ISchedulerJob
                 options.UserName = "name";
                 options.UserId = "sub";
             });
+            builder.Services.AddSequentialGuidGenerator();
             builder.AddMasaConfiguration(configurationBuilder =>
             {
                 configurationBuilder.UseDcc();

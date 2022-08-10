@@ -19,28 +19,24 @@ public class UpdateMessageRecordUserCommandHandler
     }
 
     [EventHandler]
-    public async Task HandleEventAsync(UpdateMessageRecordUserEvent eto)
+    public async Task HandleEventAsync(UpdateMessageRecordUserCommand cmd)
     {
-        var messageRecords = await _repository.FindAsync(x => x.Id == eto.MessageRecordId);
+        var messageRecords = await _repository.FindAsync(x => x.Id == cmd.MessageRecordId);
         if (messageRecords == null)
         {
-            Console.WriteLine($"UpdateMessageRecordUserEventHandler:messageRecords is null");
-            _logger.LogInformation($"UpdateMessageRecordUserEventHandler:messageRecords is null");
+            _logger.LogInformation($"UpdateMessageRecordUserCommandHandler:messageRecords is {cmd.MessageRecordId}");
             return;
         }
 
         var user = await GetMessageRecordsUser(messageRecords);
         if (user == null)
         {
-            Console.WriteLine($"UpdateMessageRecordUserEventHandler:user is null");
-            _logger.LogInformation($"UpdateMessageRecordUserEventHandler:user is null");
+            _logger.LogInformation($"UpdateMessageRecordUserCommandHandler:user is null");
             return;
         }
 
         var userInfo = ResolveUserInfo(user);
         messageRecords.SetUserInfo(user.Id, userInfo.DisplayName, userInfo.Account, userInfo.Email, userInfo.PhoneNumber);
-        Console.WriteLine($"UpdateMessageRecordUserEventHandler:messageRecords:{JsonSerializer.Serialize(messageRecords)}");
-        _logger.LogInformation($"UpdateMessageRecordUserEventHandler:messageRecords:{JsonSerializer.Serialize(messageRecords)}");
         await _repository.UpdateAsync(messageRecords);
     }
 

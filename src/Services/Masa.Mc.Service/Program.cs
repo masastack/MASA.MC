@@ -51,7 +51,7 @@ builder.Services.AddAuthentication(options =>
     options.TokenValidationParameters.ValidateIssuer = false;
     options.MapInboundClaims = false;
 });
-
+builder.Services.AddSequentialGuidGenerator();
 builder.AddMasaConfiguration(configurationBuilder =>
 {
     configurationBuilder.UseDcc();
