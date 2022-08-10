@@ -1,4 +1,4 @@
-﻿   // Copyright (c) MASA Stack All rights reserved.
+﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
 namespace Masa.Mc.Service.Admin.Application.WebsiteMessages;
@@ -125,7 +125,7 @@ public class WebsiteMessageQueryHandler
     private async Task FillDetailDto(WebsiteMessageDto dto)
     {
         var userId = _userContext.GetUserId<Guid>();
-        Expression<Func<WebsiteMessage, bool>> condition = w => w.UserId == userId;
+        Expression<Func<WebsiteMessage, bool>> condition = w => w.UserId == userId && w.ChannelId == dto.ChannelId;
         var prev = await GetPrevWebsiteMessage(dto.CreationTime, condition);
         var next = await GetNextWebsiteMessage(dto.CreationTime, condition);
         dto.PrevId = prev != null ? prev.Id : default;
