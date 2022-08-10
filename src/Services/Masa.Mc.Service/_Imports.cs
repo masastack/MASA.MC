@@ -177,3 +177,4 @@ global using Microsoft.Extensions.Diagnostics.HealthChecks;
 global using Masa.BuildingBlocks.Authentication.Identity;
 global using Masa.Contrib.StackSdks.Mc.Infrastructure.Extensions;
 global using Masa.BuildingBlocks.StackSdks.Mc;
+global using Masa.BuildingBlocks.Data;
