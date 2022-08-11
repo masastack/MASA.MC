@@ -7,12 +7,15 @@ public class MessageRecordQueryHandler
 {
     private readonly IMessageRecordRepository _repository;
     private readonly IMessageTaskHistoryRepository _messageTaskHistoryRepository;
+    private readonly IAuthClient _authClient;
 
     public MessageRecordQueryHandler(IMessageRecordRepository repository
-        , IMessageTaskHistoryRepository messageTaskHistoryRepository)
+        , IMessageTaskHistoryRepository messageTaskHistoryRepository
+        , IAuthClient authClient)
     {
         _repository = repository;
         _messageTaskHistoryRepository = messageTaskHistoryRepository;
+        _authClient = authClient;
     }
 
     [EventHandler]
@@ -72,10 +75,23 @@ public class MessageRecordQueryHandler
     {
         var messageTaskHistoryIds = dtos.Select(x => x.MessageTaskHistoryId).ToList();
         var messageTaskHistoryList = await _messageTaskHistoryRepository.GetListAsync(x => messageTaskHistoryIds.Contains(x.Id));
+
+        var userIds = dtos.Where(x => x.UserId != default && string.IsNullOrEmpty(x.User.Account)).Select(x => x.UserId).Distinct().ToArray();
+        var userInfos = await _authClient.UserService.GetUserPortraitsAsync(userIds);
+
         foreach (var item in dtos)
         {
             var messageTaskHistory = messageTaskHistoryList.FirstOrDefault(x => x.Id == item.MessageTaskHistoryId);
             if (messageTaskHistory != null) item.MessageTaskHistoryNo = messageTaskHistory.TaskHistoryNo;
+
+            if (item.UserId != default && string.IsNullOrEmpty(item.User.Account))
+            {
+                var user = userInfos.FirstOrDefault(x => x.Id == item.UserId);
+                if (user != null)
+                {
+                    item.User = user.Adapt<MessageRecordUserDto>();
+                }
+            }
         }
     }
 }
