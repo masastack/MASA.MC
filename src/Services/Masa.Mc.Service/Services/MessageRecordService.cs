@@ -5,14 +5,11 @@ namespace Masa.Mc.Service.Admin.Services;
 
 public class MessageRecordService : ServiceBase
 {
-    private const string DAPR_PUBSUB_NAME = "pubsub";
-
     public MessageRecordService(IServiceCollection services) : base(services, "api/message-record")
     {
         MapGet(GetAsync, "{id}");
         MapGet(GetListAsync, string.Empty);
         MapPost(RetryAsync);
-        MapPost(UpdateUserAsync);
     }
 
     public async Task<PaginatedListDto<MessageRecordDto>> GetListAsync(IEventBus eventbus, Guid? channelId, [FromQuery] bool? success, [FromQuery] MessageRecordTimeTypes? timeType,
@@ -35,12 +32,5 @@ public class MessageRecordService : ServiceBase
     {
         var command = new RetryMessageRecordCommand(inputDto);
         await eventBus.PublishAsync(command);
-    }
-
-    [Topic(DAPR_PUBSUB_NAME, nameof(UpdateMessageRecordUserEvent))]
-    public async Task UpdateUserAsync(IEventBus eventbus, UpdateMessageRecordUserEvent @event)
-    {
-        var command = new UpdateMessageRecordUserCommand(@event.MessageRecordId);
-        await eventbus.PublishAsync(command);
     }
 }
