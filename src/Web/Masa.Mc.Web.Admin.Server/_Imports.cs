@@ -18,3 +18,4 @@ global using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.AspNetCore.Mvc.RazorPages;
 global using Microsoft.AspNetCore.Hosting.StaticWebAssets;
+global using Masa.Mc.Infrastructure.Tsc;

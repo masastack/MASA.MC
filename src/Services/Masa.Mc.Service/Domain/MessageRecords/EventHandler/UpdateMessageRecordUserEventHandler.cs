@@ -31,10 +31,7 @@ public class UpdateMessageRecordUserEventHandler
 
         var user = await GetMessageRecordsUser(messageRecord);
 
-        if (user == null)
-        {
-            user = await CreateExternalUserAsync(messageRecord);
-        }
+        user ??= await CreateExternalUserAsync(messageRecord);
 
         if (user == null)
         {

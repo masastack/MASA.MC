@@ -33,6 +33,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\ApiGateways\Caller\Masa.Mc.ApiGateways.Caller\Masa.Mc.ApiGateways.Caller.csproj" />
     <ProjectReference Include="..\..\Infrastructure\Masa.Mc.Infrastructure.Common\Masa.Mc.Infrastructure.Common.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\Masa.Mc.Infrastructure.Tsc\Masa.Mc.Infrastructure.Tsc.csproj" />
   </ItemGroup>
 
   <ItemGroup>
