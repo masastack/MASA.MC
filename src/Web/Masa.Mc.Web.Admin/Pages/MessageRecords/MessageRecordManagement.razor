@@ -74,27 +74,27 @@
                         case ("Receiver"):
                             <MListItem Class="px-0 text-truncate">
                                 <MListItemAvatar Class="mr-3">
-                                    @if (string.IsNullOrEmpty(context.Item.ExtraProperties.GetProperty<string>("Avatar")))
+                                    @if (string.IsNullOrEmpty(context.Item.User.Avatar))
                                     {
-                                        <SEmptyAvatar Size=40 Value="@(context.Item.ExtraProperties.GetProperty<string>("DisplayName"))" />
+                                        <SEmptyAvatar Size=40 Value="@(context.Item.User.DisplayName)" />
                                     }
                                     else
                                     {
                                         <MAvatar Size=40>
-                                            <MImage Src="@(context.Item.ExtraProperties.GetProperty<string>("Avatar"))"></MImage>
+                                            <MImage Src="@(context.Item.User.Avatar)"></MImage>
                                         </MAvatar>
                                     }
                                 </MListItemAvatar>
                                 <MListItemContent>
                                     <MListItemTitle class="subtitle emphasis--text">
-                                        @(!string.IsNullOrEmpty(context.Item.ExtraProperties.GetProperty<string>("DisplayName"))?context.Item.ExtraProperties.GetProperty<string>("DisplayName"):!string.IsNullOrEmpty(context.Item.ExtraProperties.GetProperty<string>("PhoneNumber"))?context.Item.ExtraProperties.GetProperty<string>("PhoneNumber"):context.Item.ExtraProperties.GetProperty<string>("Account"))
+                                        @(!string.IsNullOrEmpty(context.Item.User.DisplayName)?context.Item.User.DisplayName:!string.IsNullOrEmpty(context.Item.User.PhoneNumber)?context.Item.User.PhoneNumber:context.Item.User.Account)
                                     </MListItemTitle>
-                                    <MListItemSubtitle class="caption regular2--text">@(!string.IsNullOrEmpty(context.Item.ExtraProperties.GetProperty<string>("DisplayName"))&&!string.IsNullOrEmpty(context.Item.ExtraProperties.GetProperty<string>("PhoneNumber"))?context.Item.ExtraProperties.GetProperty<string>("PhoneNumber"):context.Item.ExtraProperties.GetProperty<string>("Account"))</MListItemSubtitle>
+                                    <MListItemSubtitle class="caption regular2--text">@(!string.IsNullOrEmpty(context.Item.User.DisplayName)&&!string.IsNullOrEmpty(context.Item.User.PhoneNumber)?context.Item.User.PhoneNumber:context.Item.User.Account)</MListItemSubtitle>
                                 </MListItemContent>
                             </MListItem>
                             break;
                         case (nameof(MessageTaskReceiverDto.Email)):
-                            <DefaultGenericColumnRender Value="@(context.Item.ExtraProperties.GetProperty<string>(nameof(MessageTaskReceiverDto.Email)))" Width="@context.Header.Width"></DefaultGenericColumnRender>
+                            <DefaultGenericColumnRender Value="@(context.Item.User.Email)" Width="@context.Header.Width"></DefaultGenericColumnRender>
                             break;
                         case ("ChannelDisplayName"):
                             <DefaultGenericColumnRender Value="@context.Item.Channel?.DisplayName" Width="@context.Header.Width"></DefaultGenericColumnRender>

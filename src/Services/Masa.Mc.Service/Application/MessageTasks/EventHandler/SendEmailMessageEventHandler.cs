@@ -12,7 +12,6 @@ public class SendEmailMessageEventHandler
     private readonly IMessageRecordRepository _messageRecordRepository;
     private readonly IMessageTaskHistoryRepository _messageTaskHistoryRepository;
     private readonly MessageTemplateDomainService _messageTemplateDomainService;
-    private readonly MessageRecordDomainService _messageRecordDomainService;
     private readonly ILogger<SendEmailMessageEventHandler> _logger;
 
     public SendEmailMessageEventHandler(IEmailAsyncLocal emailAsyncLocal
@@ -22,7 +21,6 @@ public class SendEmailMessageEventHandler
         , IMessageRecordRepository messageRecordRepository
         , IMessageTaskHistoryRepository messageTaskHistoryRepository
         , MessageTemplateDomainService messageTemplateDomainService
-        , MessageRecordDomainService messageRecordDomainService
         , ILogger<SendEmailMessageEventHandler> logger)
     {
         _emailAsyncLocal = emailAsyncLocal;
@@ -32,7 +30,6 @@ public class SendEmailMessageEventHandler
         _messageRecordRepository = messageRecordRepository;
         _messageTaskHistoryRepository = messageTaskHistoryRepository;
         _messageTemplateDomainService = messageTemplateDomainService;
-        _messageRecordDomainService = messageRecordDomainService;
         _logger = logger;
     }
 
@@ -58,7 +55,7 @@ public class SendEmailMessageEventHandler
             {
                 var messageRecord = new MessageRecord(item.UserId, channel.Id, taskHistory.MessageTaskId, taskHistory.Id, item.Variables, eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.Title)), taskHistory.SendTime);
                 messageRecord.SetMessageEntity(taskHistory.MessageTask.EntityType, taskHistory.MessageTask.EntityId);
-                _messageRecordDomainService.SetUserInfo(messageRecord, item);
+                messageRecord.SetUserInfo(item.UserId, item.DisplayName, item.Account, item.Email, item.PhoneNumber);
                 TemplateRenderer(eto.MessageData, item.Variables);
                 if (eto.MessageData.MessageType == MessageEntityTypes.Template)
                 {

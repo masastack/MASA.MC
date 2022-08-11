@@ -11,7 +11,6 @@ public class SendSmsMessageEventHandler
     private readonly IMessageRecordRepository _messageRecordRepository;
     private readonly IMessageTaskHistoryRepository _messageTaskHistoryRepository;
     private readonly MessageTemplateDomainService _messageTemplateDomainService;
-    private readonly MessageRecordDomainService _messageRecordDomainService;
     private readonly ILogger<SendSmsMessageEventHandler> _logger;
 
     public SendSmsMessageEventHandler(IAliyunSmsAsyncLocal aliyunSmsAsyncLocal
@@ -20,7 +19,6 @@ public class SendSmsMessageEventHandler
         , IMessageRecordRepository messageRecordRepository
         , IMessageTaskHistoryRepository messageTaskHistoryRepository
         , MessageTemplateDomainService messageTemplateDomainService
-        , MessageRecordDomainService messageRecordDomainService
         , ILogger<SendSmsMessageEventHandler> logger)
     {
         _aliyunSmsAsyncLocal = aliyunSmsAsyncLocal;
@@ -29,7 +27,6 @@ public class SendSmsMessageEventHandler
         _messageRecordRepository = messageRecordRepository;
         _messageTaskHistoryRepository = messageTaskHistoryRepository;
         _messageTemplateDomainService = messageTemplateDomainService;
-        _messageRecordDomainService = messageRecordDomainService;
         _logger = logger;
     }
 
@@ -51,7 +48,7 @@ public class SendSmsMessageEventHandler
             {
                 var messageRecord = new MessageRecord(item.UserId, channel.Id, taskHistory.MessageTaskId, taskHistory.Id, item.Variables, eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.DisplayName)), taskHistory.SendTime);
                 messageRecord.SetMessageEntity(taskHistory.MessageTask.EntityType, taskHistory.MessageTask.EntityId);
-                _messageRecordDomainService.SetUserInfo(messageRecord, item);
+                messageRecord.SetUserInfo(item.UserId, item.DisplayName, item.Account, item.Email, item.PhoneNumber);
 
                 if (eto.MessageData.MessageType == MessageEntityTypes.Template)
                 {

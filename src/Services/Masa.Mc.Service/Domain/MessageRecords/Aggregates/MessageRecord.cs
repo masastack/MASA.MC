@@ -37,6 +37,12 @@ public class MessageRecord : FullAggregateRoot<Guid, Guid>
         SendTime = sendTime ?? DateTimeOffset.Now;
         Success = success;
         FailureReason = failureReason;
+
+        if (UserId == default && Id == default)
+        {
+            Id = IdGeneratorFactory.SequentialGuidGenerator.NewId();
+            AddDomainEvent(new UpdateMessageRecordUserEvent(Id));
+        }
     }
 
     public virtual T GetDataValue<T>(string name)
@@ -59,5 +65,14 @@ public class MessageRecord : FullAggregateRoot<Guid, Guid>
     {
         MessageEntityType = messageEntityType;
         MessageEntityId = messageEntityId;
+    }
+
+    public void SetUserInfo(Guid userId, string displayName, string account, string email, string phoneNumber)
+    {
+        UserId = userId;
+        SetDataValue(nameof(MessageReceiverUser.DisplayName), displayName);
+        SetDataValue(nameof(MessageReceiverUser.Account), account);
+        SetDataValue(nameof(MessageReceiverUser.Email), email);
+        SetDataValue(nameof(MessageReceiverUser.PhoneNumber), phoneNumber);
     }
 }

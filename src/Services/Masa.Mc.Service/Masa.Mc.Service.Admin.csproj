@@ -18,6 +18,7 @@
 		<PackageReference Include="Masa.BuildingBlocks.Dispatcher.Events" Version="$(MasaContribPackageVersion)" />
 		<PackageReference Include="Masa.BuildingBlocks.SearchEngine.AutoComplete" Version="$(MasaContribPackageVersion)" />
 		<PackageReference Include="Masa.Contrib.Authentication.Identity" Version="0.6.0-preview.3" />
+		<PackageReference Include="Masa.Contrib.Data.IdGenerator.SequentialGuid" Version="0.6.0-preview.3" />
 		<PackageReference Include="Masa.Contrib.StackSdks.Auth" Version="$(MasaContribPackageVersion)" />
 		<PackageReference Include="Masa.Contrib.StackSdks.Dcc" Version="$(MasaContribPackageVersion)" />
 		<PackageReference Include="Masa.Contrib.StackSdks.Scheduler" Version="$(MasaContribPackageVersion)" />
