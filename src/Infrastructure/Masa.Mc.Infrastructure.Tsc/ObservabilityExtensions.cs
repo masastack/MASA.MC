@@ -23,11 +23,11 @@ public static class ObservabilityExtensions
         {
             if (isBlazor)
             {
-                options.AspNetCoreInstrumentationOptions.AppendDefaultFilter(options);
+                options.AspNetCoreInstrumentationOptions.AppendBlazorFilter(options);
             }
             else
             {
-                options.AspNetCoreInstrumentationOptions.AppendBlazorFilter(options);
+                options.AspNetCoreInstrumentationOptions.AppendDefaultFilter(options);
             }
 
             options.BuildTraceCallback = builder =>
