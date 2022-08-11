@@ -107,6 +107,7 @@ public partial class TemplateMessageEditModal : AdminCompontentBase
         _model = new();
         _selectReceivers = new();
         _importReceivers = new();
+        _selectReceiverType = false;
         await _form.ResetValidationAsync();
     }
 

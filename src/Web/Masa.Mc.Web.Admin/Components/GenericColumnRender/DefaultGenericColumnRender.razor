@@ -1,6 +1,6 @@
 ﻿@if (Value is DateTime dateTime)
 {
-    <DateTimeListItem Value="@dateTime" />
+    <DateTimeListItem Value="@dateTime.Add(TimezoneOffset)" />
 }
 else if (Value is DateTimeOffset dateTimeOffset)
 {

@@ -7,7 +7,7 @@
                     <HeaderContent>
                         <div class="subtitle2 emphasis2--text">@T("DisplayName.MessageTaskHistory")</div>
                         <Masa.Mc.Web.Admin.Components.Pickers.DateRangePicker Class="btn-fill-line mt-6" IconClass="mr-9" @bind-StartTime="_queryParam.StartTime" @bind-EndTime="_queryParam.EndTime" OnChange="LoadData" />
-                        <div class="status-select">
+                        <div class="status-select mb-9">
                             <MSelect @bind-Value="@_queryParam.Status"
                                      Items="@(GetEnumList<MessageTaskHistoryStatuses>())"
                                      Label="@T("DisplayName.MessageTaskHistoryStatus")"
@@ -31,7 +31,7 @@
                         @if (_historys.Result.Any())
                         {
                             <div class="task-history-box">
-                                <MTimeline Dense=false Class="mt-9">
+                                <MTimeline Dense=false>
                                     @foreach (var item in _historys.Result)
                                     {
                                         <MTimelineItem Color="fill" Small FillDot Right @onclick="()=>HandleItemSelect(item)">
@@ -58,7 +58,7 @@
                                                     {
                                                         <div class="caption regular--text">@item.TaskHistoryNo</div>
                                                     }
-                                                    <div class="overline regular3--text">@item.SendTime?.ToLocalTime().ToString(T("$DateTimeFormat"))</div>
+                                                    <div class="overline regular3--text">@item.SendTime?.ToOffset(TimezoneOffset).ToString(T("$DateTimeFormat"))</div>
                                                 </div>
                                             </ChildContent>
                                         </MTimelineItem>
@@ -81,7 +81,7 @@
                         @if (_historyInfo.SendTime.HasValue)
                         {
                             <MButton Color="primary" Class="rounded-lg btn small-btn info full-width mb-8">
-                                <span>@T(string.Format(T("Description.MessageTaskHistory.SendTimeTips"),_historyInfo.SendTime?.ToLocalTime().ToString(T("$DateTimeFormat"))))</span>
+                                <span>@T(string.Format(T("Description.MessageTaskHistory.SendTimeTips"),_historyInfo.SendTime?.ToOffset(TimezoneOffset).ToString(T("$DateTimeFormat"))))</span>
                             </MButton>
                         }
                     </HeaderContent>

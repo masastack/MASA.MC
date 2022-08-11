@@ -4,7 +4,7 @@
         <div class="fill rounded-2 d-flex justify-center align-center px-6 py-3 mb-6" style="height:56px">
             <MButton Ripple=false Plain IsActive Class="emphasis2--text h6 primary--text" OnClick="NavigateToSend"><MIcon Size=22 Left>mdi-message</MIcon>@T("Permission.SendMessage")</MButton>
         </div>
-        <div class="ma-0 search-panel">
+        <div class="ma-0 search-panel mb-6">
             @if (advanced)
             {
                 <div class="fold d-inline-flex">
@@ -106,7 +106,7 @@
         </div>
     </HeaderContent>
     <AutoHeightContent>
-        <MRow Class="mt-3" Style="height:0px">
+        <MRow Style="height:0px">
             @foreach (var _entitie in _entities.Result)
             {
                 <MCol Md="3">

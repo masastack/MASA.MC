@@ -10,7 +10,9 @@
         <MCol Md="12">
             <STextField @bind-Value="_model.AccessKeySecret"
                         Label="@T("SmsChannelOptions.AccessKeySecret")"
-                        Hint="@T("ChannelOptions.Tips")">
+                        Hint="@T("ChannelOptions.Tips")"
+                        Type="@(_accessKeySecretShow ? "text" : "password")"
+                        AppendIcon="@(_accessKeySecretShow ? "mdi-eye" : "mdi-eye-off")" OnAppendClick="()=>_accessKeySecretShow = !_accessKeySecretShow">
             </STextField>
         </MCol>
     </MRow>

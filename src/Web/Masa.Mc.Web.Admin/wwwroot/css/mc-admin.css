@@ -297,7 +297,7 @@
 }
 
 .page-content {
-    height: calc(100% - 24px)
+    height: calc(100vh - 186px);
 }
 
 .masa .warning-disabled--text {
@@ -343,9 +343,9 @@
     color: #A3AED0;
 }
 
-.m-stepper__wrapper {
+/*.m-stepper__wrapper {
     overflow: visible;
-}
+}*/
 
 .m-dialog {
     border-radius: 20px !important;

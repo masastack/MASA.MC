@@ -14,6 +14,7 @@ public partial class ChannelEmailExtraProperties : AdminCompontentBase
     public MForm Form { get; set; }
 
     private EmailChannelOptions _model = new();
+    private bool _passwordShow;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {

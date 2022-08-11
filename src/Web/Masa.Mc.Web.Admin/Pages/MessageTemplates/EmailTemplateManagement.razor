@@ -82,7 +82,7 @@
                             </MChip>
                             break;
                         case "Action":
-                            <SIcon Small Color="emphasis2" Tooltip="@(T("Edit"))" OnClick="async()=>await _editModal.OpenModalAsync(context.Item)">mdi-pencil</SIcon>
+                            <DefaultIcon Small Color="emphasis2" Tooltip="@(T("Edit"))" OnClick="async()=>await _editModal.OpenModalAsync(context.Item)">mdi-pencil</DefaultIcon>
                             break;
                         default:
                             <DefaultGenericColumnRender Value="@context.Value" Width="@context.Header.Width"></DefaultGenericColumnRender>

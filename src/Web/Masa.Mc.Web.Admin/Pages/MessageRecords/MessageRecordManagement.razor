@@ -103,7 +103,7 @@
                             <MessageRecordStatusTag Class="text-truncate" Value="@context.Item.Success" />
                             break;
                         case "Action":
-                            <MIcon Small Color="emphasis2" OnClick="async()=>await _detailModal.OpenModalAsync(context.Item)">mdi-eye</MIcon>
+                            <DefaultIcon Small Color="emphasis2" Tooltip="@(T("View"))" OnClick="async()=>await _detailModal.OpenModalAsync(context.Item)">mdi-eye</DefaultIcon>
                             break;
                         default:
                             <DefaultGenericColumnRender Value="@context.Value" Width="@context.Header.Width"></DefaultGenericColumnRender>

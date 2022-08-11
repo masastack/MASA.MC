@@ -49,7 +49,7 @@
                             </MRow>
                             <MRow Class="mt-6">
                                 <MCol>
-                                    <DefaultAutoComplete Items="_templateItems" @bind-Value="_model.EntityId"
+                                    <SAutoComplete Items="_templateItems" @bind-Value="_model.EntityId"
                                                    Label="@T("TemplateTemplate")"
                                                    ItemText="@(x=>string.IsNullOrEmpty(x.TemplateId)?x.DisplayName:$"{x.DisplayName}({x.TemplateId})")"
                                                    ItemValue="x=>x.Id"
@@ -58,7 +58,7 @@
                                                    TItem="MessageTemplateDto"
                                                    TItemValue="Guid"
                                                    TValue="Guid"
-                                                   OnSelectedItemUpdate="HandleTemplateSelected"></DefaultAutoComplete>
+                                                   OnSelectedItemUpdate="HandleTemplateSelected"></SAutoComplete>
                                 </MCol>
                             </MRow>
                             @if (_model.EntityId != default)

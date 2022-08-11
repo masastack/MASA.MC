@@ -44,7 +44,7 @@
                 </MRow>
                 <MRow Class="row-box">
                     <MCol>
-                        <DefaultAutoComplete Items="_templateItems" @bind-Value="_model.TemplateId"
+                        <SAutoComplete Items="_templateItems" @bind-Value="_model.TemplateId"
                                        Label="@T("SelectTemplate")"
                                        ItemText="@(x=>$"{x.TemplateName}({x.TemplateCode})")"
                                        ItemValue="x=>x.TemplateCode"
@@ -61,7 +61,7 @@
                                     <span class="emphasis2--text">@T("SyncTemplate")</span>
                                 </MButton>
                             </AppendOuterContent>
-                        </DefaultAutoComplete>
+                        </SAutoComplete>
                     </MCol>
                 </MRow>
                 <MRow Class="row-box">
