@@ -27,8 +27,8 @@
                         </IconContent>
                         <ChildContent>
                             <div class="ml-n5">
-                                <div class="btn emphasis--text">@(_messageTask.ExpectSendTime?.ToLocalTime().ToString(T("$DateFormat")))</div>
-                                <div class="overline regular3--text">@(_messageTask.ExpectSendTime?.ToLocalTime().ToString(T("$TimeFormat")))</div>
+                                <div class="btn emphasis--text">@(_messageTask.ExpectSendTime?.Add(TimezoneOffset).ToString(T("$DateFormat")))</div>
+                                <div class="overline regular3--text">@(_messageTask.ExpectSendTime?.Add(TimezoneOffset).ToString(T("$TimeFormat")))</div>
                             </div>
                         </ChildContent>
                     </MTimelineItem>
@@ -41,8 +41,8 @@
                         </IconContent>
                         <ChildContent>
                             <div class="ml-n5">
-                                <div class="btn emphasis--text">@_messageRecord.SendTime?.ToLocalTime().ToString(T("$DateFormat"))</div>
-                                <div class="overline regular3--text">@_messageRecord.SendTime?.ToLocalTime().ToString(T("$TimeFormat"))</div>
+                                <div class="btn emphasis--text">@_messageRecord.SendTime?.Add(TimezoneOffset).ToString(T("$DateFormat"))</div>
+                                <div class="overline regular3--text">@_messageRecord.SendTime?.Add(TimezoneOffset).ToString(T("$TimeFormat"))</div>
                             </div>
                         </ChildContent>
                     </MTimelineItem>

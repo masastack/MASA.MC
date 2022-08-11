@@ -297,7 +297,7 @@
 }
 
 .page-content {
-    height: calc(100% - 24px)
+    height: calc(100vh - 186px);
 }
 
 .masa .warning-disabled--text {
