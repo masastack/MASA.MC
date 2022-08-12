@@ -70,6 +70,11 @@ public class AdminSafeListMiddleware
 
     public bool ValidateIp(string ip)
     {
+        if (_whiteListOptions.IpWhiteList.Any(x => x == "0.0.0.0"))
+        {
+            return true;
+        }
+
         foreach (var item in _whiteListOptions.IpWhiteList)
         {
             if (Regex.IsMatch(ip, item, RegexOptions.IgnoreCase))
