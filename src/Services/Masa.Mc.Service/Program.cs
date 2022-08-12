@@ -1,8 +1,6 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
-using Masa.Mc.Service.Admin.Infrastructure.Filter;
-
 var builder = WebApplication.CreateBuilder(args);
 builder.AddObservability();
 
@@ -76,14 +74,6 @@ builder.Services.AddHealthChecks()
     .AddCheck("self", () => HealthCheckResult.Healthy("A healthy result."))
     .AddDbContextCheck<McDbContext>();
 
-builder.Services.AddScoped<ClientIdCheckFilter>(container =>
-{
-    var loggerFactory = container.GetRequiredService<ILoggerFactory>();
-    var logger = loggerFactory.CreateLogger<ClientIdCheckFilter>();
-    return new ClientIdCheckFilter(
-        "192.168.1.5", logger);
-});
-
 var app = builder.Services
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     .AddEndpointsApiExplorer()
@@ -131,6 +121,8 @@ var app = builder.Services
         .UseRepository<McDbContext>();
     })
     .AddServices(builder);
+var WhiteListOptions = configuration.GetSection("WhiteListOptions").Get<WhiteListOptions>();
+app.UseMiddleware<AdminSafeListMiddleware>(configuration.GetSection("WhiteListOptions").Get<WhiteListOptions>());
 app.UseMasaExceptionHandler(opt =>
 {
     opt.ExceptionHandler = context =>
