@@ -2,7 +2,6 @@
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
 var builder = WebApplication.CreateBuilder(args);
-
 builder.AddObservability();
 
 #if DEBUG
@@ -122,6 +121,7 @@ var app = builder.Services
         .UseRepository<McDbContext>();
     })
     .AddServices(builder);
+app.UseMiddleware<AdminSafeListMiddleware>(configuration.GetSection("WhiteListOptions").Get<WhiteListOptions>());
 app.UseMasaExceptionHandler(opt =>
 {
     opt.ExceptionHandler = context =>

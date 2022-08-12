@@ -173,3 +173,6 @@ global using Masa.Contrib.StackSdks.Mc.Infrastructure.Extensions;
 global using Masa.BuildingBlocks.StackSdks.Mc;
 global using Masa.Mc.Infrastructure.Tsc;
 global using Masa.BuildingBlocks.Data;
+global using System.Net;
+global using Masa.Mc.Service.Admin.Infrastructure.Middleware;
+global using System.Text.RegularExpressions;
