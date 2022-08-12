@@ -2,7 +2,6 @@
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
 var builder = WebApplication.CreateBuilder(args);
-
 builder.AddObservability();
 
 #if DEBUG
@@ -51,7 +50,7 @@ builder.Services.AddAuthentication(options =>
     options.TokenValidationParameters.ValidateIssuer = false;
     options.MapInboundClaims = false;
 });
-
+builder.Services.AddSequentialGuidGenerator();
 builder.AddMasaConfiguration(configurationBuilder =>
 {
     configurationBuilder.UseDcc();
@@ -122,6 +121,7 @@ var app = builder.Services
         .UseRepository<McDbContext>();
     })
     .AddServices(builder);
+app.UseMiddleware<AdminSafeListMiddleware>(configuration.GetSection("WhiteListOptions").Get<WhiteListOptions>());
 app.UseMasaExceptionHandler(opt =>
 {
     opt.ExceptionHandler = context =>

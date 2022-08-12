@@ -19,4 +19,5 @@ public class MessageRecordDto : AuditEntityDto<Guid, Guid>
     public ExtraPropertyDictionary ExtraProperties { get;  set; } = new();
     public ExtraPropertyDictionary Variables { get;  set; } = new();
     public string DisplayName { get; set; } = string.Empty;
+    public MessageRecordUserDto User { get; set; } = new();
 }
