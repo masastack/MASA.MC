@@ -121,7 +121,6 @@ var app = builder.Services
         .UseRepository<McDbContext>();
     })
     .AddServices(builder);
-var WhiteListOptions = configuration.GetSection("WhiteListOptions").Get<WhiteListOptions>();
 app.UseMiddleware<AdminSafeListMiddleware>(configuration.GetSection("WhiteListOptions").Get<WhiteListOptions>());
 app.UseMasaExceptionHandler(opt =>
 {
