@@ -31,13 +31,12 @@ public class AdminSafeListMiddleware
                 await _next.Invoke(context);
                 return;
             }
-            _logger.LogDebug("Request from Remote path: {path}", path);
+            _logger.LogInformation($"AdminSafeListMiddleware:RequestFromRemotePath is {path}");
             var remoteIp = context.Connection.RemoteIpAddress?.ToString();
             
             if (!ValidateIp(remoteIp))
             {
-                _logger.LogWarning(
-                    "Forbidden Request from Remote IP address: {RemoteIp}", remoteIp);
+                _logger.LogInformation($"AdminSafeListMiddleware:RemoteIp is {remoteIp}");
                 context.Response.StatusCode = StatusCodes.Status403Forbidden;
                 return;
             }
