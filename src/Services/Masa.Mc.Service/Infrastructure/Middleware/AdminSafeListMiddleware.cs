@@ -9,7 +9,6 @@ public class AdminSafeListMiddleware
     private readonly ILogger<AdminSafeListMiddleware> _logger;
     private readonly WhiteListOptions _whiteListOptions;
 
-
     public AdminSafeListMiddleware(
         RequestDelegate next,
         ILogger<AdminSafeListMiddleware> logger,
@@ -19,7 +18,6 @@ public class AdminSafeListMiddleware
         _next = next;
         _logger = logger;
     }
-
 
     public async Task Invoke(HttpContext context)
     {
@@ -44,8 +42,6 @@ public class AdminSafeListMiddleware
 
         await _next.Invoke(context);
     }
-
-
 
     public bool ValidateUrl(string url)
     {
