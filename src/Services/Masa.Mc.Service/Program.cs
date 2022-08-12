@@ -1,8 +1,9 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
-var builder = WebApplication.CreateBuilder(args);
+using Masa.Mc.Service.Admin.Infrastructure.Filter;
 
+var builder = WebApplication.CreateBuilder(args);
 builder.AddObservability();
 
 #if DEBUG
@@ -74,6 +75,14 @@ TypeAdapterConfig.GlobalSettings.Scan(Assembly.GetExecutingAssembly(), Assembly.
 builder.Services.AddHealthChecks()
     .AddCheck("self", () => HealthCheckResult.Healthy("A healthy result."))
     .AddDbContextCheck<McDbContext>();
+
+builder.Services.AddScoped<ClientIdCheckFilter>(container =>
+{
+    var loggerFactory = container.GetRequiredService<ILoggerFactory>();
+    var logger = loggerFactory.CreateLogger<ClientIdCheckFilter>();
+    return new ClientIdCheckFilter(
+        "192.168.1.5", logger);
+});
 
 var app = builder.Services
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

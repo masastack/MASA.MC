@@ -1,6 +1,8 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
+using Masa.Mc.Service.Admin.Infrastructure.Filter;
+
 namespace Masa.Mc.Service.Services;
 
 public class ChannelService : ServiceBase
@@ -16,6 +18,7 @@ public class ChannelService : ServiceBase
         MapGet(GetListByTypeAsync);
     }
 
+    [ServiceFilter(typeof(ClientIdCheckFilter))]
     public async Task<PaginatedListDto<ChannelDto>> GetListAsync(IEventBus eventbus, [FromQuery] ChannelTypes? type, [FromQuery] string displayName = "", [FromQuery] string filter = "", [FromQuery] string sorting = "", [FromQuery] int page = 1, [FromQuery] int pagesize = 10)
     {
         var inputDto = new GetChannelInputDto(filter, type, displayName, sorting, page, pagesize);
