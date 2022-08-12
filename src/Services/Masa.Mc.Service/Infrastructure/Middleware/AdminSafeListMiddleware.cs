@@ -43,7 +43,6 @@ public class AdminSafeListMiddleware
             }
         }
 
-
         await _next.Invoke(context);
     }
 
