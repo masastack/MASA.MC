@@ -8,14 +8,20 @@ public class WebsiteMessageQueryHandler
     private readonly IWebsiteMessageRepository _repository;
     private readonly IChannelRepository _channelRepository;
     private readonly IUserContext _userContext;
+    private readonly IDistributedCacheClient _cacheClient;
+    private readonly ILogger<WebsiteMessageQueryHandler> _logger;
 
     public WebsiteMessageQueryHandler(IWebsiteMessageRepository repository
         , IChannelRepository channelRepository
+        , IDistributedCacheClient cacheClient
+        , ILogger<WebsiteMessageQueryHandler> logger
         , IUserContext userContext)
     {
         _repository = repository;
         _channelRepository = channelRepository;
         _userContext = userContext;
+        _cacheClient = cacheClient;
+        _logger = logger;
     }
 
     [EventHandler]
@@ -58,6 +64,8 @@ public class WebsiteMessageQueryHandler
     [EventHandler]
     public async Task GetNoticeListAsync(GetNoticeListQuery query)
     {
+        var checkCount = await _cacheClient.HashIncrementAsync($"GetNoticeListAsync_Count");
+        _logger.LogInformation($"GetNoticeListAsync:{checkCount}");
         var noticeNum = query.PageSize;
         var queryable = await _repository.WithDetailsAsync();
         var userId = _userContext.GetUserId<Guid>();
