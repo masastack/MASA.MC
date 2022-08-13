@@ -16,6 +16,6 @@ public class MessageTaskUpsertDtoValidator : AbstractValidator<MessageTaskUpsert
         RuleFor(inputDto => inputDto.SelectReceiverType).IsInEnum().When(m => !m.IsDraft);
         RuleFor(inputDto => inputDto.Receivers).Required().When(m => m.ReceiverType == ReceiverTypes.Assign && !m.IsDraft);
         RuleFor(inputDto => inputDto.MessageInfo).SetValidator(new MessageInfoUpsertDtoValidator()).When(m => m.EntityType == MessageEntityTypes.Ordinary).When(m => !m.IsDraft);
-        RuleFor(inputDto => inputDto.SendRules).SetValidator(new SendRuleDtoValidator()).When(m => !m.IsDraft);
+        RuleFor(inputDto => inputDto.SendRules).SetValidator(new SendRuleDtoValidator());
     }
 }
