@@ -26,7 +26,7 @@ builder.Services.AddMasaIdentityModel(IdentityType.MultiEnvironment, options =>
 builder.Services.AddFirewall(serviceProvider =>
 {
     var daprClient = serviceProvider.GetRequiredService<DaprClient>();
-    var firewallOptions = daprClient.GetSecretAsync("localsecretstore", "firewallOptions").Result;
+    var firewallOptions = daprClient.GetSecretAsync("localsecretstore", "firewall-options").Result;
 
     return new FirewallOptions
     {
