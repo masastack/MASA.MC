@@ -1,7 +1,10 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
+using Masa.Mc.Infrastructure.Firewall;
+
 var builder = WebApplication.CreateBuilder(args);
+
 builder.AddObservability();
 
 #if DEBUG
@@ -19,6 +22,17 @@ builder.Services.AddMasaIdentityModel(IdentityType.MultiEnvironment, options =>
     options.Environment = "environment";
     options.UserName = "name";
     options.UserId = "sub";
+});
+builder.Services.AddFirewall(serviceProvider =>
+{
+    var daprClient = serviceProvider.GetRequiredService<DaprClient>();
+    var firewallOptions = daprClient.GetSecretAsync("localsecretstore", "firewallOptions").Result;
+
+    return new FirewallOptions
+    {
+        IpWhiteList = firewallOptions["ipWhiteList"],
+        UrlWhiteList = firewallOptions["urlWhiteList"]
+    };
 });
 builder.Services.AddAliyunStorage(serviceProvider =>
 {
@@ -121,7 +135,8 @@ var app = builder.Services
         .UseRepository<McDbContext>();
     })
     .AddServices(builder);
-app.UseMiddleware<AdminSafeListMiddleware>(configuration.GetSection("WhiteListOptions").Get<WhiteListOptions>());
+
+app.UseFirewall();
 app.UseMasaExceptionHandler(opt =>
 {
     opt.ExceptionHandler = context =>

@@ -68,6 +68,7 @@
 	  <ProjectReference Include="..\..\Infrastructure\Masa.Mc.Infrastructure.Email\Masa.Mc.Infrastructure.Email.csproj" />
 	  <ProjectReference Include="..\..\Infrastructure\Masa.Mc.Infrastructure.EntityFrameworkCore\Masa.Mc.Infrastructure.EntityFrameworkCore.csproj" />
 	  <ProjectReference Include="..\..\Infrastructure\Masa.Mc.Infrastructure.ExporterAndImporter.Csv\Masa.Mc.Infrastructure.ExporterAndImporter.Csv.csproj" />
+	  <ProjectReference Include="..\..\Infrastructure\Masa.Mc.Infrastructure.Firewall\Masa.Mc.Infrastructure.Firewall.csproj" />
 	  <ProjectReference Include="..\..\Infrastructure\Masa.Mc.Infrastructure.MailKit\Masa.Mc.Infrastructure.MailKit.csproj" />
 	  <ProjectReference Include="..\..\Infrastructure\Masa.Mc.Infrastructure.Sms.Aliyun\Masa.Mc.Infrastructure.Sms.Aliyun.csproj" />
 	  <ProjectReference Include="..\..\Infrastructure\Masa.Mc.Infrastructure.Sms\Masa.Mc.Infrastructure.Sms.csproj" />
