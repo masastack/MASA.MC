@@ -42,6 +42,7 @@ public partial class TemplateMessageInfo : AdminCompontentBase
         }
         MessageTemplate.Title = await RenderAsync(MessageTemplate.Title, Variables, startstr, endstr);
         MessageTemplate.Content = await RenderAsync(MessageTemplate.Content, Variables, startstr, endstr);
+        MessageTemplate.JumpUrl = await RenderAsync(MessageTemplate.JumpUrl, Variables, startstr, endstr);
     }
 
     public Task<string> RenderAsync(string context, ExtraPropertyDictionary model, string startstr, string endstr)
