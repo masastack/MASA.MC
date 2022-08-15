@@ -77,6 +77,7 @@ public class MessageTaskDomainService : DomainService
         {
             messageData.SetDataValue(nameof(MessageTemplate.Title), await _templateRenderer.RenderAsync(messageData.GetDataValue<string>(nameof(MessageTemplate.Title)), variables));
             messageData.SetDataValue(nameof(MessageTemplate.Content), await _templateRenderer.RenderAsync(messageData.GetDataValue<string>(nameof(MessageTemplate.Content)), variables));
+            messageData.SetDataValue(nameof(MessageTemplate.JumpUrl), await _templateRenderer.RenderAsync(messageData.GetDataValue<string>(nameof(MessageTemplate.JumpUrl)), variables));
         }
         return messageData;
     }
