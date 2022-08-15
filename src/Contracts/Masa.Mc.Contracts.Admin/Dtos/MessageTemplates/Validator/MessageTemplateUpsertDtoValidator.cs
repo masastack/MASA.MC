@@ -17,7 +17,7 @@ public class MessageTemplateUpsertDtoValidator : AbstractValidator<MessageTempla
         RuleFor(inputDto => inputDto.TemplateId).Required().When(x => x.ChannelType == ChannelTypes.Sms);
         RuleFor(inputDto => inputDto.Title).Required().Length(2, 50).When(x => x.ChannelType == ChannelTypes.Email || x.ChannelType == ChannelTypes.WebsiteMessage);
         RuleFor(inputDto => inputDto.Content).Required();
-        RuleFor(inputDto => inputDto.JumpUrl).Required().Url().When(x => x.IsJump);
+        RuleFor(inputDto => inputDto.JumpUrl).Required().When(x => x.IsJump);
         RuleFor(inputDto => inputDto.Items).Must(x => !x.GroupBy(y => y.Code).Any(z => z.Count() > 1)).WithMessage("code cannot be repeated");
     }
 }
