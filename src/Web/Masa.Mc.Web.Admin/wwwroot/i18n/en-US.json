@@ -198,5 +198,7 @@
   "DisplayName.SendingRule.SendingCount.Tips": "0 is unlimited",
   "DisplayName.MessageTaskDetail.ReceiverType": "Type",
   "ChannelOptions.Tips": "Please check the filled data carefully. If you fill in the wrong data, the message will fail to be sent",
-  "SelectTemplate": "Select template"
+  "SelectTemplate": "Select template",
+  "CronExpressionInvalid": "Cron expression is invalid",
+  "CronExpressionNotHasNextRunTime": "Cannot calculate the next run time from this expression"
 }

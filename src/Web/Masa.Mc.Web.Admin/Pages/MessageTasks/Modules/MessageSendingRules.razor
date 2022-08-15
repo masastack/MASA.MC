@@ -15,7 +15,9 @@
                             Outlined
                             Dense
                             Disabled="ReadOnly"
-                            HideDetails="@("auto")">
+                            HideDetails="@("auto")"
+                            TValue="string"
+                            AppendIcon="mdi-clock" OnAppendClick="OpenCronModal" OnChange="()=>GetNextRunTime()">
                     </MTextField>
                 </div>
                 <div class="d-inline-flex mx-6" style="height: 24px">
@@ -35,4 +37,18 @@
             </div>
         </MCol>
     </MRow>
+    @if (!string.IsNullOrEmpty(Value.CronExpression))
+    {
+        <MRow Class="mt-6">
+            <MCol>
+                <MTextarea @bind-Value="_nextRunTimeStr" Readonly Outlined Rows="11" Label="@T("$masaBlazor.cron.demo.nextTenRunTime")">
+                </MTextarea>
+            </MCol>
+        </MRow>
+    }
 }
+
+<SSimpleModal @bind-Value="@_cronVisible" Title="@T("CronExpression")" OnSave="SetCronExpression">
+    <PCron @bind-Value="@(_tempCron)">
+    </PCron>
+</SSimpleModal>

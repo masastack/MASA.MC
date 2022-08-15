@@ -14,7 +14,6 @@ public partial class ChannelSmsExtraProperties : AdminCompontentBase
     public MForm Form { get; set; }
 
     private SmsChannelOptions _model = new();
-    private bool _accessKeySecretShow;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {

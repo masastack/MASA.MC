@@ -302,5 +302,7 @@
   "DisplayName.MessageTaskDetail.ReceiverType": "类型",
   "TemplateTemplate": "模板",
   "ChannelOptions.Tips": "请仔细核对填写数据，填写错误会导致消息发送失败",
-  "SelectTemplate": "选择模板"
+  "SelectTemplate": "选择模板",
+  "CronExpressionInvalid": "Cron表达式不合法",
+  "CronExpressionNotHasNextRunTime": "您的表达式计算不出下一次运行时间"
 }

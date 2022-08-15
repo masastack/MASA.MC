@@ -10,8 +10,8 @@
         <MCol Md="6">
             <STextField @bind-Value="_model.Password"
                         Label="@T("EmailChannelOptions.Password")"
-                        Type="@(_passwordShow ? "text" : "password")"
-                        AppendIcon="@(_passwordShow ? "mdi-eye" : "mdi-eye-off")" OnAppendClick="()=>_passwordShow = !_passwordShow">
+                        Type="password"
+                        AppendIcon="mdi-eye-off">
             </STextField>
         </MCol>
         <MCol Md="6">

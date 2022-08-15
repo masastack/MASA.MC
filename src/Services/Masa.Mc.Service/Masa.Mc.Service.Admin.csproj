@@ -13,12 +13,12 @@
 	<ItemGroup>
 		<PackageReference Include="EFCore.BulkExtensions" Version="6.5.4" />
 		<PackageReference Include="Mapster" Version="7.3.0" />
-		<PackageReference Include="Masa.BuildingBlocks.StackSdks.Scheduler" Version="$(MasaContribPackageVersion)" />
 		<PackageReference Include="Masa.BuildingBlocks.Data.UoW" Version="$(MasaContribPackageVersion)" />
 		<PackageReference Include="Masa.BuildingBlocks.Dispatcher.Events" Version="$(MasaContribPackageVersion)" />
 		<PackageReference Include="Masa.BuildingBlocks.SearchEngine.AutoComplete" Version="$(MasaContribPackageVersion)" />
-		<PackageReference Include="Masa.Contrib.Authentication.Identity" Version="0.6.0-preview.3" />
-		<PackageReference Include="Masa.Contrib.Data.IdGenerator.SequentialGuid" Version="0.6.0-preview.3" />
+		<PackageReference Include="Masa.BuildingBlocks.StackSdks.Scheduler" Version="$(MasaContribPackageVersion)" />
+		<PackageReference Include="Masa.Contrib.Authentication.Identity" Version="$(MasaContribPackageVersion)" />
+		<PackageReference Include="Masa.Contrib.Data.IdGenerator.SequentialGuid" Version="$(MasaContribPackageVersion)" />
 		<PackageReference Include="Masa.Contrib.StackSdks.Auth" Version="$(MasaContribPackageVersion)" />
 		<PackageReference Include="Masa.Contrib.StackSdks.Dcc" Version="$(MasaContribPackageVersion)" />
 		<PackageReference Include="Masa.Contrib.StackSdks.Scheduler" Version="$(MasaContribPackageVersion)" />
