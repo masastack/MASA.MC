@@ -91,4 +91,9 @@ public class MessageTaskHistory : FullAggregateRoot<Guid, Guid>
     {
         SchedulerTaskId = taskId;
     }
+
+    public void ExecuteTask()
+    {
+        AddDomainEvent(new ExecuteMessageTaskEvent(MessageTaskId, false));
+    }
 }
