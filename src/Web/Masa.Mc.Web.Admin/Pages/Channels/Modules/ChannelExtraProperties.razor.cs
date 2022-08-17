@@ -24,6 +24,9 @@ public partial class ChannelExtraProperties : AdminCompontentBase
     [Parameter]
     public EventCallback<ExtraPropertyDictionary> ValueChanged { get; set; }
 
+    [Parameter]
+    public bool PasswordView { get; set; }
+
     private ChannelEmailExtraProperties _emailExtraPropertiesRef = default!;
     private ChannelSmsExtraProperties _smsExtraPropertiesRef = default!;
 

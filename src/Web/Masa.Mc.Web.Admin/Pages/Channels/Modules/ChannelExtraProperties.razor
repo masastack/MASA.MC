@@ -2,9 +2,9 @@
 
 @if (Type==ChannelTypes.Email)
 {
-    <ChannelEmailExtraProperties @ref="_emailExtraPropertiesRef" @bind-Value="Value" />
+    <ChannelEmailExtraProperties @ref="_emailExtraPropertiesRef" @bind-Value="Value" PasswordView="PasswordView" />
 }
 else if (Type==ChannelTypes.Sms)
 {
-    <ChannelSmsExtraProperties @ref="_smsExtraPropertiesRef" @bind-Value="Value" />
+    <ChannelSmsExtraProperties @ref="_smsExtraPropertiesRef" @bind-Value="Value" PasswordView="PasswordView" />
 }

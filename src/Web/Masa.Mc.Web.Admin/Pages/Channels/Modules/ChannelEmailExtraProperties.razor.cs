@@ -11,9 +11,13 @@ public partial class ChannelEmailExtraProperties : AdminCompontentBase
     [Parameter]
     public EventCallback<ExtraPropertyDictionary> ValueChanged { get; set; }
 
+    [Parameter]
+    public bool PasswordView { get; set; }
+
     public MForm Form { get; set; }
 
     private EmailChannelOptions _model = new();
+    private bool _passwordShow;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {

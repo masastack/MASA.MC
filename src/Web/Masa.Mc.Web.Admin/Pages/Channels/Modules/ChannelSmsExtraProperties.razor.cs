@@ -11,9 +11,13 @@ public partial class ChannelSmsExtraProperties : AdminCompontentBase
     [Parameter]
     public EventCallback<ExtraPropertyDictionary> ValueChanged { get; set; }
 
+    [Parameter]
+    public bool PasswordView { get; set; }
+
     public MForm Form { get; set; }
 
     private SmsChannelOptions _model = new();
+    private bool _passwordShow;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
