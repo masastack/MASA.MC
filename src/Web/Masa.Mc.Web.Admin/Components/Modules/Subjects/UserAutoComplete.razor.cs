@@ -62,7 +62,7 @@ public partial class UserAutoComplete : AdminCompontentBase
     private async Task HandleValueChanged(List<Guid> value)
     {
         value = value ?? new();
-        var list = Items.Where(x => value.Contains(x.Id)).ToList();
+        var list = Items.Where(x => value.Contains(x.Value)).ToList();
         UserSelect = list;
         if (ValueChanged.HasDelegate)
         {

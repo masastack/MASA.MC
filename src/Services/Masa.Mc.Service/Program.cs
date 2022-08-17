@@ -14,7 +14,7 @@ builder.Services.AddDaprStarter(opt =>
 
 builder.Services.AddDaprClient();
 
-builder.Services.AddMasaIdentityModel(IdentityType.MultiEnvironment, options =>
+builder.Services.AddMasaIdentityModel(options =>
 {
     options.Environment = "environment";
     options.UserName = "name";
