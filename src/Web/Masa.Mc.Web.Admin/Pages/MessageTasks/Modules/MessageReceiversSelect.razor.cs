@@ -56,16 +56,21 @@ public partial class MessageReceiversSelect : AdminCompontentBase
         }
     }
 
-    private async Task HandleSubjectSelected(MessageTaskReceiverDto item)
+    private async Task HandleOnAdd(MessageTaskReceiverDto item)
+    {
+        if (!Value.Any(x => x.SubjectId == item.SubjectId))
+        {
+            Value.Add(item);
+            await ValueChanged.InvokeAsync(Value);
+        }
+    }
+
+    private async Task HandleOnRemove(MessageTaskReceiverDto item)
     {
         if (Value.Any(x => x.SubjectId == item.SubjectId))
         {
             Value.RemoveAll(x => x.SubjectId == item.SubjectId);
+            await ValueChanged.InvokeAsync(Value);
         }
-        else
-        {
-            Value.Add(item);
-        }
-        await ValueChanged.InvokeAsync(Value);
     }
 }

@@ -15,15 +15,31 @@
                Flat
                Dense
                Solo
+               Chips
                BackgroundColor="fill-background"
                HideDetails="@("auto")"
-               Style="@($"width:340px;height:40px;{Style}")"
                Class="@($"{Class} rounded-2")"
                Multiple
-               OnSelectedItemUpdate="OnSelectedItemUpdate">
+               HideSelected="false"
+               OnSelectedItemUpdate="HandleOnSelectedItemUpdate">
     <PrependInnerContent>
         <MIcon Size=16 Class="mr-2 default-lighten-1--text">mdi-magnify</MIcon>
     </PrependInnerContent>
+    <SelectionContent Context="data">
+        <MChip Close IsActive="@data.Selected" OnCloseClick="() => Remove(data.Item)">
+            <MAvatar Left>
+                @if (string.IsNullOrEmpty(data.Item.Avatar))
+                {
+                    <SEmptyAvatar Value="@(string.IsNullOrEmpty(data.Item.DisplayName)?data.Item.Name:data.Item.DisplayName)" />
+                }
+                else
+                {
+                    <MImage Src="@data.Item.Avatar"></MImage>
+                }
+            </MAvatar>
+            @data.Item.Name
+        </MChip>
+    </SelectionContent>
     <ItemContent Context="data">
         <div class="d-flex full-width pa-4 pl-0">
             <MListItemAvatar Size=40 Class="ma-0" Color="primary">

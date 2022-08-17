@@ -15,11 +15,6 @@ public partial class ReceiverSelect : AdminCompontentBase
     private SubjectAutoComplete _subjectAutoComplete = default!;
     private List<Guid> _userIds = new List<Guid>();
 
-    protected override void OnParametersSet()
-    {
-        _userIds = Value.Select(x=>x.SubjectId).ToList();
-    }
-
     public async Task RemoveValue(ReceiverGroupItemDto item)
     {
         Value.RemoveAll(x => x.SubjectId == item.SubjectId);
@@ -41,13 +36,9 @@ public partial class ReceiverSelect : AdminCompontentBase
         await SuccessMessageAsync(T("ExternalMemberAddMessage"));
     }
 
-    private async Task HandleSubjectSelected(SubjectDto item)
+    private async Task HandleOnAdd(SubjectDto item)
     {
-        if (Value.Any(x=>x.SubjectId== item.SubjectId))
-        {
-            Value.RemoveAll(x => x.SubjectId == item.SubjectId);
-        }
-        else
+        if (!Value.Any(x => x.SubjectId == item.SubjectId))
         {
             Value.Add(new ReceiverGroupItemDto
             {
@@ -58,13 +49,28 @@ public partial class ReceiverSelect : AdminCompontentBase
                 PhoneNumber = item.PhoneNumber ?? string.Empty,
                 Email = item.Email ?? string.Empty
             });
+            await ValueChanged.InvokeAsync(Value);
         }
         await ValueChanged.InvokeAsync(Value);
+    }
+
+    private async Task HandleOnRemove(SubjectDto item)
+    {
+        if (Value.Any(x => x.SubjectId == item.SubjectId))
+        {
+            Value.RemoveAll(x => x.SubjectId == item.SubjectId);
+            await ValueChanged.InvokeAsync(Value);
+        }
     }
 
     public void ResetForm()
     {
         _userIds = new();
+        _subjectAutoComplete.ResetForm();
+    }
+
+    private void HandleOnBlur()
+    {
         _subjectAutoComplete.ResetForm();
     }
 }
