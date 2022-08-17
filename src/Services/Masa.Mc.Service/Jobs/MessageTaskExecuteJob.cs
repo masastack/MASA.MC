@@ -1,23 +1,14 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
+using Masa.Contrib.StackSdks.Scheduler;
 using Microsoft.Data.SqlClient;
 
 namespace Masa.Mc.Service.Admin.Jobs;
 
-public class MessageTaskExecuteJob : ISchedulerJob
+public class MessageTaskExecuteJob : SchedulerJob
 {
-    public async Task BeforeExcuteAsync(JobContext context)
-    {
-        await Task.CompletedTask;
-    }
-
-    public async Task AfterExcuteAsync(JobContext context)
-    {
-        await Task.CompletedTask;
-    }
-
-    public async Task<object?> ExcuteAsync(JobContext context)
+    public override async Task<object?> ExcuteAsync(JobContext context)
     {
         try
         {
@@ -31,7 +22,7 @@ public class MessageTaskExecuteJob : ISchedulerJob
             builder.Configuration.SetBasePath(path)
             .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
             .AddJsonFile($"appsettings.{env}.json", optional: true, reloadOnChange: true);
-            builder.Services.AddMasaIdentityModel(IdentityType.MultiEnvironment, options =>
+            builder.Services.AddMasaIdentityModel(options =>
             {
                 options.Environment = "environment";
                 options.UserName = "name";
