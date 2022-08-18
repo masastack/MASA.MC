@@ -39,7 +39,7 @@
 		<PackageReference Include="Masa.BuildingBlocks.Authentication.Identity" Version="$(MasaContribPackageVersion)" />
 		<PackageReference Include="Masa.Contrib.Isolation.MultiEnvironment" Version="$(MasaContribPackageVersion)" />
 		<PackageReference Include="Masa.Contrib.Isolation.UoW.EFCore" Version="$(MasaContribPackageVersion)" />
-		<PackageReference Include="Masa.Contrib.ReadWriteSpliting.Cqrs" Version="0.6.0-preview.3" />
+		<PackageReference Include="Masa.Contrib.ReadWriteSplitting.Cqrs" Version="$(MasaContribPackageVersion)" />
 		<PackageReference Include="Masa.Contrib.Service.MinimalAPIs" Version="$(MasaContribPackageVersion)" />
 		<PackageReference Include="Masa.Contrib.Storage.ObjectStorage.Aliyun" Version="$(MasaContribPackageVersion)" />
 		<PackageReference Include="Masa.Utils.Caching.DistributedMemory" Version="$(MasaUtilsPackageVersion)" />

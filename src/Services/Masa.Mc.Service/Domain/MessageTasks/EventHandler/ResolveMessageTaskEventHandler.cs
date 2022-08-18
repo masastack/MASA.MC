@@ -138,6 +138,8 @@ public class ResolveMessageTaskEventHandler
             }
 
             var cronExpression = new CronExpression(eto.MessageTask.SendRules.CronExpression);
+            cronExpression.TimeZone = TimeZoneInfo.FindSystemTimeZoneById("China Standard Time");
+
             for (int i = 0; i < historyNum; i++)
             {
                 var nextExcuteTime = cronExpression.GetNextValidTimeAfter(sendTime);
