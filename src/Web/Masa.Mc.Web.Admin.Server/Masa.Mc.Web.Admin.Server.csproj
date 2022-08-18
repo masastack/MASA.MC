@@ -28,7 +28,7 @@
 
   <ItemGroup>
     <None Update="Certificates\7348307__lonsid.cn.pfx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 
