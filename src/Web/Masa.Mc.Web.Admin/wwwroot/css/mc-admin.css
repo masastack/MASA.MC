@@ -442,3 +442,8 @@
     height: 48px;
     padding-left: 6px;
 }
+
+.m-input--dense-40 .m-input__slot {
+    height: auto !important;
+    min-height: 40px !important;
+}
