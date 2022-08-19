@@ -29,7 +29,7 @@ public partial class WebsiteMessageTemplateManagement : AdminCompontentBase
             new() { Text = T($"{_prefix}ChannelDisplayName"), Value = "ChannelDisplayName", Sortable = false, Width = "190px" },
             new() { Text = T("Modifier"), Value = nameof(MessageTemplateDto.ModifierName), Sortable = false, Width = "190px" },
             new() { Text = T("ModificationTime"), Value = nameof(MessageTemplateDto.ModificationTime), Sortable = true, Width = "230px" },
-            new() { Text = T("Action"), Value = "Action", Sortable = false, Width = "105px", Align = "center" },
+            new() { Text = T("Action"), Value = "Action", Sortable = false, Width = 72, Align = "center" },
         };
         _channelItems = await ChannelService.GetListByTypeAsync(ChannelTypes.WebsiteMessage);
     }

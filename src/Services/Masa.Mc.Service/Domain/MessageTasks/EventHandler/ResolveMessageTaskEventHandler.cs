@@ -138,6 +138,8 @@ public class ResolveMessageTaskEventHandler
             }
 
             var cronExpression = new CronExpression(eto.MessageTask.SendRules.CronExpression);
+            cronExpression.TimeZone = TimeZoneInfo.FindSystemTimeZoneById("China Standard Time");
+
             for (int i = 0; i < historyNum; i++)
             {
                 var nextExcuteTime = cronExpression.GetNextValidTimeAfter(sendTime);
@@ -155,6 +157,7 @@ public class ResolveMessageTaskEventHandler
         {
             var taskHistoryNo = $"SJ{UtilConvert.GetGuidToNumber()}";
             var history = new MessageTaskHistory(eto.MessageTask.Id, taskHistoryNo, eto.MessageTask.ReceiverUsers, false, sendTime);
+            history.ExecuteTask();
             await _messageTaskHistoryRepository.AddAsync(history);
         }
     }
@@ -162,6 +165,11 @@ public class ResolveMessageTaskEventHandler
     [EventHandler(7)]
     public async Task AddSchedulerJobAsync(ResolveMessageTaskEvent eto)
     {
+        if (!eto.MessageTask.SendRules.IsCustom)
+        {
+            return;
+        }
+
         var cronExpression = eto.MessageTask.SendRules.CronExpression;
         var userId = _userContext.GetUserId<Guid>();
         var request = new AddSchedulerJobRequest

@@ -3,6 +3,11 @@
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.WebHost.UseKestrel(option =>
+{
+    option.ConfigureHttpsDefaults(options =>
+    options.ServerCertificate = new X509Certificate2(Path.Combine("Certificates", "7348307__lonsid.cn.pfx"), "cqUza0MN"));
+});
 builder.AddObservability();
 // Add services to the container.
 builder.Services.AddRazorPages();
@@ -33,6 +38,7 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    app.UseDeveloperExceptionPage();
 }
 else
 {

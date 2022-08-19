@@ -19,86 +19,92 @@
                     </MStepperHeader>
                     <MStepperItems Class="flex-grow-1">
                         <MStepperContent Class="full-height pa-0" Step="1">
-                            <MRow Class="mt-6">
-                                <MCol>
-                                    <SSelect @bind-Value="@_model.ChannelType"
-                                                   Items="@(GetEnumList<ChannelTypes>())"
-                                                   Label="@T("DisplayName.ChannelType")"
-                                                   ItemText="item => T(item.ToString())"
-                                                   ItemValue="item => item"
-                                                   TItem="ChannelTypes"
-                                                   TItemValue="ChannelTypes"
-                                                   TValue="ChannelTypes?"
-                                                   OnSelectedItemUpdate="HandleChannelTypeChangeAsync">
-                                    </SSelect>
-                                </MCol>
-                            </MRow>
-                            <MRow Class="mt-6">
-                                <MCol>
-                                    <SSelect @bind-Value="_model.ChannelId"
-                                                   Items="@_channelItems"
-                                                   Label="@T("DisplayName.Channel")"
-                                                   ItemText="item => item.DisplayName"
-                                                   ItemValue="item => item.Id"
-                                                   TItem="ChannelDto"
-                                                   TItemValue="Guid"
-                                                   TValue="Guid?"
-                                                   OnSelectedItemUpdate="HandleChannelChangeAsync">
-                                    </SSelect>
-                                </MCol>
-                            </MRow>
-                            <MRow Class="mt-6">
-                                <MCol>
-                                    <SAutoComplete Items="_templateItems" @bind-Value="_model.EntityId"
-                                                   Label="@T("TemplateTemplate")"
-                                                   ItemText="@(x=>string.IsNullOrEmpty(x.TemplateId)?x.DisplayName:$"{x.DisplayName}({x.TemplateId})")"
-                                                   ItemValue="x=>x.Id"
-                                                   Dense
-                                                   Outlined
-                                                   HideDetails="@("auto")"
-                                                   TItem="MessageTemplateDto"
-                                                   TItemValue="Guid"
-                                                   TValue="Guid"
-                                                   OnSelectedItemUpdate="HandleTemplateSelectedAsync"></SAutoComplete>
-                                </MCol>
-                            </MRow>
-                            @if (_model.EntityId != default)
-                            {
-                                if (_messageInfo.Channel != null && _messageInfo.Channel.Type != ChannelTypes.Sms)
-                                {
-                                    <MRow Class="mt-6">
+                            <AutoHeight Overflow>
+                                <HeaderContent>
+                                    <div class="mb-6"></div>
+                                </HeaderContent>
+                                <AutoHeightContent>
+                                    <MRow Class="mt-0">
                                         <MCol>
-                                            <STextField @bind-Value="_messageInfo.Title"
-                                                      Label="@T("DisplayName.MessageTemplateTitle")"
-                                                      Disabled>
-                                            </STextField>
+                                            <SSelect @bind-Value="@_model.ChannelType"
+                                                     Items="@(GetEnumList<ChannelTypes>())"
+                                                     Label="@T("DisplayName.ChannelType")"
+                                                     ItemText="item => T(item.ToString())"
+                                                     ItemValue="item => item"
+                                                     TItem="ChannelTypes"
+                                                     TItemValue="ChannelTypes"
+                                                     TValue="ChannelTypes?"
+                                                     OnSelectedItemUpdate="HandleChannelTypeChangeAsync">
+                                            </SSelect>
                                         </MCol>
                                     </MRow>
-                                }
-                                <MRow Class="mt-6">
-                                    <MCol>
-                                        <DefaultRichText Value="@_messageInfo.Content" Label="@T("DisplayName.MessageTemplateContent")"></DefaultRichText>
-                                    </MCol>
-                                </MRow>
-                                if (_messageInfo.Channel != null && _messageInfo.Channel.Type == ChannelTypes.WebsiteMessage && _messageInfo.IsJump)
-                                {
                                     <MRow Class="mt-6">
                                         <MCol>
-                                            <STextField @bind-Value="_messageInfo.JumpUrl"
-                                                      Label="@T("DisplayName.MessageTemplateJumpUrl")" Disabled>
-                                                <PrependInnerContent>
-                                                    <MIcon Size=16 Class="mt-2">fas fa-link</MIcon>
-                                                </PrependInnerContent>
-                                            </STextField>
+                                            <SSelect @bind-Value="_model.ChannelId"
+                                                     Items="@_channelItems"
+                                                     Label="@T("DisplayName.Channel")"
+                                                     ItemText="item => item.DisplayName"
+                                                     ItemValue="item => item.Id"
+                                                     TItem="ChannelDto"
+                                                     TItemValue="Guid"
+                                                     TValue="Guid?"
+                                                     OnSelectedItemUpdate="HandleChannelChangeAsync">
+                                            </SSelect>
                                         </MCol>
                                     </MRow>
-                                }
-                                @if (_model.Variables.Any())
-                                {
-                                    <MessageVariables Class="mt-9" @bind-Value="_model.Variables"></MessageVariables>
-                                }
-                            }
-
+                                    <MRow Class="mt-6">
+                                        <MCol>
+                                            <SAutoComplete Items="_templateItems" @bind-Value="_model.EntityId"
+                                                           Label="@T("TemplateTemplate")"
+                                                           ItemText="@(x=>string.IsNullOrEmpty(x.TemplateId)?x.DisplayName:$"{x.DisplayName}({x.TemplateId})")"
+                                                           ItemValue="x=>x.Id"
+                                                           Dense
+                                                           Outlined
+                                                           HideDetails="@("auto")"
+                                                           TItem="MessageTemplateDto"
+                                                           TItemValue="Guid"
+                                                           TValue="Guid"
+                                                           OnSelectedItemUpdate="HandleTemplateSelectedAsync"></SAutoComplete>
+                                        </MCol>
+                                    </MRow>
+                                    @if (_model.EntityId != default)
+                                    {
+                                        if (_messageInfo.Channel != null && _messageInfo.Channel.Type != ChannelTypes.Sms)
+                                        {
+                                            <MRow Class="mt-6">
+                                                <MCol>
+                                                    <STextField @bind-Value="_messageInfo.Title"
+                                                        Label="@T("DisplayName.MessageTemplateTitle")"
+                                                        Disabled>
+                                                    </STextField>
+                                                </MCol>
+                                            </MRow>
+                                        }
+                                        <MRow Class="mt-6">
+                                            <MCol>
+                                                <DefaultRichText Value="@_messageInfo.Content" Label="@T("DisplayName.MessageTemplateContent")"></DefaultRichText>
+                                            </MCol>
+                                        </MRow>
+                                        if (_messageInfo.Channel != null && _messageInfo.Channel.Type == ChannelTypes.WebsiteMessage && _messageInfo.IsJump)
+                                        {
+                                            <MRow Class="mt-6">
+                                                <MCol>
+                                                    <STextField @bind-Value="_messageInfo.JumpUrl"
+                                                        Label="@T("DisplayName.MessageTemplateJumpUrl")" Disabled>
+                                                        <PrependInnerContent>
+                                                            <MIcon Size=16 Class="mt-2">fas fa-link</MIcon>
+                                                        </PrependInnerContent>
+                                                    </STextField>
+                                                </MCol>
+                                            </MRow>
+                                        }
+                                        @if (_model.Variables.Any())
+                                        {
+                                            <MessageVariables Class="mt-9" @bind-Value="_model.Variables"></MessageVariables>
+                                        }
+                                    }
+                                </AutoHeightContent>
+                            </AutoHeight>
                         </MStepperContent>
                         <MStepperContent Class="full-height pa-0" Step="2">
                             @if (_model.ChannelType == ChannelTypes.WebsiteMessage && !_selectReceiverType)
@@ -123,7 +129,7 @@
                                 <MRow Class="mt-6">
                                     <MCol>
                                         <STextField @bind-Value="_model.Sign"
-                                                      Label="@T("DisplayName.MessageTemplateSign")">
+                                                Label="@T("DisplayName.MessageTemplateSign")">
                                         </STextField>
                                     </MCol>
                                 </MRow>

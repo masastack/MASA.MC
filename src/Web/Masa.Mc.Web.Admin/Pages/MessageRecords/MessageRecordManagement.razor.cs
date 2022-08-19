@@ -32,8 +32,8 @@ public partial class MessageRecordManagement : AdminCompontentBase
             new() { Text = T($"{_prefix}{nameof(MessageRecordDto.ExpectSendTime)}"), Value = nameof(MessageRecordDto.ExpectSendTime), Sortable = false, Width = "120px" },
             new() { Text = T($"{_prefix}{nameof(MessageRecordDto.SendTime)}"), Value = nameof(MessageRecordDto.SendTime), Sortable = false, Width = "120px" },
             new() { Text = T($"{_prefix}{nameof(MessageRecordDto.Success)}"), Value = nameof(MessageRecordDto.Success), Sortable = false, Width = "56px" },
-            new() { Text = T($"{_prefix}{nameof(MessageRecordDto.FailureReason)}"), Value = nameof(MessageRecordDto.FailureReason), Sortable = false, Width = "57px" },
-            new() { Text = T("Action"), Value = "Action", Sortable = false, Width = "54px",Align="center" },
+            new() { Text = T($"{_prefix}{nameof(MessageRecordDto.FailureReason)}"), Value = nameof(MessageRecordDto.FailureReason), Sortable = false, Width = "100px" },
+            new() { Text = T("Action"), Value = "Action", Sortable = false, Width = 72, Align="center" },
         };
         _channelItems = (await ChannelService.GetListAsync(new GetChannelInputDto(99))).Result;
         _successItems = new()

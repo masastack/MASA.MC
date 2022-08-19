@@ -125,6 +125,7 @@ public class MessageTask : FullAggregateRoot<Guid, Guid>
         else
         {
             var cronExpression = new CronExpression(SendRules.CronExpression);
+            cronExpression.TimeZone = TimeZoneInfo.FindSystemTimeZoneById("China Standard Time");
             var nextExcuteTime = cronExpression.GetNextValidTimeAfter(DateTimeOffset.Now);
             ExpectSendTime = nextExcuteTime;
         }

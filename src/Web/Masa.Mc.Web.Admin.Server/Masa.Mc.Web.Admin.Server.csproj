@@ -11,7 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Masa.Utils.Security.Authentication.OpenIdConnect" Version="0.6.0-preview.3" />
+    <PackageReference Include="Masa.Utils.Security.Authentication.OpenIdConnect" Version="0.6.0-preview.5" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.1" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0" />
   </ItemGroup>
@@ -28,7 +28,7 @@
 
   <ItemGroup>
     <None Update="Certificates\7348307__lonsid.cn.pfx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 
