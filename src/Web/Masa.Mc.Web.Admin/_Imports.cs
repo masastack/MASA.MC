@@ -73,3 +73,4 @@ global using Masa.Mc.Contracts.Admin.Dtos.MessageTasks.Validator;
 global using Masa.Mc.Web.Admin.Model;
 global using System.Collections.Concurrent;
 global using Masa.Blazor.Presets;
+global using static Masa.Stack.Components.JsInitVariables;
