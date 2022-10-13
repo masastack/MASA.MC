@@ -12,29 +12,27 @@ builder.Services.AddDaprStarter(opt =>
 });
 #endif
 
+builder.Services.AddAutoInject();
 builder.Services.AddDaprClient();
 
-builder.Services.AddMasaIdentityModel(options =>
+builder.Services.AddMasaConfiguration(configurationBuilder =>
+{
+    configurationBuilder.UseDcc();
+});
+var publicConfiguration = builder.Services.GetMasaConfiguration().ConfigurationApi.GetPublic();
+var ossOptions = publicConfiguration.GetSection("$public.OSS").Get<OssOptions>();
+builder.Services.AddAliyunStorage(new AliyunStorageOptions(ossOptions.AccessId, ossOptions.AccessSecret, ossOptions.Endpoint, ossOptions.RoleArn, ossOptions.RoleSessionName)
+{
+    Sts = new AliyunStsOptions()
+    {
+        RegionId = ossOptions.RegionId
+    }
+});
+builder.Services.AddMasaIdentity(options =>
 {
     options.Environment = "environment";
     options.UserName = "name";
     options.UserId = "sub";
-});
-builder.Services.AddAliyunStorage(serviceProvider =>
-{
-    var daprClient = serviceProvider.GetRequiredService<DaprClient>();
-    var aliyunOssConfig = daprClient.GetSecretAsync("localsecretstore", "ali-masa-cdn-dev").Result;
-    var accessId = aliyunOssConfig["access_id"];
-    var accessSecret = aliyunOssConfig["access_secret"];
-    var endpoint = aliyunOssConfig["endpoint"];
-    var roleArn = aliyunOssConfig["role_arn"];
-    return new AliyunStorageOptions(accessId, accessSecret, endpoint, roleArn, "SessionTest")
-    {
-        Sts = new AliyunStsOptions()
-        {
-            RegionId = "cn-hangzhou"
-        }
-    };
 });
 builder.Services.AddAuthorization();
 builder.Services.AddAuthentication(options =>
@@ -44,22 +42,20 @@ builder.Services.AddAuthentication(options =>
 })
 .AddJwtBearer("Bearer", options =>
 {
-    options.Authority = builder.GetMasaConfiguration().ConfigurationApi.GetDefault().GetValue<string>("AppSettings:IdentityServerUrl");
+    options.Authority = publicConfiguration.GetValue<string>("$public.AppSettings:IdentityServerUrl");
     options.RequireHttpsMetadata = false;
     options.TokenValidationParameters.ValidateAudience = false;
-    options.TokenValidationParameters.ValidateIssuer = false;
     options.MapInboundClaims = false;
 });
 builder.Services.AddSequentialGuidGenerator();
-builder.AddMasaConfiguration(configurationBuilder =>
-{
-    configurationBuilder.UseDcc();
-});
-var configuration = builder.GetMasaConfiguration().ConfigurationApi.GetDefault();
-builder.Services.AddAuthClient(configuration.GetValue<string>("AppSettings:AuthClient:Url"));
-builder.Services.AddMcClient(configuration.GetValue<string>("AppSettings:McClient:Url"));
-builder.Services.AddSchedulerClient(configuration.GetValue<string>("AppSettings:SchedulerClient:Url"));
-builder.Services.AddMasaRedisCache(configuration.GetSection("RedisConfig").Get<RedisConfigurationOptions>()).AddMasaMemoryCache();
+
+var redisOptions = publicConfiguration.GetSection("$public.RedisConfig").Get<RedisConfigurationOptions>();
+var configuration = builder.Services.GetMasaConfiguration().ConfigurationApi.GetDefault();
+builder.Services.AddAuthClient(publicConfiguration.GetValue<string>("$public.AppSettings:AuthClient:Url"), redisOptions);
+builder.Services.AddMcClient(publicConfiguration.GetValue<string>("$public.AppSettings:McClient:Url"));
+builder.Services.AddSchedulerClient(publicConfiguration.GetValue<string>("$public.AppSettings:SchedulerClient:Url"));
+builder.Services.AddStackExchangeRedisCache(publicConfiguration.GetSection("$public.RedisConfig").Get<RedisConfigurationOptions>())
+    .AddMultilevelCache();
 builder.Services.AddAliyunSms();
 builder.Services.AddMailKit();
 builder.Services.AddCsv();
@@ -151,5 +147,15 @@ app.UseEndpoints(endpoints =>
 });
 
 app.UseHttpsRedirection();
+
+app.MapHealthChecks("/hc", new HealthCheckOptions()
+{
+    Predicate = _ => true,
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+});
+app.MapHealthChecks("/liveness", new HealthCheckOptions
+{
+    Predicate = r => r.Name.Contains("self")
+});
 
 app.Run();

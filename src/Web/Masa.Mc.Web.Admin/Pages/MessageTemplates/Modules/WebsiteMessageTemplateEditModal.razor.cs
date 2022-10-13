@@ -41,13 +41,13 @@ public partial class WebsiteMessageTemplateEditModal : AdminCompontentBase
     private async Task HandleCancel()
     {
         _visible = false;
-        await ResetForm();
+        ResetForm();
     }
 
     private async Task HandleOk()
     {
         _model.DisplayName = _model.Title;
-        if (!await _form.ValidateAsync())
+        if (!_form.Validate())
         {
             return;
         }
@@ -56,7 +56,7 @@ public partial class WebsiteMessageTemplateEditModal : AdminCompontentBase
         Loading = false;
         await SuccessMessageAsync(T("MessageTemplateEditMessage"));
         _visible = false;
-        await ResetForm();
+        ResetForm();
         if (OnOk.HasDelegate)
         {
             await OnOk.InvokeAsync();
@@ -75,17 +75,17 @@ public partial class WebsiteMessageTemplateEditModal : AdminCompontentBase
         Loading = false;
         await SuccessMessageAsync(T("MessageTemplateDeleteMessage"));
         _visible = false;
-        await ResetForm();
+        ResetForm();
         if (OnOk.HasDelegate)
         {
             await OnOk.InvokeAsync();
         }
     }
 
-    private async Task ResetForm()
+    private void ResetForm()
     {
         _model = new();
-        await _form.ResetValidationAsync();
+        _form.ResetValidation();
     }
 
     private async Task HandleVisibleChanged(bool val)

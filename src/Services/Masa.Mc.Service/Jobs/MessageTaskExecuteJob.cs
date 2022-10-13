@@ -19,22 +19,23 @@ public class MessageTaskExecuteJob : SchedulerJob
             builder.Configuration.SetBasePath(path)
             .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
             .AddJsonFile($"appsettings.{env}.json", optional: true, reloadOnChange: true);
-            builder.Services.AddMasaIdentityModel(options =>
+            builder.Services.AddMasaIdentity(options =>
             {
                 options.Environment = "environment";
                 options.UserName = "name";
                 options.UserId = "sub";
             });
             builder.Services.AddSequentialGuidGenerator();
-            builder.AddMasaConfiguration(configurationBuilder =>
+            builder.Services.AddMasaConfiguration(configurationBuilder =>
             {
                 configurationBuilder.UseDcc();
             });
-            var configuration = builder.GetMasaConfiguration().ConfigurationApi.GetDefault();
-
-            serviceCollection.AddAuthClient(configuration.GetValue<string>("AppSettings:AuthClient:Url"));
-            serviceCollection.AddMcClient(configuration.GetValue<string>("AppSettings:McClient:Url"));
-            serviceCollection.AddSchedulerClient(configuration.GetValue<string>("AppSettings:SchedulerClient:Url"));
+            var configuration = builder.Services.GetMasaConfiguration().ConfigurationApi.GetDefault();
+            var publicConfiguration = builder.Services.GetMasaConfiguration().ConfigurationApi.GetPublic();
+            var redisOptions = publicConfiguration.GetSection("$public.RedisConfig").Get<RedisConfigurationOptions>();
+            serviceCollection.AddAuthClient(publicConfiguration.GetValue<string>("$public.AppSettings:AuthClient:Url"), redisOptions);
+            serviceCollection.AddMcClient(publicConfiguration.GetValue<string>("$public.AppSettings:McClient:Url"));
+            serviceCollection.AddSchedulerClient(publicConfiguration.GetValue<string>("$public.AppSettings:SchedulerClient:Url"));
             serviceCollection.AddAliyunSms();
             serviceCollection.AddMailKit();
             serviceCollection.AddSignalR();

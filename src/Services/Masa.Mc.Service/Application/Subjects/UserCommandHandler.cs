@@ -16,8 +16,10 @@ public class UserCommandHandler
     public async Task CreateExternalUserAsync(CreateExternalUserCommand command)
     {
         var createExternalUserDto = command.ExternalUser;
-        var requestData = new AddUserModel(createExternalUserDto.PhoneNumber ?? createExternalUserDto.Email, createExternalUserDto.DisplayName)
+        var requestData = new AddUserModel
         {
+            Account = createExternalUserDto.PhoneNumber ?? createExternalUserDto.Email,
+            Name = createExternalUserDto.DisplayName,
             DisplayName = createExternalUserDto.DisplayName,
             PhoneNumber = createExternalUserDto.PhoneNumber,
             Email = createExternalUserDto.Email

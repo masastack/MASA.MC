@@ -33,12 +33,12 @@ public class WebsiteMessageCursorCommandHandler
         try
         {
             await _domainService.CheckAsync(currentUserId);
-            await _cacheClient.RemoveAsync<int>($"{CacheKeys.MESSAGE_CURSOR_CHECK_COUNT}_{currentUserId}");
+            await _cacheClient.RemoveAsync($"{CacheKeys.MESSAGE_CURSOR_CHECK_COUNT}_{currentUserId}");
         }
         catch (Exception ex)
         {
             _logger.LogInformation(ex, "CheckAsync");
-            await _cacheClient.RemoveAsync<int>($"{CacheKeys.MESSAGE_CURSOR_CHECK_COUNT}_{currentUserId}");
+            await _cacheClient.RemoveAsync($"{CacheKeys.MESSAGE_CURSOR_CHECK_COUNT}_{currentUserId}");
         }
     }
 }

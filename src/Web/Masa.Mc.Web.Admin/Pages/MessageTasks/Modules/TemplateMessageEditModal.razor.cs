@@ -57,10 +57,10 @@ public partial class TemplateMessageEditModal : AdminCompontentBase
         await HandleChannelChangeAsync();
     }
 
-    private async Task HandleCancel()
+    private void HandleCancel()
     {
         _visible = false;
-        await ResetForm();
+        ResetForm();
     }
 
     private async Task HandleSaveAsync()
@@ -78,7 +78,7 @@ public partial class TemplateMessageEditModal : AdminCompontentBase
     private async Task HandleOkAsync()
     {
         SetReceivers();
-        if (!await _form.ValidateAsync())
+        if ( _form.Validate())
         {
             return;
         }
@@ -95,25 +95,25 @@ public partial class TemplateMessageEditModal : AdminCompontentBase
             await SuccessMessageAsync(T("MessageTaskSendMessage"));
         }
         _visible = false;
-        await ResetForm();
+        ResetForm();
         if (OnOk.HasDelegate)
         {
             await OnOk.InvokeAsync();
         }
     }
 
-    private async Task ResetForm()
+    private void ResetForm()
     {
         _model = new();
         _selectReceivers = new();
         _importReceivers = new();
         _selectReceiverType = false;
-        await _form.ResetValidationAsync();
+        _form.ResetValidation();
     }
 
-    private async Task HandleVisibleChanged(bool val)
+    private void HandleVisibleChanged(bool val)
     {
-        if (!val) await HandleCancel();
+        if (!val) HandleCancel();
     }
 
     private void HandleTemplateSelected(MessageTemplateDto item)
@@ -198,11 +198,11 @@ public partial class TemplateMessageEditModal : AdminCompontentBase
         }
     }
 
-    private async Task HandleNextStep()
+    private void HandleNextStep()
     {
         SetReceivers();
         _model.IsDraft = false;
-        if (!await _form.ValidateAsync())
+        if (!_form.Validate())
         {
             return;
         }

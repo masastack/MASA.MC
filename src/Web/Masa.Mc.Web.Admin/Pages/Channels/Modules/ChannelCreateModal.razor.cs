@@ -33,7 +33,7 @@ public partial class ChannelCreateModal : AdminCompontentBase
     private async Task HandleCancel()
     {
         _visible = false;
-        await ResetForm();
+        ResetForm();
     }
 
     private void HandleSelectType(ChannelTypes Type)
@@ -45,7 +45,7 @@ public partial class ChannelCreateModal : AdminCompontentBase
     private async Task HandleOkAsync()
     {
         await _channelExtraPropertiesRef.UpdateExtraPropertiesAsync();
-        if (!await _form.ValidateAsync() || !await _channelExtraPropertiesRef.ValidateAsync())
+        if (!_form.Validate() || !_channelExtraPropertiesRef.Validate())
         {
             return;
         }
@@ -54,18 +54,18 @@ public partial class ChannelCreateModal : AdminCompontentBase
         Loading = false;
         await SuccessMessageAsync(T("ChannelCreateMessage"));
         _visible = false;
-        await ResetForm();
+        ResetForm();
         if (OnOk.HasDelegate)
         {
             await OnOk.InvokeAsync();
         }
     }
 
-    private async Task ResetForm()
+    private void ResetForm()
     {
         _step = 1;
         _model = new();
-        await _form.ResetValidationAsync();
+        _form.ResetValidation();
     }
 
     private async Task HandleVisibleChanged(bool val)
