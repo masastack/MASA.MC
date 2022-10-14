@@ -8,7 +8,7 @@ public partial class SmsTemplateEditModal : AdminCompontentBase
     [Parameter]
     public EventCallback OnOk { get; set; }
 
-    private MForm _form;
+    private MForm _form = default!;
     private MessageTemplateUpsertDto _model = new();
     private Guid _entityId;
     private bool _visible;
@@ -36,7 +36,7 @@ public partial class SmsTemplateEditModal : AdminCompontentBase
 
     private async Task GetFormDataAsync()
     {
-        var dto = await MessageTemplateService.GetAsync(_entityId);
+        var dto = await MessageTemplateService.GetAsync(_entityId) ?? new();
         _model = dto.Adapt<MessageTemplateUpsertDto>();
         _templateItems = await SmsTemplateService.GetListByChannelIdAsync(_model.ChannelId);
         _model.ChannelType = dto.Channel.Type;

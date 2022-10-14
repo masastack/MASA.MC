@@ -14,7 +14,7 @@ public partial class ChannelSmsExtraProperties : AdminCompontentBase
     [Parameter]
     public bool PasswordView { get; set; }
 
-    public MForm Form { get; set; }
+    public MForm Form { get; set; } = default!;
 
     private SmsChannelOptions _model = new();
     private bool _passwordShow;

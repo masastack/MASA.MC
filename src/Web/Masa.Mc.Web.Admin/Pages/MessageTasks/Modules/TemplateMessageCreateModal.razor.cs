@@ -8,7 +8,7 @@ public partial class TemplateMessageCreateModal : AdminCompontentBase
     [Parameter]
     public EventCallback OnOk { get; set; }
 
-    private MForm _form;
+    private MForm _form = default!;
     private MessageTaskUpsertModel _model = new() { EntityType = MessageEntityTypes.Template };
     private bool _visible;
     private List<MessageTemplateDto> _templateItems = new();

@@ -7,12 +7,12 @@ public class SmsTemplateService : ServiceBase
 {
     private const string DAPR_PUBSUB_NAME = "pubsub";
 
-    public SmsTemplateService(IServiceCollection services) : base(services, "api/sms-template")
+    public SmsTemplateService(IServiceCollection services) : base("api/sms-template")
     {
-        MapGet(GetListByChannelIdAsync);
-        MapPost(SyncAsync);
+
     }
 
+    [RoutePattern("GetListByChannelId", StartWithBaseUri = true, HttpMethod = "Get")]
     public async Task<List<SmsTemplateDto>> GetListByChannelIdAsync(IEventBus eventbus, Guid channelId)
     {
         var query = new GetSmsTemplateListByChannelIdQuery(channelId);
@@ -21,6 +21,7 @@ public class SmsTemplateService : ServiceBase
     }
 
     [Topic(DAPR_PUBSUB_NAME, nameof(SmsTemplateSynchroIntegrationDomainEvent))]
+    [RoutePattern("Sync", StartWithBaseUri = true, HttpMethod = "Post")]
     public async Task SyncAsync(IEventBus eventbus, SmsTemplateSynchroIntegrationDomainEvent @event)
     {
         var command = new SyncSmsTemplateCommand(@event.ChannelId);

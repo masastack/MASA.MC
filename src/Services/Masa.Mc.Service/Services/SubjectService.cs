@@ -5,11 +5,12 @@ namespace Masa.Mc.Service.Services;
 
 public class SubjectService : ServiceBase
 {
-    public SubjectService(IServiceCollection services) : base(services, "api/subject")
+    public SubjectService(IServiceCollection services) : base("api/subject")
     {
-        MapGet(GetListAsync, string.Empty);
+
     }
 
+    [RoutePattern("", StartWithBaseUri = true, HttpMethod = "Get")]
     public async Task<List<SubjectDto>> GetListAsync(IEventBus eventbus, [FromQuery] string filter = "")
     {
         var inputDto = new GetSubjectInputDto(filter);

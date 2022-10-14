@@ -8,7 +8,7 @@ public partial class WebsiteMessageTemplateEditModal : AdminCompontentBase
     [Parameter]
     public EventCallback OnOk { get; set; }
 
-    private MForm _form;
+    private MForm _form = default!;
     private MessageTemplateUpsertDto _model = new();
     private Guid _entityId;
     private bool _visible;
@@ -32,13 +32,13 @@ public partial class WebsiteMessageTemplateEditModal : AdminCompontentBase
 
     private async Task GetFormDataAsync()
     {
-        var dto = await MessageTemplateService.GetAsync(_entityId);
+        var dto = await MessageTemplateService.GetAsync(_entityId) ?? new();
         _model = dto.Adapt<MessageTemplateUpsertDto>();
         _model.ChannelType = dto.Channel.Type;
         await HandleSelectChannelType(_model.ChannelType);
     }
 
-    private async Task HandleCancel()
+    private void HandleCancel()
     {
         _visible = false;
         ResetForm();
@@ -88,9 +88,9 @@ public partial class WebsiteMessageTemplateEditModal : AdminCompontentBase
         _form.ResetValidation();
     }
 
-    private async Task HandleVisibleChanged(bool val)
+    private void HandleVisibleChanged(bool val)
     {
-        if (!val) await HandleCancel();
+        if (!val) HandleCancel();
     }
 
     private async Task HandleSelectChannelType(ChannelTypes Type)

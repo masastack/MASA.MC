@@ -8,7 +8,7 @@ public partial class TemplateMessageEditModal : AdminCompontentBase
     [Parameter]
     public EventCallback OnOk { get; set; }
 
-    private MForm _form;
+    private MForm _form = default!;
     private MessageTaskUpsertModel _model = new();
     private Guid _entityId;
     private bool _visible;
@@ -37,7 +37,7 @@ public partial class TemplateMessageEditModal : AdminCompontentBase
 
     private async Task GetFormDataAsync()
     {
-        var dto = await MessageTaskService.GetAsync(_entityId);
+        var dto = await MessageTaskService.GetAsync(_entityId) ?? new MessageTaskDto();
         _model = dto.Adapt<MessageTaskUpsertModel>();
         if (_model.SelectReceiverType == MessageTaskSelectReceiverTypes.ManualSelection)
         {
@@ -78,7 +78,7 @@ public partial class TemplateMessageEditModal : AdminCompontentBase
     private async Task HandleOkAsync()
     {
         SetReceivers();
-        if ( _form.Validate())
+        if (_form.Validate())
         {
             return;
         }

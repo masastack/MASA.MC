@@ -5,17 +5,12 @@ namespace Masa.Mc.Service.Services;
 
 public class ChannelService : ServiceBase
 {
-    public ChannelService(IServiceCollection services) : base(services, "api/channel")
+    public ChannelService(IServiceCollection services) : base("api/channel")
     {
-        MapPost(CreateAsync, string.Empty);
-        MapPut(UpdateAsync, "{id}");
-        MapDelete(DeleteAsync, "{id}");
-        MapGet(GetAsync, "{id}");
-        MapGet(GetListAsync, string.Empty);
-        MapGet(FindByCodeAsync);
-        MapGet(GetListByTypeAsync);
     }
 
+
+    [RoutePattern("", StartWithBaseUri = true, HttpMethod = "Get")]
     public async Task<PaginatedListDto<ChannelDto>> GetListAsync(IEventBus eventbus, [FromQuery] ChannelTypes? type, [FromQuery] string displayName = "", [FromQuery] string filter = "", [FromQuery] string sorting = "", [FromQuery] int page = 1, [FromQuery] int pagesize = 10)
     {
         var inputDto = new GetChannelInputDto(filter, type, displayName, sorting, page, pagesize);
@@ -56,6 +51,7 @@ public class ChannelService : ServiceBase
         await eventBus.PublishAsync(command);
     }
 
+    [RoutePattern("FindByCode", StartWithBaseUri = true, HttpMethod = "Get")]
     public async Task<ChannelDto> FindByCodeAsync(IEventBus eventBus, string code)
     {
         var query = new FindChannelByCodeQuery(code);
@@ -63,6 +59,7 @@ public class ChannelService : ServiceBase
         return query.Result;
     }
 
+    [RoutePattern("GetListByType", StartWithBaseUri = true, HttpMethod = "Get")]
     public async Task<List<ChannelDto>> GetListByTypeAsync(IEventBus eventBus, ChannelTypes type)
     {
         var query = new GetListByTypeQuery(type);

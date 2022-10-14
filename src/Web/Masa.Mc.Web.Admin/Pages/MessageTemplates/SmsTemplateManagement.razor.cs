@@ -7,8 +7,8 @@ public partial class SmsTemplateManagement : AdminCompontentBase
 {
     public List<DataTableHeader<MessageTemplateDto>> Headers { get; set; } = new();
 
-    private SmsTemplateEditModal _editModal;
-    private SmsTemplateCreateModal _createModal;
+    private SmsTemplateEditModal _editModal = default!;
+    private SmsTemplateCreateModal _createModal = default!;
     private GetMessageTemplateInputDto _queryParam = new() { ChannelType = ChannelTypes.Sms };
     private PaginatedListDto<MessageTemplateDto> _entities = new();
     private List<ChannelDto> _channelItems = new();

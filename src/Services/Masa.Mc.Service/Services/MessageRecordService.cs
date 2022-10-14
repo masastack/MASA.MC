@@ -5,13 +5,12 @@ namespace Masa.Mc.Service.Admin.Services;
 
 public class MessageRecordService : ServiceBase
 {
-    public MessageRecordService(IServiceCollection services) : base(services, "api/message-record")
+    public MessageRecordService(IServiceCollection services) : base("api/message-record")
     {
-        MapGet(GetAsync, "{id}");
-        MapGet(GetListAsync, string.Empty);
-        MapPost(RetryAsync);
+
     }
 
+    [RoutePattern("", StartWithBaseUri = true, HttpMethod = "Get")]
     public async Task<PaginatedListDto<MessageRecordDto>> GetListAsync(IEventBus eventbus, Guid? channelId, [FromQuery] bool? success, [FromQuery] MessageRecordTimeTypes? timeType,
        [FromQuery] DateTime? startTime, [FromQuery] DateTime? endTime, [FromQuery] Guid? userId, [FromQuery] Guid? messageTemplateId, [FromQuery] Guid? messageTaskHistoryId, [FromQuery] string filter = "", [FromQuery] string sorting = "", [FromQuery] int page = 1, [FromQuery] int pagesize = 10)
     {
@@ -28,6 +27,7 @@ public class MessageRecordService : ServiceBase
         return query.Result;
     }
 
+    [RoutePattern("Retry", StartWithBaseUri = true, HttpMethod = "Post")]
     public async Task RetryAsync(IEventBus eventBus, RetryMessageRecordInputDto inputDto)
     {
         var command = new RetryMessageRecordCommand(inputDto);

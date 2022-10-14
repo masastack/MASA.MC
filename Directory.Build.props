@@ -1,5 +1,5 @@
 <Project>
   <PropertyGroup>
-    <MasaFrameworkPackageVersion>0.6.0-rc.1</MasaFrameworkPackageVersion>
+    <MasaFrameworkPackageVersion>0.6.0-rc.3</MasaFrameworkPackageVersion>
   </PropertyGroup>
 </Project>

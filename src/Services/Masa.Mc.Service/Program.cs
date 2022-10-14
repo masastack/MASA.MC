@@ -54,7 +54,7 @@ var configuration = builder.Services.GetMasaConfiguration().ConfigurationApi.Get
 builder.Services.AddAuthClient(publicConfiguration.GetValue<string>("$public.AppSettings:AuthClient:Url"), redisOptions);
 builder.Services.AddMcClient(publicConfiguration.GetValue<string>("$public.AppSettings:McClient:Url"));
 builder.Services.AddSchedulerClient(publicConfiguration.GetValue<string>("$public.AppSettings:SchedulerClient:Url"));
-builder.Services.AddStackExchangeRedisCache(publicConfiguration.GetSection("$public.RedisConfig").Get<RedisConfigurationOptions>())
+builder.Services.AddStackExchangeRedisCache(redisOptions)
     .AddMultilevelCache();
 builder.Services.AddAliyunSms();
 builder.Services.AddMailKit();

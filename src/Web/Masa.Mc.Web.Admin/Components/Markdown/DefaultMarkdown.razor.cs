@@ -22,9 +22,9 @@ public partial class DefaultMarkdown: AdminCompontentBase
 
     private OssService OssService => McCaller.OssService;
 
-    private MMarkdown Ref { get; set; }
+    private MMarkdown Ref { get; set; } = default!;
 
-    private IJSObjectReference VditorHelper;
+    private IJSObjectReference VditorHelper = default!;
 
     protected override void OnInitialized()
     {

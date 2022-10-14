@@ -8,7 +8,7 @@ public partial class OrdinaryMessageCreateModal : AdminCompontentBase
     [Parameter]
     public EventCallback OnOk { get; set; }
 
-    private MForm _form;
+    private MForm _form = default!;
     private MessageTaskUpsertModel _model = new() { EntityType = MessageEntityTypes.Ordinary };
     private bool _visible;
     private List<ChannelDto> _channelItems = new();

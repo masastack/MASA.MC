@@ -30,7 +30,7 @@ public partial class ReceiverGroupEditModal : AdminCompontentBase
 
     private async Task GetFormDataAsync()
     {
-        var dto = await ReceiverGroupService.GetAsync(_entityId);
+        var dto = await ReceiverGroupService.GetAsync(_entityId) ?? new();
         _model = dto.Adapt<ReceiverGroupUpsertDto>();
     }
 

@@ -10,7 +10,7 @@ public partial class ChannelEditModal : AdminCompontentBase
     [Parameter]
     public EventCallback OnOk { get; set; }
 
-    private MForm _form;
+    private MForm _form = default!;
     private ChannelUpsertDto _model = new();
     private Guid _entityId;
     private bool _visible;
@@ -35,11 +35,11 @@ public partial class ChannelEditModal : AdminCompontentBase
 
     private async Task GetFormDataAsync()
     {
-        var dto = await ChannelService.GetAsync(_entityId);
+        var dto = await ChannelService.GetAsync(_entityId) ?? new();
         _model = dto.Adapt<ChannelUpsertDto>();
     }
 
-    private async Task HandleCancel()
+    private void HandleCancel()
     {
         _visible = false;
         ResetForm();
@@ -87,8 +87,8 @@ public partial class ChannelEditModal : AdminCompontentBase
         _form.ResetValidation();
     }
 
-    private async Task HandleVisibleChanged(bool val)
+    private void HandleVisibleChanged(bool val)
     {
-        if (!val) await HandleCancel();
+        if (!val) HandleCancel();
     }
 }

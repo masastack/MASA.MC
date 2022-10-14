@@ -21,7 +21,7 @@ public partial class DateRangePicker
     public EventCallback OnChange { get; set; }
 
     [Parameter]
-    public string IconClass { get; set; }
+    public string IconClass { get; set; } = default!;
 
     private bool StartTimeVisible { get; set; }
 

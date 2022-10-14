@@ -5,15 +5,12 @@ namespace Masa.Mc.Service.Services;
 
 public class ReceiverGroupService : ServiceBase
 {
-    public ReceiverGroupService(IServiceCollection services) : base(services, "api/receiver-group")
+    public ReceiverGroupService(IServiceCollection services) : base("api/receiver-group")
     {
-        MapPost(CreateAsync, string.Empty);
-        MapPut(UpdateAsync, "{id}");
-        MapDelete(DeleteAsync, "{id}");
-        MapGet(GetAsync, "{id}");
-        MapGet(GetListAsync, string.Empty);
+
     }
 
+    [RoutePattern("", StartWithBaseUri = true, HttpMethod = "Get")]
     public async Task<PaginatedListDto<ReceiverGroupDto>> GetListAsync(IEventBus eventbus, [FromQuery] string filter = "", [FromQuery] string sorting = "", [FromQuery] int page = 1, [FromQuery] int pagesize = 10)
     {
         var inputDto = new GetReceiverGroupInputDto(filter, sorting, page, pagesize);

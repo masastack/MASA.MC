@@ -5,20 +5,12 @@ namespace Masa.Mc.Service.Services;
 
 public class WebsiteMessageService : ServiceBase
 {
-    public WebsiteMessageService(IServiceCollection services) : base(services, "api/website-message")
+    public WebsiteMessageService(IServiceCollection services) : base("api/website-message")
     {
-        MapGet(GetAsync, "{id}");
-        MapGet(GetListAsync, string.Empty);
-        MapDelete(DeleteAsync, "{id}");
-        MapGet(GetChannelListAsync);
-        MapPost(SetAllReadAsync);
-        MapPost(ReadAsync);
-        MapPost(CheckAsync);
-        MapGet(GetNoticeListAsync);
-        MapPost(SendCheckNotificationAsync);
-        MapPost(SendGetNotificationAsync);
+
     }
 
+    [RoutePattern("", StartWithBaseUri = true, HttpMethod = "Get")]
     public async Task<PaginatedListDto<WebsiteMessageDto>> GetListAsync(IEventBus eventbus, [FromQuery] WebsiteMessageFilterType? filterType, [FromQuery] Guid? channelId, [FromQuery] bool? isRead, [FromQuery] string filter = "", [FromQuery] string sorting = "", [FromQuery] int page = 1, [FromQuery] int pagesize = 10)
     {
         var inputDto = new GetWebsiteMessageInputDto(filter, filterType, channelId, isRead, sorting, page, pagesize);
@@ -34,6 +26,7 @@ public class WebsiteMessageService : ServiceBase
         return query.Result;
     }
 
+    [RoutePattern("GetChannelList", StartWithBaseUri = true, HttpMethod = "Get")]
     public async Task<List<WebsiteMessageChannelDto>> GetChannelListAsync(IEventBus eventbus)
     {
         var query = new GetChannelListWebsiteMessageQuery();
@@ -41,6 +34,7 @@ public class WebsiteMessageService : ServiceBase
         return query.Result;
     }
 
+    [RoutePattern("SetAllRead", StartWithBaseUri = true, HttpMethod = "Post")]
     public async Task SetAllReadAsync(IEventBus eventbus, [FromBody] GetWebsiteMessageInputDto inputDto)
     {
         var command = new ReadAllWebsiteMessageCommand(inputDto);
@@ -53,18 +47,21 @@ public class WebsiteMessageService : ServiceBase
         await eventBus.PublishAsync(command);
     }
 
+    [RoutePattern("Read", StartWithBaseUri = true, HttpMethod = "Post")]
     public async Task ReadAsync(IEventBus eventbus, [FromBody] ReadWebsiteMessageInputDto inputDto)
     {
         var command = new ReadWebsiteMessageCommand(inputDto);
         await eventbus.PublishAsync(command);
     }
 
+    [RoutePattern("Check", StartWithBaseUri = true, HttpMethod = "Post")]
     public async Task CheckAsync(IEventBus eventbus)
     {
         var command = new CheckWebsiteMessageCursorCommand();
         await eventbus.PublishAsync(command);
     }
 
+    [RoutePattern("GetNoticeList", StartWithBaseUri = true, HttpMethod = "Get")]
     public async Task<List<WebsiteMessageDto>> GetNoticeListAsync(IEventBus eventbus, [FromQuery] int pageSize = 5)
     {
         var query = new GetNoticeListQuery(pageSize);
@@ -72,12 +69,14 @@ public class WebsiteMessageService : ServiceBase
         return query.Result;
     }
 
+    [RoutePattern("SendCheckNotification", StartWithBaseUri = true, HttpMethod = "Post")]
     public async Task SendCheckNotificationAsync(IEventBus eventbus)
     {
         var command = new SendCheckNotificationCommand();
         await eventbus.PublishAsync(command);
     }
 
+    [RoutePattern("SendGetNotification", StartWithBaseUri = true, HttpMethod = "Post")]
     public async Task SendGetNotificationAsync(IEventBus eventbus, List<string> userIds)
     {
         var command = new SendGetNotificationCommand(userIds);

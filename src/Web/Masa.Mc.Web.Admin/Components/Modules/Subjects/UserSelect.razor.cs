@@ -17,7 +17,7 @@ public partial class UserSelect : AdminCompontentBase
     public string Placeholder { get; set; } = "";
 
     [Parameter]
-    public string Label { get; set; }
+    public string Label { get; set; } = default!;
 
     [Parameter]
     public int Page { get; set; } = 1;
@@ -51,7 +51,7 @@ public partial class UserSelect : AdminCompontentBase
         }
         else if (Search == search)
         {
-            var response = await AutoCompleteClient.GetAsync<UserSelectModel, Guid>(search, new AutoCompleteOptions
+            var response = await AutoCompleteClient.GetBySpecifyDocumentAsync<UserSelectModel>(search, new AutoCompleteOptions
             {
                 Page = Page,
                 PageSize = PageSize,

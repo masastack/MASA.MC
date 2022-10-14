@@ -5,7 +5,7 @@ namespace Masa.Mc.ApiGateways.Caller;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddAuthApiGateways(this IServiceCollection services, Action<McApiOptions>? configure = null)
+    public static IServiceCollection AddMcApiGateways(this IServiceCollection services, Action<McApiOptions>? configure = null)
     {
         var options = new McApiOptions("http://localhost:19501/");
         //Todo default option

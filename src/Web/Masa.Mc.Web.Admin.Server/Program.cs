@@ -1,6 +1,8 @@
 // Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
+using Masa.Utils.Security.Authentication.OpenIdConnect;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.WebHost.UseKestrel(option =>
@@ -19,17 +21,24 @@ builder.Services.AddResponseCompression(opts =>
     opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
         new[] { "application/octet-stream" });
 });
+var authBaseAddress = builder.Configuration["AuthServiceBaseAddress"];
+var mcBaseAddress = builder.Configuration["McServiceBaseAddress"];
+builder.Services.AddMcApiGateways(option => option.McServiceBaseAddress = mcBaseAddress);
+#if DEBUG
+builder.AddMasaStackComponentsForServer("wwwroot/i18n", authBaseAddress, "https://localhost:19501");
+#else
+builder.AddMasaStackComponentsForServer("wwwroot/i18n", authBaseAddress, mcBaseAddress);
+#endif
 
-builder.Services.AddAuthApiGateways(option => option.McServiceBaseAddress = builder.Configuration["McServiceBaseAddress"]);
-builder.Services.AddMasaStackComponentsForServer("wwwroot/i18n", builder.Configuration["AuthServiceBaseAddress"], builder.Configuration["McServiceBaseAddress"]);
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddGlobalForServer();
-builder.Services.AddElasticsearchClient("auth", option => option.UseNodes("http://10.10.90.44:31920/").UseDefault())
-                .AddAutoComplete(option => option.UseIndexName(builder.Configuration["UserAutoComplete"]));
+builder.Services.AddScoped<TokenProvider>();
+//builder.Services.AddElasticsearchClient("auth", option => option.UseNodes("http://10.10.90.44:31920/").UseDefault())
+//                .AddAutoComplete(option => option.UseIndexName(builder.Configuration["UserAutoComplete"]));
 builder.Services.AddSingleton<ChannelUpsertDtoValidator>();
 TypeAdapterConfig.GlobalSettings.Scan(Assembly.GetExecutingAssembly(), Assembly.Load("Masa.Mc.Contracts.Admin"));
-
-builder.Services.AddMasaOpenIdConnect(builder.Configuration);
+var oidcOptions = builder.Services.GetMasaConfiguration().Local.GetSection("$public.OIDC:AuthClient").Get<MasaOpenIdConnectOptions>();
+builder.Services.AddMasaOpenIdConnect(oidcOptions);
 
 StaticWebAssetsLoader.UseStaticWebAssets(builder.Environment, builder.Configuration);
 

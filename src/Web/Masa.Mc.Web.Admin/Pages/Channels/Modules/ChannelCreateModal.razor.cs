@@ -8,7 +8,7 @@ public partial class ChannelCreateModal : AdminCompontentBase
     [Parameter]
     public EventCallback OnOk { get; set; }
 
-    private MForm _form;
+    private MForm _form = default!;
     private ChannelUpsertDto _model = new();
     private bool _visible;
     private List<ChannelTypes> channelTypeItems = Enum.GetValues(typeof(ChannelTypes))
@@ -30,7 +30,7 @@ public partial class ChannelCreateModal : AdminCompontentBase
         });
     }
 
-    private async Task HandleCancel()
+    private void HandleCancel()
     {
         _visible = false;
         ResetForm();
@@ -68,8 +68,8 @@ public partial class ChannelCreateModal : AdminCompontentBase
         _form.ResetValidation();
     }
 
-    private async Task HandleVisibleChanged(bool val)
+    private void HandleVisibleChanged(bool val)
     {
-        if (!val) await HandleCancel();
+        if (!val) HandleCancel();
     }
 }

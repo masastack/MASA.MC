@@ -8,7 +8,7 @@ public partial class OrdinaryMessageEditModal : AdminCompontentBase
     [Parameter]
     public EventCallback OnOk { get; set; }
 
-    private MForm _form;
+    private MForm _form = default!;
     private MessageTaskUpsertModel _model = new() { EntityType = MessageEntityTypes.Ordinary };
     private Guid _entityId;
     private bool _visible;
@@ -53,7 +53,7 @@ public partial class OrdinaryMessageEditModal : AdminCompontentBase
         }
     }
 
-    private async Task HandleCancel()
+    private void HandleCancel()
     {
         _visible = false;
         ResetForm();
@@ -107,9 +107,9 @@ public partial class OrdinaryMessageEditModal : AdminCompontentBase
         _form.ResetValidation();
     }
 
-    private async Task HandleVisibleChanged(bool val)
+    private void HandleVisibleChanged(bool val)
     {
-        if (!val) await HandleCancel();
+        if (!val) HandleCancel();
     }
 
     private async Task HandleChannelTypeChangeAsync()
