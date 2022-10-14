@@ -1,7 +1,6 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
-global using Masa.Utils.Caller.Core;
 global using Masa.Mc.ApiGateways.Caller;
 global using Masa.Mc.Contracts.Admin.Dtos.Channels.Validator;
 global using System.Reflection;
@@ -20,5 +19,6 @@ global using Microsoft.AspNetCore.Mvc.RazorPages;
 global using Microsoft.AspNetCore.Hosting.StaticWebAssets;
 global using Masa.Mc.Infrastructure.Tsc;
 global using System.Security.Cryptography.X509Certificates;
-global using Masa.BuildingBlocks.StackSdks.Auth.Contracts.Provider;
 global using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+global using Masa.BuildingBlocks.StackSdks.Auth.Contracts.Provider;
+global using Masa.Utils.Security.Authentication.OpenIdConnect;

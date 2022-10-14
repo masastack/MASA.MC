@@ -7,7 +7,7 @@ public class ChannelService : ServiceBase
 {
     protected override string BaseUrl { get; set; }
 
-    internal ChannelService(ICallerProvider callerProvider) : base(callerProvider)
+    public ChannelService(ICaller caller) : base(caller)
     {
         BaseUrl = "api/channel";
     }

@@ -1,15 +1,13 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
-using System.Text.Json;
-
 namespace Masa.Mc.ApiGateways.Caller.Services.WebsiteMessages;
 
 public class WebsiteMessageService : ServiceBase
 {
     protected override string BaseUrl { get; set; }
 
-    public WebsiteMessageService(ICallerProvider callerProvider) : base(callerProvider)
+    public WebsiteMessageService(ICaller caller) : base(caller)
     {
         BaseUrl = "api/website-message";
     }

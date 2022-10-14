@@ -1,8 +1,6 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
-global using Masa.Utils.Caller.HttpClient;
-global using Masa.Utils.Configuration.Json;
 global using Microsoft.AspNetCore.WebUtilities;
 global using Microsoft.Extensions.Options;
 global using Masa.Mc.Contracts.Admin.Dtos.Channels;
@@ -13,7 +11,6 @@ global using Masa.Mc.Contracts.Admin.Dtos.ReceiverGroups;
 global using System.Net;
 global using Masa.Utils.Exceptions;
 global using Microsoft.AspNetCore.Http;
-global using Masa.Utils.Caller.Core;
 global using Microsoft.Extensions.DependencyInjection;
 global using Masa.Mc.ApiGateways.Caller.Services.Channels;
 global using Masa.Mc.ApiGateways.Caller.Services.MessageTemplates;
@@ -33,3 +30,10 @@ global using Masa.Mc.Contracts.Admin.Dtos.Oss;
 global using Masa.Mc.ApiGateways.Caller.Services.Oss;
 global using Masa.Mc.Contracts.Admin.Dtos.Subjects;
 global using Masa.Mc.ApiGateways.Caller.Services.Subjects;
+global using Masa.BuildingBlocks.Service.Caller;
+global using System.Text.Json;
+global using System.Net.Http.Headers;
+global using Masa.Contrib.Service.Caller.HttpClient;
+global using Microsoft.Extensions.Logging;
+global using Masa.Contrib.Service.Caller;
+global using Masa.BuildingBlocks.StackSdks.Auth.Contracts.Provider;

@@ -7,7 +7,7 @@ public class MessageInfoService : ServiceBase
 {
     protected override string BaseUrl { get; set; }
 
-    internal MessageInfoService(ICallerProvider callerProvider) : base(callerProvider)
+    internal MessageInfoService(ICaller caller) : base(caller)
     {
         BaseUrl = "api/message-info";
     }

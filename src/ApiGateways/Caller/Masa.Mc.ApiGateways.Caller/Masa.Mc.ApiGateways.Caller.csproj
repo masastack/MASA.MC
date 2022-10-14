@@ -7,8 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Masa.Utils.Caller.HttpClient" Version="0.6.0-preview.2" />
-    <PackageReference Include="Masa.Utils.Configuration.Json" Version="0.6.0-preview.5" />
+    <PackageReference Include="Masa.BuildingBlocks.StackSdks.Auth.Contracts" Version="$(MasaFrameworkPackageVersion)" />
+    <PackageReference Include="Masa.Contrib.Service.Caller" Version="$(MasaFrameworkPackageVersion)" />
   </ItemGroup>
 
 	<ItemGroup>

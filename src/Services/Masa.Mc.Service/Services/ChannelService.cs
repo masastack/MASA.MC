@@ -51,7 +51,7 @@ public class ChannelService : ServiceBase
         await eventBus.PublishAsync(command);
     }
 
-    [RoutePattern("FindByCode", StartWithBaseUri = true, HttpMethod = "Get")]
+    [RoutePattern("FindByCode", StartWithBaseUri = true)]
     public async Task<ChannelDto> FindByCodeAsync(IEventBus eventBus, string code)
     {
         var query = new FindChannelByCodeQuery(code);
@@ -59,7 +59,7 @@ public class ChannelService : ServiceBase
         return query.Result;
     }
 
-    [RoutePattern("GetListByType", StartWithBaseUri = true, HttpMethod = "Get")]
+    [RoutePattern("GetListByType", StartWithBaseUri = true)]
     public async Task<List<ChannelDto>> GetListByTypeAsync(IEventBus eventBus, ChannelTypes type)
     {
         var query = new GetListByTypeQuery(type);

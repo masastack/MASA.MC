@@ -18,44 +18,50 @@ public class McCaller : HttpClientCallerBase
     OssService? _ossService;
     SubjectService? _subjectService;
     UserService? _userService;
+    TokenProvider _tokenProvider;
     #endregion
 
-    public ChannelService ChannelService => _channelService ?? (_channelService = new(CallerProvider));
+    public ChannelService ChannelService => _channelService ?? (_channelService = new(Caller));
 
-    public MessageTemplateService MessageTemplateService => _messageTemplateService ?? (_messageTemplateService = new(CallerProvider));
+    public MessageTemplateService MessageTemplateService => _messageTemplateService ?? (_messageTemplateService = new(Caller));
 
-    public ReceiverGroupService ReceiverGroupService => _receiverGroupService ?? (_receiverGroupService = new(CallerProvider));
+    public ReceiverGroupService ReceiverGroupService => _receiverGroupService ?? (_receiverGroupService = new(Caller));
 
-    public SmsTemplateService SmsTemplateService => _smsTemplateService ?? (_smsTemplateService = new(CallerProvider));
+    public SmsTemplateService SmsTemplateService => _smsTemplateService ?? (_smsTemplateService = new(Caller));
 
-    public MessageTaskService MessageTaskService => _messageTaskService ?? (_messageTaskService = new(CallerProvider));
+    public MessageTaskService MessageTaskService => _messageTaskService ?? (_messageTaskService = new(Caller));
 
-    public MessageInfoService MessageInfoService => _messageInfoService ?? (_messageInfoService = new(CallerProvider));
+    public MessageInfoService MessageInfoService => _messageInfoService ?? (_messageInfoService = new(Caller));
 
-    public MessageRecordService MessageRecordService => _messageRecordService ?? (_messageRecordService = new(CallerProvider));
+    public MessageRecordService MessageRecordService => _messageRecordService ?? (_messageRecordService = new(Caller));
 
-    public MessageTaskHistoryService MessageTaskHistoryService => _messageTaskHistoryService ?? (_messageTaskHistoryService = new(CallerProvider));
+    public MessageTaskHistoryService MessageTaskHistoryService => _messageTaskHistoryService ?? (_messageTaskHistoryService = new(Caller));
 
-    public WebsiteMessageService WebsiteMessageService => _websiteMessageService ?? (_websiteMessageService = new(CallerProvider));
+    public WebsiteMessageService WebsiteMessageService => _websiteMessageService ?? (_websiteMessageService = new(Caller));
 
-    public OssService OssService => _ossService ?? (_ossService = new OssService(CallerProvider));
+    public OssService OssService => _ossService ?? (_ossService = new OssService(Caller));
 
-    public SubjectService SubjectService => _subjectService ?? (_subjectService = new(CallerProvider));
+    public SubjectService SubjectService => _subjectService ?? (_subjectService = new(Caller));
 
-    public UserService UserService => _userService ?? (_userService = new(CallerProvider));
+    public UserService UserService => _userService ?? (_userService = new(Caller));
 
     protected override string BaseAddress { get; set; }
 
     public override string Name { get; set; }
 
-    public McCaller(IServiceProvider serviceProvider, McApiOptions options) : base(serviceProvider)
+    public McCaller(
+        IServiceProvider serviceProvider,
+        TokenProvider tokenProvider,
+        McApiOptions options) : base(serviceProvider)
     {
         Name = nameof(McCaller);
         BaseAddress = options.McServiceBaseAddress;
+        _tokenProvider = tokenProvider;
     }
 
-    protected override IHttpClientBuilder UseHttpClient()
+    protected override void ConfigHttpRequestMessage(HttpRequestMessage requestMessage)
     {
-        return base.UseHttpClient().AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>();
+        requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _tokenProvider.AccessToken);
+        base.ConfigHttpRequestMessage(requestMessage);
     }
 }

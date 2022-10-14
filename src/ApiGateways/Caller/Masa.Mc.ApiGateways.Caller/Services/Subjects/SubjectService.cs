@@ -7,7 +7,7 @@ public class SubjectService : ServiceBase
 {
     protected override string BaseUrl { get; set; }
 
-    public SubjectService(ICallerProvider callerProvider) : base(callerProvider)
+    public SubjectService(ICaller caller) : base(caller)
     {
         BaseUrl = "api/subject";
     }
