@@ -7,7 +7,7 @@ public class MessageRecordService : ServiceBase
 {
     protected override string BaseUrl { get; set; }
 
-    internal MessageRecordService(ICallerProvider callerProvider) : base(callerProvider)
+    internal MessageRecordService(ICaller caller) : base(caller)
     {
         BaseUrl = "api/message-record";
     }

@@ -7,7 +7,7 @@ public class SmsTemplateService : ServiceBase
 {
     protected override string BaseUrl { get; set; }
 
-    internal SmsTemplateService(ICallerProvider callerProvider) : base(callerProvider)
+    internal SmsTemplateService(ICaller caller) : base(caller)
     {
         BaseUrl = "api/sms-template";
     }

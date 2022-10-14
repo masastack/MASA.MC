@@ -5,8 +5,8 @@ namespace Masa.Mc.Web.Admin.Pages.Channels;
 
 public partial class ChannelManagement : AdminCompontentBase
 {
-    private ChannelEditModal _editModal;
-    private ChannelCreateModal _createModal;
+    private ChannelEditModal _editModal = default!;
+    private ChannelCreateModal _createModal = default!;
     private GetChannelInputDto _queryParam = new(999);
     private PaginatedListDto<ChannelDto> _entities = new();
 

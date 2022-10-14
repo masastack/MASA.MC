@@ -5,18 +5,11 @@ namespace Masa.Mc.Service.Services;
 
 public class WebsiteMessageService : ServiceBase
 {
-    public WebsiteMessageService(IServiceCollection services) : base(services, "api/website-message")
+    public WebsiteMessageService(IServiceCollection services) : base("api/website-message")
     {
-        MapGet(GetAsync, "{id}");
         MapGet(GetListAsync, string.Empty);
-        MapDelete(DeleteAsync, "{id}");
         MapGet(GetChannelListAsync);
-        MapPost(SetAllReadAsync);
-        MapPost(ReadAsync);
-        MapPost(CheckAsync);
         MapGet(GetNoticeListAsync);
-        MapPost(SendCheckNotificationAsync);
-        MapPost(SendGetNotificationAsync);
     }
 
     public async Task<PaginatedListDto<WebsiteMessageDto>> GetListAsync(IEventBus eventbus, [FromQuery] WebsiteMessageFilterType? filterType, [FromQuery] Guid? channelId, [FromQuery] bool? isRead, [FromQuery] string filter = "", [FromQuery] string sorting = "", [FromQuery] int page = 1, [FromQuery] int pagesize = 10)

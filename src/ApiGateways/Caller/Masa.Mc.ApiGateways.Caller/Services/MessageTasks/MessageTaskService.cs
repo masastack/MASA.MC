@@ -7,7 +7,7 @@ public class MessageTaskService : ServiceBase
 {
     protected override string BaseUrl { get; set; }
 
-    internal MessageTaskService(ICallerProvider callerProvider) : base(callerProvider)
+    internal MessageTaskService(ICaller caller) : base(caller)
     {
         BaseUrl = "api/message-task";
     }

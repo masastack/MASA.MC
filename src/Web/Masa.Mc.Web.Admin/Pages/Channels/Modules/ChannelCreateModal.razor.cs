@@ -8,7 +8,7 @@ public partial class ChannelCreateModal : AdminCompontentBase
     [Parameter]
     public EventCallback OnOk { get; set; }
 
-    private MForm _form;
+    private MForm _form = default!;
     private ChannelUpsertDto _model = new();
     private bool _visible;
     private List<ChannelTypes> channelTypeItems = Enum.GetValues(typeof(ChannelTypes))
@@ -30,10 +30,10 @@ public partial class ChannelCreateModal : AdminCompontentBase
         });
     }
 
-    private async Task HandleCancel()
+    private void HandleCancel()
     {
         _visible = false;
-        await ResetForm();
+        ResetForm();
     }
 
     private void HandleSelectType(ChannelTypes Type)
@@ -45,7 +45,7 @@ public partial class ChannelCreateModal : AdminCompontentBase
     private async Task HandleOkAsync()
     {
         await _channelExtraPropertiesRef.UpdateExtraPropertiesAsync();
-        if (!await _form.ValidateAsync() || !await _channelExtraPropertiesRef.ValidateAsync())
+        if (!_form.Validate() || !_channelExtraPropertiesRef.Validate())
         {
             return;
         }
@@ -54,22 +54,22 @@ public partial class ChannelCreateModal : AdminCompontentBase
         Loading = false;
         await SuccessMessageAsync(T("ChannelCreateMessage"));
         _visible = false;
-        await ResetForm();
+        ResetForm();
         if (OnOk.HasDelegate)
         {
             await OnOk.InvokeAsync();
         }
     }
 
-    private async Task ResetForm()
+    private void ResetForm()
     {
         _step = 1;
         _model = new();
-        await _form.ResetValidationAsync();
+        _form.ResetValidation();
     }
 
-    private async Task HandleVisibleChanged(bool val)
+    private void HandleVisibleChanged(bool val)
     {
-        if (!val) await HandleCancel();
+        if (!val) HandleCancel();
     }
 }

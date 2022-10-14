@@ -5,12 +5,8 @@ namespace Masa.Mc.Service.Admin.Services;
 
 public class MessageTemplateService : ServiceBase
 {
-    public MessageTemplateService(IServiceCollection services) : base(services, "api/message-template")
+    public MessageTemplateService(IServiceCollection services) : base("api/message-template")
     {
-        MapPost(CreateAsync, string.Empty);
-        MapPut(UpdateAsync, "{id}");
-        MapDelete(DeleteAsync, "{id}");
-        MapGet(GetAsync, "{id}");
         MapGet(GetListAsync, string.Empty);
     }
 

@@ -8,7 +8,7 @@ public partial class SmsTemplateCreateModal : AdminCompontentBase
     [Parameter]
     public EventCallback OnOk { get; set; }
 
-    private MForm _form;
+    private MForm _form = default!;
     private MessageTemplateUpsertDto _model = new();
     private bool _visible;
     private List<ChannelDto> _channelItems = new();
@@ -35,15 +35,15 @@ public partial class SmsTemplateCreateModal : AdminCompontentBase
         });
     }
 
-    private async Task HandleCancel()
+    private void HandleCancel()
     {
         _visible = false;
-        await ResetForm();
+        ResetForm();
     }
 
     private async Task HandleOkAsync()
     {
-        if (!await _form.ValidateAsync())
+        if (!_form.Validate())
         {
             return;
         }
@@ -52,22 +52,22 @@ public partial class SmsTemplateCreateModal : AdminCompontentBase
         Loading = false;
         await SuccessMessageAsync(T("MessageTemplateCreateMessage"));
         _visible = false;
-        await ResetForm();
+        ResetForm();
         if (OnOk.HasDelegate)
         {
             await OnOk.InvokeAsync();
         }
     }
 
-    private async Task ResetForm()
+    private void ResetForm()
     {
         _model = new();
-        await _form.ResetValidationAsync();
+        _form.ResetValidation();
     }
 
-    private async Task HandleVisibleChanged(bool val)
+    private void HandleVisibleChanged(bool val)
     {
-        if (!val) await HandleCancel();
+        if (!val) HandleCancel();
     }
 
     private async Task HandleSelectChannelTypeAsync(ChannelTypes Type)

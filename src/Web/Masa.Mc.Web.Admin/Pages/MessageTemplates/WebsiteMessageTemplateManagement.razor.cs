@@ -7,8 +7,8 @@ public partial class WebsiteMessageTemplateManagement : AdminCompontentBase
 {
     public List<DataTableHeader<MessageTemplateDto>> Headers { get; set; } = new();
 
-    private WebsiteMessageTemplateEditModal _editModal;
-    private WebsiteMessageTemplateCreateModal _createModal;
+    private WebsiteMessageTemplateEditModal _editModal = default!;
+    private WebsiteMessageTemplateCreateModal _createModal = default!;
     private GetMessageTemplateInputDto _queryParam = new() { ChannelType = ChannelTypes.WebsiteMessage };
     private PaginatedListDto<MessageTemplateDto> _entities = new();
     private List<ChannelDto> _channelItems = new();

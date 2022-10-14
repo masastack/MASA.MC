@@ -5,12 +5,8 @@ namespace Masa.Mc.Service.Services;
 
 public class ReceiverGroupService : ServiceBase
 {
-    public ReceiverGroupService(IServiceCollection services) : base(services, "api/receiver-group")
+    public ReceiverGroupService(IServiceCollection services) : base("api/receiver-group")
     {
-        MapPost(CreateAsync, string.Empty);
-        MapPut(UpdateAsync, "{id}");
-        MapDelete(DeleteAsync, "{id}");
-        MapGet(GetAsync, "{id}");
         MapGet(GetListAsync, string.Empty);
     }
 

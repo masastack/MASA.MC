@@ -8,7 +8,7 @@ public partial class EmailTemplateEditModal : AdminCompontentBase
     [Parameter]
     public EventCallback OnOk { get; set; }
 
-    private MForm _form;
+    private MForm _form = default!;
     private MessageTemplateUpsertDto _model = new();
     private Guid _entityId;
     private bool _visible;
@@ -32,22 +32,22 @@ public partial class EmailTemplateEditModal : AdminCompontentBase
 
     private async Task GetFormDataAsync()
     {
-        var dto = await MessageTemplateService.GetAsync(_entityId);
+        var dto = await MessageTemplateService.GetAsync(_entityId) ?? new();
         _model = dto.Adapt<MessageTemplateUpsertDto>();
         _model.ChannelType = dto.Channel.Type;
         await HandleSelectChannelType(_model.ChannelType);
     }
 
-    private async Task HandleCancel()
+    private void HandleCancel()
     {
         _visible = false;
-        await ResetForm();
+        ResetForm();
     }
 
     private async Task HandleOk()
     {
         _model.DisplayName = _model.Title;
-        if (!await _form.ValidateAsync())
+        if (!_form.Validate())
         {
             return;
         }
@@ -56,7 +56,7 @@ public partial class EmailTemplateEditModal : AdminCompontentBase
         Loading = false;
         await SuccessMessageAsync(T("MessageTemplateEditMessage"));
         _visible = false;
-        await ResetForm();
+        ResetForm();
         if (OnOk.HasDelegate)
         {
             await OnOk.InvokeAsync();
@@ -75,22 +75,22 @@ public partial class EmailTemplateEditModal : AdminCompontentBase
         Loading = false;
         await SuccessMessageAsync(T("MessageTemplateDeleteMessage"));
         _visible = false;
-        await ResetForm();
+        ResetForm();
         if (OnOk.HasDelegate)
         {
             await OnOk.InvokeAsync();
         }
     }
 
-    private async Task ResetForm()
+    private void ResetForm()
     {
         _model = new();
-        await _form.ResetValidationAsync();
+        _form.ResetValidation();
     }
 
-    private async Task HandleVisibleChanged(bool val)
+    private void HandleVisibleChanged(bool val)
     {
-        if (!val) await HandleCancel();
+        if (!val) HandleCancel();
     }
 
     private async Task HandleSelectChannelType(ChannelTypes Type)

@@ -10,7 +10,7 @@ public partial class ChannelEditModal : AdminCompontentBase
     [Parameter]
     public EventCallback OnOk { get; set; }
 
-    private MForm _form;
+    private MForm _form = default!;
     private ChannelUpsertDto _model = new();
     private Guid _entityId;
     private bool _visible;
@@ -35,20 +35,20 @@ public partial class ChannelEditModal : AdminCompontentBase
 
     private async Task GetFormDataAsync()
     {
-        var dto = await ChannelService.GetAsync(_entityId);
+        var dto = await ChannelService.GetAsync(_entityId) ?? new();
         _model = dto.Adapt<ChannelUpsertDto>();
     }
 
-    private async Task HandleCancel()
+    private void HandleCancel()
     {
         _visible = false;
-        await ResetForm();
+        ResetForm();
     }
 
     private async Task HandleOk()
     {
         await _channelExtraPropertiesRef.UpdateExtraPropertiesAsync();
-        if (!await _form.ValidateAsync() || !await _channelExtraPropertiesRef.ValidateAsync())
+        if (!_form.Validate() || !_channelExtraPropertiesRef.Validate())
         {
             return;
         }
@@ -56,7 +56,7 @@ public partial class ChannelEditModal : AdminCompontentBase
         await ChannelService.UpdateAsync(_entityId, _model);
         Loading = false;
         _visible = false;
-        await ResetForm();
+        ResetForm();
         await SuccessMessageAsync(T("ChannelEditMessage"));
         if (OnOk.HasDelegate)
         {
@@ -75,20 +75,20 @@ public partial class ChannelEditModal : AdminCompontentBase
         Loading = false;
         await SuccessMessageAsync(T("ChannelDeleteMessage"));
         _visible = false;
-        await ResetForm();
+        ResetForm();
         if (OnOk.HasDelegate)
         {
             await OnOk.InvokeAsync();
         }
     }
-    private async Task ResetForm()
+    private void ResetForm()
     {
         _model = new();
-        await _form.ResetValidationAsync();
+        _form.ResetValidation();
     }
 
-    private async Task HandleVisibleChanged(bool val)
+    private void HandleVisibleChanged(bool val)
     {
-        if (!val) await HandleCancel();
+        if (!val) HandleCancel();
     }
 }

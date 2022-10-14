@@ -24,15 +24,15 @@ public partial class ReceiverGroupCreateModal : AdminCompontentBase
         });
     }
 
-    private async Task HandleCancel()
+    private void HandleCancel()
     {
         _visible = false;
-        await ResetForm();
+        ResetForm();
     }
 
     private async Task HandleOk()
     {
-        if (!await _form.ValidateAsync())
+        if (!_form.Validate())
         {
             return;
         }
@@ -41,22 +41,22 @@ public partial class ReceiverGroupCreateModal : AdminCompontentBase
         Loading = false;
         await SuccessMessageAsync(T("ReceiverGroupCreateMessage"));
         _visible = false;
-        await ResetForm();
+        ResetForm();
         if (OnOk.HasDelegate)
         {
             await OnOk.InvokeAsync();
         }
     }
 
-    private async Task ResetForm()
+    private void ResetForm()
     {
         _model = new();
-        await _form.ResetValidationAsync();
+        _form.ResetValidation();
         _ReceiverSelect.ResetForm();
     }
 
-    private async Task HandleVisibleChanged(bool val)
+    private void HandleVisibleChanged(bool val)
     {
-        if (!val) await HandleCancel();
+        if (!val) HandleCancel();
     }
 }

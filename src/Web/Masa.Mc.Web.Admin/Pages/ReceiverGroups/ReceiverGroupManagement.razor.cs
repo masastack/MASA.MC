@@ -7,14 +7,14 @@ public partial class ReceiverGroupManagement : AdminCompontentBase
 {
     public List<DataTableHeader<ReceiverGroupDto>> Headers { get; set; } = new();
 
-    private ReceiverGroupEditModal _editModal;
-    private ReceiverGroupCreateModal _createModal;
+    private ReceiverGroupEditModal _editModal = default!;
+    private ReceiverGroupCreateModal _createModal = default!;
     private GetReceiverGroupInputDto _queryParam = new(10);
     private PaginatedListDto<ReceiverGroupDto> _entities = new();
 
     ReceiverGroupService ReceiverGroupService => McCaller.ReceiverGroupService;
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
         var _prefix = "DisplayName.ReceiverGroup";
         Headers = new()

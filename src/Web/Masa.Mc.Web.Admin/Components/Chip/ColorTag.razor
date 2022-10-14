@@ -8,10 +8,10 @@
     public StringNumber Height { get; set; } = 22;
 
     [Parameter]
-    public string Color { get; set; }
+    public string Color { get; set; } = default!;
 
     [Parameter]
-    public string Class { get; set; }
+    public string Class { get; set; } = default!;
 
     protected override void OnParametersSet()
     {

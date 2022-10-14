@@ -12,22 +12,22 @@ public partial class DefaultEditor : AdminCompontentBase
     public EventCallback<string> ValueChanged { get; set; }
 
     [Parameter]
-    public string ContentClass { get; set; }
+    public string ContentClass { get; set; } = default!;
 
     [Parameter]
-    public string ContentStyle { get; set; }
+    public string ContentStyle { get; set; } = default!;
 
     [Parameter]
-    public string Placeholder { get; set; }
+    public string? Placeholder { get; set; }
 
     [Parameter]
     public bool ReadOnly { get; set; }
 
     private OssService OssService => McCaller.OssService;
 
-    private MEditor Ref { get; set; }
+    private MEditor Ref { get; set; } = default!;
 
-    private IJSObjectReference VditorHelper;
+    private IJSObjectReference VditorHelper = default!;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {

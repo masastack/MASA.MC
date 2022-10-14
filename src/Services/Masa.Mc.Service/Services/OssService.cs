@@ -5,7 +5,7 @@ namespace Masa.Mc.Service.Services;
 
 public class OssService : ServiceBase
 {
-    public OssService(IServiceCollection services) : base(services, "api/oss")
+    public OssService(IServiceCollection services) : base("api/oss")
     {
         MapGet(GetSecurityTokenAsync);
     }

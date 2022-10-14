@@ -5,24 +5,11 @@ namespace Masa.Mc.Service.Admin.Services;
 
 public class MessageTaskService : ServiceBase
 {
-    public MessageTaskService(IServiceCollection services) : base(services, "api/message-task")
+    public MessageTaskService(IServiceCollection services) : base("api/message-task")
     {
-        MapPost(CreateAsync, string.Empty);
-        MapPut(UpdateAsync, "{id}");
-        MapDelete(DeleteAsync, "{id}");
-        MapGet(GetAsync, "{id}");
         MapGet(GetListAsync, string.Empty);
-        MapPost(SendAsync);
-        MapPost(SendTestAsync);
-        MapPost(EnabledAsync);
-        MapPost(DisableAsync);
         MapGet(GenerateReceiverImportTemplateAsync);
-        MapPost(ImportReceiversAsync);
         MapGet(GetMessageTaskReceiverListAsync);
-        MapPost(ResolveReceiversCountAsync);
-        MapPost(ExecuteAsync, "execute/{messageTaskId}");
-        MapPost(SendOrdinaryMessageAsync);
-        MapPost(SendTemplateMessageAsync);
     }
 
     public async Task<PaginatedListDto<MessageTaskDto>> GetListAsync(IEventBus eventbus, [FromQuery] Guid? channelId, [FromQuery] MessageEntityTypes? entityType, [FromQuery] bool? isDraft, [FromQuery] bool? isEnabled, [FromQuery] MessageTaskTimeTypes? timeType, [FromQuery] DateTime? startTime, [FromQuery] DateTime? endTime, [FromQuery] MessageTaskStatuses? status, MessageTaskSources? source, [FromQuery] string filter = "", [FromQuery] string sorting = "", [FromQuery] int page = 1, [FromQuery] int pagesize = 10)
@@ -130,10 +117,10 @@ public class MessageTaskService : ServiceBase
         list.AddRange(subjectList.Select(x => new MessageTaskReceiverDto
         {
             SubjectId = x.SubjectId,
-            DisplayName = x.Name ?? x.DisplayName,
-            Avatar = x.Avatar,
-            PhoneNumber = x.PhoneNumber,
-            Email = x.Email,
+            DisplayName = x.Name ?? x.DisplayName ?? string.Empty,
+            Avatar = x.Avatar ?? string.Empty,
+            PhoneNumber = x.PhoneNumber ?? string.Empty,
+            Email = x.Email ?? string.Empty,
             Type = (MessageTaskReceiverTypes)(int)x.SubjectType
         }));
 

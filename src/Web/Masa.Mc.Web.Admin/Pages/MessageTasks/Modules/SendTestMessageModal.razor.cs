@@ -56,10 +56,10 @@ public partial class SendTestMessageModal : AdminCompontentBase
         _userIds = userId;
         _input.ReceiverUsers = _userRef.UserSelect.Select(x => new MessageReceiverUserDto
         {
-            UserId = new Guid(x.Id),
+            UserId = x.Id,
             DisplayName = x.Name ?? string.Empty,
-            PhoneNumber = x.PhoneNumber,
-            Email = x.Email,
+            PhoneNumber = x.PhoneNumber ?? string.Empty,
+            Email = x.Email ?? string.Empty,
         }).ToList();
     }
 }

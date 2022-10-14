@@ -40,7 +40,6 @@ namespace Masa.Mc.Web.Admin.Global
         public delegate void GlobalConfigChanged();
         public delegate void LoadingChanged(bool loading, string loadingText);
 
-        public event GlobalConfigChanged? OnCurrentNavChanged;
         public event LoadingChanged? OnLoadingChanged;
 
         #endregion

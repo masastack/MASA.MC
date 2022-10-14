@@ -30,19 +30,19 @@ public partial class ReceiverGroupEditModal : AdminCompontentBase
 
     private async Task GetFormDataAsync()
     {
-        var dto = await ReceiverGroupService.GetAsync(_entityId);
+        var dto = await ReceiverGroupService.GetAsync(_entityId) ?? new();
         _model = dto.Adapt<ReceiverGroupUpsertDto>();
     }
 
-    private async Task HandleCancel()
+    private void HandleCancel()
     {
         _visible = false;
-        await ResetForm();
+        ResetForm();
     }
 
     private async Task HandleOk()
     {
-        if (!await _form.ValidateAsync())
+        if (!_form.Validate())
         {
             return;
         }
@@ -50,7 +50,7 @@ public partial class ReceiverGroupEditModal : AdminCompontentBase
         await ReceiverGroupService.UpdateAsync(_entityId, _model);
         Loading = false;
         _visible = false;
-        await ResetForm();
+        ResetForm();
         await SuccessMessageAsync(T("ReceiverGroupEditMessage"));
         if (OnOk.HasDelegate)
         {
@@ -69,16 +69,16 @@ public partial class ReceiverGroupEditModal : AdminCompontentBase
         Loading = false;
         await SuccessMessageAsync(T("ReceiverGroupDeleteMessage"));
         _visible = false;
-        await ResetForm();
+        ResetForm();
         if (OnOk.HasDelegate)
         {
             await OnOk.InvokeAsync();
         }
     }
-    private async Task ResetForm()
+    private void ResetForm()
     {
         _model = new();
-        await _form.ResetValidationAsync();
+        _form.ResetValidation();
         _ReceiverSelect.ResetForm();
     }
 

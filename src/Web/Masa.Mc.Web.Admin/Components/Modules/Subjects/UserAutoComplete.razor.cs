@@ -41,7 +41,7 @@ public partial class UserAutoComplete : AdminCompontentBase
         }
         else if (Search == search)
         {
-            var response = await AutoCompleteClient.GetAsync<UserSelectModel, Guid>(search, new AutoCompleteOptions
+            var response = await AutoCompleteClient.GetBySpecifyDocumentAsync<UserSelectModel>(search, new AutoCompleteOptions
             {
                 Page = Page,
                 PageSize = PageSize,
@@ -62,7 +62,7 @@ public partial class UserAutoComplete : AdminCompontentBase
     private async Task HandleValueChanged(List<Guid> value)
     {
         value = value ?? new();
-        var list = Items.Where(x => value.Contains(x.Value)).ToList();
+        var list = Items.Where(x => value.Contains(x.Id)).ToList();
         UserSelect = list;
         if (ValueChanged.HasDelegate)
         {

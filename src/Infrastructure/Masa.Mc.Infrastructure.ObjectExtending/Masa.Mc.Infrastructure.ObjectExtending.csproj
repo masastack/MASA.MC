@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Masa.Contrib.StackSdks.Mc" Version="$(MasaContribPackageVersion)" />
+    <PackageReference Include="Masa.Contrib.StackSdks.Mc" Version="$(MasaFrameworkPackageVersion)" />
   </ItemGroup>
 
   <ItemGroup>

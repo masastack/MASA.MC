@@ -7,7 +7,7 @@ public class ReceiverGroupService : ServiceBase
 {
     protected override string BaseUrl { get; set; }
 
-    public ReceiverGroupService(ICallerProvider callerProvider) : base(callerProvider)
+    public ReceiverGroupService(ICaller caller) : base(caller)
     {
         BaseUrl = "api/receiver-group";
     }

@@ -7,8 +7,8 @@ public partial class EmailTemplateManagement : AdminCompontentBase
 {
     public List<DataTableHeader<MessageTemplateDto>> Headers { get; set; } = new();
 
-    private EmailTemplateEditModal _editModal;
-    private EmailTemplateCreateModal _createModal;
+    private EmailTemplateEditModal _editModal = default!;
+    private EmailTemplateCreateModal _createModal = default!;
     private GetMessageTemplateInputDto _queryParam = new() { ChannelType = ChannelTypes.Email };
     private PaginatedListDto<MessageTemplateDto> _entities = new();
     private List<ChannelDto> _channelItems = new();

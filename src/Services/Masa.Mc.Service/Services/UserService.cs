@@ -5,9 +5,9 @@ namespace Masa.Mc.Service.Admin.Services;
 
 public class UserService : ServiceBase
 {
-    public UserService(IServiceCollection services) : base(services, "api/user")
+    public UserService(IServiceCollection services) : base("api/user")
     {
-        MapPost(CreateExternalUserAsync);
+
     }
 
     public async Task<UserDto?> CreateExternalUserAsync(IEventBus eventBus, [FromBody] CreateExternalUserDto inputDto)

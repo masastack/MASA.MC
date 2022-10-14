@@ -7,10 +7,9 @@ public class SmsTemplateService : ServiceBase
 {
     private const string DAPR_PUBSUB_NAME = "pubsub";
 
-    public SmsTemplateService(IServiceCollection services) : base(services, "api/sms-template")
+    public SmsTemplateService(IServiceCollection services) : base("api/sms-template")
     {
         MapGet(GetListByChannelIdAsync);
-        MapPost(SyncAsync);
     }
 
     public async Task<List<SmsTemplateDto>> GetListByChannelIdAsync(IEventBus eventbus, Guid channelId)
