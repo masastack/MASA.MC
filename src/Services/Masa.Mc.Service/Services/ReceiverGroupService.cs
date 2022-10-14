@@ -7,10 +7,9 @@ public class ReceiverGroupService : ServiceBase
 {
     public ReceiverGroupService(IServiceCollection services) : base("api/receiver-group")
     {
-
+        MapGet(GetListAsync, string.Empty);
     }
 
-    [RoutePattern("", StartWithBaseUri = true, HttpMethod = "Get")]
     public async Task<PaginatedListDto<ReceiverGroupDto>> GetListAsync(IEventBus eventbus, [FromQuery] string filter = "", [FromQuery] string sorting = "", [FromQuery] int page = 1, [FromQuery] int pagesize = 10)
     {
         var inputDto = new GetReceiverGroupInputDto(filter, sorting, page, pagesize);

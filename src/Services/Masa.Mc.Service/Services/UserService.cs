@@ -10,7 +10,6 @@ public class UserService : ServiceBase
 
     }
 
-    [RoutePattern("CreateExternalUser", StartWithBaseUri = true, HttpMethod = "Post")]
     public async Task<UserDto?> CreateExternalUserAsync(IEventBus eventBus, [FromBody] CreateExternalUserDto inputDto)
     {
         var command = new CreateExternalUserCommand(inputDto);

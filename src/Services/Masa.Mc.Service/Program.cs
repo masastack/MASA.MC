@@ -116,7 +116,11 @@ var app = builder.Services
             dbOptions => dbOptions.UseSqlServer().UseFilter())
         .UseRepository<McDbContext>();
     })
-    .AddServices(builder);
+    .AddServices(builder, options =>
+    {
+        options.GetPrefixes = new() { "Get", "Select", "Find" };
+        options.MapHttpMethodsForUnmatched = new string[] { "Post" };
+    });
 app.UseMiddleware<AdminSafeListMiddleware>(configuration.GetSection("WhiteListOptions").Get<WhiteListOptions>());
 app.UseMasaExceptionHandler(opt =>
 {

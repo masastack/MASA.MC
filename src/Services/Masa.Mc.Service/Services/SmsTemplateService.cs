@@ -9,10 +9,9 @@ public class SmsTemplateService : ServiceBase
 
     public SmsTemplateService(IServiceCollection services) : base("api/sms-template")
     {
-
+        MapGet(GetListByChannelIdAsync);
     }
 
-    [RoutePattern("GetListByChannelId", StartWithBaseUri = true, HttpMethod = "Get")]
     public async Task<List<SmsTemplateDto>> GetListByChannelIdAsync(IEventBus eventbus, Guid channelId)
     {
         var query = new GetSmsTemplateListByChannelIdQuery(channelId);
@@ -21,7 +20,6 @@ public class SmsTemplateService : ServiceBase
     }
 
     [Topic(DAPR_PUBSUB_NAME, nameof(SmsTemplateSynchroIntegrationDomainEvent))]
-    [RoutePattern("Sync", StartWithBaseUri = true, HttpMethod = "Post")]
     public async Task SyncAsync(IEventBus eventbus, SmsTemplateSynchroIntegrationDomainEvent @event)
     {
         var command = new SyncSmsTemplateCommand(@event.ChannelId);

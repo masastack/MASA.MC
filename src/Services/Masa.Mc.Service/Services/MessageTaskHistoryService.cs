@@ -9,10 +9,9 @@ public class MessageTaskHistoryService : ServiceBase
 
     public MessageTaskHistoryService(IServiceCollection services) : base("api/message-task-history")
     {
-
+        MapGet(GetListAsync, string.Empty);
     }
 
-    [RoutePattern("", StartWithBaseUri = true, HttpMethod = "Get")]
     public async Task<PaginatedListDto<MessageTaskHistoryDto>> GetListAsync(IEventBus eventbus, [FromQuery] Guid? messageTaskId, [FromQuery] MessageTaskHistoryStatuses? status, [FromQuery] DateTime? startTime, [FromQuery] DateTime? endTime, [FromQuery] string filter = "", [FromQuery] string sorting = "", [FromQuery] int page = 1, [FromQuery] int pagesize = 10)
     {
         var inputDto = new GetMessageTaskHistoryInputDto(filter, messageTaskId, status, startTime, endTime, sorting, page, pagesize);
@@ -28,7 +27,6 @@ public class MessageTaskHistoryService : ServiceBase
         return query.Result;
     }
 
-    [RoutePattern("Withdrawn", StartWithBaseUri = true, HttpMethod = "Post")]
     public async Task WithdrawnAsync(IEventBus eventBus, WithdrawnMessageTaskHistoryInputDto inputDto)
     {
         var command = new WithdrawnMessageTaskHistoryCommand(inputDto);

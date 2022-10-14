@@ -7,10 +7,9 @@ public class OssService : ServiceBase
 {
     public OssService(IServiceCollection services) : base("api/oss")
     {
-
+        MapGet(GetSecurityTokenAsync);
     }
 
-    [RoutePattern("GetSecurityToken", StartWithBaseUri = true, HttpMethod = "Get")]
     private async Task<GetSecurityTokenDto> GetSecurityTokenAsync([FromServices] IClient client, [FromServices] DaprClient daprClient)
     {
         var region = "oss-cn-hangzhou";

@@ -7,10 +7,9 @@ public class MessageTemplateService : ServiceBase
 {
     public MessageTemplateService(IServiceCollection services) : base("api/message-template")
     {
-
+        MapGet(GetListAsync, string.Empty);
     }
 
-    [RoutePattern("", StartWithBaseUri = true, HttpMethod = "Get")]
     public async Task<PaginatedListDto<MessageTemplateDto>> GetListAsync(IEventBus eventbus, [FromQuery] ChannelTypes? channelType, [FromQuery] Guid? channelId, [FromQuery] MessageTemplateStatuses? status, [FromQuery] MessageTemplateAuditStatuses? auditStatus, [FromQuery] DateTime? startTime, [FromQuery] DateTime? endTime, [FromQuery] int templateType, [FromQuery] string filter = "", [FromQuery] string sorting = "", [FromQuery] int page = 1, [FromQuery] int pagesize = 10)
     {
         var inputDto = new GetMessageTemplateInputDto(filter, channelType, channelId, status, auditStatus, startTime, endTime, templateType, sorting, page, pagesize);

@@ -7,10 +7,11 @@ public class MessageTaskService : ServiceBase
 {
     public MessageTaskService(IServiceCollection services) : base("api/message-task")
     {
-
+        MapGet(GetListAsync, string.Empty);
+        MapGet(GenerateReceiverImportTemplateAsync);
+        MapGet(GetMessageTaskReceiverListAsync);
     }
 
-    [RoutePattern("", StartWithBaseUri = true, HttpMethod = "Get")]
     public async Task<PaginatedListDto<MessageTaskDto>> GetListAsync(IEventBus eventbus, [FromQuery] Guid? channelId, [FromQuery] MessageEntityTypes? entityType, [FromQuery] bool? isDraft, [FromQuery] bool? isEnabled, [FromQuery] MessageTaskTimeTypes? timeType, [FromQuery] DateTime? startTime, [FromQuery] DateTime? endTime, [FromQuery] MessageTaskStatuses? status, MessageTaskSources? source, [FromQuery] string filter = "", [FromQuery] string sorting = "", [FromQuery] int page = 1, [FromQuery] int pagesize = 10)
     {
         var inputDto = new GetMessageTaskInputDto(filter, channelId, entityType, isDraft, isEnabled, timeType, startTime, endTime, status, source, sorting, page, pagesize);
@@ -67,35 +68,30 @@ public class MessageTaskService : ServiceBase
         await eventBus.PublishAsync(command);
     }
 
-    [RoutePattern("Send", StartWithBaseUri = true, HttpMethod = "Post")]
     public async Task SendAsync(IEventBus eventBus, SendMessageTaskInputDto inputDto)
     {
         var command = new SendMessageTaskCommand(inputDto);
         await eventBus.PublishAsync(command);
     }
 
-    [RoutePattern("SendTest", StartWithBaseUri = true, HttpMethod = "Post")]
     public async Task SendTestAsync(IEventBus eventBus, SendTestMessageTaskInputDto inputDto)
     {
         var command = new SendTestMessageTaskCommand(inputDto);
         await eventBus.PublishAsync(command);
     }
 
-    [RoutePattern("Enabled", StartWithBaseUri = true, HttpMethod = "Post")]
     public async Task EnabledAsync(IEventBus eventBus, EnabledMessageTaskInputDto inputDto)
     {
         var command = new EnabledMessageTaskCommand(inputDto);
         await eventBus.PublishAsync(command);
     }
 
-    [RoutePattern("Disable", StartWithBaseUri = true, HttpMethod = "Post")]
     public async Task DisableAsync(IEventBus eventBus, DisableMessageTaskInputDto inputDto)
     {
         var command = new DisableMessageTaskCommand(inputDto);
         await eventBus.PublishAsync(command);
     }
 
-    [RoutePattern("GenerateReceiverImportTemplate", StartWithBaseUri = true, HttpMethod = "Get")]
     public async Task<byte[]> GenerateReceiverImportTemplateAsync(IEventBus eventBus, Guid? messageTemplatesId, ChannelTypes channelType)
     {
         var query = new GenerateReceiverImportTemplateQuery(messageTemplatesId, channelType);
@@ -103,7 +99,6 @@ public class MessageTaskService : ServiceBase
         return query.Result;
     }
 
-    [RoutePattern("ImportReceivers", StartWithBaseUri = true, HttpMethod = "Post")]
     public async Task<ImportResultDto<MessageTaskReceiverDto>> ImportReceiversAsync(IEventBus eventBus, ImportReceiversDto dto)
     {
         var command = new ImportReceiversCommand(dto);
@@ -111,7 +106,6 @@ public class MessageTaskService : ServiceBase
         return command.Result;
     }
 
-    [RoutePattern("GetMessageTaskReceiverList", StartWithBaseUri = true, HttpMethod = "Get")]
     public async Task<List<MessageTaskReceiverDto>> GetMessageTaskReceiverListAsync(IEventBus eventBus, [FromQuery] string filter = "")
     {
         var list = new List<MessageTaskReceiverDto>();
@@ -144,7 +138,6 @@ public class MessageTaskService : ServiceBase
         return list;
     }
 
-    [RoutePattern("ResolveReceiversCount", StartWithBaseUri = true, HttpMethod = "Post")]
     public async Task<long> ResolveReceiversCountAsync(IEventBus eventBus, List<MessageTaskReceiverDto> dto)
     {
         var query = new ResolveReceiversCountQuery(dto);
@@ -152,21 +145,18 @@ public class MessageTaskService : ServiceBase
         return query.Result;
     }
 
-    [RoutePattern("Execute", StartWithBaseUri = true, HttpMethod = "Post")]
     public async Task ExecuteAsync(IEventBus eventBus, Guid messageTaskId)
     {
         var query = new ExecuteMessageTaskEvent(messageTaskId);
         await eventBus.PublishAsync(query);
     }
 
-    [RoutePattern("SendOrdinaryMessage", StartWithBaseUri = true, HttpMethod = "Post")]
     public async Task SendOrdinaryMessageAsync(IEventBus eventBus, SendOrdinaryMessageTaskInputDto inputDto)
     {
         var command = new SendOrdinaryMessageTaskCommand(inputDto);
         await eventBus.PublishAsync(command);
     }
 
-    [RoutePattern("SendTemplateMessage", StartWithBaseUri = true, HttpMethod = "Post")]
     public async Task SendTemplateMessageAsync(IEventBus eventBus, SendTemplateMessageTaskInputDto inputDto)
     {
         var command = new SendTemplateMessageTaskCommand(inputDto);
