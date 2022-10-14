@@ -118,7 +118,6 @@ var app = builder.Services
     })
     .AddServices(builder, options =>
     {
-        options.GetPrefixes = new() { "Get", "Select", "Find" };
         options.MapHttpMethodsForUnmatched = new string[] { "Post" };
     });
 app.UseMiddleware<AdminSafeListMiddleware>(configuration.GetSection("WhiteListOptions").Get<WhiteListOptions>());
