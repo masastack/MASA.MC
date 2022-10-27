@@ -62,7 +62,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Masa.Mc.Infrastructure.Expo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Masa.Mc.Infrastructure.MailKit", "src\Infrastructure\Masa.Mc.Infrastructure.MailKit\Masa.Mc.Infrastructure.MailKit.csproj", "{3FDC5EC6-5B52-46E4-82D8-E9B39F017D7F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Masa.Mc.Infrastructure.Tsc", "src\Infrastructure\Masa.Mc.Infrastructure.Tsc\Masa.Mc.Infrastructure.Tsc.csproj", "{51A2EFBF-42A7-45EC-A68D-B674FD39FCF2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Masa.Mc.Infrastructure.Tsc", "src\Infrastructure\Masa.Mc.Infrastructure.Tsc\Masa.Mc.Infrastructure.Tsc.csproj", "{51A2EFBF-42A7-45EC-A68D-B674FD39FCF2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

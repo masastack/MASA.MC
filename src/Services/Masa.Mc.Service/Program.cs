@@ -54,8 +54,7 @@ var configuration = builder.Services.GetMasaConfiguration().ConfigurationApi.Get
 builder.Services.AddAuthClient(publicConfiguration.GetValue<string>("$public.AppSettings:AuthClient:Url"), redisOptions);
 builder.Services.AddMcClient(publicConfiguration.GetValue<string>("$public.AppSettings:McClient:Url"));
 builder.Services.AddSchedulerClient(publicConfiguration.GetValue<string>("$public.AppSettings:SchedulerClient:Url"));
-builder.Services.AddStackExchangeRedisCache(redisOptions)
-    .AddMultilevelCache();
+builder.Services.AddMultilevelCache(options => options.UseStackExchangeRedisCache(redisOptions));
 builder.Services.AddAliyunSms();
 builder.Services.AddMailKit();
 builder.Services.AddCsv();
@@ -65,10 +64,16 @@ builder.Services.AddSignalR();
 builder.Services.AddTransient<NotificationsHub>();
 TypeAdapterConfig.GlobalSettings.Scan(Assembly.GetExecutingAssembly(), Assembly.Load("Masa.Mc.Contracts.Admin"));
 
-
 builder.Services.AddHealthChecks()
     .AddCheck("self", () => HealthCheckResult.Healthy("A healthy result."))
     .AddDbContextCheck<McDbContext>();
+
+builder.Services.AddScoped(service =>
+{
+    var content = service.GetRequiredService<IHttpContextAccessor>();
+    AuthenticationHeaderValue.TryParse(content.HttpContext?.Request.Headers.Authorization.ToString(), out var auth);
+    return new TokenProvider { AccessToken = auth?.Parameter };
+});
 
 var app = builder.Services
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

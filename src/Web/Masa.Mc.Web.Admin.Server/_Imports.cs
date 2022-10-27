@@ -20,5 +20,5 @@ global using Microsoft.AspNetCore.Hosting.StaticWebAssets;
 global using Masa.Mc.Infrastructure.Tsc;
 global using System.Security.Cryptography.X509Certificates;
 global using Microsoft.IdentityModel.Protocols.OpenIdConnect;
-global using Masa.BuildingBlocks.StackSdks.Auth.Contracts.Provider;
+global using Masa.Contrib.Service.Caller.Authentication.OpenIdConnect;
 global using Masa.Utils.Security.Authentication.OpenIdConnect;
