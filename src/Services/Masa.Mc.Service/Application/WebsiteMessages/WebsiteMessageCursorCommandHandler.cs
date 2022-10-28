@@ -25,7 +25,19 @@ public class WebsiteMessageCursorCommandHandler
     public virtual async Task CheckAsync(CheckWebsiteMessageCursorCommand command)
     {
         var currentUserId = _userContext.GetUserId<Guid>();
-        var checkCount = await _cacheClient.HashIncrementAsync($"{CacheKeys.MESSAGE_CURSOR_CHECK_COUNT}_{currentUserId}");
+
+        if (currentUserId == default)
+        {
+            return;
+        }
+
+        var cacheKey = $"{CacheKeys.MESSAGE_CURSOR_CHECK_COUNT}_{currentUserId}";
+
+        var checkCount = await _cacheClient.HashIncrementAsync(cacheKey, 1, options =>
+        {
+            options.CacheKeyType = CacheKeyType.None;
+        });
+
         if (checkCount > 1)
         {
             return;
@@ -33,12 +45,12 @@ public class WebsiteMessageCursorCommandHandler
         try
         {
             await _domainService.CheckAsync(currentUserId);
-            await _cacheClient.RemoveAsync($"{CacheKeys.MESSAGE_CURSOR_CHECK_COUNT}_{currentUserId}");
+            await _cacheClient.RemoveAsync(cacheKey);
         }
         catch (Exception ex)
         {
             _logger.LogInformation(ex, "CheckAsync");
-            await _cacheClient.RemoveAsync($"{CacheKeys.MESSAGE_CURSOR_CHECK_COUNT}_{currentUserId}");
+            await _cacheClient.RemoveAsync(cacheKey);
         }
     }
 }

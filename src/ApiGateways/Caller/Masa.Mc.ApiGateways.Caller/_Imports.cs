@@ -36,4 +36,4 @@ global using System.Net.Http.Headers;
 global using Masa.Contrib.Service.Caller.HttpClient;
 global using Microsoft.Extensions.Logging;
 global using Masa.Contrib.Service.Caller;
-global using Masa.BuildingBlocks.StackSdks.Auth.Contracts.Provider;
+global using Masa.Contrib.Service.Caller.Authentication.OpenIdConnect;
