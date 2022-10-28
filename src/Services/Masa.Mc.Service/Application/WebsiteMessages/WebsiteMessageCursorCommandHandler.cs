@@ -1,9 +1,6 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
-using System;
-using Masa.BuildingBlocks.Caching;
-
 namespace Masa.Mc.Service.Admin.Application.WebsiteMessages;
 
 public class WebsiteMessageCursorCommandHandler
@@ -28,6 +25,11 @@ public class WebsiteMessageCursorCommandHandler
     public virtual async Task CheckAsync(CheckWebsiteMessageCursorCommand command)
     {
         var currentUserId = _userContext.GetUserId<Guid>();
+
+        if (currentUserId == default)
+        {
+            return;
+        }
 
         var cacheKey = $"{CacheKeys.MESSAGE_CURSOR_CHECK_COUNT}_{currentUserId}";
 
