@@ -33,10 +33,8 @@ public class WebsiteMessageCursorCommandHandler
 
         var cacheKey = $"{CacheKeys.MESSAGE_CURSOR_CHECK_COUNT}_{currentUserId}";
 
-        var checkCount = await _cacheClient.HashIncrementAsync(cacheKey, 1, options =>
-        {
-            options.CacheKeyType = CacheKeyType.None;
-        });
+        var checkCount = await _cacheClient.HashIncrementAsync(cacheKey);
+        await _cacheClient.KeyExpireAsync<long>(cacheKey, DateTimeOffset.Now.AddMinutes(1));
 
         if (checkCount > 1)
         {
@@ -45,12 +43,12 @@ public class WebsiteMessageCursorCommandHandler
         try
         {
             await _domainService.CheckAsync(currentUserId);
-            await _cacheClient.RemoveAsync(cacheKey);
+            await _cacheClient.RemoveAsync<long>(cacheKey);
         }
         catch (Exception ex)
         {
             _logger.LogInformation(ex, "CheckAsync");
-            await _cacheClient.RemoveAsync(cacheKey);
+            await _cacheClient.RemoveAsync<long>(cacheKey);
         }
     }
 }
