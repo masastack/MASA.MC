@@ -114,8 +114,6 @@ global using System.Dynamic;
 global using ICsvExporter = Masa.Mc.Infrastructure.ExporterAndImporter.Csv.ICsvExporter;
 global using Masa.BuildingBlocks.Ddd.Domain.Entities.Full;
 global using Masa.BuildingBlocks.Caching;
-global using Masa.Utils.Development.Dapr;
-global using Masa.Utils.Development.Dapr.AspNetCore;
 global using Dapr;
 global using Masa.Mc.Service.Admin.Domain.WebsiteMessages.Aggregates;
 global using Masa.Mc.Service.Admin.Domain.WebsiteMessages.Repositories;
