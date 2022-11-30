@@ -30,7 +30,7 @@ public class MessageRecordQueryHandler
     {
         var options = query.Input;
         var condition = await CreateFilteredPredicate(options);
-        var resultList = await _context.MessageRecordQueries.GetPaginatedListAsync(condition, new()
+        var resultList = await _context.MessageRecordQueries.Include(x => x.Channel).GetPaginatedListAsync(condition, new()
         {
             Page = options.Page,
             PageSize = options.PageSize,

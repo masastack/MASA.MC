@@ -3,7 +3,6 @@
 
 namespace Masa.Mc.Service.Admin.Domain.MessageTasks.Aggregates;
 
-//In order to support external users, the user ID of each channel is added
 public class MessageReceiverUser : Entity<Guid>
 {
     public Guid UserId { get; set; }

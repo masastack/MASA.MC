@@ -19,6 +19,8 @@ public class McQueryContext : MasaDbContext<McQueryContext>, IMcQueryContext
 
     public IQueryable<ReceiverGroupQueryModel> ReceiverGroupQueries => Set<ReceiverGroupQueryModel>().AsQueryable();
 
+    public IQueryable<WebsiteMessageQueryModel> WebsiteMessageQueries => Set<WebsiteMessageQueryModel>().AsQueryable();
+
     public McQueryContext(MasaDbContextOptions<McQueryContext> options) : base(options)
     {
     }
@@ -86,10 +88,10 @@ public class McQueryContext : MasaDbContext<McQueryContext>, IMcQueryContext
             b.Property(x => x.Variables).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
         });
 
-        //builder.Entity<WebsiteMessage>(b =>
-        //{
-        //    b.ToView(MCConsts.DbTablePrefix + "WebsiteMessages", MCConsts.DbSchema);
-        //});
+        builder.Entity<WebsiteMessageQueryModel>(b =>
+        {
+            b.ToView(MCConsts.DbTablePrefix + "WebsiteMessages", MCConsts.DbSchema);
+        });
 
         //builder.Entity<WebsiteMessageCursor>(b =>
         //{

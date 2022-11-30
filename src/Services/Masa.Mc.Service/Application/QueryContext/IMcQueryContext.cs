@@ -18,4 +18,6 @@ public interface IMcQueryContext
     public IQueryable<MessageTaskHistoryQueryModel> MessageTaskHistoryQueries { get; }
 
     public IQueryable<ReceiverGroupQueryModel> ReceiverGroupQueries { get; }
+
+    public IQueryable<WebsiteMessageQueryModel> WebsiteMessageQueries { get; }
 }

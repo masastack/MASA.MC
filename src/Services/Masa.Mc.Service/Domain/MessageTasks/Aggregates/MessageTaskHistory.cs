@@ -3,9 +3,6 @@
 
 namespace Masa.Mc.Service.Admin.Domain.MessageTasks.Aggregates;
 
-/// <summary>
-/// Subsequently, it is intended to be a single aggregation root
-/// </summary>
 public class MessageTaskHistory : FullAggregateRoot<Guid, Guid>
 {
     public Guid MessageTaskId { get; protected set; }
