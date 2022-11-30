@@ -5,34 +5,29 @@ namespace Masa.Mc.Service.Admin.Application.MessageTasks;
 
 public class MessageTaskQueryHandler
 {
-    private readonly IMessageTaskRepository _repository;
-    private readonly IMessageTemplateRepository _messageTemplateRepository;
+    private readonly IMcQueryContext _context;
     private readonly ICsvExporter _exporter;
-    private readonly MessageTaskDomainService _domainService;
     private readonly IAuthClient _authClient;
-    private readonly IReceiverGroupRepository _receiverGroupRepository;
+    private readonly ITemplateRenderer _templateRenderer;
 
-    public MessageTaskQueryHandler(IMessageTaskRepository repository
-        , IMessageTemplateRepository messageTemplateRepository
+    public MessageTaskQueryHandler(IMcQueryContext context
         , ICsvExporter exporter
-        , MessageTaskDomainService domainService
         , IAuthClient authClient
-        , IReceiverGroupRepository receiverGroupRepository)
+        , ITemplateRenderer templateRenderer)
     {
-        _repository = repository;
-        _messageTemplateRepository = messageTemplateRepository;
+        _context = context;
         _exporter = exporter;
-        _domainService = domainService;
         _authClient = authClient;
-        _receiverGroupRepository = receiverGroupRepository;
+        _templateRenderer = templateRenderer;
     }
 
     [EventHandler]
     public async Task GetAsync(GetMessageTaskQuery query)
     {
-        var entity = await _repository.FindAsync(x => x.Id == query.MessageTaskId);
-        if (entity == null)
-            throw new UserFriendlyException("messageTask not found");
+        var entity = await _context.MessageTaskQueries.Include(x => x.Channel).FirstOrDefaultAsync(x => x.Id == query.MessageTaskId);
+
+        Check.NotNull(entity, "MessageTask not found");
+
         query.Result = entity.Adapt<MessageTaskDto>();
     }
 
@@ -40,15 +35,19 @@ public class MessageTaskQueryHandler
     public async Task GetListAsync(GetMessageTaskListQuery query)
     {
         var options = query.Input;
-        var queryable = await CreateFilteredQueryAsync(options);
-        var totalCount = await queryable.CountAsync();
-        var totalPages = (int)Math.Ceiling(totalCount / (decimal)options.PageSize);
-        if (string.IsNullOrEmpty(options.Sorting)) options.Sorting = "modificationTime desc";
-        queryable = queryable.OrderBy(options.Sorting).PageBy(options.Page, options.PageSize);
-        var entities = await queryable.ToListAsync();
-        var entityDtos = entities.Adapt<List<MessageTaskDto>>();
-        await FillMessageTaskListDtos(entityDtos);
-        var result = new PaginatedListDto<MessageTaskDto>(totalCount, totalPages, entityDtos);
+        var condition = await CreateFilteredPredicate(options);
+        var resultList = await _context.MessageTaskQueries.Include(x => x.Channel).GetPaginatedListAsync(condition, new()
+        {
+            Page = options.Page,
+            PageSize = options.PageSize,
+            Sorting = new Dictionary<string, bool>
+            {
+                [nameof(MessageTaskQueryModel.ModificationTime)] = true
+            }
+        });
+        var dtos = resultList.Result.Adapt<List<MessageTaskDto>>();
+        await FillMessageTaskListDtos(dtos);
+        var result = new PaginatedListDto<MessageTaskDto>(resultList.Total, resultList.TotalPages, dtos);
         query.Result = result;
     }
 
@@ -82,7 +81,7 @@ public class MessageTaskQueryHandler
     private async Task<long> ResolveReceiverGroupCount(Guid receiverGroupId)
     {
         long receiverGroupCount = 0;
-        var receiverGroup = await _receiverGroupRepository.FindAsync(x => x.Id == receiverGroupId);
+        var receiverGroup = await _context.ReceiverGroupQueries.Include(x=>x.Items).FirstOrDefaultAsync(x => x.Id == receiverGroupId);
         if (receiverGroup == null)
         {
             return receiverGroupCount;
@@ -115,9 +114,9 @@ public class MessageTaskQueryHandler
         return count;
     }
 
-    private async Task<Expression<Func<MessageTask, bool>>> CreateFilteredPredicate(GetMessageTaskInputDto inputDto)
+    private async Task<Expression<Func<MessageTaskQueryModel, bool>>> CreateFilteredPredicate(GetMessageTaskInputDto inputDto)
     {
-        Expression<Func<MessageTask, bool>> condition = x => true;
+        Expression<Func<MessageTaskQueryModel, bool>> condition = x => true;
         condition = condition.And(!string.IsNullOrEmpty(inputDto.Filter), x => x.DisplayName.Contains(inputDto.Filter));
         condition = condition.And(inputDto.EntityType.HasValue, x => x.EntityType == inputDto.EntityType);
         condition = condition.And(inputDto.ChannelId.HasValue, x => x.ChannelId == inputDto.ChannelId);
@@ -135,20 +134,13 @@ public class MessageTaskQueryHandler
             condition = condition.And(inputDto.StartTime.HasValue, x => x.SendTime >= inputDto.StartTime);
             condition = condition.And(inputDto.EndTime.HasValue, x => x.SendTime <= inputDto.EndTime);
         }
-        return await Task.FromResult(condition); ;
-    }
-
-    private async Task<IQueryable<MessageTask>> CreateFilteredQueryAsync(GetMessageTaskInputDto inputDto)
-    {
-        var query = await _repository.WithDetailsAsync()!;
-        var condition = await CreateFilteredPredicate(inputDto);
-        return query.Where(condition);
+        return await Task.FromResult(condition);
     }
 
     [EventHandler]
     public async Task GenerateImportTemplateAsync(GenerateReceiverImportTemplateQuery query)
     {
-        var template = await _messageTemplateRepository.FindAsync(x => x.Id == query.MessageTemplateId);
+        var template = await _context.MessageTemplateQueries.Include(x=>x.Items).FirstOrDefaultAsync(x => x.Id == query.MessageTemplateId);
         var record = new ExpandoObject();
         var properties = GetReceiverImportDtoType(query.ChannelType).GetProperties();
         foreach (var prop in properties)
@@ -180,8 +172,8 @@ public class MessageTaskQueryHandler
         {
             if (item.EntityId != default)
             {
-                var messageData = await _domainService.GetMessageDataAsync(item.EntityType, item.EntityId, item.Variables);
-                item.Content = HtmlHelper.CutString(messageData.GetDataValue<string>(nameof(MessageTemplate.Content)), 500);
+                var messageContent = await GetMessageContentAsync(item.EntityType, item.EntityId);
+                item.Content = HtmlHelper.CutString(messageContent, 500);
             }
 
             item.ModifierName = userInfos.FirstOrDefault(x => x.Id == item.Modifier)?.DisplayName ?? string.Empty;
@@ -201,5 +193,22 @@ public class MessageTaskQueryHandler
             default:
                 throw new UserFriendlyException("Unknown channel type");
         }
+    }
+
+    public async Task<string> GetMessageContentAsync(MessageEntityTypes entityType, Guid entityId)
+    {
+        if (entityType == MessageEntityTypes.Ordinary)
+        {
+            var messageInfo = await _context.MessageInfoQueries.FirstOrDefaultAsync(x => x.Id == entityId);
+            return messageInfo?.Content ?? string.Empty;
+        }
+
+        if (entityType == MessageEntityTypes.Template)
+        {
+            var messageTemplate = await _context.MessageTemplateQueries.FirstOrDefaultAsync(x => x.Id == entityId);
+            return messageTemplate?.Content ?? string.Empty;
+        }
+
+        return string.Empty;
     }
 }

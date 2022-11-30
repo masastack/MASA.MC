@@ -1,26 +1,29 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
+using Masa.Mc.Infrastructure.EntityFrameworkCore.EntityFrameworkCore.Extensions;
+
 namespace Masa.Mc.Service.Admin.Application.ReceiverGroups;
 
 public class ReceiverGroupQueryHandler
 {
-    private readonly IReceiverGroupRepository _repository;
+    private readonly IMcQueryContext _context;
     private readonly IAuthClient _authClient;
 
-    public ReceiverGroupQueryHandler(IReceiverGroupRepository repository
+    public ReceiverGroupQueryHandler(IMcQueryContext context
         , IAuthClient authClient)
     {
-        _repository = repository;
+        _context = context;
         _authClient = authClient;
     }
 
     [EventHandler]
     public async Task GetAsync(GetReceiverGroupQuery query)
     {
-        var entity = await _repository.FindAsync(x => x.Id == query.ReceiverGroupId);
-        if (entity == null)
-            throw new UserFriendlyException("receiverGroup not found");
+        var entity = await _context.ReceiverGroupQueries.Include(x=>x.Items).FirstOrDefaultAsync(x => x.Id == query.ReceiverGroupId);
+
+        Check.NotNull(entity, "ReceiverGroup not found");
+
         query.Result = entity.Adapt<ReceiverGroupDto>();
     }
 
@@ -28,30 +31,27 @@ public class ReceiverGroupQueryHandler
     public async Task GetListAsync(GetReceiverGroupListQuery query)
     {
         var options = query.Input;
-        var queryable = await CreateFilteredQueryAsync(options);
-        var totalCount = await queryable.CountAsync();
-        var totalPages = (int)Math.Ceiling(totalCount / (decimal)options.PageSize);
-        if (string.IsNullOrEmpty(options.Sorting)) options.Sorting = "modificationTime desc";
-        queryable = queryable.OrderBy(options.Sorting).PageBy(options.Page, options.PageSize);
-        var entities = await queryable.ToListAsync();
-        var entityDtos = entities.Adapt<List<ReceiverGroupDto>>();
-        await FillReceiverGroupDtos(entityDtos);
-        var result = new PaginatedListDto<ReceiverGroupDto>(totalCount, totalPages, entityDtos);
+        var condition = await CreateFilteredPredicate(options);
+        var resultList = await _context.ReceiverGroupQueries.GetPaginatedListAsync(condition, new()
+        {
+            Page = options.Page,
+            PageSize = options.PageSize,
+            Sorting = new Dictionary<string, bool>
+            {
+                [nameof(ReceiverGroupQueryModel.ModificationTime)] = true
+            }
+        });
+        var dtos = resultList.Result.Adapt<List<ReceiverGroupDto>>();
+        await FillReceiverGroupDtos(dtos);
+        var result = new PaginatedListDto<ReceiverGroupDto>(resultList.Total, resultList.TotalPages, dtos);
         query.Result = result;
     }
 
-    private async Task<Expression<Func<ReceiverGroup, bool>>> CreateFilteredPredicate(GetReceiverGroupInputDto inputDto)
+    private async Task<Expression<Func<ReceiverGroupQueryModel, bool>>> CreateFilteredPredicate(GetReceiverGroupInputDto inputDto)
     {
-        Expression<Func<ReceiverGroup, bool>> condition = channel => true;
+        Expression<Func<ReceiverGroupQueryModel, bool>> condition = channel => true;
         condition = condition.And(!string.IsNullOrEmpty(inputDto.Filter), r => r.DisplayName.Contains(inputDto.Filter));
         return await Task.FromResult(condition); ;
-    }
-
-    private async Task<IQueryable<ReceiverGroup>> CreateFilteredQueryAsync(GetReceiverGroupInputDto inputDto)
-    {
-        var query = await _repository.WithDetailsAsync()!;
-        var condition = await CreateFilteredPredicate(inputDto);
-        return query.Where(condition);
     }
 
     private async Task FillReceiverGroupDtos(List<ReceiverGroupDto> dtos)

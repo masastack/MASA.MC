@@ -108,6 +108,17 @@ var app = builder.Services
     {
         options.RegisterValidatorsFromAssemblyContaining<Program>();
     })
+    .AddMasaDbContext<McDbContext>(builder =>
+    {
+        builder.UseSqlServer();
+        builder.UseFilter(options => options.EnableSoftDelete = true);
+    })
+    .AddMasaDbContext<McQueryContext>(builder =>
+    {
+        builder.UseSqlServer();
+        builder.UseFilter(options => options.EnableSoftDelete = true);
+    })
+    .AddScoped<IMcQueryContext, McQueryContext>()
     .AddDomainEventBus(dispatcherOptions =>
     {
         dispatcherOptions
@@ -116,9 +127,7 @@ var app = builder.Services
         {
             eventBusBuilder.UseMiddleware(typeof(ValidatorMiddleware<>));
         })
-        .UseIsolationUoW<McDbContext>(
-            isolationBuilder => isolationBuilder.UseMultiEnvironment("env_key"),
-            dbOptions => dbOptions.UseSqlServer().UseFilter())
+        .UseIsolationUoW<McDbContext>(isolationBuilder => isolationBuilder.UseMultiEnvironment("env_key"), null)
         .UseRepository<McDbContext>();
     })
     .AddServices(builder, options =>

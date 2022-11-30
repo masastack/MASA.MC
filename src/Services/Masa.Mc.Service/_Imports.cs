@@ -179,3 +179,6 @@ global using HealthChecks.UI.Client;
 global using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 global using Masa.Contrib.Service.Caller.Authentication.OpenIdConnect;
 global using System.Net.Http.Headers;
+global using Masa.Mc.Service.Admin.Application.QueryModels;
+global using Masa.Mc.Service.Admin.Application.QueryContext;
+global using Masa.Mc.Infrastructure.EntityFrameworkCore.EntityFrameworkCore.Extensions;
