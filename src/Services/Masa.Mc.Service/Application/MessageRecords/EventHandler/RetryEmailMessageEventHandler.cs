@@ -63,9 +63,9 @@ public class RetryEmailMessageEventHandler
             try
             {
                 await _emailSender.SendAsync(
-                        messageRecord.GetDataValue<string>(nameof(MessageReceiverUser.Email)),
-                        messageData.GetDataValue<string>(nameof(MessageTemplate.Title)),
-                        messageData.GetDataValue<string>(nameof(MessageTemplate.Content))
+                        messageRecord.GetDataValue<string>(nameof(Receiver.Email)),
+                        messageData.GetDataValue<string>(nameof(MessageContent.Title)),
+                        messageData.GetDataValue<string>(nameof(MessageContent.Content))
                     );
                 messageRecord.SetResult(true, string.Empty);
             }

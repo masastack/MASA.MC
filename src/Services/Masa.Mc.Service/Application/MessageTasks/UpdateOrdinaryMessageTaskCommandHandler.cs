@@ -25,7 +25,7 @@ public class UpdateOrdinaryMessageTaskCommandHandler
             throw new UserFriendlyException("messageInfo not found");
         dto.MessageInfo.Adapt(messageInfo);
         await _messageInfoRepository.UpdateAsync(messageInfo);
-        updateCommand.MessageTask.DisplayName = messageInfo.Title;
+        updateCommand.MessageTask.DisplayName = messageInfo.MessageContent.Title;
     }
 
     [EventHandler(2)]

@@ -8,8 +8,8 @@ public class ReceiverGroupRegister : IRegister
     public void Register(TypeAdapterConfig config)
     {
         config.ForType<ReceiverGroup, ReceiverGroupDto>().MapToConstructor(true);
-        config.ForType<ReceiverGroupUserDto, ReceiverGroupUser>().MapToConstructor(true);
         config.ForType<ReceiverGroupUpsertDto, ReceiverGroup>().MapToConstructor(true).Ignore(x => x.Items);
-        config.ForType<ReceiverGroupItemDto, ReceiverGroupItem>().MapToConstructor(true);
+        config.ForType<ReceiverGroupItemDto, ReceiverGroupItem>().MapToConstructor(true)
+            .Map(dest => dest.Receiver, src => new Receiver(src.SubjectId, src.DisplayName, src.Avatar, src.PhoneNumber, src.Email));
     }
 }

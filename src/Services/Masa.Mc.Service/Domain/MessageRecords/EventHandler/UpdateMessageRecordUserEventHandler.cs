@@ -38,34 +38,22 @@ public class UpdateMessageRecordUserEventHandler
             return;
         }
 
-        var userInfo = ResolveUserInfo(user);
-        messageRecord.SetUserInfo(user.Id, userInfo.DisplayName, userInfo.Account, userInfo.Email, userInfo.PhoneNumber);
+        messageRecord.SetUserId(user.Id);
         await _repository.UpdateAsync(messageRecord);
-    }
-
-    private MessageReceiverUser ResolveUserInfo(UserModel user)
-    {
-        return new MessageReceiverUser
-        {
-            DisplayName = user.DisplayName ?? string.Empty,
-            Account = user.Account,
-            Email = user.Email ?? string.Empty,
-            PhoneNumber = user.PhoneNumber ?? string.Empty
-        };
     }
 
     private async Task<UserModel?> GetMessageRecordsUser(MessageRecord messageRecords)
     {
         try
         {
-            if (messageRecords.Channel.Type == ChannelTypes.Sms)
+            if (messageRecords.ChannelUser.ChannelType == ChannelTypes.Sms)
             {
-                var phoneNumber = messageRecords.GetDataValue<string>(nameof(MessageReceiverUser.PhoneNumber));
+                var phoneNumber = messageRecords.GetDataValue<string>(nameof(Receiver.PhoneNumber));
                 return await _authClient.UserService.FindByPhoneNumberAsync(phoneNumber);
             }
-            else if (messageRecords.Channel.Type == ChannelTypes.Email)
+            else if (messageRecords.ChannelUser.ChannelType == ChannelTypes.Email)
             {
-                var email = messageRecords.GetDataValue<string>(nameof(MessageReceiverUser.Email));
+                var email = messageRecords.GetDataValue<string>(nameof(Receiver.Email));
                 return await _authClient.UserService.FindByEmailAsync(email);
             }
             else
@@ -83,16 +71,16 @@ public class UpdateMessageRecordUserEventHandler
     private async Task<UserModel?> CreateExternalUserAsync(MessageRecord messageRecords)
     {
         var addUserModel = new AddUserModel();
-        if (messageRecords.Channel.Type == ChannelTypes.Sms)
+        if (messageRecords.ChannelUser.ChannelType == ChannelTypes.Sms)
         {
-            var phoneNumber = messageRecords.GetDataValue<string>(nameof(MessageReceiverUser.PhoneNumber));
+            var phoneNumber = messageRecords.GetDataValue<string>(nameof(Receiver.PhoneNumber));
             addUserModel.Account = phoneNumber;
             addUserModel.DisplayName = phoneNumber;
             addUserModel.Password = phoneNumber;
         }
-        else if (messageRecords.Channel.Type == ChannelTypes.Email)
+        else if (messageRecords.ChannelUser.ChannelType == ChannelTypes.Email)
         {
-            var email = messageRecords.GetDataValue<string>(nameof(MessageReceiverUser.Email));
+            var email = messageRecords.GetDataValue<string>(nameof(Receiver.Email));
             addUserModel.Account = email;
             addUserModel.DisplayName = email;
             addUserModel.Email = email;

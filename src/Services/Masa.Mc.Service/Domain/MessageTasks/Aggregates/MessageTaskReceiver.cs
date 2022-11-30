@@ -3,21 +3,24 @@
 
 namespace Masa.Mc.Service.Admin.Domain.MessageTasks.Aggregates;
 
-public class MessageTaskReceiver
+public class MessageTaskReceiver : ValueObject
 {
-    public Guid SubjectId { get; set; }
-
-    public string DisplayName { get; set; } = string.Empty;
-
-    public string Account { get; set; } = string.Empty;
-
-    public string Avatar { get; set; } = string.Empty;
-
-    public string PhoneNumber { get; set; } = string.Empty;
-
-    public string Email { get; set; } = string.Empty;
+    public Receiver Receiver { get; set; }
 
     public MessageTaskReceiverTypes Type { get; set; }
 
     public ExtraPropertyDictionary Variables { get; set; } = new();
+
+    protected override IEnumerable<object> GetEqualityValues()
+    {
+        yield return Receiver;
+        yield return Type;
+    }
+
+    public MessageTaskReceiver(Receiver receiver, MessageTaskReceiverTypes type, ExtraPropertyDictionary variables)
+    {
+        Receiver = receiver;
+        Type = type;
+        Variables = variables;
+    }
 }

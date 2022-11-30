@@ -3,19 +3,22 @@
 
 namespace Masa.Mc.Service.Admin.Domain.MessageTasks.Aggregates;
 
-public class MessageReceiverUser : Entity<Guid>
+public class MessageReceiverUser : ValueObject
 {
-    public Guid UserId { get; set; }
-
-    public string DisplayName { get; set; } = string.Empty;
-
-    public string Account { get; set; } = string.Empty;
-
-    public string PhoneNumber { get; set; } = string.Empty;
-
-    public string Email { get; set; } = string.Empty;
+    public Receiver Receiver { get; protected set; } = default!;
 
     public ExtraPropertyDictionary Variables { get; set; } = new();
 
-    public bool IsDeleted { get; set; }
+    protected override IEnumerable<object> GetEqualityValues()
+    {
+        yield return Receiver;
+    }
+
+    private MessageReceiverUser() { }
+
+    public MessageReceiverUser(Receiver receiver, ExtraPropertyDictionary variables)
+    {
+        Receiver = receiver;
+        Variables = variables;
+    }
 }

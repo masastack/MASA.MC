@@ -39,14 +39,14 @@ public class SendWebsiteMessageEventHandler
             foreach (var item in taskHistory.ReceiverUsers)
             {
                 TemplateRenderer(eto.MessageData, item.Variables);
-                var messageRecord = new MessageRecord(item.UserId, taskHistory.MessageTask.ChannelId.Value, taskHistory.MessageTaskId, taskHistory.Id, item.Variables, eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.Title)), taskHistory.SendTime);
+                var messageRecord = new MessageRecord(item.Receiver.SubjectId, taskHistory.MessageTask.ChannelId.Value, taskHistory.MessageTaskId, taskHistory.Id, item.Variables, eto.MessageData.GetDataValue<string>(nameof(MessageContent.Title)), taskHistory.SendTime);
                 messageRecord.SetMessageEntity(taskHistory.MessageTask.EntityType, taskHistory.MessageTask.EntityId);
-                messageRecord.SetUserInfo(item.UserId, item.DisplayName, item.Account, item.Email, item.PhoneNumber);
+                messageRecord.SetChannelUser(ChannelTypes.WebsiteMessage,item.Receiver.SubjectId.ToString());
 
                 if (eto.MessageData.MessageType == MessageEntityTypes.Template)
                 {
                     var perDayLimit = eto.MessageData.GetDataValue<long>(nameof(MessageTemplate.PerDayLimit));
-                    if (!await _messageTemplateDomainService.CheckSendUpperLimitAsync(messageRecord.MessageEntityId, perDayLimit, item.UserId))
+                    if (!await _messageTemplateDomainService.CheckSendUpperLimitAsync(messageRecord.MessageEntityId, perDayLimit, item.Receiver.SubjectId))
                     {
                         messageRecord.SetResult(false, "The maximum number of times to send per day has been reached");
                         await _messageRecordRepository.AddAsync(messageRecord);
@@ -56,12 +56,12 @@ public class SendWebsiteMessageEventHandler
 
                 messageRecord.SetResult(true, string.Empty);
 
-                var linkUrl = eto.MessageData.GetDataValue<bool>(nameof(MessageTemplate.IsJump)) ? eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.JumpUrl)) : string.Empty;
-                var websiteMessage = new WebsiteMessage(messageRecord.ChannelId, item.UserId, eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.Title)), eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.Content)), linkUrl, DateTimeOffset.Now);
+                var linkUrl = eto.MessageData.GetDataValue<bool>(nameof(MessageContent.IsJump)) ? eto.MessageData.GetDataValue<string>(nameof(MessageContent.JumpUrl)) : string.Empty;
+                var websiteMessage = new WebsiteMessage(messageRecord.ChannelId, item.Receiver.SubjectId, eto.MessageData.GetDataValue<string>(nameof(MessageContent.Title)), eto.MessageData.GetDataValue<string>(nameof(MessageContent.Content)), linkUrl, DateTimeOffset.Now);
                 await _messageRecordRepository.AddAsync(messageRecord);
                 await _websiteMessageRepository.AddAsync(websiteMessage);
 
-                userIds.Add(item.UserId.ToString());
+                userIds.Add(item.Receiver.SubjectId.ToString());
                 okCount++;
             }
         }
@@ -82,7 +82,7 @@ public class SendWebsiteMessageEventHandler
 
     private async void TemplateRenderer(MessageData messageData, ExtraPropertyDictionary Variables)
     {
-        messageData.SetDataValue(nameof(MessageTemplate.Title), await _templateRenderer.RenderAsync(messageData.GetDataValue<string>(nameof(MessageTemplate.Title)), Variables));
-        messageData.SetDataValue(nameof(MessageTemplate.Content), await _templateRenderer.RenderAsync(messageData.GetDataValue<string>(nameof(MessageTemplate.Content)), Variables));
+        messageData.SetDataValue(nameof(MessageContent.Title), await _templateRenderer.RenderAsync(messageData.GetDataValue<string>(nameof(MessageContent.Title)), Variables));
+        messageData.SetDataValue(nameof(MessageContent.Content), await _templateRenderer.RenderAsync(messageData.GetDataValue<string>(nameof(MessageContent.Content)), Variables));
     }
 }

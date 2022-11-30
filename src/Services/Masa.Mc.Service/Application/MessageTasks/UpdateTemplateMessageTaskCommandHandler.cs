@@ -25,7 +25,7 @@ public class UpdateTemplateMessageTaskCommandHandler
 
         if (messageTemplate != null)
         {
-            updateCommand.MessageTask.DisplayName = string.IsNullOrEmpty(messageTemplate.Title) ? messageTemplate.DisplayName : messageTemplate.Title;
+            updateCommand.MessageTask.DisplayName = string.IsNullOrEmpty(messageTemplate.MessageContent.Title) ? messageTemplate.DisplayName : messageTemplate.MessageContent.Title;
         }
     }
 

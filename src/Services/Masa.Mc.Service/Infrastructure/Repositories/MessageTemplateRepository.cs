@@ -28,22 +28,6 @@ public class MessageTemplateRepository : Repository<McDbContext, MessageTemplate
             : await Context.Set<MessageTemplate>().Where(predicate).FirstOrDefaultAsync(cancellationToken);
     }
 
-    public async Task<IQueryable<MessageTemplateWithDetail>> GetWithDetailQueryAsync()
-    {
-        var templateSet = await WithDetailsAsync();
-        var channelSet = Context.Set<Channel>();
-        var query = from messageTemplate in templateSet
-                    join channel in channelSet
-                    on messageTemplate.ChannelId equals channel.Id into channelJoined
-                    from channel in channelJoined.DefaultIfEmpty()
-                    select new MessageTemplateWithDetail
-                    {
-                        MessageTemplate = messageTemplate,
-                        Channel = channel
-                    };
-        return query;
-    }
-
     public async Task<bool> AnyAsync(Expression<Func<MessageTemplate, bool>> predicate)
     {
         return await Context.Set<MessageTemplate>().AnyAsync(predicate);

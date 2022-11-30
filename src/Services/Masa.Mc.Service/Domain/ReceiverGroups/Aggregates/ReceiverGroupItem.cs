@@ -7,9 +7,11 @@ public class ReceiverGroupItem : Entity<Guid>
 {
     public Guid GroupId { get; protected set; }
 
-    public Receiver Receiver { get; protected set; }
+    public Receiver Receiver { get; protected set; } = default!;
 
     public ReceiverGroupItemTypes Type { get; protected set; }
+
+    private ReceiverGroupItem() { }
 
     public ReceiverGroupItem(Guid groupId, ReceiverGroupItemTypes type, Receiver receiver)
     {

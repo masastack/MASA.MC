@@ -35,7 +35,7 @@ public class MessageTask : FullAggregateRoot<Guid, Guid>
 
     public List<MessageReceiverUser> ReceiverUsers { get; protected set; } = new();
 
-    public MessageTaskSendingRule SendRules { get; protected set; } = new();
+    public MessageTaskSendingRule SendRules { get; protected set; } = default!;
 
     public ExtraPropertyDictionary Variables { get; protected set; } = new();
 

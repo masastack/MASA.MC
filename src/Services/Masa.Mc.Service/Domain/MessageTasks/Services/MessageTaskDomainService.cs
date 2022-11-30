@@ -75,9 +75,9 @@ public class MessageTaskDomainService : DomainService
         }
         if (variables != null)
         {
-            messageData.SetDataValue(nameof(MessageTemplate.Title), await _templateRenderer.RenderAsync(messageData.GetDataValue<string>(nameof(MessageTemplate.Title)), variables));
-            messageData.SetDataValue(nameof(MessageTemplate.Content), await _templateRenderer.RenderAsync(messageData.GetDataValue<string>(nameof(MessageTemplate.Content)), variables));
-            messageData.SetDataValue(nameof(MessageTemplate.JumpUrl), await _templateRenderer.RenderAsync(messageData.GetDataValue<string>(nameof(MessageTemplate.JumpUrl)), variables));
+            messageData.SetDataValue(nameof(MessageContent.Title), await _templateRenderer.RenderAsync(messageData.GetDataValue<string>(nameof(MessageContent.Title)), variables));
+            messageData.SetDataValue(nameof(MessageContent.Content), await _templateRenderer.RenderAsync(messageData.GetDataValue<string>(nameof(MessageContent.Content)), variables));
+            messageData.SetDataValue(nameof(MessageContent.JumpUrl), await _templateRenderer.RenderAsync(messageData.GetDataValue<string>(nameof(MessageContent.JumpUrl)), variables));
         }
         return messageData;
     }

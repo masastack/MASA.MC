@@ -12,124 +12,144 @@ public static class McDbContextModelBuilderExtensions
         {
             b.ToTable(MCConsts.DbTablePrefix + "Channels", MCConsts.DbSchema);
             b.Property(x => x.Color).HasMaxLength(128).HasColumnName(nameof(Channel.Color));
-            b.Property(c => c.Code).IsRequired().HasMaxLength(64).HasColumnName(nameof(Channel.Code));
-            b.Property(c => c.DisplayName).IsRequired().HasMaxLength(128).HasColumnName(nameof(Channel.DisplayName));
-            b.Property(c => c.Type).HasColumnName(nameof(Channel.Type));
-            b.Property(c => c.Description).HasMaxLength(512);
-            b.Property(c => c.ExtraProperties).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
-            b.HasIndex(c => c.Code);
-            b.HasIndex(c => c.Type);
+            b.Property(x => x.Code).IsRequired().HasMaxLength(64).HasColumnName(nameof(Channel.Code));
+            b.Property(x => x.DisplayName).IsRequired().HasMaxLength(128).HasColumnName(nameof(Channel.DisplayName));
+            b.Property(x => x.Type).HasColumnName(nameof(Channel.Type));
+            b.Property(x => x.Description).HasMaxLength(512);
+            b.Property(x => x.ExtraProperties).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
+            b.HasIndex(x => x.Code);
+            b.HasIndex(x => x.Type);
         });
 
         builder.Entity<MessageTemplate>(b =>
         {
             b.ToTable(MCConsts.DbTablePrefix + "MessageTemplates", MCConsts.DbSchema);
-            b.Property(m => m.DisplayName).IsRequired().HasMaxLength(128);
-            b.Property(c => c.Code).IsRequired().HasMaxLength(64);
-            b.Property(m => m.TemplateId).IsRequired().HasMaxLength(128);
-            b.Property(m => m.JumpUrl).HasMaxLength(256);
-            b.Property(m => m.Sign).HasMaxLength(128);
-            b.HasMany(m => m.Items).WithOne().HasForeignKey(m => m.MessageTemplateId).IsRequired();
-            b.HasIndex(m => m.ChannelId);
-            b.HasIndex(c => c.Code);
+            b.Property(x => x.DisplayName).IsRequired().HasMaxLength(128);
+            b.Property(x => x.Code).IsRequired().HasMaxLength(64);
+            b.Property(x => x.TemplateId).IsRequired().HasMaxLength(128);
+            b.Property(x => x.Sign).HasMaxLength(128);
+            b.HasMany(x => x.Items).WithOne().HasForeignKey(x => x.MessageTemplateId).IsRequired();
+            b.HasIndex(x => x.ChannelId);
+            b.HasIndex(x => x.Code);
+            b.OwnsOne(x => x.MessageContent, b =>
+            {
+                b.Property(x => x.Title).HasMaxLength(128).HasColumnName("Title");
+                b.Property(x => x.Content).HasColumnName("Content");
+                b.Property(x => x.Markdown).HasColumnName("Markdown");
+                b.Property(x => x.IsJump).HasMaxLength(128).HasColumnName("IsJump");
+                b.Property(x => x.JumpUrl).HasMaxLength(256).HasColumnName("JumpUrl");
+            });
         });
 
         builder.Entity<MessageTemplateItem>(b =>
         {
             b.ToTable(MCConsts.DbTablePrefix + "MessageTemplateItems", MCConsts.DbSchema);
-            b.Property(m => m.Code).IsRequired().HasMaxLength(64);
-            b.Property(m => m.DisplayText).IsRequired().HasMaxLength(128);
-            b.Property(m => m.Description).HasMaxLength(512);
-            b.HasIndex(m => new { m.Code, m.MessageTemplateId });
+            b.Property(x => x.Code).IsRequired().HasMaxLength(64);
+            b.Property(x => x.DisplayText).IsRequired().HasMaxLength(128);
+            b.Property(x => x.Description).HasMaxLength(512);
+            b.HasIndex(x => new { x.Code, x.MessageTemplateId });
         });
 
         builder.Entity<SmsTemplate>(b =>
         {
             b.ToTable(MCConsts.DbTablePrefix + "SmsTemplates", MCConsts.DbSchema);
-            b.Property(s => s.TemplateName).IsRequired().HasMaxLength(128);
-            b.Property(s => s.TemplateCode).IsRequired().HasMaxLength(128);
-            b.HasIndex(s => s.ChannelId);
+            b.Property(x => x.TemplateName).IsRequired().HasMaxLength(128);
+            b.Property(x => x.TemplateCode).IsRequired().HasMaxLength(128);
+            b.HasIndex(x => x.ChannelId);
         });
 
         builder.Entity<ReceiverGroup>(b =>
         {
             b.ToTable(MCConsts.DbTablePrefix + "ReceiverGroups", MCConsts.DbSchema);
-            b.Property(r => r.DisplayName).IsRequired().HasMaxLength(128);
-            b.HasMany(r => r.Users).WithOne().HasForeignKey(r => r.GroupId).IsRequired();
-            b.HasMany(r => r.Items).WithOne().HasForeignKey(r => r.GroupId).IsRequired();
-        });
-
-        builder.Entity<ReceiverGroupUser>(b =>
-        {
-            b.ToTable(MCConsts.DbTablePrefix + "ReceiverGroupUsers", MCConsts.DbSchema);
-            b.HasIndex(r => new { r.GroupId, r.UserId });
-        });
-
-        builder.Entity<ReceiverGroupItem>(b =>
-        {
-            b.ToTable(MCConsts.DbTablePrefix + "ReceiverGroupItems", MCConsts.DbSchema);
-            b.Property(r => r.DisplayName).IsRequired().HasMaxLength(128);
-            b.Property(r => r.PhoneNumber).HasMaxLength(128);
-            b.Property(r => r.Email).HasMaxLength(128);
+            b.Property(x => x.DisplayName).IsRequired().HasMaxLength(128);
+            b.OwnsMany(x => x.Items, b =>
+            {
+                b.ToTable(MCConsts.DbTablePrefix + "ReceiverGroupItems", MCConsts.DbSchema);
+                b.WithOwner().HasForeignKey(x=>x.GroupId);
+                b.OwnsOne(x => x.Receiver, b =>
+                {
+                    b.Property(x => x.SubjectId).HasColumnName("SubjectId");
+                    b.Property(x => x.DisplayName).IsRequired().HasMaxLength(128).HasColumnName("DisplayName");
+                    b.Property(x => x.Avatar).HasMaxLength(128).HasColumnName("Avatar");
+                    b.Property(x => x.PhoneNumber).HasMaxLength(128).HasColumnName("PhoneNumber");
+                    b.Property(x => x.Email).HasMaxLength(128).HasColumnName("Email");
+                });
+            });
         });
 
         builder.Entity<MessageTask>(b =>
         {
             b.ToTable(MCConsts.DbTablePrefix + "MessageTasks", MCConsts.DbSchema);
-            b.Property(m => m.DisplayName).IsRequired().HasMaxLength(128);
-            b.Property(m => m.Sign).HasMaxLength(128);
-            b.Property(m => m.Receivers).HasConversion(new ReceiversValueConverter()).Metadata.SetValueComparer(new ReceiversValueComparer());
-            b.Property(m => m.SendRules).HasConversion(new JsonValueConverter<MessageTaskSendingRule>());
-            b.Property(m => m.Variables).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
+            b.Property(x => x.DisplayName).IsRequired().HasMaxLength(128);
+            b.Property(x => x.Sign).HasMaxLength(128);
+            b.Property(x => x.Receivers).HasConversion(new ReceiversValueConverter()).Metadata.SetValueComparer(new ReceiversValueComparer());
+            b.Property(x => x.SendRules).HasConversion(new JsonValueConverter<MessageTaskSendingRule>());
+            b.Property(x => x.Variables).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
             b.Property(x => x.ReceiverUsers).HasConversion(new JsonValueConverter<List<MessageReceiverUser>>());
         });
 
         builder.Entity<MessageTaskHistory>(b =>
         {
             b.ToTable(MCConsts.DbTablePrefix + "MessageTaskHistorys", MCConsts.DbSchema);
-            b.Property(m => m.TaskHistoryNo).HasMaxLength(128);
+            b.Property(x => x.TaskHistoryNo).HasMaxLength(128);
         });
 
         builder.Entity<MessageInfo>(b =>
         {
             b.ToTable(MCConsts.DbTablePrefix + "MessageInfos", MCConsts.DbSchema);
-            b.Property(m => m.Title).IsRequired().HasMaxLength(128);
-            b.Property(m => m.JumpUrl).HasMaxLength(256);
+            b.OwnsOne(x => x.MessageContent, b =>
+            {
+                b.Property(x => x.Title).HasMaxLength(128).HasColumnName("Title");
+                b.Property(x => x.Content).HasColumnName("Content");
+                b.Property(x => x.Markdown).HasColumnName("Markdown");
+                b.Property(x => x.IsJump).HasMaxLength(128).HasColumnName("IsJump");
+                b.Property(x => x.JumpUrl).HasMaxLength(256).HasColumnName("JumpUrl");
+            });
         });
 
         builder.Entity<MessageRecord>(b =>
         {
             b.ToTable(MCConsts.DbTablePrefix + "MessageRecords", MCConsts.DbSchema);
-            b.Property(m => m.DisplayName).IsRequired().HasMaxLength(128);
-            b.Property(m => m.ExtraProperties).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
-            b.Property(m => m.Variables).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
-            b.Ignore(m => m.MessageTask);
-            b.HasIndex(m => m.UserId);
-            b.HasIndex(m => m.MessageTaskHistoryId);
+            b.Property(x => x.DisplayName).IsRequired().HasMaxLength(128);
+            b.Property(x => x.ExtraProperties).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
+            b.Property(x => x.Variables).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
+            b.HasIndex(x => x.UserId);
+            b.HasIndex(x => x.MessageTaskHistoryId);
+            b.OwnsOne(x => x.ChannelUser, b =>
+            {
+                b.Property(x => x.ChannelType).HasColumnName("ChannelType");
+                b.Property(x => x.ChannelUserIdentity).HasMaxLength(128).HasColumnName("ChannelUserIdentity");
+            });
         });
 
         builder.Entity<MessageReceiverUser>(b =>
         {
             b.ToTable(MCConsts.DbTablePrefix + "MessageReceiverUsers", MCConsts.DbSchema);
-            b.Property(m => m.DisplayName).IsRequired().HasMaxLength(128);
-            b.Property(m => m.Account).HasMaxLength(128);
-            b.Property(m => m.PhoneNumber).HasMaxLength(128);
-            b.Property(m => m.Email).HasMaxLength(128);
-            b.Property(m => m.Variables).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
+            b.Property<Guid>("Id").ValueGeneratedOnAdd();
+            b.HasKey("Id");
+            b.OwnsOne(x => x.Receiver, b =>
+            {
+                b.Property(x => x.SubjectId).HasColumnName("UserId");
+                b.Property(x => x.DisplayName).IsRequired().HasMaxLength(128).HasColumnName("DisplayName");
+                b.Property(x => x.Avatar).HasColumnName("Avatar");
+                b.Property(x => x.PhoneNumber).HasMaxLength(128).HasColumnName("PhoneNumber");
+                b.Property(x => x.Email).HasMaxLength(128).HasColumnName("Email");
+            });
+            b.Property(x => x.Variables).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
         });
 
         builder.Entity<WebsiteMessage>(b =>
         {
             b.ToTable(MCConsts.DbTablePrefix + "WebsiteMessages", MCConsts.DbSchema);
-            b.Property(w => w.Title).IsRequired().HasMaxLength(128);
-            b.Property(m => m.LinkUrl).HasMaxLength(256);
-            b.HasIndex(m => new { m.UserId, m.ChannelId });
+            b.Property(x => x.Title).IsRequired().HasMaxLength(128);
+            b.Property(x => x.LinkUrl).HasMaxLength(256);
+            b.HasIndex(x => new { x.UserId, x.ChannelId });
         });
 
         builder.Entity<WebsiteMessageCursor>(b =>
         {
             b.ToTable(MCConsts.DbTablePrefix + "WebsiteMessageCursors", MCConsts.DbSchema);
-            b.HasIndex(w => w.UserId);
+            b.HasIndex(x => x.UserId);
         });
     }
 }

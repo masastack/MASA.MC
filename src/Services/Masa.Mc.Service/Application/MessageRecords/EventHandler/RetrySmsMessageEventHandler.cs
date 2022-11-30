@@ -57,7 +57,7 @@ public class RetrySmsMessageEventHandler
             }
 
             var variables = _messageTemplateDomainService.ConvertVariables(messageData.TemplateItems, messageRecord.Variables);
-            var smsMessage = new SmsMessage(messageRecord.GetDataValue<string>(nameof(MessageReceiverUser.PhoneNumber)), JsonSerializer.Serialize(variables));
+            var smsMessage = new SmsMessage(messageRecord.GetDataValue<string>(nameof(Receiver.PhoneNumber)), JsonSerializer.Serialize(variables));
             smsMessage.Properties.Add("SignName", messageData.GetDataValue<string>(nameof(MessageTemplate.Sign)));
             smsMessage.Properties.Add("TemplateCode", messageData.GetDataValue<string>(nameof(MessageTemplate.TemplateId)));
             try

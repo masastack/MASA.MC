@@ -47,9 +47,9 @@ public class MessageTemplateDomainService : DomainService
             return;
         }
 
-        var titleParam = UtilHelper.MidStrEx(messageTemplate.Title, startstr, endstr);
-        var contentParam = UtilHelper.MidStrEx(messageTemplate.Content, startstr, endstr);
-        var jumpUrlParam = UtilHelper.MidStrEx(messageTemplate.JumpUrl, startstr, endstr);
+        var titleParam = UtilHelper.MidStrEx(messageTemplate.MessageContent.Title, startstr, endstr);
+        var contentParam = UtilHelper.MidStrEx(messageTemplate.MessageContent.Content, startstr, endstr);
+        var jumpUrlParam = UtilHelper.MidStrEx(messageTemplate.MessageContent.JumpUrl, startstr, endstr);
         var paramList = titleParam.Union(contentParam).Union(jumpUrlParam).ToList();
         messageTemplate.Items.Clear();
         foreach (var item in paramList)

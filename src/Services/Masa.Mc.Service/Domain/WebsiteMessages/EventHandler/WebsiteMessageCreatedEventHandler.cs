@@ -41,22 +41,16 @@ public class WebsiteMessageCreatedEventHandler
         foreach (var taskHistory in taskHistorys)
         {
             var messageData = await _messageTaskDomainService.GetMessageDataAsync(taskHistory.MessageTask.EntityType, taskHistory.MessageTask.EntityId, taskHistory.MessageTask.Variables);
-            var receiverUser = new MessageReceiverUser()
-            {
-                UserId = currentUser.Id,
-                DisplayName = currentUser.DisplayName ?? string.Empty,
-                Account = currentUser.Account,
-                Email = currentUser.Email ?? string.Empty,
-                PhoneNumber = currentUser.PhoneNumber ?? string.Empty
-            };
 
-            var messageRecord = new MessageRecord(receiverUser.UserId, taskHistory.MessageTask.ChannelId.Value, taskHistory.MessageTaskId, taskHistory.Id, taskHistory.MessageTask.Variables, messageData.GetDataValue<string>(nameof(MessageTemplate.Title)), taskHistory.SendTime);
+            var receiver = new Receiver(currentUser.Id, currentUser.DisplayName, currentUser.Avatar, currentUser.PhoneNumber, currentUser.Email);
+
+            var messageRecord = new MessageRecord(receiver.SubjectId, taskHistory.MessageTask.ChannelId.Value, taskHistory.MessageTaskId, taskHistory.Id, taskHistory.MessageTask.Variables, messageData.GetDataValue<string>(nameof(MessageContent.Title)), taskHistory.SendTime);
             messageRecord.SetMessageEntity(taskHistory.MessageTask.EntityType, taskHistory.MessageTask.EntityId);
-            messageRecord.SetUserInfo(receiverUser.UserId, receiverUser.DisplayName, receiverUser.Account, receiverUser.Email, receiverUser.PhoneNumber);
+            messageRecord.SetChannelUser(ChannelTypes.WebsiteMessage, receiver.SubjectId.ToString());
             messageRecord.SetResult(true, string.Empty, taskHistory.SendTime);
 
-            var linkUrl = messageData.GetDataValue<bool>(nameof(MessageTemplate.IsJump)) ? messageData.GetDataValue<string>(nameof(MessageTemplate.JumpUrl)) : string.Empty;
-            var websiteMessage = new WebsiteMessage(messageRecord.ChannelId, receiverUser.UserId, messageData.GetDataValue<string>(nameof(MessageTemplate.Title)), messageData.GetDataValue<string>(nameof(MessageTemplate.Content)), linkUrl, taskHistory.SendTime ?? DateTimeOffset.Now);
+            var linkUrl = messageData.GetDataValue<bool>(nameof(MessageContent.IsJump)) ? messageData.GetDataValue<string>(nameof(MessageContent.JumpUrl)) : string.Empty;
+            var websiteMessage = new WebsiteMessage(messageRecord.ChannelId, receiver.SubjectId, messageData.GetDataValue<string>(nameof(MessageContent.Title)), messageData.GetDataValue<string>(nameof(MessageContent.Content)), linkUrl, taskHistory.SendTime ?? DateTimeOffset.Now);
             await _messageRecordRepository.AddAsync(messageRecord);
             await _websiteMessageRepository.AddAsync(websiteMessage);
         }

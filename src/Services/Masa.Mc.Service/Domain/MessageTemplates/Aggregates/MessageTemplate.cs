@@ -2,18 +2,15 @@
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
 namespace Masa.Mc.Service.Admin.Domain.MessageTemplates.Aggregates;
+
 public class MessageTemplate : FullAggregateRoot<Guid, Guid>
 {
     public Guid ChannelId { get; protected set; }
     public string DisplayName { get; protected set; } = string.Empty;
-    public string Title { get; protected set; } = string.Empty;
     public string Code { get; protected set; } = string.Empty;
-    public string Content { get; protected set; } = string.Empty;
-    public string Markdown { get; protected set; } = string.Empty;
+    public MessageContent MessageContent { get; protected set; } = default!;
     public string Example { get; protected set; } = string.Empty;
     public string TemplateId { get; protected set; } = string.Empty;
-    public bool IsJump { get; protected set; }
-    public string JumpUrl { get; protected set; } = string.Empty;
     public string Sign { get; protected set; } = string.Empty;
     public MessageTemplateStatuses Status { get; protected set; }
     public MessageTemplateAuditStatuses AuditStatus { get; protected set; }
@@ -25,17 +22,15 @@ public class MessageTemplate : FullAggregateRoot<Guid, Guid>
     public virtual bool IsStatic { get; protected set; }
     public ICollection<MessageTemplateItem> Items { get; protected set; } = new List<MessageTemplateItem>();
 
+    private MessageTemplate() { }
+
     public MessageTemplate(
         Guid channelId,
         string displayName,
-        string title,
         string code,
-        string content,
-        string markdown,
+        MessageContent messageContent,
         string example,
         string templateId,
-        bool isJump,
-        string jumpUrl,
         string sign,
         int templateType,
         long perDayLimit,
@@ -54,9 +49,7 @@ public class MessageTemplate : FullAggregateRoot<Guid, Guid>
         PerDayLimit = perDayLimit;
         Status = status;
         IsStatic = isStatic;
-
-        SetContent(title, content, markdown);
-        SetJump(isJump, jumpUrl);
+        MessageContent = messageContent;
         SetAuditStatus(auditStatus, auditReason);
 
         Items = new List<MessageTemplateItem>();
@@ -76,16 +69,6 @@ public class MessageTemplate : FullAggregateRoot<Guid, Guid>
         }
     }
 
-    public virtual void SetContent(
-        string title,
-        string content,
-        string markdown)
-    {
-        Title = title;
-        Content = content;
-        Markdown = markdown;
-    }
-
     public virtual void SetAuditStatus(MessageTemplateAuditStatuses auditStatus, string auditReason = "")
     {
         AuditStatus = auditStatus;
@@ -100,11 +83,5 @@ public class MessageTemplate : FullAggregateRoot<Guid, Guid>
     {
         InvalidTime = DateTimeOffset.Now;
         Status = MessageTemplateStatuses.Invalid;
-    }
-
-    public virtual void SetJump(bool isJump, string jumpUrl)
-    {
-        IsJump = isJump;
-        JumpUrl = jumpUrl;
     }
 }

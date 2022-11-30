@@ -40,15 +40,7 @@ public class ResolveMessageTaskEventHandler
         if (eto.MessageTask == null || eto.MessageTask.ReceiverType == ReceiverTypes.Broadcast) return;
 
         var receiverUsers = eto.MessageTask.Receivers.Where(x => x.Type == MessageTaskReceiverTypes.User)
-            .Select(x => new MessageReceiverUser
-            {
-                UserId = x.SubjectId,
-                DisplayName = x.DisplayName,
-                Account = x.Account,
-                PhoneNumber = x.PhoneNumber,
-                Email = x.Email,
-                Variables = x.Variables.Count == 0 ? eto.MessageTask.Variables : x.Variables,
-            })
+            .Select(x => new MessageReceiverUser(x.Receiver,x.Variables.Count == 0 ? eto.MessageTask.Variables : x.Variables))
             .ToList();
         eto.MessageTask.ReceiverUsers.AddRange(receiverUsers);
     }
@@ -58,7 +50,7 @@ public class ResolveMessageTaskEventHandler
     {
         if (eto.MessageTask == null || eto.MessageTask.ReceiverType == ReceiverTypes.Broadcast) return;
 
-        var orgIds = eto.MessageTask.Receivers.Where(x => x.Type == MessageTaskReceiverTypes.Organization).Select(x => x.SubjectId).Distinct();
+        var orgIds = eto.MessageTask.Receivers.Where(x => x.Type == MessageTaskReceiverTypes.Organization).Select(x => x.Receiver.SubjectId).Distinct();
         var receiverUsers = await ResolveAuthUsers(ReceiverGroupItemTypes.Organization, orgIds.ToList(), eto.MessageTask.Variables);
         eto.MessageTask.ReceiverUsers.AddRange(receiverUsers);
     }
@@ -68,7 +60,7 @@ public class ResolveMessageTaskEventHandler
     {
         if (eto.MessageTask == null || eto.MessageTask.ReceiverType == ReceiverTypes.Broadcast) return;
 
-        var roleIds = eto.MessageTask.Receivers.Where(x => x.Type == MessageTaskReceiverTypes.Role).Select(x => x.SubjectId).Distinct();
+        var roleIds = eto.MessageTask.Receivers.Where(x => x.Type == MessageTaskReceiverTypes.Role).Select(x => x.Receiver.SubjectId).Distinct();
         var receiverUsers = await ResolveAuthUsers(ReceiverGroupItemTypes.Role, roleIds.ToList(), eto.MessageTask.Variables);
         eto.MessageTask.ReceiverUsers.AddRange(receiverUsers);
     }
@@ -78,7 +70,7 @@ public class ResolveMessageTaskEventHandler
     {
         if (eto.MessageTask == null || eto.MessageTask.ReceiverType == ReceiverTypes.Broadcast) return;
 
-        var teamIds = eto.MessageTask.Receivers.Where(x => x.Type == MessageTaskReceiverTypes.Team).Select(x => x.SubjectId).Distinct();
+        var teamIds = eto.MessageTask.Receivers.Where(x => x.Type == MessageTaskReceiverTypes.Team).Select(x => x.Receiver.SubjectId).Distinct();
         var receiverUsers = await ResolveAuthUsers(ReceiverGroupItemTypes.Team, teamIds.ToList(), eto.MessageTask.Variables);
         eto.MessageTask.ReceiverUsers.AddRange(receiverUsers);
     }
@@ -88,7 +80,7 @@ public class ResolveMessageTaskEventHandler
     {
         if (eto.MessageTask == null || eto.MessageTask.ReceiverType == ReceiverTypes.Broadcast) return;
 
-        var receiverGroupIds = eto.MessageTask.Receivers.Where(x => x.Type == MessageTaskReceiverTypes.Group).Select(x => x.SubjectId).Distinct();
+        var receiverGroupIds = eto.MessageTask.Receivers.Where(x => x.Type == MessageTaskReceiverTypes.Group).Select(x => x.Receiver.SubjectId).Distinct();
         foreach (var receiverGroupId in receiverGroupIds)
         {
             var receiverGroup = await _receiverGroupRepository.FindAsync(x => x.Id == receiverGroupId);
@@ -98,19 +90,12 @@ public class ResolveMessageTaskEventHandler
             {
                 if (items.Key == ReceiverGroupItemTypes.User)
                 {
-                    var userList = items.Select(x => new MessageReceiverUser
-                    {
-                        UserId = x.SubjectId,
-                        DisplayName = x.DisplayName,
-                        PhoneNumber = x.PhoneNumber,
-                        Email = x.Email,
-                        Variables = eto.MessageTask.Variables,
-                    });
+                    var userList = items.Select(x => new MessageReceiverUser(x.Receiver, eto.MessageTask.Variables));
                     eto.MessageTask.ReceiverUsers.AddRange(userList);
                 }
                 else
                 {
-                    var subjectIds = items.Select(x => x.SubjectId).Distinct().ToList();
+                    var subjectIds = items.Select(x => x.Receiver.SubjectId).Distinct().ToList();
                     var subjectUsers = await ResolveAuthUsers(items.Key, subjectIds, eto.MessageTask.Variables);
                     eto.MessageTask.ReceiverUsers.AddRange(subjectUsers);
                 }
@@ -201,15 +186,8 @@ public class ResolveMessageTaskEventHandler
 
     private MessageReceiverUser MapToMessageReceiverUser(StaffModel staff, ExtraPropertyDictionary variables)
     {
-        return new MessageReceiverUser
-        {
-            UserId = staff.Id,
-            DisplayName = staff.Name ?? staff.DisplayName ?? string.Empty,
-            Account = staff.Account,
-            PhoneNumber = staff.PhoneNumber ?? string.Empty,
-            Email = staff.Email ?? string.Empty,
-            Variables = variables,
-        };
+        var receiver = new Receiver(staff.UserId, staff.DisplayName, staff.Avatar, staff.PhoneNumber, staff.Email);
+        return new MessageReceiverUser(receiver, variables);
     }
 
     private async Task<List<MessageReceiverUser>> ResolveAuthUsers(ReceiverGroupItemTypes type, List<Guid> subjectIds, ExtraPropertyDictionary variables)

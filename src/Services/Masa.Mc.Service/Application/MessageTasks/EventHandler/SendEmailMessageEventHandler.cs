@@ -53,14 +53,14 @@ public class SendEmailMessageEventHandler
             int totalCount = taskHistory.ReceiverUsers.Count;
             foreach (var item in taskHistory.ReceiverUsers)
             {
-                var messageRecord = new MessageRecord(item.UserId, channel.Id, taskHistory.MessageTaskId, taskHistory.Id, item.Variables, eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.Title)), taskHistory.SendTime);
+                var messageRecord = new MessageRecord(item.Receiver.SubjectId, channel.Id, taskHistory.MessageTaskId, taskHistory.Id, item.Variables, eto.MessageData.GetDataValue<string>(nameof(MessageContent.Title)), taskHistory.SendTime);
                 messageRecord.SetMessageEntity(taskHistory.MessageTask.EntityType, taskHistory.MessageTask.EntityId);
-                messageRecord.SetUserInfo(item.UserId, item.DisplayName, item.Account, item.Email, item.PhoneNumber);
+                messageRecord.SetChannelUser(ChannelTypes.Email, item.Receiver.Email);
                 TemplateRenderer(eto.MessageData, item.Variables);
                 if (eto.MessageData.MessageType == MessageEntityTypes.Template)
                 {
                     var perDayLimit = eto.MessageData.GetDataValue<long>(nameof(MessageTemplate.PerDayLimit));
-                    if (!await _messageTemplateDomainService.CheckSendUpperLimitAsync(messageRecord.MessageEntityId, perDayLimit, item.UserId))
+                    if (!await _messageTemplateDomainService.CheckSendUpperLimitAsync(messageRecord.MessageEntityId, perDayLimit, item.Receiver.SubjectId))
                     {
                         messageRecord.SetResult(false, "The maximum number of times to send per day has been reached");
                         await _messageRecordRepository.AddAsync(messageRecord);
@@ -71,9 +71,9 @@ public class SendEmailMessageEventHandler
                 try
                 {
                     await _emailSender.SendAsync(
-                        item.Email,
-                        eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.Title)),
-                        eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.Content))
+                        item.Receiver.Email,
+                        eto.MessageData.GetDataValue<string>(nameof(MessageContent.Title)),
+                        eto.MessageData.GetDataValue<string>(nameof(MessageContent.Content))
                     );
                     messageRecord.SetResult(true, string.Empty);
                     okCount++;
@@ -93,7 +93,7 @@ public class SendEmailMessageEventHandler
 
     private async void TemplateRenderer(MessageData messageData, ExtraPropertyDictionary Variables)
     {
-        messageData.SetDataValue(nameof(MessageTemplate.Title), await _templateRenderer.RenderAsync(messageData.GetDataValue<string>(nameof(MessageTemplate.Title)), Variables));
-        messageData.SetDataValue(nameof(MessageTemplate.Content), await _templateRenderer.RenderAsync(messageData.GetDataValue<string>(nameof(MessageTemplate.Content)), Variables));
+        messageData.SetDataValue(nameof(MessageContent.Title), await _templateRenderer.RenderAsync(messageData.GetDataValue<string>(nameof(MessageContent.Title)), Variables));
+        messageData.SetDataValue(nameof(MessageContent.Content), await _templateRenderer.RenderAsync(messageData.GetDataValue<string>(nameof(MessageContent.Content)), Variables));
     }
 }
