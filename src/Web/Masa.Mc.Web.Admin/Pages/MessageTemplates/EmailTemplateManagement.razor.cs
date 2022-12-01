@@ -29,7 +29,7 @@ public partial class EmailTemplateManagement : AdminCompontentBase
             new() { Text = T($"{_prefix}ChannelDisplayName"), Value = "ChannelDisplayName", Sortable = false, Width = "190px" },
             new() { Text = T("Modifier"), Value = nameof(MessageTemplateDto.ModifierName), Sortable = false, Width = "190px" },
             new() { Text = T("ModificationTime"), Value = nameof(MessageTemplateDto.ModificationTime), Sortable = true, Width = "230px" },
-            new() { Text = T("Action"), Value = "Action", Sortable = false, Width = 72, Align = "center" },
+            new() { Text = T("Action"), Value = "Action", Sortable = false, Width = 72, Align = DataTableHeaderAlign.Center },
         };
         _channelItems = await ChannelService.GetListByTypeAsync(ChannelTypes.Email);
     }
