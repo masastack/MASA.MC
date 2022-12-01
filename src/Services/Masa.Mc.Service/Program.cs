@@ -62,6 +62,7 @@ builder.Services.AddSingleton<ITemplateRenderer, TextTemplateRenderer>();
 builder.Services.AddTransient<Microsoft.AspNetCore.SignalR.IUserIdProvider, McUserIdProvider>();
 builder.Services.AddSignalR();
 builder.Services.AddTransient<NotificationsHub>();
+builder.Services.AddAuthChannelUserFinder();
 TypeAdapterConfig.GlobalSettings.Scan(Assembly.GetExecutingAssembly(), Assembly.Load("Masa.Mc.Contracts.Admin"));
 
 builder.Services.AddHealthChecks()

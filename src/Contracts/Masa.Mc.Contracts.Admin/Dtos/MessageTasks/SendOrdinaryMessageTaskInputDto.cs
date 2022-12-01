@@ -11,7 +11,7 @@ public class SendOrdinaryMessageTaskInputDto
 
     public ReceiverTypes ReceiverType { get; set; }
 
-    public List<MessageTaskReceiverDto> Receivers { get; set; } = new();
+    public List<InternalReceiverDto> Receivers { get; set; } = new();
 
     public SendRuleDto SendRules { get; set; } = new();
 
@@ -31,7 +31,7 @@ public class SendOrdinaryMessageTaskInputDto
             IsEnabled = true,
             ReceiverType = dto.ReceiverType,
             SelectReceiverType = MessageTaskSelectReceiverTypes.ManualSelection,
-            Receivers = dto.Receivers,
+            Receivers = dto.Receivers.Select(x => (MessageTaskReceiverDto)x).ToList(),
             SendRules = dto.SendRules,
             MessageInfo = dto.MessageInfo,
             Variables = dto.Variables,

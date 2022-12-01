@@ -162,4 +162,16 @@ public class MessageTaskService : ServiceBase
         var command = new SendTemplateMessageTaskCommand(inputDto);
         await eventBus.PublishAsync(command);
     }
+
+    public async Task SendOrdinaryMessageByExternalAsync(IEventBus eventBus, SendOrdinaryMessageByExternalInputDto inputDto)
+    {
+        var command = new SendOrdinaryMessageByExternalCommand(inputDto);
+        await eventBus.PublishAsync(command);
+    }
+
+    public async Task SendTemplateMessageByExternalAsync(IEventBus eventBus, SendTemplateMessageByExternalInputDto inputDto)
+    {
+        var command = new SendTemplateMessageByExternalCommand(inputDto);
+        await eventBus.PublishAsync(command);
+    }
 }

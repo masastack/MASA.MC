@@ -5,19 +5,20 @@ namespace Masa.Mc.Service.Admin.Application.MessageInfos;
 
 public class MessageInfoQueryHandler
 {
-    private readonly IMessageInfoRepository _repository;
+    private readonly IMcQueryContext _context;
 
-    public MessageInfoQueryHandler(IMessageInfoRepository repository)
+    public MessageInfoQueryHandler(IMcQueryContext context)
     {
-        _repository = repository;
+        _context = context;
     }
 
     [EventHandler]
     public async Task GetAsync(GetMessageInfoQuery query)
     {
-        var entity = await _repository.FindAsync(x => x.Id == query.MessageInfoId);
-        if (entity == null)
-            throw new UserFriendlyException("messageInfo not found");
+        var entity = await _context.MessageInfoQueries.FirstOrDefaultAsync(x => x.Id == query.MessageInfoId);
+
+        Check.NotNull(entity, "MessageInfo not found");
+
         query.Result = entity.Adapt<MessageInfoDto>();
     }
 }

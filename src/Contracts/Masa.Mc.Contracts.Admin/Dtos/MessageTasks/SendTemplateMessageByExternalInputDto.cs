@@ -3,11 +3,11 @@
 
 namespace Masa.Mc.Contracts.Admin.Dtos.MessageTasks;
 
-public class SendTemplateMessageTaskInputDto
+public class SendTemplateMessageByExternalInputDto
 {
     public string ChannelCode { get; set; } = string.Empty;
 
-    public ChannelTypes? ChannelType { get; set; }
+    public ChannelTypes ChannelType { get; set; }
 
     public string TemplateCode { get; set; } = string.Empty;
 
@@ -15,7 +15,7 @@ public class SendTemplateMessageTaskInputDto
 
     public string Sign { get; set; } = string.Empty;
 
-    public List<InternalReceiverDto> Receivers { get; set; } = new();
+    public List<ExternalReceiverDto> Receivers { get; set; } = new();
 
     public SendRuleDto SendRules { get; set; } = new();
 
@@ -23,7 +23,7 @@ public class SendTemplateMessageTaskInputDto
 
     public Guid OperatorId { get; set; } = default;
 
-    public static implicit operator MessageTaskUpsertDto(SendTemplateMessageTaskInputDto dto)
+    public static implicit operator MessageTaskUpsertDto(SendTemplateMessageByExternalInputDto dto)
     {
         return new MessageTaskUpsertDto
         {
@@ -34,7 +34,12 @@ public class SendTemplateMessageTaskInputDto
             ReceiverType = dto.ReceiverType,
             SelectReceiverType = MessageTaskSelectReceiverTypes.ManualSelection,
             Sign = dto.Sign,
-            Receivers = dto.Receivers.Select(x => (MessageTaskReceiverDto)x).ToList(),
+            Receivers = dto.Receivers.Select(x =>
+            {
+                var receiver = new MessageTaskReceiverDto();
+                receiver.SetChannelUserIdentity(dto.ChannelType, x.ChannelUserIdentity);
+                return receiver;
+            }).ToList(),
             SendRules = dto.SendRules,
             Variables = dto.Variables,
             Source = MessageTaskSources.Sdk,

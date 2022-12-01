@@ -1,6 +1,8 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
+using Masa.Mc.Service.Admin.Domain.MessageInfos.Aggregates;
+
 namespace Masa.Mc.Service.Admin.Domain.MessageTasks.Services;
 
 public class MessageTaskDomainService : DomainService
@@ -61,30 +63,31 @@ public class MessageTaskDomainService : DomainService
 
 
 
-    public virtual async Task<MessageData> GetMessageDataAsync(MessageEntityTypes entityType, Guid entityId, ExtraPropertyDictionary variables = null)
+    public virtual async Task<MessageData?> GetMessageDataAsync(MessageEntityTypes entityType, Guid entityId, ExtraPropertyDictionary variables)
     {
-        var messageData = new MessageData();
         if (entityType == MessageEntityTypes.Ordinary)
         {
             var messageInfo = await _messageInfoRepository.FindAsync(x => x.Id == entityId);
-            messageData = new MessageData { MessageType = MessageEntityTypes.Ordinary, ExtraProperties = ExtensionPropertyHelper.ObjMapToExtraProperty(messageInfo) };
+            if (messageInfo == null) return null;
+
+            var messageData = new MessageData(messageInfo.MessageContent, MessageEntityTypes.Ordinary);
+            messageData.RenderContent(variables);
+            return messageData;
         }
         if (entityType == MessageEntityTypes.Template)
         {
             var messageTemplate = await _messageTemplateRepository.FindAsync(x => x.Id == entityId);
-            messageData = new MessageData { MessageType = MessageEntityTypes.Template, ExtraProperties = ExtensionPropertyHelper.ObjMapToExtraProperty(messageTemplate) };
-            messageData.TemplateItems = messageTemplate.Items.ToList();
+            if (messageTemplate == null) return null;
+
+            var messageData = new MessageData(messageTemplate.MessageContent, MessageEntityTypes.Template);
+            messageData.RenderContent(variables);
+            return messageData;
         }
-        if (variables != null)
-        {
-            messageData.SetDataValue(nameof(MessageContent.Title), await _templateRenderer.RenderAsync(messageData.GetDataValue<string>(nameof(MessageContent.Title)), variables));
-            messageData.SetDataValue(nameof(MessageContent.Content), await _templateRenderer.RenderAsync(messageData.GetDataValue<string>(nameof(MessageContent.Content)), variables));
-            messageData.SetDataValue(nameof(MessageContent.JumpUrl), await _templateRenderer.RenderAsync(messageData.GetDataValue<string>(nameof(MessageContent.JumpUrl)), variables));
-        }
-        return messageData;
+
+        return null;
     }
 
-    public virtual async Task<MessageData> GetMessageDataAsync(Guid messageTaskId, ExtraPropertyDictionary variables = null)
+    public virtual async Task<MessageData?> GetMessageDataAsync(Guid messageTaskId, ExtraPropertyDictionary variables)
     {
         var messageTask = await _repository.FindAsync(x => x.Id == messageTaskId);
         if (messageTask == null)

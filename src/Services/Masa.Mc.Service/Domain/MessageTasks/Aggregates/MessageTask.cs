@@ -162,8 +162,8 @@ public class MessageTask : FullAggregateRoot<Guid, Guid>
         return historyNum;
     }
 
-    public string GenerateHistoryNo()
+    public List<MessageReceiverUser> GetHistoryReceiverUsers(int historyNum, int sendingCount)
     {
-       return $"SJ{UtilConvert.GetGuidToNumber()}";
+        return ReceiverUsers.Skip(historyNum * sendingCount).Take(sendingCount).ToList(); ;
     }
 }

@@ -11,13 +11,15 @@ public class RetrySmsMessageEventHandler
     private readonly IMessageRecordRepository _messageRecordRepository;
     private readonly MessageTaskDomainService _taskDomainService;
     private readonly MessageTemplateDomainService _messageTemplateDomainService;
+    private readonly IMessageTemplateRepository _repository;
 
     public RetrySmsMessageEventHandler(IAliyunSmsAsyncLocal aliyunSmsAsyncLocal
         , ISmsSender smsSender
         , IChannelRepository channelRepository
         , IMessageRecordRepository messageRecordRepository
         , MessageTaskDomainService taskDomainService
-        , MessageTemplateDomainService messageTemplateDomainService)
+        , MessageTemplateDomainService messageTemplateDomainService
+        , IMessageTemplateRepository repository)
     {
         _aliyunSmsAsyncLocal = aliyunSmsAsyncLocal;
         _smsSender = smsSender;
@@ -25,6 +27,7 @@ public class RetrySmsMessageEventHandler
         _messageRecordRepository = messageRecordRepository;
         _taskDomainService = taskDomainService;
         _messageTemplateDomainService = messageTemplateDomainService;
+        _repository = repository;
     }
 
     [EventHandler]
@@ -43,23 +46,24 @@ public class RetrySmsMessageEventHandler
         };
         using (_aliyunSmsAsyncLocal.Change(options))
         {
-            var messageData = await _taskDomainService.GetMessageDataAsync(messageRecord.MessageTaskId);
-
+            var messageData = await _taskDomainService.GetMessageDataAsync(messageRecord.MessageTaskId, messageRecord.Variables);
+            var variables = messageRecord.Variables;
             if (messageData.MessageType == MessageEntityTypes.Template)
             {
-                var perDayLimit = messageData.GetDataValue<long>(nameof(MessageTemplate.PerDayLimit));
-                if (!await _messageTemplateDomainService.CheckSendUpperLimitAsync(messageRecord.MessageEntityId, perDayLimit, messageRecord.ChannelUserIdentity))
+                var messageTemplate = await _repository.FindAsync(x => x.Id == messageRecord.MessageEntityId, false);
+                if (!await _messageTemplateDomainService.CheckSendUpperLimitAsync(messageTemplate, messageRecord.ChannelUserIdentity))
                 {
                     messageRecord.SetResult(false, "The maximum number of times to send per day has been reached");
                     await _messageRecordRepository.UpdateAsync(messageRecord);
                     throw new UserFriendlyException("The maximum number of times to send per day has been reached");
                 }
+
+                variables = _messageTemplateDomainService.ConvertVariables(messageTemplate, messageRecord.Variables);
             }
 
-            var variables = _messageTemplateDomainService.ConvertVariables(messageData.TemplateItems, messageRecord.Variables);
-            var smsMessage = new SmsMessage(messageRecord.GetDataValue<string>(nameof(Receiver.PhoneNumber)), JsonSerializer.Serialize(variables));
-            smsMessage.Properties.Add("SignName", messageData.GetDataValue<string>(nameof(MessageTemplate.Sign)));
-            smsMessage.Properties.Add("TemplateCode", messageData.GetDataValue<string>(nameof(MessageTemplate.TemplateId)));
+            var smsMessage = new SmsMessage(messageRecord.ChannelUserIdentity, JsonSerializer.Serialize(variables));
+            smsMessage.Properties.Add("SignName", messageRecord.GetDataValue<string>(nameof(MessageTemplate.Sign)));
+            smsMessage.Properties.Add("TemplateCode", messageRecord.GetDataValue<string>(nameof(MessageTemplate.TemplateId)));
             try
             {
                 var response = await _smsSender.SendAsync(smsMessage) as SmsSendResponse;

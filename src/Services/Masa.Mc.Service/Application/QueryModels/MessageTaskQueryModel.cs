@@ -33,9 +33,7 @@ public class MessageTaskQueryModel : ISoftDelete
 
     public string Sign { get; set; } = string.Empty;
 
-    public List<MessageTaskReceiverQueryModel> Receivers { get; set; } = new();
-
-    public List<MessageReceiverUserQueryModel> ReceiverUsers { get; set; } = new();
+    public List<MessageTaskReceiver> Receivers { get; set; } = new();
 
     public MessageTaskSendingRule SendRules { get; set; } = new();
 
