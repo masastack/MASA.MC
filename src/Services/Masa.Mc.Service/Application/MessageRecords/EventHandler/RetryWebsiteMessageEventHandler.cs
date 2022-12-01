@@ -10,18 +10,21 @@ public class RetryWebsiteMessageEventHandler
     private readonly MessageTaskDomainService _taskDomainService;
     private readonly IWebsiteMessageRepository _repository;
     private readonly MessageTemplateDomainService _messageTemplateDomainService;
+    private readonly IMessageTemplateRepository _templateRepository;
 
     public RetryWebsiteMessageEventHandler(IHubContext<NotificationsHub> hubContext
         , IMessageRecordRepository messageRecordRepository
         , MessageTaskDomainService taskDomainService
         , IWebsiteMessageRepository repository
-        , MessageTemplateDomainService messageTemplateDomainService)
+        , MessageTemplateDomainService messageTemplateDomainService
+        , IMessageTemplateRepository templateRepository)
     {
         _hubContext = hubContext;
         _messageRecordRepository = messageRecordRepository;
         _taskDomainService = taskDomainService;
         _repository = repository;
         _messageTemplateDomainService = messageTemplateDomainService;
+        _templateRepository = templateRepository;
     }
 
     [EventHandler(1)]
@@ -32,12 +35,12 @@ public class RetryWebsiteMessageEventHandler
         {
             return;
         }
-        var messageData = await _taskDomainService.GetMessageDataAsync(messageRecord.MessageTaskId);
+        var messageData = await _taskDomainService.GetMessageDataAsync(messageRecord.MessageTaskId, messageRecord.Variables);
 
         if (messageData.MessageType == MessageEntityTypes.Template)
         {
-            var perDayLimit = messageData.GetDataValue<long>(nameof(MessageTemplate.PerDayLimit));
-            if (!await _messageTemplateDomainService.CheckSendUpperLimitAsync(messageRecord.MessageEntityId, perDayLimit, messageRecord.ChannelUserIdentity))
+            var messageTemplate = await _templateRepository.FindAsync(x => x.Id == messageRecord.MessageEntityId, false);
+            if(!await _messageTemplateDomainService.CheckSendUpperLimitAsync(messageTemplate, messageRecord.ChannelUserIdentity))
             {
                 messageRecord.SetResult(false, "The maximum number of times to send per day has been reached");
                 await _messageRecordRepository.UpdateAsync(messageRecord);
@@ -45,8 +48,7 @@ public class RetryWebsiteMessageEventHandler
             }
         }
 
-        var linkUrl = messageData.GetDataValue<bool>(nameof(MessageContent.IsJump)) ? messageData.GetDataValue<string>(nameof(MessageContent.JumpUrl)) : string.Empty;
-        var websiteMessage = new WebsiteMessage(messageRecord.ChannelId, messageRecord.UserId, messageData.GetDataValue<string>(nameof(MessageContent.Title)), messageData.GetDataValue<string>(nameof(MessageContent.Content)), linkUrl, DateTimeOffset.Now);
+        var websiteMessage = new WebsiteMessage(messageRecord.ChannelId, messageRecord.UserId, messageData.MessageContent.Title, messageData.MessageContent.Content, messageData.MessageContent.GetJumpUrl(), DateTimeOffset.Now);
         await _repository.AddAsync(websiteMessage);
 
         messageRecord.SetResult(true, string.Empty);

@@ -11,13 +11,10 @@ public class MessageData : ValueObject
 
     public ExtraPropertyDictionary ExtraProperties { get; protected set; } = new();
 
-    public List<MessageTemplateItem> TemplateItems { get; set; } = new();
-
     protected override IEnumerable<object> GetEqualityValues()
     {
         yield return MessageContent;
         yield return MessageType;
-        yield return TemplateItems;
     }
 
     public MessageData(MessageContent messageContent, MessageEntityTypes messageEntityTypes)
@@ -26,12 +23,12 @@ public class MessageData : ValueObject
         MessageType = messageEntityTypes;
     }
 
-    private T GetDataValue<T>(string name)
+    public T GetDataValue<T>(string name)
     {
         return ExtraProperties.GetProperty<T>(name);
     }
 
-    private void SetDataValue(string name, string value)
+    public void SetDataValue(string name, string value)
     {
         ExtraProperties.SetProperty(name, value);
     }

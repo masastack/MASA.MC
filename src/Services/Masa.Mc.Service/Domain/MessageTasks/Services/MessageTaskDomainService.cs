@@ -1,8 +1,6 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
-using Masa.Mc.Service.Admin.Domain.MessageInfos.Aggregates;
-
 namespace Masa.Mc.Service.Admin.Domain.MessageTasks.Services;
 
 public class MessageTaskDomainService : DomainService
@@ -61,8 +59,6 @@ public class MessageTaskDomainService : DomainService
         }
     }
 
-
-
     public virtual async Task<MessageData?> GetMessageDataAsync(MessageEntityTypes entityType, Guid entityId, ExtraPropertyDictionary variables)
     {
         if (entityType == MessageEntityTypes.Ordinary)
@@ -81,6 +77,8 @@ public class MessageTaskDomainService : DomainService
 
             var messageData = new MessageData(messageTemplate.MessageContent, MessageEntityTypes.Template);
             messageData.RenderContent(variables);
+            messageData.SetDataValue(nameof(MessageTemplate.TemplateId), messageTemplate.TemplateId);
+            messageData.SetDataValue(nameof(MessageTemplate.Sign), messageTemplate.Sign);
             return messageData;
         }
 

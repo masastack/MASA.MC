@@ -27,4 +27,9 @@ public class MessageContent : ValueObject
         Markdown = markdown;
         JumpUrl = jumpUrl;
     }
+
+    public string GetJumpUrl()
+    {
+        return IsJump ? JumpUrl : string.Empty;
+    }
 }

@@ -1,8 +1,6 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
-using Masa.BuildingBlocks.Ddd.Domain.Entities;
-
 namespace Masa.Mc.Service.Admin.Application.MessageTasks;
 
 public class MessageTaskCommandHandler
@@ -36,8 +34,8 @@ public class MessageTaskCommandHandler
     public async Task DeleteAsync(DeleteMessageTaskCommand createCommand)
     {
         var entity = await _repository.FindAsync(x => x.Id == createCommand.MessageTaskId);
-        if (entity == null)
-            throw new UserFriendlyException("messageTask not found");
+        Check.NotNull(entity, "MessageTask not found");
+
         if (entity.IsEnabled)
             throw new UserFriendlyException("enabled status cannot be deleted");
         await _repository.RemoveAsync(entity);
@@ -48,8 +46,8 @@ public class MessageTaskCommandHandler
     {
         var inputDto = command.inputDto;
         var entity = await _repository.FindAsync(x => x.Id == inputDto.Id);
-        if (entity == null)
-            throw new UserFriendlyException("messageTask not found");
+        Check.NotNull(entity, "MessageTask not found");
+
         if (!entity.ChannelId.HasValue)
             throw new UserFriendlyException("please select the configuration channel");
         if (entity.Channel.Type == ChannelTypes.Sms && string.IsNullOrEmpty(entity.Sign))

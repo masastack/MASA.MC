@@ -32,7 +32,7 @@ public class MessageTaskHistoryCommandHandler
         if (entity.SchedulerTaskId != default)
         {
             var userId = _userContext.GetUserId<Guid>();
-            await _schedulerClient.SchedulerTaskService.StopAsync(new BaseSchedulerTaskRequest { TaskId = entity.SchedulerTaskId, OperatorId = userId });
+            await _schedulerClient.SchedulerTaskService.StopAsync(new SchedulerTaskRequestBase { TaskId = entity.SchedulerTaskId, OperatorId = userId });
         }
     }
 }
