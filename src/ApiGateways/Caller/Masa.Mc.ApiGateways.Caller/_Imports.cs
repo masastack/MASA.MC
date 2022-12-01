@@ -9,7 +9,6 @@ global using Masa.Mc.Contracts.Admin.Dtos.MessageTemplates;
 global using Masa.Mc.Contracts.Admin.Enums.Channels;
 global using Masa.Mc.Contracts.Admin.Dtos.ReceiverGroups;
 global using System.Net;
-global using Masa.Utils.Exceptions;
 global using Microsoft.AspNetCore.Http;
 global using Microsoft.Extensions.DependencyInjection;
 global using Masa.Mc.ApiGateways.Caller.Services.Channels;

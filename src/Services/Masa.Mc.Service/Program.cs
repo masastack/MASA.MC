@@ -2,7 +2,7 @@
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
 var builder = WebApplication.CreateBuilder(args);
-builder.AddObservability();
+builder.Services.AddObservable(builder.Logging, builder.Configuration);
 
 #if DEBUG
 builder.Services.AddDaprStarter(opt =>

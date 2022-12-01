@@ -37,7 +37,7 @@ public partial class MessageTemplateItems : AdminCompontentBase
           new (){ Text= T($"{_prefix}{nameof(MessageTemplateItemDto.Code)}"),Value= nameof(MessageTemplateItemDto.Code),Sortable=false,Width=175},
           new (){ Text= T($"{_prefix}{nameof(MessageTemplateItemDto.MappingCode)}"), Value= nameof(MessageTemplateItemDto.MappingCode),Sortable=false,Width=175},
           new (){ Text= T($"{_prefix}{nameof(MessageTemplateItemDto.DisplayText)}"), Value= nameof(MessageTemplateItemDto.DisplayText),Sortable=false,Width=166},
-          new (){ Text= T("Action"), Value= "actions",Sortable=false,Width=108,Align="center" }
+          new (){ Text= T("Action"), Value= "actions",Sortable=false,Width=108,Align=DataTableHeaderAlign.Center }
         };
     }
 
