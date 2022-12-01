@@ -56,7 +56,7 @@ public class MessageTask : FullAggregateRoot<Guid, Guid>
         SetDraft(isDraft);
         SelectReceiverType = selectReceiverType;
         SetReceivers(receiverType, receivers);
-        SendRules = sendRules ?? new();
+        SendRules = sendRules;
         Status = MessageTaskStatuses.WaitSend;
         Source = source;
     }
@@ -134,5 +134,36 @@ public class MessageTask : FullAggregateRoot<Guid, Guid>
     public void SetJobId(Guid jobId)
     {
         SchedulerJobId = jobId;
+    }
+
+    public int GetSendingCount()
+    {
+        var sendingCount = (int)SendRules.SendingCount;
+        if (sendingCount == 0)
+        {
+            sendingCount = ReceiverUsers.Count;
+        }
+        return sendingCount;
+    }
+
+    public long GetHistoryCount()
+    {
+        var totalCount = ReceiverUsers.Count;
+
+        var sendingCount = GetSendingCount();
+
+        var historyNum = (long)Math.Ceiling((double)totalCount / sendingCount);
+
+        if (ReceiverType == ReceiverTypes.Broadcast)
+        {
+            historyNum = 1;
+        }
+
+        return historyNum;
+    }
+
+    public string GenerateHistoryNo()
+    {
+       return $"SJ{UtilConvert.GetGuidToNumber()}";
     }
 }

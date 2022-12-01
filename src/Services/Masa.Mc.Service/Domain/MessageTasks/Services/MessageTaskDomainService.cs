@@ -59,6 +59,8 @@ public class MessageTaskDomainService : DomainService
         }
     }
 
+
+
     public virtual async Task<MessageData> GetMessageDataAsync(MessageEntityTypes entityType, Guid entityId, ExtraPropertyDictionary variables = null)
     {
         var messageData = new MessageData();

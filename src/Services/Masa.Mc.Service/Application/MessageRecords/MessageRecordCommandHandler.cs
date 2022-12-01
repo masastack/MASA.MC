@@ -23,7 +23,7 @@ public class MessageRecordCommandHandler
             throw new UserFriendlyException("MessageRecord not found");
         if (entity.Success == true)
             throw new UserFriendlyException("The message is successfully sent without resending");
-        switch (entity.ChannelUser.ChannelType)
+        switch (entity.Channel.Type)
         {
             case ChannelTypes.Sms:
                 await _eventBus.PublishAsync(new RetrySmsMessageEvent(entity.Id));

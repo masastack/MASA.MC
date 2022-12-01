@@ -5,20 +5,24 @@ namespace Masa.Mc.Service.Admin.Domain.MessageTasks.Aggregates;
 
 public class MessageReceiverUser : ValueObject
 {
-    public Receiver Receiver { get; protected set; } = default!;
+    public Guid UserId { get; set; }
+
+    public string ChannelUserIdentity { get; set; } = string.Empty;
 
     public ExtraPropertyDictionary Variables { get; set; } = new();
 
     protected override IEnumerable<object> GetEqualityValues()
     {
-        yield return Receiver;
+        yield return UserId;
+        yield return ChannelUserIdentity;
     }
 
     private MessageReceiverUser() { }
 
-    public MessageReceiverUser(Receiver receiver, ExtraPropertyDictionary variables)
+    public MessageReceiverUser(Guid userId, string channelUserIdentity, ExtraPropertyDictionary variables)
     {
-        Receiver = receiver;
+        UserId = userId;
+        ChannelUserIdentity = channelUserIdentity;
         Variables = variables;
     }
 }

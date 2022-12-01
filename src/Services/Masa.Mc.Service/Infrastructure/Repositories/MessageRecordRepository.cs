@@ -15,6 +15,19 @@ public class MessageRecordRepository : Repository<McDbContext, MessageRecord>, I
         return await Task.FromResult(Context.Set<MessageRecord>().AsQueryable());
     }
 
+    public async Task<IQueryable<MessageRecord>> WithDetailsAsync()
+    {
+        var query = await GetQueryableAsync();
+        return query.IncludeDetails();
+    }
+
+    public async Task<MessageRecord?> FindAsync(Expression<Func<MessageRecord, bool>> predicate, bool include = true, CancellationToken cancellationToken = default(CancellationToken))
+    {
+        return include
+            ? await (await WithDetailsAsync()).Where(predicate).FirstOrDefaultAsync(cancellationToken)
+            : await Context.Set<MessageRecord>().Where(predicate).FirstOrDefaultAsync(cancellationToken);
+    }
+
     public async Task<bool> IsExistsAsync(Guid taskHistoryId, Guid userId)
     {
         return await Context.Set<MessageRecord>().AnyAsync(x => x.MessageTaskHistoryId == taskHistoryId && x.UserId == userId);

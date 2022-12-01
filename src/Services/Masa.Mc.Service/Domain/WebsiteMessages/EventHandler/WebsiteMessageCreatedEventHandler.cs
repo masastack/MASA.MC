@@ -42,15 +42,14 @@ public class WebsiteMessageCreatedEventHandler
         {
             var messageData = await _messageTaskDomainService.GetMessageDataAsync(taskHistory.MessageTask.EntityType, taskHistory.MessageTask.EntityId, taskHistory.MessageTask.Variables);
 
-            var receiver = new Receiver(currentUser.Id, currentUser.DisplayName, currentUser.Avatar, currentUser.PhoneNumber, currentUser.Email);
+            //var receiver = new Receiver(currentUser.Id, currentUser.DisplayName, currentUser.Avatar, currentUser.PhoneNumber, currentUser.Email);
 
-            var messageRecord = new MessageRecord(receiver.SubjectId, taskHistory.MessageTask.ChannelId.Value, taskHistory.MessageTaskId, taskHistory.Id, taskHistory.MessageTask.Variables, messageData.GetDataValue<string>(nameof(MessageContent.Title)), taskHistory.SendTime);
+            var messageRecord = new MessageRecord(currentUser.Id, currentUser.Id.ToString(), taskHistory.MessageTask.ChannelId.Value, taskHistory.MessageTaskId, taskHistory.Id, taskHistory.MessageTask.Variables, messageData.GetDataValue<string>(nameof(MessageContent.Title)), taskHistory.SendTime);
             messageRecord.SetMessageEntity(taskHistory.MessageTask.EntityType, taskHistory.MessageTask.EntityId);
-            messageRecord.SetChannelUser(ChannelTypes.WebsiteMessage, receiver.SubjectId.ToString());
             messageRecord.SetResult(true, string.Empty, taskHistory.SendTime);
 
             var linkUrl = messageData.GetDataValue<bool>(nameof(MessageContent.IsJump)) ? messageData.GetDataValue<string>(nameof(MessageContent.JumpUrl)) : string.Empty;
-            var websiteMessage = new WebsiteMessage(messageRecord.ChannelId, receiver.SubjectId, messageData.GetDataValue<string>(nameof(MessageContent.Title)), messageData.GetDataValue<string>(nameof(MessageContent.Content)), linkUrl, taskHistory.SendTime ?? DateTimeOffset.Now);
+            var websiteMessage = new WebsiteMessage(messageRecord.ChannelId, currentUser.Id, messageData.GetDataValue<string>(nameof(MessageContent.Title)), messageData.GetDataValue<string>(nameof(MessageContent.Content)), linkUrl, taskHistory.SendTime ?? DateTimeOffset.Now);
             await _messageRecordRepository.AddAsync(messageRecord);
             await _websiteMessageRepository.AddAsync(websiteMessage);
         }

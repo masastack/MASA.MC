@@ -46,14 +46,13 @@ public class SendSmsMessageEventHandler
             int totalCount = taskHistory.ReceiverUsers.Count;
             foreach (var item in taskHistory.ReceiverUsers)
             {
-                var messageRecord = new MessageRecord(item.Receiver.SubjectId, channel.Id, taskHistory.MessageTaskId, taskHistory.Id, item.Variables, eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.DisplayName)), taskHistory.SendTime);
+                var messageRecord = new MessageRecord(item.UserId, item.ChannelUserIdentity, channel.Id, taskHistory.MessageTaskId, taskHistory.Id, item.Variables, eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.DisplayName)), taskHistory.SendTime);
                 messageRecord.SetMessageEntity(taskHistory.MessageTask.EntityType, taskHistory.MessageTask.EntityId);
-                messageRecord.SetChannelUser( ChannelTypes.Sms, item.Receiver.Email);
 
                 if (eto.MessageData.MessageType == MessageEntityTypes.Template)
                 {
                     var perDayLimit = eto.MessageData.GetDataValue<long>(nameof(MessageTemplate.PerDayLimit));
-                    if (!await _messageTemplateDomainService.CheckSendUpperLimitAsync(messageRecord.MessageEntityId, perDayLimit, item.Receiver.SubjectId))
+                    if (!await _messageTemplateDomainService.CheckSendUpperLimitAsync(messageRecord.MessageEntityId, perDayLimit, item.ChannelUserIdentity))
                     {
                         messageRecord.SetResult(false, "The maximum number of times to send per day has been reached");
                         await _messageRecordRepository.AddAsync(messageRecord);
@@ -62,7 +61,7 @@ public class SendSmsMessageEventHandler
                 }
 
                 var variables = _messageTemplateDomainService.ConvertVariables(eto.MessageData.TemplateItems, item.Variables);
-                var smsMessage = new SmsMessage(item.Receiver.PhoneNumber, JsonSerializer.Serialize(variables));
+                var smsMessage = new SmsMessage(item.ChannelUserIdentity, JsonSerializer.Serialize(variables));
                 smsMessage.Properties.Add("SignName", taskHistory.MessageTask.Sign);
                 smsMessage.Properties.Add("TemplateCode", eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.TemplateId)));
                 try

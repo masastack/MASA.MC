@@ -28,4 +28,19 @@ public class Receiver : ValueObject
         PhoneNumber = phoneNumber;
         Email = email;
     }
+
+    public string GetChannelUserIdentity(ChannelTypes channelType)
+    {
+        switch (channelType)
+        {
+            case ChannelTypes.Sms:
+                return PhoneNumber;
+            case ChannelTypes.Email:
+                return Email;
+            case ChannelTypes.WebsiteMessage:
+                return SubjectId.ToString();
+            default:
+                return string.Empty;
+        }
+    }
 }

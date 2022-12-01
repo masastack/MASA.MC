@@ -73,9 +73,9 @@ public class MessageTemplateDomainService : DomainService
     }
 
 
-    public async Task<bool> CheckSendUpperLimitAsync(Guid messageTemplateId, long perDayLimit, Guid userId)
+    public async Task<bool> CheckSendUpperLimitAsync(Guid messageTemplateId, long perDayLimit, string channelUserIdentity)
     {
-        var sendNum = await _messageRecordRepository.GetCountAsync(x => x.SendTime.Value.Date == DateTime.Now.Date && x.UserId == userId && x.MessageEntityId == messageTemplateId);
+        var sendNum = await _messageRecordRepository.GetCountAsync(x => x.SendTime.Value.Date == DateTime.Now.Date && x.ChannelUserIdentity == channelUserIdentity && x.MessageEntityId == messageTemplateId);
         if (sendNum > perDayLimit)
         {
             return false;

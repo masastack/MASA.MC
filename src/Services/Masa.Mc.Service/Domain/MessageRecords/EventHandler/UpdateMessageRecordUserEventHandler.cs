@@ -46,12 +46,12 @@ public class UpdateMessageRecordUserEventHandler
     {
         try
         {
-            if (messageRecords.ChannelUser.ChannelType == ChannelTypes.Sms)
+            if (messageRecords.Channel.Type == ChannelTypes.Sms)
             {
                 var phoneNumber = messageRecords.GetDataValue<string>(nameof(Receiver.PhoneNumber));
                 return await _authClient.UserService.FindByPhoneNumberAsync(phoneNumber);
             }
-            else if (messageRecords.ChannelUser.ChannelType == ChannelTypes.Email)
+            else if (messageRecords.Channel.Type == ChannelTypes.Email)
             {
                 var email = messageRecords.GetDataValue<string>(nameof(Receiver.Email));
                 return await _authClient.UserService.FindByEmailAsync(email);
@@ -71,14 +71,14 @@ public class UpdateMessageRecordUserEventHandler
     private async Task<UserModel?> CreateExternalUserAsync(MessageRecord messageRecords)
     {
         var addUserModel = new AddUserModel();
-        if (messageRecords.ChannelUser.ChannelType == ChannelTypes.Sms)
+        if (messageRecords.Channel.Type == ChannelTypes.Sms)
         {
             var phoneNumber = messageRecords.GetDataValue<string>(nameof(Receiver.PhoneNumber));
             addUserModel.Account = phoneNumber;
             addUserModel.DisplayName = phoneNumber;
             addUserModel.Password = phoneNumber;
         }
-        else if (messageRecords.ChannelUser.ChannelType == ChannelTypes.Email)
+        else if (messageRecords.Channel.Type == ChannelTypes.Email)
         {
             var email = messageRecords.GetDataValue<string>(nameof(Receiver.Email));
             addUserModel.Account = email;

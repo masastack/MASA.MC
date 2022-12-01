@@ -5,19 +5,19 @@ namespace Masa.Mc.Service.Admin.Domain.MessageRecords.Aggregates;
 
 public class ChannelUser : ValueObject
 {
-    public ChannelTypes ChannelType { get; protected set; }
+    public Guid UserId { get; set; }
 
-    public string ChannelUserIdentity { get; protected set; }
+    public string ChannelUserIdentity { get; set; } = string.Empty;
 
     protected override IEnumerable<object> GetEqualityValues()
     {
-        yield return ChannelType;
+        yield return UserId;
         yield return ChannelUserIdentity;
     }
 
-    public ChannelUser(ChannelTypes channelType, string channelUserIdentity)
+    public ChannelUser(Guid userId, string channelUserIdentity)
     {
-        ChannelType = channelType;
+        UserId = userId;
         ChannelUserIdentity = channelUserIdentity;
     }
 }

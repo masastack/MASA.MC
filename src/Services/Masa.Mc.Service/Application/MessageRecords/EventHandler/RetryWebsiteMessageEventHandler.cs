@@ -37,7 +37,7 @@ public class RetryWebsiteMessageEventHandler
         if (messageData.MessageType == MessageEntityTypes.Template)
         {
             var perDayLimit = messageData.GetDataValue<long>(nameof(MessageTemplate.PerDayLimit));
-            if (!await _messageTemplateDomainService.CheckSendUpperLimitAsync(messageRecord.MessageEntityId, perDayLimit, messageRecord.UserId))
+            if (!await _messageTemplateDomainService.CheckSendUpperLimitAsync(messageRecord.MessageEntityId, perDayLimit, messageRecord.ChannelUserIdentity))
             {
                 messageRecord.SetResult(false, "The maximum number of times to send per day has been reached");
                 await _messageRecordRepository.UpdateAsync(messageRecord);

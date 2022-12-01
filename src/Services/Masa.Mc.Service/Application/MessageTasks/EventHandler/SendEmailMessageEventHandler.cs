@@ -53,14 +53,13 @@ public class SendEmailMessageEventHandler
             int totalCount = taskHistory.ReceiverUsers.Count;
             foreach (var item in taskHistory.ReceiverUsers)
             {
-                var messageRecord = new MessageRecord(item.Receiver.SubjectId, channel.Id, taskHistory.MessageTaskId, taskHistory.Id, item.Variables, eto.MessageData.GetDataValue<string>(nameof(MessageContent.Title)), taskHistory.SendTime);
+                var messageRecord = new MessageRecord(item.UserId, item.ChannelUserIdentity, channel.Id, taskHistory.MessageTaskId, taskHistory.Id, item.Variables, eto.MessageData.GetDataValue<string>(nameof(MessageContent.Title)), taskHistory.SendTime);
                 messageRecord.SetMessageEntity(taskHistory.MessageTask.EntityType, taskHistory.MessageTask.EntityId);
-                messageRecord.SetChannelUser(ChannelTypes.Email, item.Receiver.Email);
                 TemplateRenderer(eto.MessageData, item.Variables);
                 if (eto.MessageData.MessageType == MessageEntityTypes.Template)
                 {
                     var perDayLimit = eto.MessageData.GetDataValue<long>(nameof(MessageTemplate.PerDayLimit));
-                    if (!await _messageTemplateDomainService.CheckSendUpperLimitAsync(messageRecord.MessageEntityId, perDayLimit, item.Receiver.SubjectId))
+                    if (!await _messageTemplateDomainService.CheckSendUpperLimitAsync(messageRecord.MessageEntityId, perDayLimit, item.ChannelUserIdentity))
                     {
                         messageRecord.SetResult(false, "The maximum number of times to send per day has been reached");
                         await _messageRecordRepository.AddAsync(messageRecord);
@@ -71,7 +70,7 @@ public class SendEmailMessageEventHandler
                 try
                 {
                     await _emailSender.SendAsync(
-                        item.Receiver.Email,
+                        item.ChannelUserIdentity,
                         eto.MessageData.GetDataValue<string>(nameof(MessageContent.Title)),
                         eto.MessageData.GetDataValue<string>(nameof(MessageContent.Content))
                     );

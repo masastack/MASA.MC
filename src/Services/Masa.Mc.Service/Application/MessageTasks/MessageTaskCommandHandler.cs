@@ -74,7 +74,7 @@ public class MessageTaskCommandHandler
         if (entity.SchedulerJobId != default)
         {
             var userId = _userContext.GetUserId<Guid>();
-            await _schedulerClient.SchedulerJobService.EnableAsync(new BaseSchedulerJobRequest { JobId = entity.SchedulerJobId, OperatorId = userId });
+            await _schedulerClient.SchedulerJobService.EnableAsync(new SchedulerJobRequestBase { JobId = entity.SchedulerJobId, OperatorId = userId });
         }
     }
 
@@ -92,7 +92,7 @@ public class MessageTaskCommandHandler
         if (entity.SchedulerJobId != default)
         {
             var userId = _userContext.GetUserId<Guid>();
-            await _schedulerClient.SchedulerJobService.DisableAsync(new BaseSchedulerJobRequest { JobId = entity.SchedulerJobId, OperatorId = userId });
+            await _schedulerClient.SchedulerJobService.DisableAsync(new SchedulerJobRequestBase { JobId = entity.SchedulerJobId, OperatorId = userId });
         }
     }
 
