@@ -3,38 +3,39 @@
 
 namespace Masa.Mc.Contracts.Admin.Dtos.MessageTasks;
 
-[Obsolete("To be abandoned")]
-public class SendOrdinaryMessageTaskInputDto
+public class SendTemplateMessageByInternalInputDto
 {
     public string ChannelCode { get; set; } = string.Empty;
 
     public ChannelTypes? ChannelType { get; set; }
 
+    public string TemplateCode { get; set; } = string.Empty;
+
     public ReceiverTypes ReceiverType { get; set; }
 
-    public List<MessageTaskReceiverDto> Receivers { get; set; } = new();
+    public string Sign { get; set; } = string.Empty;
+
+    public List<InternalReceiverDto> Receivers { get; set; } = new();
 
     public SendRuleDto SendRules { get; set; } = new();
-
-    public MessageInfoUpsertDto MessageInfo { get; set; } = new();
 
     public ExtraPropertyDictionary Variables { get; set; } = new();
 
     public Guid OperatorId { get; set; } = default;
 
-    public static implicit operator MessageTaskUpsertDto(SendOrdinaryMessageTaskInputDto dto)
+    public static implicit operator MessageTaskUpsertDto(SendTemplateMessageByInternalInputDto dto)
     {
         return new MessageTaskUpsertDto
         {
             ChannelType = dto.ChannelType,
-            EntityType = MessageEntityTypes.Ordinary,
+            EntityType = MessageEntityTypes.Template,
             IsDraft = false,
             IsEnabled = true,
             ReceiverType = dto.ReceiverType,
             SelectReceiverType = MessageTaskSelectReceiverTypes.ManualSelection,
-            Receivers = dto.Receivers,
+            Sign = dto.Sign,
+            Receivers = dto.Receivers.Select(x => (MessageTaskReceiverDto)x).ToList(),
             SendRules = dto.SendRules,
-            MessageInfo = dto.MessageInfo,
             Variables = dto.Variables,
             Source = MessageTaskSources.Sdk,
             OperatorId = dto.OperatorId,

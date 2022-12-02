@@ -6,6 +6,7 @@ namespace Masa.Mc.Service.Admin.Infrastructure.ChannelUserFinder.Provider.Auth;
 public class AuthChannelUserFinder : IChannelUserFinder
 {
     private readonly IAuthClient _authClient;
+    //Later, I will kill this IReceiverGroupRepository
     private readonly IReceiverGroupRepository _receiverGroupRepository;
 
     public AuthChannelUserFinder(IAuthClient authClient

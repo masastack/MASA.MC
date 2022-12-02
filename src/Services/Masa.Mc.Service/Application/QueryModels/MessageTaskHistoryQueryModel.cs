@@ -23,8 +23,6 @@ public class MessageTaskHistoryQueryModel : ISoftDelete
 
     public bool IsTest { get; set; }
 
-    public List<MessageReceiverUserQueryModel> ReceiverUsers { get; set; } = new();
-
     public Guid SchedulerTaskId { get; set; }
 
     public Guid Creator { get; set; }

@@ -774,7 +774,7 @@ namespace Masa.Mc.Service.Admin.Migrations
 
             modelBuilder.Entity("Masa.Mc.Service.Admin.Domain.MessageInfos.Aggregates.MessageInfo", b =>
                 {
-                    b.OwnsOne("Masa.Mc.Service.Admin.Domain.MessageInfos.Aggregates.MessageContent", "MessageContent", b1 =>
+                    b.OwnsOne("Masa.Mc.Service.Admin.Domain.MessageInfos.Aggregates.MessageInfo.MessageContent#Masa.Mc.Service.Admin.Domain.MessageInfos.Aggregates.MessageContent", "MessageContent", b1 =>
                         {
                             b1.Property<Guid>("MessageInfoId")
                                 .HasColumnType("uniqueidentifier");
@@ -808,7 +808,7 @@ namespace Masa.Mc.Service.Admin.Migrations
 
                             b1.HasKey("MessageInfoId");
 
-                            b1.ToTable("MessageInfos");
+                            b1.ToTable("MessageInfos", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("MessageInfoId");
@@ -858,7 +858,7 @@ namespace Masa.Mc.Service.Admin.Migrations
 
             modelBuilder.Entity("Masa.Mc.Service.Admin.Domain.MessageTemplates.Aggregates.MessageTemplate", b =>
                 {
-                    b.OwnsOne("Masa.Mc.Service.Admin.Domain.MessageInfos.Aggregates.MessageContent", "MessageContent", b1 =>
+                    b.OwnsOne("Masa.Mc.Service.Admin.Domain.MessageTemplates.Aggregates.MessageTemplate.MessageContent#Masa.Mc.Service.Admin.Domain.MessageInfos.Aggregates.MessageContent", "MessageContent", b1 =>
                         {
                             b1.Property<Guid>("MessageTemplateId")
                                 .HasColumnType("uniqueidentifier");
@@ -892,7 +892,7 @@ namespace Masa.Mc.Service.Admin.Migrations
 
                             b1.HasKey("MessageTemplateId");
 
-                            b1.ToTable("MessageTemplates");
+                            b1.ToTable("MessageTemplates", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("MessageTemplateId");
@@ -913,7 +913,7 @@ namespace Masa.Mc.Service.Admin.Migrations
 
             modelBuilder.Entity("Masa.Mc.Service.Admin.Domain.ReceiverGroups.Aggregates.ReceiverGroup", b =>
                 {
-                    b.OwnsMany("Masa.Mc.Service.Admin.Domain.ReceiverGroups.Aggregates.ReceiverGroupItem", "Items", b1 =>
+                    b.OwnsMany("Masa.Mc.Service.Admin.Domain.ReceiverGroups.Aggregates.ReceiverGroup.Items#Masa.Mc.Service.Admin.Domain.ReceiverGroups.Aggregates.ReceiverGroupItem", "Items", b1 =>
                         {
                             b1.Property<Guid>("GroupId")
                                 .HasColumnType("uniqueidentifier");
@@ -932,7 +932,7 @@ namespace Masa.Mc.Service.Admin.Migrations
                             b1.WithOwner()
                                 .HasForeignKey("GroupId");
 
-                            b1.OwnsOne("Masa.Mc.Service.Admin.Domain.ReceiverGroups.Aggregates.Receiver", "Receiver", b2 =>
+                            b1.OwnsOne("Masa.Mc.Service.Admin.Domain.ReceiverGroups.Aggregates.ReceiverGroup.Items#Masa.Mc.Service.Admin.Domain.ReceiverGroups.Aggregates.ReceiverGroupItem.Receiver#Masa.Mc.Service.Admin.Domain.ReceiverGroups.Aggregates.Receiver", "Receiver", b2 =>
                                 {
                                     b2.Property<Guid>("ReceiverGroupItemGroupId")
                                         .HasColumnType("uniqueidentifier");
@@ -970,7 +970,7 @@ namespace Masa.Mc.Service.Admin.Migrations
 
                                     b2.HasKey("ReceiverGroupItemGroupId", "ReceiverGroupItemId");
 
-                                    b2.ToTable("ReceiverGroupItems");
+                                    b2.ToTable("ReceiverGroupItems", (string)null);
 
                                     b2.WithOwner()
                                         .HasForeignKey("ReceiverGroupItemGroupId", "ReceiverGroupItemId");

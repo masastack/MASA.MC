@@ -9,11 +9,7 @@ public class MessageReceiverUserQueryModel
 
     public Guid UserId { get; set; }
 
-    public string DisplayName { get; set; } = string.Empty;
-
-    public string PhoneNumber { get; set; } = string.Empty;
-
-    public string Email { get; set; } = string.Empty;
+    public string ChannelUserIdentity { get; set; } = string.Empty;
 
     public ExtraPropertyDictionary Variables { get; set; } = new();
 

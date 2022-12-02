@@ -15,7 +15,7 @@ public class MessageTaskHistoryQueryHandler
     [EventHandler]
     public async Task GetAsync(GetMessageTaskHistoryQuery query)
     {
-        var entity = await _context.MessageTaskHistoryQueries.Include(x => x.ReceiverUsers).FirstOrDefaultAsync(x => x.Id == query.MessageTaskHistoryId);
+        var entity = await _context.MessageTaskHistoryQueries.FirstOrDefaultAsync(x => x.Id == query.MessageTaskHistoryId);
 
         Check.NotNull(entity, "MessageTaskHistory not found");
 

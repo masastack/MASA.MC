@@ -95,6 +95,7 @@ public class MessageTaskCommandHandler
         }
     }
 
+    [Obsolete("To be abandoned")]
     [EventHandler]
     public async Task SendOrdinaryMessageAsync(SendOrdinaryMessageTaskCommand command)
     {
@@ -107,8 +108,37 @@ public class MessageTaskCommandHandler
         await _eventBus.PublishAsync(ordinaryCommand);
     }
 
+    [Obsolete("To be abandoned")]
     [EventHandler]
     public async Task SendTemplateMessageAsync(SendTemplateMessageTaskCommand command)
+    {
+        var channel = await _channelRepository.FindAsync(x => x.Code == command.inputDto.ChannelCode);
+        Check.NotNull(channel, "Channel not found");
+
+        var template = await _messageTemplateRepository.FindAsync(x => x.Code == command.inputDto.TemplateCode);
+        Check.NotNull(template, "Template not found");
+
+        var taskUpsertDto = (MessageTaskUpsertDto)command.inputDto;
+        taskUpsertDto.ChannelId = channel.Id;
+        taskUpsertDto.EntityId = template.Id;
+        var templateCommand = new CreateTemplateMessageTaskCommand(taskUpsertDto);
+        await _eventBus.PublishAsync(templateCommand);
+    }
+
+    [EventHandler]
+    public async Task SendOrdinaryMessageByInternalAsync(SendOrdinaryMessageByInternalCommand command)
+    {
+        var channel = await _channelRepository.FindAsync(x => x.Code == command.inputDto.ChannelCode);
+        Check.NotNull(channel, "Channel not found");
+
+        var taskUpsertDto = (MessageTaskUpsertDto)command.inputDto;
+        taskUpsertDto.ChannelId = channel.Id;
+        var ordinaryCommand = new CreateOrdinaryMessageTaskCommand(taskUpsertDto);
+        await _eventBus.PublishAsync(ordinaryCommand);
+    }
+
+    [EventHandler]
+    public async Task SendTemplateMessageByInternalAsync(SendTemplateMessageByInternalCommand command)
     {
         var channel = await _channelRepository.FindAsync(x => x.Code == command.inputDto.ChannelCode);
         Check.NotNull(channel, "Channel not found");

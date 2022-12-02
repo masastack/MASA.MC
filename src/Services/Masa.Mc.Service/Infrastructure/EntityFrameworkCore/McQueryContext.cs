@@ -66,7 +66,6 @@ public class McQueryContext : MasaDbContext<McQueryContext>, IMcQueryContext
         builder.Entity<MessageTaskHistoryQueryModel>(b =>
         {
             b.ToView(MCConsts.DbTablePrefix + "MessageTaskHistorys", MCConsts.DbSchema);
-            b.HasMany(x => x.ReceiverUsers).WithOne().HasForeignKey(m => m.MessageTaskHistoryId).IsRequired();
         });
 
         builder.Entity<MessageInfoQueryModel>(b =>

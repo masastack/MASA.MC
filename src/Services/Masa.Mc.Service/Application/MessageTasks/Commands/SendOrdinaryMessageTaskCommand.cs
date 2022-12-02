@@ -3,6 +3,7 @@
 
 namespace Masa.Mc.Service.Admin.Application.MessageTasks.Commands;
 
+[Obsolete("To be abandoned")]
 public record SendOrdinaryMessageTaskCommand(SendOrdinaryMessageTaskInputDto inputDto) : Command
 {
 }

@@ -3,6 +3,7 @@
 
 namespace Masa.Mc.Contracts.Admin.Dtos.MessageTasks;
 
+[Obsolete("To be abandoned")]
 public class SendTemplateMessageTaskInputDto
 {
     public string ChannelCode { get; set; } = string.Empty;
@@ -15,7 +16,7 @@ public class SendTemplateMessageTaskInputDto
 
     public string Sign { get; set; } = string.Empty;
 
-    public List<InternalReceiverDto> Receivers { get; set; } = new();
+    public List<MessageTaskReceiverDto> Receivers { get; set; } = new();
 
     public SendRuleDto SendRules { get; set; } = new();
 
@@ -34,7 +35,7 @@ public class SendTemplateMessageTaskInputDto
             ReceiverType = dto.ReceiverType,
             SelectReceiverType = MessageTaskSelectReceiverTypes.ManualSelection,
             Sign = dto.Sign,
-            Receivers = dto.Receivers.Select(x => (MessageTaskReceiverDto)x).ToList(),
+            Receivers = dto.Receivers,
             SendRules = dto.SendRules,
             Variables = dto.Variables,
             Source = MessageTaskSources.Sdk,

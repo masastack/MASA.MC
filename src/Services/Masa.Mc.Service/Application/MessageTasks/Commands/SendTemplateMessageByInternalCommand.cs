@@ -3,7 +3,6 @@
 
 namespace Masa.Mc.Service.Admin.Application.MessageTasks.Commands;
 
-[Obsolete("To be abandoned")]
-public record SendTemplateMessageTaskCommand(SendTemplateMessageTaskInputDto inputDto) : Command
+public record SendTemplateMessageByInternalCommand(SendTemplateMessageByInternalInputDto inputDto) : Command
 {
 }
