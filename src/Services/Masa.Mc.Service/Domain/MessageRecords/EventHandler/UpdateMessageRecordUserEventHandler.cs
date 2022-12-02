@@ -48,13 +48,11 @@ public class UpdateMessageRecordUserEventHandler
         {
             if (messageRecords.Channel.Type == ChannelType.Sms)
             {
-                var phoneNumber = messageRecords.GetDataValue<string>(nameof(Receiver.PhoneNumber));
-                return await _authClient.UserService.FindByPhoneNumberAsync(phoneNumber);
+                return await _authClient.UserService.FindByPhoneNumberAsync(messageRecords.ChannelUserIdentity);
             }
             else if (messageRecords.Channel.Type == ChannelType.Email)
             {
-                var email = messageRecords.GetDataValue<string>(nameof(Receiver.Email));
-                return await _authClient.UserService.FindByEmailAsync(email);
+                return await _authClient.UserService.FindByEmailAsync(messageRecords.ChannelUserIdentity);
             }
             else
             {
@@ -73,14 +71,14 @@ public class UpdateMessageRecordUserEventHandler
         var addUserModel = new AddUserModel();
         if (messageRecords.Channel.Type == ChannelType.Sms)
         {
-            var phoneNumber = messageRecords.GetDataValue<string>(nameof(Receiver.PhoneNumber));
+            var phoneNumber = messageRecords.ChannelUserIdentity;
             addUserModel.Account = phoneNumber;
             addUserModel.DisplayName = phoneNumber;
-            addUserModel.Password = phoneNumber;
+            addUserModel.PhoneNumber = phoneNumber;
         }
         else if (messageRecords.Channel.Type == ChannelType.Email)
         {
-            var email = messageRecords.GetDataValue<string>(nameof(Receiver.Email));
+            var email = messageRecords.ChannelUserIdentity;
             addUserModel.Account = email;
             addUserModel.DisplayName = email;
             addUserModel.Email = email;

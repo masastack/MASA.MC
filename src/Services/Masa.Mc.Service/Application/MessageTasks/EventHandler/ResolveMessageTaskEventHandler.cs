@@ -31,14 +31,13 @@ public class ResolveMessageTaskEventHandler
     public async Task QueryMessageTask(ResolveMessageTaskEvent eto)
     {
         var messageTask = (await _messageTaskRepository.WithDetailsAsync()).FirstOrDefault(x => x.Id == eto.MessageTaskId);
+        eto.MessageTask = messageTask;
 
         if (messageTask == null || messageTask.ReceiverType == ReceiverTypes.Broadcast)
         {
             eto.IsStop = true;
             return;
         }
-
-        eto.MessageTask = messageTask;
     }
 
     [EventHandler(2)]

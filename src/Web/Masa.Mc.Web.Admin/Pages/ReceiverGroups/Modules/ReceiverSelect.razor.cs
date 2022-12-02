@@ -27,7 +27,7 @@ public partial class ReceiverSelect : AdminCompontentBase
         {
             Type = ReceiverGroupItemTypes.User,
             SubjectId = user.Id,
-            DisplayName = user.Name ?? user.DisplayName ?? string.Empty,
+            DisplayName = user.GetDisplayName(),
             Avatar = user.Avatar,
             PhoneNumber = user.PhoneNumber ?? string.Empty,
             Email = user.Email ?? string.Empty
@@ -44,7 +44,7 @@ public partial class ReceiverSelect : AdminCompontentBase
             {
                 Type = (ReceiverGroupItemTypes)((int)item.SubjectType),
                 SubjectId = item.SubjectId,
-                DisplayName = item.Name ?? item.DisplayName ?? string.Empty,
+                DisplayName = item.GetDisplayName(),
                 Avatar = item.Avatar ?? string.Empty,
                 PhoneNumber = item.PhoneNumber ?? string.Empty,
                 Email = item.Email ?? string.Empty

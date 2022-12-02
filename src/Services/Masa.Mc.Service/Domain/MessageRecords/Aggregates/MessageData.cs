@@ -35,10 +35,11 @@ public class MessageData : ValueObject
 
     public void RenderContent(ExtraPropertyDictionary variables, string startstr = "{{", string endstr = "}}")
     {
-
-        SetDataValue(nameof(MessageContent.Title), Render(GetDataValue<string>(nameof(MessageContent.Title)), variables, startstr, endstr));
-        SetDataValue(nameof(MessageContent.Content), Render(GetDataValue<string>(nameof(MessageContent.Content)), variables, startstr, endstr));
-        SetDataValue(nameof(MessageContent.JumpUrl), Render(GetDataValue<string>(nameof(MessageContent.JumpUrl)), variables, startstr, endstr));
+        MessageContent = new MessageContent(Render(MessageContent.Title, variables, startstr, endstr)
+            , Render(MessageContent.Content, variables, startstr, endstr)
+            , MessageContent.Markdown
+            , MessageContent.IsJump
+            , Render(MessageContent.JumpUrl, variables, startstr, endstr));
     }
 
     private string Render(string context, ExtraPropertyDictionary variables, string startstr, string endstr)

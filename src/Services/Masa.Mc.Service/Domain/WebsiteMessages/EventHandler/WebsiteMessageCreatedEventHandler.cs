@@ -44,12 +44,11 @@ public class WebsiteMessageCreatedEventHandler
 
             //var receiver = new Receiver(currentUser.Id, currentUser.DisplayName, currentUser.Avatar, currentUser.PhoneNumber, currentUser.Email);
 
-            var messageRecord = new MessageRecord(currentUser.Id, currentUser.Id.ToString(), taskHistory.MessageTask.ChannelId.Value, taskHistory.MessageTaskId, taskHistory.Id, taskHistory.MessageTask.Variables, messageData.GetDataValue<string>(nameof(MessageContent.Title)), taskHistory.SendTime);
+            var messageRecord = new MessageRecord(currentUser.Id, currentUser.Id.ToString(), taskHistory.MessageTask.ChannelId.Value, taskHistory.MessageTaskId, taskHistory.Id, taskHistory.MessageTask.Variables, messageData.MessageContent.Title, taskHistory.SendTime);
             messageRecord.SetMessageEntity(taskHistory.MessageTask.EntityType, taskHistory.MessageTask.EntityId);
             messageRecord.SetResult(true, string.Empty, taskHistory.SendTime);
 
-            var linkUrl = messageData.GetDataValue<bool>(nameof(MessageContent.IsJump)) ? messageData.GetDataValue<string>(nameof(MessageContent.JumpUrl)) : string.Empty;
-            var websiteMessage = new WebsiteMessage(messageRecord.ChannelId, currentUser.Id, messageData.GetDataValue<string>(nameof(MessageContent.Title)), messageData.GetDataValue<string>(nameof(MessageContent.Content)), linkUrl, taskHistory.SendTime ?? DateTimeOffset.Now);
+            var websiteMessage = new WebsiteMessage(messageRecord.ChannelId, currentUser.Id, messageData.MessageContent.Title, messageData.MessageContent.Content, messageData.MessageContent.GetJumpUrl(), taskHistory.SendTime ?? DateTimeOffset.Now);
             await _messageRecordRepository.AddAsync(messageRecord);
             await _websiteMessageRepository.AddAsync(websiteMessage);
         }

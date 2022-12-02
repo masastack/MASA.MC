@@ -46,9 +46,8 @@ public class RetrySmsMessageEventHandler
         };
         using (_aliyunSmsAsyncLocal.Change(options))
         {
-            var messageData = await _taskDomainService.GetMessageDataAsync(messageRecord.MessageTaskId, messageRecord.Variables);
             var variables = messageRecord.Variables;
-            if (messageData.MessageType == MessageEntityTypes.Template)
+            if (messageRecord.MessageEntityType == MessageEntityTypes.Template)
             {
                 var messageTemplate = await _repository.FindAsync(x => x.Id == messageRecord.MessageEntityId, false);
                 if (!await _messageTemplateDomainService.CheckSendUpperLimitAsync(messageTemplate, messageRecord.ChannelUserIdentity))

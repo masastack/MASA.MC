@@ -78,7 +78,7 @@ public partial class TemplateMessageEditModal : AdminCompontentBase
     private async Task HandleOkAsync()
     {
         SetReceivers();
-        if (_form.Validate())
+        if (!_form.Validate())
         {
             return;
         }

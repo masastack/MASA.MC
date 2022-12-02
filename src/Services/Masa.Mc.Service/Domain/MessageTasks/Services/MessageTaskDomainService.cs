@@ -98,7 +98,7 @@ public class MessageTaskDomainService : DomainService
         var channel = await _channelRepository.FindAsync(x => x.Id == messageTask.ChannelId);
         if (channel == null)
             throw new UserFriendlyException("Channel not found");
-        if (channel.Type != messageTask.ChannelType)
+        if (channel.Type.Id != messageTask.ChannelType?.Id)
             throw new UserFriendlyException("Channel type does not match the channel");
     }
 }

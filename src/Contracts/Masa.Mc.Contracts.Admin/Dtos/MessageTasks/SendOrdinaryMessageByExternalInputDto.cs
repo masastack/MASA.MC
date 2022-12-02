@@ -33,7 +33,7 @@ public class SendOrdinaryMessageByExternalInputDto
             SelectReceiverType = MessageTaskSelectReceiverTypes.ManualSelection,
             Receivers = dto.Receivers.Select(x =>
             {
-                var receiver = new MessageTaskReceiverDto();
+                var receiver = new MessageTaskReceiverDto() { Type = MessageTaskReceiverTypes.User };
                 receiver.SetChannelUserIdentity(dto.ChannelType, x.ChannelUserIdentity);
                 return receiver;
             }).ToList(),

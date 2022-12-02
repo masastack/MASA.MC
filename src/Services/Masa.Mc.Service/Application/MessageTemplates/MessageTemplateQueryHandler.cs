@@ -31,7 +31,7 @@ public class MessageTemplateQueryHandler
     {
         var options = query.Input;
         var condition = await CreateFilteredPredicate(options);
-        var resultList = await _context.MessageTemplateQueries.Include(x=>x.Channel).GetPaginatedListAsync(condition, new()
+        var resultList = await _context.MessageTemplateQueries.Include(x=>x.Channel).Include(x => x.Items).GetPaginatedListAsync(condition, new()
         {
             Page = options.Page,
             PageSize = options.PageSize,
