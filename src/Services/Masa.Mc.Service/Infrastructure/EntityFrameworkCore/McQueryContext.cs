@@ -91,11 +91,6 @@ public class McQueryContext : MasaDbContext<McQueryContext>, IMcQueryContext
             b.ToView(MCConsts.DbTablePrefix + "WebsiteMessages", MCConsts.DbSchema);
         });
 
-        //builder.Entity<WebsiteMessageCursor>(b =>
-        //{
-        //    b.ToView(MCConsts.DbTablePrefix + "WebsiteMessageCursors", MCConsts.DbSchema);
-        //});
-
         base.OnModelCreatingExecuting(builder);
     }
 }

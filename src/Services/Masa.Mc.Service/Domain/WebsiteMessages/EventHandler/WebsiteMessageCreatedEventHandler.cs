@@ -41,9 +41,6 @@ public class WebsiteMessageCreatedEventHandler
         foreach (var taskHistory in taskHistorys)
         {
             var messageData = await _messageTaskDomainService.GetMessageDataAsync(taskHistory.MessageTask.EntityType, taskHistory.MessageTask.EntityId, taskHistory.MessageTask.Variables);
-
-            //var receiver = new Receiver(currentUser.Id, currentUser.DisplayName, currentUser.Avatar, currentUser.PhoneNumber, currentUser.Email);
-
             var messageRecord = new MessageRecord(currentUser.Id, currentUser.Id.ToString(), taskHistory.MessageTask.ChannelId.Value, taskHistory.MessageTaskId, taskHistory.Id, taskHistory.MessageTask.Variables, messageData.MessageContent.Title, taskHistory.SendTime);
             messageRecord.SetMessageEntity(taskHistory.MessageTask.EntityType, taskHistory.MessageTask.EntityId);
             messageRecord.SetResult(true, string.Empty, taskHistory.SendTime);
