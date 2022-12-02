@@ -50,7 +50,7 @@ public class MessageTaskCommandHandler
 
         if (!entity.ChannelId.HasValue)
             throw new UserFriendlyException("please select the configuration channel");
-        if (entity.Channel.Type == ChannelTypes.Sms && string.IsNullOrEmpty(entity.Sign))
+        if (entity.Channel.Type == ChannelType.Sms && string.IsNullOrEmpty(entity.Sign))
             throw new UserFriendlyException("please fill in the signature of the task first");
         if (entity.Variables.Any(x => string.IsNullOrEmpty(x.Value.ToString())))
             throw new UserFriendlyException("please fill in the signature template variable of the task first");

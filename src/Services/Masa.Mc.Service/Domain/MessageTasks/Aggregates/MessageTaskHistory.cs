@@ -64,7 +64,7 @@ public class MessageTaskHistory : FullAggregateRoot<Guid, Guid>
 
         AddDomainEvent(new WithdrawMessageRecordEvent(Id));
 
-        if (MessageTask.ChannelType == ChannelTypes.WebsiteMessage)
+        if (MessageTask.ChannelType == ChannelType.WebsiteMessage)
         {
             AddDomainEvent(new WithdrawWebsiteMessageEvent(Id));
         }

@@ -31,7 +31,7 @@ public class ChannelCommandHandler
         var entity = await _repository.FindAsync(x => x.Id == updateCommand.ChannelId);
         if (entity == null)
             throw new UserFriendlyException("channel not found");
-        if (updateCommand.Channel.Type != entity.Type)
+        if ((int)updateCommand.Channel.Type != entity.Type.Id)
             throw new UserFriendlyException("type cannot be changed");
         if (updateCommand.Channel.Code != entity.Code)
             throw new UserFriendlyException("code cannot be changed");

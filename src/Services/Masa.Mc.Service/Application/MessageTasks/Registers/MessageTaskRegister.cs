@@ -9,7 +9,8 @@ namespace Masa.Mc.Service.Admin.Application.MessageTasks.Registers
         {
             config.ForType<MessageTask, MessageTaskDto>().MapToConstructor(true)
                 .Map(dest => dest.Receivers, src => src.Receivers);
-            config.ForType<MessageTaskUpsertDto, MessageTask>().MapToConstructor(true);
+            config.ForType<MessageTaskUpsertDto, MessageTask>().MapToConstructor(true)
+                .Map(dest => dest.ChannelType, src => src.ChannelType.HasValue ? Enumeration.FromValue<ChannelType>((int)src.ChannelType.Value) : null);
             config.ForType<MessageTaskHistory, MessageTaskHistoryDto>().MapToConstructor(true);
             config.ForType<MessageTaskReceiverDto, MessageTaskReceiver>().MapToConstructor(true)
                  .Map(dest => dest.Receiver, src => new Receiver(src.SubjectId, src.DisplayName, src.Avatar, src.PhoneNumber, src.Email));

@@ -17,6 +17,7 @@ public static class McDbContextModelBuilderExtensions
             b.Property(x => x.Type).HasColumnName(nameof(Channel.Type));
             b.Property(x => x.Description).HasMaxLength(512);
             b.Property(x => x.ExtraProperties).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
+            b.Property(x => x.Type).HasConversion(x => x.Id, x => Enumeration.FromValue<ChannelType>(x)).HasColumnName(nameof(Channel.Type));
             b.HasIndex(x => x.Code);
             b.HasIndex(x => x.Type);
         });
@@ -86,6 +87,7 @@ public static class McDbContextModelBuilderExtensions
             b.Property(x => x.SendRules).HasConversion(new JsonValueConverter<MessageTaskSendingRule>());
             b.Property(x => x.Variables).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
             b.Property(x => x.ReceiverUsers).HasConversion(new JsonValueConverter<List<MessageReceiverUser>>());
+            b.Property(x => x.ChannelType).HasConversion(x => x.Id, x => Enumeration.FromValue<ChannelType>(x));
         });
 
         builder.Entity<MessageTaskHistory>(b =>
