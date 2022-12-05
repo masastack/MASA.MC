@@ -58,6 +58,7 @@ public class SendSmsMessageEventHandler
                 if (eto.MessageData.MessageType == MessageEntityTypes.Template)
                 {
                     var messageTemplate = await _templateRepository.FindAsync(x => x.Id == messageRecord.MessageEntityId, false);
+                    messageRecord.SetDisplayName(messageTemplate.DisplayName);
                     if (!await _messageTemplateDomainService.CheckSendUpperLimitAsync(messageTemplate, messageRecord.ChannelUserIdentity))
                     {
                         messageRecord.SetResult(false, "The maximum number of times to send per day has been reached");

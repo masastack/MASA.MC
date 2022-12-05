@@ -72,4 +72,9 @@ public class MessageRecord : FullAggregateRoot<Guid, Guid>
     {
         UserId = userId;
     }
+
+    public void SetDisplayName(string displayName)
+    {
+        DisplayName = displayName;
+    }
 }
