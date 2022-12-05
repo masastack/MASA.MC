@@ -13,6 +13,7 @@ public class SendEmailMessageEventHandler
     private readonly IMessageTaskHistoryRepository _messageTaskHistoryRepository;
     private readonly MessageTemplateDomainService _messageTemplateDomainService;
     private readonly ILogger<SendEmailMessageEventHandler> _logger;
+    private readonly IMessageTemplateRepository _repository;
 
     public SendEmailMessageEventHandler(IEmailAsyncLocal emailAsyncLocal
         , IEmailSender emailSender
@@ -21,7 +22,8 @@ public class SendEmailMessageEventHandler
         , IMessageRecordRepository messageRecordRepository
         , IMessageTaskHistoryRepository messageTaskHistoryRepository
         , MessageTemplateDomainService messageTemplateDomainService
-        , ILogger<SendEmailMessageEventHandler> logger)
+        , ILogger<SendEmailMessageEventHandler> logger
+        , IMessageTemplateRepository repository)
     {
         _emailAsyncLocal = emailAsyncLocal;
         _emailSender = emailSender;
@@ -31,6 +33,7 @@ public class SendEmailMessageEventHandler
         _messageTaskHistoryRepository = messageTaskHistoryRepository;
         _messageTemplateDomainService = messageTemplateDomainService;
         _logger = logger;
+        _repository = repository;
     }
 
     [EventHandler]
@@ -53,14 +56,13 @@ public class SendEmailMessageEventHandler
             int totalCount = taskHistory.ReceiverUsers.Count;
             foreach (var item in taskHistory.ReceiverUsers)
             {
-                var messageRecord = new MessageRecord(item.UserId, channel.Id, taskHistory.MessageTaskId, taskHistory.Id, item.Variables, eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.Title)), taskHistory.SendTime);
+                var messageRecord = new MessageRecord(item.UserId, item.ChannelUserIdentity, channel.Id, taskHistory.MessageTaskId, taskHistory.Id, item.Variables, eto.MessageData.MessageContent.Title, taskHistory.SendTime);
                 messageRecord.SetMessageEntity(taskHistory.MessageTask.EntityType, taskHistory.MessageTask.EntityId);
-                messageRecord.SetUserInfo(item.UserId, item.DisplayName, item.Account, item.Email, item.PhoneNumber);
-                TemplateRenderer(eto.MessageData, item.Variables);
+                eto.MessageData.RenderContent(item.Variables);
                 if (eto.MessageData.MessageType == MessageEntityTypes.Template)
                 {
-                    var perDayLimit = eto.MessageData.GetDataValue<long>(nameof(MessageTemplate.PerDayLimit));
-                    if (!await _messageTemplateDomainService.CheckSendUpperLimitAsync(messageRecord.MessageEntityId, perDayLimit, item.UserId))
+                    var messageTemplate = await _repository.FindAsync(x => x.Id == messageRecord.MessageEntityId, false);
+                    if (!await _messageTemplateDomainService.CheckSendUpperLimitAsync(messageTemplate, messageRecord.ChannelUserIdentity))
                     {
                         messageRecord.SetResult(false, "The maximum number of times to send per day has been reached");
                         await _messageRecordRepository.AddAsync(messageRecord);
@@ -71,9 +73,9 @@ public class SendEmailMessageEventHandler
                 try
                 {
                     await _emailSender.SendAsync(
-                        item.Email,
-                        eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.Title)),
-                        eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.Content))
+                        item.ChannelUserIdentity,
+                        eto.MessageData.MessageContent.Title,
+                        eto.MessageData.MessageContent.Content
                     );
                     messageRecord.SetResult(true, string.Empty);
                     okCount++;
@@ -89,11 +91,5 @@ public class SendEmailMessageEventHandler
             taskHistory.SetResult(okCount == totalCount ? MessageTaskHistoryStatuses.Success : (okCount > 0 ? MessageTaskHistoryStatuses.PartialFailure : MessageTaskHistoryStatuses.Fail));
             await _messageTaskHistoryRepository.UpdateAsync(taskHistory);
         }
-    }
-
-    private async void TemplateRenderer(MessageData messageData, ExtraPropertyDictionary Variables)
-    {
-        messageData.SetDataValue(nameof(MessageTemplate.Title), await _templateRenderer.RenderAsync(messageData.GetDataValue<string>(nameof(MessageTemplate.Title)), Variables));
-        messageData.SetDataValue(nameof(MessageTemplate.Content), await _templateRenderer.RenderAsync(messageData.GetDataValue<string>(nameof(MessageTemplate.Content)), Variables));
     }
 }

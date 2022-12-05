@@ -151,15 +151,41 @@ public class MessageTaskService : ServiceBase
         await eventBus.PublishAsync(query);
     }
 
+    [Obsolete("Please use SendOrdinaryMessageByInternalAsync or SendOrdinaryMessageByExternalAsync")]
     public async Task SendOrdinaryMessageAsync(IEventBus eventBus, SendOrdinaryMessageTaskInputDto inputDto)
     {
         var command = new SendOrdinaryMessageTaskCommand(inputDto);
         await eventBus.PublishAsync(command);
     }
 
+    [Obsolete("Please use SendTemplateMessageByInternalAsync or SendTemplateMessageByExternalAsync")]
     public async Task SendTemplateMessageAsync(IEventBus eventBus, SendTemplateMessageTaskInputDto inputDto)
     {
         var command = new SendTemplateMessageTaskCommand(inputDto);
+        await eventBus.PublishAsync(command);
+    }
+
+    public async Task SendOrdinaryMessageByInternalAsync(IEventBus eventBus, SendOrdinaryMessageByInternalInputDto inputDto)
+    {
+        var command = new SendOrdinaryMessageByInternalCommand(inputDto);
+        await eventBus.PublishAsync(command);
+    }
+
+    public async Task SendTemplateMessageByInternalAsync(IEventBus eventBus, SendTemplateMessageByInternalInputDto inputDto)
+    {
+        var command = new SendTemplateMessageByInternalCommand(inputDto);
+        await eventBus.PublishAsync(command);
+    }
+
+    public async Task SendOrdinaryMessageByExternalAsync(IEventBus eventBus, SendOrdinaryMessageByExternalInputDto inputDto)
+    {
+        var command = new SendOrdinaryMessageByExternalCommand(inputDto);
+        await eventBus.PublishAsync(command);
+    }
+
+    public async Task SendTemplateMessageByExternalAsync(IEventBus eventBus, SendTemplateMessageByExternalInputDto inputDto)
+    {
+        var command = new SendTemplateMessageByExternalCommand(inputDto);
         await eventBus.PublishAsync(command);
     }
 }

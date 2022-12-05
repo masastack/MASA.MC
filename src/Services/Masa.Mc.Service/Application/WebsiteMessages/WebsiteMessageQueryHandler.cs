@@ -5,25 +5,22 @@ namespace Masa.Mc.Service.Admin.Application.WebsiteMessages;
 
 public class WebsiteMessageQueryHandler
 {
-    private readonly IWebsiteMessageRepository _repository;
-    private readonly IChannelRepository _channelRepository;
+    private readonly IMcQueryContext _context;
     private readonly IUserContext _userContext;
 
-    public WebsiteMessageQueryHandler(IWebsiteMessageRepository repository
-        , IChannelRepository channelRepository
+    public WebsiteMessageQueryHandler(IMcQueryContext context
         , IUserContext userContext)
     {
-        _repository = repository;
-        _channelRepository = channelRepository;
+        _context = context;
         _userContext = userContext;
     }
 
     [EventHandler]
     public async Task GetAsync(GetWebsiteMessageQuery query)
     {
-        var entity = await _repository.FindAsync(x => x.Id == query.WebsiteMessageId);
-        if (entity == null)
-            throw new UserFriendlyException("WebsiteMessage not found");
+        var entity = await _context.WebsiteMessageQueries.Include(x => x.Channel).FirstOrDefaultAsync(x => x.Id == query.WebsiteMessageId);
+        MasaArgumentException.ThrowIfNull(entity, "WebsiteMessage");
+
         var dto = entity.Adapt<WebsiteMessageDto>();
         await FillDetailDto(dto);
         query.Result = dto;
@@ -33,15 +30,19 @@ public class WebsiteMessageQueryHandler
     public async Task GetListAsync(GetWebsiteMessageListQuery query)
     {
         var options = query.Input;
-        var queryable = await CreateFilteredQueryAsync(options);
-        var totalCount = await queryable.CountAsync();
-        var totalPages = (int)Math.Ceiling(totalCount / (decimal)options.PageSize);
-        if (string.IsNullOrEmpty(options.Sorting)) options.Sorting = "creationTime desc";
-        queryable = queryable.OrderBy(options.Sorting).PageBy(options.Page, options.PageSize);
-        var entities = await queryable.ToListAsync();
-        var entityDtos = entities.Adapt<List<WebsiteMessageDto>>();
-        FillListDtos(entityDtos);
-        var result = new PaginatedListDto<WebsiteMessageDto>(totalCount, totalPages, entityDtos);
+        var condition = await CreateFilteredPredicate(options);
+        var resultList = await _context.WebsiteMessageQueries.Include(x => x.Channel).GetPaginatedListAsync(condition, new()
+        {
+            Page = options.Page,
+            PageSize = options.PageSize,
+            Sorting = new Dictionary<string, bool>
+            {
+                [nameof(WebsiteMessageQueryModel.CreationTime)] = true
+            }
+        });
+        var dtos = resultList.Result.Adapt<List<WebsiteMessageDto>>();
+        FillListDtos(dtos);
+        var result = new PaginatedListDto<WebsiteMessageDto>(resultList.Total, resultList.TotalPages, dtos);
         query.Result = result;
     }
 
@@ -49,7 +50,15 @@ public class WebsiteMessageQueryHandler
     public async Task GetChannelListAsync(GetChannelListWebsiteMessageQuery query)
     {
         var userId = _userContext.GetUserId<Guid>();
-        var entities = await _repository.GetChannelListAsync(userId);
+
+        var set = _context.WebsiteMessageQueries.AsNoTracking().Where(x => x.UserId == userId);
+        var sorted = set.OrderByDescending(x => x.CreationTime);
+        var list = set.Select(x => x.ChannelId)
+            .Distinct()
+            .SelectMany(x => sorted.Where(y => y.ChannelId == x).Take(1));
+
+        var entities = list.OrderByDescending(x => x.CreationTime).ToList();
+
         var entityDtos = entities.Adapt<List<WebsiteMessageChannelDto>>();
         await FillChannelListDtos(entityDtos);
         query.Result = entityDtos;
@@ -58,15 +67,14 @@ public class WebsiteMessageQueryHandler
     [EventHandler]
     public async Task GetNoticeListAsync(GetNoticeListQuery query)
     {
-        var noticeNum = query.PageSize;
-        var queryable = await _repository.WithDetailsAsync();
         var userId = _userContext.GetUserId<Guid>();
-        queryable = queryable.Where(x => x.UserId == userId && !x.IsWithdrawn);
-        var list = queryable.Where(x => !x.IsRead).OrderByDescending(x => x.CreationTime).Take(noticeNum).ToList();
+        var noticeNum = query.PageSize;
+        var queryable = _context.WebsiteMessageQueries.Include(x => x.Channel).Where(x => x.UserId == userId && !x.IsWithdrawn);
+        var list = await queryable.Where(x => !x.IsRead).OrderByDescending(x => x.CreationTime).Take(noticeNum).ToListAsync();
         if (list.Count < noticeNum)
         {
             var surplusNum = noticeNum - list.Count;
-            var surplusList = queryable.Where(x => x.IsRead).OrderByDescending(x => x.CreationTime).Take(surplusNum).ToList();
+            var surplusList = await queryable.Where(x => x.IsRead).OrderByDescending(x => x.CreationTime).Take(surplusNum).ToListAsync();
             list.AddRange(surplusList);
         }
         var dtos = list.Adapt<List<WebsiteMessageDto>>();
@@ -74,10 +82,10 @@ public class WebsiteMessageQueryHandler
         query.Result = dtos;
     }
 
-    private async Task<Expression<Func<WebsiteMessage, bool>>> CreateFilteredPredicate(GetWebsiteMessageInputDto inputDto)
+    private async Task<Expression<Func<WebsiteMessageQueryModel, bool>>> CreateFilteredPredicate(GetWebsiteMessageInputDto inputDto)
     {
         var userId = _userContext.GetUserId<Guid>();
-        Expression<Func<WebsiteMessage, bool>> condition = w => w.UserId == userId && !w.IsWithdrawn;
+        Expression<Func<WebsiteMessageQueryModel, bool>> condition = w => w.UserId == userId && !w.IsWithdrawn;
         switch (inputDto.FilterType)
         {
             case WebsiteMessageFilterType.MessageTitle:
@@ -95,20 +103,13 @@ public class WebsiteMessageQueryHandler
         return await Task.FromResult(condition); ;
     }
 
-    private async Task<IQueryable<WebsiteMessage>> CreateFilteredQueryAsync(GetWebsiteMessageInputDto inputDto)
-    {
-        var query = await _repository.WithDetailsAsync()!;
-        var condition = await CreateFilteredPredicate(inputDto);
-        return query.Where(condition);
-    }
-
     private async Task FillChannelListDtos(List<WebsiteMessageChannelDto> dtos)
     {
         var channeIds = dtos.Select(d => d.ChannelId).ToList();
-        var channeList = await _channelRepository.GetListAsync(x => channeIds.Contains(x.Id));
+        var channeList = await _context.ChannelQueryQueries.Where(x => channeIds.Contains(x.Id)).ToListAsync();
         foreach (var item in dtos)
         {
-            item.NoReading = await _repository.GetCountAsync(x => x.ChannelId == item.ChannelId && !x.IsRead && x.UserId == item.UserId);
+            item.NoReading = await _context.WebsiteMessageQueries.CountAsync(x => x.ChannelId == item.ChannelId && !x.IsRead && x.UserId == item.UserId);
             var channel = channeList.FirstOrDefault(x => x.Id == item.ChannelId);
             if (channel != null) item.Channel = channel.Adapt<ChannelDto>();
         }
@@ -125,22 +126,20 @@ public class WebsiteMessageQueryHandler
     private async Task FillDetailDto(WebsiteMessageDto dto)
     {
         var userId = _userContext.GetUserId<Guid>();
-        Expression<Func<WebsiteMessage, bool>> condition = w => w.UserId == userId && w.ChannelId == dto.ChannelId;
+        Expression<Func<WebsiteMessageQueryModel, bool>> condition = w => w.UserId == userId && w.ChannelId == dto.ChannelId;
         var prev = await GetPrevWebsiteMessage(dto.CreationTime, condition);
         var next = await GetNextWebsiteMessage(dto.CreationTime, condition);
         dto.PrevId = prev != null ? prev.Id : default;
         dto.NextId = next != null ? next.Id : default;
     }
 
-    public async Task<WebsiteMessage?> GetPrevWebsiteMessage(DateTime creationTime, Expression<Func<WebsiteMessage, bool>> predicate)
+    public async Task<WebsiteMessageQueryModel?> GetPrevWebsiteMessage(DateTime creationTime, Expression<Func<WebsiteMessageQueryModel, bool>> predicate)
     {
-        var query = await _repository.GetQueryableAsync()!;
-        return query.Where(predicate).Where(x => x.CreationTime < creationTime).OrderByDescending(x => x.CreationTime).FirstOrDefault();
+        return await _context.WebsiteMessageQueries.Where(predicate).Where(x => x.CreationTime < creationTime).OrderByDescending(x => x.CreationTime).FirstOrDefaultAsync();
     }
 
-    public async Task<WebsiteMessage?> GetNextWebsiteMessage(DateTime creationTime, Expression<Func<WebsiteMessage, bool>> predicate)
+    public async Task<WebsiteMessageQueryModel?> GetNextWebsiteMessage(DateTime creationTime, Expression<Func<WebsiteMessageQueryModel, bool>> predicate)
     {
-        var query = await _repository.GetQueryableAsync()!;
-        return query.Where(predicate).Where(x => x.CreationTime > creationTime).OrderBy(x => x.CreationTime).FirstOrDefault();
+        return await _context.WebsiteMessageQueries.Where(predicate).Where(x => x.CreationTime > creationTime).OrderBy(x => x.CreationTime).FirstOrDefaultAsync();
     }
 }

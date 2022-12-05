@@ -22,7 +22,7 @@ public partial class MessageReceiversSelect : AdminCompontentBase
         var receiver = new MessageTaskReceiverDto
         {
             SubjectId = user.Id,
-            DisplayName = user.Name ?? user.DisplayName ?? string.Empty,
+            DisplayName = user.GetDisplayName(),
             Avatar = user.Avatar,
             PhoneNumber = user.PhoneNumber ?? string.Empty,
             Email = user.Email ?? string.Empty,

@@ -3,18 +3,26 @@
 
 namespace Masa.Mc.Service.Admin.Domain.MessageTasks.Aggregates;
 
-//In order to support external users, the user ID of each channel is added
-public class MessageReceiverUser : Entity<Guid>
+public class MessageReceiverUser : ValueObject
 {
     public Guid UserId { get; set; }
 
-    public string DisplayName { get; set; } = string.Empty;
-
-    public string Account { get; set; } = string.Empty;
-
-    public string PhoneNumber { get; set; } = string.Empty;
-
-    public string Email { get; set; } = string.Empty;
+    public string ChannelUserIdentity { get; set; } = string.Empty;
 
     public ExtraPropertyDictionary Variables { get; set; } = new();
+
+    protected override IEnumerable<object> GetEqualityValues()
+    {
+        yield return UserId;
+        yield return ChannelUserIdentity;
+    }
+
+    private MessageReceiverUser() { }
+
+    public MessageReceiverUser(Guid userId, string channelUserIdentity, ExtraPropertyDictionary variables)
+    {
+        UserId = userId;
+        ChannelUserIdentity = channelUserIdentity;
+        Variables = variables;
+    }
 }

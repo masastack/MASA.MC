@@ -8,5 +8,5 @@ public class AppChannel : Entity<Guid>
     public string DisplayName { get; protected set; } = string.Empty;
     public string Color { get; protected set; } = string.Empty;
     public string Code { get; protected set; } = string.Empty;
-    public ChannelTypes Type { get; protected set; }
+    public ChannelType Type { get; protected set; } = default!;
 }

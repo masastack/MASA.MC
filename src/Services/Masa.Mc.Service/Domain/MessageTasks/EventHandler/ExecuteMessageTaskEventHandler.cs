@@ -38,7 +38,7 @@ public class ExecuteMessageTaskEventHandler
             if (messageTask == null) return;
 
             Guid userId = Guid.Empty;
-            await _schedulerClient.SchedulerJobService.DisableAsync(new BaseSchedulerJobRequest { JobId = messageTask.SchedulerJobId, OperatorId = userId });
+            await _schedulerClient.SchedulerJobService.DisableAsync(new SchedulerJobRequestBase { JobId = messageTask.SchedulerJobId, OperatorId = userId });
             return;
         }
         history.SetTaskId(eto.TaskId);
@@ -59,19 +59,7 @@ public class ExecuteMessageTaskEventHandler
     {
         var channel = await _channelRepository.FindAsync(x => x.Id == channelId);
 
-        switch (channel.Type)
-        {
-            case ChannelTypes.Sms:
-                await _eventBus.PublishAsync(new SendSmsMessageEvent(channelId, messageData, messageTaskHistory));
-                break;
-            case ChannelTypes.Email:
-                await _eventBus.PublishAsync(new SendEmailMessageEvent(channelId, messageData, messageTaskHistory));
-                break;
-            case ChannelTypes.WebsiteMessage:
-                await _eventBus.PublishAsync(new SendWebsiteMessageEvent(channelId, messageData, messageTaskHistory));
-                break;
-            default:
-                break;
-        }
+        var eto = channel.Type.GetSendMessageEvent(channelId, messageData, messageTaskHistory);
+        await _eventBus.PublishAsync(eto);
     }
 }

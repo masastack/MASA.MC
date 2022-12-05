@@ -59,30 +59,33 @@ public class MessageTaskDomainService : DomainService
         }
     }
 
-    public virtual async Task<MessageData> GetMessageDataAsync(MessageEntityTypes entityType, Guid entityId, ExtraPropertyDictionary variables = null)
+    public virtual async Task<MessageData?> GetMessageDataAsync(MessageEntityTypes entityType, Guid entityId, ExtraPropertyDictionary variables)
     {
-        var messageData = new MessageData();
         if (entityType == MessageEntityTypes.Ordinary)
         {
             var messageInfo = await _messageInfoRepository.FindAsync(x => x.Id == entityId);
-            messageData = new MessageData { MessageType = MessageEntityTypes.Ordinary, ExtraProperties = ExtensionPropertyHelper.ObjMapToExtraProperty(messageInfo) };
+            if (messageInfo == null) return null;
+
+            var messageData = new MessageData(messageInfo.MessageContent, MessageEntityTypes.Ordinary);
+            messageData.RenderContent(variables);
+            return messageData;
         }
         if (entityType == MessageEntityTypes.Template)
         {
             var messageTemplate = await _messageTemplateRepository.FindAsync(x => x.Id == entityId);
-            messageData = new MessageData { MessageType = MessageEntityTypes.Template, ExtraProperties = ExtensionPropertyHelper.ObjMapToExtraProperty(messageTemplate) };
-            messageData.TemplateItems = messageTemplate.Items.ToList();
+            if (messageTemplate == null) return null;
+
+            var messageData = new MessageData(messageTemplate.MessageContent, MessageEntityTypes.Template);
+            messageData.RenderContent(variables);
+            messageData.SetDataValue(nameof(MessageTemplate.TemplateId), messageTemplate.TemplateId);
+            messageData.SetDataValue(nameof(MessageTemplate.Sign), messageTemplate.Sign);
+            return messageData;
         }
-        if (variables != null)
-        {
-            messageData.SetDataValue(nameof(MessageTemplate.Title), await _templateRenderer.RenderAsync(messageData.GetDataValue<string>(nameof(MessageTemplate.Title)), variables));
-            messageData.SetDataValue(nameof(MessageTemplate.Content), await _templateRenderer.RenderAsync(messageData.GetDataValue<string>(nameof(MessageTemplate.Content)), variables));
-            messageData.SetDataValue(nameof(MessageTemplate.JumpUrl), await _templateRenderer.RenderAsync(messageData.GetDataValue<string>(nameof(MessageTemplate.JumpUrl)), variables));
-        }
-        return messageData;
+
+        return null;
     }
 
-    public virtual async Task<MessageData> GetMessageDataAsync(Guid messageTaskId, ExtraPropertyDictionary variables = null)
+    public virtual async Task<MessageData?> GetMessageDataAsync(Guid messageTaskId, ExtraPropertyDictionary variables)
     {
         var messageTask = await _repository.FindAsync(x => x.Id == messageTaskId);
         if (messageTask == null)
@@ -95,7 +98,7 @@ public class MessageTaskDomainService : DomainService
         var channel = await _channelRepository.FindAsync(x => x.Id == messageTask.ChannelId);
         if (channel == null)
             throw new UserFriendlyException("Channel not found");
-        if (channel.Type != messageTask.ChannelType)
+        if (channel.Type.Id != messageTask.ChannelType?.Id)
             throw new UserFriendlyException("Channel type does not match the channel");
     }
 }

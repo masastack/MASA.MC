@@ -3,21 +3,51 @@
 
 namespace Masa.Mc.Service.Admin.Domain.MessageRecords.Aggregates;
 
-public class MessageData
+public class MessageData : ValueObject
 {
-    public MessageEntityTypes MessageType { get; set; }
+    public MessageContent MessageContent { get; protected set; } = default!;
 
-    public ExtraPropertyDictionary ExtraProperties { get; set; } = new();
+    public MessageEntityTypes MessageType { get; protected set; }
 
-    public List<MessageTemplateItem> TemplateItems = new();
+    public ExtraPropertyDictionary ExtraProperties { get; protected set; } = new();
 
-    public virtual T GetDataValue<T>(string name)
+    protected override IEnumerable<object> GetEqualityValues()
+    {
+        yield return MessageContent;
+        yield return MessageType;
+    }
+
+    public MessageData(MessageContent messageContent, MessageEntityTypes messageEntityTypes)
+    {
+        MessageContent = messageContent;
+        MessageType = messageEntityTypes;
+    }
+
+    public T GetDataValue<T>(string name)
     {
         return ExtraProperties.GetProperty<T>(name);
     }
 
-    public virtual void SetDataValue(string name, string value)
+    public void SetDataValue(string name, string value)
     {
         ExtraProperties.SetProperty(name, value);
+    }
+
+    public void RenderContent(ExtraPropertyDictionary variables, string startstr = "{{", string endstr = "}}")
+    {
+        MessageContent = new MessageContent(Render(MessageContent.Title, variables, startstr, endstr)
+            , Render(MessageContent.Content, variables, startstr, endstr)
+            , MessageContent.Markdown
+            , MessageContent.IsJump
+            , Render(MessageContent.JumpUrl, variables, startstr, endstr));
+    }
+
+    private string Render(string context, ExtraPropertyDictionary variables, string startstr, string endstr)
+    {
+        foreach (var item in variables)
+        {
+            context = context.Replace($"{startstr}{item.Key}{endstr}", item.Value?.ToString() ?? string.Empty);
+        }
+        return context;
     }
 }

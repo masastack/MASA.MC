@@ -3,9 +3,6 @@
 
 namespace Masa.Mc.Service.Admin.Domain.MessageTasks.Aggregates;
 
-/// <summary>
-/// Subsequently, it is intended to be a single aggregation root
-/// </summary>
 public class MessageTaskHistory : FullAggregateRoot<Guid, Guid>
 {
     public Guid MessageTaskId { get; protected set; }
@@ -28,14 +25,14 @@ public class MessageTaskHistory : FullAggregateRoot<Guid, Guid>
 
     public Guid SchedulerTaskId { get; protected set; }
 
-    public MessageTaskHistory(Guid messageTaskId, string taskHistoryNo, List<MessageReceiverUser> receiverUsers, bool isTest, DateTimeOffset? sendTime = null)
+    public MessageTaskHistory(Guid messageTaskId, List<MessageReceiverUser> receiverUsers, bool isTest, DateTimeOffset? sendTime = null)
     {
         MessageTaskId = messageTaskId;
-        TaskHistoryNo = taskHistoryNo;
         Status = MessageTaskHistoryStatuses.WaitSend;
         ReceiverUsers = receiverUsers;
         IsTest = isTest;
         SendTime = sendTime;
+        TaskHistoryNo = GenerateHistoryNo();
     }
 
     public MessageTaskHistory(Guid messageTaskId, string taskHistoryNo, MessageTaskHistoryStatuses status, DateTimeOffset? sendTime, DateTimeOffset? completionTime, DateTimeOffset? withdrawTime) : this(messageTaskId, taskHistoryNo, status, sendTime, completionTime, withdrawTime, new List<MessageReceiverUser>())
@@ -67,7 +64,7 @@ public class MessageTaskHistory : FullAggregateRoot<Guid, Guid>
 
         AddDomainEvent(new WithdrawMessageRecordEvent(Id));
 
-        if (MessageTask.ChannelType == ChannelTypes.WebsiteMessage)
+        if (MessageTask.ChannelType == ChannelType.WebsiteMessage)
         {
             AddDomainEvent(new WithdrawWebsiteMessageEvent(Id));
         }
@@ -95,5 +92,10 @@ public class MessageTaskHistory : FullAggregateRoot<Guid, Guid>
     public void ExecuteTask()
     {
         AddDomainEvent(new ExecuteMessageTaskEvent(MessageTaskId, false));
+    }
+
+    public string GenerateHistoryNo()
+    {
+        return $"SJ{UtilConvert.GetGuidToNumber()}";
     }
 }

@@ -1,6 +1,8 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
+using Masa.Mc.Service.Admin.Domain.MessageRecords.Aggregates;
+
 namespace Masa.Mc.Service.Admin.Application.MessageTasks.EventHandler;
 
 public class SendWebsiteMessageEventHandler
@@ -11,13 +13,15 @@ public class SendWebsiteMessageEventHandler
     private readonly IWebsiteMessageRepository _websiteMessageRepository;
     private readonly ITemplateRenderer _templateRenderer;
     private readonly MessageTemplateDomainService _messageTemplateDomainService;
+    private readonly IMessageTemplateRepository _templateRepository;
 
     public SendWebsiteMessageEventHandler(IMcClient mcClient
         , IMessageTaskHistoryRepository messageTaskHistoryRepository
         , IMessageRecordRepository messageRecordRepository
         , IWebsiteMessageRepository websiteMessageRepository
         , ITemplateRenderer templateRenderer
-        , MessageTemplateDomainService messageTemplateDomainService)
+        , MessageTemplateDomainService messageTemplateDomainService
+        , IMessageTemplateRepository templateRepository)
     {
         _mcClient = mcClient;
         _messageTaskHistoryRepository = messageTaskHistoryRepository;
@@ -25,6 +29,7 @@ public class SendWebsiteMessageEventHandler
         _websiteMessageRepository = websiteMessageRepository;
         _templateRenderer = templateRenderer;
         _messageTemplateDomainService = messageTemplateDomainService;
+        _templateRepository = templateRepository;
     }
 
     [EventHandler(1)]
@@ -38,15 +43,14 @@ public class SendWebsiteMessageEventHandler
         {
             foreach (var item in taskHistory.ReceiverUsers)
             {
-                TemplateRenderer(eto.MessageData, item.Variables);
-                var messageRecord = new MessageRecord(item.UserId, taskHistory.MessageTask.ChannelId.Value, taskHistory.MessageTaskId, taskHistory.Id, item.Variables, eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.Title)), taskHistory.SendTime);
+                eto.MessageData.RenderContent(item.Variables);
+                var messageRecord = new MessageRecord(item.UserId, item.ChannelUserIdentity, taskHistory.MessageTask.ChannelId.Value, taskHistory.MessageTaskId, taskHistory.Id, item.Variables, eto.MessageData.MessageContent.Title, taskHistory.SendTime);
                 messageRecord.SetMessageEntity(taskHistory.MessageTask.EntityType, taskHistory.MessageTask.EntityId);
-                messageRecord.SetUserInfo(item.UserId, item.DisplayName, item.Account, item.Email, item.PhoneNumber);
 
                 if (eto.MessageData.MessageType == MessageEntityTypes.Template)
                 {
-                    var perDayLimit = eto.MessageData.GetDataValue<long>(nameof(MessageTemplate.PerDayLimit));
-                    if (!await _messageTemplateDomainService.CheckSendUpperLimitAsync(messageRecord.MessageEntityId, perDayLimit, item.UserId))
+                    var messageTemplate = await _templateRepository.FindAsync(x => x.Id == messageRecord.MessageEntityId, false);
+                    if (!await _messageTemplateDomainService.CheckSendUpperLimitAsync(messageTemplate, messageRecord.ChannelUserIdentity))
                     {
                         messageRecord.SetResult(false, "The maximum number of times to send per day has been reached");
                         await _messageRecordRepository.AddAsync(messageRecord);
@@ -56,12 +60,11 @@ public class SendWebsiteMessageEventHandler
 
                 messageRecord.SetResult(true, string.Empty);
 
-                var linkUrl = eto.MessageData.GetDataValue<bool>(nameof(MessageTemplate.IsJump)) ? eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.JumpUrl)) : string.Empty;
-                var websiteMessage = new WebsiteMessage(messageRecord.ChannelId, item.UserId, eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.Title)), eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.Content)), linkUrl, DateTimeOffset.Now);
+                var websiteMessage = new WebsiteMessage(messageRecord.ChannelId, item.UserId, eto.MessageData.MessageContent.Title, eto.MessageData.MessageContent.Content, eto.MessageData.MessageContent.GetJumpUrl(), DateTimeOffset.Now);
                 await _messageRecordRepository.AddAsync(messageRecord);
                 await _websiteMessageRepository.AddAsync(websiteMessage);
 
-                userIds.Add(item.UserId.ToString());
+                userIds.Add(item.ChannelUserIdentity);
                 okCount++;
             }
         }
@@ -78,11 +81,5 @@ public class SendWebsiteMessageEventHandler
         {
             await _mcClient.WebsiteMessageService.SendGetNotificationAsync(userIds);
         }
-    }
-
-    private async void TemplateRenderer(MessageData messageData, ExtraPropertyDictionary Variables)
-    {
-        messageData.SetDataValue(nameof(MessageTemplate.Title), await _templateRenderer.RenderAsync(messageData.GetDataValue<string>(nameof(MessageTemplate.Title)), Variables));
-        messageData.SetDataValue(nameof(MessageTemplate.Content), await _templateRenderer.RenderAsync(messageData.GetDataValue<string>(nameof(MessageTemplate.Content)), Variables));
     }
 }

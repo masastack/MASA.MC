@@ -16,7 +16,7 @@ public class ChannelDomainService : DomainService
     {
         await ValidateChannelAsync(channel.Code);
         await _repository.AddAsync(channel);
-        if (channel.Type == ChannelTypes.Sms)
+        if (channel.Type == ChannelType.Sms)
         {
             await _repository.UnitOfWork.SaveChangesAsync();
             await _repository.UnitOfWork.CommitAsync();

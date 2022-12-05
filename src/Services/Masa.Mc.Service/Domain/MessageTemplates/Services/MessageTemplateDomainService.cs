@@ -47,9 +47,9 @@ public class MessageTemplateDomainService : DomainService
             return;
         }
 
-        var titleParam = UtilHelper.MidStrEx(messageTemplate.Title, startstr, endstr);
-        var contentParam = UtilHelper.MidStrEx(messageTemplate.Content, startstr, endstr);
-        var jumpUrlParam = UtilHelper.MidStrEx(messageTemplate.JumpUrl, startstr, endstr);
+        var titleParam = UtilHelper.MidStrEx(messageTemplate.MessageContent.Title, startstr, endstr);
+        var contentParam = UtilHelper.MidStrEx(messageTemplate.MessageContent.Content, startstr, endstr);
+        var jumpUrlParam = UtilHelper.MidStrEx(messageTemplate.MessageContent.JumpUrl, startstr, endstr);
         var paramList = titleParam.Union(contentParam).Union(jumpUrlParam).ToList();
         messageTemplate.Items.Clear();
         foreach (var item in paramList)
@@ -73,17 +73,19 @@ public class MessageTemplateDomainService : DomainService
     }
 
 
-    public async Task<bool> CheckSendUpperLimitAsync(Guid messageTemplateId, long perDayLimit, Guid userId)
+    public async Task<bool> CheckSendUpperLimitAsync(MessageTemplate messageTemplate, string channelUserIdentity)
     {
-        var sendNum = await _messageRecordRepository.GetCountAsync(x => x.SendTime.Value.Date == DateTime.Now.Date && x.UserId == userId && x.MessageEntityId == messageTemplateId);
+        var perDayLimit = messageTemplate.PerDayLimit;
+        var sendNum = await _messageRecordRepository.GetCountAsync(x => x.SendTime.Value.Date == DateTime.Now.Date && x.ChannelUserIdentity == channelUserIdentity && x.MessageEntityId == messageTemplate.Id);
         if (sendNum > perDayLimit)
         {
             return false;
         }
+
         return true;
     }
 
-    public ExtraPropertyDictionary ConvertVariables(List<MessageTemplateItem> Items, ExtraPropertyDictionary variables)
+    public ExtraPropertyDictionary ConvertVariables(MessageTemplate messageTemplate, ExtraPropertyDictionary variables)
     {
         var newVariables = new ExtraPropertyDictionary();
 
@@ -92,7 +94,7 @@ public class MessageTemplateDomainService : DomainService
             return newVariables;
         }
 
-        foreach (var item in Items)
+        foreach (var item in messageTemplate.Items)
         {
             var key = string.IsNullOrEmpty(item.MappingCode) ? item.Code : item.MappingCode;
             var value = variables.FirstOrDefault(x => x.Key == item.Code).Value;

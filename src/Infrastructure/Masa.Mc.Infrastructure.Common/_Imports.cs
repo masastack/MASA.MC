@@ -13,3 +13,4 @@ global using System.Security.Cryptography;
 global using System.Text;
 global using System.Dynamic;
 global using System.Runtime.Serialization;
+global using System.Diagnostics.CodeAnalysis;

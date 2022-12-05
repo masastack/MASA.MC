@@ -11,6 +11,6 @@ public static class MessageRecordEfCoreQueryableExtensions
         {
             return queryable;
         }
-        return queryable.Include(x=>x.Channel);
+        return queryable.Include(x => x.Channel);
     }
 }

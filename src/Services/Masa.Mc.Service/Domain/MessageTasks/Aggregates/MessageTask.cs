@@ -7,7 +7,7 @@ public class MessageTask : FullAggregateRoot<Guid, Guid>
 {
     public string DisplayName { get; protected set; } = string.Empty;
 
-    public ChannelTypes? ChannelType { get; protected set; }
+    public ChannelType? ChannelType { get; }
 
     public Guid? ChannelId { get; protected set; }
 
@@ -35,7 +35,7 @@ public class MessageTask : FullAggregateRoot<Guid, Guid>
 
     public List<MessageReceiverUser> ReceiverUsers { get; protected set; } = new();
 
-    public MessageTaskSendingRule SendRules { get; protected set; } = new();
+    public MessageTaskSendingRule SendRules { get; protected set; } = default!;
 
     public ExtraPropertyDictionary Variables { get; protected set; } = new();
 
@@ -45,7 +45,9 @@ public class MessageTask : FullAggregateRoot<Guid, Guid>
 
     public Guid SchedulerJobId { get; protected set; }
 
-    public MessageTask(string displayName, ChannelTypes? channelType, Guid? channelId, MessageEntityTypes entityType, Guid entityId, bool isDraft, string sign, ReceiverTypes receiverType, MessageTaskSelectReceiverTypes selectReceiverType, List<MessageTaskReceiver> receivers, MessageTaskSendingRule sendRules, MessageTaskSources source)
+    private MessageTask() { }
+
+    public MessageTask(string displayName, ChannelType? channelType, Guid? channelId, MessageEntityTypes entityType, Guid entityId, bool isDraft, string sign, ReceiverTypes receiverType, MessageTaskSelectReceiverTypes selectReceiverType, List<MessageTaskReceiver> receivers, MessageTaskSendingRule sendRules, MessageTaskSources source)
     {
         DisplayName = displayName;
         ChannelType = channelType;
@@ -56,7 +58,7 @@ public class MessageTask : FullAggregateRoot<Guid, Guid>
         SetDraft(isDraft);
         SelectReceiverType = selectReceiverType;
         SetReceivers(receiverType, receivers);
-        SendRules = sendRules ?? new();
+        SendRules = sendRules;
         Status = MessageTaskStatuses.WaitSend;
         Source = source;
     }
@@ -134,5 +136,36 @@ public class MessageTask : FullAggregateRoot<Guid, Guid>
     public void SetJobId(Guid jobId)
     {
         SchedulerJobId = jobId;
+    }
+
+    public int GetSendingCount()
+    {
+        var sendingCount = (int)SendRules.SendingCount;
+        if (sendingCount == 0)
+        {
+            sendingCount = ReceiverUsers.Count;
+        }
+        return sendingCount;
+    }
+
+    public long GetHistoryCount()
+    {
+        var totalCount = ReceiverUsers.Count;
+
+        var sendingCount = GetSendingCount();
+
+        var historyNum = (long)Math.Ceiling((double)totalCount / sendingCount);
+
+        if (ReceiverType == ReceiverTypes.Broadcast)
+        {
+            historyNum = 1;
+        }
+
+        return historyNum;
+    }
+
+    public List<MessageReceiverUser> GetHistoryReceiverUsers(int historyNum, int sendingCount)
+    {
+        return ReceiverUsers.Skip(historyNum * sendingCount).Take(sendingCount).ToList(); ;
     }
 }

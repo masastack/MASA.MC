@@ -25,8 +25,8 @@ public class MessageInfoCommandHandler
     public async Task UpdateAsync(UpdateMessageInfoCommand updateCommand)
     {
         var entity = await _repository.FindAsync(x => x.Id == updateCommand.MessageInfoId);
-        if (entity == null)
-            throw new UserFriendlyException("messageInfo not found");
+        MasaArgumentException.ThrowIfNull(entity, "MessageInfo");
+
         updateCommand.MessageInfo.Adapt(entity);
         await _repository.UpdateAsync(entity);
     }
@@ -35,8 +35,8 @@ public class MessageInfoCommandHandler
     public async Task DeleteAsync(DeleteMessageInfoCommand createCommand)
     {
         var entity = await _repository.FindAsync(x => x.Id == createCommand.MessageInfoId);
-        if (entity == null)
-            throw new UserFriendlyException("messageInfo not found");
+        MasaArgumentException.ThrowIfNull(entity, "MessageInfo");
+
         await _repository.RemoveAsync(entity);
     }
 }

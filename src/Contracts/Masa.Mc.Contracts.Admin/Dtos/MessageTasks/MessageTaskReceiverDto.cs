@@ -20,4 +20,22 @@ public class MessageTaskReceiverDto
     public MessageTaskReceiverTypes Type { get; set; }
 
     public ExtraPropertyDictionary Variables { get; set; } = new();
+
+    public void SetChannelUserIdentity(ChannelTypes channelType, string channelUserIdentity)
+    {
+        switch (channelType)
+        {
+            case ChannelTypes.Email:
+                Email = channelUserIdentity;
+                break;
+            case ChannelTypes.Sms:
+                PhoneNumber = channelUserIdentity;
+                break;
+            case ChannelTypes.WebsiteMessage:
+                SubjectId = new Guid(channelUserIdentity);
+                break;
+            default:
+                break;
+        }
+    }
 }

@@ -7,32 +7,21 @@ public class ReceiverGroupItem : Entity<Guid>
 {
     public Guid GroupId { get; protected set; }
 
-    public Guid SubjectId { get; protected set; }
-
-    public string DisplayName { get; protected set; } = string.Empty;
-
-    public string Avatar { get; protected set; } = string.Empty;
-
-    public string PhoneNumber { get; protected set; } = string.Empty;
-
-    public string Email { get; protected set; } = string.Empty;
+    public Receiver Receiver { get; protected set; } = default!;
 
     public ReceiverGroupItemTypes Type { get; protected set; }
 
-    public ReceiverGroupItem(Guid groupId, Guid subjectId, ReceiverGroupItemTypes type, string displayName, string avatar = "", string phoneNumber = "", string email = "")
+    private ReceiverGroupItem() { }
+
+    public ReceiverGroupItem(Guid groupId, ReceiverGroupItemTypes type, Receiver receiver)
     {
         GroupId = groupId;
-        SubjectId = subjectId;
         Type = type;
-
-        SetContent(displayName, avatar, phoneNumber, email);
+        Receiver= receiver;
     }
 
-    public void SetContent(string displayName, string avatar, string phoneNumber, string email)
+    public void SetReceiver(Receiver receiver)
     {
-        DisplayName = displayName;
-        Avatar = avatar;
-        PhoneNumber = phoneNumber;
-        Email = email;
+        Receiver = receiver;
     }
 }

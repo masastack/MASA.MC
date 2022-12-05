@@ -26,8 +26,8 @@ public class ReceiverGroupCommandHandler
     public async Task UpdateAsync(UpdateReceiverGroupCommand updateCommand)
     {
         var entity = await _repository.FindAsync(x => x.Id == updateCommand.ReceiverGroupId);
-        if (entity == null)
-            throw new UserFriendlyException("receiverGroup not found");
+        MasaArgumentException.ThrowIfNull(entity, "ReceiverGroup");
+
         updateCommand.ReceiverGroup.Adapt(entity);
         var items = updateCommand.ReceiverGroup.Items.Adapt<List<ReceiverGroupItem>>();
         await _domainService.UpdateAsync(entity, items);
@@ -37,8 +37,8 @@ public class ReceiverGroupCommandHandler
     public async Task DeleteAsync(DeleteReceiverGroupCommand createCommand)
     {
         var entity = await _repository.FindAsync(x => x.Id == createCommand.ReceiverGroupId);
-        if (entity == null)
-            throw new UserFriendlyException("receiverGroup not found");
+        MasaArgumentException.ThrowIfNull(entity, "ReceiverGroup");
+
         await _repository.RemoveAsync(entity);
     }
 }

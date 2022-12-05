@@ -3,6 +3,7 @@
 
 namespace Masa.Mc.Contracts.Admin.Dtos.MessageTasks;
 
+[Obsolete("To be abandoned")]
 public class SendTemplateMessageTaskInputDto
 {
     public string ChannelCode { get; set; } = string.Empty;

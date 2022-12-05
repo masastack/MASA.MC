@@ -28,4 +28,14 @@ public class UserDto
     public string? Department { get; set; }
 
     public string? Position { get; set; }
+
+    public string GetDisplayName()
+    {
+        if (!string.IsNullOrEmpty(Name))
+        {
+            return Name;
+        }
+
+        return DisplayName ?? string.Empty;
+    }
 }

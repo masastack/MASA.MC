@@ -18,4 +18,14 @@ public class SubjectDto
     public string? Email { get; set; }
 
     public SubjectTypes SubjectType { get; set; }
+
+    public string GetDisplayName()
+    {
+        if (!string.IsNullOrEmpty(Name))
+        {
+            return Name;
+        }
+
+        return DisplayName ?? string.Empty;
+    }
 }

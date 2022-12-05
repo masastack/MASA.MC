@@ -19,23 +19,12 @@ public class MessageRecordCommandHandler
     public async Task RetryAsync(RetryMessageRecordCommand command)
     {
         var entity = await _repository.FindAsync(x => x.Id == command.Input.MessageRecordId);
-        if (entity == null)
-            throw new UserFriendlyException("MessageRecord not found");
+        MasaArgumentException.ThrowIfNull(entity, "MessageRecord");
+
         if (entity.Success == true)
             throw new UserFriendlyException("The message is successfully sent without resending");
-        switch (entity.Channel.Type)
-        {
-            case ChannelTypes.Sms:
-                await _eventBus.PublishAsync(new RetrySmsMessageEvent(entity.Id));
-                break;
-            case ChannelTypes.Email:
-                await _eventBus.PublishAsync(new RetryEmailMessageEvent(entity.Id));
-                break;
-            case ChannelTypes.WebsiteMessage:
-                await _eventBus.PublishAsync(new RetryWebsiteMessageEvent(entity.Id));
-                break;
-            default:
-                break;
-        }
+
+        var eto = entity.Channel.Type.GetRetryMessageEvent(entity.Id);
+        await _eventBus.PublishAsync(eto);
     }
 }

@@ -5,22 +5,22 @@ namespace Masa.Mc.Service.Admin.Application.Channels;
 
 public class ChannelQueryHandler
 {
-    private readonly IChannelRepository _repository;
+    private readonly IMcQueryContext _context;
     private readonly IAuthClient _authClient;
 
-    public ChannelQueryHandler(IChannelRepository repository
+    public ChannelQueryHandler(IMcQueryContext context
         , IAuthClient authClient)
     {
-        _repository = repository;
+        _context = context;
         _authClient = authClient;
     }
 
     [EventHandler]
     public async Task GetAsync(GetChannelQuery query)
     {
-        var entity = await _repository.FindAsync(x => x.Id == query.ChannelId);
-        if (entity == null)
-            throw new UserFriendlyException("channel not found");
+        var entity = await _context.ChannelQueryQueries.FirstOrDefaultAsync(x => x.Id == query.ChannelId);
+        MasaArgumentException.ThrowIfNull(entity, "Channel");
+
         query.Result = entity.Adapt<ChannelDto>();
     }
 
@@ -29,13 +29,13 @@ public class ChannelQueryHandler
     {
         var options = query.Input;
         var condition = await CreateFilteredPredicate(options);
-        var resultList = await _repository.GetPaginatedListAsync(condition, new PaginatedOptions
+        var resultList = await _context.ChannelQueryQueries.GetPaginatedListAsync(condition, new PaginatedOptions
         {
             Page = options.Page,
             PageSize = options.PageSize,
             Sorting = new Dictionary<string, bool>
             {
-                [nameof(Channel.ModificationTime)] = true
+                [nameof(ChannelQueryModel.ModificationTime)] = true
             }
         });
         var dtos = resultList.Result.Adapt<List<ChannelDto>>();
@@ -47,22 +47,22 @@ public class ChannelQueryHandler
     [EventHandler]
     public async Task FindByCodeAsync(FindChannelByCodeQuery query)
     {
-        var entity = await _repository.FindAsync(d => d.Code == query.Code);
-        if (entity == null)
-            throw new UserFriendlyException("channel not found");
+        var entity = await _context.ChannelQueryQueries.FirstOrDefaultAsync(x => x.Code == query.Code);
+        MasaArgumentException.ThrowIfNull(entity, "Channel");
+
         query.Result = entity.Adapt<ChannelDto>();
     }
 
     [EventHandler]
     public async Task GetListByTypeAsync(GetListByTypeQuery query)
     {
-        var list = await _repository.GetListAsync(d => d.Type == query.Type);
+        var list = await _context.ChannelQueryQueries.Where(x => x.Type == query.Type).ToListAsync();
         query.Result = list.Adapt<List<ChannelDto>>();
     }
 
-    private async Task<Expression<Func<Channel, bool>>> CreateFilteredPredicate(GetChannelInputDto inputDto)
+    private async Task<Expression<Func<ChannelQueryModel, bool>>> CreateFilteredPredicate(GetChannelInputDto inputDto)
     {
-        Expression<Func<Channel, bool>> condition = channel => true;
+        Expression<Func<ChannelQueryModel, bool>> condition = channel => true;
         condition = condition.And(inputDto.Type.HasValue, channel => channel.Type == inputDto.Type);
         condition = condition.And(!string.IsNullOrEmpty(inputDto.Filter), channel => channel.DisplayName.Contains(inputDto.Filter) || channel.Code.Contains(inputDto.Filter));
         condition = condition.And(!string.IsNullOrEmpty(inputDto.DisplayName), channel => channel.DisplayName.Contains(inputDto.DisplayName));

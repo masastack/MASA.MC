@@ -9,7 +9,6 @@ public class MessageRecord : FullAggregateRoot<Guid, Guid>
     public Guid ChannelId { get; protected set; }
     public AppChannel Channel { get; protected set; } = default!;
     public Guid MessageTaskId { get; protected set; }
-    public AppMessageTask MessageTask { get; protected set; }
     public Guid MessageTaskHistoryId { get; protected set; }
     public bool? Success { get; protected set; }
     public DateTimeOffset? SendTime { get; protected set; }
@@ -20,10 +19,12 @@ public class MessageRecord : FullAggregateRoot<Guid, Guid>
     public string DisplayName { get; protected set; } = string.Empty;
     public MessageEntityTypes MessageEntityType { get; protected set; }
     public Guid MessageEntityId { get; protected set; }
+    public string ChannelUserIdentity { get; protected set; } = string.Empty;
 
-    public MessageRecord(Guid userId, Guid channelId, Guid messageTaskId, Guid messageTaskHistoryId, ExtraPropertyDictionary variables, string displayName, DateTimeOffset? expectSendTime)
+    public MessageRecord(Guid userId, string channelUserIdentity, Guid channelId, Guid messageTaskId, Guid messageTaskHistoryId, ExtraPropertyDictionary variables, string displayName, DateTimeOffset? expectSendTime)
     {
         UserId = userId;
+        ChannelUserIdentity = channelUserIdentity;
         ChannelId = channelId;
         MessageTaskId = messageTaskId;
         MessageTaskHistoryId = messageTaskHistoryId;
@@ -67,12 +68,13 @@ public class MessageRecord : FullAggregateRoot<Guid, Guid>
         MessageEntityId = messageEntityId;
     }
 
-    public void SetUserInfo(Guid userId, string displayName, string account, string email, string phoneNumber)
+    public void SetUserId(Guid userId)
     {
         UserId = userId;
-        SetDataValue(nameof(MessageReceiverUser.DisplayName), displayName);
-        SetDataValue(nameof(MessageReceiverUser.Account), account);
-        SetDataValue(nameof(MessageReceiverUser.Email), email);
-        SetDataValue(nameof(MessageReceiverUser.PhoneNumber), phoneNumber);
+    }
+
+    public void SetDisplayName(string displayName)
+    {
+        DisplayName = displayName;
     }
 }

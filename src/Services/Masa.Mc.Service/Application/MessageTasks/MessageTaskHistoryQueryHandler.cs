@@ -5,19 +5,19 @@ namespace Masa.Mc.Service.Admin.Application.MessageTaskHistorys;
 
 public class MessageTaskHistoryQueryHandler
 {
-    private readonly IMessageTaskHistoryRepository _repository;
+    private readonly IMcQueryContext _context;
 
-    public MessageTaskHistoryQueryHandler(IMessageTaskHistoryRepository repository)
+    public MessageTaskHistoryQueryHandler(IMcQueryContext context)
     {
-        _repository = repository;
+        _context = context;
     }
 
     [EventHandler]
     public async Task GetAsync(GetMessageTaskHistoryQuery query)
     {
-        var entity = await _repository.FindAsync(x => x.Id == query.MessageTaskHistoryId, false);
-        if (entity == null)
-            throw new UserFriendlyException("messageTaskHistory not found");
+        var entity = await _context.MessageTaskHistoryQueries.FirstOrDefaultAsync(x => x.Id == query.MessageTaskHistoryId);
+        MasaArgumentException.ThrowIfNull(entity, "MessageTaskHistory");
+
         query.Result = entity.Adapt<MessageTaskHistoryDto>();
     }
 
@@ -25,32 +25,30 @@ public class MessageTaskHistoryQueryHandler
     public async Task GetListAsync(GetMessageTaskHistoryListQuery query)
     {
         var options = query.Input;
-        var queryable = await CreateFilteredQueryAsync(options);
-        var totalCount = await queryable.CountAsync();
-        var totalPages = (int)Math.Ceiling(totalCount / (decimal)options.PageSize);
-        if (string.IsNullOrEmpty(options.Sorting)) options.Sorting = "sendTime asc";
-        queryable = queryable.OrderBy(options.Sorting).PageBy(options.Page, options.PageSize);
-        var entities = await queryable.ToListAsync();
-        var entityDtos = entities.Adapt<List<MessageTaskHistoryDto>>();
-        var result = new PaginatedListDto<MessageTaskHistoryDto>(totalCount, totalPages, entityDtos);
+        var condition = await CreateFilteredPredicate(options);
+        var resultList = await _context.MessageTaskHistoryQueries.GetPaginatedListAsync(condition, new()
+        {
+            Page = options.Page,
+            PageSize = options.PageSize,
+            Sorting = new Dictionary<string, bool>
+            {
+                [nameof(MessageTaskHistoryQueryModel.SendTime)] = true
+            }
+        });
+
+        var dtos = resultList.Result.Adapt<List<MessageTaskHistoryDto>>();
+        var result = new PaginatedListDto<MessageTaskHistoryDto>(resultList.Total, resultList.TotalPages, dtos);
         query.Result = result;
     }
 
-    private async Task<Expression<Func<MessageTaskHistory, bool>>> CreateFilteredPredicate(GetMessageTaskHistoryInputDto inputDto)
+    private async Task<Expression<Func<MessageTaskHistoryQueryModel, bool>>> CreateFilteredPredicate(GetMessageTaskHistoryInputDto inputDto)
     {
-        Expression<Func<MessageTaskHistory, bool>> condition = x => !x.IsTest;
+        Expression<Func<MessageTaskHistoryQueryModel, bool>> condition = x => !x.IsTest;
         condition = condition.And(!string.IsNullOrEmpty(inputDto.Filter), x => x.TaskHistoryNo.Contains(inputDto.Filter));
         condition = condition.And(inputDto.MessageTaskId.HasValue, x => x.MessageTaskId == inputDto.MessageTaskId);
         condition = condition.And(inputDto.Status.HasValue, x => x.Status == inputDto.Status);
         condition = condition.And(inputDto.StartTime.HasValue, x => x.SendTime >= inputDto.StartTime);
         condition = condition.And(inputDto.EndTime.HasValue, x => x.SendTime <= inputDto.EndTime);
-        return await Task.FromResult(condition); ;
-    }
-
-    private async Task<IQueryable<MessageTaskHistory>> CreateFilteredQueryAsync(GetMessageTaskHistoryInputDto inputDto)
-    {
-        var query = await _repository.GetQueryableAsync()!;
-        var condition = await CreateFilteredPredicate(inputDto);
-        return query.Where(condition);
+        return await Task.FromResult(condition);
     }
 }

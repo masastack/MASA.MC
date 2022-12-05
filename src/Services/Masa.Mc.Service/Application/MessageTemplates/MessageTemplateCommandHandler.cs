@@ -33,8 +33,8 @@ public class MessageTemplateCommandHandler
     {
         var entity = await _repository.FindAsync(x => x.Id == updateCommand.MessageTemplateId);
         var dto = updateCommand.MessageTemplate;
-        if (entity == null)
-            throw new UserFriendlyException("messageTemplate not found");
+        MasaArgumentException.ThrowIfNull(entity, "MessageTemplate");
+
         dto.Adapt(entity);
         foreach (var itemDto in dto.Items)
         {

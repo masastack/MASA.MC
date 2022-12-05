@@ -12,6 +12,7 @@ public class SendSmsMessageEventHandler
     private readonly IMessageTaskHistoryRepository _messageTaskHistoryRepository;
     private readonly MessageTemplateDomainService _messageTemplateDomainService;
     private readonly ILogger<SendSmsMessageEventHandler> _logger;
+    private readonly IMessageTemplateRepository _templateRepository;
 
     public SendSmsMessageEventHandler(IAliyunSmsAsyncLocal aliyunSmsAsyncLocal
         , ISmsSender smsSender
@@ -19,7 +20,8 @@ public class SendSmsMessageEventHandler
         , IMessageRecordRepository messageRecordRepository
         , IMessageTaskHistoryRepository messageTaskHistoryRepository
         , MessageTemplateDomainService messageTemplateDomainService
-        , ILogger<SendSmsMessageEventHandler> logger)
+        , ILogger<SendSmsMessageEventHandler> logger
+        , IMessageTemplateRepository templateRepository)
     {
         _aliyunSmsAsyncLocal = aliyunSmsAsyncLocal;
         _smsSender = smsSender;
@@ -28,6 +30,7 @@ public class SendSmsMessageEventHandler
         _messageTaskHistoryRepository = messageTaskHistoryRepository;
         _messageTemplateDomainService = messageTemplateDomainService;
         _logger = logger;
+        _templateRepository = templateRepository;
     }
 
     [EventHandler]
@@ -46,23 +49,27 @@ public class SendSmsMessageEventHandler
             int totalCount = taskHistory.ReceiverUsers.Count;
             foreach (var item in taskHistory.ReceiverUsers)
             {
-                var messageRecord = new MessageRecord(item.UserId, channel.Id, taskHistory.MessageTaskId, taskHistory.Id, item.Variables, eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.DisplayName)), taskHistory.SendTime);
+                var messageRecord = new MessageRecord(item.UserId, item.ChannelUserIdentity, channel.Id, taskHistory.MessageTaskId, taskHistory.Id, item.Variables, eto.MessageData.MessageContent.Title, taskHistory.SendTime);
                 messageRecord.SetMessageEntity(taskHistory.MessageTask.EntityType, taskHistory.MessageTask.EntityId);
-                messageRecord.SetUserInfo(item.UserId, item.DisplayName, item.Account, item.Email, item.PhoneNumber);
+                messageRecord.SetDataValue(nameof(MessageTemplate.Sign), taskHistory.MessageTask.Sign);
+                messageRecord.SetDataValue(nameof(MessageTemplate.TemplateId), eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.TemplateId)));
 
+                var variables = messageRecord.Variables;
                 if (eto.MessageData.MessageType == MessageEntityTypes.Template)
                 {
-                    var perDayLimit = eto.MessageData.GetDataValue<long>(nameof(MessageTemplate.PerDayLimit));
-                    if (!await _messageTemplateDomainService.CheckSendUpperLimitAsync(messageRecord.MessageEntityId, perDayLimit, item.UserId))
+                    var messageTemplate = await _templateRepository.FindAsync(x => x.Id == messageRecord.MessageEntityId, false);
+                    messageRecord.SetDisplayName(messageTemplate.DisplayName);
+                    if (!await _messageTemplateDomainService.CheckSendUpperLimitAsync(messageTemplate, messageRecord.ChannelUserIdentity))
                     {
                         messageRecord.SetResult(false, "The maximum number of times to send per day has been reached");
                         await _messageRecordRepository.AddAsync(messageRecord);
                         continue;
                     }
+
+                    variables = _messageTemplateDomainService.ConvertVariables(messageTemplate, messageRecord.Variables);
                 }
 
-                var variables = _messageTemplateDomainService.ConvertVariables(eto.MessageData.TemplateItems, item.Variables);
-                var smsMessage = new SmsMessage(item.PhoneNumber, JsonSerializer.Serialize(variables));
+                var smsMessage = new SmsMessage(item.ChannelUserIdentity, JsonSerializer.Serialize(variables));
                 smsMessage.Properties.Add("SignName", taskHistory.MessageTask.Sign);
                 smsMessage.Properties.Add("TemplateCode", eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.TemplateId)));
                 try

@@ -5,24 +5,23 @@ namespace Masa.Mc.Service.Admin.Application.MessageTemplates;
 
 public class MessageTemplateQueryHandler
 {
-    private readonly IMessageTemplateRepository _repository;
+    private readonly IMcQueryContext _context;
     private readonly IAuthClient _authClient;
 
-    public MessageTemplateQueryHandler(IMessageTemplateRepository repository
+    public MessageTemplateQueryHandler(IMcQueryContext context
         , IAuthClient authClient)
     {
-        _repository = repository;
+        _context = context;
         _authClient = authClient;
     }
 
     [EventHandler]
     public async Task GetAsync(GetMessageTemplateQuery query)
     {
-        var entity = await (await _repository.GetWithDetailQueryAsync()).FirstOrDefaultAsync(x => x.MessageTemplate.Id == query.MessageTemplateId);
-        if (entity == null)
-            throw new UserFriendlyException("messageTemplate not found");
-        var dto = entity.MessageTemplate.Adapt<MessageTemplateDto>();
-        dto.Channel = entity.Channel.Adapt<ChannelDto>();
+        var entity = await _context.MessageTemplateQueries.Include(x => x.Channel).Include(x=>x.Items).FirstOrDefaultAsync(x => x.Id == query.MessageTemplateId);
+        MasaArgumentException.ThrowIfNull(entity, "MessageTemplate");
+
+        var dto = entity.Adapt<MessageTemplateDto>();
         query.Result = dto;
     }
 
@@ -30,42 +29,34 @@ public class MessageTemplateQueryHandler
     public async Task GetListAsync(GetMessageTemplateListQuery query)
     {
         var options = query.Input;
-        var queryable = await CreateFilteredDetailQueryAsync(options);
-        var totalCount = await queryable.CountAsync();
-        var totalPages = (int)Math.Ceiling(totalCount / (decimal)options.PageSize);
-        if (string.IsNullOrEmpty(options.Sorting)) options.Sorting = "messageTemplate.modificationTime desc";
-        queryable = queryable.OrderBy(options.Sorting).PageBy(options.Page, options.PageSize);
-        var entities = await queryable.ToListAsync();
-        var entityDtos = entities.Select(x =>
+        var condition = await CreateFilteredPredicate(options);
+        var resultList = await _context.MessageTemplateQueries.Include(x=>x.Channel).Include(x => x.Items).GetPaginatedListAsync(condition, new()
         {
-            var dto = x.MessageTemplate.Adapt<MessageTemplateDto>();
-            dto.Channel = x.Channel.Adapt<ChannelDto>();
-            return dto;
-        }).ToList();
-        await FillMessageTemplateDtos(entityDtos);
-        var result = new PaginatedListDto<MessageTemplateDto>(totalCount, totalPages, entityDtos);
+            Page = options.Page,
+            PageSize = options.PageSize,
+            Sorting = new Dictionary<string, bool>
+            {
+                [nameof(MessageTemplateQueryModel.ModificationTime)] = true
+            }
+        });
+        var dtos = resultList.Result.Adapt<List<MessageTemplateDto>>();
+        await FillMessageTemplateDtos(dtos);
+        var result = new PaginatedListDto<MessageTemplateDto>(resultList.Total, resultList.TotalPages, dtos);
         query.Result = result;
     }
 
-    private async Task<Expression<Func<MessageTemplateWithDetail, bool>>> CreateFilteredPredicate(GetMessageTemplateInputDto inputDto)
+    private async Task<Expression<Func<MessageTemplateQueryModel, bool>>> CreateFilteredPredicate(GetMessageTemplateInputDto inputDto)
     {
-        Expression<Func<MessageTemplateWithDetail, bool>> condition = x => true;
-        condition = condition.And(!string.IsNullOrEmpty(inputDto.Filter), x => x.MessageTemplate.DisplayName.Contains(inputDto.Filter) || x.MessageTemplate.TemplateId.Contains(inputDto.Filter));
+        Expression<Func<MessageTemplateQueryModel, bool>> condition = x => true;
+        condition = condition.And(!string.IsNullOrEmpty(inputDto.Filter), x => x.DisplayName.Contains(inputDto.Filter) || x.TemplateId.Contains(inputDto.Filter));
         condition = condition.And(inputDto.ChannelType.HasValue, x => x.Channel.Type == inputDto.ChannelType);
-        condition = condition.And(inputDto.Status.HasValue, x => x.MessageTemplate.Status == inputDto.Status);
-        condition = condition.And(inputDto.AuditStatus.HasValue, x => x.MessageTemplate.AuditStatus == inputDto.AuditStatus);
-        condition = condition.And(inputDto.ChannelId.HasValue, x => x.MessageTemplate.ChannelId == inputDto.ChannelId);
-        condition = condition.And(inputDto.StartTime.HasValue, x => x.MessageTemplate.ModificationTime >= inputDto.StartTime);
-        condition = condition.And(inputDto.EndTime.HasValue, x => x.MessageTemplate.ModificationTime <= inputDto.EndTime);
-        condition = condition.And(inputDto.TemplateType > 0, x => x.MessageTemplate.TemplateType == inputDto.TemplateType);
+        condition = condition.And(inputDto.Status.HasValue, x => x.Status == inputDto.Status);
+        condition = condition.And(inputDto.AuditStatus.HasValue, x => x.AuditStatus == inputDto.AuditStatus);
+        condition = condition.And(inputDto.ChannelId.HasValue, x => x.ChannelId == inputDto.ChannelId);
+        condition = condition.And(inputDto.StartTime.HasValue, x => x.ModificationTime >= inputDto.StartTime);
+        condition = condition.And(inputDto.EndTime.HasValue, x => x.ModificationTime <= inputDto.EndTime);
+        condition = condition.And(inputDto.TemplateType > 0, x => x.TemplateType == inputDto.TemplateType);
         return await Task.FromResult(condition); ;
-    }
-
-    private async Task<IQueryable<MessageTemplateWithDetail>> CreateFilteredDetailQueryAsync(GetMessageTemplateInputDto inputDto)
-    {
-        var query = await _repository.GetWithDetailQueryAsync()!;
-        var condition = await CreateFilteredPredicate(inputDto);
-        return query.Where(condition);
     }
 
     private async Task FillMessageTemplateDtos(List<MessageTemplateDto> dtos)

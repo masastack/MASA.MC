@@ -5,25 +5,22 @@ namespace Masa.Mc.Service.Admin.Application.MessageRecords;
 
 public class MessageRecordQueryHandler
 {
-    private readonly IMessageRecordRepository _repository;
-    private readonly IMessageTaskHistoryRepository _messageTaskHistoryRepository;
+    private readonly IMcQueryContext _context;
     private readonly IAuthClient _authClient;
 
-    public MessageRecordQueryHandler(IMessageRecordRepository repository
-        , IMessageTaskHistoryRepository messageTaskHistoryRepository
+    public MessageRecordQueryHandler(IMcQueryContext context
         , IAuthClient authClient)
     {
-        _repository = repository;
-        _messageTaskHistoryRepository = messageTaskHistoryRepository;
+        _context = context;
         _authClient = authClient;
     }
 
     [EventHandler]
     public async Task GetAsync(GetMessageRecordQuery query)
     {
-        var entity = await _repository.FindAsync(x => x.Id == query.MessageRecordId);
-        if (entity == null)
-            throw new UserFriendlyException("messageRecord not found");
+        var entity = await _context.MessageRecordQueries.Include(x=>x.Channel).FirstOrDefaultAsync(x => x.Id == query.MessageRecordId);
+        MasaArgumentException.ThrowIfNull(entity, "MessageRecord");
+
         query.Result = entity.Adapt<MessageRecordDto>();
     }
 
@@ -31,21 +28,25 @@ public class MessageRecordQueryHandler
     public async Task GetListAsync(GetListMessageRecordQuery query)
     {
         var options = query.Input;
-        var queryable = await CreateFilteredQueryAsync(options);
-        var totalCount = await queryable.CountAsync();
-        var totalPages = (int)Math.Ceiling(totalCount / (decimal)options.PageSize);
-        if (string.IsNullOrEmpty(options.Sorting)) options.Sorting = "modificationTime desc";
-        queryable = queryable.OrderBy(options.Sorting).PageBy(options.Page, options.PageSize);
-        var entities = await queryable.ToListAsync();
-        var entityDtos = entities.Adapt<List<MessageRecordDto>>();
-        await FillMessageRecordDtos(entityDtos);
-        var result = new PaginatedListDto<MessageRecordDto>(totalCount, totalPages, entityDtos);
+        var condition = await CreateFilteredPredicate(options);
+        var resultList = await _context.MessageRecordQueries.Include(x => x.Channel).GetPaginatedListAsync(condition, new()
+        {
+            Page = options.Page,
+            PageSize = options.PageSize,
+            Sorting = new Dictionary<string, bool>
+            {
+                [nameof(MessageRecordQueryModel.ModificationTime)] = true
+            }
+        });
+        var dtos = resultList.Result.Adapt<List<MessageRecordDto>>();
+        await FillMessageRecordDtos(dtos);
+        var result = new PaginatedListDto<MessageRecordDto>(resultList.Total, resultList.TotalPages, dtos);
         query.Result = result;
     }
 
-    private async Task<Expression<Func<MessageRecord, bool>>> CreateFilteredPredicate(GetMessageRecordInputDto inputDto)
+    private async Task<Expression<Func<MessageRecordQueryModel, bool>>> CreateFilteredPredicate(GetMessageRecordInputDto inputDto)
     {
-        Expression<Func<MessageRecord, bool>> condition = x => true;
+        Expression<Func<MessageRecordQueryModel, bool>> condition = x => true;
         condition = condition.And(!string.IsNullOrEmpty(inputDto.Filter), x => x.DisplayName.Contains(inputDto.Filter));
         condition = condition.And(inputDto.MessageTaskHistoryId.HasValue, m => m.MessageTaskHistoryId == inputDto.MessageTaskHistoryId);
         condition = condition.And(inputDto.ChannelId.HasValue, m => m.ChannelId == inputDto.ChannelId);
@@ -64,17 +65,10 @@ public class MessageRecordQueryHandler
         return await Task.FromResult(condition); ;
     }
 
-    private async Task<IQueryable<MessageRecord>> CreateFilteredQueryAsync(GetMessageRecordInputDto inputDto)
-    {
-        var query = await _repository.WithDetailsAsync()!;
-        var condition = await CreateFilteredPredicate(inputDto);
-        return query.Where(condition);
-    }
-
     private async Task FillMessageRecordDtos(List<MessageRecordDto> dtos)
     {
         var messageTaskHistoryIds = dtos.Select(x => x.MessageTaskHistoryId).ToList();
-        var messageTaskHistoryList = await _messageTaskHistoryRepository.GetListAsync(x => messageTaskHistoryIds.Contains(x.Id));
+        var messageTaskHistoryList = await _context.MessageTaskHistoryQueries.Where(x => messageTaskHistoryIds.Contains(x.Id)).ToListAsync();
 
         var userIds = dtos.Where(x => x.UserId != default && string.IsNullOrEmpty(x.User.Account)).Select(x => x.UserId).Distinct().ToArray();
         var userInfos = await _authClient.UserService.GetUserPortraitsAsync(userIds);

@@ -5,5 +5,7 @@ namespace Masa.Mc.Service.Admin.Domain.MessageTasks.Events;
 
 public record ResolveMessageTaskEvent(Guid MessageTaskId, Guid OperatorId = default) : DomainEvent
 {
-    public MessageTask MessageTask { get; set; }
+    public MessageTask MessageTask { get; set; } = default!;
+
+    public bool IsStop { get; set; }
 }
