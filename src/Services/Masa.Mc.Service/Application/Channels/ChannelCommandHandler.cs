@@ -29,8 +29,7 @@ public class ChannelCommandHandler
     {
         await ValidateChannelNameAsync(updateCommand.Channel.DisplayName, updateCommand.ChannelId);
         var entity = await _repository.FindAsync(x => x.Id == updateCommand.ChannelId);
-        if (entity == null)
-            throw new UserFriendlyException("channel not found");
+        MasaArgumentException.ThrowIfNull(entity, "Channel");
         if ((int)updateCommand.Channel.Type != entity.Type.Id)
             throw new UserFriendlyException("type cannot be changed");
         if (updateCommand.Channel.Code != entity.Code)
@@ -43,8 +42,7 @@ public class ChannelCommandHandler
     public async Task DeleteAsync(DeleteChannelCommand createCommand)
     {
         var entity = await _repository.FindAsync(x => x.Id == createCommand.ChannelId);
-        if (entity == null)
-            throw new UserFriendlyException("channel not found");
+        MasaArgumentException.ThrowIfNull(entity, "Channel");
         if (await _messageTaskRepository.FindAsync(x => x.ChannelId == createCommand.ChannelId && (x.Status == MessageTaskStatuses.WaitSend || x.Status == MessageTaskStatuses.Sending), false) != null)
         {
             throw new UserFriendlyException("If there is a message task to be sent / being sent, it cannot be deleted");

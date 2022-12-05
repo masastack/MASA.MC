@@ -1,6 +1,8 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
+using Masa.BuildingBlocks.Ddd.Domain.Entities;
+
 namespace Masa.Mc.Service.Admin.Application.MessageTasks;
 
 public class UpdateTemplateMessageTaskCommandHandler
@@ -33,8 +35,8 @@ public class UpdateTemplateMessageTaskCommandHandler
     public async Task UpdateTemplateMessageTaskAsync(UpdateTemplateMessageTaskCommand updateCommand)
     {
         var entity = await _repository.FindAsync(x => x.Id == updateCommand.MessageTaskId);
-        if (entity == null)
-            throw new UserFriendlyException("messageTask not found");
+        MasaArgumentException.ThrowIfNull(entity, "MessageTask");
+
         if (!entity.IsDraft)
             throw new UserFriendlyException("non draft cannot be modified");
         updateCommand.MessageTask.Adapt(entity);

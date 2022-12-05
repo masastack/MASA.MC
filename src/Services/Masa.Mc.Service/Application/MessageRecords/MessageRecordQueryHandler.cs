@@ -19,8 +19,7 @@ public class MessageRecordQueryHandler
     public async Task GetAsync(GetMessageRecordQuery query)
     {
         var entity = await _context.MessageRecordQueries.Include(x=>x.Channel).FirstOrDefaultAsync(x => x.Id == query.MessageRecordId);
-
-        Check.NotNull(entity, "MessageRecord not found");
+        MasaArgumentException.ThrowIfNull(entity, "MessageRecord");
 
         query.Result = entity.Adapt<MessageRecordDto>();
     }

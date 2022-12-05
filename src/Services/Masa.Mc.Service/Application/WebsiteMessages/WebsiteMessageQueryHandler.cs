@@ -19,8 +19,7 @@ public class WebsiteMessageQueryHandler
     public async Task GetAsync(GetWebsiteMessageQuery query)
     {
         var entity = await _context.WebsiteMessageQueries.Include(x => x.Channel).FirstOrDefaultAsync(x => x.Id == query.WebsiteMessageId);
-
-        Check.NotNull(entity, "WebsiteMessage not found");
+        MasaArgumentException.ThrowIfNull(entity, "WebsiteMessage");
 
         var dto = entity.Adapt<WebsiteMessageDto>();
         await FillDetailDto(dto);

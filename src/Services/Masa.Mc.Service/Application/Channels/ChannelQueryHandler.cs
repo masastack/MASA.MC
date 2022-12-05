@@ -19,8 +19,7 @@ public class ChannelQueryHandler
     public async Task GetAsync(GetChannelQuery query)
     {
         var entity = await _context.ChannelQueryQueries.FirstOrDefaultAsync(x => x.Id == query.ChannelId);
-
-        Check.NotNull(entity, "Channel not found");
+        MasaArgumentException.ThrowIfNull(entity, "Channel");
 
         query.Result = entity.Adapt<ChannelDto>();
     }
@@ -49,8 +48,7 @@ public class ChannelQueryHandler
     public async Task FindByCodeAsync(FindChannelByCodeQuery query)
     {
         var entity = await _context.ChannelQueryQueries.FirstOrDefaultAsync(x => x.Code == query.Code);
-
-        Check.NotNull(entity, "Channel not found");
+        MasaArgumentException.ThrowIfNull(entity, "Channel");
 
         query.Result = entity.Adapt<ChannelDto>();
     }

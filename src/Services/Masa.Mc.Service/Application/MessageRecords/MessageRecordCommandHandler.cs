@@ -19,8 +19,8 @@ public class MessageRecordCommandHandler
     public async Task RetryAsync(RetryMessageRecordCommand command)
     {
         var entity = await _repository.FindAsync(x => x.Id == command.Input.MessageRecordId);
-        if (entity == null)
-            throw new UserFriendlyException("MessageRecord not found");
+        MasaArgumentException.ThrowIfNull(entity, "MessageRecord");
+
         if (entity.Success == true)
             throw new UserFriendlyException("The message is successfully sent without resending");
 

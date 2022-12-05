@@ -16,8 +16,7 @@ public class MessageInfoQueryHandler
     public async Task GetAsync(GetMessageInfoQuery query)
     {
         var entity = await _context.MessageInfoQueries.FirstOrDefaultAsync(x => x.Id == query.MessageInfoId);
-
-        Check.NotNull(entity, "MessageInfo not found");
+        MasaArgumentException.ThrowIfNull(entity, "MessageInfo");
 
         query.Result = entity.Adapt<MessageInfoDto>();
     }

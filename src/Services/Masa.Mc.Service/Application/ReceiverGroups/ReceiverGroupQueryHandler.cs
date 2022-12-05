@@ -19,8 +19,7 @@ public class ReceiverGroupQueryHandler
     public async Task GetAsync(GetReceiverGroupQuery query)
     {
         var entity = await _context.ReceiverGroupQueries.Include(x=>x.Items).FirstOrDefaultAsync(x => x.Id == query.ReceiverGroupId);
-
-        Check.NotNull(entity, "ReceiverGroup not found");
+        MasaArgumentException.ThrowIfNull(entity, "ReceiverGroup");
 
         query.Result = entity.Adapt<ReceiverGroupDto>();
     }

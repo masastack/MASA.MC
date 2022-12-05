@@ -19,8 +19,7 @@ public class MessageTemplateQueryHandler
     public async Task GetAsync(GetMessageTemplateQuery query)
     {
         var entity = await _context.MessageTemplateQueries.Include(x => x.Channel).Include(x=>x.Items).FirstOrDefaultAsync(x => x.Id == query.MessageTemplateId);
-
-        Check.NotNull(entity, "MessageTemplate not found");
+        MasaArgumentException.ThrowIfNull(entity, "MessageTemplate");
 
         var dto = entity.Adapt<MessageTemplateDto>();
         query.Result = dto;

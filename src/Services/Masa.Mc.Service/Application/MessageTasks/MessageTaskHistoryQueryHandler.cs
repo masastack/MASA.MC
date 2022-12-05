@@ -16,8 +16,7 @@ public class MessageTaskHistoryQueryHandler
     public async Task GetAsync(GetMessageTaskHistoryQuery query)
     {
         var entity = await _context.MessageTaskHistoryQueries.FirstOrDefaultAsync(x => x.Id == query.MessageTaskHistoryId);
-
-        Check.NotNull(entity, "MessageTaskHistory not found");
+        MasaArgumentException.ThrowIfNull(entity, "MessageTaskHistory");
 
         query.Result = entity.Adapt<MessageTaskHistoryDto>();
     }

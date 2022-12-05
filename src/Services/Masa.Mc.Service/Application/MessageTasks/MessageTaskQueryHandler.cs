@@ -25,8 +25,7 @@ public class MessageTaskQueryHandler
     public async Task GetAsync(GetMessageTaskQuery query)
     {
         var entity = await _context.MessageTaskQueries.Include(x => x.Channel).FirstOrDefaultAsync(x => x.Id == query.MessageTaskId);
-
-        Check.NotNull(entity, "MessageTask not found");
+        MasaArgumentException.ThrowIfNull(entity, "MessageTask");
 
         query.Result = entity.Adapt<MessageTaskDto>();
     }
