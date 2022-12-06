@@ -14,6 +14,6 @@ public class UserService : ServiceBase
 
     public async Task<UserDto?> CreateExternalUserAsync(CreateExternalUserDto inputDto)
     {
-        return await PostAsync<CreateExternalUserDto, UserDto?>(nameof(CreateExternalUserAsync), inputDto);
+        return await PostAsync<CreateExternalUserDto, UserDto?>("ExternalUser", inputDto);
     }
 }
