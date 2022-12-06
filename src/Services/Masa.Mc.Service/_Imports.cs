@@ -138,7 +138,6 @@ global using Masa.BuildingBlocks.Storage.ObjectStorage;
 global using Masa.BuildingBlocks.StackSdks.Auth;
 global using Masa.Mc.Contracts.Admin.Dtos.Subjects;
 global using Masa.Mc.Service.Admin.Application.Subjects.Queries;
-global using Masa.Mc.Service.Admin.Application.Subjects.Commands;
 global using Masa.BuildingBlocks.StackSdks.Auth.Contracts.Model;
 global using Masa.BuildingBlocks.SearchEngine.AutoComplete;
 global using Masa.BuildingBlocks.StackSdks.Auth.Contracts.Enum;
