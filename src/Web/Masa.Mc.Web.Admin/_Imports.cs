@@ -74,3 +74,5 @@ global using Masa.Mc.Web.Admin.Model;
 global using System.Collections.Concurrent;
 global using Masa.Blazor.Presets;
 global using static Masa.Stack.Components.JsInitVariables;
+global using Masa.BuildingBlocks.StackSdks.Auth;
+global using Masa.BuildingBlocks.StackSdks.Auth.Contracts.Model;
