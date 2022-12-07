@@ -3,10 +3,8 @@
 
 namespace Masa.Mc.Service.Admin.Application.QueryModels;
 
-public class ReceiverGroupQueryModel : ISoftDelete
+public class ReceiverGroupQueryModel : Entity<Guid>, ISoftDelete
 {
-    public Guid Id { get; set; }
-
     public string DisplayName { get; set; } = string.Empty;
 
     public string Description { get; set; } = string.Empty;

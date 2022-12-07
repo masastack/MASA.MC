@@ -3,10 +3,8 @@
 
 namespace Masa.Mc.Service.Admin.Application.QueryModels;
 
-public class MessageTemplateItemQueryModel
+public class MessageTemplateItemQueryModel : Entity<Guid>
 {
-    public Guid Id { get; set; }
-
     public Guid MessageTemplateId { get; set; }
 
     public string Code { get; set; } = string.Empty;

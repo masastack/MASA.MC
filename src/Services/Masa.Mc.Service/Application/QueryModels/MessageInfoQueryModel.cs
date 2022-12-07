@@ -3,10 +3,8 @@
 
 namespace Masa.Mc.Service.Admin.Application.QueryModels;
 
-public class MessageInfoQueryModel : ISoftDelete
+public class MessageInfoQueryModel : Entity<Guid>, ISoftDelete
 {
-    public Guid Id { get; set; }
-
     public string Title { get; set; } = string.Empty;
 
     public string Content { get; set; } = string.Empty;
