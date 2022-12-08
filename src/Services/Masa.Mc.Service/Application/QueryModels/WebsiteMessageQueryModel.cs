@@ -3,10 +3,8 @@
 
 namespace Masa.Mc.Service.Admin.Application.QueryModels;
 
-public class WebsiteMessageQueryModel : ISoftDelete
+public class WebsiteMessageQueryModel : Entity<Guid>, ISoftDelete
 {
-    public Guid Id { get; set; }
-
     public Guid ChannelId { get; set; }
 
     public ChannelQueryModel Channel { get; set; } = default!;

@@ -3,10 +3,8 @@
 
 namespace Masa.Mc.Service.Admin.Application.QueryModels;
 
-public class MessageTaskHistoryQueryModel : ISoftDelete
+public class MessageTaskHistoryQueryModel : Entity<Guid>, ISoftDelete
 {
-    public Guid Id { get; set; }
-
     public Guid MessageTaskId { get; set; }
 
     public string TaskHistoryNo { get; set; } = string.Empty;

@@ -3,10 +3,8 @@
 
 namespace Masa.Mc.Service.Admin.Application.QueryModels;
 
-public class MessageReceiverUserQueryModel
+public class MessageReceiverUserQueryModel : Entity<Guid>
 {
-    public Guid Id { get; set; }
-
     public Guid UserId { get; set; }
 
     public string ChannelUserIdentity { get; set; } = string.Empty;

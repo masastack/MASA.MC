@@ -3,10 +3,8 @@
 
 namespace Masa.Mc.Service.Admin.Application.QueryModels;
 
-public class ReceiverGroupItemQueryModel
+public class ReceiverGroupItemQueryModel : Entity<Guid>
 {
-    public Guid Id { get; set; }
-
     public Guid GroupId { get; set; }
 
     public Guid SubjectId { get; set; }

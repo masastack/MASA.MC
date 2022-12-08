@@ -71,7 +71,7 @@ public class MessageRecordQueryHandler
         var messageTaskHistoryList = await _context.MessageTaskHistoryQueries.Where(x => messageTaskHistoryIds.Contains(x.Id)).ToListAsync();
 
         var userIds = dtos.Where(x => x.UserId != default && string.IsNullOrEmpty(x.User.Account)).Select(x => x.UserId).Distinct().ToArray();
-        var userInfos = await _authClient.UserService.GetUserPortraitsAsync(userIds);
+        var userInfos = await _authClient.UserService.GetUsersAsync(userIds);
 
         foreach (var item in dtos)
         {
