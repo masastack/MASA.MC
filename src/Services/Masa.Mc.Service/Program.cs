@@ -63,6 +63,7 @@ builder.Services.AddTransient<Microsoft.AspNetCore.SignalR.IUserIdProvider, McUs
 builder.Services.AddSignalR();
 builder.Services.AddTransient<NotificationsHub>();
 builder.Services.AddAuthChannelUserFinder();
+builder.Services.AddMessageTaskHttpJobService();
 TypeAdapterConfig.GlobalSettings.Scan(Assembly.GetExecutingAssembly(), Assembly.Load("Masa.Mc.Contracts.Admin"));
 
 builder.Services.AddHealthChecks()

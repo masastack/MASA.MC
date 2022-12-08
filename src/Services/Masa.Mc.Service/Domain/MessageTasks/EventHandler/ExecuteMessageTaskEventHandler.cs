@@ -10,21 +10,21 @@ public class ExecuteMessageTaskEventHandler
     private readonly IMessageTaskHistoryRepository _messageTaskHistoryRepository;
     private readonly IDomainEventBus _eventBus;
     private readonly MessageTaskDomainService _domainService;
-    private readonly ISchedulerClient _schedulerClient;
+    private readonly IMessageTaskJobService _messageTaskJobService;
 
     public ExecuteMessageTaskEventHandler(IChannelRepository channelRepository
         , IMessageTaskRepository messageTaskRepository
         , IMessageTaskHistoryRepository messageTaskHistoryRepository
         , IDomainEventBus eventBus
         , MessageTaskDomainService domainService
-        , ISchedulerClient schedulerClient)
+        , IMessageTaskJobService messageTaskJobService)
     {
         _channelRepository = channelRepository;
         _messageTaskRepository = messageTaskRepository;
         _messageTaskHistoryRepository = messageTaskHistoryRepository;
         _eventBus = eventBus;
         _domainService = domainService;
-        _schedulerClient = schedulerClient;
+        _messageTaskJobService = messageTaskJobService;
     }
 
     [EventHandler]
@@ -38,7 +38,7 @@ public class ExecuteMessageTaskEventHandler
             if (messageTask == null) return;
 
             Guid userId = Guid.Empty;
-            await _schedulerClient.SchedulerJobService.DisableAsync(new SchedulerJobRequestBase { JobId = messageTask.SchedulerJobId, OperatorId = userId });
+            await _messageTaskJobService.DisableJobAsync(messageTask.SchedulerJobId, userId);
             return;
         }
         history.SetTaskId(eto.TaskId);

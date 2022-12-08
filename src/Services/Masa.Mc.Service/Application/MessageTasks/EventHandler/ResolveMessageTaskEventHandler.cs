@@ -9,22 +9,22 @@ public class ResolveMessageTaskEventHandler
     private readonly IMessageTaskRepository _messageTaskRepository;
     private readonly IMessageTaskHistoryRepository _messageTaskHistoryRepository;
     private readonly IDomainEventBus _eventBus;
-    private readonly ISchedulerClient _schedulerClient;
     private readonly IUserContext _userContext;
+    private readonly IMessageTaskJobService _messageTaskJobService;
 
     public ResolveMessageTaskEventHandler(IChannelUserFinder channelUserFinder
         , IMessageTaskRepository messageTaskRepository
         , IMessageTaskHistoryRepository messageTaskHistoryRepository
         , IDomainEventBus eventBus
-        , ISchedulerClient schedulerClient
-        , IUserContext userContext)
+        , IUserContext userContext
+        , IMessageTaskJobService messageTaskJobService)
     {
         _channelUserFinder = channelUserFinder;
         _messageTaskRepository = messageTaskRepository;
         _messageTaskHistoryRepository = messageTaskHistoryRepository;
         _eventBus = eventBus;
-        _schedulerClient = schedulerClient;
         _userContext = userContext;
+        _messageTaskJobService = messageTaskJobService;
     }
 
     [EventHandler(1)]
@@ -95,30 +95,17 @@ public class ResolveMessageTaskEventHandler
 
         var cronExpression = eto.MessageTask.SendRules.CronExpression;
         var userId = _userContext.GetUserId<Guid>();
-        var request = new AddSchedulerJobRequest
-        {
-            ProjectIdentity = MasaStackConsts.MC_SYSTEM_ID,
-            Name = eto.MessageTask.DisplayName,
-            JobType = JobTypes.JobApp,
-            CronExpression = cronExpression,
-            OperatorId = userId == default ? eto.OperatorId : userId,
-            JobAppConfig = new SchedulerJobAppConfig
-            {
-                JobAppIdentity = MessageTaskExecuteJobConsts.JOB_APP_IDENTITY,
-                JobEntryAssembly = MessageTaskExecuteJobConsts.JOB_ENTRY_ASSEMBLY,
-                JobEntryClassName = MessageTaskExecuteJobConsts.JOB_ENTRY_METHOD,
-                JobParams = eto.MessageTaskId.ToString(),
-            }
-        };
+        var operatorId = userId == default ? eto.OperatorId : userId;
 
-        var jobId = await _schedulerClient.SchedulerJobService.AddAsync(request);
+        var jobId = await _messageTaskJobService.RegisterJobAsync(eto.MessageTaskId, cronExpression, operatorId, eto.MessageTask.DisplayName);
         eto.MessageTask.SetJobId(jobId);
+
         await _messageTaskRepository.UpdateAsync(eto.MessageTask);
         await _messageTaskHistoryRepository.UnitOfWork.SaveChangesAsync();
 
         if (string.IsNullOrEmpty(cronExpression) && jobId != default)
         {
-            await _schedulerClient.SchedulerJobService.StartAsync(new SchedulerJobRequestBase { JobId = jobId, OperatorId = userId });
+            await _messageTaskJobService.StartJobAsync(jobId, operatorId);
         }
     }
 }
