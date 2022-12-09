@@ -145,9 +145,9 @@ public class MessageTaskService : ServiceBase
         return query.Result;
     }
 
-    public async Task ExecuteAsync(IEventBus eventBus, Guid messageTaskId)
+    public async Task ExecuteAsync(IEventBus eventBus, Guid messageTaskId, Guid taskId)
     {
-        var query = new ExecuteMessageTaskEvent(messageTaskId);
+        var query = new ExecuteMessageTaskEvent(messageTaskId, false, default, taskId);
         await eventBus.PublishAsync(query);
     }
 

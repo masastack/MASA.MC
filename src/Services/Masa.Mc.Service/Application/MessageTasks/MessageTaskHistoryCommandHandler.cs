@@ -6,15 +6,15 @@ namespace Masa.Mc.Service.Admin.Application.MessageTasks;
 public class MessageTaskHistoryCommandHandler
 {
     private readonly IMessageTaskHistoryRepository _repository;
-    private readonly ISchedulerClient _schedulerClient;
+    private readonly IMessageTaskJobService _messageTaskJobService;
     private readonly IUserContext _userContext;
 
     public MessageTaskHistoryCommandHandler(IMessageTaskHistoryRepository repository
-        , ISchedulerClient schedulerClient
+        , IMessageTaskJobService messageTaskJobService
         , IUserContext userContext)
     {
         _repository = repository;
-        _schedulerClient = schedulerClient;
+        _messageTaskJobService = messageTaskJobService;
         _userContext = userContext;
     }
 
@@ -32,7 +32,7 @@ public class MessageTaskHistoryCommandHandler
         if (entity.SchedulerTaskId != default)
         {
             var userId = _userContext.GetUserId<Guid>();
-            await _schedulerClient.SchedulerTaskService.StopAsync(new SchedulerTaskRequestBase { TaskId = entity.SchedulerTaskId, OperatorId = userId });
+            await _messageTaskJobService.StopTaskAsync(entity.SchedulerTaskId, userId);
         }
     }
 }

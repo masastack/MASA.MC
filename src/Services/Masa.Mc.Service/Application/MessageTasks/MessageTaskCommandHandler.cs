@@ -8,7 +8,7 @@ public class MessageTaskCommandHandler
     private readonly IMessageTaskRepository _repository;
     private readonly IMessageTaskHistoryRepository _messageTaskHistoryRepository;
     private readonly IEventBus _eventBus;
-    private readonly ISchedulerClient _schedulerClient;
+    private readonly IMessageTaskJobService _messageTaskJobService;
     private readonly IUserContext _userContext;
     private readonly IChannelRepository _channelRepository;
     private readonly IMessageTemplateRepository _messageTemplateRepository;
@@ -16,7 +16,7 @@ public class MessageTaskCommandHandler
     public MessageTaskCommandHandler(IMessageTaskRepository repository
         , IMessageTaskHistoryRepository messageTaskHistoryRepository
         , IEventBus eventBus
-        , ISchedulerClient schedulerClient
+        , IMessageTaskJobService messageTaskJobService
         , IUserContext userContext
         , IChannelRepository channelRepository
         , IMessageTemplateRepository messageTemplateRepository)
@@ -24,7 +24,7 @@ public class MessageTaskCommandHandler
         _repository = repository;
         _messageTaskHistoryRepository = messageTaskHistoryRepository;
         _eventBus = eventBus;
-        _schedulerClient = schedulerClient;
+        _messageTaskJobService = messageTaskJobService;
         _userContext = userContext;
         _channelRepository = channelRepository;
         _messageTemplateRepository = messageTemplateRepository;
@@ -73,7 +73,7 @@ public class MessageTaskCommandHandler
         if (entity.SchedulerJobId != default)
         {
             var userId = _userContext.GetUserId<Guid>();
-            await _schedulerClient.SchedulerJobService.EnableAsync(new SchedulerJobRequestBase { JobId = entity.SchedulerJobId, OperatorId = userId });
+            await _messageTaskJobService.EnableJobAsync(entity.SchedulerJobId, userId);
         }
     }
 
@@ -91,7 +91,7 @@ public class MessageTaskCommandHandler
         if (entity.SchedulerJobId != default)
         {
             var userId = _userContext.GetUserId<Guid>();
-            await _schedulerClient.SchedulerJobService.DisableAsync(new SchedulerJobRequestBase { JobId = entity.SchedulerJobId, OperatorId = userId });
+            await _messageTaskJobService.DisableJobAsync(entity.SchedulerJobId, userId);
         }
     }
 
@@ -99,7 +99,7 @@ public class MessageTaskCommandHandler
     [EventHandler]
     public async Task SendOrdinaryMessageAsync(SendOrdinaryMessageTaskCommand command)
     {
-        var channel = await _channelRepository.FindAsync(x=>x.Code== command.inputDto.ChannelCode);
+        var channel = await _channelRepository.FindAsync(x => x.Code == command.inputDto.ChannelCode);
         Check.NotNull(channel, "Channel not found");
 
         var taskUpsertDto = (MessageTaskUpsertDto)command.inputDto;
