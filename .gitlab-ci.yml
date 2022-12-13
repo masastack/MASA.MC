@@ -18,8 +18,8 @@ variables:
   IMAGE_MC_WEB_ADMIN_SERVER_DEV:  $CI_ALI_REGISTRY_DOMAIN/masa/$MC_Web_Name:dev-$CI_PIPELINE_ID
 
 
-  WebDomain_test: mc-test.masastack.com
-  ServiceDomain_test: mc-service-test.masastack.com
+  WebDomain_test: mc-staging.masastack.com
+  ServiceDomain_test: mc-service-staging.masastack.com
 
 
   WebDomain_dev: mc-develop.masastack.com
