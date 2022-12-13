@@ -68,6 +68,7 @@ Create the name of the service account to use
 kubernetes.io/ingress.class: nginx
 kubernetes.io/load-balancer-port: "443"
 kubernetes.io/load-balancer-protocol: TERMINATED_HTTPS
+nginx.ingress.kubernetes.io/backend-protocol: HTTPS
 nginx.ingress.kubernetes.io/cors-allow-headers: DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization,elastic-apm-traceparent
 nginx.ingress.kubernetes.io/cors-allow-methods: PUT, GET, POST, OPTIONS, DELETE
 nginx.ingress.kubernetes.io/cors-allow-origin: '*'
