@@ -184,3 +184,6 @@ global using Masa.BuildingBlocks.Ddd.Domain.Values;
 global using Masa.Mc.Service.Admin.Infrastructure.ChannelUserFinder.Provider.Auth;
 global using Masa.BuildingBlocks.Ddd.Domain.SeedWork;
 global using Masa.Mc.Service.Admin.Infrastructure.MessageTaskJobService;
+global using Masa.Mc.Infrastructure.AppNotification;
+global using Masa.Mc.Infrastructure.AppNotification.Infrastructure.OptionsResolve;
+global using Masa.Mc.Infrastructure.Getui;

@@ -46,7 +46,7 @@ public class ResolveMessageTaskEventHandler
         if (eto.IsStop) return;
 
         var messageTask = eto.MessageTask;
-        var receiverUsers = await _channelUserFinder.GetReceiverUsersAsync(messageTask.Channel.Type, messageTask.Variables, messageTask.Receivers);
+        var receiverUsers = await _channelUserFinder.GetReceiverUsersAsync(messageTask.Channel, messageTask.Variables, messageTask.Receivers);
         messageTask.ReceiverUsers.AddRange(receiverUsers);
     }
 

@@ -11,6 +11,8 @@ public class ChannelType : Enumeration
 
     public static ChannelType WebsiteMessage = new WebsiteMessageChannel();
 
+    public static ChannelType App = new AppsChannel();
+
     public ChannelType(int id, string name) : base(id, name)
     {
     }
@@ -87,6 +89,26 @@ public class ChannelType : Enumeration
         public override string GetChannelUserIdentity(Receiver receiver)
         {
             return receiver.SubjectId.ToString();
+        }
+    }
+
+    private class AppsChannel : ChannelType
+    {
+        public AppsChannel() : base(4, nameof(App)) { }
+
+        public override SendMessageEvent GetSendMessageEvent(Guid channelId, MessageData messageData, MessageTaskHistory messageTaskHistory)
+        {
+            return new SendAppMessageEvent(channelId, messageData, messageTaskHistory);
+        }
+
+        public override RetryMessageEvent GetRetryMessageEvent(Guid messageRecordId)
+        {
+            return new RetryAppMessageEvent(messageRecordId);
+        }
+
+        public override string GetChannelUserIdentity(Receiver receiver)
+        {
+            return string.Empty
         }
     }
 }

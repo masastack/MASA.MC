@@ -1,6 +1,8 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
+using Masa.Mc.Infrastructure.Getui;
+
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddObservable(builder.Logging, builder.Configuration);
 
@@ -57,6 +59,7 @@ builder.Services.AddSchedulerClient(publicConfiguration.GetValue<string>("$publi
 builder.Services.AddMultilevelCache(options => options.UseStackExchangeRedisCache(redisOptions));
 builder.Services.AddAliyunSms();
 builder.Services.AddMailKit();
+builder.Services.AddGetui();
 builder.Services.AddCsv();
 builder.Services.AddSingleton<ITemplateRenderer, TextTemplateRenderer>();
 builder.Services.AddTransient<Microsoft.AspNetCore.SignalR.IUserIdProvider, McUserIdProvider>();
