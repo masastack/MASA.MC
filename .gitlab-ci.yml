@@ -63,7 +63,7 @@ deploy-dev-ali:
   script:
     - ls
     - pwd 
-    - echo $KUBE_CONFIG_DEV_YDY | base64 -d > ./config
+    - echo $KUBE_CONFIG_DEV | base64 -d > ./config
     - cat ./config
     - helm version 
     - helm --kubeconfig ./config list   -n $NAMESPACE_DEV 
@@ -82,7 +82,7 @@ deploy-test-ali:
   script:
     - ls
     - pwd 
-    - echo $KUBE_CONFIG_DEV_YDY | base64 -d > ./config
+    - echo $KUBE_CONFIG_DEV | base64 -d > ./config
     - cat ./config
     - helm version 
     - helm --kubeconfig ./config list   -n $NAMESPACE_TEST
