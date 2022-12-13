@@ -50,6 +50,46 @@ docker-dev:
     - docker rmi $IMAGE_MC_SERVICE_DEV
 
 
+
+deploy-dev-ali:
+  stage: deploy-dev
+  image: registry.cn-hangzhou.aliyuncs.com/masa/library:helm3_latest
+  variables:
+    EnviromentPath: Develop
+  # tags:
+  #   - ydy-runner
+  only:
+    - main  
+  script:
+    - ls
+    - pwd 
+    - echo $KUBE_CONFIG_DEV_YDY | base64 -d > ./config
+    - cat ./config
+    - helm version 
+    - helm --kubeconfig ./config list   -n $NAMESPACE_DEV 
+    - helm upgrade --install $MC_Service_Name ./charts/masa-service --set domain.name=$ServiceDomain_dev  --set domain.secret=masastack  --set service.port=80  --set enviroment.path=$EnviromentPath --set image.tag=dev-$CI_PIPELINE_ID -n $NAMESPACE_DEV
+    - helm upgrade --install $MC_Web_Name ./charts/masa-service  --set domain.name=$WebDomain_dev  --set domain.secret=masastack  --set service.port=80  --set enviroment.path=$EnviromentPath --set image.tag=dev-$CI_PIPELINE_ID -n $NAMESPACE_DEV
+
+deploy-test-ali:
+  stage: deploy-test
+  image: registry.cn-hangzhou.aliyuncs.com/masa/library:helm3_latest
+  variables:
+    EnviromentPath: Staging
+  tags:
+    - ydy-runner
+  only:
+    - main  
+  script:
+    - ls
+    - pwd 
+    - echo $KUBE_CONFIG_DEV_YDY | base64 -d > ./config
+    - cat ./config
+    - helm version 
+    - helm --kubeconfig ./config list   -n $NAMESPACE_TEST
+    - helm upgrade --install $MC_Service_Name ./charts/masa-service --set domain.name=$ServiceDomain_test  --set domain.secret=masastack  --set service.port=80  --set enviroment.path=$EnviromentPath --set image.tag=dev-$CI_PIPELINE_ID -n $NAMESPACE_TEST
+    - helm upgrade --install $MC_Web_Name ./charts/masa-service  --set domain.name=$WebDomain_test  --set domain.secret=masastack  --set service.port=80  --set enviroment.path=$EnviromentPath --set image.tag=dev-$CI_PIPELINE_ID -n $NAMESPACE_TEST
+
+
 deploy-dev:
   stage: deploy-dev
   image: registry.cn-hangzhou.aliyuncs.com/masa/library:helm3_latest
@@ -73,7 +113,7 @@ deploy-test:
   stage: deploy-test
   image: registry.cn-hangzhou.aliyuncs.com/masa/library:helm3_latest
   variables:
-    EnviromentPath: Test
+    EnviromentPath: Staging
   tags:
     - ydy-runner
   only:
