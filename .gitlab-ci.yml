@@ -22,7 +22,7 @@ variables:
   ServiceDomain_test: mc-service-test.masastack.com
 
 
-  WebDomain_dev: mcdevelop.masastack.com
+  WebDomain_dev: mc-develop.masastack.com
   ServiceDomain_dev: mc-service-develop.masastack.com
   DOCKER_MC_SERVICE_PATH: ./src/Services/Masa.Mc.Service/Dockerfile
   DOCKER_MC_ADMIN_WEB_PATH: ./src/Web/Masa.Mc.Web.Admin.Server/Dockerfile
