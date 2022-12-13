@@ -91,7 +91,7 @@ rules:
         service:
           name:   {{ .Release.Name }}
           port:
-            number: 80
+            number: {{ .Values.service.port }}
       path: /
       pathType: ImplementationSpecific
 tls:
