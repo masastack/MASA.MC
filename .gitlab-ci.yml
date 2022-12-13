@@ -1,24 +1,38 @@
 stages:
+#   - sonarqube
   - docker-dev
   - deploy-dev
   - deploy-test
   - docker-prd
   - deploy-prd
 
+
 variables:
-  ALI_REGISTRY: registry.cn-hangzhou.aliyuncs.com
-  IMAGE_MC_SERVICE: $ALI_REGISTRY/masa/masa-mc-service:$CI_COMMIT_TAG
-  IMAGE_MC_SERVICE_DEV: $ALI_REGISTRY/masa/masa-mc-service:dev-$CI_PIPELINE_ID
-  IMAGE_MC_WEB_ADMIN_SERVER: $ALI_REGISTRY/masa/masa-mc-web-admin-server:$CI_COMMIT_TAG
-  IMAGE_MC_WEB_ADMIN_SERVER_DEV: $ALI_REGISTRY/masa/masa-mc-web-admin-server:dev-$CI_PIPELINE_ID
+  MC_Service_Name: masa-mc-service
+  MC_Web_Name: masa-mc-ui-admin
+
+  IMAGE_MC_SERVICE:  $CI_ALI_REGISTRY_DOMAIN/masa/$MC_Service_Name:$CI_COMMIT_TAG
+  IMAGE_MC_WEB_ADMIN_SERVER:  $CI_ALI_REGISTRY_DOMAIN/masa/$MC_Web_Name:$CI_COMMIT_TAG
+
+  IMAGE_MC_SERVICE_DEV:  $CI_ALI_REGISTRY_DOMAIN/masa/$MC_Service_Name:dev-$CI_PIPELINE_ID
+  IMAGE_MC_WEB_ADMIN_SERVER_DEV:  $CI_ALI_REGISTRY_DOMAIN/masa/$MC_Web_Name:dev-$CI_PIPELINE_ID
+
+
+  WebDomain_test: mc-test.masastack.com
+  ServiceDomain_test: mc-service-test.masastack.com
+
+
+  WebDomain_dev: mcdevelop.masastack.com
+  ServiceDomain_dev: mc-service-develop.masastack.com
   DOCKER_MC_SERVICE_PATH: ./src/Services/Masa.Mc.Service/Dockerfile
   DOCKER_MC_ADMIN_WEB_PATH: ./src/Web/Masa.Mc.Web.Admin.Server/Dockerfile
   NAMESPACE_DEV: masa-mc-dev
   NAMESPACE_TEST: masa-mc-test
-  NAMESPACE_PRE: masa-mc-pre
+  NAMESPACE_STAGING: masa-mc-staging
   NAMESPACE_PRO: masa-mc
 
-docker-build-dev:
+  # NAMESPACE_PRD: alert
+docker-dev:
   stage: docker-dev
   tags:
     - linux-shell
@@ -32,66 +46,72 @@ docker-build-dev:
     - docker build -f $DOCKER_MC_ADMIN_WEB_PATH -t $IMAGE_MC_WEB_ADMIN_SERVER_DEV .
     - docker push $IMAGE_MC_WEB_ADMIN_SERVER_DEV
   after_script:
-    - docker rmi $IMAGE_MC_SERVICE_DEV   
-    - docker rmi $IMAGE_MC_WEB_ADMIN_SERVER_DEV
+    - docker rmi $IMAGE_MC_WEB_ADMIN_SERVER_DEV   
+    - docker rmi $IMAGE_MC_SERVICE_DEV
+
 
 deploy-dev:
   stage: deploy-dev
+  image: registry.cn-hangzhou.aliyuncs.com/masa/library:helm3_latest
+  variables:
+    EnviromentPath: Develop
   tags:
-    - linux-shell
-  before_script:
-    - docker login -u $CI_ALI_REGISTRY_USER -p $CI_ALI_REGISTRY_PASSWD $CI_ALI_REGISTRY_DOMAIN 
+    - ydy-runner
   only:
     - main  
   script:
-    - echo $KUBE_CONFIG_DEV | base64 -d > ./config
-    - kubectl --kubeconfig ./config set image deployment/masa-mc-service masa-mc-service=$IMAGE_MC_SERVICE_DEV -n $NAMESPACE_DEV
-    - kubectl --kubeconfig ./config set image deployment/masa-mc-web-admin-server masa-mc-web-admin-server=$IMAGE_MC_WEB_ADMIN_SERVER_DEV -n $NAMESPACE_DEV
-  retry: 2
+    - ls
+    - pwd 
+    - echo $KUBE_CONFIG_DEV_YDY | base64 -d > ./config
+    - cat ./config
+    - helm version 
+    - helm --kubeconfig ./config list   -n $NAMESPACE_DEV 
+    - helm upgrade --install $MC_Service_Name ./charts/masa-service --set domain.name=$ServiceDomain_dev  --set domain.secret=masastack  --set service.port=80  --set enviroment.path=$EnviromentPath --set image.tag=dev-$CI_PIPELINE_ID -n $NAMESPACE_DEV
+    - helm upgrade --install $MC_Web_Name ./charts/masa-service  --set domain.name=$WebDomain_dev  --set domain.secret=masastack  --set service.port=80  --set enviroment.path=$EnviromentPath --set image.tag=dev-$CI_PIPELINE_ID -n $NAMESPACE_DEV
 
 deploy-test:
   stage: deploy-test
+  image: registry.cn-hangzhou.aliyuncs.com/masa/library:helm3_latest
+  variables:
+    EnviromentPath: Test
   tags:
-    - linux-shell
-  before_script:
-    - docker login -u $CI_ALI_REGISTRY_USER -p $CI_ALI_REGISTRY_PASSWD $CI_ALI_REGISTRY_DOMAIN 
+    - ydy-runner
   only:
     - main  
   script:
-    - echo $KUBE_CONFIG_DEV | base64 -d > ./config
-    - kubectl --kubeconfig ./config set image deployment/masa-mc-service masa-mc-service=$IMAGE_MC_SERVICE_DEV -n $NAMESPACE_TEST
-    - kubectl --kubeconfig ./config set image deployment/masa-mc-web-admin-server masa-mc-web-admin-server=$IMAGE_MC_WEB_ADMIN_SERVER_DEV -n $NAMESPACE_TEST
-  retry: 2
-  when: manual
+    - ls
+    - pwd 
+    - echo $KUBE_CONFIG_DEV_YDY | base64 -d > ./config
+    - cat ./config
+    - helm version 
+    - helm --kubeconfig ./config list   -n $NAMESPACE_TEST
+    - helm upgrade --install $MC_Service_Name ./charts/masa-service --set domain.name=$ServiceDomain_test  --set domain.secret=masastack  --set service.port=80  --set enviroment.path=$EnviromentPath --set image.tag=dev-$CI_PIPELINE_ID -n $NAMESPACE_TEST
+    - helm upgrade --install $MC_Web_Name ./charts/masa-service  --set domain.name=$WebDomain_test  --set domain.secret=masastack  --set service.port=80  --set enviroment.path=$EnviromentPath --set image.tag=dev-$CI_PIPELINE_ID -n $NAMESPACE_TEST
 
-docker-build-prd:
-  stage: docker-prd
-  tags:
-    - linux-shell
-  before_script:
-    - docker login -u $CI_ALI_REGISTRY_USER -p $CI_ALI_REGISTRY_PASSWD $CI_ALI_REGISTRY_DOMAIN 
-  only:
-    - tags  
-  script:
-    - docker build -f $DOCKER_MC_SERVICE_PATH -t $IMAGE_MC_SERVICE .
-    - docker push $IMAGE_MC_SERVICE 
-    - docker build -f $DOCKER_MC_ADMIN_WEB_PATH -t $IMAGE_MC_WEB_ADMIN_SERVER .
-    - docker push $IMAGE_MC_WEB_ADMIN_SERVER
-  after_script:
-    - docker rmi $IMAGE_MC_SERVICE 
-    - docker rmi $IMAGE_MC_WEB_ADMIN_SERVER
-  
-deploy-prd:
-  stage: deploy-prd
-  tags:
-    - linux-shell
-  before_script:
-    - docker login -u $CI_ALI_REGISTRY_USER -p $CI_ALI_REGISTRY_PASSWD $CI_ALI_REGISTRY_DOMAIN 
-  only:
-    - tags
-  script:
-    - echo $KUBE_CONFIG_BLAZOR_PRD | base64 -d > ./config
-    - kubectl --kubeconfig ./config set image deployment/masa-mc-service masa-mc-service=$IMAGE_MC_SERVICE -n NAMESPACE_PRO
-    - kubectl --kubeconfig ./config set image deployment/masa-mc-web-admin-server masa-mc-web-admin-server=$IMAGE_MC_WEB_ADMIN_SERVER -n NAMESPACE_PRO
-  retry: 2
-  when: manual
+
+# include: 'devops/**/*.yml'
+
+# stages:
+#   - sornarqube
+#   - build-docker-image-dev
+#   - deploy-dev
+#   - deploy-test
+#   - deploy-staging
+#   - build-docker-image-prd
+#   - deploy-prd
+#   - rollout-dev
+#   - rollout-test
+#   - rollout-staging
+#   - rollout-prd
+# variables: 
+#   PRD_REPLICAS: 2
+
+#   DEV_REPLICAS: 1
+
+#   REGISTRY_URL: registry.cn-hangzhou.aliyuncs.com
+#   # HARBOR_URL: reg.lonsid.cn
+#   REGISTRY_WAREHOUSE: masa
+
+#   K8S_IMAGEPULLSECRETSPULL: aliregistry
+#   SECRET_TLS: lonsid-cn
+

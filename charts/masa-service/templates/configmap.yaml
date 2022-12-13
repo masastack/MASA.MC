@@ -1,0 +1,7 @@
+apiVersion: v1
+data:
+  APP_ID_SUFFIX: {{ .Values.environment.paths |default "Develop"}}
+  ASPNETCORE_ENVIRONMENT: {{ .Values.environment.paths |default "Develop" }}
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}
