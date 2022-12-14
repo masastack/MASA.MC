@@ -52,13 +52,13 @@ spec:
             valueFrom:
               configMapKeyRef:
                 key: ASPNETCORE_ENVIRONMENT
-                name: aspnetcore-environment
+                name: {{ .Release.Name }}
                 optional: false
           - name: APP_ID_SUFFIX
             valueFrom:
               configMapKeyRef:
                 key: APP_ID_SUFFIX
-                name: aspnetcore-environment
+                name: {{ .Release.Name }}
                 optional: false
       volumes:
       - hostPath:
