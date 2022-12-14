@@ -40,7 +40,7 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
-              containerPort: 80
+              containerPort: {{ .Values.service.port }}
               protocol: TCP
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
@@ -52,13 +52,13 @@ spec:
             valueFrom:
               configMapKeyRef:
                 key: ASPNETCORE_ENVIRONMENT
-                name: aspnetcore-environment
+                name: {{ .Release.Name }}
                 optional: false
           - name: APP_ID_SUFFIX
             valueFrom:
               configMapKeyRef:
                 key: APP_ID_SUFFIX
-                name: aspnetcore-environment
+                name: {{ .Release.Name }}
                 optional: false
       volumes:
       - hostPath:
