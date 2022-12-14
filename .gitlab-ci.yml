@@ -123,8 +123,8 @@ deploy-test:
     - cat ./config
     - helm version 
     - helm --kubeconfig ./config list   -n $NAMESPACE_TEST
-    - helm upgrade --install $MC_Service_Name ./charts/masa-service  --set ingress.servertype=service --set domain.name=$ServiceDomain_test  --set domain.secret=masastack  --set service.port=80  --set environment.path=$EnviromentPath --set image.tag=dev-$CI_PIPELINE_ID -n $NAMESPACE_TEST
-    - helm upgrade --install $MC_Web_Name ./charts/masa-service --set ingress.servertype=web  --set domain.name=$WebDomain_test  --set domain.secret=masastack  --set service.port=443  --set environment.path=$EnviromentPath --set image.tag=dev-$CI_PIPELINE_ID -n $NAMESPACE_TEST
+    - helm upgrade --install $MC_Service_Name ./charts/masa-service  --set ingress.servertype=service --set domain.name=$ServiceDomain_test  --set domain.secret=masastack  --set service.port=80  --set environment.path=$EnviromentPath --set image.tag=dev-$CI_PIPELINE_ID -n $NAMESPACE_STAGING
+    - helm upgrade --install $MC_Web_Name ./charts/masa-service --set ingress.servertype=web  --set domain.name=$WebDomain_test  --set domain.secret=masastack  --set service.port=443  --set environment.path=$EnviromentPath --set image.tag=dev-$CI_PIPELINE_ID -n $NAMESPACE_STAGING
 
 
 # include: 'devops/**/*.yml'
