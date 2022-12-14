@@ -17,10 +17,8 @@ variables:
   IMAGE_MC_SERVICE_DEV:  $CI_ALI_REGISTRY_DOMAIN/masa/$MC_Service_Name:dev-$CI_PIPELINE_ID
   IMAGE_MC_WEB_ADMIN_SERVER_DEV:  $CI_ALI_REGISTRY_DOMAIN/masa/$MC_Web_Name:dev-$CI_PIPELINE_ID
 
-
   WebDomain_test: mc-staging.masastack.com
   ServiceDomain_test: mc-service-staging.masastack.com
-
 
   WebDomain_dev: mc-develop.masastack.com
   ServiceDomain_dev: mc-service-develop.masastack.com
@@ -31,7 +29,6 @@ variables:
   NAMESPACE_STAGING: masa-mc-staging
   NAMESPACE_PRO: masa-mc
 
-  # NAMESPACE_PRD: alert
 docker-dev:
   stage: docker-dev
   tags:
