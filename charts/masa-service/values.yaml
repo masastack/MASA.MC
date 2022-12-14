@@ -67,6 +67,7 @@ ingress:
   enabled: true
   className: ""
   annotations: {}
+  servertype: "service"
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
 
