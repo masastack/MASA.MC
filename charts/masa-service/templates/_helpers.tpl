@@ -65,7 +65,17 @@ Create the name of the service account to use
 
 {{- define "masa-service.ingress.annotations" -}}
 {{- if .Values.ingress.enabled -}}
-{{- if eq .Values.ingress.servertype "web" -}}
+{{- if eq .Values.ingress.servertype "service" -}}
+kubernetes.io/ingress.class: nginx
+kubernetes.io/load-balancer-port: "443"
+kubernetes.io/load-balancer-protocol: TERMINATED_HTTPS
+nginx.ingress.kubernetes.io/cors-allow-headers: DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization,elastic-apm-traceparent
+nginx.ingress.kubernetes.io/cors-allow-methods: PUT, GET, POST, OPTIONS, DELETE
+nginx.ingress.kubernetes.io/cors-allow-origin: '*'
+nginx.ingress.kubernetes.io/enable-cors: "true"
+nginx.ingress.kubernetes.io/proxy-connect-timeout: "3600"
+nginx.ingress.kubernetes.io/ssl-redirect: "true"
+{{- else if eq .Values.ingress.servertype "web" -}}
 kubernetes.io/ingress.class: nginx
 kubernetes.io/load-balancer-port: "443"
 kubernetes.io/load-balancer-protocol: TERMINATED_HTTPS
@@ -82,17 +92,7 @@ nginx.ingress.kubernetes.io/proxy_busy_buffers_size: 256k
 nginx.ingress.kubernetes.io/proxy_set_header: Connection upgrade
 nginx.ingress.kubernetes.io/ssl-redirect: "true"
 nginx.ingress.kubernetes.io/websocket-services: "true"
-{{- else if .Values.ingress.servertype "service" -}}
-kubernetes.io/ingress.class: nginx
-kubernetes.io/load-balancer-port: "443"
-kubernetes.io/load-balancer-protocol: TERMINATED_HTTPS
-nginx.ingress.kubernetes.io/cors-allow-headers: DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization,elastic-apm-traceparent
-nginx.ingress.kubernetes.io/cors-allow-methods: PUT, GET, POST, OPTIONS, DELETE
-nginx.ingress.kubernetes.io/cors-allow-origin: '*'
-nginx.ingress.kubernetes.io/enable-cors: "true"
-nginx.ingress.kubernetes.io/proxy-connect-timeout: "3600"
-nginx.ingress.kubernetes.io/ssl-redirect: "true"
-{{- else }}
+{{- else -}}
 kubernetes.io/ingress.class: nginx
 kubernetes.io/load-balancer-port: "443"
 kubernetes.io/load-balancer-protocol: TERMINATED_HTTPS
