@@ -64,9 +64,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Masa.Mc.Infrastructure.Mail
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Masa.Mc.Infrastructure.Tsc", "src\Infrastructure\Masa.Mc.Infrastructure.Tsc\Masa.Mc.Infrastructure.Tsc.csproj", "{51A2EFBF-42A7-45EC-A68D-B674FD39FCF2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Masa.Mc.Infrastructure.Getui", "src\Infrastructure\Masa.Mc.Infrastructure.Getui\Masa.Mc.Infrastructure.Getui.csproj", "{7DCBB420-B8E2-41BE-A763-88506A43ED71}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Masa.Mc.Infrastructure.Getui", "src\Infrastructure\Masa.Mc.Infrastructure.Getui\Masa.Mc.Infrastructure.Getui.csproj", "{7DCBB420-B8E2-41BE-A763-88506A43ED71}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Masa.Mc.Infrastructure.AppNotification", "src\Infrastructure\Masa.Mc.Infrastructure.AppNotification\Masa.Mc.Infrastructure.AppNotification.csproj", "{7F2708C3-F1EE-4BFD-9321-F8D90390BF3C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Masa.Mc.Infrastructure.AppNotification", "src\Infrastructure\Masa.Mc.Infrastructure.AppNotification\Masa.Mc.Infrastructure.AppNotification.csproj", "{7F2708C3-F1EE-4BFD-9321-F8D90390BF3C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

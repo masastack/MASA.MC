@@ -70,13 +70,13 @@ public class SendAppMessageEventHandler
 
                 try
                 {
-                    await _appNotificationSender.SendAsync(new AppMessage(item.ChannelUserIdentity, eto.MessageData.MessageContent.Title, eto.MessageData.MessageContent.Content));
+                    await _appNotificationSender.SendAsync(new AppMessage(item.ChannelUserIdentity, eto.MessageData.MessageContent.Title, eto.MessageData.MessageContent.Content,eto.MessageData.MessageContent.GetJumpUrl()));
                     messageRecord.SetResult(true, string.Empty);
                     okCount++;
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "SendEmailMessageEventHandler");
+                    _logger.LogError(ex, "SendAppMessageEventHandler");
                     messageRecord.SetResult(false, ex.Message);
                 }
 

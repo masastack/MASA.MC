@@ -108,7 +108,7 @@ public class ChannelType : Enumeration
 
         public override string GetChannelUserIdentity(Receiver receiver)
         {
-            return string.Empty
+            return string.Empty;
         }
     }
 }

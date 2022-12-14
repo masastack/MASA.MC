@@ -9,9 +9,9 @@
                             <MContainer Fluid Class="pt-6 px-1">
                                 <div class="subtitle3 regular--text mb-8">@T("Description.Channel.Type.Required")</div>
                                 <MRow Align="AlignTypes.Center" Justify="JustifyTypes.Center">
-                                    <MCol Md="4">
+                                    <MCol Md="6">
                                         <MHover>
-                                            <MCard @attributes="context.Attrs" Height="208" Width="208" Class="@($"d-flex flex-column justify-center align-center {context.Class} {((context.Hover||_model.Type==ChannelTypes.Sms) ? "primary" : "fill-background")}")"
+                                            <MCard @attributes="context.Attrs" Height="240" Width="240" Class="@($"d-flex flex-column justify-center align-center ml-auto {context.Class} {((context.Hover||_model.Type==ChannelTypes.Sms) ? "primary" : "fill-background")}")"
                                                    OnClick="()=> HandleSelectType(ChannelTypes.Sms)">
                                                 @if (context.Hover || _model.Type == ChannelTypes.Sms)
                                                 {
@@ -26,9 +26,9 @@
                                             </MCard>
                                         </MHover>
                                     </MCol>
-                                    <MCol Md="4">
+                                    <MCol Md="6">
                                         <MHover>
-                                            <MCard @attributes="context.Attrs" Height="208" Width="208" Class="@($"d-flex flex-column justify-center align-center {context.Class} {((context.Hover||_model.Type==ChannelTypes.Email) ? "primary" : "fill-background")}")"
+                                            <MCard @attributes="context.Attrs" Height="240" Width="240" Class="@($"d-flex flex-column justify-center align-center mr-auto {context.Class} {((context.Hover||_model.Type==ChannelTypes.Email) ? "primary" : "fill-background")}")"
                                                    OnClick="()=>HandleSelectType(ChannelTypes.Email)">
                                                 @if (context.Hover || _model.Type == ChannelTypes.Email)
                                                 {
@@ -43,9 +43,9 @@
                                             </MCard>
                                         </MHover>
                                     </MCol>
-                                    <MCol Md="4">
+                                    <MCol Md="6">
                                         <MHover>
-                                            <MCard @attributes="context.Attrs" Height="208" Width="208" Class="@($"d-flex flex-column justify-center align-center {context.Class} {((context.Hover||_model.Type==ChannelTypes.WebsiteMessage) ? "primary" : "fill-background")}")"
+                                            <MCard @attributes="context.Attrs" Height="240" Width="240" Class="@($"d-flex flex-column justify-center align-center ml-auto {context.Class} {((context.Hover||_model.Type==ChannelTypes.WebsiteMessage) ? "primary" : "fill-background")}")"
                                                    OnClick="()=>HandleSelectType(ChannelTypes.WebsiteMessage)">
                                                 @if (context.Hover || _model.Type == ChannelTypes.WebsiteMessage)
                                                 {
@@ -56,6 +56,23 @@
                                                 {
                                                     <MIcon Size=33 Color="#323D6F">mdi-bell</MIcon>
                                                     <div class="h6 pt-10 regular--text">@T("WebsiteMessage")</div>
+                                                }
+                                            </MCard>
+                                        </MHover>
+                                    </MCol>
+                                    <MCol Md="6">
+                                        <MHover>
+                                            <MCard @attributes="context.Attrs" Height="240" Width="240" Class="@($"d-flex flex-column justify-center align-center mr-auto {context.Class} {((context.Hover||_model.Type==ChannelTypes.App) ? "primary" : "fill-background")}")"
+                                                   OnClick="()=>HandleSelectType(ChannelTypes.App)">
+                                                @if (context.Hover || _model.Type == ChannelTypes.App)
+                                                {
+                                                    <MIcon Size=33 Color="#FFFFFF">mdi-app-outline</MIcon>
+                                                    <div class="h6 pt-10" style="color:#FAFAFA">@T("App")</div>
+                                                }
+                                                else
+                                                {
+                                                    <MIcon Size=33 Color="#323D6F">mdi-app</MIcon>
+                                                    <div class="h6 pt-10 regular--text">@T("App")</div>
                                                 }
                                             </MCard>
                                         </MHover>

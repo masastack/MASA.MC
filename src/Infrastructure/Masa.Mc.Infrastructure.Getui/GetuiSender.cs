@@ -17,7 +17,7 @@ public class GetuiSender : IAppNotificationSender
     {
         var options = await _getuiOptionsResolver.ResolveAsync();
         IGtPush push = new IGtPush(HOST, options.AppKey, options.MasterSecret);
-        NotificationTemplate template = NotificationTemplate(options, appMessage.Title, appMessage.Text, appMessage.TransmissionContent);
+        NotificationTemplate template = NotificationTemplate(options, appMessage.Title, appMessage.Text, appMessage.Url);
 
         SingleMessage message = new SingleMessage();
         message.IsOffline = true;
@@ -44,17 +44,17 @@ public class GetuiSender : IAppNotificationSender
         }
     }
 
-    public static NotificationTemplate NotificationTemplate(IAppNotificationOptions options, string title, string text, string transmissionContent)
+    public static NotificationTemplate NotificationTemplate(IAppNotificationOptions options, string title, string content, string url)
     {
         NotificationTemplate template = new NotificationTemplate();
         template.AppId = options.AppID;
         template.AppKey = options.AppKey;
         template.Title = title; 
-        template.Text = text;
+        template.Text = content;
         template.Logo = "";
         template.LogoURL = "";
         template.TransmissionType = 1;
-        template.TransmissionContent = transmissionContent;
+        template.TransmissionContent = "{\"url\":\"" + url + "\"}";
         template.IsRing = true;
         template.IsVibrate = true;
         template.IsClearable = true;

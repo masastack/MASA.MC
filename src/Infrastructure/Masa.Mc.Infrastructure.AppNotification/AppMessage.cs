@@ -11,13 +11,13 @@ public class AppMessage
 
     public string Text { get; }
 
-    public string TransmissionContent { get; }
+    public string Url { get; }
 
-    public AppMessage(string clientId, string title, string text, string transmissionContent)
+    public AppMessage(string clientId, string title, string text, string url)
     {
         ClientId = clientId;
         Title = title;
         Text = text;
-        TransmissionContent = transmissionContent;
+        Url = url;
     }
 }
