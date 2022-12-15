@@ -35,6 +35,8 @@ public class MessageRecordQueryModel : Entity<Guid>, ISoftDelete
 
     public Guid MessageEntityId { get; set; }
 
+    public string SystemId { get; set; } = string.Empty;
+
     public Guid Creator { get; set; }
 
     public DateTime CreationTime { get; set; }

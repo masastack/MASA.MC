@@ -45,9 +45,11 @@ public class MessageTask : FullAggregateRoot<Guid, Guid>
 
     public Guid SchedulerJobId { get; protected set; }
 
+    public string SystemId { get; protected set; } = string.Empty;
+
     private MessageTask() { }
 
-    public MessageTask(string displayName, ChannelType? channelType, Guid? channelId, MessageEntityTypes entityType, Guid entityId, bool isDraft, string sign, ReceiverTypes receiverType, MessageTaskSelectReceiverTypes selectReceiverType, List<MessageTaskReceiver> receivers, MessageTaskSendingRule sendRules, MessageTaskSources source)
+    public MessageTask(string displayName, ChannelType? channelType, Guid? channelId, MessageEntityTypes entityType, Guid entityId, bool isDraft, string sign, ReceiverTypes receiverType, MessageTaskSelectReceiverTypes selectReceiverType, List<MessageTaskReceiver> receivers, MessageTaskSendingRule sendRules, MessageTaskSources source, string systemId)
     {
         DisplayName = displayName;
         ChannelType = channelType;
@@ -61,6 +63,7 @@ public class MessageTask : FullAggregateRoot<Guid, Guid>
         SendRules = sendRules;
         Status = MessageTaskStatuses.WaitSend;
         Source = source;
+        SystemId = systemId;
     }
 
     public virtual void SetEnabled()

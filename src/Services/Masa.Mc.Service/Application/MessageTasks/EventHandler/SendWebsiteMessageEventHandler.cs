@@ -44,7 +44,7 @@ public class SendWebsiteMessageEventHandler
             foreach (var item in taskHistory.ReceiverUsers)
             {
                 eto.MessageData.RenderContent(item.Variables);
-                var messageRecord = new MessageRecord(item.UserId, item.ChannelUserIdentity, taskHistory.MessageTask.ChannelId.Value, taskHistory.MessageTaskId, taskHistory.Id, item.Variables, eto.MessageData.MessageContent.Title, taskHistory.SendTime);
+                var messageRecord = new MessageRecord(item.UserId, item.ChannelUserIdentity, taskHistory.MessageTask.ChannelId.Value, taskHistory.MessageTaskId, taskHistory.Id, item.Variables, eto.MessageData.MessageContent.Title, taskHistory.SendTime, taskHistory.MessageTask.SystemId);
                 messageRecord.SetMessageEntity(taskHistory.MessageTask.EntityType, taskHistory.MessageTask.EntityId);
 
                 if (eto.MessageData.MessageType == MessageEntityTypes.Template)

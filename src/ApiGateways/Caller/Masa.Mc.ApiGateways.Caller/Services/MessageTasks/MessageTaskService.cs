@@ -47,14 +47,9 @@ public class MessageTaskService : ServiceBase
         await PostAsync("SendTest", inputDto);
     }
 
-    public async Task EnabledAsync(EnabledMessageTaskInputDto inputDto)
+    public async Task SetIsEnabledAsync(Guid id, bool isEnabled)
     {
-        await PostAsync("Enabled", inputDto);
-    }
-
-    public async Task DisableAsync(DisableMessageTaskInputDto inputDto)
-    {
-        await PostAsync("Disable", inputDto);
+        await PutAsync($"{id}/enabled/{isEnabled}", new { });
     }
 
     public async Task<ImportResultDto<MessageTaskReceiverDto>> ImportReceiversAsync(ImportReceiversDto dto)

@@ -89,6 +89,7 @@ public static class McDbContextModelBuilderExtensions
             b.Property(x => x.Variables).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
             b.Property(x => x.ReceiverUsers).HasConversion(new JsonValueConverter<List<MessageReceiverUser>>());
             b.Property(x => x.ChannelType).HasConversion(x => x.Id, x => Enumeration.FromValue<ChannelType>(x));
+            b.Property(x => x.SystemId).HasMaxLength(128);
         });
 
         builder.Entity<MessageTaskHistory>(b =>
@@ -120,6 +121,7 @@ public static class McDbContextModelBuilderExtensions
             b.Property(x => x.Variables).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
             b.HasIndex(x => x.UserId);
             b.HasIndex(x => x.MessageTaskHistoryId);
+            b.Property(x => x.SystemId).HasMaxLength(128);
         });
 
         builder.Entity<MessageReceiverUser>(b =>

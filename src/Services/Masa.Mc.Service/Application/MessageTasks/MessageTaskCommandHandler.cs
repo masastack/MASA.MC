@@ -64,7 +64,7 @@ public class MessageTaskCommandHandler
     [EventHandler]
     public async Task EnabledAsync(EnabledMessageTaskCommand command)
     {
-        var entity = await _repository.FindAsync(x => x.Id == command.Input.MessageTaskId);
+        var entity = await _repository.FindAsync(x => x.Id == command.MessageTaskId);
         Check.NotNull(entity, "MessageTask not found");
 
         entity.SetEnabled();
@@ -80,10 +80,10 @@ public class MessageTaskCommandHandler
     [EventHandler]
     public async Task DisableAsync(DisableMessageTaskCommand command)
     {
-        var entity = await _repository.FindAsync(x => x.Id == command.Input.MessageTaskId);
+        var entity = await _repository.FindAsync(x => x.Id == command.MessageTaskId);
         Check.NotNull(entity, "MessageTask not found");
 
-        if (await _messageTaskHistoryRepository.AnyAsync(x => x.MessageTaskId == command.Input.MessageTaskId && x.Status == MessageTaskHistoryStatuses.Sending))
+        if (await _messageTaskHistoryRepository.AnyAsync(x => x.MessageTaskId == command.MessageTaskId && x.Status == MessageTaskHistoryStatuses.Sending))
             throw new UserFriendlyException("the task has a sending task history and cannot be disabled.");
         entity.SetDisable();
         await _repository.UpdateAsync(entity);

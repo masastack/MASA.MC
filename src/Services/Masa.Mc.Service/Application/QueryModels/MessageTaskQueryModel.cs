@@ -41,6 +41,8 @@ public class MessageTaskQueryModel : Entity<Guid>, ISoftDelete
 
     public MessageTaskSources Source { get; set; }
 
+    public string SystemId { get; set; } = string.Empty;
+
     public Guid Creator { get; set; }
 
     public DateTime CreationTime { get; set; }

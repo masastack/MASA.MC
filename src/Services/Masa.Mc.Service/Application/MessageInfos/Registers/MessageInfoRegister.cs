@@ -8,6 +8,6 @@ public class MessageInfoRegister : IRegister
     public void Register(TypeAdapterConfig config)
     {
         config.ForType<MessageInfoUpsertDto, MessageInfo>().MapToConstructor(true)
-            .Map(dest => dest.MessageContent, src => new MessageContent(src.Title, src.Content, src.Markdown, src.IsJump, src.JumpUrl));
+            .Map(dest => dest.MessageContent, src => new MessageContent(src.Title, src.Content, src.Markdown, src.IsJump, src.JumpUrl, src.ExtraProperties));
     }
 }

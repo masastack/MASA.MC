@@ -56,7 +56,7 @@ public class SendAppMessageEventHandler
             int totalCount = taskHistory.ReceiverUsers.Count;
             foreach (var item in taskHistory.ReceiverUsers)
             {
-                var messageRecord = new MessageRecord(item.UserId, item.ChannelUserIdentity, channel.Id, taskHistory.MessageTaskId, taskHistory.Id, item.Variables, eto.MessageData.MessageContent.Title, taskHistory.SendTime);
+                var messageRecord = new MessageRecord(item.UserId, item.ChannelUserIdentity, channel.Id, taskHistory.MessageTaskId, taskHistory.Id, item.Variables, eto.MessageData.MessageContent.Title, taskHistory.SendTime, taskHistory.MessageTask.SystemId);
                 messageRecord.SetMessageEntity(taskHistory.MessageTask.EntityType, taskHistory.MessageTask.EntityId);
                 eto.MessageData.RenderContent(item.Variables);
                 if (eto.MessageData.MessageType == MessageEntityTypes.Template)

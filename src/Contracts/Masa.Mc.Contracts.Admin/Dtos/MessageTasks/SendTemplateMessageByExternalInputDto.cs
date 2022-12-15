@@ -23,6 +23,8 @@ public class SendTemplateMessageByExternalInputDto
 
     public Guid OperatorId { get; set; } = default;
 
+    public string SystemId { get; set; } = string.Empty;
+
     public static implicit operator MessageTaskUpsertDto(SendTemplateMessageByExternalInputDto dto)
     {
         return new MessageTaskUpsertDto
@@ -44,6 +46,7 @@ public class SendTemplateMessageByExternalInputDto
             Variables = dto.Variables,
             Source = MessageTaskSources.Sdk,
             OperatorId = dto.OperatorId,
+            SystemId = dto.SystemId 
         };
     }
 }
