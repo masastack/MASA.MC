@@ -10,6 +10,7 @@ public class MessageContent : ValueObject
     public string Markdown { get; protected set; } = string.Empty;
     public bool IsJump { get; protected set; }
     public string JumpUrl { get; protected set; } = string.Empty;
+    public ExtraPropertyDictionary ExtraProperties { get; protected set; } = new();
 
     protected override IEnumerable<object> GetEqualityValues()
     {

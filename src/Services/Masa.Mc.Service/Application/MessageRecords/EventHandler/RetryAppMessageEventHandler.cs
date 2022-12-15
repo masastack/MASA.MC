@@ -63,8 +63,18 @@ public class RetryAppMessageEventHandler
 
             try
             {
-                await _appNotificationSender.SendAsync(new AppMessage(messageRecord.ChannelUserIdentity, messageData.MessageContent.Title, messageData.MessageContent.Content, messageData.MessageContent.GetJumpUrl()));
-                messageRecord.SetResult(true, string.Empty);
+                var appChannel = channel.Type as ChannelType.AppsChannel;
+                var transmissionContent = appChannel.GetMessageTransmissionContent(messageData.MessageContent);
+                var response = await _appNotificationSender.SendAsync(new AppMessage(messageRecord.ChannelUserIdentity, messageData.MessageContent.Title, messageData.MessageContent.Content, transmissionContent));
+                if (response.Success)
+                {
+                    messageRecord.SetResult(true, string.Empty);
+                }
+                else
+                {
+                    messageRecord.SetResult(false, response.Message);
+                    throw new UserFriendlyException("Resend message failed");
+                }
             }
             catch (Exception ex)
             {

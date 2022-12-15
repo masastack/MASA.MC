@@ -1,6 +1,8 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
+using Masa.Mc.Service.Admin.Domain.Channels.Aggregates;
+
 namespace Masa.Mc.Service.Admin.Application.MessageTasks.EventHandler;
 
 public class SendAppMessageEventHandler
@@ -70,9 +72,18 @@ public class SendAppMessageEventHandler
 
                 try
                 {
-                    await _appNotificationSender.SendAsync(new AppMessage(item.ChannelUserIdentity, eto.MessageData.MessageContent.Title, eto.MessageData.MessageContent.Content,eto.MessageData.MessageContent.GetJumpUrl()));
-                    messageRecord.SetResult(true, string.Empty);
-                    okCount++;
+                    var appChannel = channel.Type as ChannelType.AppsChannel;
+                    var transmissionContent = appChannel.GetMessageTransmissionContent(eto.MessageData.MessageContent);
+                    var response = await _appNotificationSender.SendAsync(new AppMessage(item.ChannelUserIdentity, eto.MessageData.MessageContent.Title, eto.MessageData.MessageContent.Content, transmissionContent));
+                    if (response.Success)
+                    {
+                        messageRecord.SetResult(true, string.Empty);
+                        okCount++;
+                    }
+                    else
+                    {
+                        messageRecord.SetResult(false, response.Message);
+                    }
                 }
                 catch (Exception ex)
                 {

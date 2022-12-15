@@ -92,7 +92,7 @@ public class ChannelType : Enumeration
         }
     }
 
-    private class AppsChannel : ChannelType
+    public class AppsChannel : ChannelType
     {
         public AppsChannel() : base(4, nameof(App)) { }
 
@@ -109,6 +109,16 @@ public class ChannelType : Enumeration
         public override string GetChannelUserIdentity(Receiver receiver)
         {
             return string.Empty;
+        }
+
+        public string GetMessageTransmissionContent(MessageContent messageContent)
+        {
+            if (messageContent.IsJump && !messageContent.ExtraProperties.Any(x => x.Key == "url"))
+            {
+                messageContent.ExtraProperties.TryAdd("url", messageContent.JumpUrl);
+            }
+
+            return JsonSerializer.Serialize(messageContent.ExtraProperties);
         }
     }
 }

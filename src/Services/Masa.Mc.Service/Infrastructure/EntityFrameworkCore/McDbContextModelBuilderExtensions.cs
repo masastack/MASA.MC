@@ -39,6 +39,7 @@ public static class McDbContextModelBuilderExtensions
                 b.Property(x => x.Markdown).HasColumnName("Markdown");
                 b.Property(x => x.IsJump).HasMaxLength(128).HasColumnName("IsJump");
                 b.Property(x => x.JumpUrl).HasMaxLength(256).HasColumnName("JumpUrl");
+                b.Ignore(x => x.ExtraProperties);
             });
         });
 
@@ -106,6 +107,7 @@ public static class McDbContextModelBuilderExtensions
                 b.Property(x => x.Markdown).HasColumnName("Markdown");
                 b.Property(x => x.IsJump).HasMaxLength(128).HasColumnName("IsJump");
                 b.Property(x => x.JumpUrl).HasMaxLength(256).HasColumnName("JumpUrl");
+                b.Property(x => x.ExtraProperties).HasColumnName("ExtraProperties").HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
             });
         });
 

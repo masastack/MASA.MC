@@ -1,9 +1,6 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
-using Masa.BuildingBlocks.Ddd.Domain.Entities;
-using Masa.Mc.Service.Admin.Domain.MessageInfos.Aggregates;
-
 namespace Masa.Mc.Service.Admin.Application.MessageTasks;
 
 public class UpdateOrdinaryMessageTaskCommandHandler
