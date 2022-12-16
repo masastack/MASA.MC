@@ -1,6 +1,8 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
+using Microsoft.AspNetCore.Components.Forms;
+
 namespace Masa.Mc.Service.Admin.Services;
 
 public class MessageTaskService : ServiceBase
@@ -158,6 +160,7 @@ public class MessageTaskService : ServiceBase
     [RoutePattern("{id}/Withdrawn", StartWithBaseUri = true, HttpMethod = "Post")]
     public async Task WithdrawnAsync(IEventBus eventBus, Guid id)
     {
-
+        var command = new WithdrawnMessageTaskCommand(id);
+        await eventBus.PublishAsync(command);
     }
 }

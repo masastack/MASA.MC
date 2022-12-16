@@ -180,4 +180,24 @@ public class MessageTaskCommandHandler
         var templateCommand = new CreateTemplateMessageTaskCommand(taskUpsertDto);
         await _eventBus.PublishAsync(templateCommand);
     }
+
+    [EventHandler]
+    public async Task WithdrawnAsync(WithdrawnMessageTaskCommand command)
+    {
+        var entity = await _repository.FindAsync(x => x.Id == command.MessageTaskId);
+        MasaArgumentException.ThrowIfNull(entity, "MessageTask");
+        var list = await _messageTaskHistoryRepository.GetListAsync(x => x.MessageTaskId == command.MessageTaskId);
+
+        foreach (var item in list)
+        {
+            item.SetWithdraw();
+            await _messageTaskHistoryRepository.UpdateAsync(item);
+        }
+
+        if (entity.SchedulerJobId != default)
+        {
+            var userId = _userContext.GetUserId<Guid>();
+            await _messageTaskJobService.DisableJobAsync(entity.SchedulerJobId, userId);
+        }
+    }
 }

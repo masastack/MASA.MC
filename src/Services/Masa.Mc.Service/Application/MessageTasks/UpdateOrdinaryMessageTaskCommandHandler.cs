@@ -17,25 +17,21 @@ public class UpdateOrdinaryMessageTaskCommandHandler
     }
 
     [EventHandler(1)]
-    public async Task UpdateMessageInfoAsync(UpdateOrdinaryMessageTaskCommand updateCommand)
-    {
-        var dto = updateCommand.MessageTask;
-        var messageInfo = await _messageInfoRepository.FindAsync(x => x.Id == dto.EntityId);
-        MasaArgumentException.ThrowIfNull(messageInfo, "MessageInfo");
-
-        dto.MessageInfo.Adapt(messageInfo);
-        await _messageInfoRepository.UpdateAsync(messageInfo);
-        updateCommand.MessageTask.DisplayName = messageInfo.MessageContent.Title;
-    }
-
-    [EventHandler(2)]
     public async Task UpdateOrdinaryMessageTaskAsync(UpdateOrdinaryMessageTaskCommand updateCommand)
     {
         var entity = await _repository.FindAsync(x => x.Id == updateCommand.MessageTaskId);
-        MasaArgumentException.ThrowIfNull(entity, "MessageInfo");
+        MasaArgumentException.ThrowIfNull(entity, "MessageTask");
+
+        var dto = updateCommand.MessageTask;
+        var messageInfo = await _messageInfoRepository.FindAsync(x => x.Id == entity.EntityId);
+        MasaArgumentException.ThrowIfNull(messageInfo, "MessageInfo");
+        dto.MessageInfo.Adapt(messageInfo);
+        await _messageInfoRepository.UpdateAsync(messageInfo);
+        dto.DisplayName = messageInfo.MessageContent.Title;
+
         if (!entity.IsDraft)
             throw new UserFriendlyException("non draft cannot be modified");
-        var dto = updateCommand.MessageTask;
+
         dto.Adapt(entity);
         await _domainService.UpdateAsync(entity);
     }
