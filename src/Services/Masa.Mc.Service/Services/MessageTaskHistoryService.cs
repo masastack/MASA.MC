@@ -27,9 +27,10 @@ public class MessageTaskHistoryService : ServiceBase
         return query.Result;
     }
 
-    public async Task WithdrawnAsync(IEventBus eventBus, WithdrawnMessageTaskHistoryInputDto inputDto)
+    [RoutePattern("{id}/Withdrawn", StartWithBaseUri = true, HttpMethod = "Post")]
+    public async Task WithdrawnAsync(IEventBus eventBus, Guid id)
     {
-        var command = new WithdrawnMessageTaskHistoryCommand(inputDto);
+        var command = new WithdrawnMessageTaskHistoryCommand(id);
         await eventBus.PublishAsync(command);
     }
 }

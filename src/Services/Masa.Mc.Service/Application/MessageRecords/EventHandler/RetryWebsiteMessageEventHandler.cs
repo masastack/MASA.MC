@@ -44,7 +44,7 @@ public class RetryWebsiteMessageEventHandler
             {
                 messageRecord.SetResult(false, "The maximum number of times to send per day has been reached");
                 await _messageRecordRepository.UpdateAsync(messageRecord);
-                throw new UserFriendlyException("The maximum number of times to send per day has been reached");
+                return;
             }
         }
 

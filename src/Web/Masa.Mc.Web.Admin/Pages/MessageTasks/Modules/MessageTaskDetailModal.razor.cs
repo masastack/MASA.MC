@@ -124,12 +124,8 @@ public partial class MessageTaskDetailModal : AdminCompontentBase
 
     private async Task WithdrawnHistoryAsync()
     {
-        var inputDto = new WithdrawnMessageTaskHistoryInputDto
-        {
-            HistoryId = _historyInfo.Id
-        };
         Loading = true;
-        await MessageTaskHistoryService.WithdrawnAsync(inputDto);
+        await MessageTaskHistoryService.WithdrawnAsync(_historyInfo.Id);
         Loading = false;
         await SuccessMessageAsync(T("MessageTaskHistoryWithdrawnMessage"));
         await GetFormDataAsync();

@@ -3,6 +3,6 @@
 
 namespace Masa.Mc.Service.Admin.Application.MessageTasks.Commands;
 
-public record WithdrawnMessageTaskHistoryCommand(Guid MessageTaskHistoryId) : Command
+public record ResendMessageTaskCommand(Guid MessageTaskId) : Command
 {
 }

@@ -59,7 +59,7 @@ public class RetryEmailMessageEventHandler
                 {
                     messageRecord.SetResult(false, "The maximum number of times to send per day has been reached");
                     await _messageRecordRepository.UpdateAsync(messageRecord);
-                    throw new UserFriendlyException("The maximum number of times to send per day has been reached");
+                    return;
                 }
             }
 
@@ -75,7 +75,6 @@ public class RetryEmailMessageEventHandler
             catch (Exception ex)
             {
                 messageRecord.SetResult(false, ex.Message);
-                throw new UserFriendlyException("Resend message failed");
             }
 
             await _messageRecordRepository.UpdateAsync(messageRecord);

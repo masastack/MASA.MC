@@ -28,9 +28,10 @@ public class UpdateOrdinaryMessageTaskCommandHandler
         dto.MessageInfo.Adapt(messageInfo);
         await _messageInfoRepository.UpdateAsync(messageInfo);
         dto.DisplayName = messageInfo.MessageContent.Title;
+        dto.EntityId = messageInfo.Id;
 
-        if (!entity.IsDraft)
-            throw new UserFriendlyException("non draft cannot be modified");
+        if (entity.Status != MessageTaskStatuses.WaitSend)
+            throw new UserFriendlyException("It can only be modified after being sent");
 
         dto.Adapt(entity);
         await _domainService.UpdateAsync(entity);

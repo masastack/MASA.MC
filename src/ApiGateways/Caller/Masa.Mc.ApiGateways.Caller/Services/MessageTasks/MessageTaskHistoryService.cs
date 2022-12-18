@@ -22,8 +22,8 @@ public class MessageTaskHistoryService : ServiceBase
         return await GetAsync<MessageTaskHistoryDto>($"{id}");
     }
 
-    public async Task WithdrawnAsync(WithdrawnMessageTaskHistoryInputDto inputDto)
+    public async Task WithdrawnAsync(Guid id)
     {
-        await PostAsync("Withdrawn", inputDto);
+        await PostAsync($"{id}/Withdrawn", new { });
     }
 }

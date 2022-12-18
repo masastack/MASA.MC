@@ -33,7 +33,7 @@ public class GetuiSender : IAppNotificationSender
 
             if (string.IsNullOrWhiteSpace(pushResult) || !pushResult.Contains("successed"))
             {
-                return new AppNotificationResponseBase(false, "PushMessageSender error");
+                return new AppNotificationResponseBase(false, pushResult);
             }
 
             return new AppNotificationResponseBase(true, "ok");

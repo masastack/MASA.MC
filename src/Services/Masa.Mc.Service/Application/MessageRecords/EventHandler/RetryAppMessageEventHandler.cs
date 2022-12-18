@@ -12,6 +12,7 @@ public class RetryAppMessageEventHandler
     private readonly MessageTaskDomainService _taskDomainService;
     private readonly MessageTemplateDomainService _messageTemplateDomainService;
     private readonly IMessageTemplateRepository _repository;
+    private readonly IWebsiteMessageRepository _websiteMessageRepository;
 
     public RetryAppMessageEventHandler(IAppNotificationAsyncLocal appNotificationAsyncLocal
         , IAppNotificationSender appNotificationSender
@@ -19,7 +20,8 @@ public class RetryAppMessageEventHandler
         , IMessageRecordRepository messageRecordRepository
         , MessageTaskDomainService taskDomainService
         , MessageTemplateDomainService messageTemplateDomainService
-        , IMessageTemplateRepository repository)
+        , IMessageTemplateRepository repository
+        , IWebsiteMessageRepository websiteMessageRepository)
     {
         _appNotificationAsyncLocal = appNotificationAsyncLocal;
         _appNotificationSender = appNotificationSender;
@@ -28,10 +30,11 @@ public class RetryAppMessageEventHandler
         _taskDomainService = taskDomainService;
         _messageTemplateDomainService = messageTemplateDomainService;
         _repository = repository;
+        _websiteMessageRepository = websiteMessageRepository;
     }
 
     [EventHandler]
-    public async Task HandleEventAsync(RetryEmailMessageEvent eto)
+    public async Task HandleEventAsync(RetryAppMessageEvent eto)
     {
         var messageRecord = await _messageRecordRepository.FindAsync(x => x.Id == eto.MessageRecordId);
         if (messageRecord == null)
@@ -57,7 +60,7 @@ public class RetryAppMessageEventHandler
                 {
                     messageRecord.SetResult(false, "The maximum number of times to send per day has been reached");
                     await _messageRecordRepository.UpdateAsync(messageRecord);
-                    throw new UserFriendlyException("The maximum number of times to send per day has been reached");
+                    return;
                 }
             }
 
@@ -69,17 +72,21 @@ public class RetryAppMessageEventHandler
                 if (response.Success)
                 {
                     messageRecord.SetResult(true, string.Empty);
+
+                    if (messageData.MessageContent.ExtraProperties.GetProperty<bool>("IsWebsiteMessage"))
+                    {
+                        var websiteMessage = new WebsiteMessage(messageRecord.ChannelId, messageRecord.UserId, messageData.MessageContent.Title, messageData.MessageContent.Content, messageData.MessageContent.GetJumpUrl(), DateTimeOffset.Now);
+                        await _websiteMessageRepository.AddAsync(websiteMessage);
+                    }
                 }
                 else
                 {
                     messageRecord.SetResult(false, response.Message);
-                    throw new UserFriendlyException("Resend message failed");
                 }
             }
             catch (Exception ex)
             {
                 messageRecord.SetResult(false, ex.Message);
-                throw new UserFriendlyException("Resend message failed");
             }
 
             await _messageRecordRepository.UpdateAsync(messageRecord);

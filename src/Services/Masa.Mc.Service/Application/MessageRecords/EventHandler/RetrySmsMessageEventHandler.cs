@@ -54,7 +54,7 @@ public class RetrySmsMessageEventHandler
                 {
                     messageRecord.SetResult(false, "The maximum number of times to send per day has been reached");
                     await _messageRecordRepository.UpdateAsync(messageRecord);
-                    throw new UserFriendlyException("The maximum number of times to send per day has been reached");
+                    return;
                 }
 
                 variables = _messageTemplateDomainService.ConvertVariables(messageTemplate, messageRecord.Variables);
@@ -73,13 +73,11 @@ public class RetrySmsMessageEventHandler
                 else
                 {
                     messageRecord.SetResult(false, response.Message);
-                    throw new UserFriendlyException("Resend message failed");
                 }
             }
             catch (Exception ex)
             {
                 messageRecord.SetResult(false, ex.Message);
-                throw new UserFriendlyException("Resend message failed");
             }
 
             await _messageRecordRepository.UpdateAsync(messageRecord);

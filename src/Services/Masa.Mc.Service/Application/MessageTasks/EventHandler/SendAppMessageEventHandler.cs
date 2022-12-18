@@ -1,8 +1,6 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
-using Masa.Mc.Service.Admin.Domain.Channels.Aggregates;
-
 namespace Masa.Mc.Service.Admin.Application.MessageTasks.EventHandler;
 
 public class SendAppMessageEventHandler
@@ -16,6 +14,7 @@ public class SendAppMessageEventHandler
     private readonly MessageTemplateDomainService _messageTemplateDomainService;
     private readonly ILogger<SendEmailMessageEventHandler> _logger;
     private readonly IMessageTemplateRepository _repository;
+    private readonly IWebsiteMessageRepository _websiteMessageRepository;
 
     public SendAppMessageEventHandler(IAppNotificationAsyncLocal appNotificationAsyncLocal
         , IAppNotificationSender appNotificationSender
@@ -25,7 +24,8 @@ public class SendAppMessageEventHandler
         , IMessageTaskHistoryRepository messageTaskHistoryRepository
         , MessageTemplateDomainService messageTemplateDomainService
         , ILogger<SendEmailMessageEventHandler> logger
-        , IMessageTemplateRepository repository)
+        , IMessageTemplateRepository repository
+        , IWebsiteMessageRepository websiteMessageRepository)
     {
         _appNotificationAsyncLocal = appNotificationAsyncLocal;
         _appNotificationSender = appNotificationSender;
@@ -36,6 +36,7 @@ public class SendAppMessageEventHandler
         _messageTemplateDomainService = messageTemplateDomainService;
         _logger = logger;
         _repository = repository;
+        _websiteMessageRepository = websiteMessageRepository;
     }
 
     [EventHandler]
@@ -78,6 +79,12 @@ public class SendAppMessageEventHandler
                     if (response.Success)
                     {
                         messageRecord.SetResult(true, string.Empty);
+
+                        if (eto.MessageData.MessageContent.ExtraProperties.GetProperty<bool>("IsWebsiteMessage"))
+                        {
+                            var websiteMessage = new WebsiteMessage(messageRecord.ChannelId, item.UserId, eto.MessageData.MessageContent.Title, eto.MessageData.MessageContent.Content, eto.MessageData.MessageContent.GetJumpUrl(), DateTimeOffset.Now);
+                            await _websiteMessageRepository.AddAsync(websiteMessage);
+                        }
                         okCount++;
                     }
                     else

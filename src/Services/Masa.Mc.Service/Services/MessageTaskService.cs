@@ -1,6 +1,9 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
+using Aliyun.OSS;
+using Masa.Contrib.Dispatcher.Events;
+using Masa.Mc.Service.Admin.Application.MessageTasks.Commands;
 using Microsoft.AspNetCore.Components.Forms;
 
 namespace Masa.Mc.Service.Admin.Services;
@@ -157,10 +160,41 @@ public class MessageTaskService : ServiceBase
         await eventBus.PublishAsync(query);
     }
 
+    public async Task SendOrdinaryMessageByInternalAsync(IEventBus eventBus, SendOrdinaryMessageByInternalInputDto inputDto)
+    {
+        var command = new SendOrdinaryMessageByInternalCommand(inputDto);
+        await eventBus.PublishAsync(command);
+    }
+
+    public async Task SendTemplateMessageByInternalAsync(IEventBus eventBus, SendTemplateMessageByInternalInputDto inputDto)
+    {
+        var command = new SendTemplateMessageByInternalCommand(inputDto);
+        await eventBus.PublishAsync(command);
+    }
+
+    public async Task SendOrdinaryMessageByExternalAsync(IEventBus eventBus, SendOrdinaryMessageByExternalInputDto inputDto)
+    {
+        var command = new SendOrdinaryMessageByExternalCommand(inputDto);
+        await eventBus.PublishAsync(command);
+    }
+
+    public async Task SendTemplateMessageByExternalAsync(IEventBus eventBus, SendTemplateMessageByExternalInputDto inputDto)
+    {
+        var command = new SendTemplateMessageByExternalCommand(inputDto);
+        await eventBus.PublishAsync(command);
+    }
+
     [RoutePattern("{id}/Withdrawn", StartWithBaseUri = true, HttpMethod = "Post")]
     public async Task WithdrawnAsync(IEventBus eventBus, Guid id)
     {
         var command = new WithdrawnMessageTaskCommand(id);
+        await eventBus.PublishAsync(command);
+    }
+
+    [RoutePattern("{id}/Resend", StartWithBaseUri = true, HttpMethod = "Post")]
+    public async Task ResendAsync(IEventBus eventBus, Guid id)
+    {
+        var command = new ResendMessageTaskCommand(id);
         await eventBus.PublishAsync(command);
     }
 }

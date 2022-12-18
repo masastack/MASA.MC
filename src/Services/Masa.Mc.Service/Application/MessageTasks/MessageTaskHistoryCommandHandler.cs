@@ -21,7 +21,7 @@ public class MessageTaskHistoryCommandHandler
     [EventHandler]
     public async Task WithdrawnHistoryAsync(WithdrawnMessageTaskHistoryCommand command)
     {
-        var entity = (await _repository.GetQueryableAsync()).Include(x => x.MessageTask).FirstOrDefault(x => x.Id == command.Input.HistoryId);
+        var entity = (await _repository.GetQueryableAsync()).Include(x => x.MessageTask).FirstOrDefault(x => x.Id == command.MessageTaskHistoryId);
         if (entity == null)
             throw new UserFriendlyException("messageHistory not found");
         if (entity.Status == MessageTaskHistoryStatuses.Withdrawn)
