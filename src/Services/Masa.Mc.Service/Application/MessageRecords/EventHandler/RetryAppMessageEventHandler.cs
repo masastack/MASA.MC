@@ -37,11 +37,10 @@ public class RetryAppMessageEventHandler
     public async Task HandleEventAsync(RetryAppMessageEvent eto)
     {
         var messageRecord = await _messageRecordRepository.FindAsync(x => x.Id == eto.MessageRecordId);
-        if (messageRecord == null)
-        {
-            return;
-        }
+        if (messageRecord == null) return;
         var channel = await _channelRepository.FindAsync(x => x.Id == messageRecord.ChannelId);
+        if (channel == null) return;
+
         var options = new GetuiOptions
         {
             AppID = channel.ExtraProperties.GetProperty<string>(nameof(AppChannelOptions.AppID)),
