@@ -31,10 +31,8 @@ public class RetryWebsiteMessageEventHandler
     public async Task HandleEventAsync(RetryWebsiteMessageEvent eto)
     {
         var messageRecord = await _messageRecordRepository.FindAsync(x => x.Id == eto.MessageRecordId);
-        if (messageRecord == null)
-        {
-            return;
-        }
+        if (messageRecord == null) return;
+
         var messageData = await _taskDomainService.GetMessageDataAsync(messageRecord.MessageTaskId, messageRecord.Variables);
 
         if (messageData.MessageType == MessageEntityTypes.Template)
@@ -44,7 +42,7 @@ public class RetryWebsiteMessageEventHandler
             {
                 messageRecord.SetResult(false, "The maximum number of times to send per day has been reached");
                 await _messageRecordRepository.UpdateAsync(messageRecord);
-                throw new UserFriendlyException("The maximum number of times to send per day has been reached");
+                return;
             }
         }
 

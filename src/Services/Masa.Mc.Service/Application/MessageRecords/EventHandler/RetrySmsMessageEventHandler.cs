@@ -34,11 +34,11 @@ public class RetrySmsMessageEventHandler
     public async Task HandleEventAsync(RetrySmsMessageEvent eto)
     {
         var messageRecord = await _messageRecordRepository.FindAsync(x => x.Id == eto.MessageRecordId);
-        if (messageRecord == null)
-        {
-            return;
-        }
+        if (messageRecord == null) return;
+
         var channel = await _channelRepository.FindAsync(x => x.Id == messageRecord.ChannelId);
+        if (channel == null) return;
+
         var options = new AliyunSmsOptions
         {
             AccessKeyId = channel.GetDataValue<string>(nameof(SmsChannelOptions.AccessKeyId)),
@@ -54,7 +54,7 @@ public class RetrySmsMessageEventHandler
                 {
                     messageRecord.SetResult(false, "The maximum number of times to send per day has been reached");
                     await _messageRecordRepository.UpdateAsync(messageRecord);
-                    throw new UserFriendlyException("The maximum number of times to send per day has been reached");
+                    return;
                 }
 
                 variables = _messageTemplateDomainService.ConvertVariables(messageTemplate, messageRecord.Variables);
@@ -73,13 +73,11 @@ public class RetrySmsMessageEventHandler
                 else
                 {
                     messageRecord.SetResult(false, response.Message);
-                    throw new UserFriendlyException("Resend message failed");
                 }
             }
             catch (Exception ex)
             {
                 messageRecord.SetResult(false, ex.Message);
-                throw new UserFriendlyException("Resend message failed");
             }
 
             await _messageRecordRepository.UpdateAsync(messageRecord);

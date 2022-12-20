@@ -5,5 +5,5 @@ namespace Masa.Mc.Service.Admin.Domain.MessageTasks.Services;
 
 public interface IChannelUserFinder
 {
-    Task<IEnumerable<MessageReceiverUser>> GetReceiverUsersAsync(ChannelType type, ExtraPropertyDictionary variables, IEnumerable<MessageTaskReceiver> receivers);
+    Task<IEnumerable<MessageReceiverUser>> GetReceiverUsersAsync(AppChannel Channel, ExtraPropertyDictionary variables, IEnumerable<MessageTaskReceiver> receivers);
 }

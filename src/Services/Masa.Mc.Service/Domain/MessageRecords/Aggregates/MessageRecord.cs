@@ -20,8 +20,9 @@ public class MessageRecord : FullAggregateRoot<Guid, Guid>
     public MessageEntityTypes MessageEntityType { get; protected set; }
     public Guid MessageEntityId { get; protected set; }
     public string ChannelUserIdentity { get; protected set; } = string.Empty;
+    public string SystemId { get; protected set; } = string.Empty;
 
-    public MessageRecord(Guid userId, string channelUserIdentity, Guid channelId, Guid messageTaskId, Guid messageTaskHistoryId, ExtraPropertyDictionary variables, string displayName, DateTimeOffset? expectSendTime)
+    public MessageRecord(Guid userId, string channelUserIdentity, Guid channelId, Guid messageTaskId, Guid messageTaskHistoryId, ExtraPropertyDictionary variables, string displayName, DateTimeOffset? expectSendTime, string systemId)
     {
         UserId = userId;
         ChannelUserIdentity = channelUserIdentity;
@@ -31,6 +32,7 @@ public class MessageRecord : FullAggregateRoot<Guid, Guid>
         Variables = variables;
         DisplayName = displayName;
         ExpectSendTime = expectSendTime;
+        SystemId = systemId;
     }
 
     public void SetResult(bool success, string failureReason, DateTimeOffset? sendTime = null)

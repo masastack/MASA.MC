@@ -7,6 +7,7 @@ public enum MessageTaskStatuses
 {
     WaitSend = 1,
     Sending = 2,
+    Cancel = 3,
     Success = 4,
     Fail = 5,
     PartialFailure = 6

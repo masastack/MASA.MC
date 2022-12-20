@@ -10,6 +10,7 @@ public class MessageContent : ValueObject
     public string Markdown { get; protected set; } = string.Empty;
     public bool IsJump { get; protected set; }
     public string JumpUrl { get; protected set; } = string.Empty;
+    public ExtraPropertyDictionary ExtraProperties { get; set; } = new();
 
     protected override IEnumerable<object> GetEqualityValues()
     {
@@ -20,12 +21,15 @@ public class MessageContent : ValueObject
         yield return JumpUrl;
     }
 
-    public MessageContent(string title, string content, string markdown, bool isJump, string jumpUrl)
+    private MessageContent() { }
+
+    public MessageContent(string title, string content, string markdown, bool isJump, string jumpUrl, ExtraPropertyDictionary extraProperties)
     {
         Title = title;
         Content = content;
         Markdown = markdown;
         JumpUrl = jumpUrl;
+        ExtraProperties = extraProperties ?? new();
     }
 
     public string GetJumpUrl()

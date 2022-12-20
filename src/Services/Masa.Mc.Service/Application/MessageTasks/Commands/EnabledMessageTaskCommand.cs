@@ -3,6 +3,6 @@
 
 namespace Masa.Mc.Service.Admin.Application.MessageTasks.Commands;
 
-public record EnabledMessageTaskCommand(EnabledMessageTaskInputDto Input) : Command
+public record EnabledMessageTaskCommand(Guid MessageTaskId) : Command
 {
 }

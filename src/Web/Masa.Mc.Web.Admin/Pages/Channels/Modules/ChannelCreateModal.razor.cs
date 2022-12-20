@@ -8,7 +8,7 @@ public partial class ChannelCreateModal : AdminCompontentBase
     [Parameter]
     public EventCallback OnOk { get; set; }
 
-    private MForm _form = default!;
+    private MForm? _form;
     private ChannelUpsertDto _model = new();
     private bool _visible;
     private List<ChannelTypes> channelTypeItems = Enum.GetValues(typeof(ChannelTypes))
@@ -44,6 +44,8 @@ public partial class ChannelCreateModal : AdminCompontentBase
 
     private async Task HandleOkAsync()
     {
+        Check.NotNull(_form, "form not found");
+
         await _channelExtraPropertiesRef.UpdateExtraPropertiesAsync();
         if (!_form.Validate() || !_channelExtraPropertiesRef.Validate())
         {
@@ -65,7 +67,7 @@ public partial class ChannelCreateModal : AdminCompontentBase
     {
         _step = 1;
         _model = new();
-        _form.ResetValidation();
+        _form?.ResetValidation();
     }
 
     private void HandleVisibleChanged(bool val)

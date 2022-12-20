@@ -57,6 +57,7 @@ builder.Services.AddSchedulerClient(publicConfiguration.GetValue<string>("$publi
 builder.Services.AddMultilevelCache(options => options.UseStackExchangeRedisCache(redisOptions));
 builder.Services.AddAliyunSms();
 builder.Services.AddMailKit();
+builder.Services.AddGetui();
 builder.Services.AddCsv();
 builder.Services.AddSingleton<ITemplateRenderer, TextTemplateRenderer>();
 builder.Services.AddTransient<Microsoft.AspNetCore.SignalR.IUserIdProvider, McUserIdProvider>();

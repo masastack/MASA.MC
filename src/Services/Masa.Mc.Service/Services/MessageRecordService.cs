@@ -11,9 +11,9 @@ public class MessageRecordService : ServiceBase
     }
 
     public async Task<PaginatedListDto<MessageRecordDto>> GetListAsync(IEventBus eventbus, [FromQuery] Guid? channelId, [FromQuery] bool? success, [FromQuery] MessageRecordTimeTypes? timeType,
-       [FromQuery] DateTime? startTime, [FromQuery] DateTime? endTime, [FromQuery] Guid? userId, [FromQuery] Guid? messageTemplateId, [FromQuery] Guid? messageTaskHistoryId, [FromQuery] string filter = "", [FromQuery] string sorting = "", [FromQuery] int page = 1, [FromQuery] int pagesize = 10)
+       [FromQuery] DateTime? startTime, [FromQuery] DateTime? endTime, [FromQuery] Guid? userId, [FromQuery] Guid? messageTemplateId, [FromQuery] Guid? messageTaskHistoryId, [FromQuery] string systemId, [FromQuery] string filter = "", [FromQuery] string sorting = "", [FromQuery] int page = 1, [FromQuery] int pagesize = 10)
     {
-        var inputDto = new GetMessageRecordInputDto(filter, channelId, success, timeType, startTime, endTime, userId, messageTemplateId, messageTaskHistoryId, sorting, page, pagesize);
+        var inputDto = new GetMessageRecordInputDto(filter, channelId, success, timeType, startTime, endTime, userId, messageTemplateId, messageTaskHistoryId, systemId, sorting, page, pagesize);
         var query = new GetListMessageRecordQuery(inputDto);
         await eventbus.PublishAsync(query);
         return query.Result;
@@ -26,7 +26,7 @@ public class MessageRecordService : ServiceBase
         return query.Result;
     }
 
-    public async Task RetryAsync(IEventBus eventBus,RetryMessageRecordInputDto inputDto)
+    public async Task RetryAsync(IEventBus eventBus, RetryMessageRecordInputDto inputDto)
     {
         var command = new RetryMessageRecordCommand(inputDto);
         await eventBus.PublishAsync(command);

@@ -8,6 +8,7 @@ public enum ChannelTypes
     Sms = 1,
     Email,
     WebsiteMessage,
+    App
     //WeChatOfficial,
     //WeChatMiniProgram
 }

@@ -27,8 +27,9 @@ public partial class ChannelExtraProperties : AdminCompontentBase
     [Parameter]
     public bool PasswordView { get; set; }
 
-    private ChannelEmailExtraProperties _emailExtraPropertiesRef = default!;
-    private ChannelSmsExtraProperties _smsExtraPropertiesRef = default!;
+    private ChannelEmailExtraProperties? _emailExtraPropertiesRef;
+    private ChannelSmsExtraProperties? _smsExtraPropertiesRef;
+    private ChannelAppExtraProperties? _appExtraPropertiesRef;
 
     protected override void OnInitialized()
     {
@@ -47,20 +48,34 @@ public partial class ChannelExtraProperties : AdminCompontentBase
 
     public async Task UpdateExtraPropertiesAsync()
     {
-        if (Type == ChannelTypes.Email) await _emailExtraPropertiesRef.HandleChangeAsync();
-        if (Type == ChannelTypes.Sms) await _smsExtraPropertiesRef.HandleChangeAsync();
+        if (Type == ChannelTypes.Email && _emailExtraPropertiesRef != null)
+        {
+            await _emailExtraPropertiesRef.HandleChangeAsync();
+        }
+        if (Type == ChannelTypes.Sms && _smsExtraPropertiesRef != null)
+        {
+            await _smsExtraPropertiesRef.HandleChangeAsync();
+        }
+        if (Type == ChannelTypes.App && _appExtraPropertiesRef != null)
+        {
+            await _appExtraPropertiesRef.HandleChangeAsync();
+        }
         await ValueChanged.InvokeAsync(Value);
     }
 
     public bool Validate()
     {
-        if (Type == ChannelTypes.Email)
+        if (Type == ChannelTypes.Email && _emailExtraPropertiesRef != null)
         {
             return _emailExtraPropertiesRef.Form.Validate();
         }
-        if (Type == ChannelTypes.Sms)
+        if (Type == ChannelTypes.Sms && _smsExtraPropertiesRef != null)
         {
             return _smsExtraPropertiesRef.Form.Validate();
+        }
+        if (Type == ChannelTypes.App && _appExtraPropertiesRef != null && _appExtraPropertiesRef.Form != null)
+        {
+            return _appExtraPropertiesRef.Form.Validate();
         }
         return true;
     }

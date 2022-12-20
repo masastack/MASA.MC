@@ -36,4 +36,6 @@ public class MessageTaskUpsertDto
     public MessageTaskSources Source { get; set; } = MessageTaskSources.Management;
 
     public Guid OperatorId { get; set; } = default;
+
+    public string SystemId { get; set; } = string.Empty;
 }

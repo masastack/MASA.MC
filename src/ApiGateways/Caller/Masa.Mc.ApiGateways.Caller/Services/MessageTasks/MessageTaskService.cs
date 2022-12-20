@@ -47,14 +47,9 @@ public class MessageTaskService : ServiceBase
         await PostAsync("SendTest", inputDto);
     }
 
-    public async Task EnabledAsync(EnabledMessageTaskInputDto inputDto)
+    public async Task SetIsEnabledAsync(Guid id, bool isEnabled)
     {
-        await PostAsync("Enabled", inputDto);
-    }
-
-    public async Task DisableAsync(DisableMessageTaskInputDto inputDto)
-    {
-        await PostAsync("Disable", inputDto);
+        await PutAsync($"{id}/enabled/{isEnabled}", new { });
     }
 
     public async Task<ImportResultDto<MessageTaskReceiverDto>> ImportReceiversAsync(ImportReceiversDto dto)
@@ -80,5 +75,15 @@ public class MessageTaskService : ServiceBase
     public async Task<long> ResolveReceiversCountAsync(List<MessageTaskReceiverDto> dto)
     {
         return await PostAsync<List<MessageTaskReceiverDto>, long>(nameof(ResolveReceiversCountAsync), dto);
+    }
+
+    public async Task WithdrawnAsync(Guid id)
+    {
+        await PostAsync($"{id}/Withdrawn", new { });
+    }
+
+    public async Task ResendAsync(Guid id)
+    {
+        await PostAsync($"{id}/Resend", new { });
     }
 }

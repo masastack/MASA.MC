@@ -12,6 +12,8 @@ public class MessageTaskCommandHandler
     private readonly IUserContext _userContext;
     private readonly IChannelRepository _channelRepository;
     private readonly IMessageTemplateRepository _messageTemplateRepository;
+    private readonly IMessageRecordRepository _messageRecordRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
     public MessageTaskCommandHandler(IMessageTaskRepository repository
         , IMessageTaskHistoryRepository messageTaskHistoryRepository
@@ -19,7 +21,9 @@ public class MessageTaskCommandHandler
         , IMessageTaskJobService messageTaskJobService
         , IUserContext userContext
         , IChannelRepository channelRepository
-        , IMessageTemplateRepository messageTemplateRepository)
+        , IMessageTemplateRepository messageTemplateRepository
+        , IMessageRecordRepository messageRecordRepository
+        , IUnitOfWork unitOfWork)
     {
         _repository = repository;
         _messageTaskHistoryRepository = messageTaskHistoryRepository;
@@ -28,6 +32,8 @@ public class MessageTaskCommandHandler
         _userContext = userContext;
         _channelRepository = channelRepository;
         _messageTemplateRepository = messageTemplateRepository;
+        _messageRecordRepository = messageRecordRepository;
+        _unitOfWork = unitOfWork;
     }
 
     [EventHandler]
@@ -57,14 +63,14 @@ public class MessageTaskCommandHandler
         var receiverUsers = inputDto.ReceiverUsers.Adapt<List<MessageReceiverUser>>();
         var history = new MessageTaskHistory(entity.Id, receiverUsers, true);
         await _messageTaskHistoryRepository.AddAsync(history);
-        await _messageTaskHistoryRepository.UnitOfWork.SaveChangesAsync();
+        await _unitOfWork.SaveChangesAsync();
         await _eventBus.PublishAsync(new ExecuteMessageTaskEvent(entity.Id, true));
     }
 
     [EventHandler]
     public async Task EnabledAsync(EnabledMessageTaskCommand command)
     {
-        var entity = await _repository.FindAsync(x => x.Id == command.Input.MessageTaskId);
+        var entity = await _repository.FindAsync(x => x.Id == command.MessageTaskId);
         Check.NotNull(entity, "MessageTask not found");
 
         entity.SetEnabled();
@@ -80,10 +86,10 @@ public class MessageTaskCommandHandler
     [EventHandler]
     public async Task DisableAsync(DisableMessageTaskCommand command)
     {
-        var entity = await _repository.FindAsync(x => x.Id == command.Input.MessageTaskId);
+        var entity = await _repository.FindAsync(x => x.Id == command.MessageTaskId);
         Check.NotNull(entity, "MessageTask not found");
 
-        if (await _messageTaskHistoryRepository.AnyAsync(x => x.MessageTaskId == command.Input.MessageTaskId && x.Status == MessageTaskHistoryStatuses.Sending))
+        if (await _messageTaskHistoryRepository.AnyAsync(x => x.MessageTaskId == command.MessageTaskId && x.Status == MessageTaskHistoryStatuses.Sending))
             throw new UserFriendlyException("the task has a sending task history and cannot be disabled.");
         entity.SetDisable();
         await _repository.UpdateAsync(entity);
@@ -179,5 +185,56 @@ public class MessageTaskCommandHandler
         taskUpsertDto.EntityId = template.Id;
         var templateCommand = new CreateTemplateMessageTaskCommand(taskUpsertDto);
         await _eventBus.PublishAsync(templateCommand);
+    }
+
+    [EventHandler]
+    public async Task WithdrawnAsync(WithdrawnMessageTaskCommand command)
+    {
+        var entity = await _repository.FindAsync(x => x.Id == command.MessageTaskId);
+        MasaArgumentException.ThrowIfNull(entity, "MessageTask");
+
+        entity.SetDraft(true);
+        entity.SetResult(MessageTaskStatuses.Cancel);
+        await _repository.UpdateAsync(entity);
+
+        var list = await _messageTaskHistoryRepository.GetListAsync(x => x.MessageTaskId == command.MessageTaskId);
+
+        foreach (var item in list)
+        {
+            if (item.Status == MessageTaskHistoryStatuses.Withdrawn) continue;
+
+            item.SetWithdraw();
+            await _messageTaskHistoryRepository.UpdateAsync(item);
+        }
+
+        if (entity.SchedulerJobId != default)
+        {
+            var userId = _userContext.GetUserId<Guid>();
+            await _messageTaskJobService.DisableJobAsync(entity.SchedulerJobId, userId);
+        }
+    }
+
+    [EventHandler]
+    public async Task ResendAsync(ResendMessageTaskCommand command)
+    {
+        var records = await (await _messageRecordRepository.WithDetailsAsync()).Where(x => x.MessageTaskId == command.MessageTaskId && x.Success == false).ToListAsync();
+
+        foreach (var item in records)
+        {
+            var eto = item.Channel.Type.GetRetryMessageEvent(item.Id);
+            await _eventBus.PublishAsync(eto);
+        }
+
+        await _unitOfWork.SaveChangesAsync();
+
+        var historys = await _messageTaskHistoryRepository.GetListAsync(x => x.MessageTaskId == command.MessageTaskId);
+        foreach (var item in historys)
+        {
+            await _eventBus.PublishAsync(new UpdateMessageTaskHistoryStatusEvent(item.Id));
+        }
+
+        await _unitOfWork.SaveChangesAsync();
+
+        await _eventBus.PublishAsync(new UpdateMessageTaskStatusEvent(command.MessageTaskId));
     }
 }

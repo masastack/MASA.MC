@@ -34,11 +34,11 @@ public class RetryEmailMessageEventHandler
     public async Task HandleEventAsync(RetryEmailMessageEvent eto)
     {
         var messageRecord = await _messageRecordRepository.FindAsync(x => x.Id == eto.MessageRecordId);
-        if (messageRecord == null)
-        {
-            return;
-        }
+        if (messageRecord == null) return;
+
         var channel = await _channelRepository.FindAsync(x => x.Id == messageRecord.ChannelId);
+        if (channel == null) return;
+
         var options = new SmtpEmailOptions
         {
             Host = channel.ExtraProperties.GetProperty<string>(nameof(EmailChannelOptions.Smtp)),
@@ -59,7 +59,7 @@ public class RetryEmailMessageEventHandler
                 {
                     messageRecord.SetResult(false, "The maximum number of times to send per day has been reached");
                     await _messageRecordRepository.UpdateAsync(messageRecord);
-                    throw new UserFriendlyException("The maximum number of times to send per day has been reached");
+                    return;
                 }
             }
 
@@ -75,7 +75,6 @@ public class RetryEmailMessageEventHandler
             catch (Exception ex)
             {
                 messageRecord.SetResult(false, ex.Message);
-                throw new UserFriendlyException("Resend message failed");
             }
 
             await _messageRecordRepository.UpdateAsync(messageRecord);

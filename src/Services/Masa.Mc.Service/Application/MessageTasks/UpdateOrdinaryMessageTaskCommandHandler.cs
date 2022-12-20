@@ -1,9 +1,6 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
-using Masa.BuildingBlocks.Ddd.Domain.Entities;
-using Masa.Mc.Service.Admin.Domain.MessageInfos.Aggregates;
-
 namespace Masa.Mc.Service.Admin.Application.MessageTasks;
 
 public class UpdateOrdinaryMessageTaskCommandHandler
@@ -20,25 +17,22 @@ public class UpdateOrdinaryMessageTaskCommandHandler
     }
 
     [EventHandler(1)]
-    public async Task UpdateMessageInfoAsync(UpdateOrdinaryMessageTaskCommand updateCommand)
-    {
-        var dto = updateCommand.MessageTask;
-        var messageInfo = await _messageInfoRepository.FindAsync(x => x.Id == dto.EntityId);
-        MasaArgumentException.ThrowIfNull(messageInfo, "MessageInfo");
-
-        dto.MessageInfo.Adapt(messageInfo);
-        await _messageInfoRepository.UpdateAsync(messageInfo);
-        updateCommand.MessageTask.DisplayName = messageInfo.MessageContent.Title;
-    }
-
-    [EventHandler(2)]
     public async Task UpdateOrdinaryMessageTaskAsync(UpdateOrdinaryMessageTaskCommand updateCommand)
     {
         var entity = await _repository.FindAsync(x => x.Id == updateCommand.MessageTaskId);
-        MasaArgumentException.ThrowIfNull(entity, "MessageInfo");
-        if (!entity.IsDraft)
-            throw new UserFriendlyException("non draft cannot be modified");
+        MasaArgumentException.ThrowIfNull(entity, "MessageTask");
+
         var dto = updateCommand.MessageTask;
+        var messageInfo = await _messageInfoRepository.FindAsync(x => x.Id == entity.EntityId);
+        MasaArgumentException.ThrowIfNull(messageInfo, "MessageInfo");
+        dto.MessageInfo.Adapt(messageInfo);
+        await _messageInfoRepository.UpdateAsync(messageInfo);
+        dto.DisplayName = messageInfo.MessageContent.Title;
+        dto.EntityId = messageInfo.Id;
+
+        if (entity.Status != MessageTaskStatuses.WaitSend)
+            throw new UserFriendlyException("It can only be modified after being sent");
+
         dto.Adapt(entity);
         await _domainService.UpdateAsync(entity);
     }

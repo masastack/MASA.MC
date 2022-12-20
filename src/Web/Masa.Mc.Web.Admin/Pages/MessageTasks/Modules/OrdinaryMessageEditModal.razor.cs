@@ -8,7 +8,7 @@ public partial class OrdinaryMessageEditModal : AdminCompontentBase
     [Parameter]
     public EventCallback OnOk { get; set; }
 
-    private MForm _form = default!;
+    private MForm? _form;
     private MessageTaskUpsertModel _model = new() { EntityType = MessageEntityTypes.Ordinary };
     private Guid _entityId;
     private bool _visible;
@@ -73,6 +73,8 @@ public partial class OrdinaryMessageEditModal : AdminCompontentBase
 
     private async Task HandleOkAsync()
     {
+        Check.NotNull(_form, "form not found");
+
         SetReceivers();
         if (!_form.Validate())
         {
@@ -104,7 +106,7 @@ public partial class OrdinaryMessageEditModal : AdminCompontentBase
         _selectReceivers = new();
         _importReceivers = new();
         _selectReceiverType = false;
-        _form.ResetValidation();
+        _form?.ResetValidation();
     }
 
     private void HandleVisibleChanged(bool val)

@@ -133,6 +133,7 @@ public class MessageTaskQueryHandler
             condition = condition.And(inputDto.StartTime.HasValue, x => x.SendTime >= inputDto.StartTime);
             condition = condition.And(inputDto.EndTime.HasValue, x => x.SendTime <= inputDto.EndTime);
         }
+        condition = condition.And(!string.IsNullOrEmpty(inputDto.SystemId), x => x.SystemId == inputDto.SystemId);
         return await Task.FromResult(condition);
     }
 

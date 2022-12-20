@@ -39,7 +39,8 @@ public class MessageData : ValueObject
             , Render(MessageContent.Content, variables, startstr, endstr)
             , MessageContent.Markdown
             , MessageContent.IsJump
-            , Render(MessageContent.JumpUrl, variables, startstr, endstr));
+            , Render(MessageContent.JumpUrl, variables, startstr, endstr)
+            , MessageContent.ExtraProperties);
     }
 
     private string Render(string context, ExtraPropertyDictionary variables, string startstr, string endstr)
