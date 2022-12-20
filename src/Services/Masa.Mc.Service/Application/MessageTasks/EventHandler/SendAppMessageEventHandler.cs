@@ -13,7 +13,7 @@ public class SendAppMessageEventHandler
     private readonly IMessageTaskHistoryRepository _messageTaskHistoryRepository;
     private readonly MessageTemplateDomainService _messageTemplateDomainService;
     private readonly ILogger<SendEmailMessageEventHandler> _logger;
-    private readonly IMessageTemplateRepository _repository;
+    private readonly IMessageTemplateRepository _messageTemplateRepository;
     private readonly IWebsiteMessageRepository _websiteMessageRepository;
 
     public SendAppMessageEventHandler(IAppNotificationAsyncLocal appNotificationAsyncLocal
@@ -24,7 +24,7 @@ public class SendAppMessageEventHandler
         , IMessageTaskHistoryRepository messageTaskHistoryRepository
         , MessageTemplateDomainService messageTemplateDomainService
         , ILogger<SendEmailMessageEventHandler> logger
-        , IMessageTemplateRepository repository
+        , IMessageTemplateRepository messageTemplateRepository
         , IWebsiteMessageRepository websiteMessageRepository)
     {
         _appNotificationAsyncLocal = appNotificationAsyncLocal;
@@ -35,7 +35,7 @@ public class SendAppMessageEventHandler
         _messageTaskHistoryRepository = messageTaskHistoryRepository;
         _messageTemplateDomainService = messageTemplateDomainService;
         _logger = logger;
-        _repository = repository;
+        _messageTemplateRepository = messageTemplateRepository;
         _websiteMessageRepository = websiteMessageRepository;
     }
 
@@ -62,7 +62,7 @@ public class SendAppMessageEventHandler
                 eto.MessageData.RenderContent(item.Variables);
                 if (eto.MessageData.MessageType == MessageEntityTypes.Template)
                 {
-                    var messageTemplate = await _repository.FindAsync(x => x.Id == messageRecord.MessageEntityId, false);
+                    var messageTemplate = await _messageTemplateRepository.FindAsync(x => x.Id == messageRecord.MessageEntityId, false);
                     if (!await _messageTemplateDomainService.CheckSendUpperLimitAsync(messageTemplate, messageRecord.ChannelUserIdentity))
                     {
                         messageRecord.SetResult(false, "The maximum number of times to send per day has been reached");
