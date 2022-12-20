@@ -21,15 +21,17 @@ public class UpdateMessageTaskHistoryStatusHandler
         var history = await _historyRepository.FindAsync(x => x.Id == eto.MessageTaskHistoryId, false);
         if (history == null) return;
 
+        var hasSuccessMessageRecord = await _messageRecordRepository.AnyAsync(x => x.MessageTaskHistoryId == history.Id && x.Success == true);
+
         if (!await _messageRecordRepository.AnyAsync(x => x.MessageTaskHistoryId == history.Id && x.Success != true))
         {
             history.SetResult(MessageTaskHistoryStatuses.Success);
         }
-        else if (!await _messageRecordRepository.AnyAsync(x => x.MessageTaskHistoryId == history.Id && x.Success == true))
+        else if (!hasSuccessMessageRecord)
         {
             history.SetResult(MessageTaskHistoryStatuses.Fail);
         }
-        else if (await _messageRecordRepository.AnyAsync(x => x.MessageTaskHistoryId == history.Id && x.Success == true))
+        else if (hasSuccessMessageRecord)
         {
             history.SetResult(MessageTaskHistoryStatuses.PartialFailure);
         }
