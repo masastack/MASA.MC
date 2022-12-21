@@ -31,6 +31,7 @@ public partial class SmsTemplateManagement : AdminCompontentBase
             new() { Text = T($"{_prefix}{nameof(MessageTemplateDto.AuditStatus)}"), Value = nameof(MessageTemplateDto.AuditStatus), Sortable = false, Width = "190px" },
             new() { Text = T("Modifier"), Value = nameof(MessageTemplateDto.ModifierName), Sortable = false, Width = "190px" },
             new() { Text = T("ModificationTime"), Value = nameof(MessageTemplateDto.ModificationTime), Sortable = true, Width = "210px" },
+             new() { Text = T($"{_prefix}{nameof(MessageTemplateDto.Status)}"), Value = nameof(MessageTemplateDto.Status), Sortable = true, Width = "150px" },
             new() { Text = T("Action"), Value = "Action", Sortable = false, Width = 72, Align = DataTableHeaderAlign.Center },
         };
         _channelItems = await ChannelService.GetListByTypeAsync(ChannelTypes.Sms);

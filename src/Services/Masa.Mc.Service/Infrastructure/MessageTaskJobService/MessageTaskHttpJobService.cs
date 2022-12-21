@@ -17,12 +17,12 @@ public class MessageTaskHttpJobService : IMessageTaskJobService
 
     public async Task<bool> DisableJobAsync(Guid jobId, Guid operatorId)
     {
-        return await _schedulerClient.SchedulerJobService.EnableAsync(new SchedulerJobRequestBase { JobId = jobId, OperatorId = operatorId });
+        return await _schedulerClient.SchedulerJobService.DisableAsync(new SchedulerJobRequestBase { JobId = jobId, OperatorId = operatorId });
     }
 
     public async Task<bool> EnableJobAsync(Guid jobId, Guid operatorId)
     {
-        return await _schedulerClient.SchedulerJobService.DisableAsync(new SchedulerJobRequestBase { JobId = jobId, OperatorId = operatorId });
+        return await _schedulerClient.SchedulerJobService.EnableAsync(new SchedulerJobRequestBase { JobId = jobId, OperatorId = operatorId });
     }
 
     public async Task<Guid> RegisterJobAsync(Guid messageTaskId, string cronExpression, Guid operatorId, string jobName)

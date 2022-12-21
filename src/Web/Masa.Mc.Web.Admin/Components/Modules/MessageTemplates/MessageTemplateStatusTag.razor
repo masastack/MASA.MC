@@ -1,18 +1,15 @@
 ﻿@inherits AdminCompontentBase
 @switch (Value)
 {
-    case MessageTemplateAuditStatuses.WaitAudit:
-        <span class="yellow-lighten yellow--text btn tag">@T("DisplayName.MessageTemplateAuditStatus.WaitAudit")</span>
+    case MessageTemplateStatuses.Invalid:
+        <span class="yellow-lighten yellow--text btn tag">@T("DisplayName.MessageTemplateStatus.Invalid")</span>
         break;
-    case MessageTemplateAuditStatuses.Adopt:
-        <span class="green-lighten green--text btn tag">@T("DisplayName.MessageTemplateAuditStatus.Adopt")</span>
-        break;
-    case MessageTemplateAuditStatuses.Fail:
-        <span class="warning-lighten warning--text btn tag">@T("DisplayName.MessageTemplateAuditStatus.Fail")</span>
+    case MessageTemplateStatuses.Normal:
+        <span class="green-lighten green--text btn tag">@T("DisplayName.MessageTemplateStatus.Normal")</span>
         break;
 }
 
 @code {
     [Parameter]
-    public MessageTemplateAuditStatuses Value { get; set; }
+    public MessageTemplateStatuses Value { get; set; }
 }

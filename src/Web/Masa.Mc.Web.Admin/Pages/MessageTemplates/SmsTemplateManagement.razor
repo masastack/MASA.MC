@@ -114,7 +114,10 @@
                             <DefaultGenericColumnRender Value="@T($"DisplayName.SmsTemplateType.{((SmsTemplateTypes)context.Item.TemplateType).ToString()}")" Width="@context.Header.Width"></DefaultGenericColumnRender>
                             break;
                         case nameof(MessageTemplateDto.AuditStatus):
-                            <MessageTemplateStatusTag Value="@context.Item.AuditStatus" />
+                            <MessageTemplateAuditStatusTag Value="@context.Item.AuditStatus" />
+                            break;
+                        case nameof(MessageTemplateDto.Status):
+                            <MessageTemplateStatusTag Value="@context.Item.Status" />
                             break;
                         case "Action":
                             <DefaultIcon Small Color="emphasis2" Tooltip="@(T("Edit"))" OnClick="async()=>await _editModal.OpenModalAsync(context.Item)">mdi-pencil</DefaultIcon>
