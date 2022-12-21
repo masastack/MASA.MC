@@ -21,7 +21,9 @@ public class MessageRecordQueryHandler
         var entity = await _context.MessageRecordQueries.Include(x => x.Channel).FirstOrDefaultAsync(x => x.Id == query.MessageRecordId);
         MasaArgumentException.ThrowIfNull(entity, "MessageRecord");
 
-        query.Result = entity.Adapt<MessageRecordDto>();
+        var dto = entity.Adapt<MessageRecordDto>();
+        await FillUserInfo(new List<MessageRecordDto> { dto });
+        query.Result = dto;
     }
 
     [EventHandler]
@@ -39,7 +41,7 @@ public class MessageRecordQueryHandler
             }
         });
         var dtos = resultList.Result.Adapt<List<MessageRecordDto>>();
-        await FillMessageRecordDtos(dtos);
+        await FillUserInfo(dtos);
         var result = new PaginatedListDto<MessageRecordDto>(resultList.Total, resultList.TotalPages, dtos);
         query.Result = result;
     }
@@ -66,19 +68,13 @@ public class MessageRecordQueryHandler
         return await Task.FromResult(condition); ;
     }
 
-    private async Task FillMessageRecordDtos(List<MessageRecordDto> dtos)
+    private async Task FillUserInfo(List<MessageRecordDto> dtos)
     {
-        var messageTaskHistoryIds = dtos.Select(x => x.MessageTaskHistoryId).ToList();
-        var messageTaskHistoryList = await _context.MessageTaskHistoryQueries.Where(x => messageTaskHistoryIds.Contains(x.Id)).ToListAsync();
-
         var userIds = dtos.Where(x => x.UserId != default && string.IsNullOrEmpty(x.User.Account)).Select(x => x.UserId).Distinct().ToArray();
         var userInfos = await _authClient.UserService.GetUsersAsync(userIds);
 
         foreach (var item in dtos)
         {
-            var messageTaskHistory = messageTaskHistoryList.FirstOrDefault(x => x.Id == item.MessageTaskHistoryId);
-            if (messageTaskHistory != null) item.MessageTaskHistoryNo = messageTaskHistory.TaskHistoryNo;
-
             if (item.UserId != default && string.IsNullOrEmpty(item.User.Account))
             {
                 var user = userInfos.FirstOrDefault(x => x.Id == item.UserId);

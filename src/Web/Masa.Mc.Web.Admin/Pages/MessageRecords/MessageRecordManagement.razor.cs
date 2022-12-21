@@ -28,7 +28,6 @@ public partial class MessageRecordManagement : AdminCompontentBase
             new() { Text = T(nameof(MessageTaskReceiverDto.Email)), Value = nameof(MessageTaskReceiverDto.Email), Sortable = false, Width = "157px" },
             new() { Text = T("DisplayName.Channel"), Value = "ChannelDisplayName", Sortable = false, Width = "80px" },
             new() { Text = T($"{_prefix}{nameof(MessageRecordDto.DisplayName)}"), Value = nameof(MessageRecordDto.DisplayName), Sortable = false, Width = "120px" },
-            new() { Text = T($"{_prefix}{nameof(MessageRecordDto.MessageTaskHistoryNo)}"), Value = nameof(MessageRecordDto.MessageTaskHistoryNo), Sortable = false, Width = "180px" },
             new() { Text = T($"{_prefix}{nameof(MessageRecordDto.ExpectSendTime)}"), Value = nameof(MessageRecordDto.ExpectSendTime), Sortable = false, Width = "120px" },
             new() { Text = T($"{_prefix}{nameof(MessageRecordDto.SendTime)}"), Value = nameof(MessageRecordDto.SendTime), Sortable = false, Width = "120px" },
             new() { Text = T($"{_prefix}{nameof(MessageRecordDto.Success)}"), Value = nameof(MessageRecordDto.Success), Sortable = false, Width = "56px" },

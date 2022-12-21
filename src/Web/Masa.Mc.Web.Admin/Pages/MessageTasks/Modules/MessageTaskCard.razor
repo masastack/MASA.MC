@@ -110,6 +110,8 @@
     [Parameter]
     public EventCallback OnIsEnabled { get; set; }
 
+    protected override string? PageName { get; set; } = "MessageTaskBlock";
+
     private async Task HandleOnEdit()
     {
         if (OnEdit.HasDelegate)

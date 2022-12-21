@@ -26,6 +26,8 @@ public partial class OrdinaryMessageCreateModal : AdminCompontentBase
             _visible = true;
             StateHasChanged();
         });
+
+        _form?.ResetValidation();
     }
 
     private void HandleCancel()
@@ -81,7 +83,6 @@ public partial class OrdinaryMessageCreateModal : AdminCompontentBase
         _selectReceivers = new();
         _importReceivers = new();
         _selectReceiverType = false;
-        _form?.ResetValidation();
     }
 
     private void HandleVisibleChanged(bool val)

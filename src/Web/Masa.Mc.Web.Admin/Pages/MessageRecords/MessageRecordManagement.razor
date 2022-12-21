@@ -47,9 +47,6 @@
 
                     <BooleanSelect @bind-Value="_queryParam.Success" Items="_successItems" Placeholder="@T("DisplayName.MessageRecordSuccess")" Class="ml-6" OnClearClick="RefreshAsync"
                                OnSelectedItemUpdate="RefreshAsync" />
-
-                    <MessageTaskHistorySelect @bind-Value="_queryParam.MessageTaskHistoryId" Placeholder="@T("DisplayName.MessageTaskHistoryNo")" Class="ml-6" OnClearClick="RefreshAsync"
-                                          OnSelectedItemUpdate="RefreshAsync" />
                 </div>
             }
             <div class="d-flex search-panel-right @(!isAnimate?"full-width":"") @(isAnimate?"animate__animated":"") @(!advanced?"animate__searchOpen":"animate__searchShrink")">
