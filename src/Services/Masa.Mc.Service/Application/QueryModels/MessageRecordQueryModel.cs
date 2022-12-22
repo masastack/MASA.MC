@@ -7,7 +7,7 @@ public class MessageRecordQueryModel : Entity<Guid>, ISoftDelete
 {
     public Guid UserId { get; set; }
 
-    public Guid ChannelId { get; set; }
+    public Guid? ChannelId { get; set; }
 
     public ChannelQueryModel Channel { get; set; } = default!;
 

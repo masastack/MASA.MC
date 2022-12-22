@@ -80,7 +80,19 @@ public abstract class AdminCompontentBase : BDomComponentBase
         set => GlobalConfig.LoadingText = value;
     }
 
-    public string T(string key) => I18n.T(key);
+    protected virtual string? PageName { get; set; }
+
+    public string T(string key)
+    {
+        if (string.IsNullOrEmpty(key)) return key;
+        if (PageName is not null) return I18n.T(PageName, key, false) ?? I18n.T(key, false);
+        else return I18n.T(key, true);
+    }
+
+    public string T(string formatkey, params string[] args)
+    {
+        return string.Format(T(formatkey), args);
+    }
 
     public HubConnection? HubConnection { get; set; }
 

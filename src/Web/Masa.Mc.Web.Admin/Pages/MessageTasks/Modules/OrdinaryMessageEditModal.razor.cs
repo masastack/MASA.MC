@@ -31,6 +31,8 @@ public partial class OrdinaryMessageEditModal : AdminCompontentBase
             _visible = true;
             StateHasChanged();
         });
+
+        _form?.ResetValidation();
     }
 
     private async Task GetFormDataAsync()
@@ -106,7 +108,6 @@ public partial class OrdinaryMessageEditModal : AdminCompontentBase
         _selectReceivers = new();
         _importReceivers = new();
         _selectReceiverType = false;
-        _form?.ResetValidation();
     }
 
     private void HandleVisibleChanged(bool val)

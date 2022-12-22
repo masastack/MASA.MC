@@ -24,7 +24,7 @@ public class MessageTaskQueryHandler
     [EventHandler]
     public async Task GetAsync(GetMessageTaskQuery query)
     {
-        var entity = await _context.MessageTaskQueries.Include(x => x.Channel).FirstOrDefaultAsync(x => x.Id == query.MessageTaskId);
+        var entity = await _context.MessageTaskQueries.IgnoreQueryFilters().Include(x => x.Channel).FirstOrDefaultAsync(x => x.Id == query.MessageTaskId);
         MasaArgumentException.ThrowIfNull(entity, "MessageTask");
 
         query.Result = entity.Adapt<MessageTaskDto>();
@@ -176,7 +176,7 @@ public class MessageTaskQueryHandler
                 item.Content = HtmlHelper.CutString(messageContent, 500);
             }
 
-            item.ModifierName = userInfos.FirstOrDefault(x => x.Id == item.Modifier)?.DisplayName ?? string.Empty;
+            item.ModifierName = userInfos.FirstOrDefault(x => x.Id == item.Modifier)?.StaffDislpayName ?? string.Empty;
         }
     }
 

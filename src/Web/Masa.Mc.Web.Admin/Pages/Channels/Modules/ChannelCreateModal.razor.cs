@@ -28,6 +28,8 @@ public partial class ChannelCreateModal : AdminCompontentBase
             _visible = true;
             StateHasChanged();
         });
+
+        _form?.ResetValidation();
     }
 
     private void HandleCancel()
@@ -67,7 +69,6 @@ public partial class ChannelCreateModal : AdminCompontentBase
     {
         _step = 1;
         _model = new();
-        _form?.ResetValidation();
     }
 
     private void HandleVisibleChanged(bool val)

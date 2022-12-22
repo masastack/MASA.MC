@@ -43,7 +43,7 @@ public class MessageTaskCommandHandler
         Check.NotNull(entity, "MessageTask not found");
 
         if (entity.IsEnabled)
-            throw new UserFriendlyException("enabled status cannot be deleted");
+            throw new UserFriendlyException("Enabled status cannot be deleted");
         await _repository.RemoveAsync(entity);
     }
 

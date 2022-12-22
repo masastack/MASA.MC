@@ -8,7 +8,7 @@ public partial class SmsTemplateCreateModal : AdminCompontentBase
     [Parameter]
     public EventCallback OnOk { get; set; }
 
-    private MForm _form = default!;
+    private MForm? _form;
     private MessageTemplateUpsertDto _model = new();
     private bool _visible;
     private List<ChannelDto> _channelItems = new();
@@ -33,6 +33,8 @@ public partial class SmsTemplateCreateModal : AdminCompontentBase
             _visible = true;
             StateHasChanged();
         });
+
+        _form?.ResetValidation();
     }
 
     private void HandleCancel()
@@ -43,6 +45,8 @@ public partial class SmsTemplateCreateModal : AdminCompontentBase
 
     private async Task HandleOkAsync()
     {
+        Check.NotNull(_form, "form not found");
+
         if (!_form.Validate())
         {
             return;
@@ -62,7 +66,6 @@ public partial class SmsTemplateCreateModal : AdminCompontentBase
     private void ResetForm()
     {
         _model = new();
-        _form.ResetValidation();
     }
 
     private void HandleVisibleChanged(bool val)

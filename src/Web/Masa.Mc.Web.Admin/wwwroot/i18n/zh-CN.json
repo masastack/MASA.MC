@@ -127,7 +127,7 @@
   "DisplayName.MessageTemplateTemplateType": "模板类型",
   "DisplayName.MessageTemplateDisplayName": "模板名称",
   "DisplayName.MessageTemplateTitle": "模板标题",
-  "DisplayName.MessageTemplateCode": "模板Id",
+  "DisplayName.MessageTemplateCode": "模板ID",
   "DisplayName.MessageTemplateContent": "模板内容",
   "DisplayName.MessageTemplateExample": "模板示例",
   "DisplayName.MessageTemplateSign": "签名",
@@ -237,6 +237,7 @@
   "DisplayName.MessageTaskStatus.PartialFailure": "部分失败",
   "DisplayName.MessageTaskStatus.Cancel": "已撤销",
   "MessageTaskHistoryWithdrawnMessage": "撤回消息任务历史成功.",
+  "MessageTaskWithdrawnMessage": "撤回消息任务成功.",
   "Permission.TestMessageTask": "测试消息任务",
   "DisplayName.MessageRecordSendTime": "实际发送时间",
   "DisplayName.MessageRecordExpectSendTime": "预计发送时间",
@@ -311,5 +312,9 @@
   "ChannelOptions.Tips": "请仔细核对填写数据，填写错误会导致消息发送失败",
   "SelectTemplate": "选择模板",
   "CronExpressionInvalid": "Cron表达式不合法",
-  "CronExpressionNotHasNextRunTime": "您的表达式计算不出下一次运行时间"
+  "CronExpressionNotHasNextRunTime": "您的表达式计算不出下一次运行时间",
+  "MessageTaskBlock": {
+    "MessageTask not found": "未找到消息任务",
+    "Enabled status cannot be deleted": "启用状态下无法删除"
+  }
 }

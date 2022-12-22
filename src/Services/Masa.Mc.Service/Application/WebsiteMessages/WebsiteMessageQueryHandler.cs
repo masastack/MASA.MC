@@ -51,7 +51,7 @@ public class WebsiteMessageQueryHandler
     {
         var userId = _userContext.GetUserId<Guid>();
 
-        var set = _context.WebsiteMessageQueries.AsNoTracking().Where(x => x.UserId == userId);
+        var set = _context.WebsiteMessageQueries.Include(x => x.Channel).AsNoTracking().Where(x => x.Channel != null && x.UserId == userId);
         var sorted = set.OrderByDescending(x => x.CreationTime);
         var list = set.Select(x => x.ChannelId)
             .Distinct()
@@ -69,7 +69,7 @@ public class WebsiteMessageQueryHandler
     {
         var userId = _userContext.GetUserId<Guid>();
         var noticeNum = query.PageSize;
-        var queryable = _context.WebsiteMessageQueries.Include(x => x.Channel).Where(x => x.UserId == userId && !x.IsWithdrawn);
+        var queryable = _context.WebsiteMessageQueries.Include(x => x.Channel).Where(x => x.Channel != null && x.UserId == userId && !x.IsWithdrawn);
         var list = await queryable.Where(x => !x.IsRead).OrderByDescending(x => x.CreationTime).Take(noticeNum).ToListAsync();
         if (list.Count < noticeNum)
         {
@@ -105,13 +105,9 @@ public class WebsiteMessageQueryHandler
 
     private async Task FillChannelListDtos(List<WebsiteMessageChannelDto> dtos)
     {
-        var channeIds = dtos.Select(d => d.ChannelId).ToList();
-        var channeList = await _context.ChannelQueryQueries.Where(x => channeIds.Contains(x.Id)).ToListAsync();
         foreach (var item in dtos)
         {
             item.NoReading = await _context.WebsiteMessageQueries.CountAsync(x => x.ChannelId == item.ChannelId && !x.IsRead && x.UserId == item.UserId);
-            var channel = channeList.FirstOrDefault(x => x.Id == item.ChannelId);
-            if (channel != null) item.Channel = channel.Adapt<ChannelDto>();
         }
     }
 

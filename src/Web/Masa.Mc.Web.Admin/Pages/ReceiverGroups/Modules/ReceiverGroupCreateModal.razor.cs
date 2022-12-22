@@ -9,7 +9,7 @@ public partial class ReceiverGroupCreateModal : AdminCompontentBase
     public EventCallback OnOk { get; set; }
 
     private ReceiverGroupUpsertDto _model = new();
-    private MForm _form = default!;
+    private MForm? _form;
     private ReceiverSelect _ReceiverSelect = default!;
     private bool _visible;
 
@@ -22,6 +22,8 @@ public partial class ReceiverGroupCreateModal : AdminCompontentBase
             _visible = true;
             StateHasChanged();
         });
+
+        _form?.ResetValidation();
     }
 
     private void HandleCancel()
@@ -32,6 +34,8 @@ public partial class ReceiverGroupCreateModal : AdminCompontentBase
 
     private async Task HandleOk()
     {
+        Check.NotNull(_form, "form not found");
+
         if (!_form.Validate())
         {
             return;
@@ -51,7 +55,6 @@ public partial class ReceiverGroupCreateModal : AdminCompontentBase
     private void ResetForm()
     {
         _model = new();
-        _form.ResetValidation();
         _ReceiverSelect.ResetForm();
     }
 

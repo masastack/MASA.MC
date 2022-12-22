@@ -122,12 +122,12 @@ public partial class MessageTaskDetailModal : AdminCompontentBase
         await LoadData();
     }
 
-    private async Task WithdrawnHistoryAsync()
+    private async Task WithdrawnAsync()
     {
         Loading = true;
-        await MessageTaskHistoryService.WithdrawnAsync(_historyInfo.Id);
+        await MessageTaskService.WithdrawnAsync(_info.Id);
         Loading = false;
-        await SuccessMessageAsync(T("MessageTaskHistoryWithdrawnMessage"));
+        await SuccessMessageAsync(T("MessageTaskWithdrawnMessage"));
         await GetFormDataAsync();
         if (OnOk.HasDelegate)
         {

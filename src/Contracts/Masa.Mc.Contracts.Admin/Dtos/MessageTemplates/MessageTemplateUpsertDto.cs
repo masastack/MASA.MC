@@ -1,8 +1,6 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
-using System.ComponentModel.DataAnnotations;
-
 namespace Masa.Mc.Contracts.Admin.Dtos.MessageTemplates;
 
 public class MessageTemplateUpsertDto
@@ -29,8 +27,8 @@ public class MessageTemplateUpsertDto
     public DateTimeOffset? InvalidTime { get; set; }
     public string AuditReason { get; set; } = string.Empty;
     public int TemplateType { get; set; }
-    public long PerDayLimit { get; set; }
+    public long PerDayLimit { get; set; } = 10;
     public bool IsStatic { get; set; }
     public List<MessageTemplateItemDto> Items { get; set; }
-    public MessageInfoUpsertDto MessageInfo { get; set; }
+    public MessageInfoUpsertDto MessageInfo { get; set; } = new();
 }

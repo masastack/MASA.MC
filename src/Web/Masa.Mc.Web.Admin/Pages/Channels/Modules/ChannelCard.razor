@@ -14,10 +14,12 @@
         <div class="h6 emphasis--text text-truncate full-width">@Channel.DisplayName</div>
         <div class="caption regular3--text text-truncate full-width">@Channel.Code</div>
     </MCardText>
-    @if (!string.IsNullOrEmpty(Channel.Description))
-    {
-        <div class="fill-hover caption px-2 py-1 regular2--text text-justify line-clamp-2 rounded-lg" style="height:42px;line-height:19px">@Channel.Description</div>
-    }
+    <div style="height:42px;line-height:19px">
+        @if (!string.IsNullOrEmpty(Channel.Description))
+        {
+            <div class="fill-hover caption px-2 py-1 regular2--text text-justify line-clamp-2 rounded-lg">@Channel.Description</div>
+        }
+    </div>
     <MCardActions class="px-3 pb-3">
         <MSpacer />
         <span class="caption regular3--text">@Channel.ModificationTime.Humanize(culture:I18n.Culture) </span>

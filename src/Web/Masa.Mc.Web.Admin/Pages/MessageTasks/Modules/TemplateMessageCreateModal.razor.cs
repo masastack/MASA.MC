@@ -8,7 +8,7 @@ public partial class TemplateMessageCreateModal : AdminCompontentBase
     [Parameter]
     public EventCallback OnOk { get; set; }
 
-    private MForm _form = default!;
+    private MForm? _form;
     private MessageTaskUpsertModel _model = new() { EntityType = MessageEntityTypes.Template };
     private bool _visible;
     private List<MessageTemplateDto> _templateItems = new();
@@ -29,6 +29,8 @@ public partial class TemplateMessageCreateModal : AdminCompontentBase
             _visible = true;
             StateHasChanged();
         });
+
+        _form?.ResetValidation();
     }
 
     private void HandleCancel()
@@ -51,6 +53,8 @@ public partial class TemplateMessageCreateModal : AdminCompontentBase
 
     private async Task HandleOkAsync()
     {
+        Check.NotNull(_form, "form not found");
+
         SetReceivers();
         if (!_form.Validate())
         {
@@ -82,7 +86,6 @@ public partial class TemplateMessageCreateModal : AdminCompontentBase
         _selectReceivers = new();
         _importReceivers = new();
         _selectReceiverType = false;
-         _form.ResetValidation();
     }
 
     private void HandleVisibleChanged(bool val)

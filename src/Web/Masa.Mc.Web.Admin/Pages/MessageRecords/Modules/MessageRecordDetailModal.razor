@@ -3,19 +3,19 @@
     <SSheetDialog Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.ViewMessageRecord")">
         <div class="full-height d-flex">
             <div class="pa-12 record-detail-left">
-                @if (string.IsNullOrEmpty(_messageRecord.ExtraProperties.GetProperty<string>("Avatar")))
+                @if (string.IsNullOrEmpty(_messageRecord.User.Avatar))
                 {
-                    <SEmptyAvatar Size=48 Value="@(_messageRecord.ExtraProperties.GetProperty<string>("DisplayName"))" />
+                    <SEmptyAvatar Size=48 Value="@(_messageRecord.User.DisplayName)" />
                 }
                 else
                 {
                     <MAvatar Size=48>
-                        <MImage Src="@(_messageRecord.ExtraProperties.GetProperty<string>("Avatar"))"></MImage>
+                        <MImage Src="@(_messageRecord.User.Avatar)"></MImage>
                     </MAvatar>
                 }
-                <div class="h8 emphasis--text mt-2">@(_messageRecord.ExtraProperties.GetProperty<string>("DisplayName"))</div>
-                <div class="body2 regular--text mt-2">@(_messageRecord.ExtraProperties.GetProperty<string>("Email"))</div>
-                <div class="body2 regular--text mt-1">@(_messageRecord.ExtraProperties.GetProperty<string>("PhoneNumber"))</div>
+                <div class="h8 emphasis--text mt-2">@(_messageRecord.User.DisplayName)</div>
+                <div class="body2 regular--text mt-2">@(_messageRecord.User.Email)</div>
+                <div class="body2 regular--text mt-1">@(_messageRecord.User.PhoneNumber)</div>
                 <div class="subtitle3 regular--text mt-9">@T("DisplayName.MessageTaskSendTime")</div>
                 <MTimeline Dense=false Class="mt-9" Style="margin-left: -66px;">
                     <MTimelineItem Small FillDot Right>
