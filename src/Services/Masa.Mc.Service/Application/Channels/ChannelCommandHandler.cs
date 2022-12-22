@@ -8,12 +8,14 @@ public class ChannelCommandHandler
     private readonly IChannelRepository _repository;
     private readonly IMessageTaskRepository _messageTaskRepository;
     private readonly ChannelDomainService _domainService;
+    private readonly II18n<DefaultResource> _i18n;
 
-    public ChannelCommandHandler(IChannelRepository repository, IMessageTaskRepository messageTaskRepository, ChannelDomainService domainService)
+    public ChannelCommandHandler(IChannelRepository repository, IMessageTaskRepository messageTaskRepository, ChannelDomainService domainService, II18n<DefaultResource> i18n)
     {
         _repository = repository;
         _messageTaskRepository = messageTaskRepository;
         _domainService = domainService;
+        _i18n = i18n;
     }
 
     [EventHandler]
@@ -29,11 +31,11 @@ public class ChannelCommandHandler
     {
         await ValidateChannelNameAsync(updateCommand.Channel.DisplayName, updateCommand.ChannelId);
         var entity = await _repository.FindAsync(x => x.Id == updateCommand.ChannelId);
-        MasaArgumentException.ThrowIfNull(entity, "Channel");
+        MasaArgumentException.ThrowIfNull(entity, _i18n.T("Channel"));
         if ((int)updateCommand.Channel.Type != entity.Type.Id)
-            throw new UserFriendlyException("type cannot be changed");
+            throw new UserFriendlyException(errorCode: UserFriendlyExceptionCodes.CHANNEL_TYPE_CANNOT_BE_MODIFIED);
         if (updateCommand.Channel.Code != entity.Code)
-            throw new UserFriendlyException("code cannot be changed");
+            throw new UserFriendlyException(errorCode: UserFriendlyExceptionCodes.CHANNEL_CODE_CANNOT_BE_MODIFIED);
         updateCommand.Channel.Adapt(entity);
         await _domainService.UpdateAsync(entity);
     }
@@ -42,10 +44,10 @@ public class ChannelCommandHandler
     public async Task DeleteAsync(DeleteChannelCommand createCommand)
     {
         var entity = await _repository.FindAsync(x => x.Id == createCommand.ChannelId);
-        MasaArgumentException.ThrowIfNull(entity, "Channel");
+        MasaArgumentException.ThrowIfNull(entity, _i18n.T("Channel"));
         if (await _messageTaskRepository.FindAsync(x => x.ChannelId == createCommand.ChannelId && (x.Status == MessageTaskStatuses.WaitSend || x.Status == MessageTaskStatuses.Sending), false) != null)
         {
-            throw new UserFriendlyException("If there is a message task to be sent / being sent, it cannot be deleted");
+            throw new UserFriendlyException(errorCode: UserFriendlyExceptionCodes.MESSAGE_TASK_TO_BE_SENT_OR_BEING_SENT_CANNOT_BE_DELETED);
         }
         await _domainService.DeleteAsync(entity);
     }
@@ -54,7 +56,7 @@ public class ChannelCommandHandler
     {
         if (await _repository.FindAsync(x => x.DisplayName == displayName && x.Id != id) != null)
         {
-            throw new UserFriendlyException("channel name cannot be repeated");
+            throw new UserFriendlyException(errorCode: UserFriendlyExceptionCodes.CHANNEL_NAME_CANNOT_BE_DUPLICATE);
         }
     }
 }

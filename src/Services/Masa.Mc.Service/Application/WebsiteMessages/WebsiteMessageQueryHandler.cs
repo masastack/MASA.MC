@@ -7,19 +7,22 @@ public class WebsiteMessageQueryHandler
 {
     private readonly IMcQueryContext _context;
     private readonly IUserContext _userContext;
+    private readonly II18n<DefaultResource> _i18n;
 
     public WebsiteMessageQueryHandler(IMcQueryContext context
-        , IUserContext userContext)
+        , IUserContext userContext
+        , II18n<DefaultResource> i18n)
     {
         _context = context;
         _userContext = userContext;
+        _i18n = i18n;
     }
 
     [EventHandler]
     public async Task GetAsync(GetWebsiteMessageQuery query)
     {
         var entity = await _context.WebsiteMessageQueries.Include(x => x.Channel).FirstOrDefaultAsync(x => x.Id == query.WebsiteMessageId);
-        MasaArgumentException.ThrowIfNull(entity, "WebsiteMessage");
+        MasaArgumentException.ThrowIfNull(entity, _i18n.T("WebsiteMessage"));
 
         var dto = entity.Adapt<WebsiteMessageDto>();
         await FillDetailDto(dto);

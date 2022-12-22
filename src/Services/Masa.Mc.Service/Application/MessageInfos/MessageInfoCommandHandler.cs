@@ -7,11 +7,13 @@ public class MessageInfoCommandHandler
 {
     private readonly IMessageInfoRepository _repository;
     private readonly IIntegrationEventBus _integrationEventBus;
+    private readonly II18n<DefaultResource> _i18n;
 
-    public MessageInfoCommandHandler(IMessageInfoRepository repository, IIntegrationEventBus integrationEventBus)
+    public MessageInfoCommandHandler(IMessageInfoRepository repository, IIntegrationEventBus integrationEventBus, II18n<DefaultResource> i18n)
     {
         _repository = repository;
         _integrationEventBus = integrationEventBus;
+        _i18n = i18n;
     }
 
     [EventHandler]
@@ -25,7 +27,7 @@ public class MessageInfoCommandHandler
     public async Task UpdateAsync(UpdateMessageInfoCommand updateCommand)
     {
         var entity = await _repository.FindAsync(x => x.Id == updateCommand.MessageInfoId);
-        MasaArgumentException.ThrowIfNull(entity, "MessageInfo");
+        MasaArgumentException.ThrowIfNull(entity, _i18n.T("MessageInfo"));
 
         updateCommand.MessageInfo.Adapt(entity);
         await _repository.UpdateAsync(entity);
@@ -35,7 +37,7 @@ public class MessageInfoCommandHandler
     public async Task DeleteAsync(DeleteMessageInfoCommand createCommand)
     {
         var entity = await _repository.FindAsync(x => x.Id == createCommand.MessageInfoId);
-        MasaArgumentException.ThrowIfNull(entity, "MessageInfo");
+        MasaArgumentException.ThrowIfNull(entity, _i18n.T("MessageInfo"));
 
         await _repository.RemoveAsync(entity);
     }

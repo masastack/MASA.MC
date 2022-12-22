@@ -9,12 +9,15 @@ public class ImportReceiversCommandHandler
     private readonly IMessageTemplateRepository _messageTemplateRepository;
     private ImportResult<dynamic> _importResult = new ImportResult<dynamic>();
     private List<MessageTaskReceiverDto> _importDtos = new List<MessageTaskReceiverDto>();
+    private readonly II18n<DefaultResource> _i18n;
 
     public ImportReceiversCommandHandler(ICsvImporter importer
-        , IMessageTemplateRepository messageTemplateRepository)
+        , IMessageTemplateRepository messageTemplateRepository
+        , II18n<DefaultResource> i18n)
     {
         _importer = importer;
         _messageTemplateRepository = messageTemplateRepository;
+        _i18n = i18n;
     }
 
     [EventHandler]
@@ -47,7 +50,7 @@ public class ImportReceiversCommandHandler
         List<MessageTaskReceiverDto> importDtos = new();
         if (_importResult.Data == null || !_importResult.Data.Any())
         {
-            _importResult.Exception = new Exception("no valid data detected");
+            _importResult.Exception = new Exception(_i18n.T("NoValidData"));
             return importDtos;
         }
         foreach (var item in _importResult.Data)
@@ -84,7 +87,7 @@ public class ImportReceiversCommandHandler
             case ChannelTypes.WebsiteMessage:
                 return await _importer.DynamicImport<WebsiteMessageReceiverImportDto>(stream);
             default:
-                throw new UserFriendlyException("Unknown channel type");
+                throw new UserFriendlyException(errorCode: UserFriendlyExceptionCodes.UNKNOWN_CHANNEL_TYPE);
         }
     }
 
@@ -104,7 +107,7 @@ public class ImportReceiversCommandHandler
                 receiver.SubjectId = subjectId == null ? default : Guid.Parse(subjectId.ToString());
                 break;
             default:
-                throw new UserFriendlyException("Unknown channel type");
+                throw new UserFriendlyException(errorCode: UserFriendlyExceptionCodes.UNKNOWN_CHANNEL_TYPE);
         }
         return receiver;
     }
@@ -132,7 +135,7 @@ public class ImportReceiversCommandHandler
 
         if (_importDtos.Any(x => string.IsNullOrEmpty(x.PhoneNumber)))
         {
-            _importResult.Exception = new Exception("Phone number cannot be empty");
+            _importResult.Exception = new Exception(_i18n.T("PhoneCannotEmpty"));
             _importDtos = new();
         }
 
@@ -144,7 +147,7 @@ public class ImportReceiversCommandHandler
 
         if (_importDtos.Any(x => string.IsNullOrEmpty(x.Email)))
         {
-            _importResult.Exception = new Exception("Email cannot be empty");
+            _importResult.Exception = new Exception(_i18n.T("EmailCannotEmpty"));
             _importDtos = new();
         }
     }

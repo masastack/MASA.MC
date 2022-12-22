@@ -1,7 +1,7 @@
 ﻿@inherits AdminCompontentBase
 <MRow Class="mt-6">
     <MCol Class="d-flex align-self-stretch">
-        <MessageTaskReceiverAutoComplete Class="d-flex" @bind-Value="_userIds" SelectedValues="Value.Select(x=>x.SubjectId).ToList()" OnAdd="HandleOnAdd" OnRemove="HandleOnRemove"></MessageTaskReceiverAutoComplete>
+        <MessageTaskReceiverAutoComplete Class="d-flex" @bind-Value="_userIds" SelectedValues="Value.Select(x=>x.SubjectId).ToList()" OnAdd="HandleOnAdd"></MessageTaskReceiverAutoComplete>
         <MButton Color="fill" Class="d-flex ml-6 rounded-lg btn small-btn pa-0 btn-fill-line" OnClick="_createModal.OpenModalAsync">
             <MIcon Size=18>mdi-plus</MIcon>
             <span>@T("ExternalMember")</span>
@@ -15,7 +15,7 @@
             @foreach (var item in Value)
             {
                 <MHover>
-                    <MListItem @attributes="context.Attrs" Class="@($"pa-4 {context.Class} {(context.Hover ? "on-hover" : "")}")">
+                    <MListItem @attributes="context.Attrs" Class="@($"pa-4 {context.Class} {(context.Hover ? "on-hover fill-hover" : "")}")">
                         <MListItemAvatar Size=40 Class="ma-0" Color="primary" Style="z-index:2">
                             @if (item.Type != MessageTaskReceiverTypes.User)
                             {
@@ -52,12 +52,11 @@
                                 </MListItemSubtitle>
                             }
                         </MListItemContent>
-                        <MOverlay Color="#F6F8FD" Opacity=1 Absolute ZIndex=1 Class="justify-end align-center"
-                          Value="@(context.Hover)">
+                        <div style="@(context.Hover?"display:flex":"display:none")" class="justify-end align-center">
                             <MButton Icon OnClick="()=>RemoveValue(item)">
-                                <MIcon Color="#1B2559">mdi-close</MIcon>
+                                <MIcon Color="emphasis">mdi-close</MIcon>
                             </MButton>
-                        </MOverlay>
+                        </div>
                     </MListItem>
                 </MHover>
             }

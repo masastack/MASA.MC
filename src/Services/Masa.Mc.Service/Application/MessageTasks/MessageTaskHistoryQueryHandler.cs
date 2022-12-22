@@ -6,17 +6,19 @@ namespace Masa.Mc.Service.Admin.Application.MessageTaskHistorys;
 public class MessageTaskHistoryQueryHandler
 {
     private readonly IMcQueryContext _context;
+    private readonly II18n<DefaultResource> _i18n;
 
-    public MessageTaskHistoryQueryHandler(IMcQueryContext context)
+    public MessageTaskHistoryQueryHandler(IMcQueryContext context, II18n<DefaultResource> i18n)
     {
         _context = context;
+        _i18n = i18n;
     }
 
     [EventHandler]
     public async Task GetAsync(GetMessageTaskHistoryQuery query)
     {
         var entity = await _context.MessageTaskHistoryQueries.FirstOrDefaultAsync(x => x.Id == query.MessageTaskHistoryId);
-        MasaArgumentException.ThrowIfNull(entity, "MessageTaskHistory");
+        MasaArgumentException.ThrowIfNull(entity, _i18n.T("MessageTaskHistory"));
 
         query.Result = entity.Adapt<MessageTaskHistoryDto>();
     }

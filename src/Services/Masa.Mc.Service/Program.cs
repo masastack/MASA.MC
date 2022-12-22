@@ -48,7 +48,7 @@ builder.Services.AddAuthentication(options =>
     options.MapInboundClaims = false;
 });
 builder.Services.AddSequentialGuidGenerator();
-
+builder.Services.AddI18n(Path.Combine("Assets", "I18n"));
 var redisOptions = publicConfiguration.GetSection("$public.RedisConfig").Get<RedisConfigurationOptions>();
 var configuration = builder.Services.GetMasaConfiguration().ConfigurationApi.GetDefault();
 builder.Services.AddAuthClient(publicConfiguration.GetValue<string>("$public.AppSettings:AuthClient:Url"), redisOptions);
@@ -138,6 +138,7 @@ var app = builder.Services
         options.MapHttpMethodsForUnmatched = new string[] { "Post" };
     });
 app.UseMiddleware<AdminSafeListMiddleware>(configuration.GetSection("WhiteListOptions").Get<WhiteListOptions>());
+app.UseI18n();
 app.UseMasaExceptionHandler(opt =>
 {
     opt.ExceptionHandler = context =>

@@ -54,7 +54,7 @@ public class ReceiverGroupDomainService : DomainService
         var receiverGroup = await _repository.FindAsync(d => d.DisplayName == displayName);
         if (receiverGroup != null && receiverGroup.Id != expectedId)
         {
-            throw new UserFriendlyException("ReceiverGroup name cannot be repeated");
+            throw new UserFriendlyException(errorCode: UserFriendlyExceptionCodes.RECEIVER_GROUP_NAME_CANNOT_REPEATED);
         }
     }
 }

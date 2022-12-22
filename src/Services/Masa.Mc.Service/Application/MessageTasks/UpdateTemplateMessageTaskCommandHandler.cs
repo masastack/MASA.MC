@@ -8,12 +8,14 @@ public class UpdateTemplateMessageTaskCommandHandler
     private readonly MessageTaskDomainService _domainService;
     private readonly IMessageTemplateRepository _messageTemplateRepository;
     private readonly IMessageTaskRepository _repository;
+    private readonly II18n<DefaultResource> _i18n;
 
-    public UpdateTemplateMessageTaskCommandHandler(MessageTaskDomainService domainService, IMessageTemplateRepository messageTemplateRepository, IMessageTaskRepository repository)
+    public UpdateTemplateMessageTaskCommandHandler(MessageTaskDomainService domainService, IMessageTemplateRepository messageTemplateRepository, IMessageTaskRepository repository, II18n<DefaultResource> i18n)
     {
         _domainService = domainService;
         _messageTemplateRepository = messageTemplateRepository;
         _repository = repository;
+        _i18n = i18n;
     }
 
     [EventHandler(1)]
@@ -21,7 +23,7 @@ public class UpdateTemplateMessageTaskCommandHandler
     {
         var messageTemplate = await _messageTemplateRepository.FindAsync(x => x.Id == updateCommand.MessageTask.EntityId);
         if (messageTemplate == null && !updateCommand.MessageTask.IsDraft)
-            throw new UserFriendlyException("messageTemplate not found");
+            throw new UserFriendlyException(errorCode: UserFriendlyExceptionCodes.MESSAGE_TEMPLATE_NOT_EXIST);
 
         if (messageTemplate != null)
         {
@@ -33,10 +35,10 @@ public class UpdateTemplateMessageTaskCommandHandler
     public async Task UpdateTemplateMessageTaskAsync(UpdateTemplateMessageTaskCommand updateCommand)
     {
         var entity = await _repository.FindAsync(x => x.Id == updateCommand.MessageTaskId);
-        MasaArgumentException.ThrowIfNull(entity, "MessageTask");
+        MasaArgumentException.ThrowIfNull(entity, _i18n.T("MessageTask"));
 
         if (entity.Status != MessageTaskStatuses.WaitSend)
-            throw new UserFriendlyException("It can only be modified after being sent");
+            throw new UserFriendlyException(errorCode: UserFriendlyExceptionCodes.CAN_BE_MODIFIED_AFTER_SENDING);
         updateCommand.MessageTask.Adapt(entity);
         entity.UpdateVariables(updateCommand.MessageTask.Variables);
         await _domainService.UpdateAsync(entity);

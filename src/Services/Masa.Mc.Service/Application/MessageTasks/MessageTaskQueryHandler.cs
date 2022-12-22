@@ -9,23 +9,26 @@ public class MessageTaskQueryHandler
     private readonly ICsvExporter _exporter;
     private readonly IAuthClient _authClient;
     private readonly ITemplateRenderer _templateRenderer;
+    private readonly II18n<DefaultResource> _i18n;
 
     public MessageTaskQueryHandler(IMcQueryContext context
         , ICsvExporter exporter
         , IAuthClient authClient
-        , ITemplateRenderer templateRenderer)
+        , ITemplateRenderer templateRenderer
+        , II18n<DefaultResource> i18n)
     {
         _context = context;
         _exporter = exporter;
         _authClient = authClient;
         _templateRenderer = templateRenderer;
+        _i18n = i18n;
     }
 
     [EventHandler]
     public async Task GetAsync(GetMessageTaskQuery query)
     {
         var entity = await _context.MessageTaskQueries.IgnoreQueryFilters().Include(x => x.Channel).FirstOrDefaultAsync(x => x.Id == query.MessageTaskId);
-        MasaArgumentException.ThrowIfNull(entity, "MessageTask");
+        MasaArgumentException.ThrowIfNull(entity, _i18n.T("MessageTask"));
 
         query.Result = entity.Adapt<MessageTaskDto>();
     }
@@ -191,7 +194,7 @@ public class MessageTaskQueryHandler
             case ChannelTypes.WebsiteMessage:
                 return typeof(WebsiteMessageReceiverImportDto);
             default:
-                throw new UserFriendlyException("Unknown channel type");
+                throw new UserFriendlyException(errorCode: UserFriendlyExceptionCodes.UNKNOWN_CHANNEL_TYPE);
         }
     }
 

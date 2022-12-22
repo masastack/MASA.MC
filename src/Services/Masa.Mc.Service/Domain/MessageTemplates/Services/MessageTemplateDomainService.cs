@@ -62,13 +62,13 @@ public class MessageTemplateDomainService : DomainService
     {
         if (await _repository.AnyAsync(d => d.Code == expectedTemplate.Code && d.Id != expectedId))
         {
-            throw new UserFriendlyException("Template code cannot be repeated");
+            throw new UserFriendlyException(errorCode: UserFriendlyExceptionCodes.TEMPLATE_CODE_CANNOT_REPEATED);
         }
 
         if (string.IsNullOrEmpty(expectedTemplate.TemplateId)) return;
         if (await _repository.AnyAsync(d => d.TemplateId == expectedTemplate.TemplateId && d.Id != expectedId))
         {
-            throw new UserFriendlyException("Message templateId cannot be repeated");
+            throw new UserFriendlyException(errorCode: UserFriendlyExceptionCodes.TEMPLATE_ID_CANNOT_REPEATED);
         }
     }
 

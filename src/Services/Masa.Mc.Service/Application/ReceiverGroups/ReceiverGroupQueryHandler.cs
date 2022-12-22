@@ -7,19 +7,22 @@ public class ReceiverGroupQueryHandler
 {
     private readonly IMcQueryContext _context;
     private readonly IAuthClient _authClient;
+    private readonly II18n<DefaultResource> _i18n;
 
     public ReceiverGroupQueryHandler(IMcQueryContext context
-        , IAuthClient authClient)
+        , IAuthClient authClient
+        , II18n<DefaultResource> i18n)
     {
         _context = context;
         _authClient = authClient;
+        _i18n = i18n;
     }
 
     [EventHandler]
     public async Task GetAsync(GetReceiverGroupQuery query)
     {
         var entity = await _context.ReceiverGroupQueries.Include(x=>x.Items).FirstOrDefaultAsync(x => x.Id == query.ReceiverGroupId);
-        MasaArgumentException.ThrowIfNull(entity, "ReceiverGroup");
+        MasaArgumentException.ThrowIfNull(entity, _i18n.T("ReceiverGroup"));
 
         query.Result = entity.Adapt<ReceiverGroupDto>();
     }

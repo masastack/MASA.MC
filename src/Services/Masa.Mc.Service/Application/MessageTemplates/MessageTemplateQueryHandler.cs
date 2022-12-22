@@ -7,19 +7,22 @@ public class MessageTemplateQueryHandler
 {
     private readonly IMcQueryContext _context;
     private readonly IAuthClient _authClient;
+    private readonly II18n<DefaultResource> _i18n;
 
     public MessageTemplateQueryHandler(IMcQueryContext context
-        , IAuthClient authClient)
+        , IAuthClient authClient
+        , II18n<DefaultResource> i18n)
     {
         _context = context;
         _authClient = authClient;
+        _i18n = i18n;
     }
 
     [EventHandler]
     public async Task GetAsync(GetMessageTemplateQuery query)
     {
         var entity = await _context.MessageTemplateQueries.Include(x => x.Channel).Include(x=>x.Items).FirstOrDefaultAsync(x => x.Id == query.MessageTemplateId);
-        MasaArgumentException.ThrowIfNull(entity, "MessageTemplate");
+        MasaArgumentException.ThrowIfNull(entity, _i18n.T("MessageTemplate"));
 
         var dto = entity.Adapt<MessageTemplateDto>();
         query.Result = dto;
