@@ -7,6 +7,6 @@ public class GetMessageTaskInputDtoValidator : AbstractValidator<GetMessageTaskI
 {
     public GetMessageTaskInputDtoValidator()
     {
-        RuleFor(inputDto => inputDto.EntityType).IsInEnum();
+        RuleFor(inputDto => inputDto.EntityType).IsInEnum().WithMessage("MessageTypeRequired");
     }
 }

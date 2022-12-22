@@ -7,8 +7,10 @@ public class CreateExternalUserDtoValidator : AbstractValidator<CreateExternalUs
 {
     public CreateExternalUserDtoValidator()
     {
-        RuleFor(inputDto => inputDto.DisplayName).Required().Length(2, 50).ChineseLetterNumber();
-        RuleFor(inputDto => inputDto.PhoneNumber).Required().Phone().When(u => string.IsNullOrEmpty(u.Email) || !string.IsNullOrEmpty(u.PhoneNumber));
-        RuleFor(inputDto => inputDto.Email).Required().Email().When(u => string.IsNullOrEmpty(u.PhoneNumber) || !string.IsNullOrEmpty(u.Email));
+        RuleFor(inputDto => inputDto.DisplayName).Required().WithMessage("DisplayNameRequired").Length(2, 50).ChineseLetterNumber();
+        RuleFor(inputDto => inputDto.PhoneNumber).Required().WithMessage("PhoneNumberRequired").Phone().When(u => string.IsNullOrEmpty(u.Email) || !string.IsNullOrEmpty(u.PhoneNumber));
+        RuleFor(inputDto => inputDto.Email).Required().WithMessage("EmailRequired")
+            .Email().WithMessage("EmailInvalid")
+            .When(u => string.IsNullOrEmpty(u.PhoneNumber) || !string.IsNullOrEmpty(u.Email));
     }
 }
