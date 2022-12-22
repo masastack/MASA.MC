@@ -54,7 +54,6 @@ global using BlazorDownloadFile;
 global using Microsoft.JSInterop;
 global using Masa.Mc.ApiGateways.Caller.Services.Oss;
 global using Masa.Blazor.Components.Editor;
-global using Masa.Mc.ApiGateways.Caller.Services.Subjects;
 global using Masa.Mc.Contracts.Admin.Dtos.Subjects;
 global using Masa.Mc.Web.Admin.Components.Modules.MessageTasks;
 global using Masa.Mc.Web.Admin.Data.Shared.Favorite;

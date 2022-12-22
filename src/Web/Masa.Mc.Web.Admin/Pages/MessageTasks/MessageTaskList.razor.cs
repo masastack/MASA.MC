@@ -93,12 +93,11 @@ public partial class MessageTaskList : AdminCompontentBase
         {
             await OnNavigateToSend.InvokeAsync();
         }
-        //NavigationManager.NavigateTo("/messageTasks/sendMessage");
     }
 
-    private async Task HandleDelAsync(Guid _entityId)
+    private async Task HandleDelAsync(Guid _entityId, string displayName)
     {
-        await ConfirmAsync(T("DeletionConfirmationMessage"), async () => { await DeleteAsync(_entityId); });
+        await ConfirmAsync(T("DeletionConfirmationMessage", $"{T("MessageTask")}\"{displayName}\""), async () => { await DeleteAsync(_entityId); }, AlertTypes.Error);
     }
 
     private async Task DeleteAsync(Guid _entityId)

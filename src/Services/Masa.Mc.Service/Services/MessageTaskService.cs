@@ -110,18 +110,14 @@ public class MessageTaskService : ServiceBase
         return command.Result;
     }
 
-    public async Task<List<MessageTaskReceiverDto>> GetMessageTaskReceiverListAsync(IEventBus eventBus, [FromQuery] string filter = "")
+    public async Task<List<MessageTaskReceiverDto>> GetMessageTaskReceiverListAsync(IEventBus eventBus, IAuthClient authClient,[FromQuery] string filter = "")
     {
         var list = new List<MessageTaskReceiverDto>();
-
-        var subjectInputDto = new GetSubjectInputDto(filter);
-        var subjectQuery = new GetSubjectListQuery(subjectInputDto);
-        await eventBus.PublishAsync(subjectQuery);
-        var subjectList = subjectQuery.Result;
+        var subjectList = await authClient.SubjectService.GetListAsync(filter);
         list.AddRange(subjectList.Select(x => new MessageTaskReceiverDto
         {
             SubjectId = x.SubjectId,
-            DisplayName = x.Name ?? x.DisplayName ?? string.Empty,
+            DisplayName = x.DisplayName ?? string.Empty,
             Avatar = x.Avatar ?? string.Empty,
             PhoneNumber = x.PhoneNumber ?? string.Empty,
             Email = x.Email ?? string.Empty,

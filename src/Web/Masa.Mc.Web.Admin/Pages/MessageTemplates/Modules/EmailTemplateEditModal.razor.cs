@@ -65,7 +65,7 @@ public partial class EmailTemplateEditModal : AdminCompontentBase
 
     private async Task HandleDelAsync()
     {
-        await ConfirmAsync(T("DeletionConfirmationMessage"), DeleteAsync);
+        await ConfirmAsync(T("DeletionConfirmationMessage", $"{T("EmailTemplate")}\"{_model.DisplayName}\""), DeleteAsync);
     }
 
     private async Task DeleteAsync()

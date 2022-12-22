@@ -166,7 +166,6 @@ public class MessageTaskCommandHandler
         var entity = await _repository.FindAsync(x => x.Id == command.MessageTaskId);
         MasaArgumentException.ThrowIfNull(entity, _i18n.T("MessageTask"));
 
-        entity.SetDraft(true);
         entity.SetResult(MessageTaskStatuses.Cancel);
         await _repository.UpdateAsync(entity);
 

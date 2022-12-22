@@ -2,10 +2,10 @@
 <MContainer Fluid Class="pt-9 px-1 full-height">
     <MRow Align="AlignTypes.Center" Justify="JustifyTypes.SpaceBetween">
         <MCol>
-            <MHover Context="hoverContext">
-                <MCard @attributes="hoverContext.Attrs" Height="320" Width="320" Class="@($"d-flex flex-column justify-center align-center {hoverContext.Class} {((hoverContext.Hover||Value==ReceiverTypes.Assign) ? "primary" : "fill-background")}")"
+            <MHover Context="hoverContext" ValueChanged="(v)=>HandleHoverChanged(v,ReceiverTypes.Assign)">
+                <MCard @attributes="hoverContext.Attrs" Height="320" Width="320" Class="@($"d-flex flex-column justify-center align-center {hoverContext.Class} {(IsReceiverTypeActive(hoverContext.Hover, ReceiverTypes.Assign) ? "primary" : "fill-background")}")"
                        OnClick="()=>HandleReceiverType(ReceiverTypes.Assign)">
-                    @if (hoverContext.Hover || Value == ReceiverTypes.Assign)
+                    @if (IsReceiverTypeActive(hoverContext.Hover, ReceiverTypes.Assign))
                     {
                         <MIcon Size=40 Color="#FFFFFF">mdi-account-supervisor-circle</MIcon>
                         <div class="h6 pt-10" style="color:#FAFAFA">@T("DisplayName.ReceiverType.Assign")</div>
@@ -19,10 +19,10 @@
             </MHover>
         </MCol>
         <MCol>
-            <MHover Context="hoverContext">
-                <MCard @attributes="hoverContext.Attrs" Height="320" Width="320" Class="@($"d-flex flex-column justify-center align-center {hoverContext.Class} {((hoverContext.Hover||Value==ReceiverTypes.Broadcast) ? "primary" : "fill-background")}")"
+            <MHover Context="hoverContext" ValueChanged="(v)=>HandleHoverChanged(v,ReceiverTypes.Broadcast)">
+                <MCard @attributes="hoverContext.Attrs" Height="320" Width="320" Class="@($"d-flex flex-column justify-center align-center {hoverContext.Class} {(IsReceiverTypeActive(hoverContext.Hover, ReceiverTypes.Broadcast) ? "primary" : "fill-background")}")"
                        OnClick="()=>HandleReceiverType(ReceiverTypes.Broadcast)">
-                    @if (hoverContext.Hover || Value == ReceiverTypes.Broadcast)
+                    @if (IsReceiverTypeActive(hoverContext.Hover, ReceiverTypes.Broadcast))
                     {
                         <MIcon Size=40 Color="#FFFFFF">mdi-email-outline</MIcon>
                         <div class="h6 pt-10" style="color:#FAFAFA">@T("DisplayName.ReceiverType.Broadcast")</div>
@@ -45,8 +45,12 @@
     [Parameter]
     public EventCallback<ReceiverTypes> OnClick { get; set; }
 
+    private ReceiverTypes _hoverType;
+
     private async Task HandleReceiverType(ReceiverTypes receiverType)
     {
+        _hoverType = default;
+
         if (OnClick.HasDelegate)
         {
             await OnClick.InvokeAsync(receiverType);
@@ -55,5 +59,18 @@
         {
             Value = receiverType;
         }
+    }
+
+    private void HandleHoverChanged(bool val, ReceiverTypes hoverType)
+    {
+        if (val)
+        {
+            _hoverType = hoverType;
+        }
+    }
+
+    private bool IsReceiverTypeActive(bool hover, ReceiverTypes type)
+    {
+        return hover || (_hoverType == default && Value == type);
     }
 }

@@ -110,7 +110,7 @@
             @foreach (var _entitie in _entities.Result)
             {
                 <MCol Md="3">
-                    <MessageTaskCard Height="375" MessageTask="_entitie" OnEdit="()=>HandleEditAsync(_entitie)" OnView="()=>_detailModal.OpenModalAsync(_entitie)" OnTest="()=>_sendTestModal.OpenModalAsync(_entitie.Id,_entitie.Channel?.Type)" OnDelete="()=>HandleDelAsync(_entitie.Id)" OnIsEnabled="()=>HandleIsEnabled(_entitie)" />
+                    <MessageTaskCard Height="375" MessageTask="_entitie" OnEdit="()=>HandleEditAsync(_entitie)" OnView="()=>_detailModal.OpenModalAsync(_entitie)" OnTest="()=>_sendTestModal.OpenModalAsync(_entitie.Id,_entitie.Channel?.Type)" OnDelete="()=>HandleDelAsync(_entitie.Id,_entitie.DisplayName)" OnIsEnabled="()=>HandleIsEnabled(_entitie)" />
                 </MCol>
             }
         </MRow>

@@ -28,7 +28,6 @@ global using Masa.Mc.ApiGateways.Caller.Services.WebsiteMessages;
 global using Masa.Mc.Contracts.Admin.Dtos.Oss;
 global using Masa.Mc.ApiGateways.Caller.Services.Oss;
 global using Masa.Mc.Contracts.Admin.Dtos.Subjects;
-global using Masa.Mc.ApiGateways.Caller.Services.Subjects;
 global using Masa.BuildingBlocks.Service.Caller;
 global using System.Text.Json;
 global using System.Net.Http.Headers;

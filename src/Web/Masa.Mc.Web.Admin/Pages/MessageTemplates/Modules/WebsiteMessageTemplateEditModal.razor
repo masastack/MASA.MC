@@ -2,11 +2,11 @@
 <div @ref="Ref">
     <SSimpleModal Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.EditMessageTemplate")" HeaderClass="mr-4" BodyStyle="height: 617px;" SaveText="@T("Save")" OnCancel="HandleCancel" OnDelete="HandleDelAsync" OnSave="async() => await Throttle(HandleOk)">
         <ChildContent>
-            <MForm Model="_model" EnableValidation @ref="_form" Class="full-height">
+            <MForm Model="_model" EnableValidation EnableI18n @ref="_form" Class="full-height">
                 <MRow Class="row-box">
                     <MCol>
                         <STextField @bind-Value="_model.Code"
-                                    Label="@T("DisplayName.MessageTemplateCode")" Readonly>
+                                    Label="@T("DisplayName.MessageTemplateCode")" Disabled>
                         </STextField>
                     </MCol>
                 </MRow>

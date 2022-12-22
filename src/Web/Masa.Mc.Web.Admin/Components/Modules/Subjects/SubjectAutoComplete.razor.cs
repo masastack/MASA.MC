@@ -1,4 +1,8 @@
-﻿namespace Masa.Mc.Web.Admin.Components.Modules.Subjects;
+﻿using System.Collections.Generic;
+using Masa.BuildingBlocks.StackSdks.Auth;
+using Masa.Contrib.StackSdks.Auth;
+
+namespace Masa.Mc.Web.Admin.Components.Modules.Subjects;
 public partial class SubjectAutoComplete : AdminCompontentBase
 {
     [Parameter]
@@ -14,7 +18,8 @@ public partial class SubjectAutoComplete : AdminCompontentBase
 
     public string Search { get; set; } = "";
 
-    SubjectService SubjectService => McCaller.SubjectService;
+    [Inject]
+    public IAuthClient AuthClient { get; set; } = default!;
 
     public async Task OnSearchChanged(string search)
     {
@@ -25,8 +30,9 @@ public partial class SubjectAutoComplete : AdminCompontentBase
         }
         else if (Search == search)
         {
-            var items = await SubjectService.GetListAsync(new GetSubjectInputDto(search));
-            Items = items.Where(x => !SelectedValues.Contains(x.SubjectId)).ToList();
+            var subjects = await AuthClient.SubjectService.GetListAsync(search);
+            var dtos = subjects.Adapt<List<SubjectDto>>();
+            Items = dtos.Where(x => !SelectedValues.Contains(x.SubjectId)).ToList();
         }
     }
 

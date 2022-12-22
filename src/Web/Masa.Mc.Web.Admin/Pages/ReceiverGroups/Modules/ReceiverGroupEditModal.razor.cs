@@ -60,7 +60,7 @@ public partial class ReceiverGroupEditModal : AdminCompontentBase
 
     private async Task HandleDel()
     {
-        await ConfirmAsync(T("DeletionConfirmationMessage"), DeleteAsync);
+        await ConfirmAsync(T("DeletionConfirmationMessage",$"{T("ReceiverGroup")}\"{_model.DisplayName}\""), DeleteAsync, AlertTypes.Error);
     }
     private async Task DeleteAsync()
     {

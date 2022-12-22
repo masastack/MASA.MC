@@ -29,7 +29,7 @@
   "Sync": "同步",
   "SyncTemplate": "同步模板",
   "AddChild": "加子级",
-  "DeletionConfirmationMessage": "确定删除数据?",
+  "DeletionConfirmationMessage": "确定删除{0}吗",
   "Creator": "创建人",
   "Modifier": "最近修改人",
   "Rows per page": "列/页",
@@ -86,7 +86,7 @@
   "Draft": "草稿",
   "Initiate": "启动",
   "Disable": "禁用",
-  "Withdraw": "撤回",
+  "Withdraw": "撤销",
   "Ok": "确定",
   "Cancel": "取消",
   "StartTime": "开始时间",
@@ -118,6 +118,9 @@
   "ChannelEditMessage": "编辑渠道数据成功.",
   "ChannelDeleteMessage": "删除渠道数据成功.",
   "MessageTemplate": "消息模板",
+  "SmsTemplate": "短信模板",
+  "EmailTemplate": "邮箱模板",
+  "WebsiteMessageTemplate": "站内信模板",
   "Permission.MessageTemplateManagement": "消息模板",
   "Permission.CreateMessageTemplate": "新增消息模板",
   "Permission.EditMessageTemplate": "编辑消息模板",
@@ -316,5 +319,8 @@
   "MessageTaskBlock": {
     "MessageTask not found": "未找到消息任务",
     "Enabled status cannot be deleted": "启用状态下无法删除"
-  }
+  },
+  "Required": "{0}必须填写",
+  "ChannelDisplayNameChineseLetterNumberSymbol": "渠道名称只能是中文/字母/数字/部分特殊字符",
+  "RequiredLength": "{0}只能介于{1}和{2}之间"
 }
