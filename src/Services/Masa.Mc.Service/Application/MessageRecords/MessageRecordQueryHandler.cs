@@ -21,7 +21,7 @@ public class MessageRecordQueryHandler
     [EventHandler]
     public async Task GetAsync(GetMessageRecordQuery query)
     {
-        var entity = await _context.MessageRecordQueries.Include(x => x.Channel).FirstOrDefaultAsync(x => x.Id == query.MessageRecordId);
+        var entity = await _context.MessageRecordQueries.Include(x => x.Channel).IgnoreQueryFilters().FirstOrDefaultAsync(x => x.Id == query.MessageRecordId);
         MasaArgumentException.ThrowIfNull(entity, _i18n.T("MessageRecord"));
 
         var dto = entity.Adapt<MessageRecordDto>();
@@ -34,7 +34,7 @@ public class MessageRecordQueryHandler
     {
         var options = query.Input;
         var condition = await CreateFilteredPredicate(options);
-        var resultList = await _context.MessageRecordQueries.Include(x => x.Channel).GetPaginatedListAsync(condition, new()
+        var resultList = await _context.MessageRecordQueries.Include(x => x.Channel).IgnoreQueryFilters().GetPaginatedListAsync(condition, new()
         {
             Page = options.Page,
             PageSize = options.PageSize,
