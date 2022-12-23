@@ -7,8 +7,8 @@ public class EmailChannelOptionsValidator : AbstractValidator<EmailChannelOption
 {
     public EmailChannelOptionsValidator()
     {
-        RuleFor(option => option.UserName).Required().WithMessage("Please enter email account");
-        RuleFor(option => option.Password).Required().WithMessage("Please enter email password");
-        RuleFor(option => option.Smtp).Required().WithMessage("Please enter smtp");
+        RuleFor(option => option.UserName).Required("EmailChannelUserNameRequired");
+        RuleFor(option => option.Password).Required("EmailChannelPasswordRequired");
+        RuleFor(option => option.Smtp).Required("EmailChannelSmtpRequired");
     }
 }

@@ -7,6 +7,6 @@ public class SendTestMessageTaskInputDtoValidator : AbstractValidator<SendTestMe
 {
     public SendTestMessageTaskInputDtoValidator()
     {
-        RuleFor(inputDto => inputDto.ReceiverUsers).Required().WithMessage("ReceiversRequired");
+        RuleFor(inputDto => inputDto.ReceiverUsers).Required("ReceiversRequired");
     }
 }

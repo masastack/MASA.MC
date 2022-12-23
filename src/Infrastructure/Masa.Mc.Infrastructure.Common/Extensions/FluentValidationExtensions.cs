@@ -85,8 +85,10 @@ public static class FluentValidationExtensions
         return ruleBuilder.MaximumLength(maximumLength);
     }
 
-    public static IRuleBuilderOptions<T, TProperty> Required<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder)
+    public static IRuleBuilderOptions<T, TProperty> Required<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, string errorMessage = "{PropertyName} is required")
     {
-        return ruleBuilder.NotNull().NotEmpty();
+        return ruleBuilder.NotNull().WithMessage(errorMessage)
+            .NotEmpty().WithMessage(errorMessage)
+            ;
     }
 }

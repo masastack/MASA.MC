@@ -7,9 +7,9 @@ public class ReceiverGroupUpsertDtoValidator : AbstractValidator<ReceiverGroupUp
 {
     public ReceiverGroupUpsertDtoValidator()
     {
-        RuleFor(inputDto => inputDto.DisplayName).Required().WithMessage("DisplayNameRequired")
+        RuleFor(inputDto => inputDto.DisplayName).Required("DisplayNameRequired")
             .Length(2, 50).WithMessage("DisplayNameLength")
             .ChineseLetterNumber().WithMessage("DisplayNameChineseLetterNumber");
-        RuleFor(inputDto => inputDto.Items).Required().WithMessage("ReceiverGroupItemsRequired");
+        RuleFor(inputDto => inputDto.Items).Required("ReceiverGroupItemsRequired");
     }
 }

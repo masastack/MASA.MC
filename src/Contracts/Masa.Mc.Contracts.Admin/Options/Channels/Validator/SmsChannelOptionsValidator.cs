@@ -7,7 +7,7 @@ public class SmsChannelOptionsValidator : AbstractValidator<SmsChannelOptions>
 {
     public SmsChannelOptionsValidator()
     {
-        RuleFor(option => option.AccessKeyId).Required().WithMessage("Please enter accessKeyId");
-        RuleFor(option => option.AccessKeySecret).Required().WithMessage("Please enter accessKeySecret");
+        RuleFor(option => option.AccessKeyId).Required("SmsChannelAccessKeyIdRequired");
+        RuleFor(option => option.AccessKeySecret).Required("SmsChannelAccessKeySecretRequired");
     }
 }
