@@ -1,6 +1,8 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
+using Masa.BuildingBlocks.Ddd.Domain.Entities;
+
 namespace Masa.Mc.Service.Admin.Domain.MessageTasks.Services;
 
 public class MessageTaskDomainService : DomainService
@@ -10,19 +12,22 @@ public class MessageTaskDomainService : DomainService
     private readonly IMessageTemplateRepository _messageTemplateRepository;
     private readonly ITemplateRenderer _templateRenderer;
     private readonly IChannelRepository _channelRepository;
+    private readonly II18n<DefaultResource> _i18n;
 
     public MessageTaskDomainService(IDomainEventBus eventBus
         , IMessageTaskRepository repository
         , IMessageInfoRepository messageInfoRepository
         , IMessageTemplateRepository messageTemplateRepository
         , ITemplateRenderer templateRenderer
-        , IChannelRepository channelRepository) : base(eventBus)
+        , IChannelRepository channelRepository
+        , II18n<DefaultResource> i18n) : base(eventBus)
     {
         _repository = repository;
         _messageInfoRepository = messageInfoRepository;
         _messageTemplateRepository = messageTemplateRepository;
         _templateRenderer = templateRenderer;
         _channelRepository = channelRepository;
+        _i18n = i18n;
     }
 
     public virtual async Task CreateAsync(MessageTask messageTask, Guid operatorId = default)
@@ -88,17 +93,17 @@ public class MessageTaskDomainService : DomainService
     public virtual async Task<MessageData?> GetMessageDataAsync(Guid messageTaskId, ExtraPropertyDictionary variables)
     {
         var messageTask = await _repository.FindAsync(x => x.Id == messageTaskId);
-        if (messageTask == null)
-            throw new UserFriendlyException("MessageTask not found");
+        MasaArgumentException.ThrowIfNull(messageTask, _i18n.T("MessageTask"));
+
         return await GetMessageDataAsync(messageTask.EntityType, messageTask.EntityId, variables);
     }
 
     protected async Task ValidateChannelAsync(MessageTask messageTask)
     {
         var channel = await _channelRepository.FindAsync(x => x.Id == messageTask.ChannelId);
-        if (channel == null)
-            throw new UserFriendlyException("Channel not found");
+        MasaArgumentException.ThrowIfNull(channel, _i18n.T("Channel"));
+
         if (channel.Type.Id != messageTask.ChannelType?.Id)
-            throw new UserFriendlyException("Channel type does not match the channel");
+            throw new UserFriendlyException(errorCode: UserFriendlyExceptionCodes.CHANNEL_TYPE_DOES_NOT_MATCH_CHANNEL);
     }
 }

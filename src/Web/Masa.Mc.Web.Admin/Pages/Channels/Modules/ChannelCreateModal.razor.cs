@@ -1,6 +1,8 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
+using Nest;
+
 namespace Masa.Mc.Web.Admin.Pages.Channels.Modules;
 
 public partial class ChannelCreateModal : AdminCompontentBase
@@ -15,6 +17,7 @@ public partial class ChannelCreateModal : AdminCompontentBase
         .Cast<ChannelTypes>().ToList();
     private List<string> _colors = new List<string> { "purple", "green", "yellow", "red", "blue" };
     private ChannelExtraProperties _channelExtraPropertiesRef = default!;
+    private ChannelTypes _hoverType;
 
     int _step = 1;
 
@@ -40,6 +43,7 @@ public partial class ChannelCreateModal : AdminCompontentBase
 
     private void HandleSelectType(ChannelTypes Type)
     {
+        _hoverType = default;
         _model.Type = Type;
         _step++;
     }
@@ -74,5 +78,18 @@ public partial class ChannelCreateModal : AdminCompontentBase
     private void HandleVisibleChanged(bool val)
     {
         if (!val) HandleCancel();
+    }
+
+    private void HandleHoverChanged(bool val, ChannelTypes hoverType)
+    {
+        if (val)
+        {
+            _hoverType = hoverType;
+        }
+    }
+
+    private bool IsChannelActive(bool hover, ChannelTypes type)
+    {
+        return hover || (_hoverType == default && _model.Type == type);
     }
 }

@@ -2,19 +2,13 @@
 public partial class MessageTaskReceiverAutoComplete : AdminCompontentBase
 {
     [Parameter]
-    public List<Guid> Value { get; set; } = new();
-
-    [Parameter]
-    public EventCallback<List<Guid>> ValueChanged { get; set; }
+    public List<Guid> SelectedValues { get; set; } = new();
 
     [Parameter]
     public EventCallback<MessageTaskReceiverDto> OnRemove { get; set; }
 
     [Parameter]
     public EventCallback<MessageTaskReceiverDto> OnAdd { get; set; }
-
-    [Parameter]
-    public List<Guid> SelectedValues { get; set; } = new();
 
     public List<MessageTaskReceiverDto> Items { get; set; } = new();
 
@@ -31,8 +25,8 @@ public partial class MessageTaskReceiverAutoComplete : AdminCompontentBase
         }
         else if (Search == search)
         {
-            var subjectList = await MessageTaskService.GetMessageTaskReceiverListAsync(search);
-            Items = subjectList;
+            var items = await MessageTaskService.GetMessageTaskReceiverListAsync(search);
+            Items = items.Where(x => !SelectedValues.Contains(x.SubjectId)).ToList();
         }
     }
 
@@ -47,49 +41,15 @@ public partial class MessageTaskReceiverAutoComplete : AdminCompontentBase
     public void ResetForm()
     {
         Items = new();
-        ResetValue();
-    }
-
-    public void ResetValue()
-    {
-        Value = new();
-        if (ValueChanged.HasDelegate)
-        {
-            ValueChanged.InvokeAsync(Value);
-        }
-    }
-
-    public void Remove(MessageTaskReceiverDto item)
-    {
-        var index = Value.IndexOf(item.SubjectId);
-        if (index >= 0)
-        {
-            Value.RemoveAt(index);
-        }
-
-        if (ValueChanged.HasDelegate)
-        {
-            ValueChanged.InvokeAsync(Value);
-        }
-
-        if (OnRemove.HasDelegate)
-        {
-            OnRemove.InvokeAsync(item);
-        }
     }
 
     public void HandleOnSelectedItemUpdate(MessageTaskReceiverDto item)
     {
-        if (SelectedValues.Contains(item.SubjectId))
+        Items.Remove(item);
+
+        if (OnAdd.HasDelegate)
         {
-            Remove(item);
-        }
-        else
-        {
-            if (OnAdd.HasDelegate)
-            {
-                OnAdd.InvokeAsync(item);
-            }
+            OnAdd.InvokeAsync(item);
         }
     }
 }

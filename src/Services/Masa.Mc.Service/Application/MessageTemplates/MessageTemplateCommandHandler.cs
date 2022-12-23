@@ -8,12 +8,14 @@ public class MessageTemplateCommandHandler
     private readonly IMessageTemplateRepository _repository;
     private readonly IMessageTaskRepository _messageTaskRepository;
     private readonly MessageTemplateDomainService _domainService;
+    private readonly II18n<DefaultResource> _i18n;
 
-    public MessageTemplateCommandHandler(IMessageTemplateRepository repository, IMessageTaskRepository messageTaskRepository, MessageTemplateDomainService domainService)
+    public MessageTemplateCommandHandler(IMessageTemplateRepository repository, IMessageTaskRepository messageTaskRepository, MessageTemplateDomainService domainService, II18n<DefaultResource> i18n)
     {
         _repository = repository;
         _messageTaskRepository = messageTaskRepository;
         _domainService = domainService;
+        _i18n = i18n;
     }
 
     [EventHandler]
@@ -33,7 +35,7 @@ public class MessageTemplateCommandHandler
     {
         var entity = await _repository.FindAsync(x => x.Id == updateCommand.MessageTemplateId);
         var dto = updateCommand.MessageTemplate;
-        MasaArgumentException.ThrowIfNull(entity, "MessageTemplate");
+        MasaArgumentException.ThrowIfNull(entity, _i18n.T("MessageTemplate"));
 
         dto.Adapt(entity);
         foreach (var itemDto in dto.Items)
@@ -49,11 +51,11 @@ public class MessageTemplateCommandHandler
     public async Task DeleteAsync(DeleteMessageTemplateCommand createCommand)
     {
         var entity = await _repository.FindAsync(x => x.Id == createCommand.MessageTemplateId);
-        if (entity == null)
-            throw new UserFriendlyException("messageTemplate not found");
+        MasaArgumentException.ThrowIfNull(entity, _i18n.T("MessageTemplate"));
+
         if (await _messageTaskRepository.FindAsync(x => x.EntityType == MessageEntityTypes.Template && x.EntityId == createCommand.MessageTemplateId, false) != null)
         {
-            throw new UserFriendlyException("There are message tasks in use and cannot be deleted");
+            throw new UserFriendlyException(errorCode: UserFriendlyExceptionCodes.MESSAGE_TEMPLATE_CANNOT_DELETE_BY_MESSAGE_TASK);
         }
         await _domainService.DeleteAsync(entity);
     }

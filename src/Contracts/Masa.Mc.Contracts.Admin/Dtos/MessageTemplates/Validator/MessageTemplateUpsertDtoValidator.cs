@@ -7,17 +7,24 @@ public class MessageTemplateUpsertDtoValidator : AbstractValidator<MessageTempla
 {
     public MessageTemplateUpsertDtoValidator()
     {
-        RuleFor(inputDto => inputDto.DisplayName).Required().Length(2, 50);
-        RuleFor(inputDto => inputDto.Code).Required().LetterNumberSymbol().Length(2, 50);
-        RuleFor(inputDto => inputDto.ChannelId).Required();
-        RuleFor(inputDto => inputDto.Status).IsInEnum();
+        RuleFor(inputDto => inputDto.DisplayName).Required("MessageTemplateDisplayNameRequired")
+            .Length(2, 50).WithMessage("MessageTemplateDisplayNameLength");
+        RuleFor(inputDto => inputDto.Code).Required("MessageTemplateCodeRequired")
+            .LetterNumberSymbol().WithMessage("MessageTemplateCodeLetterNumberSymbol")
+            .Length(2, 50).WithMessage("MessageTemplateCodeLength");
+        RuleFor(inputDto => inputDto.ChannelId).Required("ChannelIdRequired");
+        RuleFor(inputDto => inputDto.Status).IsInEnum().WithMessage("MessageTemplateStatusRequired");
         RuleFor(inputDto => inputDto.AuditStatus).IsInEnum();
-        RuleFor(inputDto => inputDto.Sign).Required().Length(2, 12).ChineseLetterNumber().When(x => x.ChannelType == ChannelTypes.Sms);
-        RuleFor(inputDto => inputDto.PerDayLimit).InclusiveBetween(1, 500);
-        RuleFor(inputDto => inputDto.TemplateId).Required().When(x => x.ChannelType == ChannelTypes.Sms);
-        RuleFor(inputDto => inputDto.Title).Required().Length(2, 50).When(x => x.ChannelType == ChannelTypes.Email || x.ChannelType == ChannelTypes.WebsiteMessage);
-        RuleFor(inputDto => inputDto.Content).Required();
-        RuleFor(inputDto => inputDto.JumpUrl).Required().When(x => x.IsJump);
-        RuleFor(inputDto => inputDto.Items).Must(x => !x.GroupBy(y => y.Code).Any(z => z.Count() > 1)).WithMessage("code cannot be repeated");
+        RuleFor(inputDto => inputDto.Sign).Required("SignRequired")
+            .Length(2, 12).WithMessage("SignLength")
+            .ChineseLetterNumber().WithMessage("SignChineseLetterNumber").When(x => x.ChannelType == ChannelTypes.Sms);
+        RuleFor(inputDto => inputDto.PerDayLimit).InclusiveBetween(1, 500).WithMessage("MessageTemplatePerDayLimitBetween");
+        RuleFor(inputDto => inputDto.TemplateId).Required("MessageTemplateTemplateIdRequired").When(x => x.ChannelType == ChannelTypes.Sms);
+        RuleFor(inputDto => inputDto.Title).Required("TitleRequired")
+            .Length(2, 50).WithMessage("TitleLength")
+            .When(x => x.ChannelType == ChannelTypes.Email || x.ChannelType == ChannelTypes.WebsiteMessage);
+        RuleFor(inputDto => inputDto.Content).Required("ContentRequired");
+        RuleFor(inputDto => inputDto.JumpUrl).Required("JumpUrlRequired").When(x => x.IsJump);
+        RuleFor(inputDto => inputDto.Items).Must(x => !x.GroupBy(y => y.Code).Any(z => z.Count() > 1)).WithMessage("MessageTemplateItemsCannotRepeated");
     }
 }

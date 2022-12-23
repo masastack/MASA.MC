@@ -1,15 +1,15 @@
 ﻿@inherits AdminCompontentBase
-<MForm Model="_model" @ref="Form" EnableValidation Class="my-3">
+<MForm Model="_model" @ref="Form" EnableValidation EnableI18n Class="my-3">
     <MRow Class="row-box">
         <MCol Md="6">
             <STextField @bind-Value="_model.AppID"
-                        Label="@T("AppChannelOptions.AppID")"
+                        Label="@T("AppID")"
                         Hint="@T("ChannelOptions.Tips")">
             </STextField>
         </MCol>
         <MCol Md="6">
             <STextField @bind-Value="_model.AppKey"
-                        Label="@T("AppChannelOptions.AppKey")"
+                        Label="@T("AppKey")"
                         Hint="@T("ChannelOptions.Tips")"
                         Type="@(!PasswordView?"password":_passwordShow ? "text" : "password")"
                         AppendIcon="@(!PasswordView?"":_passwordShow ? "mdi-eye" : "mdi-eye-off")" OnAppendClick="()=>_passwordShow = !_passwordShow">
@@ -17,7 +17,7 @@
         </MCol>
         <MCol Md="6">
             <STextField @bind-Value="_model.AppSecret"
-                        Label="@T("AppChannelOptions.AppSecret")"
+                        Label="@T("AppSecret")"
                         Hint="@T("ChannelOptions.Tips")"
                         Type="@(!PasswordView?"password":_passwordShow ? "text" : "password")"
                         AppendIcon="@(!PasswordView?"":_passwordShow ? "mdi-eye" : "mdi-eye-off")" OnAppendClick="()=>_passwordShow = !_passwordShow">
@@ -25,7 +25,7 @@
         </MCol>
         <MCol Md="6">
             <STextField @bind-Value="_model.MasterSecret"
-                        Label="@T("AppChannelOptions.MasterSecret")"
+                        Label="@T("MasterSecret")"
                         Hint="@T("ChannelOptions.Tips")"
                         Type="@(!PasswordView?"password":_passwordShow ? "text" : "password")"
                         AppendIcon="@(!PasswordView?"":_passwordShow ? "mdi-eye" : "mdi-eye-off")" OnAppendClick="()=>_passwordShow = !_passwordShow">

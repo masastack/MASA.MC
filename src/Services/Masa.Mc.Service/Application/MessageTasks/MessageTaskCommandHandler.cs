@@ -14,6 +14,7 @@ public class MessageTaskCommandHandler
     private readonly IMessageTemplateRepository _messageTemplateRepository;
     private readonly IMessageRecordRepository _messageRecordRepository;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly II18n<DefaultResource> _i18n;
 
     public MessageTaskCommandHandler(IMessageTaskRepository repository
         , IMessageTaskHistoryRepository messageTaskHistoryRepository
@@ -23,7 +24,8 @@ public class MessageTaskCommandHandler
         , IChannelRepository channelRepository
         , IMessageTemplateRepository messageTemplateRepository
         , IMessageRecordRepository messageRecordRepository
-        , IUnitOfWork unitOfWork)
+        , IUnitOfWork unitOfWork
+        , II18n<DefaultResource> i18n)
     {
         _repository = repository;
         _messageTaskHistoryRepository = messageTaskHistoryRepository;
@@ -34,16 +36,17 @@ public class MessageTaskCommandHandler
         _messageTemplateRepository = messageTemplateRepository;
         _messageRecordRepository = messageRecordRepository;
         _unitOfWork = unitOfWork;
+        _i18n = i18n;
     }
 
     [EventHandler]
     public async Task DeleteAsync(DeleteMessageTaskCommand createCommand)
     {
         var entity = await _repository.FindAsync(x => x.Id == createCommand.MessageTaskId);
-        Check.NotNull(entity, "MessageTask not found");
+        MasaArgumentException.ThrowIfNull(entity, _i18n.T("MessageTask"));
 
         if (entity.IsEnabled)
-            throw new UserFriendlyException("Enabled status cannot be deleted");
+            throw new UserFriendlyException(errorCode: UserFriendlyExceptionCodes.ENABLED_STATUS_CANNOT_BE_DELETED);
         await _repository.RemoveAsync(entity);
     }
 
@@ -52,14 +55,14 @@ public class MessageTaskCommandHandler
     {
         var inputDto = command.inputDto;
         var entity = await _repository.FindAsync(x => x.Id == inputDto.Id);
-        Check.NotNull(entity, "MessageTask not found");
+        MasaArgumentException.ThrowIfNull(entity, _i18n.T("MessageTask"));
 
         if (!entity.ChannelId.HasValue)
-            throw new UserFriendlyException("please select the configuration channel");
+            throw new UserFriendlyException(errorCode: UserFriendlyExceptionCodes.CHANNEL_REQUIRED);
         if (entity.Channel.Type == ChannelType.Sms && string.IsNullOrEmpty(entity.Sign))
-            throw new UserFriendlyException("please fill in the signature of the task first");
+            throw new UserFriendlyException(errorCode: UserFriendlyExceptionCodes.SIGN_REQUIRED);
         if (entity.Variables.Any(x => string.IsNullOrEmpty(x.Value.ToString())))
-            throw new UserFriendlyException("please fill in the signature template variable of the task first");
+            throw new UserFriendlyException(errorCode: UserFriendlyExceptionCodes.TEMPLATE_VARIABLES_REQUIRED);
         var receiverUsers = inputDto.ReceiverUsers.Adapt<List<MessageReceiverUser>>();
         var history = new MessageTaskHistory(entity.Id, receiverUsers, true);
         await _messageTaskHistoryRepository.AddAsync(history);
@@ -71,7 +74,7 @@ public class MessageTaskCommandHandler
     public async Task EnabledAsync(EnabledMessageTaskCommand command)
     {
         var entity = await _repository.FindAsync(x => x.Id == command.MessageTaskId);
-        Check.NotNull(entity, "MessageTask not found");
+        MasaArgumentException.ThrowIfNull(entity, _i18n.T("MessageTask"));
 
         entity.SetEnabled();
         await _repository.UpdateAsync(entity);
@@ -87,10 +90,10 @@ public class MessageTaskCommandHandler
     public async Task DisableAsync(DisableMessageTaskCommand command)
     {
         var entity = await _repository.FindAsync(x => x.Id == command.MessageTaskId);
-        Check.NotNull(entity, "MessageTask not found");
+        MasaArgumentException.ThrowIfNull(entity, _i18n.T("MessageTask"));
 
         if (await _messageTaskHistoryRepository.AnyAsync(x => x.MessageTaskId == command.MessageTaskId && x.Status == MessageTaskHistoryStatuses.Sending))
-            throw new UserFriendlyException("the task has a sending task history and cannot be disabled.");
+            throw new UserFriendlyException(errorCode: UserFriendlyExceptionCodes.MESSAGE_TASK_DISABLE_HAS_HISTORY);
         entity.SetDisable();
         await _repository.UpdateAsync(entity);
 
@@ -101,41 +104,11 @@ public class MessageTaskCommandHandler
         }
     }
 
-    [Obsolete("To be abandoned")]
-    [EventHandler]
-    public async Task SendOrdinaryMessageAsync(SendOrdinaryMessageTaskCommand command)
-    {
-        var channel = await _channelRepository.FindAsync(x => x.Code == command.inputDto.ChannelCode);
-        Check.NotNull(channel, "Channel not found");
-
-        var taskUpsertDto = (MessageTaskUpsertDto)command.inputDto;
-        taskUpsertDto.ChannelId = channel.Id;
-        var ordinaryCommand = new CreateOrdinaryMessageTaskCommand(taskUpsertDto);
-        await _eventBus.PublishAsync(ordinaryCommand);
-    }
-
-    [Obsolete("To be abandoned")]
-    [EventHandler]
-    public async Task SendTemplateMessageAsync(SendTemplateMessageTaskCommand command)
-    {
-        var channel = await _channelRepository.FindAsync(x => x.Code == command.inputDto.ChannelCode);
-        Check.NotNull(channel, "Channel not found");
-
-        var template = await _messageTemplateRepository.FindAsync(x => x.Code == command.inputDto.TemplateCode);
-        Check.NotNull(template, "Template not found");
-
-        var taskUpsertDto = (MessageTaskUpsertDto)command.inputDto;
-        taskUpsertDto.ChannelId = channel.Id;
-        taskUpsertDto.EntityId = template.Id;
-        var templateCommand = new CreateTemplateMessageTaskCommand(taskUpsertDto);
-        await _eventBus.PublishAsync(templateCommand);
-    }
-
     [EventHandler]
     public async Task SendOrdinaryMessageByInternalAsync(SendOrdinaryMessageByInternalCommand command)
     {
         var channel = await _channelRepository.FindAsync(x => x.Code == command.inputDto.ChannelCode);
-        Check.NotNull(channel, "Channel not found");
+        MasaArgumentException.ThrowIfNull(channel, _i18n.T("Channel"));
 
         var taskUpsertDto = (MessageTaskUpsertDto)command.inputDto;
         taskUpsertDto.ChannelId = channel.Id;
@@ -147,10 +120,10 @@ public class MessageTaskCommandHandler
     public async Task SendTemplateMessageByInternalAsync(SendTemplateMessageByInternalCommand command)
     {
         var channel = await _channelRepository.FindAsync(x => x.Code == command.inputDto.ChannelCode);
-        Check.NotNull(channel, "Channel not found");
+        MasaArgumentException.ThrowIfNull(channel, _i18n.T("Channel"));
 
         var template = await _messageTemplateRepository.FindAsync(x => x.Code == command.inputDto.TemplateCode);
-        Check.NotNull(template, "Template not found");
+        MasaArgumentException.ThrowIfNull(template, _i18n.T("MessageTemplate"));
 
         var taskUpsertDto = (MessageTaskUpsertDto)command.inputDto;
         taskUpsertDto.ChannelId = channel.Id;
@@ -163,7 +136,7 @@ public class MessageTaskCommandHandler
     public async Task SendOrdinaryMessageByExternalAsync(SendOrdinaryMessageByExternalCommand command)
     {
         var channel = await _channelRepository.FindAsync(x => x.Code == command.inputDto.ChannelCode);
-        Check.NotNull(channel, "Channel not found");
+        MasaArgumentException.ThrowIfNull(channel, _i18n.T("Channel"));
 
         var taskUpsertDto = (MessageTaskUpsertDto)command.inputDto;
         taskUpsertDto.ChannelId = channel.Id;
@@ -175,10 +148,10 @@ public class MessageTaskCommandHandler
     public async Task SendTemplateMessageByExternalAsync(SendTemplateMessageByExternalCommand command)
     {
         var channel = await _channelRepository.FindAsync(x => x.Code == command.inputDto.ChannelCode);
-        Check.NotNull(channel, "Channel not found");
+        MasaArgumentException.ThrowIfNull(channel, _i18n.T("Channel"));
 
         var template = await _messageTemplateRepository.FindAsync(x => x.Code == command.inputDto.TemplateCode);
-        Check.NotNull(template, "Template not found");
+        MasaArgumentException.ThrowIfNull(template, _i18n.T("MessageTemplate"));
 
         var taskUpsertDto = (MessageTaskUpsertDto)command.inputDto;
         taskUpsertDto.ChannelId = channel.Id;
@@ -191,9 +164,8 @@ public class MessageTaskCommandHandler
     public async Task WithdrawnAsync(WithdrawnMessageTaskCommand command)
     {
         var entity = await _repository.FindAsync(x => x.Id == command.MessageTaskId);
-        MasaArgumentException.ThrowIfNull(entity, "MessageTask");
+        MasaArgumentException.ThrowIfNull(entity, _i18n.T("MessageTask"));
 
-        entity.SetDraft(true);
         entity.SetResult(MessageTaskStatuses.Cancel);
         await _repository.UpdateAsync(entity);
 

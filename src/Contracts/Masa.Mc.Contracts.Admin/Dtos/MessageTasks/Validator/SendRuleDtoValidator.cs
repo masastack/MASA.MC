@@ -8,6 +8,7 @@ public class SendRuleDtoValidator : AbstractValidator<SendRuleDto>
 {
     public SendRuleDtoValidator()
     {
-        RuleFor(dto => dto.CronExpression).Required().Must(x => CronExpression.IsValidExpression(x)).When(x => x.IsCustom);
+        RuleFor(dto => dto.CronExpression).Required("CronExpressionRequired")
+            .Must(x => CronExpression.IsValidExpression(x)).WithMessage("CronExpressionInvalid").When(x => x.IsCustom);
     }
 }

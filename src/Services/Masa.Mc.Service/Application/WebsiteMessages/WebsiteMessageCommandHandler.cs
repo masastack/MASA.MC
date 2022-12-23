@@ -7,11 +7,13 @@ public class WebsiteMessageCommandHandler
 {
     private readonly IWebsiteMessageRepository _repository;
     private readonly IUserContext _userContext;
+    private readonly II18n<DefaultResource> _i18n;
 
-    public WebsiteMessageCommandHandler(IWebsiteMessageRepository repository, IUserContext userContext)
+    public WebsiteMessageCommandHandler(IWebsiteMessageRepository repository, IUserContext userContext, II18n<DefaultResource> i18n)
     {
         _repository = repository;
         _userContext = userContext;
+        _i18n = i18n;
     }
 
     [EventHandler]
@@ -30,7 +32,7 @@ public class WebsiteMessageCommandHandler
     public async Task ReadAsync(ReadWebsiteMessageCommand command)
     {
         var entity = await _repository.FindAsync(x => x.Id == command.dto.Id);
-        MasaArgumentException.ThrowIfNull(entity, "WebsiteMessage");
+        MasaArgumentException.ThrowIfNull(entity, _i18n.T("WebsiteMessage"));
 
         entity.SetRead();
         await _repository.UpdateAsync(entity);
@@ -40,7 +42,7 @@ public class WebsiteMessageCommandHandler
     public async Task DeleteAsync(DeleteWebsiteMessageCommand createCommand)
     {
         var entity = await _repository.FindAsync(x => x.Id == createCommand.WebsiteMessageId);
-        MasaArgumentException.ThrowIfNull(entity, "WebsiteMessage");
+        MasaArgumentException.ThrowIfNull(entity, _i18n.T("WebsiteMessage"));
 
         await _repository.RemoveAsync(entity);
     }

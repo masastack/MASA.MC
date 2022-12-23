@@ -9,23 +9,30 @@ public class MessageTaskQueryHandler
     private readonly ICsvExporter _exporter;
     private readonly IAuthClient _authClient;
     private readonly ITemplateRenderer _templateRenderer;
+    private readonly II18n<DefaultResource> _i18n;
+    private readonly IDataFilter _dataFilter;
 
     public MessageTaskQueryHandler(IMcQueryContext context
         , ICsvExporter exporter
         , IAuthClient authClient
-        , ITemplateRenderer templateRenderer)
+        , ITemplateRenderer templateRenderer
+        , II18n<DefaultResource> i18n
+        , IDataFilter dataFilter)
     {
         _context = context;
         _exporter = exporter;
         _authClient = authClient;
         _templateRenderer = templateRenderer;
+        _i18n = i18n;
+        _dataFilter = dataFilter;
     }
 
     [EventHandler]
     public async Task GetAsync(GetMessageTaskQuery query)
     {
-        var entity = await _context.MessageTaskQueries.IgnoreQueryFilters().Include(x => x.Channel).FirstOrDefaultAsync(x => x.Id == query.MessageTaskId);
-        MasaArgumentException.ThrowIfNull(entity, "MessageTask");
+        using var dataFilter = _dataFilter.Disable<ISoftDelete>();
+        var entity = await _context.MessageTaskQueries.Include(x => x.Channel).FirstOrDefaultAsync(x => x.Id == query.MessageTaskId);
+        MasaArgumentException.ThrowIfNull(entity, _i18n.T("MessageTask"));
 
         query.Result = entity.Adapt<MessageTaskDto>();
     }
@@ -115,7 +122,7 @@ public class MessageTaskQueryHandler
 
     private async Task<Expression<Func<MessageTaskQueryModel, bool>>> CreateFilteredPredicate(GetMessageTaskInputDto inputDto)
     {
-        Expression<Func<MessageTaskQueryModel, bool>> condition = x => true;
+        Expression<Func<MessageTaskQueryModel, bool>> condition = x => x.Channel!=null;
         condition = condition.And(!string.IsNullOrEmpty(inputDto.Filter), x => x.DisplayName.Contains(inputDto.Filter));
         condition = condition.And(inputDto.EntityType.HasValue, x => x.EntityType == inputDto.EntityType);
         condition = condition.And(inputDto.ChannelId.HasValue, x => x.ChannelId == inputDto.ChannelId);
@@ -191,7 +198,7 @@ public class MessageTaskQueryHandler
             case ChannelTypes.WebsiteMessage:
                 return typeof(WebsiteMessageReceiverImportDto);
             default:
-                throw new UserFriendlyException("Unknown channel type");
+                throw new UserFriendlyException(errorCode: UserFriendlyExceptionCodes.UNKNOWN_CHANNEL_TYPE);
         }
     }
 

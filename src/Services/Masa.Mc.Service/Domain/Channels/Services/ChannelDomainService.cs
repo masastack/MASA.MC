@@ -34,7 +34,7 @@ public class ChannelDomainService : DomainService
     {
         if (channel.IsStatic)
         {
-            throw new UserFriendlyException("This channel cannot be deleted");
+            throw new UserFriendlyException(errorCode: UserFriendlyExceptionCodes.CHANNEL_CANNOT_DELETED);
         }
         return await _repository.RemoveAsync(channel);
     }
@@ -44,7 +44,7 @@ public class ChannelDomainService : DomainService
         var dict = await _repository.FindAsync(d => d.Code == code);
         if (dict != null && dict.Id != expectedId)
         {
-            throw new UserFriendlyException("Channel code cannot be repeated");
+            throw new UserFriendlyException(errorCode: UserFriendlyExceptionCodes.CHANNEL_CANNOT_REPEATED);
         }
     }
 }

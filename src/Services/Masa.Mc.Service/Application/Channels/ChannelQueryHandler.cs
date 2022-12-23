@@ -7,19 +7,22 @@ public class ChannelQueryHandler
 {
     private readonly IMcQueryContext _context;
     private readonly IAuthClient _authClient;
+    private readonly II18n<DefaultResource> _i18n;
 
     public ChannelQueryHandler(IMcQueryContext context
-        , IAuthClient authClient)
+        , IAuthClient authClient
+        , II18n<DefaultResource> i18n)
     {
         _context = context;
         _authClient = authClient;
+        _i18n = i18n;
     }
 
     [EventHandler]
     public async Task GetAsync(GetChannelQuery query)
     {
         var entity = await _context.ChannelQueryQueries.FirstOrDefaultAsync(x => x.Id == query.ChannelId);
-        MasaArgumentException.ThrowIfNull(entity, "Channel");
+        MasaArgumentException.ThrowIfNull(entity, _i18n.T("Channel"));
 
         query.Result = entity.Adapt<ChannelDto>();
     }
@@ -48,7 +51,7 @@ public class ChannelQueryHandler
     public async Task FindByCodeAsync(FindChannelByCodeQuery query)
     {
         var entity = await _context.ChannelQueryQueries.FirstOrDefaultAsync(x => x.Code == query.Code);
-        MasaArgumentException.ThrowIfNull(entity, "Channel");
+        MasaArgumentException.ThrowIfNull(entity, _i18n.T("Channel"));
 
         query.Result = entity.Adapt<ChannelDto>();
     }

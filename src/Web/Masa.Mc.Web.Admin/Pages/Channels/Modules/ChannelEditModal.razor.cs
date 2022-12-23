@@ -64,7 +64,7 @@ public partial class ChannelEditModal : AdminCompontentBase
 
     private async Task HandleDel()
     {
-        await ConfirmAsync(T("DeletionConfirmationMessage"), DeleteAsync);
+        await ConfirmAsync(T("DeletionConfirmationMessage", $"{T("Channel")}\"{_model.DisplayName}\""), DeleteAsync, AlertTypes.Error);
     }
     private async Task DeleteAsync()
     {

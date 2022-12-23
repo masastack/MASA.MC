@@ -1,31 +1,25 @@
-﻿namespace Masa.Mc.Web.Admin.Components.Modules.Subjects;
+﻿using System.Collections.Generic;
+using Masa.BuildingBlocks.StackSdks.Auth;
+using Masa.Contrib.StackSdks.Auth;
+
+namespace Masa.Mc.Web.Admin.Components.Modules.Subjects;
 public partial class SubjectAutoComplete : AdminCompontentBase
 {
     [Parameter]
-    public List<Guid> Value { get; set; } = new();
-
-    [Parameter]
-    public EventCallback<List<Guid>> ValueChanged { get; set; }
-
-    [Parameter]
-    public EventCallback<SubjectDto> OnRemove { get; set; }
+    public List<Guid> SelectedValues { get; set; } = new();
 
     [Parameter]
     public EventCallback<SubjectDto> OnAdd { get; set; }
-
-    [Parameter]
-    public List<Guid> SelectedValues { get; set; } = new();
 
     [Parameter]
     public EventCallback<FocusEventArgs> OnBlur { get; set; }
 
     public List<SubjectDto> Items { get; set; } = new();
 
-    public List<SubjectDto> SubjectSelect { get; set; } = new();
-
     public string Search { get; set; } = "";
 
-    SubjectService SubjectService => McCaller.SubjectService;
+    [Inject]
+    public IAuthClient AuthClient { get; set; } = default!;
 
     public async Task OnSearchChanged(string search)
     {
@@ -36,7 +30,9 @@ public partial class SubjectAutoComplete : AdminCompontentBase
         }
         else if (Search == search)
         {
-            Items = await SubjectService.GetListAsync(new GetSubjectInputDto(search));
+            var subjects = await AuthClient.SubjectService.GetListAsync(search);
+            var dtos = subjects.Adapt<List<SubjectDto>>();
+            Items = dtos.Where(x => !SelectedValues.Contains(x.SubjectId)).ToList();
         }
     }
 
@@ -52,49 +48,15 @@ public partial class SubjectAutoComplete : AdminCompontentBase
     public void ResetForm()
     {
         Items = new();
-        ResetValue();
-    }
-
-    public void ResetValue()
-    {
-        Value = new();
-        if (ValueChanged.HasDelegate)
-        {
-            ValueChanged.InvokeAsync(Value);
-        }
-    }
-
-    public void Remove(SubjectDto item)
-    {
-        var index = Value.IndexOf(item.SubjectId);
-        if (index >= 0)
-        {
-            Value.RemoveAt(index);
-        }
-
-        if (ValueChanged.HasDelegate)
-        {
-            ValueChanged.InvokeAsync(Value);
-        }
-
-        if (OnRemove.HasDelegate)
-        {
-            OnRemove.InvokeAsync(item);
-        }
     }
 
     public void HandleOnSelectedItemUpdate(SubjectDto item)
     {
-        if (SelectedValues.Contains(item.SubjectId))
+        Items.Remove(item);
+
+        if (OnAdd.HasDelegate)
         {
-            Remove(item);
-        }
-        else
-        {
-            if (OnAdd.HasDelegate)
-            {
-                OnAdd.InvokeAsync(item);
-            }
+            OnAdd.InvokeAsync(item);
         }
     }
 }

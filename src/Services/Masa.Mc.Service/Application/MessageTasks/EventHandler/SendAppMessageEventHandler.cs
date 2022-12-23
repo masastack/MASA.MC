@@ -15,6 +15,7 @@ public class SendAppMessageEventHandler
     private readonly ILogger<SendEmailMessageEventHandler> _logger;
     private readonly IMessageTemplateRepository _messageTemplateRepository;
     private readonly IWebsiteMessageRepository _websiteMessageRepository;
+    private readonly II18n<DefaultResource> _i18n;
 
     public SendAppMessageEventHandler(IAppNotificationAsyncLocal appNotificationAsyncLocal
         , IAppNotificationSender appNotificationSender
@@ -25,7 +26,8 @@ public class SendAppMessageEventHandler
         , MessageTemplateDomainService messageTemplateDomainService
         , ILogger<SendEmailMessageEventHandler> logger
         , IMessageTemplateRepository messageTemplateRepository
-        , IWebsiteMessageRepository websiteMessageRepository)
+        , IWebsiteMessageRepository websiteMessageRepository
+        , II18n<DefaultResource> i18n)
     {
         _appNotificationAsyncLocal = appNotificationAsyncLocal;
         _appNotificationSender = appNotificationSender;
@@ -37,6 +39,7 @@ public class SendAppMessageEventHandler
         _logger = logger;
         _messageTemplateRepository = messageTemplateRepository;
         _websiteMessageRepository = websiteMessageRepository;
+        _i18n = i18n;
     }
 
     [EventHandler]
@@ -65,7 +68,7 @@ public class SendAppMessageEventHandler
                     var messageTemplate = await _messageTemplateRepository.FindAsync(x => x.Id == messageRecord.MessageEntityId, false);
                     if (!await _messageTemplateDomainService.CheckSendUpperLimitAsync(messageTemplate, messageRecord.ChannelUserIdentity))
                     {
-                        messageRecord.SetResult(false, "The maximum number of times to send per day has been reached");
+                        messageRecord.SetResult(false, _i18n.T("DailySendingLimit"));
                         await _messageRecordRepository.AddAsync(messageRecord);
                         continue;
                     }

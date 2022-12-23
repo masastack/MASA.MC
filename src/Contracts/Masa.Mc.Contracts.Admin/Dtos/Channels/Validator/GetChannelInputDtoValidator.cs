@@ -7,6 +7,6 @@ public class GetChannelInputDtoValidator : AbstractValidator<GetChannelInputDto>
 {
     public GetChannelInputDtoValidator()
     {
-        RuleFor(inputDto => inputDto.Type).IsInEnum();
+        RuleFor(inputDto => inputDto.Type).IsInEnum().WithMessage("ChannelTypeRequired");
     }
 }

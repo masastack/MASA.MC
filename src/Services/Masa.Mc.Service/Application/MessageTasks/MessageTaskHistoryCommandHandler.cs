@@ -8,24 +8,26 @@ public class MessageTaskHistoryCommandHandler
     private readonly IMessageTaskHistoryRepository _repository;
     private readonly IMessageTaskJobService _messageTaskJobService;
     private readonly IUserContext _userContext;
+    private readonly II18n<DefaultResource> _i18n;
 
     public MessageTaskHistoryCommandHandler(IMessageTaskHistoryRepository repository
         , IMessageTaskJobService messageTaskJobService
-        , IUserContext userContext)
+        , IUserContext userContext
+        , II18n<DefaultResource> i18n)
     {
         _repository = repository;
         _messageTaskJobService = messageTaskJobService;
         _userContext = userContext;
+        _i18n = i18n;
     }
 
     [EventHandler]
     public async Task WithdrawnHistoryAsync(WithdrawnMessageTaskHistoryCommand command)
     {
         var entity = (await _repository.GetQueryableAsync()).Include(x => x.MessageTask).FirstOrDefault(x => x.Id == command.MessageTaskHistoryId);
-        if (entity == null)
-            throw new UserFriendlyException("messageHistory not found");
+        MasaArgumentException.ThrowIfNull(entity, _i18n.T("MessageTaskHistory"));
         if (entity.Status == MessageTaskHistoryStatuses.Withdrawn)
-            throw new UserFriendlyException("withdrawn");
+            throw new UserFriendlyException(errorCode: UserFriendlyExceptionCodes.MESSAGE_TASK_HISTORY_WITHDRAWN);
         entity.SetWithdraw();
         await _repository.UpdateAsync(entity);
 

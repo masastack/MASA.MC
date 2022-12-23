@@ -7,11 +7,13 @@ public class ReceiverGroupCommandHandler
 {
     private readonly IReceiverGroupRepository _repository;
     private readonly ReceiverGroupDomainService _domainService;
+    private readonly II18n<DefaultResource> _i18n;
 
-    public ReceiverGroupCommandHandler(IReceiverGroupRepository repository, ReceiverGroupDomainService domainService)
+    public ReceiverGroupCommandHandler(IReceiverGroupRepository repository, ReceiverGroupDomainService domainService, II18n<DefaultResource> i18n)
     {
         _repository = repository;
         _domainService = domainService;
+        _i18n = i18n;
     }
 
     [EventHandler]
@@ -26,7 +28,7 @@ public class ReceiverGroupCommandHandler
     public async Task UpdateAsync(UpdateReceiverGroupCommand updateCommand)
     {
         var entity = await _repository.FindAsync(x => x.Id == updateCommand.ReceiverGroupId);
-        MasaArgumentException.ThrowIfNull(entity, "ReceiverGroup");
+        MasaArgumentException.ThrowIfNull(entity, _i18n.T("ReceiverGroup"));
 
         updateCommand.ReceiverGroup.Adapt(entity);
         var items = updateCommand.ReceiverGroup.Items.Adapt<List<ReceiverGroupItem>>();
@@ -37,7 +39,7 @@ public class ReceiverGroupCommandHandler
     public async Task DeleteAsync(DeleteReceiverGroupCommand createCommand)
     {
         var entity = await _repository.FindAsync(x => x.Id == createCommand.ReceiverGroupId);
-        MasaArgumentException.ThrowIfNull(entity, "ReceiverGroup");
+        MasaArgumentException.ThrowIfNull(entity, _i18n.T("ReceiverGroup"));
 
         await _repository.RemoveAsync(entity);
     }

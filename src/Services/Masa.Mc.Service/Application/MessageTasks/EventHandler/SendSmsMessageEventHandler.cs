@@ -13,6 +13,7 @@ public class SendSmsMessageEventHandler
     private readonly MessageTemplateDomainService _messageTemplateDomainService;
     private readonly ILogger<SendSmsMessageEventHandler> _logger;
     private readonly IMessageTemplateRepository _templateRepository;
+    private readonly II18n<DefaultResource> _i18n;
 
     public SendSmsMessageEventHandler(IAliyunSmsAsyncLocal aliyunSmsAsyncLocal
         , ISmsSender smsSender
@@ -21,7 +22,8 @@ public class SendSmsMessageEventHandler
         , IMessageTaskHistoryRepository messageTaskHistoryRepository
         , MessageTemplateDomainService messageTemplateDomainService
         , ILogger<SendSmsMessageEventHandler> logger
-        , IMessageTemplateRepository templateRepository)
+        , IMessageTemplateRepository templateRepository
+        , II18n<DefaultResource> i18n)
     {
         _aliyunSmsAsyncLocal = aliyunSmsAsyncLocal;
         _smsSender = smsSender;
@@ -31,6 +33,7 @@ public class SendSmsMessageEventHandler
         _messageTemplateDomainService = messageTemplateDomainService;
         _logger = logger;
         _templateRepository = templateRepository;
+        _i18n = i18n;
     }
 
     [EventHandler]
@@ -61,7 +64,7 @@ public class SendSmsMessageEventHandler
                     messageRecord.SetDisplayName(messageTemplate.DisplayName);
                     if (!await _messageTemplateDomainService.CheckSendUpperLimitAsync(messageTemplate, messageRecord.ChannelUserIdentity))
                     {
-                        messageRecord.SetResult(false, "The maximum number of times to send per day has been reached");
+                        messageRecord.SetResult(false, _i18n.T("DailySendingLimit"));
                         await _messageRecordRepository.AddAsync(messageRecord);
                         continue;
                     }
