@@ -1,8 +1,6 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
-using static AlibabaCloud.SDK.Dysmsapi20170525.Models.QuerySmsTemplateListResponseBody;
-
 namespace Masa.Mc.Service.Admin.Application.MessageTemplates;
 
 public class SmsTemplateCommandHandler
@@ -11,16 +9,19 @@ public class SmsTemplateCommandHandler
     private readonly ISmsTemplateService _smsTemplateService;
     private readonly IChannelRepository _channelRepository;
     private readonly ISmsTemplateRepository _smsTemplateRepository;
+    private readonly IMessageTemplateRepository _messageTemplateRepository;
 
     public SmsTemplateCommandHandler(IAliyunSmsAsyncLocal aliyunSmsAsyncLocal
         , ISmsTemplateService smsTemplateService
         , IChannelRepository channelRepository
-        , ISmsTemplateRepository smsTemplateRepository)
+        , ISmsTemplateRepository smsTemplateRepository
+        , IMessageTemplateRepository messageTemplateRepository)
     {
         _aliyunSmsAsyncLocal = aliyunSmsAsyncLocal;
         _smsTemplateService = smsTemplateService;
         _channelRepository = channelRepository;
         _smsTemplateRepository = smsTemplateRepository;
+        _messageTemplateRepository = messageTemplateRepository;
     }
 
     [EventHandler]
@@ -44,6 +45,32 @@ public class SmsTemplateCommandHandler
             await _smsTemplateRepository.RemoveRangeAsync(removeList);
             var smsTemplateList = aliyunSmsTemplateList.Select(item => new SmsTemplate(channel.Id, item.TemplateCode, item.TemplateName, AliyunSmsTemplateTypeMapToSmsTemplateType(item.TemplateType), AliyunSmsTemplateAuditStatusMapToAuditStatus(item.AuditStatus), item.TemplateContent, item.Reason.RejectInfo));
             await _smsTemplateRepository.AddRangeAsync(smsTemplateList);
+
+            await SyncTemplateStatus(channel.Id, smsTemplateList);
+        }
+    }
+
+    private async Task SyncTemplateStatus(Guid channelId, IEnumerable<SmsTemplate> smsTemplateList)
+    {
+        var templateList = await _messageTemplateRepository.GetListAsync(x => x.ChannelId == channelId);
+        foreach (var item in templateList)
+        {
+            var template = smsTemplateList.FirstOrDefault(x => x.TemplateCode == item.TemplateId);
+
+            if (template != null && template.AuditStatus == item.AuditStatus)
+            {
+                continue;
+            }
+            if (template == null)
+            {
+                item.SetInvalid();
+            }
+            else
+            {
+                item.SetAuditStatus(template.AuditStatus, template.AuditReason);
+            }
+            
+            await _messageTemplateRepository.UpdateAsync(item);
         }
     }
 

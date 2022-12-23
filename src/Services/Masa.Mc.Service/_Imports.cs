@@ -188,3 +188,4 @@ global using Masa.Mc.Infrastructure.AppNotification.Infrastructure.OptionsResolv
 global using Masa.Mc.Infrastructure.Getui;
 global using Masa.Mc.Service.Admin.Infrastructure.Constants;
 global using Masa.BuildingBlocks.Globalization.I18n;
+global using static AlibabaCloud.SDK.Dysmsapi20170525.Models.QuerySmsTemplateListResponseBody;
