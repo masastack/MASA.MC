@@ -8,20 +8,24 @@ public class MessageRecordQueryHandler
     private readonly IMcQueryContext _context;
     private readonly IAuthClient _authClient;
     private readonly II18n<DefaultResource> _i18n;
+    private readonly IDataFilter _dataFilter;
 
     public MessageRecordQueryHandler(IMcQueryContext context
         , IAuthClient authClient
-        , II18n<DefaultResource> i18n)
+        , II18n<DefaultResource> i18n
+        , IDataFilter dataFilter)
     {
         _context = context;
         _authClient = authClient;
         _i18n = i18n;
+        _dataFilter = dataFilter;
     }
 
     [EventHandler]
     public async Task GetAsync(GetMessageRecordQuery query)
     {
-        var entity = await _context.MessageRecordQueries.Include(x => x.Channel).IgnoreQueryFilters().FirstOrDefaultAsync(x => x.Id == query.MessageRecordId);
+        using var dataFilter = _dataFilter.Disable<ISoftDelete>();
+        var entity = await _context.MessageRecordQueries.Include(x => x.Channel).FirstOrDefaultAsync(x => x.Id == query.MessageRecordId);
         MasaArgumentException.ThrowIfNull(entity, _i18n.T("MessageRecord"));
 
         var dto = entity.Adapt<MessageRecordDto>();
@@ -34,7 +38,8 @@ public class MessageRecordQueryHandler
     {
         var options = query.Input;
         var condition = await CreateFilteredPredicate(options);
-        var resultList = await _context.MessageRecordQueries.Include(x => x.Channel).IgnoreQueryFilters().GetPaginatedListAsync(condition, new()
+        using var dataFilter = _dataFilter.Disable<ISoftDelete>();
+        var resultList = await _context.MessageRecordQueries.Include(x => x.Channel).GetPaginatedListAsync(condition, new()
         {
             Page = options.Page,
             PageSize = options.PageSize,
