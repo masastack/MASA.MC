@@ -18,8 +18,7 @@
                                  Label="@T("DisplayName.MessageTemplateTemplateType")"
                                  ItemText="@(item => T($"DisplayName.SmsTemplateType.{item.ToString()}"))"
                                  ItemValue="item => (int)item"
-                                 Dense
-                                 Solo
+                                 BackgroundColor="white"
                                  Clearable
                                  HideDetails="@("auto")"
                                  TItem="SmsTemplateTypes"
@@ -36,8 +35,7 @@
                                  Label="@T("DisplayName.Channel")"
                                  ItemText="item => item.DisplayName"
                                  ItemValue="item => item.Id"
-                                 Dense
-                                 Solo
+                                 BackgroundColor="white"
                                  Clearable
                                  HideDetails="@("auto")"
                                  TItem="ChannelDto"
@@ -54,8 +52,7 @@
                                  Label="@T("DisplayName.MessageTemplateAuditStatus")"
                                  ItemText="item => T(item.ToString())"
                                  ItemValue="item => item"
-                                 Dense
-                                 Solo
+                                 BackgroundColor="white"
                                  Clearable
                                  HideDetails="@("auto")"
                                  TItem="MessageTemplateAuditStatuses"
@@ -72,8 +69,7 @@
                                  Label="@T("DisplayName.MessageTemplateStatus")"
                                  ItemText="item => T(item.ToString())"
                                  ItemValue="item => item"
-                                 Dense
-                                 Solo
+                                 BackgroundColor="white"
                                  Clearable
                                  HideDetails="@("auto")"
                                  TItem="MessageTemplateStatuses"
