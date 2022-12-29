@@ -13,8 +13,7 @@
                          Label="@T("DisplayName.MessageTaskTimeType")"
                          ItemText="@(item => T($"DisplayName.MessageTaskTimeType.{item.ToString()}"))"
                          ItemValue="item => item"
-                         Dense
-                         Solo
+                         BackgroundColor="white"
                          Clearable
                          HideDetails="@("auto")"
                          TItem="MessageTaskTimeTypes"
@@ -32,8 +31,7 @@
                          Label="@T("DisplayName.Channel")"
                          ItemText="item => item.DisplayName"
                          ItemValue="item => item.Id"
-                         Dense
-                         Solo
+                         BackgroundColor="white"
                          Clearable
                          HideDetails="@("auto")"
                          TItem="ChannelDto"
@@ -49,8 +47,7 @@
                          Label="@T("DisplayName.MessageTaskStatus")"
                          ItemText="@(item => T($"DisplayName.MessageTaskStatus.{item.ToString()}"))"
                          ItemValue="item => item"
-                         Dense
-                         Solo
+                         BackgroundColor="white"
                          Clearable
                          HideDetails="@("auto")"
                          TItem="MessageTaskStatuses"
@@ -66,8 +63,7 @@
                          Label="@T("DisplayName.MessageTaskEntityType")"
                          ItemText="@(item => T($"DisplayName.MessageEntityType.{item.ToString()}"))"
                          ItemValue="item => item"
-                         Dense
-                         Solo
+                         BackgroundColor="white"
                          Clearable
                          HideDetails="@("auto")"
                          TItem="MessageEntityTypes"
@@ -78,7 +74,7 @@
                          OnSelectedItemUpdate="RefreshAsync">
                     </SSelect>
 
-                    <BooleanSelect @bind-Value="_queryParam.IsEnabled" Placeholder="@T("DisplayName.MessageTaskIsEnabled")" Class="ml-6" Style="width:130px;flex: none;" OnClearClick="RefreshAsync"
+                    <BooleanSelect @bind-Value="_queryParam.IsEnabled" Label="@T("DisplayName.MessageTaskIsEnabled")" Class="ml-6" Style="width:130px;flex: none;" OnClearClick="RefreshAsync"
                                OnSelectedItemUpdate="RefreshAsync" />
 
                 </div>

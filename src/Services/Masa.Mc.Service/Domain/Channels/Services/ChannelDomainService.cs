@@ -7,19 +7,21 @@ public class ChannelDomainService : DomainService
 {
     private readonly IChannelRepository _repository;
 
-    public ChannelDomainService(IDomainEventBus eventBus, IChannelRepository repository) : base(eventBus)
+    private readonly IUnitOfWork _unitOfWork;
+
+    public ChannelDomainService(IDomainEventBus eventBus, IChannelRepository repository, IUnitOfWork unitOfWork) : base(eventBus)
     {
         _repository = repository;
+        _unitOfWork = unitOfWork;
     }
 
     public virtual async Task CreateAsync(Channel channel)
     {
         await ValidateChannelAsync(channel.Code);
         await _repository.AddAsync(channel);
-        if (channel.Type == ChannelType.Sms)
+        if (channel.Type.Id == ChannelType.Sms.Id)
         {
-            await _repository.UnitOfWork.SaveChangesAsync();
-            await _repository.UnitOfWork.CommitAsync();
+            await _unitOfWork.SaveChangesAsync();
             await EventBus.PublishAsync(new SmsTemplateSynchroIntegrationDomainEvent(channel.Id));
         }
     }

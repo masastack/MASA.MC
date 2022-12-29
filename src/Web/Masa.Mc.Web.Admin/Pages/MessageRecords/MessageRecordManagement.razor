@@ -13,9 +13,7 @@
                          Label="@T("DisplayName.MessageRecordTimeTypes")"
                          ItemText="@(item => T($"DisplayName.MessageRecordTimeTypes.{item.ToString()}"))"
                          ItemValue="item => item"
-                         Dense
-                         Solo
-                         HideDetails="@("auto")"
+                         BackgroundColor="white"
                          TItem="MessageRecordTimeTypes"
                          TItemValue="MessageRecordTimeTypes"
                          TValue="MessageRecordTimeTypes?"
@@ -30,8 +28,7 @@
                          Label="@T("DisplayName.Channel")"
                          ItemText="item => item.DisplayName"
                          ItemValue="item => item.Id"
-                         Dense
-                         Solo
+                         BackgroundColor="white"
                          Clearable
                          HideDetails="@("auto")"
                          TItem="ChannelDto"
@@ -42,10 +39,10 @@
                          OnSelectedItemUpdate="RefreshAsync">
                     </SSelect>
 
-                    <UserSelect @bind-Value="_queryParam.UserId" Placeholder="@T("DisplayName.MessageRecordUserId")" Class="ml-6" OnClearClick="RefreshAsync"
+                    <UserSelect @bind-Value="_queryParam.UserId" Label="@T("DisplayName.MessageRecordUserId")" Class="ml-6" OnClearClick="RefreshAsync"
                             OnSelectedItemUpdate="RefreshAsync" />
 
-                    <BooleanSelect @bind-Value="_queryParam.Success" Items="_successItems" Placeholder="@T("DisplayName.MessageRecordSuccess")" Class="ml-6" OnClearClick="RefreshAsync"
+                    <BooleanSelect @bind-Value="_queryParam.Success" Items="_successItems" Label="@T("DisplayName.MessageRecordSuccess")" Class="ml-6" OnClearClick="RefreshAsync"
                                OnSelectedItemUpdate="RefreshAsync" />
                 </div>
             }
