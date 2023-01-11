@@ -9,7 +9,7 @@ public partial class TemplateMessageCreateModal : AdminCompontentBase
     public EventCallback OnOk { get; set; }
 
     private MForm? _form;
-    private MessageTaskUpsertModel _model = new() { EntityType = MessageEntityTypes.Template };
+    private MessageTaskUpsertModel _model = new() { EntityType = MessageEntityTypes.Template, SystemId = MasaStackConsts.MC_SYSTEM_ID };
     private bool _visible;
     private List<MessageTemplateDto> _templateItems = new();
     private MessageTemplateDto _messageInfo = new();
@@ -82,7 +82,7 @@ public partial class TemplateMessageCreateModal : AdminCompontentBase
 
     private void ResetForm()
     {
-        _model = new() { EntityType = MessageEntityTypes.Template };
+        _model = new() { EntityType = MessageEntityTypes.Template, SystemId = MasaStackConsts.MC_SYSTEM_ID };
         _selectReceivers = new();
         _importReceivers = new();
         _selectReceiverType = false;

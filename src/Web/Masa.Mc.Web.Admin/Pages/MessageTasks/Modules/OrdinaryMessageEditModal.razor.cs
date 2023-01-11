@@ -9,7 +9,7 @@ public partial class OrdinaryMessageEditModal : AdminCompontentBase
     public EventCallback OnOk { get; set; }
 
     private MForm? _form;
-    private MessageTaskUpsertModel _model = new() { EntityType = MessageEntityTypes.Ordinary };
+    private MessageTaskUpsertModel _model = new() { EntityType = MessageEntityTypes.Ordinary, SystemId = MasaStackConsts.MC_SYSTEM_ID };
     private Guid _entityId;
     private bool _visible;
     private List<ChannelDto> _channelItems = new();
@@ -104,7 +104,7 @@ public partial class OrdinaryMessageEditModal : AdminCompontentBase
 
     private void ResetForm()
     {
-        _model = new() { EntityType = MessageEntityTypes.Ordinary };
+        _model = new() { EntityType = MessageEntityTypes.Ordinary, SystemId = MasaStackConsts.MC_SYSTEM_ID };
         _selectReceivers = new();
         _importReceivers = new();
         _selectReceiverType = false;
