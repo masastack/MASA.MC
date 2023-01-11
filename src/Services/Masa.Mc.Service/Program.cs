@@ -130,7 +130,9 @@ var app = builder.Services
         {
             eventBusBuilder.UseMiddleware(typeof(ValidatorMiddleware<>));
         })
-        .UseIsolationUoW<McDbContext>(isolationBuilder => isolationBuilder.UseMultiEnvironment("env_key"), null)
+        .UseIsolationUoW<McDbContext>(
+        isolationBuilder => isolationBuilder.UseMultiEnvironment(IsolationConsts.ENVIRONMENT),
+        dbOptions => dbOptions.UseSqlServer().UseFilter())
         .UseRepository<McDbContext>();
     })
     .AddServices(builder, options =>

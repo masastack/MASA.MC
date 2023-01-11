@@ -189,3 +189,4 @@ global using Masa.Mc.Infrastructure.Getui;
 global using Masa.Mc.Service.Admin.Infrastructure.Constants;
 global using Masa.BuildingBlocks.Globalization.I18n;
 global using static AlibabaCloud.SDK.Dysmsapi20170525.Models.QuerySmsTemplateListResponseBody;
+global using Masa.BuildingBlocks.StackSdks.Auth.Contracts.Consts;
