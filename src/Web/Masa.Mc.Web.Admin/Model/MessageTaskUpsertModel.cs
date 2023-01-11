@@ -34,4 +34,6 @@ public class MessageTaskUpsertModel
     public ExtraPropertyDictionary Variables { get; set; } = new();
 
     public int Step { get; set; } = 1;
+
+    public string SystemId { get; set; } = string.Empty;
 }
