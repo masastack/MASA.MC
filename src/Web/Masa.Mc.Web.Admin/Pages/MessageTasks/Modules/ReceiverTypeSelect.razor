@@ -3,7 +3,7 @@
     <MRow Align="AlignTypes.Center" Justify="JustifyTypes.SpaceBetween">
         <MCol>
             <MHover Context="hoverContext" ValueChanged="(v)=>HandleHoverChanged(v,ReceiverTypes.Assign)">
-                <MCard @attributes="hoverContext.Attrs" Height="320" Width="320" Class="@($"d-flex flex-column justify-center align-center {hoverContext.Class} {(IsReceiverTypeActive(hoverContext.Hover, ReceiverTypes.Assign) ? "primary" : "fill-background")}")"
+                <MCard @attributes="hoverContext.Attrs" Height="320" Class="@($"d-flex flex-column justify-center align-center {hoverContext.Class} {(IsReceiverTypeActive(hoverContext.Hover, ReceiverTypes.Assign) ? "primary" : "fill-background")}")"
                        OnClick="()=>HandleReceiverType(ReceiverTypes.Assign)">
                     @if (IsReceiverTypeActive(hoverContext.Hover, ReceiverTypes.Assign))
                     {
@@ -20,7 +20,7 @@
         </MCol>
         <MCol>
             <MHover Context="hoverContext" ValueChanged="(v)=>HandleHoverChanged(v,ReceiverTypes.Broadcast)">
-                <MCard @attributes="hoverContext.Attrs" Height="320" Width="320" Class="@($"d-flex flex-column justify-center align-center {hoverContext.Class} {(IsReceiverTypeActive(hoverContext.Hover, ReceiverTypes.Broadcast) ? "primary" : "fill-background")}")"
+                <MCard @attributes="hoverContext.Attrs" Height="320" Class="@($"d-flex flex-column justify-center align-center {hoverContext.Class} {(IsReceiverTypeActive(hoverContext.Hover, ReceiverTypes.Broadcast) ? "primary" : "fill-background")}")"
                        OnClick="()=>HandleReceiverType(ReceiverTypes.Broadcast)">
                     @if (IsReceiverTypeActive(hoverContext.Hover, ReceiverTypes.Broadcast))
                     {
