@@ -1,62 +1,58 @@
 ﻿@inherits AdminCompontentBase
-<AutoHeight Overflow>
-    <AutoHeightContent>
-        <div class="mt-8 rounded-xl d-flex flex-column align-center" style="border: 4px dashed #E2E7F4;">
-            <MHover OpenDelay="200">
-                <div @attributes="context.Attrs" class="@($"mt-8 {context.Class}")">
-                    <MProgressCircular Value="_progress" Size="258" Width="18" Color="@(_importResult?.HasError==true?"warning-disabled":"gradient")">
-                        <div class="upload-btn">
-                            <MImage Width=80 Height=80 Class="d-flex justify-center align-center" ContentClass="text-center"
-                                    Src="@(_isUpload?(_importResult?.HasError==true?"_content/Masa.Mc.Web.Admin/img/upload/upload-error.png":"_content/Masa.Mc.Web.Admin/img/upload/upload-complete.png"):context.Hover?"_content/Masa.Mc.Web.Admin/img/upload/upload-active.png":"_content/Masa.Mc.Web.Admin/img/upload/upload.png")">
-                            </MImage>
-                            <MFileInput TValue="IBrowserFile"
-                                        Dense
-                                        Outlined
-                                        Accept="text/csv"
-                                        Class="full-width full-height"
-                                        Placeholder="@T("Description.MessageReceiversUpload.Placeholder")"
-                                        OnChange="HandleFileChange"></MFileInput>
-                        </div>
-                    </MProgressCircular>
-
+<div class="mt-8 rounded-xl d-flex flex-column align-center" style="border: 4px dashed #E2E7F4;">
+    <MHover OpenDelay="200">
+        <div @attributes="context.Attrs" class="@($"mt-8 {context.Class}")">
+            <MProgressCircular Value="_progress" Size="258" Width="18" Color="@(_importResult?.HasError==true?"warning-disabled":"gradient")">
+                <div class="upload-btn">
+                    <MImage Width=80 Height=80 Class="d-flex justify-center align-center" ContentClass="text-center"
+                            Src="@(_isUpload?(_importResult?.HasError==true?"_content/Masa.Mc.Web.Admin/img/upload/upload-error.png":"_content/Masa.Mc.Web.Admin/img/upload/upload-complete.png"):context.Hover?"_content/Masa.Mc.Web.Admin/img/upload/upload-active.png":"_content/Masa.Mc.Web.Admin/img/upload/upload.png")">
+                    </MImage>
+                    <MFileInput TValue="IBrowserFile"
+                                Dense
+                                Outlined
+                                Accept="text/csv"
+                                Class="full-width full-height"
+                                Placeholder="@T("Description.MessageReceiversUpload.Placeholder")"
+                                OnChange="HandleFileChange"></MFileInput>
                 </div>
-            </MHover>
-            <div class="d-flex flex-column align-center mt-6">
-                <div class="h6 regular--text">@(_importResult?.HasError==false?T("UploadComplete"):T("UploadFile"))</div>
-                <div class="body regular3--text">@_fileName</div>
-            </div>
+            </MProgressCircular>
+
         </div>
+    </MHover>
+    <div class="d-flex flex-column align-center mt-6">
+        <div class="h6 regular--text">@(_importResult?.HasError == false ? T("UploadComplete") : T("UploadFile"))</div>
+        <div class="body regular3--text">@_fileName</div>
+    </div>
+</div>
 
-        <MRow Class="mt-6">
-            <MCol>
-                <div class="d-flex justify-space-between">
-                    <span class="body2 emphasis2--text">@T("Description.MessageReceiversDownload.Name")</span>
-                    <span class="body2 primary--text"> <a class="text-decoration-none" @onclick="Download">@T("Description.MessageReceiversDownload.Tips")</a></span>
-                </div>
-            </MCol>
-        </MRow>
+<MRow Class="mt-6">
+    <MCol>
+        <div class="d-flex justify-space-between">
+            <span class="body2 emphasis2--text">@T("Description.MessageReceiversDownload.Name")</span>
+            <span class="body2 primary--text"> <a class="text-decoration-none" @onclick="Download">@T("Description.MessageReceiversDownload.Tips")</a></span>
+        </div>
+    </MCol>
+</MRow>
 
-        @if (_importResult != null && _importResult.HasError)
-        {
-            <MAlert Class="mt-9 body2  d-flex align-center" Dense
-                Text
-                Icon="@("mdi-close")"
-                Type="AlertTypes.Error" Style="border: 1px solid #FF5252;height: 56px;">
-                @T("Description.MessageReceiversImport.ErrorMsg")
-            </MAlert>
-        }
-        @if (Value != null && Value.Any())
-        {
-            <MAlert Class="mt-9 body2 d-flex align-center" Dense
-                Text
-                Icon="@("mdi-check")"
-                Type="AlertTypes.Success" Style="height: 56px;">
-                <div class="d-flex justify-space-between">
-                    <span>@(string.Format(T("Description.MessageReceiversImport.Tips"), Value.Count))</span>
-                    <span @onclick="()=>_importReceiversDetailModal.OpenModal()">@T("View")</span>
-                </div>
-            </MAlert>
-        }
-    </AutoHeightContent>
-</AutoHeight>
+@if (_importResult != null && _importResult.HasError)
+{
+    <MAlert Class="mt-9 body2  d-flex align-center" Dense
+        Text
+        Icon="@("mdi-close")"
+        Type="AlertTypes.Error" Style="border: 1px solid #FF5252;height: 56px;">
+        @T("Description.MessageReceiversImport.ErrorMsg")
+    </MAlert>
+}
+@if (Value != null && Value.Any())
+{
+    <MAlert Class="mt-9 body2 d-flex align-center" Dense
+        Text
+        Icon="@("mdi-check")"
+        Type="AlertTypes.Success" Style="height: 56px;">
+        <div class="d-flex justify-space-between">
+            <span>@(string.Format(T("Description.MessageReceiversImport.Tips"), Value.Count))</span>
+            <span @onclick="()=>_importReceiversDetailModal.OpenModal()">@T("View")</span>
+        </div>
+    </MAlert>
+}
 <ImportReceiversDetailModal @ref="_importReceiversDetailModal" Value="Value" ChannelType="ChannelType" />

@@ -103,20 +103,24 @@
                             </AutoHeight>
                         </MStepperContent>
                         <MStepperContent Class="full-height pa-0" Step="2">
-                            @if (_model.ChannelType == ChannelTypes.WebsiteMessage && !_selectReceiverType)
-                            {
-                                <ReceiverTypeSelect @bind-value="_model.ReceiverType" OnClick="HandleReceiverType" />
-                            }
-                            else
-                            {
-                                <MInput @bind-Value="_model.Receivers" />
-                                <MessageReceivers @bind-ReceiverType="_model.ReceiverType"
-                                              @bind-SelectReceivers="_selectReceivers"
-                                              @bind-ImportReceivers="_importReceivers"
-                                              @bind-SelectReceiverType="_model.SelectReceiverType"
-                                              ChannelType="_model.ChannelType"
-                                              MessageTemplatesId="_model.EntityId" />
-                            }
+                            <AutoHeight Overflow>
+                                <AutoHeightContent>
+                                    @if (_model.ChannelType == ChannelTypes.WebsiteMessage && !_selectReceiverType)
+                                    {
+                                        <ReceiverTypeSelect @bind-value="_model.ReceiverType" OnClick="HandleReceiverType" />
+                                    }
+                                    else
+                                    {
+                                        <MInput @bind-Value="_model.Receivers" />
+                                        <MessageReceivers @bind-ReceiverType="_model.ReceiverType"
+                                                      @bind-SelectReceivers="_selectReceivers"
+                                                      @bind-ImportReceivers="_importReceivers"
+                                                      @bind-SelectReceiverType="_model.SelectReceiverType"
+                                                      ChannelType="_model.ChannelType"
+                                                      MessageTemplatesId="_model.EntityId" />
+                                    }
+                                </AutoHeightContent>
+                            </AutoHeight>
                         </MStepperContent>
                         <MStepperContent Class="full-height pa-0" Step="3">
                             <MInput @bind-Value="_model.SendRules" />
