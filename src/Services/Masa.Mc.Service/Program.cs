@@ -139,7 +139,7 @@ var app = builder.Services
     {
         options.MapHttpMethodsForUnmatched = new string[] { "Post" };
     });
-app.UseMiddleware<AdminSafeListMiddleware>(configuration.GetSection("WhiteListOptions").Get<WhiteListOptions>());
+app.UseMiddleware<AdminSafeListMiddleware>(publicConfiguration.GetSection("$public.WhiteListOptions").Get<WhiteListOptions>());
 app.UseI18n();
 app.UseMasaExceptionHandler(opt =>
 {
