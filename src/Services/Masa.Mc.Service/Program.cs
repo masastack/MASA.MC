@@ -2,7 +2,8 @@
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddObservable(builder.Logging, builder.Configuration);
+builder.Services.AddMasaStackConfig();
+var masaStackConfig = builder.Services.GetMasaStackConfig();
 
 #if DEBUG
 builder.Services.AddDaprStarter(opt =>
@@ -15,11 +16,10 @@ builder.Services.AddDaprStarter(opt =>
 builder.Services.AddAutoInject();
 builder.Services.AddDaprClient();
 
-builder.Services.AddMasaConfiguration(configurationBuilder =>
-{
-    configurationBuilder.UseDcc();
-});
+DccOptions dccOptions = masaStackConfig.GetDccMiniOptions<DccOptions>();
+builder.Services.AddMasaConfiguration(configurationBuilder => configurationBuilder.UseDcc(dccOptions));
 var publicConfiguration = builder.Services.GetMasaConfiguration().ConfigurationApi.GetPublic();
+var identityServerUrl = masaStackConfig.GetSsoDomain();
 var ossOptions = publicConfiguration.GetSection("$public.OSS").Get<OssOptions>();
 builder.Services.AddAliyunStorage(new AliyunStorageOptions(ossOptions.AccessId, ossOptions.AccessSecret, ossOptions.Endpoint, ossOptions.RoleArn, ossOptions.RoleSessionName)
 {
@@ -28,11 +28,26 @@ builder.Services.AddAliyunStorage(new AliyunStorageOptions(ossOptions.AccessId, 
         RegionId = ossOptions.RegionId
     }
 });
+builder.Services.AddObservable(builder.Logging, () =>
+{
+    return new MasaObservableOptions
+    {
+        ServiceNameSpace = builder.Environment.EnvironmentName,
+        ServiceVersion = masaStackConfig.Version,
+        ServiceName = masaStackConfig.GetServiceId("mc", "server")
+    };
+}, () =>
+{
+    return masaStackConfig.OtlpUrl;
+});
 builder.Services.AddMasaIdentity(options =>
 {
     options.Environment = "environment";
     options.UserName = "name";
     options.UserId = "sub";
+    options.Mapping(nameof(MasaUser.CurrentTeamId), IdentityClaimConsts.CURRENT_TEAM);
+    options.Mapping(nameof(MasaUser.StaffId), IdentityClaimConsts.STAFF);
+    options.Mapping(nameof(MasaUser.Account), IdentityClaimConsts.ACCOUNT);
 });
 builder.Services.AddAuthorization();
 builder.Services.AddAuthentication(options =>
@@ -42,18 +57,29 @@ builder.Services.AddAuthentication(options =>
 })
 .AddJwtBearer("Bearer", options =>
 {
-    options.Authority = publicConfiguration.GetValue<string>("$public.AppSettings:IdentityServerUrl");
+    options.Authority = identityServerUrl;
     options.RequireHttpsMetadata = false;
     options.TokenValidationParameters.ValidateAudience = false;
     options.MapInboundClaims = false;
 });
 builder.Services.AddSequentialGuidGenerator();
 builder.Services.AddI18n(Path.Combine("Assets", "I18n"));
-var redisOptions = publicConfiguration.GetSection("$public.RedisConfig").Get<RedisConfigurationOptions>();
+var redisOptions = new RedisConfigurationOptions
+{
+    Servers = new List<RedisServerOptions> {
+        new RedisServerOptions()
+        {
+            Host= masaStackConfig.RedisModel.RedisHost,
+            Port=   masaStackConfig.RedisModel.RedisPort
+        }
+    },
+    DefaultDatabase = masaStackConfig.RedisModel.RedisDb,
+    Password = masaStackConfig.RedisModel.RedisPassword
+};
 var configuration = builder.Services.GetMasaConfiguration().ConfigurationApi.GetDefault();
-builder.Services.AddAuthClient(publicConfiguration.GetValue<string>("$public.AppSettings:AuthClient:Url"), redisOptions);
-builder.Services.AddMcClient(publicConfiguration.GetValue<string>("$public.AppSettings:McClient:Url"));
-builder.Services.AddSchedulerClient(publicConfiguration.GetValue<string>("$public.AppSettings:SchedulerClient:Url"));
+builder.Services.AddAuthClient(masaStackConfig.GetAuthServiceDomain(), redisOptions);
+builder.Services.AddMcClient(masaStackConfig.GetMcServiceDomain());
+builder.Services.AddSchedulerClient(masaStackConfig.GetSchedulerServiceDomain());
 builder.Services.AddMultilevelCache(options => options.UseStackExchangeRedisCache(redisOptions));
 builder.Services.AddAliyunSms();
 builder.Services.AddMailKit();
@@ -70,6 +96,8 @@ TypeAdapterConfig.GlobalSettings.Scan(Assembly.GetExecutingAssembly(), Assembly.
 builder.Services.AddHealthChecks()
     .AddCheck("self", () => HealthCheckResult.Healthy("A healthy result."))
     .AddDbContextCheck<McDbContext>();
+
+var a = masaStackConfig.GetConnectionString("mc_dev");
 
 builder.Services.AddScoped(service =>
 {
@@ -113,12 +141,12 @@ var app = builder.Services
     })
     .AddMasaDbContext<McDbContext>(builder =>
     {
-        builder.UseSqlServer();
+        builder.UseSqlServer(masaStackConfig.GetConnectionString("mc_dev"));
         builder.UseFilter(options => options.EnableSoftDelete = true);
     })
     .AddMasaDbContext<McQueryContext>(builder =>
     {
-        builder.UseSqlServer();
+        builder.UseSqlServer(masaStackConfig.GetConnectionString("mc_dev"));
         builder.UseFilter(options => options.EnableSoftDelete = true);
     })
     .AddScoped<IMcQueryContext, McQueryContext>()
@@ -132,14 +160,15 @@ var app = builder.Services
         })
         .UseIsolationUoW<McDbContext>(
         isolationBuilder => isolationBuilder.UseMultiEnvironment(IsolationConsts.ENVIRONMENT),
-        dbOptions => dbOptions.UseSqlServer().UseFilter())
+        dbOptions => dbOptions.UseSqlServer(masaStackConfig.GetConnectionString("mc_dev")).UseFilter())
         .UseRepository<McDbContext>();
     })
     .AddServices(builder, options =>
     {
         options.MapHttpMethodsForUnmatched = new string[] { "Post" };
     });
-app.UseMiddleware<AdminSafeListMiddleware>(publicConfiguration.GetSection("$public.WhiteListOptions").Get<WhiteListOptions>());
+await builder.MigrateDbContextAsync<McDbContext>();
+//app.UseMiddleware<AdminSafeListMiddleware>(publicConfiguration.GetSection("$public.WhiteListOptions").Get<WhiteListOptions>());
 app.UseI18n();
 app.UseMasaExceptionHandler(opt =>
 {
@@ -152,11 +181,8 @@ app.UseMasaExceptionHandler(opt =>
     };
 });
 // Configure the HTTP request pipeline.
-if (!app.Environment.IsProduction())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
 app.UseRouting();
 
 app.UseAuthentication();

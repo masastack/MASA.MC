@@ -3,11 +3,9 @@
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.WebHost.UseKestrel(option =>
-{
-    option.ConfigureHttpsDefaults(options =>
-    options.ServerCertificate = new X509Certificate2(Path.Combine("Certificates", "7348307__lonsid.cn.pfx"), "cqUza0MN"));
-});
+builder.Services.AddMasaStackConfig();
+var masaStackConfig = builder.Services.GetMasaStackConfig();
+
 builder.WebHost.UseKestrel(option =>
 {
     option.ConfigureHttpsDefaults(options =>
@@ -23,7 +21,18 @@ builder.WebHost.UseKestrel(option =>
         options.CheckCertificateRevocation = false;
     });
 });
-builder.Services.AddObservable(builder.Logging, builder.Configuration, true);
+builder.Services.AddObservable(builder.Logging, () =>
+{
+    return new MasaObservableOptions
+    {
+        ServiceNameSpace = builder.Environment.EnvironmentName,
+        ServiceVersion = masaStackConfig.Version,
+        ServiceName = masaStackConfig.GetServiceId("mc", "ui")
+    };
+}, () =>
+{
+    return masaStackConfig.OtlpUrl;
+}, true);
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
@@ -48,8 +57,15 @@ builder.Services.AddGlobalForServer();
 builder.Services.AddScoped<TokenProvider>();
 builder.Services.AddSingleton<ChannelUpsertDtoValidator>();
 TypeAdapterConfig.GlobalSettings.Scan(Assembly.GetExecutingAssembly(), Assembly.Load("Masa.Mc.Contracts.Admin"));
-var oidcOptions = builder.Services.GetMasaConfiguration().Local.GetSection("$public.OIDC:AuthClient").Get<MasaOpenIdConnectOptions>();
-builder.Services.AddMasaOpenIdConnect(oidcOptions);
+MasaOpenIdConnectOptions masaOpenIdConnectOptions = new MasaOpenIdConnectOptions
+{
+    Authority = masaStackConfig.GetSsoDomain(),
+    ClientId = masaStackConfig.GetServiceId("mc", "ui"),
+    Scopes = new List<string> { "offline_access" }
+}; ;
+
+IdentityModelEventSource.ShowPII = true;
+builder.Services.AddMasaOpenIdConnect(masaOpenIdConnectOptions);
 
 StaticWebAssetsLoader.UseStaticWebAssets(builder.Environment, builder.Configuration);
 
