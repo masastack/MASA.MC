@@ -3,7 +3,7 @@
 
 namespace Masa.Mc.Service.Admin.Infrastructure.EntityFrameworkCore;
 
-[ConnectionStringName("aa")]
+[ConnectionStringName("DefaultConnection")]
 public class McDbContext : IsolationDbContext
 {
     public McDbContext(MasaDbContextOptions<McDbContext> options) : base(options)

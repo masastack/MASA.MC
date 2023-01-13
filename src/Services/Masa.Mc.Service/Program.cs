@@ -97,8 +97,6 @@ builder.Services.AddHealthChecks()
     .AddCheck("self", () => HealthCheckResult.Healthy("A healthy result."))
     .AddDbContextCheck<McDbContext>();
 
-var a = masaStackConfig.GetConnectionString("mc_dev");
-
 builder.Services.AddScoped(service =>
 {
     var content = service.GetRequiredService<IHttpContextAccessor>();
@@ -158,9 +156,7 @@ var app = builder.Services
         {
             eventBusBuilder.UseMiddleware(typeof(ValidatorMiddleware<>));
         })
-        .UseIsolationUoW<McDbContext>(
-        isolationBuilder => isolationBuilder.UseMultiEnvironment(IsolationConsts.ENVIRONMENT),
-        dbOptions => dbOptions.UseSqlServer(masaStackConfig.GetConnectionString("mc_dev")).UseFilter())
+        .UseIsolationUoW<McDbContext>(isolationBuilder => isolationBuilder.UseMultiEnvironment("env_key"), null)
         .UseRepository<McDbContext>();
     })
     .AddServices(builder, options =>
