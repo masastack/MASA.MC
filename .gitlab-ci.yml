@@ -34,7 +34,7 @@ docker-dev:
   tags:
     - linux-shell
   before_script:
-    - docker login -u $CI_ALI_REGISTRY_USER -p $CI_ALI_REGISTRY_PASSWD $CI_ALI_REGISTRY_DOMAIN 
+    - docker login -u $CI_ALI_REGISTRY_USER --password-stdin $CI_ALI_REGISTRY_PASSWD $CI_ALI_REGISTRY_DOMAIN 
   only:
     - main  
   script:
