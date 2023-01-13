@@ -43,8 +43,8 @@ builder.Services.AddResponseCompression(opts =>
     opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
         new[] { "application/octet-stream" });
 });
-var authBaseAddress = builder.Configuration["AuthServiceBaseAddress"];
-var mcBaseAddress = builder.Configuration["McServiceBaseAddress"];
+var authBaseAddress = masaStackConfig.GetAuthServiceDomain();
+var mcBaseAddress = masaStackConfig.GetMcServiceDomain();
 builder.Services.AddMcApiGateways(option => option.McServiceBaseAddress = mcBaseAddress);
 #if DEBUG
 builder.AddMasaStackComponentsForServer("wwwroot/i18n", authBaseAddress, "https://localhost:19501");
