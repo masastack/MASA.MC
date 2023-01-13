@@ -24,7 +24,7 @@
             <MRow>
                 <MCol>
                     <div class="outlined-box-medium pt-1">
-                        <MCheckbox Dense @bind-Value="_model.Ssl" Label="@T("EmailChannelOptions.Ssl")" OnChange="HandleChangeAsync"></MCheckbox>
+                        <MCheckbox Dense @bind-Value="_model.Ssl" Label="@T("EmailChannelOptions.Ssl")" TValue="bool" OnChange="HandleChangeAsync"></MCheckbox>
                     </div>
                 </MCol>
                 <MCol>

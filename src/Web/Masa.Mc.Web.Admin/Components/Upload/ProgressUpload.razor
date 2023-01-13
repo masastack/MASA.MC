@@ -1,7 +1,7 @@
 ﻿@inherits AdminCompontentBase
 <div class="mt-9 rounded-xl d-flex flex-column justify-center align-center" style="height: 499px;border: 4px dashed #E2E7F4;">
     <MHover OpenDelay="200">
-        <div @attributes="context.Attrs" class="@($"{context.Class}")">
+        <div @attributes="context.Attrs">
             <MProgressCircular Value="progress" Size="258" Width="18" Color="gradient">
                 <MImage Width=80 Height=80 Class="d-flex justify-center align-center" ContentClass="text-center"
                         Src="@(context.Hover?"_content/Masa.Mc.Web.Admin/img/upload/upload-active.png":"_content/Masa.Mc.Web.Admin/img/upload/upload.png")">

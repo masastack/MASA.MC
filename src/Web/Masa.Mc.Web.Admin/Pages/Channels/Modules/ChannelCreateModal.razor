@@ -11,7 +11,7 @@
                                 <MRow Align="AlignTypes.Center" Justify="JustifyTypes.Center">
                                     <MCol Md="6">
                                         <MHover ValueChanged="(v)=>HandleHoverChanged(v,ChannelTypes.Sms)">
-                                            <MCard @attributes="context.Attrs" Height="240" Width="240" Class="@($"d-flex flex-column justify-center align-center ml-auto {context.Class} {(IsChannelActive(context.Hover, ChannelTypes.Sms) ? "primary" : "fill-background")}")"
+                                            <MCard @attributes="context.Attrs" Height="240" Width="240" Class="@($"d-flex flex-column justify-center align-center ml-auto {(IsChannelActive(context.Hover, ChannelTypes.Sms) ? "primary" : "fill-background")}")"
                                                    OnClick="()=> HandleSelectType(ChannelTypes.Sms)">
                                                 @if (IsChannelActive(context.Hover, ChannelTypes.Sms))
                                                 {
@@ -28,7 +28,7 @@
                                     </MCol>
                                     <MCol Md="6">
                                         <MHover ValueChanged="(v)=>HandleHoverChanged(v,ChannelTypes.Email)">
-                                            <MCard @attributes="context.Attrs" Height="240" Width="240" Class="@($"d-flex flex-column justify-center align-center mr-auto {context.Class} {(IsChannelActive(context.Hover, ChannelTypes.Email) ? "primary" : "fill-background")}")"
+                                            <MCard @attributes="context.Attrs" Height="240" Width="240" Class="@($"d-flex flex-column justify-center align-center mr-auto {(IsChannelActive(context.Hover, ChannelTypes.Email) ? "primary" : "fill-background")}")"
                                                    OnClick="()=>HandleSelectType(ChannelTypes.Email)">
                                                 @if (IsChannelActive(context.Hover, ChannelTypes.Email))
                                                 {
@@ -45,7 +45,7 @@
                                     </MCol>
                                     <MCol Md="6">
                                         <MHover ValueChanged="(v)=>HandleHoverChanged(v,ChannelTypes.WebsiteMessage)">
-                                            <MCard @attributes="context.Attrs" Height="240" Width="240" Class="@($"d-flex flex-column justify-center align-center ml-auto {context.Class} {(IsChannelActive(context.Hover, ChannelTypes.WebsiteMessage) ? "primary" : "fill-background")}")"
+                                            <MCard @attributes="context.Attrs" Height="240" Width="240" Class="@($"d-flex flex-column justify-center align-center ml-auto {(IsChannelActive(context.Hover, ChannelTypes.WebsiteMessage) ? "primary" : "fill-background")}")"
                                                    OnClick="()=>HandleSelectType(ChannelTypes.WebsiteMessage)">
                                                 @if (IsChannelActive(context.Hover, ChannelTypes.WebsiteMessage))
                                                 {
@@ -62,7 +62,7 @@
                                     </MCol>
                                     <MCol Md="6">
                                         <MHover ValueChanged="(v)=>HandleHoverChanged(v,ChannelTypes.App)">
-                                            <MCard @attributes="context.Attrs" Height="240" Width="240" Class="@($"d-flex flex-column justify-center align-center mr-auto {context.Class} {(IsChannelActive(context.Hover, ChannelTypes.App) ? "primary" : "fill-background")}")"
+                                            <MCard @attributes="context.Attrs" Height="240" Width="240" Class="@($"d-flex flex-column justify-center align-center mr-auto {(IsChannelActive(context.Hover, ChannelTypes.App) ? "primary" : "fill-background")}")"
                                                    OnClick="()=>HandleSelectType(ChannelTypes.App)">
                                                 @if (IsChannelActive(context.Hover, ChannelTypes.App))
                                                 {
