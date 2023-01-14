@@ -83,13 +83,17 @@ public class MessageRecordQueryHandler
 
         foreach (var item in dtos)
         {
-            if (item.UserId != default && string.IsNullOrEmpty(item.User.Account))
+            if (item.UserId != default)
             {
                 var user = userInfos.FirstOrDefault(x => x.Id == item.UserId);
                 if (user != null)
                 {
                     item.User = user.Adapt<MessageRecordUserDto>();
                 }
+            }
+            else
+            {
+                item.User = new MessageRecordUserDto(item.ChannelUserIdentity, item.Channel.Type);
             }
         }
     }
