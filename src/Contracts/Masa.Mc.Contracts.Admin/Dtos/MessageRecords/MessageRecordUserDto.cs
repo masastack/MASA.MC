@@ -14,4 +14,21 @@ public class MessageRecordUserDto
     public string Email { get; set; } = string.Empty;
 
     public string Avatar { get; set; } = string.Empty;
+
+    public MessageRecordUserDto() { }
+
+    public MessageRecordUserDto(string channelUserIdentity, ChannelTypes type)
+    {
+        switch (type)
+        {
+            case ChannelTypes.Sms:
+                PhoneNumber = channelUserIdentity;
+                break;
+            case ChannelTypes.Email:
+                PhoneNumber = Email;
+                break;
+            default:
+                break;
+        }
+    }
 }
