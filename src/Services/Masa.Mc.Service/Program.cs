@@ -34,7 +34,7 @@ builder.Services.AddObservable(builder.Logging, () =>
     {
         ServiceNameSpace = builder.Environment.EnvironmentName,
         ServiceVersion = masaStackConfig.Version,
-        ServiceName = masaStackConfig.GetServiceId("mc", "server")
+        ServiceName = masaStackConfig.GetServerId("mc")
     };
 }, () =>
 {
