@@ -1,6 +1,8 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
+using Microsoft.AspNetCore.SignalR;
+
 namespace Masa.Mc.Service.Admin.Application.MessageTasks.EventHandler;
 
 public class SendWebsiteMessageEventHandler
@@ -13,6 +15,7 @@ public class SendWebsiteMessageEventHandler
     private readonly MessageTemplateDomainService _messageTemplateDomainService;
     private readonly IMessageTemplateRepository _templateRepository;
     private readonly II18n<DefaultResource> _i18n;
+    private readonly IHubContext<NotificationsHub> _hubContext;
 
     public SendWebsiteMessageEventHandler(IMcClient mcClient
         , IMessageTaskHistoryRepository messageTaskHistoryRepository
@@ -21,7 +24,8 @@ public class SendWebsiteMessageEventHandler
         , ITemplateRenderer templateRenderer
         , MessageTemplateDomainService messageTemplateDomainService
         , IMessageTemplateRepository templateRepository
-        , II18n<DefaultResource> i18n)
+        , II18n<DefaultResource> i18n
+        , IHubContext<NotificationsHub> hubContext)
     {
         _mcClient = mcClient;
         _messageTaskHistoryRepository = messageTaskHistoryRepository;
@@ -31,6 +35,7 @@ public class SendWebsiteMessageEventHandler
         _messageTemplateDomainService = messageTemplateDomainService;
         _templateRepository = templateRepository;
         _i18n = i18n;
+        _hubContext = hubContext;
     }
 
     [EventHandler(1)]
@@ -76,11 +81,13 @@ public class SendWebsiteMessageEventHandler
 
         if (taskHistory.MessageTask.ReceiverType == ReceiverTypes.Broadcast)
         {
-            await _mcClient.WebsiteMessageService.SendCheckNotificationAsync();
+            var singalRGroup = _hubContext.Clients.Group("Global");
+            await singalRGroup.SendAsync(SignalRMethodConsts.CHECK_NOTIFICATION);
         }
         if (taskHistory.MessageTask.ReceiverType == ReceiverTypes.Assign)
         {
-            await _mcClient.WebsiteMessageService.SendGetNotificationAsync(userIds);
+            var onlineClients = _hubContext.Clients.Users(userIds);
+            await onlineClients.SendAsync(SignalRMethodConsts.GET_NOTIFICATION);
         }
     }
 }

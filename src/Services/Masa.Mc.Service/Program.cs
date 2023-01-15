@@ -34,7 +34,7 @@ builder.Services.AddObservable(builder.Logging, () =>
     {
         ServiceNameSpace = builder.Environment.EnvironmentName,
         ServiceVersion = masaStackConfig.Version,
-        ServiceName = masaStackConfig.GetServerId("mc")
+        ServiceName = masaStackConfig.GetServerId(MasaStackConstant.MC)
     };
 }, () =>
 {
@@ -154,6 +154,7 @@ var app = builder.Services
         .UseIntegrationEventBus<IntegrationEventLogService>(options => options.UseDapr().UseEventLog<McDbContext>())
         .UseEventBus(eventBusBuilder =>
         {
+            eventBusBuilder.UseMiddleware(typeof(DisabledCommandMiddleware<>));
             eventBusBuilder.UseMiddleware(typeof(ValidatorMiddleware<>));
         })
         .UseIsolationUoW<McDbContext>(isolationBuilder => isolationBuilder.UseMultiEnvironment("env_key"), null)
