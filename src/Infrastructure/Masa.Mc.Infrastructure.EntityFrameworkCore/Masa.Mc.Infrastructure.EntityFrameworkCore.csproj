@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Masa.Mc.Infrastructure.Email\Masa.Mc.Infrastructure.Email.csproj" />
     <ProjectReference Include="..\Masa.Mc.Infrastructure.ObjectExtending\Masa.Mc.Infrastructure.ObjectExtending.csproj" />
   </ItemGroup>
 
