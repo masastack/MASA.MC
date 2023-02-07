@@ -112,7 +112,7 @@ deploy-prd:
   variables:
     EnviromentPath: Production
   tags:
-    - ydy-runner
+    - 51-132
   only:
     - main  
   script:
