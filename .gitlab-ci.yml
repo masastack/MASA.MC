@@ -114,7 +114,7 @@ deploy-prd:
   tags:
     - 51-132
   only:
-    - main  
+    - main
   script:
     - ls
     - pwd 
@@ -122,8 +122,8 @@ deploy-prd:
     - cat ./config
     - helm version 
     - helm --kubeconfig ./config list   -n $NAMESPACE_PRD
-    - helm upgrade --install $MC_Service_Name ./charts/masa-service --set ingress.servertype=service --set domain.name=$ServiceDomain_prd  --set domain.secret=masastack  --set service.port=80  --set environment.path=$EnviromentPath --set image.tag=dev-$CI_COMMIT_TAG -n $NAMESPACE_PRD
-    - helm upgrade --install $MC_Web_Name ./charts/masa-service --set ingress.servertype=web  --set domain.name=$WebDomain_prd  --set domain.secret=masastack  --set service.port=443  --set environment.path=$EnviromentPath --set image.tag=dev-$CI_COMMIT_TAG -n $NAMESPACE_PRD
+    - helm --kubeconfig ./config upgrade --install $MC_Service_Name ./charts/masa-service --set ingress.servertype=service --set domain.name=$ServiceDomain_prd  --set domain.secret=masastack  --set service.port=80  --set environment.path=$EnviromentPath --set image.tag=dev-$CI_COMMIT_TAG -n $NAMESPACE_PRD
+    - helm --kubeconfig ./config upgrade --install $MC_Web_Name ./charts/masa-service --set ingress.servertype=web  --set domain.name=$WebDomain_prd  --set domain.secret=masastack  --set service.port=443  --set environment.path=$EnviromentPath --set image.tag=dev-$CI_COMMIT_TAG -n $NAMESPACE_PRD
   when: manual
 
 # include: 'devops/**/*.yml'
