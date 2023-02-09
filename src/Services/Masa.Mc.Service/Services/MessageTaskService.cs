@@ -188,4 +188,13 @@ public class MessageTaskService : ServiceBase
         var command = new ResendMessageTaskCommand(id);
         await eventBus.PublishAsync(command);
     }
+
+    [RoutePattern(HttpMethod = "Post")]
+    public async Task BindClientIdAsync([FromServices] IMasaConfiguration configuration, [FromServices] IAuthClient authClient, BindClientIdInputDto inputDto)
+    {
+        var systemId = $"{MasaStackConsts.MC_SYSTEM_ID}:{inputDto.ChannelCode}";
+        var userSystemData = await authClient.UserService.GetUserSystemDataAsync<UserSystemDataDto>(systemId) ?? new();
+        userSystemData.ClientId = inputDto.ClientId;
+        await authClient.UserService.SaveUserSystemDataAsync<UserSystemDataDto>(systemId, userSystemData);
+    }
 }
