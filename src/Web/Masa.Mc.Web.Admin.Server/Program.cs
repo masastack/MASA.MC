@@ -2,6 +2,7 @@
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
 using Masa.Contrib.Configuration.ConfigurationApi.Dcc;
+using Masa.Stack.Components.Extensions.OpenIdConnect;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,8 +45,8 @@ builder.Services.AddGlobalForServer();
 builder.Services.AddScoped<TokenProvider>();
 builder.Services.AddSingleton<ChannelUpsertDtoValidator>();
 TypeAdapterConfig.GlobalSettings.Scan(Assembly.GetExecutingAssembly(), Assembly.Load("Masa.Mc.Contracts.Admin"));
-var oidcOptions = builder.Services.GetMasaConfiguration().Local.GetSection("$public.OIDC:AuthClient").Get<MasaOpenIdConnectOptions>();
-builder.Services.AddMasaOpenIdConnect(oidcOptions);
+var masaOpenIdConnectOptions = publicConfiguration.GetSection("$public.OIDC").Get<MasaOpenIdConnectOptions>();
+builder.Services.AddMasaOpenIdConnect(masaOpenIdConnectOptions);
 
 StaticWebAssetsLoader.UseStaticWebAssets(builder.Environment, builder.Configuration);
 
