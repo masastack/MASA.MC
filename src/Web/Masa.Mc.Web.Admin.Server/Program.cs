@@ -1,6 +1,8 @@
 // Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
+using Masa.Contrib.Configuration.ConfigurationApi.Dcc;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.WebHost.UseKestrel(option =>
@@ -34,15 +36,9 @@ builder.Services.AddResponseCompression(opts =>
     opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
         new[] { "application/octet-stream" });
 });
-var authBaseAddress = builder.Configuration["AuthServiceBaseAddress"];
-var mcBaseAddress = builder.Configuration["McServiceBaseAddress"];
-builder.Services.AddMcApiGateways(option => option.McServiceBaseAddress = mcBaseAddress);
-#if DEBUG
-builder.AddMasaStackComponentsForServer("wwwroot/i18n", authBaseAddress, "https://localhost:19501");
-#else
-builder.AddMasaStackComponentsForServer("wwwroot/i18n", authBaseAddress, mcBaseAddress);
-#endif
-
+builder.AddMasaStackComponentsForServer();
+var publicConfiguration = builder.Services.GetMasaConfiguration().ConfigurationApi.GetPublic();
+builder.Services.AddMcApiGateways(option => option.McServiceBaseAddress = publicConfiguration.GetValue<string>("$public.AppSettings:McClient:Url"));
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddGlobalForServer();
 builder.Services.AddScoped<TokenProvider>();

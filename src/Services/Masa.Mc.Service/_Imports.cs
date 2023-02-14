@@ -192,3 +192,4 @@ global using static AlibabaCloud.SDK.Dysmsapi20170525.Models.QuerySmsTemplateLis
 global using Masa.BuildingBlocks.StackSdks.Auth.Contracts.Consts;
 global using Masa.BuildingBlocks.Ddd.Domain.Services;
 global using Masa.BuildingBlocks.Isolation;
+global using Masa.Mc.Service.Admin.Infrastructure.Extensions;
