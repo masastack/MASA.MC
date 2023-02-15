@@ -1,6 +1,6 @@
 ﻿@inherits AdminCompontentBase
 <div class="import-receivers" @ref="Ref">
-    <SSimpleModal Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("View")" Height="800">
+    <SSimpleModal Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("View")">
         <ChildContent>
             <AutoHeight>
                 <AutoHeightContent>
@@ -62,7 +62,7 @@
                     </MSimpleTable>
                 </AutoHeightContent>
                 <FooterContent>
-                    <SPagination Class="full-width" Page="@_queryParam.Page" PageSize="@_queryParam.PageSize" Total="Value.Count" PageChanged="HandlePageChanged" PageSizeChanged="HandlePageSizeChanged" />
+                    <SPagination Class="full-width mt-5" Page="@_queryParam.Page" PageSize="@_queryParam.PageSize" Total="Value.Count" PageChanged="HandlePageChanged" PageSizeChanged="HandlePageSizeChanged" />
                 </FooterContent>
             </AutoHeight>
         </ChildContent>

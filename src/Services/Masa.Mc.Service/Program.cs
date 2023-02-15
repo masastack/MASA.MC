@@ -1,6 +1,8 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
+using Masa.Mc.Service.Admin.Infrastructure.Extensions;
+
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddObservable(builder.Logging, builder.Configuration);
 
@@ -140,6 +142,7 @@ var app = builder.Services
         options.MapHttpMethodsForUnmatched = new string[] { "Post" };
     });
 app.UseMiddleware<AdminSafeListMiddleware>(publicConfiguration.GetSection("$public.WhiteListOptions").Get<WhiteListOptions>());
+await builder.MigrateDbContextAsync<McDbContext>();
 app.UseI18n();
 app.UseMasaExceptionHandler(opt =>
 {
