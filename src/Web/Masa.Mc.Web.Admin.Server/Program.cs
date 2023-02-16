@@ -1,32 +1,16 @@
 // Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
-using Masa.Contrib.Configuration.ConfigurationApi.Dcc;
-using Masa.Stack.Components.Extensions.OpenIdConnect;
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.WebHost.UseKestrel(option =>
 {
     option.ConfigureHttpsDefaults(options =>
-    options.ServerCertificate = new X509Certificate2(Path.Combine("Certificates", "7348307__lonsid.cn.pfx"), "cqUza0MN"));
-});
-builder.WebHost.UseKestrel(option =>
-{
-    option.ConfigureHttpsDefaults(options =>
     {
-        if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("TLS_NAME")))
-        {
-            options.ServerCertificate = new X509Certificate2(Path.Combine("Certificates", "7348307__lonsid.cn.pfx"), "cqUza0MN");
-        }
-        else
-        {
-            options.ServerCertificate = X509Certificate2.CreateFromPemFile("./ssl/tls.crt", "./ssl/tls.key");
-        }
+        options.ServerCertificate = new X509Certificate2(Path.Combine("Certificates", "7348307__lonsid.cn.pfx"), "cqUza0MN");
         options.CheckCertificateRevocation = false;
     });
 });
-builder.Services.AddObservable(builder.Logging, builder.Configuration, true);
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
@@ -39,6 +23,18 @@ builder.Services.AddResponseCompression(opts =>
 });
 builder.AddMasaStackComponentsForServer();
 var publicConfiguration = builder.Services.GetMasaConfiguration().ConfigurationApi.GetPublic();
+builder.Services.AddObservable(builder.Logging, () =>
+{
+    return new MasaObservableOptions
+    {
+        ServiceNameSpace = builder.Environment.EnvironmentName,
+        ServiceVersion = "1.0.0",//todo global version
+        ServiceName = "masa-mc-web-admin"
+    };
+}, () =>
+{
+    return publicConfiguration.GetValue<string>("$public.AppSettings:OtlpUrl");
+}, true);
 builder.Services.AddMcApiGateways(option => option.McServiceBaseAddress = publicConfiguration.GetValue<string>("$public.AppSettings:McClient:Url"));
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddGlobalForServer();

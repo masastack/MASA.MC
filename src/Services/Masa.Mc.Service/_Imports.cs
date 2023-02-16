@@ -193,3 +193,4 @@ global using Masa.BuildingBlocks.StackSdks.Auth.Contracts.Consts;
 global using Masa.BuildingBlocks.Ddd.Domain.Services;
 global using Masa.BuildingBlocks.Isolation;
 global using Masa.Mc.Service.Admin.Infrastructure.Extensions;
+global using Masa.Contrib.StackSdks.Tsc;

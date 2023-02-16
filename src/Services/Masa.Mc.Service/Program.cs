@@ -1,10 +1,7 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
-using Masa.Mc.Service.Admin.Infrastructure.Extensions;
-
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddObservable(builder.Logging, builder.Configuration);
 
 #if DEBUG
 builder.Services.AddDaprStarter(opt =>
@@ -30,6 +27,20 @@ builder.Services.AddAliyunStorage(new AliyunStorageOptions(ossOptions.AccessId, 
         RegionId = ossOptions.RegionId
     }
 });
+
+builder.Services.AddObservable(builder.Logging, () =>
+{
+    return new MasaObservableOptions
+    {
+        ServiceNameSpace = builder.Environment.EnvironmentName,
+        ServiceVersion = "1.0.0",//todo global version
+        ServiceName = "masa-mc-service-admin"
+    };
+}, () =>
+{
+    return publicConfiguration.GetValue<string>("$public.AppSettings:OtlpUrl");
+});
+
 builder.Services.AddMasaIdentity(options =>
 {
     options.Environment = "environment";
