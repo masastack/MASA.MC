@@ -47,9 +47,11 @@ public class MessageTask : FullAggregateRoot<Guid, Guid>
 
     public string SystemId { get; protected set; } = string.Empty;
 
+    public ExtraPropertyDictionary ExtraProperties { get; protected set; } = new();
+
     private MessageTask() { }
 
-    public MessageTask(string displayName, ChannelType? channelType, Guid? channelId, MessageEntityTypes entityType, Guid entityId, bool isDraft, string sign, ReceiverTypes receiverType, MessageTaskSelectReceiverTypes selectReceiverType, List<MessageTaskReceiver> receivers, MessageTaskSendingRule sendRules, MessageTaskSources source, string systemId)
+    public MessageTask(string displayName, ChannelType? channelType, Guid? channelId, MessageEntityTypes entityType, Guid entityId, bool isDraft, string sign, ReceiverTypes receiverType, MessageTaskSelectReceiverTypes selectReceiverType, List<MessageTaskReceiver> receivers, MessageTaskSendingRule sendRules, MessageTaskSources source, string systemId, ExtraPropertyDictionary extraProperties)
     {
         DisplayName = displayName;
         ChannelType = channelType;
@@ -64,6 +66,7 @@ public class MessageTask : FullAggregateRoot<Guid, Guid>
         Status = MessageTaskStatuses.WaitSend;
         Source = source;
         SystemId = systemId;
+        ExtraProperties = extraProperties;
     }
 
     public virtual void SetEnabled()
@@ -170,5 +173,10 @@ public class MessageTask : FullAggregateRoot<Guid, Guid>
     public List<MessageReceiverUser> GetHistoryReceiverUsers(int historyNum, int sendingCount)
     {
         return ReceiverUsers.Skip(historyNum * sendingCount).Take(sendingCount).ToList(); ;
+    }
+
+    public bool IsAppInWebsiteMessage()
+    {
+        return ChannelType == ChannelType.App && ExtraProperties.GetProperty<bool>("IsWebsiteMessage");
     }
 }

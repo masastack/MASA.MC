@@ -13,6 +13,7 @@ public class RetryAppMessageEventHandler
     private readonly MessageTemplateDomainService _messageTemplateDomainService;
     private readonly IMessageTemplateRepository _repository;
     private readonly IWebsiteMessageRepository _websiteMessageRepository;
+    private readonly IMessageTaskRepository _messageTaskRepository;
     private readonly II18n<DefaultResource> _i18n;
 
     public RetryAppMessageEventHandler(IAppNotificationAsyncLocal appNotificationAsyncLocal
@@ -23,6 +24,7 @@ public class RetryAppMessageEventHandler
         , MessageTemplateDomainService messageTemplateDomainService
         , IMessageTemplateRepository repository
         , IWebsiteMessageRepository websiteMessageRepository
+        , IMessageTaskRepository messageTaskRepository
         , II18n<DefaultResource> i18n)
     {
         _appNotificationAsyncLocal = appNotificationAsyncLocal;
@@ -33,6 +35,7 @@ public class RetryAppMessageEventHandler
         _messageTemplateDomainService = messageTemplateDomainService;
         _repository = repository;
         _websiteMessageRepository = websiteMessageRepository;
+        _messageTaskRepository = messageTaskRepository;
         _i18n = i18n;
     }
 
@@ -75,7 +78,8 @@ public class RetryAppMessageEventHandler
                 {
                     messageRecord.SetResult(true, string.Empty);
 
-                    if (messageData.MessageContent.ExtraProperties.GetProperty<bool>("IsWebsiteMessage"))
+                    var messageTask = await _messageTaskRepository.FindAsync(x => x.Id == messageRecord.MessageTaskId);
+                    if (messageTask != null && messageTask.IsAppInWebsiteMessage())
                     {
                         var websiteMessage = new WebsiteMessage(messageRecord.ChannelId, messageRecord.UserId, messageData.MessageContent.Title, messageData.MessageContent.Content, messageData.MessageContent.GetJumpUrl(), DateTimeOffset.Now);
                         await _websiteMessageRepository.AddAsync(websiteMessage);

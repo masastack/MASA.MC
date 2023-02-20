@@ -23,6 +23,8 @@ public class SendOrdinaryMessageByExternalInputDto
 
     public string SystemId { get; set; } = string.Empty;
 
+    public ExtraPropertyDictionary ExtraProperties { get; set; } = new();
+
 
     public static implicit operator MessageTaskUpsertDto(SendOrdinaryMessageByExternalInputDto dto)
     {
@@ -45,7 +47,8 @@ public class SendOrdinaryMessageByExternalInputDto
             Variables = dto.Variables,
             Source = MessageTaskSources.Sdk,
             OperatorId = dto.OperatorId,
-            SystemId = dto.SystemId
+            SystemId = dto.SystemId,
+            ExtraProperties = dto.ExtraProperties
         };
     }
 }
