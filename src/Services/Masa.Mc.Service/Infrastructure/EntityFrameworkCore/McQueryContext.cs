@@ -61,6 +61,7 @@ public class McQueryContext : MasaDbContext<McQueryContext>, IMcQueryContext
             b.Property(x => x.Receivers).HasConversion(new JsonValueConverter<List<MessageTaskReceiver>>());
             b.Property(x => x.SendRules).HasConversion(new JsonValueConverter<MessageTaskSendingRule>());
             b.Property(x => x.Variables).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
+            b.Property(x => x.ExtraProperties).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
         });
 
         builder.Entity<MessageTaskHistoryQueryModel>(b =>

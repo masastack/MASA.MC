@@ -83,7 +83,7 @@ public class SendAppMessageEventHandler
                     {
                         messageRecord.SetResult(true, string.Empty);
 
-                        if (eto.MessageData.MessageContent.ExtraProperties.GetProperty<bool>("IsWebsiteMessage"))
+                        if (taskHistory.MessageTask.IsAppInWebsiteMessage())
                         {
                             var websiteMessage = new WebsiteMessage(messageRecord.ChannelId, item.UserId, eto.MessageData.MessageContent.Title, eto.MessageData.MessageContent.Content, eto.MessageData.MessageContent.GetJumpUrl(), DateTimeOffset.Now);
                             await _websiteMessageRepository.AddAsync(websiteMessage);
