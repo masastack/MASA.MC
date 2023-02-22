@@ -81,7 +81,7 @@ public class RetryAppMessageEventHandler
                     var messageTask = await _messageTaskRepository.FindAsync(x => x.Id == messageRecord.MessageTaskId);
                     if (messageTask != null && messageTask.IsAppInWebsiteMessage())
                     {
-                        var websiteMessage = new WebsiteMessage(messageRecord.ChannelId, messageRecord.UserId, messageData.MessageContent.Title, messageData.MessageContent.Content, messageData.MessageContent.GetJumpUrl(), DateTimeOffset.Now);
+                        var websiteMessage = new WebsiteMessage(messageRecord.ChannelId, messageRecord.UserId, messageData.MessageContent.Title, messageData.MessageContent.Content, messageData.MessageContent.GetJumpUrl(), DateTimeOffset.Now, messageData.MessageContent.ExtraProperties);
                         await _websiteMessageRepository.AddAsync(websiteMessage);
                     }
                 }
