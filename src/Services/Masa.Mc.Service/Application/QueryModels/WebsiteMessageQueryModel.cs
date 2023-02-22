@@ -27,6 +27,8 @@ public class WebsiteMessageQueryModel : Entity<Guid>, ISoftDelete
 
     public Guid MessageTaskHistoryId { get; set; }
 
+    public ExtraPropertyDictionary ExtraProperties { get; set; } = new();
+
     public Guid Creator { get; set; }
 
     public DateTime CreationTime { get; set; }

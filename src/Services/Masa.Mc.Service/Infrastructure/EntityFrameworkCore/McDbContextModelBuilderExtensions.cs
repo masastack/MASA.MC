@@ -140,6 +140,7 @@ public static class McDbContextModelBuilderExtensions
             b.Property(x => x.Title).IsRequired().HasMaxLength(128);
             b.Property(x => x.LinkUrl).HasMaxLength(256);
             b.HasIndex(x => new { x.UserId, x.ChannelId });
+            b.Property(x => x.ExtraProperties).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
         });
 
         builder.Entity<WebsiteMessageCursor>(b =>

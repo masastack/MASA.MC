@@ -27,11 +27,13 @@ public class WebsiteMessage : FullAggregateRoot<Guid, Guid>
 
     public Guid MessageTaskHistoryId { get; protected set; }
 
-    public WebsiteMessage(Guid channelId, Guid userId, string title, string content, string linkUrl, DateTimeOffset sendTime) : this(channelId, userId, title, content, linkUrl, sendTime, false, null)
+    public ExtraPropertyDictionary ExtraProperties { get; protected set; } = new();
+
+    public WebsiteMessage(Guid channelId, Guid userId, string title, string content, string linkUrl, DateTimeOffset sendTime, ExtraPropertyDictionary extraProperties) : this(channelId, userId, title, content, linkUrl, sendTime, false, null, extraProperties)
     {
     }
 
-    public WebsiteMessage(Guid channelId, Guid userId, string title, string content, string linkUrl, DateTimeOffset sendTime, bool isRead, DateTimeOffset? readTime)
+    public WebsiteMessage(Guid channelId, Guid userId, string title, string content, string linkUrl, DateTimeOffset sendTime, bool isRead, DateTimeOffset? readTime, ExtraPropertyDictionary extraProperties)
     {
         ChannelId = channelId;
         UserId = userId;
@@ -41,6 +43,7 @@ public class WebsiteMessage : FullAggregateRoot<Guid, Guid>
         SendTime = sendTime;
         IsRead = isRead;
         ReadTime = readTime;
+        ExtraProperties = extraProperties;
     }
 
     public void SetRead()
