@@ -177,6 +177,6 @@ public class MessageTask : FullAggregateRoot<Guid, Guid>
 
     public bool IsAppInWebsiteMessage()
     {
-        return ChannelType == ChannelType.App && ExtraProperties.GetProperty<bool>("IsWebsiteMessage");
+        return ChannelType?.Id == ChannelType.App.Id && ExtraProperties.GetProperty<bool>("IsWebsiteMessage");
     }
 }
