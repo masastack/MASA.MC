@@ -1,10 +1,7 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
-using Masa.Mc.Service.Admin.Infrastructure.Extensions;
-
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddObservable(builder.Logging, builder.Configuration);
 
 #if DEBUG
 builder.Services.AddDaprStarter(opt =>
@@ -22,14 +19,28 @@ builder.Services.AddMasaConfiguration(configurationBuilder =>
     configurationBuilder.UseDcc();
 });
 var publicConfiguration = builder.Services.GetMasaConfiguration().ConfigurationApi.GetPublic();
+
+builder.Services.AddObservable(builder.Logging, () =>
+{
+    return new MasaObservableOptions
+    {
+        ServiceNameSpace = builder.Environment.EnvironmentName,
+        ServiceVersion = "1.0.0",//todo global version
+        ServiceName = "masa-mc-service-admin"
+    };
+}, () =>
+{
+    return publicConfiguration.GetValue<string>("$public.AppSettings:OtlpUrl");
+});
+
 var ossOptions = publicConfiguration.GetSection("$public.OSS").Get<OssOptions>();
-builder.Services.AddAliyunStorage(new AliyunStorageOptions(ossOptions.AccessId, ossOptions.AccessSecret, ossOptions.Endpoint, ossOptions.RoleArn, ossOptions.RoleSessionName)
+builder.Services.AddObjectStorage(option => option.UseAliyunStorage(new AliyunStorageOptions(ossOptions.AccessId, ossOptions.AccessSecret, ossOptions.Endpoint, ossOptions.RoleArn, ossOptions.RoleSessionName)
 {
     Sts = new AliyunStsOptions()
     {
         RegionId = ossOptions.RegionId
     }
-});
+}));
 builder.Services.AddMasaIdentity(options =>
 {
     options.Environment = "environment";

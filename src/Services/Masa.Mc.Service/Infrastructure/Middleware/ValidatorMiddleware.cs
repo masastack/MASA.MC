@@ -3,7 +3,7 @@
 
 namespace Masa.Mc.Service.Infrastructure.Middleware;
 
-public class ValidatorMiddleware<TEvent> : IMiddleware<TEvent>
+public class ValidatorMiddleware<TEvent> : IEventMiddleware<TEvent>
     where TEvent : notnull, IEvent
 {
     private readonly ILogger<ValidatorMiddleware<TEvent>> _logger;

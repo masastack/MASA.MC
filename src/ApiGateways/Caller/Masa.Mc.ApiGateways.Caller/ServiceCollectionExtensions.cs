@@ -13,7 +13,7 @@ public static class ServiceCollectionExtensions
         configure?.Invoke(options);
         services.AddSingleton(options);
         services.AddScoped<HttpClientAuthorizationDelegatingHandler>();
-        services.AddCaller(Assembly.Load("Masa.Mc.ApiGateways.Caller"));
+        services.AddAutoRegistrationCaller(Assembly.Load("Masa.Mc.ApiGateways.Caller"));
         return services;
     }
 }

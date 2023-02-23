@@ -3,7 +3,7 @@
 
 namespace Masa.Mc.Service.Infrastructure.Middleware;
 
-public class LogMiddleware<TEvent> : IMiddleware<TEvent>
+public class LogMiddleware<TEvent> : IEventMiddleware<TEvent>
     where TEvent : notnull, IEvent
 {
     private readonly ILogger<LogMiddleware<TEvent>> _logger;
