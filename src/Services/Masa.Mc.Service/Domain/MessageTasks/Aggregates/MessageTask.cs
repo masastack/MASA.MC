@@ -71,7 +71,10 @@ public class MessageTask : FullAggregateRoot<Guid, Guid>
 
     public virtual void SetEnabled()
     {
-        IsEnabled = true;
+        if (!IsDraft)
+        {
+            IsEnabled = true;
+        }
     }
 
     public virtual void SetDisable()
