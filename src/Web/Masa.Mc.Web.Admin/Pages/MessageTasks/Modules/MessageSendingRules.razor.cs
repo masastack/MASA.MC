@@ -60,7 +60,7 @@ public partial class MessageSendingRules : AdminCompontentBase
 
         var cronExpression = new CronExpression(Value.CronExpression);
 
-        var timezone = TimeZoneInfo.GetSystemTimeZones().FirstOrDefault(p => p.BaseUtcOffset == TimezoneOffset);
+        var timezone = TimeZoneInfo.GetSystemTimeZones().FirstOrDefault(p => p.BaseUtcOffset == JsInitVariables.TimezoneOffset);
 
         if (timezone != null)
             cronExpression.TimeZone = timezone;
@@ -72,7 +72,7 @@ public partial class MessageSendingRules : AdminCompontentBase
             if (nextExcuteTime.HasValue)
             {
                 startTime = nextExcuteTime.Value;
-                sb.AppendLine(startTime.ToOffset(TimezoneOffset).ToString("yyyy-MM-dd HH:mm:ss"));
+                sb.AppendLine(startTime.ToOffset(JsInitVariables.TimezoneOffset).ToString("yyyy-MM-dd HH:mm:ss"));
             }
         }
 
