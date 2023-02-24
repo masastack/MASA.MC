@@ -20,13 +20,13 @@ builder.Services.AddMasaConfiguration(configurationBuilder =>
 });
 var publicConfiguration = builder.Services.GetMasaConfiguration().ConfigurationApi.GetPublic();
 var ossOptions = publicConfiguration.GetSection("$public.OSS").Get<OssOptions>();
-builder.Services.AddAliyunStorage(new AliyunStorageOptions(ossOptions.AccessId, ossOptions.AccessSecret, ossOptions.Endpoint, ossOptions.RoleArn, ossOptions.RoleSessionName)
+builder.Services.AddObjectStorage(option => option.UseAliyunStorage(new AliyunStorageOptions(ossOptions.AccessId, ossOptions.AccessSecret, ossOptions.Endpoint, ossOptions.RoleArn, ossOptions.RoleSessionName)
 {
     Sts = new AliyunStsOptions()
     {
         RegionId = ossOptions.RegionId
     }
-});
+}));
 
 builder.Services.AddObservable(builder.Logging, () =>
 {
