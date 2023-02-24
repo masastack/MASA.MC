@@ -207,6 +207,7 @@
   "MessageTaskDeleteMessage": "删除消息任务成功.",
   "MessageTaskSendMessage": "发送消息任务成功.",
   "EnableConfirmationMessageTask": "是否确认启用消息任务?",
+  "CouldNotEnableATaskInDraft": "草稿箱任务不能被启用",
   "DisableConfirmationMessageTask": "是否确认禁用消息任务?",
   "DisplayName.MessageTaskList": "消息任务列表",
   "DisplayName.MessageInfoTitle": "消息标题",
