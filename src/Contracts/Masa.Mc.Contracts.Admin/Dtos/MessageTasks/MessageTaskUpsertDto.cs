@@ -38,4 +38,6 @@ public class MessageTaskUpsertDto
     public Guid OperatorId { get; set; } = default;
 
     public string SystemId { get; set; } = string.Empty;
+
+    public ExtraPropertyDictionary ExtraProperties { get; set; } = new();
 }

@@ -19,7 +19,7 @@ public class RetryWebsiteMessageEventHandler
         , IWebsiteMessageRepository repository
         , MessageTemplateDomainService messageTemplateDomainService
         , IMessageTemplateRepository templateRepository
-        , II18n<DefaultResource> i18n        )
+        , II18n<DefaultResource> i18n)
     {
         _hubContext = hubContext;
         _messageRecordRepository = messageRecordRepository;
@@ -41,7 +41,7 @@ public class RetryWebsiteMessageEventHandler
         if (messageData.MessageType == MessageEntityTypes.Template)
         {
             var messageTemplate = await _templateRepository.FindAsync(x => x.Id == messageRecord.MessageEntityId, false);
-            if(!await _messageTemplateDomainService.CheckSendUpperLimitAsync(messageTemplate, messageRecord.ChannelUserIdentity))
+            if (!await _messageTemplateDomainService.CheckSendUpperLimitAsync(messageTemplate, messageRecord.ChannelUserIdentity))
             {
                 messageRecord.SetResult(false, _i18n.T("DailySendingLimit"));
                 await _messageRecordRepository.UpdateAsync(messageRecord);
@@ -49,7 +49,7 @@ public class RetryWebsiteMessageEventHandler
             }
         }
 
-        var websiteMessage = new WebsiteMessage(messageRecord.ChannelId, messageRecord.UserId, messageData.MessageContent.Title, messageData.MessageContent.Content, messageData.MessageContent.GetJumpUrl(), DateTimeOffset.Now);
+        var websiteMessage = new WebsiteMessage(messageRecord.ChannelId, messageRecord.UserId, messageData.MessageContent.Title, messageData.MessageContent.Content, messageData.MessageContent.GetJumpUrl(), DateTimeOffset.Now, messageData.MessageContent.ExtraProperties);
         await _repository.AddAsync(websiteMessage);
 
         messageRecord.SetResult(true, string.Empty);

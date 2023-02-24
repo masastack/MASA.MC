@@ -1,10 +1,10 @@
 ﻿@if (Value is DateTime dateTime)
 {
-    <DateTimeListItem Value="@dateTime.Add(TimezoneOffset)" />
+    <DateTimeListItem Value="@dateTime.Add(JsInitVariables.TimezoneOffset)" />
 }
 else if (Value is DateTimeOffset dateTimeOffset)
 {
-    <DateTimeListItem Value="@dateTimeOffset.ToOffset(TimezoneOffset)" />
+    <DateTimeListItem Value="@dateTimeOffset.ToOffset(JsInitVariables.TimezoneOffset)" />
 }
 else
 {
@@ -28,4 +28,7 @@ else
 
     [Parameter]
     public StringNumber? Width { get; set; }
+
+    [Inject]
+    public JsInitVariables JsInitVariables { get; set; } = default!;
 }
