@@ -58,7 +58,7 @@
                                                     {
                                                         <div class="caption regular--text">@item.TaskHistoryNo</div>
                                                     }
-                                                    <div class="overline regular3--text">@item.SendTime?.ToOffset(TimezoneOffset).ToString(T("$DateTimeFormat"))</div>
+                                                    <div class="overline regular3--text">@item.SendTime?.ToOffset(JsInitVariables.TimezoneOffset).ToString(T("$DateTimeFormat"))</div>
                                                 </div>
                                             </ChildContent>
                                         </MTimelineItem>
@@ -81,7 +81,7 @@
                         @if (_historyInfo.SendTime.HasValue)
                         {
                             <MButton Color="primary" Class="rounded-lg btn small-btn info full-width mb-8">
-                                <span>@T(string.Format(T("Description.MessageTaskHistory.SendTimeTips"),_historyInfo.SendTime?.ToOffset(TimezoneOffset).ToString(T("$DateTimeFormat"))))</span>
+                                <span>@T(string.Format(T("Description.MessageTaskHistory.SendTimeTips"),_historyInfo.SendTime?.ToOffset(JsInitVariables.TimezoneOffset).ToString(T("$DateTimeFormat"))))</span>
                             </MButton>
                         }
                     </HeaderContent>

@@ -16,7 +16,10 @@ public partial class BooleanButtonGroup
 
     [Parameter]
     public StyleTypes StyleType { get; set; }
-
+    
+    [Parameter]
+    public bool Disabled { get; set; }
+    
     public List<KeyValuePair<string, bool>> KeyValues { get; set; } = new();
 
     protected override void OnParametersSet()

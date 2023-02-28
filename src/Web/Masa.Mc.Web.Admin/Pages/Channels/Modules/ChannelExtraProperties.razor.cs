@@ -31,16 +31,6 @@ public partial class ChannelExtraProperties : AdminCompontentBase
     private ChannelSmsExtraProperties? _smsExtraPropertiesRef;
     private ChannelAppExtraProperties? _appExtraPropertiesRef;
 
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-        Watcher
-            .Watch<ExtraPropertyDictionary>(nameof(Value), async val =>
-             {
-                 await ValueChanged.InvokeAsync(Value);
-             });
-    }
-
     public void HandleChangeAsync(string value, string key)
     {
         Value[key] = value;

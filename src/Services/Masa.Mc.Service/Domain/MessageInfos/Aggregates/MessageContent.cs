@@ -28,6 +28,7 @@ public class MessageContent : ValueObject
         Title = title;
         Content = content;
         Markdown = markdown;
+        IsJump = isJump;
         JumpUrl = jumpUrl;
         ExtraProperties = extraProperties ?? new();
     }

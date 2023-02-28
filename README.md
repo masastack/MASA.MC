@@ -1,26 +1,29 @@
-# <center>MASA.MC</center>
+<p align="center">
+  <a href="https://www.masastack.com/stack" target="_blank">
+    <img alt="Logo" src="https://cdn.masastack.com/images/MC.png">
+  </a>
+</p>
 
-# 介绍
+## 介绍
 
-MASA消息中心应用程序，由[Masa.BuildingBlocks](https://github.com/masastack/Masa.BuildingBlocks), [Masa.Contrib](https://github.com/masastack/Masa.Contrib), [Masa.Utils](https://github.com/masastack/Masa.Utils),[Dapr](https://github.com/dapr/dapr)提供支持。
+MASA Stack 1.0 系统合集中底层支持消息发送的一款综合性产品，担任了全局消息系统支持多渠道的配置与消息发送规则的配置，并且可以配置多种消息模板以及特定用户组群。可以与关联产品Alert、TSC等对接，一站式解决故障问题触发与处理。
+![MC](http://cdn.masastack.com/stack/doc/mc/introduce.png)
 
-
+## MASA Stack 概览
+[传送门](https://github.com/masastack/MASA.Stack)
 
 ## 特性
-
-- 🛡 使用 C# 构建，多范式静态语言带来高效的开发体验。
-- ⚙️ 基于 .NET 6，可直接引用丰富的 .NET 类库。
-- 🎁 可与已有的 ASP.NET Core MVC、Razor Pages 项目无缝集成。
-- 
+- 待补充
 
 ## 安装
+- 待补充
 
 
 ## 本地开发
-
+- 待补充
 
 ## 开发路线
-
+- 待补充
 
 ## 贡献者
 

@@ -34,7 +34,15 @@ public class MessageTaskQueryHandler
         var entity = await _context.MessageTaskQueries.Include(x => x.Channel).FirstOrDefaultAsync(x => x.Id == query.MessageTaskId);
         MasaArgumentException.ThrowIfNull(entity, _i18n.T("MessageTask"));
 
-        query.Result = entity.Adapt<MessageTaskDto>();
+        var dto = entity.Adapt<MessageTaskDto>();
+
+        if (entity.EntityType == MessageEntityTypes.Ordinary)
+        {
+            var info = await _context.MessageInfoQueries.FirstOrDefaultAsync(x => x.Id == entity.EntityId);
+            dto.MessageInfo = info?.Adapt<MessageInfoDto>() ?? new();
+        }
+
+        query.Result = dto;
     }
 
     [EventHandler]
@@ -87,7 +95,7 @@ public class MessageTaskQueryHandler
     private async Task<long> ResolveReceiverGroupCount(Guid receiverGroupId)
     {
         long receiverGroupCount = 0;
-        var receiverGroup = await _context.ReceiverGroupQueries.Include(x=>x.Items).FirstOrDefaultAsync(x => x.Id == receiverGroupId);
+        var receiverGroup = await _context.ReceiverGroupQueries.Include(x => x.Items).FirstOrDefaultAsync(x => x.Id == receiverGroupId);
         if (receiverGroup == null)
         {
             return receiverGroupCount;
@@ -122,7 +130,7 @@ public class MessageTaskQueryHandler
 
     private async Task<Expression<Func<MessageTaskQueryModel, bool>>> CreateFilteredPredicate(GetMessageTaskInputDto inputDto)
     {
-        Expression<Func<MessageTaskQueryModel, bool>> condition = x => x.Channel!=null;
+        Expression<Func<MessageTaskQueryModel, bool>> condition = x => x.Channel != null;
         condition = condition.And(!string.IsNullOrEmpty(inputDto.Filter), x => x.DisplayName.Contains(inputDto.Filter));
         condition = condition.And(inputDto.EntityType.HasValue, x => x.EntityType == inputDto.EntityType);
         condition = condition.And(inputDto.ChannelId.HasValue, x => x.ChannelId == inputDto.ChannelId);
@@ -147,7 +155,7 @@ public class MessageTaskQueryHandler
     [EventHandler]
     public async Task GenerateImportTemplateAsync(GenerateReceiverImportTemplateQuery query)
     {
-        var template = await _context.MessageTemplateQueries.Include(x=>x.Items).FirstOrDefaultAsync(x => x.Id == query.MessageTemplateId);
+        var template = await _context.MessageTemplateQueries.Include(x => x.Items).FirstOrDefaultAsync(x => x.Id == query.MessageTemplateId);
         var record = new ExpandoObject();
         var properties = GetReceiverImportDtoType(query.ChannelType).GetProperties();
         foreach (var prop in properties)

@@ -71,10 +71,10 @@
             @switch (context.Header.Value)
             {
                 case (nameof(MessageTemplateItemDto.Code)):
-                    if (Value.IndexOf(context.Item)==_editedIndex)
-                    {
-                        <MTextField Class="mr-6" @bind-Value="_editedItem.Code" Dense Outlined HideDetails="@("auto")"></MTextField>
-                    }
+                if (Value.IndexOf(context.Item) == _editedIndex)
+                {
+                        <MTextField Class="mr-6" @bind-Value="_editedItem.Code" Dense Outlined HideDetails="@("auto")" Attributes="@(new Dictionary<string,object>{["maxLength"]=16})"></MTextField>
+            }
                     else
                     {
                         <div class="text-truncate mr-6" style="max-width:172px">@context.Value</div>
@@ -83,7 +83,7 @@
                 case (nameof(MessageTemplateItemDto.DisplayText)):
                     if (Value.IndexOf(context.Item)==_editedIndex)
                     {
-                        <MTextField  @bind-Value="_editedItem.DisplayText" Dense Outlined HideDetails="@("auto")"></MTextField>
+                        <MTextField @bind-Value="_editedItem.DisplayText" Dense Outlined HideDetails="@("auto")" Attributes="@(new Dictionary<string,object>{["maxLength"]=128})"></MTextField>
                     }
                     else
                     {

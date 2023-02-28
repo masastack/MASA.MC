@@ -119,12 +119,18 @@ public partial class MessageTaskList : AdminCompontentBase
     {
         if (!item.IsEnabled)
         {
-            await ConfirmAsync(T("EnableConfirmationMessageTask"), async () =>
+            if (item.IsDraft)
             {
-                await MessageTaskService.SetIsEnabledAsync(item.Id, true);
-                item.IsEnabled = true;
-            });
-
+                await ErrorMessageAsync(T("CouldNotEnableATaskInDraft"));
+            }
+            else
+            {
+                await ConfirmAsync(T("EnableConfirmationMessageTask"), async () =>
+                {
+                    await MessageTaskService.SetIsEnabledAsync(item.Id, true);
+                    item.IsEnabled = true;
+                });
+            }
         }
         else
         {

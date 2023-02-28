@@ -41,14 +41,11 @@ public class McCaller : HttpClientCallerBase
 
     protected override string BaseAddress { get; set; }
 
-    public override string Name { get; set; }
-
     public McCaller(
         IServiceProvider serviceProvider,
         TokenProvider tokenProvider,
         McApiOptions options) : base(serviceProvider)
     {
-        Name = nameof(McCaller);
         BaseAddress = options.McServiceBaseAddress;
         _tokenProvider = tokenProvider;
     }

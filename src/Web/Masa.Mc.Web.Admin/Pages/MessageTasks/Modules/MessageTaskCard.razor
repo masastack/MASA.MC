@@ -18,7 +18,7 @@
                             <MListItem>
                                 <MListItemContent>
                                     <MListItemTitle>
-                                        <BooleanButtonGroup Value="@MessageTask.IsEnabled" StyleType="StyleTypes.Slider" Style="width:146px" ValueChanged="HandleOnIsEnabled" />
+                                        <BooleanButtonGroup Disabled="@MessageTask.IsDraft" Value="@MessageTask.IsEnabled" StyleType="StyleTypes.Slider" Style="width:146px" ValueChanged="HandleOnIsEnabled" />
                                     </MListItemTitle>
                                 </MListItemContent>
                             </MListItem>
@@ -66,7 +66,7 @@
     <MDivider></MDivider>
     <MCardText class="flex-grow-1 px-0 d-flex flex-column">
         <div class="@($"h8 text-truncate {(MessageTask.IsEnabled?"emphasis--text":"regular3--text")}")" style="line-height: 24px;">@MessageTask.DisplayName</div>
-        <div class="caption regular3--text" style="line-height: 18px;">@((MessageTask.SendTime?.ToOffset(TimezoneOffset)??MessageTask.ExpectSendTime?.ToOffset(TimezoneOffset))?.ToString(T("$DateTimeFormat")))</div>
+        <div class="caption regular3--text" style="line-height: 18px;">@((MessageTask.SendTime?.ToOffset(JsInitVariables.TimezoneOffset) ?? MessageTask.ExpectSendTime?.ToOffset(JsInitVariables.TimezoneOffset))?.ToString(T("$DateTimeFormat")))</div>
     </MCardText>
     <div class="@($"message-content fill-background caption px-2 py-1 text-justify rounded-lg {(MessageTask.IsEnabled?"regular2--text":"regular3--text")}")">@MessageTask.Content</div>
     <MCardActions class="px-3 pb-3">
