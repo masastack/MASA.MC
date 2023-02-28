@@ -1,8 +1,11 @@
-﻿@inherits LayoutComponentBase
+﻿@using Masa.BuildingBlocks.StackSdks.Config;
+@using Masa.Contrib.StackSdks.Config;
+@inherits LayoutComponentBase
 @inject GlobalConfig GlobalConfig
 @inject NavigationManager Navigation
+@inject IMasaStackConfig MasaStackConfig
 
-<SLayout AppId="@MasaStackConsts.MC_SYSTEM_WEB_APP_ID" OnSignOut="SignOut" OnErrorAsync="OnError"
+<SLayout AppId="@MasaStackConfig.GetWebId(MasaStackConstant.MC)" OnSignOut="SignOut" OnErrorAsync="OnError"
         Logo="https://cdn.masastack.com/stack/images/logo/MASAStack/logo-h-en.png"
         MiniLogo="/_content/Masa.Mc.Web.Admin/img/mainLayout/logo.svg">
     @Body

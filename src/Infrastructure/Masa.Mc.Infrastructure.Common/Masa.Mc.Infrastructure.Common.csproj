@@ -8,7 +8,9 @@
 
   <ItemGroup>
 	  <PackageReference Include="Masa.Utils.Extensions.DotNet" Version="$(MasaFrameworkPackageVersion)" />
-	  <PackageReference Include="FluentValidation" Version="10.4.0" />
+	  <PackageReference Include="Masa.Utils.Extensions.Validations.FluentValidation" Version="$(MasaFrameworkPackageVersion)" />
+	  <PackageReference Include="FluentValidation" Version="11.4.0" />
+	  <PackageReference Include="FluentValidation.AspNetCore" Version="11.0.3" />
   </ItemGroup>
 
 </Project>

@@ -7,12 +7,15 @@ public class MessageTaskHttpJobService : IMessageTaskJobService
 {
     private readonly ISchedulerClient _schedulerClient;
     private readonly IMasaConfiguration _configuration;
+    private readonly IMasaStackConfig _masaStackConfig;
 
     public MessageTaskHttpJobService(ISchedulerClient schedulerClient
-        , IMasaConfiguration configuration)
+        , IMasaConfiguration configuration
+        , IMasaStackConfig masaStackConfig)
     {
         _schedulerClient = schedulerClient;
         _configuration = configuration;
+        _masaStackConfig = masaStackConfig;
     }
 
     public async Task<bool> DisableJobAsync(Guid jobId, Guid operatorId)
@@ -27,7 +30,7 @@ public class MessageTaskHttpJobService : IMessageTaskJobService
 
     public async Task<Guid> RegisterJobAsync(Guid messageTaskId, string cronExpression, Guid operatorId, string jobName)
     {
-        var mcUrl = _configuration.ConfigurationApi.GetPublic().GetValue<string>("$public.AppSettings:McClient:Url");
+        var mcUrl = _masaStackConfig.GetMcServiceDomain();
         var parameters = new List<KeyValuePair<string, string>>() { new(nameof(messageTaskId), messageTaskId.ToString()) };
 
         var request = new AddSchedulerJobRequest

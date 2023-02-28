@@ -3,16 +3,17 @@
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.WebHost.UseKestrel(option =>
-{
-    option.ConfigureHttpsDefaults(options =>
-    options.ServerCertificate = new X509Certificate2(Path.Combine("Certificates", "7348307__lonsid.cn.pfx"), "cqUza0MN"));
-});
+ValidatorOptions.Global.LanguageManager = new MasaLanguageManager();
+GlobalValidationOptions.SetDefaultCulture("zh-CN");
+
+await builder.Services.AddMasaStackConfigAsync();
+var masaStackConfig = builder.Services.GetMasaStackConfig();
+
 builder.WebHost.UseKestrel(option =>
 {
     option.ConfigureHttpsDefaults(options =>
     {
-        if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("TLS_NAME")))
+        if (string.IsNullOrEmpty(masaStackConfig.TlsName))
         {
             options.ServerCertificate = new X509Certificate2(Path.Combine("Certificates", "7348307__lonsid.cn.pfx"), "cqUza0MN");
         }
@@ -23,7 +24,18 @@ builder.WebHost.UseKestrel(option =>
         options.CheckCertificateRevocation = false;
     });
 });
-
+builder.Services.AddObservable(builder.Logging, () =>
+{
+    return new MasaObservableOptions
+    {
+        ServiceNameSpace = builder.Environment.EnvironmentName,
+        ServiceVersion = masaStackConfig.Version,
+        ServiceName = masaStackConfig.GetWebId(MasaStackConstant.MC)
+    };
+}, () =>
+{
+    return masaStackConfig.OtlpUrl;
+}, true);
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
@@ -34,29 +46,29 @@ builder.Services.AddResponseCompression(opts =>
     opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
         new[] { "application/octet-stream" });
 });
-
-builder.AddMasaStackComponentsForServer();
-var publicConfiguration = builder.Services.GetMasaConfiguration().ConfigurationApi.GetPublic();
-var mcBaseAddress = publicConfiguration.GetValue<string>("$public.AppSettings:McClient:Url");
+var authBaseAddress = masaStackConfig.GetAuthServiceDomain();
+var mcBaseAddress = masaStackConfig.GetMcServiceDomain();
 builder.Services.AddMcApiGateways(option => option.McServiceBaseAddress = mcBaseAddress);
-builder.Services.AddObservable(builder.Logging, () =>
-{
-    return new MasaObservableOptions
-    {
-        ServiceNameSpace = builder.Environment.EnvironmentName,
-        ServiceVersion = "1.0.0",//todo global version
-        ServiceName = "masa-mc-web-admin"
-    };
-}, () =>
-{
-    return publicConfiguration.GetValue<string>("$public.AppSettings:OtlpUrl");
-}, true);
+#if DEBUG
+builder.AddMasaStackComponentsForServer("wwwroot/i18n", authBaseAddress, "https://localhost:19501");
+#else
+builder.AddMasaStackComponentsForServer("wwwroot/i18n", authBaseAddress, mcBaseAddress);
+#endif
+
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddGlobalForServer();
 builder.Services.AddScoped<TokenProvider>();
 builder.Services.AddSingleton<ChannelUpsertDtoValidator>();
 TypeAdapterConfig.GlobalSettings.Scan(Assembly.GetExecutingAssembly(), Assembly.Load("Masa.Mc.Contracts.Admin"));
-builder.Services.AddMasaOpenIdConnect(publicConfiguration.GetSection("$public.OIDC").Get<MasaOpenIdConnectOptions>());
+MasaOpenIdConnectOptions masaOpenIdConnectOptions = new MasaOpenIdConnectOptions
+{
+    Authority = masaStackConfig.GetSsoDomain(),
+    ClientId = masaStackConfig.GetWebId(MasaStackConstant.MC),
+    Scopes = new List<string> { "offline_access" }
+}; ;
+
+IdentityModelEventSource.ShowPII = true;
+builder.Services.AddMasaOpenIdConnect(masaOpenIdConnectOptions);
 
 StaticWebAssetsLoader.UseStaticWebAssets(builder.Environment, builder.Configuration);
 

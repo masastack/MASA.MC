@@ -3,6 +3,7 @@
 
 namespace Masa.Mc.Service.Admin.Application.WebsiteMessages.Commands;
 
-public record ReadWebsiteMessageCommand(ReadWebsiteMessageInputDto dto) : Command
+public record ReadWebsiteMessageCommand(ReadWebsiteMessageInputDto dto) : Query<int>
 {
+    public override int Result { get; set; }
 }

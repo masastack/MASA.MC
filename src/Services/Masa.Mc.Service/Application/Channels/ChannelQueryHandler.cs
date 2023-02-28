@@ -75,7 +75,7 @@ public class ChannelQueryHandler
     private async Task FillChannelDtos(List<ChannelDto> dtos)
     {
         var modifierUserIds = dtos.Where(x => x.Modifier != default).Select(x => x.Modifier).Distinct().ToArray();
-        var userInfos = await _authClient.UserService.GetUsersAsync(modifierUserIds);
+        var userInfos = await _authClient.UserService.GetListByIdsAsync(modifierUserIds);
         foreach (var item in dtos)
         {
             item.ModifierName = userInfos.FirstOrDefault(x => x.Id == item.Modifier)?.StaffDislpayName ?? string.Empty;

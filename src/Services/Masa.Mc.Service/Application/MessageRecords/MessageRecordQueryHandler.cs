@@ -79,9 +79,9 @@ public class MessageRecordQueryHandler
     private async Task FillUserInfo(List<MessageRecordDto> dtos)
     {
         var userIds = dtos.Where(x => x.UserId != default && string.IsNullOrEmpty(x.User.Account)).Select(x => x.UserId).Distinct().ToArray();
-        var userInfos = await _authClient.UserService.GetUsersAsync(userIds);
+        var userInfos = await _authClient.UserService.GetListByIdsAsync(userIds);
 
-        foreach (var item in dtos)
+        foreach (var item in dtos)  
         {
             if (item.UserId != default)
             {
