@@ -159,11 +159,11 @@ public class AuthChannelUserFinder : IChannelUserFinder
         {
             if (Channel.Type == ChannelType.App)
             {
-                var userSystemData = await _authClient.UserService.GetUserSystemDataAsync<UserSystemData>(receiver.SubjectId, $"{MasaStackConsts.MC_SYSTEM_ID}:{Channel.Code}");
+                var userSystemData = await _authClient.UserService.GetSystemDataAsync<UserSystemData>(receiver.SubjectId, $"{MasaStackConsts.MC_SYSTEM_ID}:{Channel.Code}");
                 return userSystemData?.ClientId ?? string.Empty;
             }
 
-            var authUser = await _authClient.UserService.FindByIdAsync(receiver.SubjectId);
+            var authUser = await _authClient.UserService.GetByIdAsync(receiver.SubjectId);
             if (authUser != null)
             {
                 receiver = new Receiver(authUser.Id, authUser.DisplayName, authUser.Avatar, authUser.PhoneNumber ?? string.Empty, authUser.Email ?? string.Empty);

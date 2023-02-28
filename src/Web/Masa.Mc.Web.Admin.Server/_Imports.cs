@@ -25,3 +25,6 @@ global using Masa.Stack.Components.Extensions.OpenIdConnect;
 global using Masa.Contrib.StackSdks.Config;
 global using Masa.Contrib.StackSdks.Tsc;
 global using Microsoft.IdentityModel.Logging;
+global using FluentValidation;
+global using FluentValidation.Resources;
+global using Masa.BuildingBlocks.StackSdks.Config;

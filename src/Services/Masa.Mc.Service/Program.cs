@@ -1,9 +1,19 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
+using Masa.Utils.Configuration.Json;
+
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddMasaStackConfig();
+
+ValidatorOptions.Global.LanguageManager = new MasaLanguageManager();
+GlobalValidationOptions.SetDefaultCulture("zh-CN");
+
+await builder.Services.AddMasaStackConfigAsync();
 var masaStackConfig = builder.Services.GetMasaStackConfig();
+
+var publicConfiguration = builder.Services.GetMasaConfiguration().ConfigurationApi.GetPublic();
+
+var identityServerUrl = masaStackConfig.GetSsoDomain();
 
 #if DEBUG
 builder.Services.AddDaprStarter(opt =>
@@ -16,18 +26,15 @@ builder.Services.AddDaprStarter(opt =>
 builder.Services.AddAutoInject();
 builder.Services.AddDaprClient();
 
-DccOptions dccOptions = masaStackConfig.GetDccMiniOptions<DccOptions>();
-builder.Services.AddMasaConfiguration(configurationBuilder => configurationBuilder.UseDcc(dccOptions));
-var publicConfiguration = builder.Services.GetMasaConfiguration().ConfigurationApi.GetPublic();
-var identityServerUrl = masaStackConfig.GetSsoDomain();
 var ossOptions = publicConfiguration.GetSection("$public.OSS").Get<OssOptions>();
-builder.Services.AddAliyunStorage(new AliyunStorageOptions(ossOptions.AccessId, ossOptions.AccessSecret, ossOptions.Endpoint, ossOptions.RoleArn, ossOptions.RoleSessionName)
+builder.Services.AddObjectStorage(option => option.UseAliyunStorage(new AliyunStorageOptions(ossOptions.AccessId, ossOptions.AccessSecret, ossOptions.Endpoint, ossOptions.RoleArn, ossOptions.RoleSessionName)
 {
     Sts = new AliyunStsOptions()
     {
         RegionId = ossOptions.RegionId
     }
-});
+}));
+
 builder.Services.AddObservable(builder.Logging, () =>
 {
     return new MasaObservableOptions
@@ -139,12 +146,12 @@ var app = builder.Services
     })
     .AddMasaDbContext<McDbContext>(builder =>
     {
-        builder.UseSqlServer(masaStackConfig.GetConnectionString("mc"));
+        builder.UseSqlServer(masaStackConfig.GetConnectionString(AppSettings.Get("DBName")));
         builder.UseFilter(options => options.EnableSoftDelete = true);
     })
     .AddMasaDbContext<McQueryContext>(builder =>
     {
-        builder.UseSqlServer(masaStackConfig.GetConnectionString("mc"));
+        builder.UseSqlServer(masaStackConfig.GetConnectionString(AppSettings.Get("DBName")));
         builder.UseFilter(options => options.EnableSoftDelete = true);
     })
     .AddScoped<IMcQueryContext, McQueryContext>()
@@ -167,6 +174,7 @@ var app = builder.Services
 await builder.MigrateDbContextAsync<McDbContext>();
 //app.UseMiddleware<AdminSafeListMiddleware>(publicConfiguration.GetSection("$public.WhiteListOptions").Get<WhiteListOptions>());
 app.UseI18n();
+
 app.UseMasaExceptionHandler(opt =>
 {
     opt.ExceptionHandler = context =>

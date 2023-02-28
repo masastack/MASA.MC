@@ -51,11 +51,11 @@ public class UpdateMessageRecordUserEventHandler
         {
             if (messageRecords.Channel.Type == ChannelType.Sms)
             {
-                return await _authClient.UserService.FindByPhoneNumberAsync(messageRecords.ChannelUserIdentity);
+                return await _authClient.UserService.GetByPhoneNumberAsync(messageRecords.ChannelUserIdentity);
             }
             else if (messageRecords.Channel.Type == ChannelType.Email)
             {
-                return await _authClient.UserService.FindByEmailAsync(messageRecords.ChannelUserIdentity);
+                return await _authClient.UserService.GetByEmailAsync(messageRecords.ChannelUserIdentity);
             }
             else
             {

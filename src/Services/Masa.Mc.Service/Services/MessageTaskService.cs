@@ -193,8 +193,8 @@ public class MessageTaskService : ServiceBase
     public async Task BindClientIdAsync([FromServices] IMasaConfiguration configuration, [FromServices] IAuthClient authClient, BindClientIdInputDto inputDto)
     {
         var systemId = $"{MasaStackConsts.MC_SYSTEM_ID}:{inputDto.ChannelCode}";
-        var userSystemData = await authClient.UserService.GetUserSystemDataAsync<UserSystemDataDto>(systemId) ?? new();
+        var userSystemData = await authClient.UserService.GetSystemDataAsync<UserSystemDataDto>(systemId) ?? new();
         userSystemData.ClientId = inputDto.ClientId;
-        await authClient.UserService.SaveUserSystemDataAsync<UserSystemDataDto>(systemId, userSystemData);
+        await authClient.UserService.UpsertSystemDataAsync<UserSystemDataDto>(systemId, userSystemData);
     }
 }
