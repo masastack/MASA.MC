@@ -1,17 +1,29 @@
 ﻿@inherits AdminCompontentBase
 <div class="@CssProvider.GetClass()" style="@CssProvider.GetStyle()" id="@Id" @ref="Ref" @attributes="Attributes">
-    <div class="subtitle2 emphasis2--text">@T("DisplayName.VariableValueTransfer")</div>
-    <MRow Class="row-box">
-        @foreach (var item in _items)
-        {
-            <MCol Md="6">
-                <STextField @bind-Value="item.Value"
-                        Label="@item.Name"
-                        Disabled="ReadOnly"
-                        Clearable="!ReadOnly"
-                        TValue="string"
-                        OnChange="HandleChangeAsync"></STextField>
-            </MCol>
-        }
-    </MRow>
+	<div class="subtitle2 emphasis2--text">@T("DisplayName.VariableValueTransfer")</div>
+
+	<MRow Class="row-box pt-12">
+		<MCol Md="6">
+			<MLabel Class="grey--text mb-2">@T("DisplayName.Variable")</MLabel>
+		</MCol>
+		<MCol Md="6">
+			<MLabel Class="grey--text mb-2">@T("DisplayName.Value")</MLabel>
+		</MCol>
+		<hr class="grey--text" style="width:98%" />
+	</MRow>
+	@foreach (var item in _items)
+	{
+		<MRow Class="row-box pt-5 mb-n14">
+			<MCol Md="6">
+				<p class="text-h7 font-weight-regular" style="padding:20px 0;">@item.Name</p>
+			</MCol>
+			<MCol Md="6">
+				<STextField @bind-Value="item.Value"
+						Disabled="ReadOnly"
+						Clearable="!ReadOnly"
+						TValue="string"
+						OnChange="HandleChangeAsync"></STextField>
+			</MCol>
+		</MRow>
+	}
 </div>
