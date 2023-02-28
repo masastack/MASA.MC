@@ -172,7 +172,7 @@ var app = builder.Services
         options.MapHttpMethodsForUnmatched = new string[] { "Post" };
     });
 await builder.MigrateDbContextAsync<McDbContext>();
-//app.UseMiddleware<AdminSafeListMiddleware>(publicConfiguration.GetSection("$public.WhiteListOptions").Get<WhiteListOptions>());
+app.UseMiddleware<AdminSafeListMiddleware>(publicConfiguration.GetSection("$public.WhiteListOptions").Get<WhiteListOptions>());
 app.UseI18n();
 
 app.UseMasaExceptionHandler(opt =>
