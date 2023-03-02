@@ -106,17 +106,17 @@ public abstract class AdminCompontentBase : BDomComponentBase
 
     public async Task SuccessMessageAsync(string message)
     {
-        await PopupService.ToastSuccessAsync(message);
+        await PopupService.EnqueueSnackbarAsync(message, AlertTypes.Success);
     }
 
     public async Task WarningAsync(string message)
     {
-        await PopupService.ToastWarningAsync(message);
+        await PopupService.EnqueueSnackbarAsync(message, AlertTypes.Warning);
     }
 
     public async Task ErrorMessageAsync(string message)
     {
-        await PopupService.ToastErrorAsync(message);
+        await PopupService.EnqueueSnackbarAsync(message, AlertTypes.Error);
     }
 
     public static List<TEnum> GetEnumList<TEnum>() where TEnum : struct, Enum

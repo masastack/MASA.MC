@@ -18,7 +18,7 @@
 
     private Task OnError(Exception exception)
     {
-        PopupService.AlertAsync(exception.Message, AlertTypes.Error);
+        PopupService.EnqueueSnackbarAsync(exception.Message, AlertTypes.Error);
         GlobalConfig.Loading = false;
         GlobalConfig.ThrottleFlag = false;
         return Task.CompletedTask;
