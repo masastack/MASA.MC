@@ -41,7 +41,7 @@ public partial class MessageSendingRules : AdminCompontentBase
         }
         else
         {
-           await PopupService.ToastErrorAsync(T("CronExpressionInvalid"));
+            await PopupService.EnqueueSnackbarAsync(T("CronExpressionInvalid"), AlertTypes.Error);
         }
 
     }
