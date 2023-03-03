@@ -1,8 +1,6 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
-using Masa.Utils.Configuration.Json;
-
 var builder = WebApplication.CreateBuilder(args);
 
 ValidatorOptions.Global.LanguageManager = new MasaLanguageManager();
@@ -171,6 +169,8 @@ var app = builder.Services
     {
         options.MapHttpMethodsForUnmatched = new string[] { "Post" };
     });
+
+builder.Services.AddStackMiddleware();
 await builder.MigrateDbContextAsync<McDbContext>();
 app.UseMiddleware<AdminSafeListMiddleware>(publicConfiguration.GetSection("$public.WhiteListOptions").Get<WhiteListOptions>());
 app.UseI18n();
@@ -192,7 +192,7 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
-
+app.UseAddStackMiddleware();
 app.UseCloudEvents();
 app.UseEndpoints(endpoints =>
 {
