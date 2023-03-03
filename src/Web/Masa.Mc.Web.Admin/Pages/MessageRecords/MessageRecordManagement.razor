@@ -8,42 +8,50 @@
             @if (advanced)
             {
                 <div class="fold d-inline-flex">
-                    <SSelect Small @bind-Value="@_queryParam.TimeType"
-                         Items="@(GetEnumList<MessageRecordTimeTypes>())"
-                         Label="@T("DisplayName.MessageRecordTimeTypes")"
-                         ItemText="@(item => T($"DisplayName.MessageRecordTimeTypes.{item.ToString()}"))"
-                         ItemValue="item => item"
-                         BackgroundColor="white"
-                         TItem="MessageRecordTimeTypes"
-                         TItemValue="MessageRecordTimeTypes"
-                         TValue="MessageRecordTimeTypes?"
-                         Class="fill-card body2"
-                         OnSelectedItemUpdate="RefreshAsync">
-                    </SSelect>
-
-                    <Masa.Mc.Web.Admin.Components.Pickers.DateRangePicker @bind-StartTime="_queryParam.StartTime" @bind-EndTime="_queryParam.EndTime" Class="ml-6" OnChange="RefreshAsync" />
-
-                    <SSelect Small @bind-Value="_queryParam.ChannelId"
-                         Items="@_channelItems"
-                         Label="@T("DisplayName.Channel")"
-                         ItemText="item => item.DisplayName"
-                         ItemValue="item => item.Id"
-                         BackgroundColor="white"
-                         Clearable
-                         HideDetails="@("auto")"
-                         TItem="ChannelDto"
-                         TItemValue="Guid"
-                         TValue="Guid?"
-                         Class="fill-card body2 ml-6"
-                         OnClearClick="RefreshAsync"
-                         OnSelectedItemUpdate="RefreshAsync">
-                    </SSelect>
-
-                    <UserSelect @bind-Value="_queryParam.UserId" Label="@T("DisplayName.MessageRecordUserId")" Class="ml-6" OnClearClick="RefreshAsync"
-                            OnSelectedItemUpdate="RefreshAsync" />
-
-                    <BooleanSelect @bind-Value="_queryParam.Success" Items="_successItems" Label="@T("DisplayName.MessageRecordSuccess")" Class="ml-6" OnClearClick="RefreshAsync"
-                               OnSelectedItemUpdate="RefreshAsync" />
+                    <MRow NoGutters>
+                        <MCol Md="2">
+                            <SSelect Small @bind-Value="@_queryParam.TimeType"
+                                 Items="@(GetEnumList<MessageRecordTimeTypes>())"
+                                 Label="@T("DisplayName.MessageRecordTimeTypes")"
+                                 ItemText="@(item => T($"DisplayName.MessageRecordTimeTypes.{item.ToString()}"))"
+                                 ItemValue="item => item"
+                                 BackgroundColor="white"
+                                 TItem="MessageRecordTimeTypes"
+                                 TItemValue="MessageRecordTimeTypes"
+                                 TValue="MessageRecordTimeTypes?"
+                                 Class="fill-card body2"
+                                 OnSelectedItemUpdate="RefreshAsync">
+                            </SSelect>
+                        </MCol>
+                        <MCol Md="3">
+                            <Masa.Mc.Web.Admin.Components.Pickers.DateRangePicker @bind-StartTime="_queryParam.StartTime" @bind-EndTime="_queryParam.EndTime" Class="ml-6" OnChange="RefreshAsync" />
+                        </MCol>
+                        <MCol Md="2">
+                            <SSelect Small @bind-Value="_queryParam.ChannelId"
+                                 Items="@_channelItems"
+                                 Label="@T("DisplayName.Channel")"
+                                 ItemText="item => item.DisplayName"
+                                 ItemValue="item => item.Id"
+                                 BackgroundColor="white"
+                                 Clearable
+                                 HideDetails="@("auto")"
+                                 TItem="ChannelDto"
+                                 TItemValue="Guid"
+                                 TValue="Guid?"
+                                 Class="fill-card body2 ml-6"
+                                 OnClearClick="RefreshAsync"
+                                 OnSelectedItemUpdate="RefreshAsync">
+                            </SSelect>
+                        </MCol>
+                        <MCol Md="2">
+                            <UserSelect @bind-Value="_queryParam.UserId" Label="@T("DisplayName.MessageRecordUserId")" Class="ml-6" OnClearClick="RefreshAsync"
+                                    OnSelectedItemUpdate="RefreshAsync" />
+                        </MCol>
+                        <MCol Md="2">
+                            <BooleanSelect @bind-Value="_queryParam.Success" Items="_successItems" Label="@T("DisplayName.MessageRecordSuccess")" Class="ml-6" OnClearClick="RefreshAsync"
+                                       OnSelectedItemUpdate="RefreshAsync" />
+                        </MCol>
+                    </MRow>
                 </div>
             }
             <div class="d-flex search-panel-right @(!isAnimate?"full-width":"") @(isAnimate?"animate__animated":"") @(!advanced?"animate__searchOpen":"animate__searchShrink")">

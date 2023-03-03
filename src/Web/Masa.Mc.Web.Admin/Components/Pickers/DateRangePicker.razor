@@ -1,10 +1,10 @@
 ﻿@inherits AdminCompontentBase
 
-<div class="d-flex fill fill-card @Class" style="height: 40px;min-width: 240px">
+<div class="d-flex fill fill-card @Class" style="height: 40px;">
     <MIcon Size=20 Color="emphasis2--text" Class="@($"pl-2 {IconClass}")">mdi-calendar-month</MIcon>
     <MMenu @bind-Value="StartTimeVisible" CloseOnContentClick="false" OffsetY Transition="scale-transition">
         <ActivatorContent>
-            <div class="ml-2 text-btn my-auto hover-pointer text-center" style="height:20px;min-width:73px" @attributes="@context.Attrs">
+            <div class="ml-2 text-btn my-auto hover-pointer text-center" style="height:20px;width:calc(50% - 23px)" @attributes="@context.Attrs">
                 @(StartTime?.ToString("yyyy-MM-dd")??T("StartTime"))
             </div>
         </ActivatorContent>
@@ -15,7 +15,7 @@
     <MDivider Vertical Class="ma-2" Style="display:initial"></MDivider>
     <MMenu @bind-Value="EndTimeVisible" CloseOnContentClick="false" OffsetY Transition="scale-transition">
         <ActivatorContent>
-            <div class="text-btn my-auto hover-pointer text-center" style="height:20px;min-width:73px" @attributes="@context.Attrs">
+            <div class="text-btn my-auto hover-pointer text-center" style="height:20px;width:calc(50% - 23px)" @attributes="@context.Attrs">
                 @(EndTime?.ToString("yyyy-MM-dd")??T("EndTime"))
             </div>
         </ActivatorContent>

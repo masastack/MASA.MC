@@ -212,7 +212,7 @@
   "DisplayName.MessageTaskList": "消息任务列表",
   "DisplayName.MessageInfoTitle": "消息标题",
   "DisplayName.MessageInfoContent": "消息详情",
-  "DisplayName.MessageTaskIsEnabled": "消息任务状态",
+  "DisplayName.MessageTaskIsEnabled": "状态",
   "DisplayName.MessageTaskTimeType": "时间类型",
   "DisplayName.MessageTaskTimeType.ModificationTime": "最近修改时间",
   "DisplayName.MessageTaskTimeType.SendTime": "发送时间",
