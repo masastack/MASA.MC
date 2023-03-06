@@ -1,0 +1,13 @@
+﻿<MAvatar Size=Size>
+    <MImage Src="@(string.IsNullOrEmpty(Avatar)?_defaultAvatar:Avatar)"></MImage>
+</MAvatar>
+
+@code {
+    [Parameter]
+    public string Avatar { get; set; }
+
+    [Parameter]
+    public StringNumber Size { get; set; }
+
+    private string _defaultAvatar = "https://cdn.masastack.com/stack/images/avatar/mr.chen.svg";
+}
