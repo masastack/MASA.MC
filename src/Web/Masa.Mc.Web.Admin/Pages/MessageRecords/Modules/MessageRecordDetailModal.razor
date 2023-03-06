@@ -3,16 +3,7 @@
     <SSheetDialog Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.ViewMessageRecord")">
         <div class="full-height d-flex">
             <div class="pa-12 record-detail-left">
-                @if (string.IsNullOrEmpty(_messageRecord.User.Avatar))
-                {
-                    <SEmptyAvatar Size=48 Value="@(_messageRecord.User.DisplayName)" />
-                }
-                else
-                {
-                    <MAvatar Size=48>
-                        <MImage Src="@(_messageRecord.User.Avatar)"></MImage>
-                    </MAvatar>
-                }
+                <DefaultUserAvatar Avatar="@_messageRecord.User.Avatar" Size="48" />
                 <div class="h8 emphasis--text mt-2">@(_messageRecord.User.DisplayName)</div>
                 <div class="body2 regular--text mt-2">@(_messageRecord.User.Email)</div>
                 <div class="body2 regular--text mt-1">@(_messageRecord.User.PhoneNumber)</div>

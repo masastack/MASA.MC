@@ -13,7 +13,7 @@ builder.WebHost.UseKestrel(option =>
 {
     option.ConfigureHttpsDefaults(options =>
     {
-        if (string.IsNullOrEmpty(masaStackConfig.TlsName))
+        if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("TLS_NAME")))
         {
             options.ServerCertificate = new X509Certificate2(Path.Combine("Certificates", "7348307__lonsid.cn.pfx"), "cqUza0MN");
         }

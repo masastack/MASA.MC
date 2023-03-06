@@ -76,16 +76,7 @@
                         case ("Receiver"):
                             <MListItem Class="px-0 text-truncate">
                                 <MListItemAvatar Class="mr-3">
-                                    @if (string.IsNullOrEmpty(context.Item.User.Avatar))
-                                    {
-                                        <SEmptyAvatar Size=40 Value="@(context.Item.User.DisplayName)" />
-                                    }
-                                    else
-                                    {
-                                        <MAvatar Size=40>
-                                            <MImage Src="@(context.Item.User.Avatar)"></MImage>
-                                        </MAvatar>
-                                    }
+                                    <DefaultUserAvatar Avatar="@context.Item.User.Avatar" Size="40" />
                                 </MListItemAvatar>
                                 <MListItemContent>
                                     <MListItemTitle class="subtitle emphasis--text">
