@@ -198,3 +198,5 @@ global using Masa.BuildingBlocks.StackSdks.Auth.Contracts;
 global using Masa.Contrib.StackSdks.Tsc;
 global using Masa.Mc.Service.Admin.Infrastructure.Extensions;
 global using FluentValidation.Resources;
+global using Masa.Contrib.StackSdks.Middleware;
+global using Masa.Utils.Configuration.Json;
