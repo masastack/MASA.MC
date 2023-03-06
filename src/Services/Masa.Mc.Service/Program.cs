@@ -109,7 +109,7 @@ builder.Services.AddScoped(service =>
     return new TokenProvider { AccessToken = auth?.Parameter };
 });
 
-var app = builder.Services
+builder.Services
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     .AddEndpointsApiExplorer()
     .AddSwaggerGen(options =>
@@ -159,20 +159,22 @@ var app = builder.Services
         .UseIntegrationEventBus<IntegrationEventLogService>(options => options.UseDapr().UseEventLog<McDbContext>())
         .UseEventBus(eventBusBuilder =>
         {
-            eventBusBuilder.UseMiddleware(typeof(DisabledCommandMiddleware<>));
             eventBusBuilder.UseMiddleware(typeof(ValidatorMiddleware<>));
         })
         .UseIsolationUoW<McDbContext>(isolationBuilder => isolationBuilder.UseMultiEnvironment("env_key"), null)
         .UseRepository<McDbContext>();
-    })
-    .AddServices(builder, options =>
-    {
-        options.MapHttpMethodsForUnmatched = new string[] { "Post" };
     });
 
 builder.Services.AddStackMiddleware();
 await builder.MigrateDbContextAsync<McDbContext>();
+
+var app = builder.AddServices(options =>
+{
+    options.MapHttpMethodsForUnmatched = new string[] { "Post" };
+});
+
 app.UseMiddleware<AdminSafeListMiddleware>(publicConfiguration.GetSection("$public.WhiteListOptions").Get<WhiteListOptions>());
+
 app.UseI18n();
 
 app.UseMasaExceptionHandler(opt =>
@@ -201,15 +203,5 @@ app.UseEndpoints(endpoints =>
 });
 
 app.UseHttpsRedirection();
-
-app.MapHealthChecks("/hc", new HealthCheckOptions()
-{
-    Predicate = _ => true,
-    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-});
-app.MapHealthChecks("/liveness", new HealthCheckOptions
-{
-    Predicate = r => r.Name.Contains("self")
-});
 
 app.Run();
