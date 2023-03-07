@@ -17,6 +17,7 @@ public class McCaller : HttpClientCallerBase
     WebsiteMessageService? _websiteMessageService;
     OssService? _ossService;
     TokenProvider _tokenProvider;
+    JwtTokenValidator _jwtTokenValidator;
     #endregion
 
     public ChannelService ChannelService => _channelService ?? (_channelService = new(Caller));
@@ -44,15 +45,22 @@ public class McCaller : HttpClientCallerBase
     public McCaller(
         IServiceProvider serviceProvider,
         TokenProvider tokenProvider,
-        McApiOptions options) : base(serviceProvider)
+        McApiOptions options,
+        JwtTokenValidator jwtTokenValidator) : base(serviceProvider)
     {
         BaseAddress = options.McServiceBaseAddress;
         _tokenProvider = tokenProvider;
+        _jwtTokenValidator = jwtTokenValidator;
     }
 
     protected override async Task ConfigHttpRequestMessageAsync(HttpRequestMessage requestMessage)
     {
-        requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _tokenProvider.AccessToken);
+        if (!string.IsNullOrWhiteSpace(_tokenProvider.AccessToken))
+        {
+            await _jwtTokenValidator.ValidateAccessTokenAsync(_tokenProvider);
+            requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _tokenProvider.AccessToken);
+        }
+
         await base.ConfigHttpRequestMessageAsync(requestMessage);
     }
 }

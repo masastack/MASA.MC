@@ -70,6 +70,15 @@ MasaOpenIdConnectOptions masaOpenIdConnectOptions = new MasaOpenIdConnectOptions
 IdentityModelEventSource.ShowPII = true;
 builder.Services.AddMasaOpenIdConnect(masaOpenIdConnectOptions);
 
+builder.Services.AddJwtTokenValidator(options =>
+{
+    options.AuthorityEndpoint = masaOpenIdConnectOptions.Authority;
+}, refreshTokenOptions =>
+{
+    refreshTokenOptions.ClientId = masaOpenIdConnectOptions.ClientId;
+    refreshTokenOptions.ClientSecret = masaOpenIdConnectOptions.ClientSecret;
+});
+
 StaticWebAssetsLoader.UseStaticWebAssets(builder.Environment, builder.Configuration);
 
 var app = builder.Build();

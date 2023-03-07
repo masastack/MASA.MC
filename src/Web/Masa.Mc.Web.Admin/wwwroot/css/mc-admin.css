@@ -458,3 +458,7 @@
     border-radius: 18px;
     height: 27px;
 }
+
+.fold .m-input label {
+    color: #A3AED0 !important;
+}
