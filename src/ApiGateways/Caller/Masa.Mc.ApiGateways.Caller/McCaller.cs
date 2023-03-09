@@ -5,6 +5,8 @@ namespace Masa.Mc.ApiGateways.Caller;
 
 public class McCaller : HttpClientCallerBase
 {
+    private const string DEFAULT_SCHEME = "Bearer";
+
     #region Field
     ChannelService? _channelService;
     MessageTemplateService? _messageTemplateService;
@@ -17,7 +19,8 @@ public class McCaller : HttpClientCallerBase
     WebsiteMessageService? _websiteMessageService;
     OssService? _ossService;
     TokenProvider _tokenProvider;
-    JwtTokenValidator _jwtTokenValidator;
+    ITokenValidatorHandler? _tokenValidatorHandler;
+    MasaOpenIdConnectOptions _masaOpenIdConnectOptions;
     #endregion
 
     public ChannelService ChannelService => _channelService ?? (_channelService = new(Caller));
@@ -46,21 +49,37 @@ public class McCaller : HttpClientCallerBase
         IServiceProvider serviceProvider,
         TokenProvider tokenProvider,
         McApiOptions options,
-        JwtTokenValidator jwtTokenValidator) : base(serviceProvider)
+        ITokenValidatorHandler? tokenValidatorHandler,
+        MasaOpenIdConnectOptions masaOpenIdConnectOptions) : base(serviceProvider)
     {
         BaseAddress = options.McServiceBaseAddress;
         _tokenProvider = tokenProvider;
-        _jwtTokenValidator = jwtTokenValidator;
+        _tokenValidatorHandler = tokenValidatorHandler;
+        _masaOpenIdConnectOptions = masaOpenIdConnectOptions;
     }
 
     protected override async Task ConfigHttpRequestMessageAsync(HttpRequestMessage requestMessage)
     {
-        if (!string.IsNullOrWhiteSpace(_tokenProvider.AccessToken))
-        {
-            await _jwtTokenValidator.ValidateAccessTokenAsync(_tokenProvider);
-            requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _tokenProvider.AccessToken);
-        }
+        var authenticationService = new AuthenticationService(_tokenProvider, _tokenValidatorHandler, DEFAULT_SCHEME);
+        await authenticationService.ExecuteAsync(requestMessage);
 
         await base.ConfigHttpRequestMessageAsync(requestMessage);
+    }
+
+    protected override MasaHttpClientBuilder UseHttpClient()
+    {
+        var httpClientBuilder = base.UseHttpClient();
+        httpClientBuilder.UseAuthentication(options =>
+         {
+             options.UseJwtBearer(jwtTokenValidatorOptions =>
+             {
+                 jwtTokenValidatorOptions.AuthorityEndpoint = _masaOpenIdConnectOptions.Authority;
+             }, clientRefreshTokenOptions =>
+             {
+                 clientRefreshTokenOptions.ClientId = _masaOpenIdConnectOptions.ClientId;
+                 clientRefreshTokenOptions.ClientSecret = _masaOpenIdConnectOptions.ClientSecret;
+             });
+         });
+        return httpClientBuilder;
     }
 }

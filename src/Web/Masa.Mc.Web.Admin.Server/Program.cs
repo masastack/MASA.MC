@@ -48,7 +48,7 @@ builder.Services.AddResponseCompression(opts =>
 });
 var authBaseAddress = masaStackConfig.GetAuthServiceDomain();
 var mcBaseAddress = masaStackConfig.GetMcServiceDomain();
-builder.Services.AddMcApiGateways(option => option.McServiceBaseAddress = mcBaseAddress);
+
 #if DEBUG
 builder.AddMasaStackComponentsForServer("wwwroot/i18n", authBaseAddress, "https://localhost:19501");
 #else
@@ -69,15 +69,15 @@ MasaOpenIdConnectOptions masaOpenIdConnectOptions = new MasaOpenIdConnectOptions
 
 IdentityModelEventSource.ShowPII = true;
 builder.Services.AddMasaOpenIdConnect(masaOpenIdConnectOptions);
-
-builder.Services.AddJwtTokenValidator(options =>
-{
-    options.AuthorityEndpoint = masaOpenIdConnectOptions.Authority;
-}, refreshTokenOptions =>
-{
-    refreshTokenOptions.ClientId = masaOpenIdConnectOptions.ClientId;
-    refreshTokenOptions.ClientSecret = masaOpenIdConnectOptions.ClientSecret;
-});
+builder.Services.AddMcApiGateways(masaOpenIdConnectOptions, option => option.McServiceBaseAddress = mcBaseAddress);
+//builder.Services.AddJwtTokenValidator(options =>
+//{
+//    options.AuthorityEndpoint = masaOpenIdConnectOptions.Authority;
+//}, refreshTokenOptions =>
+//{
+//    refreshTokenOptions.ClientId = masaOpenIdConnectOptions.ClientId;
+//    refreshTokenOptions.ClientSecret = masaOpenIdConnectOptions.ClientSecret;
+//});
 
 StaticWebAssetsLoader.UseStaticWebAssets(builder.Environment, builder.Configuration);
 
