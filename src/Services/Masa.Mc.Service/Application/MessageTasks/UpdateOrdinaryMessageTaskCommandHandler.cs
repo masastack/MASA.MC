@@ -33,7 +33,7 @@ public class UpdateOrdinaryMessageTaskCommandHandler
         dto.EntityId = messageInfo.Id;
 
         if (entity.Status != MessageTaskStatuses.WaitSend)
-            throw new UserFriendlyException(errorCode: UserFriendlyExceptionCodes.CAN_BE_MODIFIED_AFTER_SENDING);
+            throw new UserFriendlyException(errorCode: UserFriendlyExceptionCodes.CAN_BE_MODIFIED_BEFORE_SENDING);
 
         dto.Adapt(entity);
         await _domainService.UpdateAsync(entity);

@@ -48,12 +48,13 @@ builder.Services.AddResponseCompression(opts =>
 });
 var authBaseAddress = masaStackConfig.GetAuthServiceDomain();
 var mcBaseAddress = masaStackConfig.GetMcServiceDomain();
-builder.Services.AddMcApiGateways(option => option.McServiceBaseAddress = mcBaseAddress);
+
 #if DEBUG
-builder.AddMasaStackComponentsForServer("wwwroot/i18n", authBaseAddress, "https://localhost:19501");
-#else
-builder.AddMasaStackComponentsForServer("wwwroot/i18n", authBaseAddress, mcBaseAddress);
+mcBaseAddress = "https://localhost:19501";
 #endif
+
+builder.Services.AddMcApiGateways(option => option.McServiceBaseAddress = mcBaseAddress);
+builder.AddMasaStackComponentsForServer("wwwroot/i18n", authBaseAddress, mcBaseAddress);
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddGlobalForServer();
