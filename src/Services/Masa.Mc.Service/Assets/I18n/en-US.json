@@ -30,5 +30,6 @@
   "ChannelTypeDoesNotMatchChannel": "Channel type does not match the channel",
   "TemplateCodeCannotRepeated": "Template code cannot be repeated",
   "TemplateIdCannotRepeated": "Template id cannot be repeated",
-  "ReceiverGroupNameCannotRepeated": "ReceiverGroup name cannot be repeated"
+  "ReceiverGroupNameCannotRepeated": "ReceiverGroup name cannot be repeated",
+  "SyncSmsTemplateErrorMessage": "SMS template synchronization failed. Please check whether the channel information is correct"
 }

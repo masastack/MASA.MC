@@ -5,6 +5,8 @@ namespace Masa.Mc.ApiGateways.Caller;
 
 public class McCaller : HttpClientCallerBase
 {
+    private const string DEFAULT_SCHEME = "Bearer";
+
     #region Field
     ChannelService? _channelService;
     MessageTemplateService? _messageTemplateService;
@@ -52,7 +54,11 @@ public class McCaller : HttpClientCallerBase
 
     protected override async Task ConfigHttpRequestMessageAsync(HttpRequestMessage requestMessage)
     {
-        requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _tokenProvider.AccessToken);
+        if (!string.IsNullOrWhiteSpace(_tokenProvider.AccessToken))
+        {
+            requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _tokenProvider.AccessToken);
+        }
+
         await base.ConfigHttpRequestMessageAsync(requestMessage);
     }
 }

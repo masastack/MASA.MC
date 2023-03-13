@@ -76,18 +76,26 @@ public class SmsTemplateCommandHandler
 
     private async Task GetAliyunSmsTemplateList(List<QuerySmsTemplateListResponseBodySmsTemplateList> smsTemplateList, int page = 1)
     {
-        var aliyunSmsTemplateListResponse = await _smsTemplateService.GetSmsTemplateListAsync(page, 50) as SmsTemplateListResponse;
-        if (!aliyunSmsTemplateListResponse.Success)
+        try
         {
-            throw new UserFriendlyException(aliyunSmsTemplateListResponse.Message);
+            var aliyunSmsTemplateListResponse = await _smsTemplateService.GetSmsTemplateListAsync(page, 50) as SmsTemplateListResponse;
+            if (!aliyunSmsTemplateListResponse.Success)
+            {
+                throw new UserFriendlyException(aliyunSmsTemplateListResponse.Message);
+            }
+            var aliyunSmsTemplateList = aliyunSmsTemplateListResponse.Data.Body.SmsTemplateList;
+            if (aliyunSmsTemplateList != null && aliyunSmsTemplateList.Any())
+            {
+                smsTemplateList.AddRange(aliyunSmsTemplateList);
+                page++;
+                await GetAliyunSmsTemplateList(smsTemplateList, page);
+            }
         }
-        var aliyunSmsTemplateList = aliyunSmsTemplateListResponse.Data.Body.SmsTemplateList;
-        if (aliyunSmsTemplateList != null && aliyunSmsTemplateList.Any())
+        catch (Exception ex)
         {
-            smsTemplateList.AddRange(aliyunSmsTemplateList);
-            page++;
-            await GetAliyunSmsTemplateList(smsTemplateList, page);
+            throw new UserFriendlyException(errorCode: UserFriendlyExceptionCodes.SYNC_SMS_TEMPLATE_ERROR_MESSAGE);
         }
+        
     }
 
     private SmsTemplateTypes AliyunSmsTemplateTypeMapToSmsTemplateType(int? templateType)

@@ -1,16 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Masa.Contrib.Service.Caller.Authentication.OpenIdConnect" Version="$(MasaFrameworkPackageVersion)" />
-  </ItemGroup>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\..\..\Contracts\Masa.Mc.Contracts.Admin\Masa.Mc.Contracts.Admin.csproj" />
+		<PackageReference Include="Masa.Contrib.Service.Caller.Authentication.OpenIdConnect" Version="$(MasaFrameworkPackageVersion)" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\..\Contracts\Masa.Mc.Contracts.Admin\Masa.Mc.Contracts.Admin.csproj" />
 	</ItemGroup>
 </Project>
