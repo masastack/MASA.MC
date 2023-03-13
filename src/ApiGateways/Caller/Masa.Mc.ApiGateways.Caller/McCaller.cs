@@ -19,8 +19,6 @@ public class McCaller : HttpClientCallerBase
     WebsiteMessageService? _websiteMessageService;
     OssService? _ossService;
     TokenProvider _tokenProvider;
-    ITokenValidatorHandler? _tokenValidatorHandler;
-    MasaOpenIdConnectOptions _masaOpenIdConnectOptions;
     #endregion
 
     public ChannelService ChannelService => _channelService ?? (_channelService = new(Caller));
@@ -48,38 +46,19 @@ public class McCaller : HttpClientCallerBase
     public McCaller(
         IServiceProvider serviceProvider,
         TokenProvider tokenProvider,
-        McApiOptions options,
-        ITokenValidatorHandler? tokenValidatorHandler,
-        MasaOpenIdConnectOptions masaOpenIdConnectOptions) : base(serviceProvider)
+        McApiOptions options) : base(serviceProvider)
     {
         BaseAddress = options.McServiceBaseAddress;
         _tokenProvider = tokenProvider;
-        _tokenValidatorHandler = tokenValidatorHandler;
-        _masaOpenIdConnectOptions = masaOpenIdConnectOptions;
     }
 
     protected override async Task ConfigHttpRequestMessageAsync(HttpRequestMessage requestMessage)
     {
-        var authenticationService = new AuthenticationService(_tokenProvider, _tokenValidatorHandler, DEFAULT_SCHEME);
-        await authenticationService.ExecuteAsync(requestMessage);
+        if (!string.IsNullOrWhiteSpace(_tokenProvider.AccessToken))
+        {
+            requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _tokenProvider.AccessToken);
+        }
 
         await base.ConfigHttpRequestMessageAsync(requestMessage);
-    }
-
-    protected override MasaHttpClientBuilder UseHttpClient()
-    {
-        var httpClientBuilder = base.UseHttpClient();
-        httpClientBuilder.UseAuthentication(options =>
-         {
-             options.UseJwtBearer(jwtTokenValidatorOptions =>
-             {
-                 jwtTokenValidatorOptions.AuthorityEndpoint = _masaOpenIdConnectOptions.Authority;
-             }, clientRefreshTokenOptions =>
-             {
-                 clientRefreshTokenOptions.ClientId = _masaOpenIdConnectOptions.ClientId;
-                 clientRefreshTokenOptions.ClientSecret = _masaOpenIdConnectOptions.ClientSecret;
-             });
-         });
-        return httpClientBuilder;
     }
 }
