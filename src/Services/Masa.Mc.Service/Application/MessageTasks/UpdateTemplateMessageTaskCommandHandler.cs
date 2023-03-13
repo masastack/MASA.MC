@@ -38,7 +38,7 @@ public class UpdateTemplateMessageTaskCommandHandler
         MasaArgumentException.ThrowIfNull(entity, _i18n.T("MessageTask"));
 
         if (entity.Status != MessageTaskStatuses.WaitSend)
-            throw new UserFriendlyException(errorCode: UserFriendlyExceptionCodes.CAN_BE_MODIFIED_AFTER_SENDING);
+            throw new UserFriendlyException(errorCode: UserFriendlyExceptionCodes.CAN_BE_MODIFIED_BEFORE_SENDING);
         updateCommand.MessageTask.Adapt(entity);
         entity.UpdateVariables(updateCommand.MessageTask.Variables);
         await _domainService.UpdateAsync(entity);

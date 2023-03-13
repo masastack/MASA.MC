@@ -18,7 +18,7 @@ public static class UserFriendlyExceptionCodes
     public const string TEMPLATE_VARIABLES_REQUIRED = "TemplateVariablesRequired";
     public const string MESSAGE_TASK_DISABLE_HAS_HISTORY = "MessageTaskDisableHasHistory";
     public const string MESSAGE_TASK_HISTORY_WITHDRAWN = "MessageTaskHistoryWithdrawn";
-    public const string CAN_BE_MODIFIED_AFTER_SENDING = "CanBeModifiedAfterSending";
+    public const string CAN_BE_MODIFIED_BEFORE_SENDING = "CanBeModifiedBeforeSending";
     public const string MESSAGE_TEMPLATE_CANNOT_DELETE_BY_MESSAGE_TASK = "MessageTemplateCannotDeleteByMessageTask";
     public const string CHANNEL_CANNOT_DELETED = "ChannelCannotDeleted";
     public const string CHANNEL_CANNOT_REPEATED = "ChannelCannotRepeated";

@@ -23,7 +23,7 @@
   "TemplateVariablesRequired": "Please fill in the template variable",
   "MessageTaskDisableHasHistory": "The task has a sending task history and cannot be disabled",
   "MessageTaskHistoryWithdrawn": "Message task history has been canceled",
-  "CanBeModifiedAfterSending": "It can only be modified after being sent",
+  "CanBeModifiedBeforeSending": "It can only be modified before being sent",
   "MessageTemplateCannotDeleteByMessageTask": "There are message tasks in use and cannot be deleted",
   "ChannelCannotDeleted": "This channel cannot be deleted",
   "ChannelCannotRepeated": "Channel code cannot be repeated",
