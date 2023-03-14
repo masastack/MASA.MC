@@ -22,6 +22,8 @@ public class McQueryContext : MasaDbContext<McQueryContext>, IMcQueryContext
 
     public IQueryable<WebsiteMessageQueryModel> WebsiteMessageQueries => Set<WebsiteMessageQueryModel>().AsQueryable();
 
+    public IQueryable<WebsiteMessageTagQueryModel> WebsiteMessageTagQueries => Set<WebsiteMessageTagQueryModel>().AsQueryable();
+
     public McQueryContext(MasaDbContextOptions<McQueryContext> options) : base(options)
     {
     }
@@ -92,6 +94,12 @@ public class McQueryContext : MasaDbContext<McQueryContext>, IMcQueryContext
         {
             b.ToView(MCConsts.DbTablePrefix + "WebsiteMessages", MCConsts.DbSchema);
             b.Property(x => x.ExtraProperties).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
+            b.HasMany(x => x.Tags).WithOne().HasForeignKey(x => x.WebsiteMessageId).IsRequired();
+        });
+
+        builder.Entity<WebsiteMessageTagQueryModel>(b =>
+        {
+            b.ToView(MCConsts.DbTablePrefix + "WebsiteMessageTags", MCConsts.DbSchema);
         });
 
         base.OnModelCreatingExecuting(builder);

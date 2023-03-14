@@ -200,3 +200,4 @@ global using Masa.Mc.Service.Admin.Infrastructure.Extensions;
 global using FluentValidation.Resources;
 global using Masa.Contrib.StackSdks.Middleware;
 global using Masa.Utils.Configuration.Json;
+global using Microsoft.EntityFrameworkCore.Design;

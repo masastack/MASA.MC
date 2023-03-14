@@ -1,6 +1,9 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
+using System.Linq;
+using com.igetui.api.openservice.igetui;
+
 namespace Masa.Mc.Service.Admin.Application.WebsiteMessages;
 
 public class WebsiteMessageQueryHandler
@@ -89,6 +92,7 @@ public class WebsiteMessageQueryHandler
     {
         var userId = _userContext.GetUserId<Guid>();
         Expression<Func<WebsiteMessageQueryModel, bool>> condition = w => w.UserId == userId && !w.IsWithdrawn;
+
         switch (inputDto.FilterType)
         {
             case WebsiteMessageFilterType.MessageTitle:
@@ -103,6 +107,7 @@ public class WebsiteMessageQueryHandler
         }
         condition = condition.And(inputDto.ChannelId.HasValue, w => w.ChannelId == inputDto.ChannelId);
         condition = condition.And(inputDto.IsRead.HasValue, w => w.IsRead == inputDto.IsRead);
+        condition = condition.And(!string.IsNullOrEmpty(inputDto.Tag), w => w.Tags.Any(x => x.Tag == inputDto.Tag));
         return await Task.FromResult(condition); ;
     }
 
@@ -140,5 +145,27 @@ public class WebsiteMessageQueryHandler
     public async Task<WebsiteMessageQueryModel?> GetNextWebsiteMessage(DateTime creationTime, Expression<Func<WebsiteMessageQueryModel, bool>> predicate)
     {
         return await _context.WebsiteMessageQueries.Where(predicate).Where(x => x.CreationTime > creationTime).OrderBy(x => x.CreationTime).FirstOrDefaultAsync();
+    }
+
+    [EventHandler]
+    public async Task GetListByTagAsync(GetListByTagQuery query)
+    {
+        var userId = _userContext.GetUserId<Guid>();
+        var tags = query.Tags.Split(',');
+
+        var set = _context.WebsiteMessageTagQueries.AsNoTracking().Where(x => tags.Contains(x.Tag));
+        var sorted = set.OrderByDescending(x => x.CreationTime);
+        var tagQuery = set.Select(x => x.Tag)
+            .Distinct()
+            .SelectMany(x => sorted.Where(y => y.Tag == x).Take(1));
+
+        var messageQuery = from tag in tagQuery
+                           join message in _context.WebsiteMessageQueries on tag.WebsiteMessageId equals message.Id into messageJoined
+                           from message in messageJoined.DefaultIfEmpty()
+                           where message != null && message.UserId == userId
+                           select message;
+
+        var dtos = messageQuery.Adapt<List<WebsiteMessageDto>>();
+        query.Result = dtos;
     }
 }

@@ -76,18 +76,18 @@ public class SendAppMessageEventHandler
 
                 try
                 {
+                    if (taskHistory.MessageTask.IsAppInWebsiteMessage())
+                    {
+                        var websiteMessage = new WebsiteMessage(messageRecord.ChannelId, item.UserId, eto.MessageData.MessageContent.Title, eto.MessageData.MessageContent.Content, eto.MessageData.MessageContent.GetJumpUrl(), DateTimeOffset.Now, eto.MessageData.MessageContent.ExtraProperties);
+                        await _websiteMessageRepository.AddAsync(websiteMessage);
+                    }
+
                     var appChannel = channel.Type as ChannelType.AppsChannel;
                     var transmissionContent = appChannel.GetMessageTransmissionContent(eto.MessageData.MessageContent);
                     var response = await _appNotificationSender.SendAsync(new AppMessage(item.ChannelUserIdentity, eto.MessageData.MessageContent.Title, eto.MessageData.MessageContent.Content, transmissionContent));
                     if (response.Success)
                     {
                         messageRecord.SetResult(true, string.Empty);
-
-                        if (taskHistory.MessageTask.IsAppInWebsiteMessage())
-                        {
-                            var websiteMessage = new WebsiteMessage(messageRecord.ChannelId, item.UserId, eto.MessageData.MessageContent.Title, eto.MessageData.MessageContent.Content, eto.MessageData.MessageContent.GetJumpUrl(), DateTimeOffset.Now, eto.MessageData.ExtraProperties);
-                            await _websiteMessageRepository.AddAsync(websiteMessage);
-                        }
                         okCount++;
                     }
                     else

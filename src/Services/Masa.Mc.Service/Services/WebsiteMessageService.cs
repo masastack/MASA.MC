@@ -12,9 +12,9 @@ public class WebsiteMessageService : ServiceBase
         MapGet(GetNoticeListAsync);
     }
 
-    public async Task<PaginatedListDto<WebsiteMessageDto>> GetListAsync(IEventBus eventbus, [FromQuery] WebsiteMessageFilterType? filterType, [FromQuery] Guid? channelId, [FromQuery] bool? isRead, [FromQuery] string filter = "", [FromQuery] string sorting = "", [FromQuery] int page = 1, [FromQuery] int pagesize = 10)
+    public async Task<PaginatedListDto<WebsiteMessageDto>> GetListAsync(IEventBus eventbus, [FromQuery] WebsiteMessageFilterType? filterType, [FromQuery] Guid? channelId, [FromQuery] bool? isRead, [FromQuery] string tag = "", [FromQuery] string filter = "", [FromQuery] string sorting = "", [FromQuery] int page = 1, [FromQuery] int pagesize = 10)
     {
-        var inputDto = new GetWebsiteMessageInputDto(filter, filterType, channelId, isRead, sorting, page, pagesize);
+        var inputDto = new GetWebsiteMessageInputDto(filter, filterType, channelId, isRead, tag, sorting, page, pagesize);
         var query = new GetWebsiteMessageListQuery(inputDto);
         await eventbus.PublishAsync(query);
         return query.Result;
@@ -75,5 +75,12 @@ public class WebsiteMessageService : ServiceBase
     {
         var command = new SendGetNotificationCommand(userIds);
         await eventbus.PublishAsync(command);
+    }
+
+    public async Task<List<WebsiteMessageDto>> GetListByTagAsync(IEventBus eventbus,string tags)
+    {
+        var query = new GetListByTagQuery(tags);
+        await eventbus.PublishAsync(query);
+        return query.Result;
     }
 }

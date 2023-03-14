@@ -20,4 +20,6 @@ public interface IMcQueryContext
     public IQueryable<ReceiverGroupQueryModel> ReceiverGroupQueries { get; }
 
     public IQueryable<WebsiteMessageQueryModel> WebsiteMessageQueries { get; }
+
+    public IQueryable<WebsiteMessageTagQueryModel> WebsiteMessageTagQueries { get; }
 }

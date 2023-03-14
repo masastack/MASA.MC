@@ -29,6 +29,9 @@ public class WebsiteMessage : FullAggregateRoot<Guid, Guid>
 
     public ExtraPropertyDictionary ExtraProperties { get; protected set; } = new();
 
+    public List<WebsiteMessageTag> Tags { get; protected set; } = new ();
+
+
     public WebsiteMessage(Guid channelId, Guid userId, string title, string content, string linkUrl, DateTimeOffset sendTime, ExtraPropertyDictionary extraProperties) : this(channelId, userId, title, content, linkUrl, sendTime, false, null, extraProperties)
     {
     }
@@ -44,6 +47,8 @@ public class WebsiteMessage : FullAggregateRoot<Guid, Guid>
         IsRead = isRead;
         ReadTime = readTime;
         ExtraProperties = extraProperties;
+
+        AddTag();
     }
 
     public void SetRead()
@@ -55,5 +60,15 @@ public class WebsiteMessage : FullAggregateRoot<Guid, Guid>
     public void SetWithdraw()
     {
         IsWithdrawn = true;
+    }
+
+    public void AddTag()
+    {
+        var tag = ExtraProperties.GetProperty<string>("Tag");
+
+        if (!string.IsNullOrEmpty(tag))
+        {
+            Tags.Add(new WebsiteMessageTag(tag));
+        }
     }
 }

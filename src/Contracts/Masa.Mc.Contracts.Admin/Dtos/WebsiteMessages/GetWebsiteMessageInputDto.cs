@@ -1,8 +1,6 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
-using Masa.Mc.Contracts.Admin.Enums.WebsiteMessages;
-
 namespace Masa.Mc.Contracts.Admin.Dtos.WebsiteMessages;
 
 public class GetWebsiteMessageInputDto : PaginatedOptionsDto
@@ -12,6 +10,8 @@ public class GetWebsiteMessageInputDto : PaginatedOptionsDto
     public Guid? ChannelId { get; set; }
     public bool? IsRead { get; set; }
 
+    public string Tag { get; set; } = string.Empty;
+
     public GetWebsiteMessageInputDto()
     {
     }
@@ -20,11 +20,12 @@ public class GetWebsiteMessageInputDto : PaginatedOptionsDto
     {
     }
 
-    public GetWebsiteMessageInputDto(string filter, WebsiteMessageFilterType? filterType, Guid? channelId, bool? isRead, string sorting, int page, int pageSize) : base(sorting, page, pageSize)
+    public GetWebsiteMessageInputDto(string filter, WebsiteMessageFilterType? filterType, Guid? channelId, bool? isRead, string tag, string sorting, int page, int pageSize) : base(sorting, page, pageSize)
     {
         Filter = filter;
         FilterType = filterType;
         ChannelId = channelId;
         IsRead = isRead;
+        Tag = tag;
     }
 }
