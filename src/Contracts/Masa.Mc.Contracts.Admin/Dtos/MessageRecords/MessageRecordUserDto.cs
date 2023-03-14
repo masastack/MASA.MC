@@ -25,7 +25,7 @@ public class MessageRecordUserDto
                 PhoneNumber = channelUserIdentity;
                 break;
             case ChannelTypes.Email:
-                PhoneNumber = Email;
+                Email = channelUserIdentity;
                 break;
             default:
                 break;
