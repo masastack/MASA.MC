@@ -13,7 +13,7 @@ public class GetuiSender : IAppNotificationSender
         _getuiOptionsResolver = getuiOptionsResolver;
     }
 
-    public async Task<AppNotificationResponseBase> SendAsync(AppMessage appMessage)
+    public async Task<AppNotificationResponseBase> SendAsync(SingleAppMessage appMessage)
     {
         var options = await _getuiOptionsResolver.ResolveAsync();
         IGtPush push = new IGtPush(HOST, options.AppKey, options.MasterSecret);
@@ -31,7 +31,38 @@ public class GetuiSender : IAppNotificationSender
         {
             var pushResult = push.pushMessageToSingle(message, target);
 
-            if (string.IsNullOrWhiteSpace(pushResult) || !pushResult.Contains("successed"))
+            if (string.IsNullOrWhiteSpace(pushResult) || !pushResult.Contains("ok"))
+            {
+                return new AppNotificationResponseBase(false, pushResult);
+            }
+
+            return new AppNotificationResponseBase(true, "ok");
+        }
+        catch (RequestException e)
+        {
+            return new AppNotificationResponseBase(false, e.Message);
+        }
+    }
+
+    public async Task<AppNotificationResponseBase> SendAllAsync(AppMessage appMessage)
+    {
+        var options = await _getuiOptionsResolver.ResolveAsync();
+        IGtPush push = new IGtPush(HOST, options.AppKey, options.MasterSecret);
+        NotificationTemplate template = NotificationTemplate(options, appMessage.Title, appMessage.Text, appMessage.TransmissionContent);
+
+        com.igetui.api.openservice.igetui.AppMessage message = new com.igetui.api.openservice.igetui.AppMessage();
+        message.IsOffline = true;
+        message.OfflineExpireTime = 1000 * 3600 * 12;
+        message.Data = template;
+        var appIdList = new List<string>();
+        appIdList.Add(options.AppID);
+        message.AppIdList = appIdList;
+
+        try
+        {
+            var pushResult = push.pushMessageToApp(message);
+
+            if (string.IsNullOrWhiteSpace(pushResult) || !pushResult.Contains("ok"))
             {
                 return new AppNotificationResponseBase(false, pushResult);
             }
