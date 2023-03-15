@@ -39,6 +39,11 @@ public partial class MessageReceiversImport
             await WarningAsync(T("Description.ChannelType.Required"));
             return;
         }
+        if (maxFileSize < file.Size)
+        {
+            await WarningAsync(T("Upload.FileSize.Exceeded"));
+            return;
+        }
         var fileContent = await ReadFile(file);
         _isUpload = true;
         if (FileEncoderHelper.GetTextFileEncodingType(fileContent) != Encoding.UTF8)

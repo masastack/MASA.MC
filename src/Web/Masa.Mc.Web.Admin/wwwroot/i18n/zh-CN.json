@@ -364,5 +364,6 @@
   "EmailChannelPasswordRequired": "请填写邮箱密码",
   "EmailChannelSmtpRequired": "请填写邮箱Smtp",
   "SmsChannelAccessKeyIdRequired": "请填写AccessKeyId",
-  "SmsChannelAccessKeySecretRequired": "请填写AccessKeySecret"
+  "SmsChannelAccessKeySecretRequired": "请填写AccessKeySecret",
+  "Upload.FileSize.Exceeded": "文件过大"
 }
