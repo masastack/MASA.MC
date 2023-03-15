@@ -5,5 +5,7 @@ namespace Masa.Mc.Infrastructure.AppNotification;
 
 public interface IAppNotificationSender
 {
-    Task<AppNotificationResponseBase> SendAsync(AppMessage appMessage);
+    Task<AppNotificationResponseBase> SendAsync(SingleAppMessage appMessage);
+
+    Task<AppNotificationResponseBase> SendAllAsync(AppMessage appMessage);
 }

@@ -86,7 +86,7 @@
                         <MStepperContent Class="full-height pa-0" Step="2">
                             <AutoHeight Overflow>
                                 <AutoHeightContent>
-                                    @if (_model.ChannelType == ChannelTypes.WebsiteMessage && !_selectReceiverType)
+                                    @if ((_model.ChannelType == ChannelTypes.WebsiteMessage || _model.ChannelType == ChannelTypes.App) && !_selectReceiverType)
                                     {
                                         <ReceiverTypeSelect @bind-value="_model.ReceiverType" OnClick="HandleReceiverType" />
                                     }
