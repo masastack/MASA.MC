@@ -243,5 +243,6 @@
   "EmailChannelSmtpRequired": "Please fill in the email Smtp",
   "SmsChannelAccessKeyIdRequired": "Please fill in AccessKeyId",
   "SmsChannelAccessKeySecretRequired": "Please fill in AccessKeySecret",
-  "Upload.FileSize.Exceeded": "Upload file size exceeds limit "
+  "Upload.FileSize.Exceeded": "Upload file size exceeds limit",
+  "Upload.File.Empty": "Please select file"
 }
