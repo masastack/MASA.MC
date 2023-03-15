@@ -25,3 +25,4 @@ global using System.ComponentModel.DataAnnotations;
 global using Masa.Mc.Contracts.Admin.Enums.Subjects;
 global using Masa.Mc.Infrastructure.Common.Utils;
 global using System.Collections.Concurrent;
+global using Masa.Mc.Contracts.Admin.Enums.WebsiteMessages;

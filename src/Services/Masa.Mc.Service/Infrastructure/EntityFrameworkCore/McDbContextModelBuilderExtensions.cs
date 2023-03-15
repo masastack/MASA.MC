@@ -141,6 +141,14 @@ public static class McDbContextModelBuilderExtensions
             b.Property(x => x.LinkUrl).HasMaxLength(256);
             b.HasIndex(x => new { x.UserId, x.ChannelId });
             b.Property(x => x.ExtraProperties).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
+            b.OwnsMany(x => x.Tags, c =>
+            {
+                c.ToTable(MCConsts.DbTablePrefix + "WebsiteMessageTags", MCConsts.DbSchema);
+                c.Property<Guid>("Id").ValueGeneratedOnAdd();
+                c.HasKey("Id");
+                c.Property(x => x.Tag).HasMaxLength(128).HasColumnName("Tag");
+                c.Property<DateTime>("CreationTime").HasDefaultValueSql("getdate()");
+            });
         });
 
         builder.Entity<WebsiteMessageCursor>(b =>

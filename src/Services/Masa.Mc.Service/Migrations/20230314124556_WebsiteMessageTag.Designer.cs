@@ -4,6 +4,7 @@ using Masa.Mc.Service.Admin.Infrastructure.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Masa.Mc.Service.Admin.Migrations
 {
     [DbContext(typeof(McDbContext))]
-    partial class McDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230314124556_WebsiteMessageTag")]
+    partial class WebsiteMessageTag
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -792,7 +794,7 @@ namespace Masa.Mc.Service.Admin.Migrations
 
             modelBuilder.Entity("Masa.Mc.Service.Admin.Domain.MessageInfos.Aggregates.MessageInfo", b =>
                 {
-                    b.OwnsOne("Masa.Mc.Service.Admin.Domain.MessageInfos.Aggregates.MessageInfo.MessageContent#Masa.Mc.Service.Admin.Domain.MessageInfos.Aggregates.MessageContent", "MessageContent", b1 =>
+                    b.OwnsOne("Masa.Mc.Service.Admin.Domain.MessageInfos.Aggregates.MessageContent", "MessageContent", b1 =>
                         {
                             b1.Property<Guid>("MessageInfoId")
                                 .HasColumnType("uniqueidentifier");
@@ -831,7 +833,7 @@ namespace Masa.Mc.Service.Admin.Migrations
 
                             b1.HasKey("MessageInfoId");
 
-                            b1.ToTable("MessageInfos", (string)null);
+                            b1.ToTable("MessageInfos");
 
                             b1.WithOwner()
                                 .HasForeignKey("MessageInfoId");
@@ -881,7 +883,7 @@ namespace Masa.Mc.Service.Admin.Migrations
 
             modelBuilder.Entity("Masa.Mc.Service.Admin.Domain.MessageTemplates.Aggregates.MessageTemplate", b =>
                 {
-                    b.OwnsOne("Masa.Mc.Service.Admin.Domain.MessageTemplates.Aggregates.MessageTemplate.MessageContent#Masa.Mc.Service.Admin.Domain.MessageInfos.Aggregates.MessageContent", "MessageContent", b1 =>
+                    b.OwnsOne("Masa.Mc.Service.Admin.Domain.MessageInfos.Aggregates.MessageContent", "MessageContent", b1 =>
                         {
                             b1.Property<Guid>("MessageTemplateId")
                                 .HasColumnType("uniqueidentifier");
@@ -915,7 +917,7 @@ namespace Masa.Mc.Service.Admin.Migrations
 
                             b1.HasKey("MessageTemplateId");
 
-                            b1.ToTable("MessageTemplates", (string)null);
+                            b1.ToTable("MessageTemplates");
 
                             b1.WithOwner()
                                 .HasForeignKey("MessageTemplateId");
@@ -936,7 +938,7 @@ namespace Masa.Mc.Service.Admin.Migrations
 
             modelBuilder.Entity("Masa.Mc.Service.Admin.Domain.ReceiverGroups.Aggregates.ReceiverGroup", b =>
                 {
-                    b.OwnsMany("Masa.Mc.Service.Admin.Domain.ReceiverGroups.Aggregates.ReceiverGroup.Items#Masa.Mc.Service.Admin.Domain.ReceiverGroups.Aggregates.ReceiverGroupItem", "Items", b1 =>
+                    b.OwnsMany("Masa.Mc.Service.Admin.Domain.ReceiverGroups.Aggregates.ReceiverGroupItem", "Items", b1 =>
                         {
                             b1.Property<Guid>("GroupId")
                                 .HasColumnType("uniqueidentifier");
@@ -955,7 +957,7 @@ namespace Masa.Mc.Service.Admin.Migrations
                             b1.WithOwner()
                                 .HasForeignKey("GroupId");
 
-                            b1.OwnsOne("Masa.Mc.Service.Admin.Domain.ReceiverGroups.Aggregates.ReceiverGroup.Items#Masa.Mc.Service.Admin.Domain.ReceiverGroups.Aggregates.ReceiverGroupItem.Receiver#Masa.Mc.Service.Admin.Domain.ReceiverGroups.Aggregates.Receiver", "Receiver", b2 =>
+                            b1.OwnsOne("Masa.Mc.Service.Admin.Domain.ReceiverGroups.Aggregates.Receiver", "Receiver", b2 =>
                                 {
                                     b2.Property<Guid>("ReceiverGroupItemGroupId")
                                         .HasColumnType("uniqueidentifier");
@@ -993,7 +995,7 @@ namespace Masa.Mc.Service.Admin.Migrations
 
                                     b2.HasKey("ReceiverGroupItemGroupId", "ReceiverGroupItemId");
 
-                                    b2.ToTable("ReceiverGroupItems", (string)null);
+                                    b2.ToTable("ReceiverGroupItems");
 
                                     b2.WithOwner()
                                         .HasForeignKey("ReceiverGroupItemGroupId", "ReceiverGroupItemId");
@@ -1014,16 +1016,11 @@ namespace Masa.Mc.Service.Admin.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsMany("Masa.Mc.Service.Admin.Domain.WebsiteMessages.Aggregates.WebsiteMessage.Tags#Masa.Mc.Service.Admin.Domain.WebsiteMessages.Aggregates.WebsiteMessageTag", "Tags", b1 =>
+                    b.OwnsMany("Masa.Mc.Service.Admin.Domain.WebsiteMessages.Aggregates.WebsiteMessageTag", "Tags", b1 =>
                         {
                             b1.Property<Guid>("Id")
                                 .ValueGeneratedOnAdd()
                                 .HasColumnType("uniqueidentifier");
-
-                            b1.Property<DateTime>("CreationTime")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("datetime2")
-                                .HasDefaultValueSql("getdate()");
 
                             b1.Property<string>("Tag")
                                 .IsRequired()
