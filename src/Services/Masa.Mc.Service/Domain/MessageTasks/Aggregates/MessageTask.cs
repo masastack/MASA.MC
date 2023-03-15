@@ -7,7 +7,7 @@ public class MessageTask : FullAggregateRoot<Guid, Guid>
 {
     public string DisplayName { get; protected set; } = string.Empty;
 
-    public ChannelType? ChannelType { get; }
+    public ChannelType? ChannelType { get; protected set; }
 
     public Guid? ChannelId { get; protected set; }
 
