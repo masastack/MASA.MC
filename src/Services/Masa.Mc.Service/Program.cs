@@ -173,7 +173,7 @@ var app = builder.AddServices(options =>
     options.MapHttpMethodsForUnmatched = new string[] { "Post" };
 });
 
-app.UseMiddleware<AdminSafeListMiddleware>(publicConfiguration.GetSection("$public.WhiteListOptions").Get<WhiteListOptions>());
+//app.UseMiddleware<AdminSafeListMiddleware>(publicConfiguration.GetSection("$public.WhiteListOptions").Get<WhiteListOptions>());
 
 app.UseI18n();
 

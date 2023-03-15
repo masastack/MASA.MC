@@ -52,7 +52,7 @@ var mcBaseAddress = masaStackConfig.GetMcServiceDomain();
 #if DEBUG
 mcBaseAddress = "https://localhost:19501";
 #endif
-
+mcBaseAddress = "http://masa-mc-service";
 builder.Services.AddMcApiGateways(option => option.McServiceBaseAddress = mcBaseAddress);
 builder.AddMasaStackComponentsForServer("wwwroot/i18n", authBaseAddress, mcBaseAddress);
 
