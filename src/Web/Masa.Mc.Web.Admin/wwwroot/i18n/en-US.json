@@ -242,5 +242,6 @@
   "EmailChannelPasswordRequired": "Please fill in the email password",
   "EmailChannelSmtpRequired": "Please fill in the email Smtp",
   "SmsChannelAccessKeyIdRequired": "Please fill in AccessKeyId",
-  "SmsChannelAccessKeySecretRequired": "Please fill in AccessKeySecret"
+  "SmsChannelAccessKeySecretRequired": "Please fill in AccessKeySecret",
+  "TaskWithdrawnConfirmationMessage": "Are you sure withdrawn task {0}？"
 }

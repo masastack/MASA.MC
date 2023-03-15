@@ -364,5 +364,6 @@
   "EmailChannelPasswordRequired": "请填写邮箱密码",
   "EmailChannelSmtpRequired": "请填写邮箱Smtp",
   "SmsChannelAccessKeyIdRequired": "请填写AccessKeyId",
-  "SmsChannelAccessKeySecretRequired": "请填写AccessKeySecret"
+  "SmsChannelAccessKeySecretRequired": "请填写AccessKeySecret",
+  "TaskWithdrawnConfirmationMessage": "确定撤销任务{0}吗？"
 }
