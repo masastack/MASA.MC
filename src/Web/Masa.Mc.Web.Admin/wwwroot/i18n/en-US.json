@@ -244,5 +244,6 @@
   "SmsChannelAccessKeyIdRequired": "Please fill in AccessKeyId",
   "SmsChannelAccessKeySecretRequired": "Please fill in AccessKeySecret",
   "Upload.FileSize.Exceeded": "Upload file size exceeds limit",
-  "UploadFileEmpty": "Please select file"
+  "UploadFileEmpty": "Please select file",
+  "TaskWithdrawnConfirmationMessage": "Are you sure withdrawn task {0}?"
 }

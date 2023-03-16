@@ -28,3 +28,4 @@ global using Microsoft.IdentityModel.Logging;
 global using FluentValidation;
 global using FluentValidation.Resources;
 global using Masa.BuildingBlocks.StackSdks.Config;
+global using Masa.Contrib.Configuration.ConfigurationApi.Dcc;

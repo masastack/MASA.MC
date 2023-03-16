@@ -122,6 +122,11 @@ public partial class MessageTaskDetailModal : AdminCompontentBase
         await LoadData();
     }
 
+    private async Task HandleWithdrawnAsync()
+    {
+        await ConfirmAsync(T("TaskWithdrawnConfirmationMessage", $"[{_info.DisplayName}]"), WithdrawnAsync);
+    }
+
     private async Task WithdrawnAsync()
     {
         Loading = true;
