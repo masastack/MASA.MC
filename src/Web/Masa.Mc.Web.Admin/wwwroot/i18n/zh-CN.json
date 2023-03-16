@@ -366,5 +366,5 @@
   "SmsChannelAccessKeyIdRequired": "请填写AccessKeyId",
   "SmsChannelAccessKeySecretRequired": "请填写AccessKeySecret",
   "Upload.FileSize.Exceeded": "文件过大",
-  "Upload.File.Empty": "请选择文件"
+  "UploadFileEmpty": "请选择文件"
 }
