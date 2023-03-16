@@ -197,4 +197,11 @@ public class MessageTaskService : ServiceBase
         userSystemData.ClientId = inputDto.ClientId;
         await authClient.UserService.UpsertSystemDataAsync<UserSystemDataDto>(systemId, userSystemData);
     }
+
+    [RoutePattern(HttpMethod = "Post")]
+    public async Task HandleJobStatusNotifyAsync(IEventBus eventBus, [FromQuery] Guid jobId, [FromQuery] JobNotifyStatus status)
+    {
+        var command = new HandleJobStatusNotifyCommand(jobId, status);
+        await eventBus.PublishAsync(command);
+    }
 }

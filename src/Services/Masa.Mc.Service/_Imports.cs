@@ -201,3 +201,4 @@ global using FluentValidation.Resources;
 global using Masa.Contrib.StackSdks.Middleware;
 global using Masa.Utils.Configuration.Json;
 global using Microsoft.EntityFrameworkCore.Design;
+global using Masa.Mc.Contracts.Admin.Scheduler;
