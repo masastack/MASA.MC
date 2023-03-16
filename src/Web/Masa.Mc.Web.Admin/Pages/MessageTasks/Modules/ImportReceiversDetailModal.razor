@@ -7,19 +7,19 @@
                     <tr>
                     @if (ChannelType == ChannelTypes.WebsiteMessage)
                     {
-                        <th class="text-left body2 regular3--text d-flex align-center">
+                        <th class="text-left body2 regular3--text d-flex align-center rounded-0">
                             @T("UserId")
                         </th>
                     }
                     @if (ChannelType == ChannelTypes.Sms)
                     {
-				        <th class="text-left body2 regular3--text d-flex align-center">
+				        <th class="text-left body2 regular3--text d-flex align-center rounded-0">
                             @T("PhoneNumber")
 				        </th>
                     }
                     @if (ChannelType == ChannelTypes.Email)
                     {
-				        <th class="text-left body2 regular3--text d-flex align-center">
+				        <th class="text-left body2 regular3--text d-flex align-center rounded-0">
                             @T("Email")
 				        </th>
                     }
@@ -27,9 +27,9 @@
                     {
                         foreach (var item in Value[0].Variables)
                         {
-                        <th class="text-left body2 regular3--text d-flex align-center">
-                        @item.Key
-                        </th>
+                            <th class="text-left body2 regular3--text d-flex align-center rounded-0">
+                                @item.Key
+                            </th>
                         }
                     }
                     </tr>
