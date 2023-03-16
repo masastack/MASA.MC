@@ -365,5 +365,7 @@
   "EmailChannelSmtpRequired": "请填写邮箱Smtp",
   "SmsChannelAccessKeyIdRequired": "请填写AccessKeyId",
   "SmsChannelAccessKeySecretRequired": "请填写AccessKeySecret",
+  "UploadFileSizeExceeded": "文件过大",
+  "UploadFileEmpty": "请选择文件"
   "TaskWithdrawnConfirmationMessage": "确定撤销任务{0}吗？"
 }

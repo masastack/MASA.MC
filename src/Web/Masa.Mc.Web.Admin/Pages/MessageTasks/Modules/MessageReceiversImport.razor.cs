@@ -34,9 +34,19 @@ public partial class MessageReceiversImport
 
     private async void HandleFileChange(IBrowserFile file)
     {
+        if (file == null)
+        {
+            await WarningAsync(T("UploadFileEmpty"));
+            return;
+        }
         if (!ChannelType.HasValue)
         {
             await WarningAsync(T("Description.ChannelType.Required"));
+            return;
+        }
+        if (maxFileSize < file.Size)
+        {
+            await WarningAsync(T("UploadFileSizeExceeded"));
             return;
         }
         var fileContent = await ReadFile(file);
