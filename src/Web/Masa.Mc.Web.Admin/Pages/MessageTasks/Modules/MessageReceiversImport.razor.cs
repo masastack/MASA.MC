@@ -36,7 +36,6 @@ public partial class MessageReceiversImport
     {
         if (file == null)
         {
-            await WarningAsync(T("UploadFileEmpty"));
             return;
         }
         if (!ChannelType.HasValue)
