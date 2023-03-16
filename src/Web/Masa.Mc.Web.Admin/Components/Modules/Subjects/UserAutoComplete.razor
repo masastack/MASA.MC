@@ -12,15 +12,15 @@
                ItemText="u=>TextView(u)"
                ItemValue="u=>u.Id"
                Filter="(item,search,value) => true"
-               Flat
-               Dense
-               Solo
+                  Flat
+                  Dense
+                  Solo
                BackgroundColor="fill-background"
-               Clearable
+                  Clearable
                HideDetails="@("auto")"
                Style="@($"width:340px;height:40px;{Style}")"
                Class="@($"{Class} rounded-2")"
-               Multiple
+                  Multiple
                HideSelected="false">
     <PrependInnerContent>
         <MIcon Size=16 Class="mr-2 default-lighten-1--text">mdi-magnify</MIcon>
@@ -44,13 +44,13 @@
                         <div class="d-inline-flex mx-2" style="height: 8px">
                             <MDivider Vertical />
                         </div>
-                        <span class="overline regular2--text">@T("DisplayName.SubjectTypes.User")</span>
-                    </MListItemTitle>
-                    <MListItemSubtitle>
                         <span class="body2 regular2--text">@(data.Item.DisplayName)</span>
                         <div class="d-inline-flex mx-1" style="height: 8px">
                             <MDivider Vertical />
                         </div>
+                        <span class="overline regular2--text">@T("DisplayName.SubjectTypes.User")</span>
+                    </MListItemTitle>
+                    <MListItemSubtitle>
                         <span class="body2 regular2--text">@(data.Item.PhoneNumber)</span>
                         <div class="d-inline-flex mx-1" style="height: 8px">
                             <MDivider Vertical />
