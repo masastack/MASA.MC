@@ -462,3 +462,7 @@
 .fold .m-input label {
     color: #A3AED0 !important;
 }
+
+.message-receiver-import-upload .m-input__control .m-input__slot{
+    cursor: pointer !important;
+}

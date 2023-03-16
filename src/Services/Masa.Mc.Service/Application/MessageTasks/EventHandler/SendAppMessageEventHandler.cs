@@ -56,8 +56,23 @@ public class SendAppMessageEventHandler
         using (_appNotificationAsyncLocal.Change(options))
         {
             var taskHistory = eto.MessageTaskHistory;
+
+            var appChannel = channel.Type as ChannelType.AppsChannel;
+            var transmissionContent = appChannel.GetMessageTransmissionContent(eto.MessageData.MessageContent);
+
+            if (taskHistory.MessageTask.ReceiverType == ReceiverTypes.Broadcast)
+            {
+                var response = await _appNotificationSender.SendAllAsync(new AppMessage(eto.MessageData.MessageContent.Title, eto.MessageData.MessageContent.Content, transmissionContent));
+                taskHistory.SetResult(response.Success ? MessageTaskHistoryStatuses.Success : MessageTaskHistoryStatuses.Fail);
+
+                await _messageTaskHistoryRepository.UpdateAsync(taskHistory);
+
+                return;
+            }
+
             int okCount = 0;
             int totalCount = taskHistory.ReceiverUsers.Count;
+
             foreach (var item in taskHistory.ReceiverUsers)
             {
                 var messageRecord = new MessageRecord(item.UserId, item.ChannelUserIdentity, channel.Id, taskHistory.MessageTaskId, taskHistory.Id, item.Variables, eto.MessageData.MessageContent.Title, taskHistory.SendTime, taskHistory.MessageTask.SystemId);
@@ -82,9 +97,7 @@ public class SendAppMessageEventHandler
                         await _websiteMessageRepository.AddAsync(websiteMessage);
                     }
 
-                    var appChannel = channel.Type as ChannelType.AppsChannel;
-                    var transmissionContent = appChannel.GetMessageTransmissionContent(eto.MessageData.MessageContent);
-                    var response = await _appNotificationSender.SendAsync(new AppMessage(item.ChannelUserIdentity, eto.MessageData.MessageContent.Title, eto.MessageData.MessageContent.Content, transmissionContent));
+                    var response = await _appNotificationSender.SendAsync(new SingleAppMessage(item.ChannelUserIdentity, eto.MessageData.MessageContent.Title, eto.MessageData.MessageContent.Content, transmissionContent));
                     if (response.Success)
                     {
                         messageRecord.SetResult(true, string.Empty);
@@ -104,6 +117,7 @@ public class SendAppMessageEventHandler
                 await _messageRecordRepository.AddAsync(messageRecord);
             }
             taskHistory.SetResult(okCount == totalCount ? MessageTaskHistoryStatuses.Success : (okCount > 0 ? MessageTaskHistoryStatuses.PartialFailure : MessageTaskHistoryStatuses.Fail));
+
             await _messageTaskHistoryRepository.UpdateAsync(taskHistory);
         }
     }

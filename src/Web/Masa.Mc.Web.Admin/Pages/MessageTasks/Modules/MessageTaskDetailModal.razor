@@ -101,7 +101,10 @@
                             <dt class="overline regular3--text">@T("DisplayName.MessageTaskDetail.ReceiverType")</dt>
                             <dd class="body2 emphasis2--text mt-1">@T($"DisplayName.ReceiverType.{_info.ReceiverType.ToString()}")</dd>
                         </dl>
-                        <div class="subtitle2 emphasis2--text mt-8">@T("DisplayName.MessageTaskSendingRule")</div>
+                        @if (_info.Channel.Type == ChannelTypes.Sms || _info.SendRules.IsCustom)
+                        {
+                            <div class="subtitle2 emphasis2--text mt-8">@T("DisplayName.MessageTaskSendingRule")</div>
+                        }                        
                         @if (_info.Channel.Type == ChannelTypes.Sms)
                         {
                             <dl class="mt-8">
@@ -119,7 +122,7 @@
                         {
                             <div Class="d-flex">
                                 <MSpacer></MSpacer>
-                                <MButton Rounded Color="primary" Class="px-6" Width="100" OnClick="WithdrawnAsync">
+                                <MButton Rounded Color="primary" Class="px-6" Width="100" OnClick="HandleWithdrawnAsync">
                                     <span>@T("Withdraw")</span>
                                 </MButton>
                             </div>

@@ -47,11 +47,12 @@ builder.Services.AddResponseCompression(opts =>
         new[] { "application/octet-stream" });
 });
 var authBaseAddress = masaStackConfig.GetAuthServiceDomain();
-var mcBaseAddress = masaStackConfig.GetMcServiceDomain();
+var mcBaseAddress = builder.Services.GetMasaConfiguration().ConfigurationApi.GetDefault().GetValue<string>("AppSettings:McClient:Url");
 
-#if DEBUG
-mcBaseAddress = "https://localhost:19501";
-#endif
+if (string.IsNullOrEmpty(mcBaseAddress))
+{
+    mcBaseAddress = masaStackConfig.GetMcServiceDomain();
+}
 
 builder.Services.AddMcApiGateways(option => option.McServiceBaseAddress = mcBaseAddress);
 builder.AddMasaStackComponentsForServer("wwwroot/i18n", authBaseAddress, mcBaseAddress);
