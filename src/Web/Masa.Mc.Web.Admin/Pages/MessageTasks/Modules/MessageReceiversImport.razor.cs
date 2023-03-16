@@ -46,7 +46,7 @@ public partial class MessageReceiversImport
         }
         if (maxFileSize < file.Size)
         {
-            await WarningAsync(T("Upload.FileSize.Exceeded"));
+            await WarningAsync(T("UploadFileSizeExceeded"));
             return;
         }
         var fileContent = await ReadFile(file);
