@@ -17,7 +17,7 @@ public class HandleJobStatusNotifyCommandHandler
     [EventHandler]
     public async Task HandleEventAsync(HandleJobStatusNotifyCommand command)
     {
-        if (command.status != JobNotifyStatus.Delete) return;
+        if (command.status != JobNotifyStatus.Delete || command.status != JobNotifyStatus.Failure) return;
 
         var messageTask = await _repository.FindAsync(x => x.SchedulerJobId == command.JobId, false);
         if (messageTask == null) return;
