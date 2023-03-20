@@ -462,3 +462,8 @@
 .fold .m-input label {
     color: #A3AED0 !important;
 }
+
+.table-boder-head thead th {
+    height: 43px !important;
+    border-bottom: solid 1px #E2E7F4 !important;
+}

@@ -44,7 +44,7 @@
         Type="AlertTypes.Success" Style="height: 56px;">
         <div class="d-flex justify-space-between">
             <span>@(string.Format(T("Description.MessageReceiversImport.Tips"), Value.Count))</span>
-            <span @onclick="()=>_importReceiversDetailModal.OpenModal()">@T("View")</span>
+            <span class="hover-pointer" @onclick="()=>_importReceiversDetailModal.OpenModal()">@T("View")</span>
         </div>
     </MAlert>
 }
