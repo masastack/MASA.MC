@@ -4,10 +4,10 @@
         <div @attributes="context.Attrs" class="@($"mt-8")">
     	    <label class="uploadImage" for="upload">
                 <InputFile accept="text/csv" OnChange="HandleFileChange" id="upload" />
-	        	<MProgressCircular Value="_progress" Size="258" Width="18" Color="@(_importResult?.HasError==true?"warning-disabled":"gradient")">
+                <MProgressCircular Value="_progress" Size="258" Width="18" Color="@(_importResult?.HasError==true?"warning-disabled":"gradient")">
 		            <MImage Width=80 Height=80 Class="d-flex justify-center align-center" ContentClass="text-center"
 				        Src="@(_isUpload?(_importResult?.HasError==true?"_content/Masa.Mc.Web.Admin/img/upload/upload-error.png":"_content/Masa.Mc.Web.Admin/img/upload/upload-complete.png"):context.Hover?"_content/Masa.Mc.Web.Admin/img/upload/upload-active.png":"_content/Masa.Mc.Web.Admin/img/upload/upload.png")">
-		        </MImage>
+		            </MImage>
 		        </MProgressCircular>
 	        </label>
         </div>
