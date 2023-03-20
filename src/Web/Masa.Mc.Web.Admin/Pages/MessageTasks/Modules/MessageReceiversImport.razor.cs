@@ -32,8 +32,9 @@ public partial class MessageReceiversImport
 
     MessageTaskService MessageTaskService => McCaller.MessageTaskService;
 
-    private async void HandleFileChange(IBrowserFile file)
+    private async void HandleFileChange(InputFileChangeEventArgs e)
     {
+        var file = e.File;
         if (file == null)
         {
             return;
