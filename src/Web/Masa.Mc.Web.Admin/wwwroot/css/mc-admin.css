@@ -463,11 +463,7 @@
     color: #A3AED0 !important;
 }
 
-.message-receiver-import-upload .m-input__control .m-input__slot{
-    cursor: pointer !important;
-}
-
-.table-boder-head thead th{
+.table-boder-head thead th {
     height: 43px !important;
     border-bottom: solid 1px #E2E7F4 !important;
 }

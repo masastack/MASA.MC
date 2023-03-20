@@ -32,11 +32,21 @@ public partial class MessageReceiversImport
 
     MessageTaskService MessageTaskService => McCaller.MessageTaskService;
 
-    private async void HandleFileChange(IBrowserFile file)
+    private async void HandleFileChange(InputFileChangeEventArgs e)
     {
+        var file = e.File;
+        if (file == null)
+        {
+            return;
+        }
         if (!ChannelType.HasValue)
         {
             await WarningAsync(T("Description.ChannelType.Required"));
+            return;
+        }
+        if (maxFileSize < file.Size)
+        {
+            await WarningAsync(T("UploadFileSizeExceeded"));
             return;
         }
         var fileContent = await ReadFile(file);
