@@ -9,7 +9,7 @@
                OnSearchInputUpdate="OnSearchChanged"
                HideDetails="@("auto")"
                BackgroundColor="white"
-               Clearable
+                  Clearable
                ItemText="u=>TextView(u)"
                ItemValue="u=>u.Id"
                Filter="(item,search,value) => true"
@@ -33,15 +33,16 @@
             <div class="ma-auto ml-2">
                 <div class="d-flex">
                     <span class="Body2 emphasis2--text">@data.Item.Name</span>
-                    @if (string.IsNullOrEmpty(data.Item.Name) is false && string.IsNullOrEmpty(data.Item.PhoneNumber) is false)
-                    {
-                        <div class="my-auto mx-2" style="width: 0px;height: 8px;border: 1px solid #E2E7F4;"></div>
-                    }
+                    <div class="d-inline-flex mx-2" style="height: 8px">
+                        <MDivider Vertical />
+                    </div>
+                    <span class="body2 regular2--text">@(data.Item.DisplayName)</span>
+                    <div class="my-auto mx-2" style="width: 0px;height: 8px;border: 1px solid #E2E7F4;"></div>
                     <span class="btn emphasis2--text">@data.Item.PhoneNumber</span>
                 </div>
                 <div class="d-flex">
                     <span class="overline regular3--text">@data.Item.Account</span>
-                    @if (string.IsNullOrEmpty(data.Item.Account) is false && string.IsNullOrEmpty(data.Item.Email) is false)
+                    @if (!string.IsNullOrEmpty(data.Item.Account) && !string.IsNullOrEmpty(data.Item.Email))
                     {
                         <div class="my-auto mx-2" style="width: 0px;height: 8px;border: 1px solid #E2E7F4;"></div>
                     }
