@@ -70,7 +70,6 @@ public static class ExtensionPropertyHelper
         {
             return Activator.CreateInstance<T>();
         }
-        var  dd= JsonSerializer.Deserialize<T>(extraPropertiesAsJson) ?? Activator.CreateInstance<T>();
-        return dd;
+        return JsonSerializer.Deserialize<T>(extraPropertiesAsJson) ?? Activator.CreateInstance<T>();
     }
 }
