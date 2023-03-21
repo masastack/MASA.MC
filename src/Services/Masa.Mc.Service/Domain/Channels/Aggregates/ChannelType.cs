@@ -119,7 +119,6 @@ public class ChannelType : Enumeration
             }
 
             return messageContent.ExtraProperties;
-            //return JsonSerializer.Serialize(messageContent.ExtraProperties);
         }
     }
 }
