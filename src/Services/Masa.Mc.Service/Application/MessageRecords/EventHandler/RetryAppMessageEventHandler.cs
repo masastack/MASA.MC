@@ -6,7 +6,7 @@ namespace Masa.Mc.Service.Admin.Application.MessageRecords.EventHandler;
 public class RetryAppMessageEventHandler
 {
     private readonly IAppNotificationAsyncLocal _appNotificationAsyncLocal;
-    private readonly IAppNotificationSender _appNotificationSender;
+    private readonly AppNotificationSenderFactory _appNotificationSenderFactory;
     private readonly IChannelRepository _channelRepository;
     private readonly IMessageRecordRepository _messageRecordRepository;
     private readonly MessageTaskDomainService _taskDomainService;
@@ -17,7 +17,7 @@ public class RetryAppMessageEventHandler
     private readonly II18n<DefaultResource> _i18n;
 
     public RetryAppMessageEventHandler(IAppNotificationAsyncLocal appNotificationAsyncLocal
-        , IAppNotificationSender appNotificationSender
+        , AppNotificationSenderFactory appNotificationSenderFactory
         , IChannelRepository channelRepository
         , IMessageRecordRepository messageRecordRepository
         , MessageTaskDomainService taskDomainService
@@ -28,7 +28,7 @@ public class RetryAppMessageEventHandler
         , II18n<DefaultResource> i18n)
     {
         _appNotificationAsyncLocal = appNotificationAsyncLocal;
-        _appNotificationSender = appNotificationSender;
+        _appNotificationSenderFactory = appNotificationSenderFactory;
         _channelRepository = channelRepository;
         _messageRecordRepository = messageRecordRepository;
         _taskDomainService = taskDomainService;
@@ -47,7 +47,7 @@ public class RetryAppMessageEventHandler
         var channel = await _channelRepository.FindAsync(x => x.Id == messageRecord.ChannelId);
         if (channel == null) return;
 
-        var options = new GetuiOptions
+        var options = new AppOptions
         {
             AppID = channel.ExtraProperties.GetProperty<string>(nameof(AppChannelOptions.AppID)),
             AppKey = channel.ExtraProperties.GetProperty<string>(nameof(AppChannelOptions.AppKey)),
@@ -73,7 +73,10 @@ public class RetryAppMessageEventHandler
             {
                 var appChannel = channel.Type as ChannelType.AppsChannel;
                 var transmissionContent = appChannel.GetMessageTransmissionContent(messageData.MessageContent);
-                var response = await _appNotificationSender.SendAsync(new SingleAppMessage(messageRecord.ChannelUserIdentity, messageData.MessageContent.Title, messageData.MessageContent.Content, transmissionContent));
+
+                var provider = channel.ExtraProperties.GetProperty<int>(nameof(AppChannelOptions.Provider));
+                var appNotificationSender = _appNotificationSenderFactory.GetAppNotificationSender((Providers)provider);
+                var response = await appNotificationSender.SendAsync(new SingleAppMessage(messageRecord.ChannelUserIdentity, messageData.MessageContent.Title, messageData.MessageContent.Content, transmissionContent));
                 if (response.Success)
                 {
                     messageRecord.SetResult(true, string.Empty);

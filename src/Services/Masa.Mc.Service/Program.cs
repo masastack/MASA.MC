@@ -88,7 +88,7 @@ builder.Services.AddSchedulerClient(masaStackConfig.GetSchedulerServiceDomain())
 builder.Services.AddMultilevelCache(options => options.UseStackExchangeRedisCache(redisOptions));
 builder.Services.AddAliyunSms();
 builder.Services.AddMailKit();
-builder.Services.AddGetui();
+builder.Services.AddAppNotification();
 builder.Services.AddCsv();
 builder.Services.AddSingleton<ITemplateRenderer, TextTemplateRenderer>();
 builder.Services.AddTransient<Microsoft.AspNetCore.SignalR.IUserIdProvider, McUserIdProvider>();

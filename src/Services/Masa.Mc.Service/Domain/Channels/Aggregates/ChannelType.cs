@@ -111,14 +111,15 @@ public class ChannelType : Enumeration
             return string.Empty;
         }
 
-        public string GetMessageTransmissionContent(MessageContent messageContent)
+        public ExtraPropertyDictionary GetMessageTransmissionContent(MessageContent messageContent)
         {
             if (messageContent.IsJump && !messageContent.ExtraProperties.Any(x => x.Key == "url"))
             {
                 messageContent.ExtraProperties.TryAdd("url", messageContent.JumpUrl);
             }
 
-            return JsonSerializer.Serialize(messageContent.ExtraProperties);
+            return messageContent.ExtraProperties;
+            //return JsonSerializer.Serialize(messageContent.ExtraProperties);
         }
     }
 }

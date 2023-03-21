@@ -7,7 +7,7 @@ public class SingleAppMessage: AppMessage
 {
     public string ClientId { get; }
 
-    public SingleAppMessage(string clientId,string title, string text, string transmissionContent) : base(title, text, transmissionContent)
+    public SingleAppMessage(string clientId,string title, string text, ConcurrentDictionary<string, object> transmissionContent) : base(title, text, transmissionContent)
     {
         ClientId = clientId;
     }

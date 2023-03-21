@@ -9,9 +9,9 @@ public class AppMessage
 
     public string Text { get; }
 
-    public string TransmissionContent { get; }
+    public ConcurrentDictionary<string, object> TransmissionContent { get; }
 
-    public AppMessage(string title, string text, string transmissionContent)
+    public AppMessage(string title, string text, ConcurrentDictionary<string, object> transmissionContent)
     {
         Title = title;
         Text = text;
