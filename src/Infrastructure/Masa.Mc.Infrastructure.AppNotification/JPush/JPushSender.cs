@@ -17,10 +17,15 @@ public class JPushSender : IAppNotificationSender
         var options = await _jPushOptionsResolver.ResolveAsync();
         JPushClient client = new JPushClient(options.AppKey, options.MasterSecret);
 
+        var audience = new
+        {
+            registration_id = new string[] { appMessage.ClientId }
+        };
+
         PushPayload pushPayload = new PushPayload()
         {
             Platform = new List<string> { "android", "ios" },
-            Audience = "all",
+            Audience = audience,
             Notification = new Notification
             {
                 Alert = appMessage.Title,
