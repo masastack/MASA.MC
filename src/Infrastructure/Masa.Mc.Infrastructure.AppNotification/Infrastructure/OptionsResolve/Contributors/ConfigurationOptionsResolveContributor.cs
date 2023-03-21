@@ -1,7 +1,7 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
-namespace Masa.Mc.Infrastructure.Getui.Infrastructure.OptionsResolve.Contributors;
+namespace Masa.Mc.Infrastructure.AppNotification.Infrastructure.OptionsResolve.Contributors;
 
 public class ConfigurationOptionsResolveContributor : IAppNotificationOptionsResolveContributor
 {
@@ -10,7 +10,7 @@ public class ConfigurationOptionsResolveContributor : IAppNotificationOptionsRes
 
     public Task ResolveAsync(AppNotificationOptionsResolveContext context)
     {
-        context.Options = context.ServiceProvider.GetRequiredService<IOptions<GetuiOptions>>().Value;
+        context.Options = context.ServiceProvider.GetRequiredService<IOptions<AppOptions>>().Value;
 
         return Task.CompletedTask;
     }

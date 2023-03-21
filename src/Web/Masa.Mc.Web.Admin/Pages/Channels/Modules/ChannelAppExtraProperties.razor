@@ -1,12 +1,27 @@
 ﻿@inherits AdminCompontentBase
 <MForm Model="_model" @ref="Form" EnableValidation EnableI18n Class="my-3">
     <MRow Class="row-box">
-        <MCol Md="6">
-            <STextField @bind-Value="_model.AppID"
+        <MCol>
+            <MRadioGroup @bind-Value="_model.Provider" Label="@T("DisplayName.AppChannelProviders")" Class="mt-0" Row OnClick="HandleChangeAsync">
+                @foreach (var item in GetEnumList<AppChannelProviders>())
+                {
+                    <MRadio Label="@T($"DisplayName.AppChannelProviders.{item.ToString()}")" )
+                        Value="item">
+                    </MRadio>
+                }
+            </MRadioGroup>
+        </MCol>
+    </MRow>
+    <MRow Class="row-box">
+        @if (_model.Provider == AppChannelProviders.GeTui)
+        {
+            <MCol Md="6">
+                <STextField @bind-Value="_model.AppID"
                         Label="@T("AppID")"
                         Hint="@T("ChannelOptions.Tips")">
-            </STextField>
-        </MCol>
+                </STextField>
+            </MCol>
+        }
         <MCol Md="6">
             <STextField @bind-Value="_model.AppKey"
                         Label="@T("AppKey")"
@@ -15,14 +30,17 @@
                         AppendIcon="@(!PasswordView?"":_passwordShow ? "mdi-eye" : "mdi-eye-off")" OnAppendClick="()=>_passwordShow = !_passwordShow">
             </STextField>
         </MCol>
-        <MCol Md="6">
-            <STextField @bind-Value="_model.AppSecret"
+        @if (_model.Provider == AppChannelProviders.GeTui)
+        {
+            <MCol Md="6">
+                <STextField @bind-Value="_model.AppSecret"
                         Label="@T("AppSecret")"
                         Hint="@T("ChannelOptions.Tips")"
                         Type="@(!PasswordView?"password":_passwordShow ? "text" : "password")"
                         AppendIcon="@(!PasswordView?"":_passwordShow ? "mdi-eye" : "mdi-eye-off")" OnAppendClick="()=>_passwordShow = !_passwordShow">
-            </STextField>
-        </MCol>
+                </STextField>
+            </MCol>
+        }
         <MCol Md="6">
             <STextField @bind-Value="_model.MasterSecret"
                         Label="@T("MasterSecret")"

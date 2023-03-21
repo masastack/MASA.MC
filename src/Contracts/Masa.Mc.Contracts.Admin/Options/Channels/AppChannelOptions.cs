@@ -12,4 +12,6 @@ public class AppChannelOptions
     public string AppSecret { get; set; } = string.Empty;
 
     public string MasterSecret { get; set; } = string.Empty;
+
+    public AppChannelProviders Provider { get; set; }
 }

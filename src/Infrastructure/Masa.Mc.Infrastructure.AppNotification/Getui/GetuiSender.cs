@@ -1,7 +1,7 @@
-// Copyright (c) MASA Stack All rights reserved.
+﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
-namespace Masa.Mc.Infrastructure.Getui;
+namespace Masa.Mc.Infrastructure.AppNotification.Getui;
 
 public class GetuiSender : IAppNotificationSender
 {
@@ -17,7 +17,7 @@ public class GetuiSender : IAppNotificationSender
     {
         var options = await _getuiOptionsResolver.ResolveAsync();
         IGtPush push = new IGtPush(HOST, options.AppKey, options.MasterSecret);
-        NotificationTemplate template = NotificationTemplate(options, appMessage.Title, appMessage.Text, appMessage.TransmissionContent);
+        NotificationTemplate template = NotificationTemplate(options, appMessage.Title, appMessage.Text, JsonSerializer.Serialize(appMessage.TransmissionContent));
 
         SingleMessage message = new SingleMessage();
         message.IsOffline = true;
@@ -48,7 +48,7 @@ public class GetuiSender : IAppNotificationSender
     {
         var options = await _getuiOptionsResolver.ResolveAsync();
         IGtPush push = new IGtPush(HOST, options.AppKey, options.MasterSecret);
-        NotificationTemplate template = NotificationTemplate(options, appMessage.Title, appMessage.Text, appMessage.TransmissionContent);
+        NotificationTemplate template = NotificationTemplate(options, appMessage.Title, appMessage.Text, JsonSerializer.Serialize(appMessage.TransmissionContent));
 
         com.igetui.api.openservice.igetui.AppMessage message = new com.igetui.api.openservice.igetui.AppMessage();
         message.IsOffline = true;
@@ -80,7 +80,7 @@ public class GetuiSender : IAppNotificationSender
         NotificationTemplate template = new NotificationTemplate();
         template.AppId = options.AppID;
         template.AppKey = options.AppKey;
-        template.Title = title; 
+        template.Title = title;
         template.Text = content;
         template.Logo = "";
         template.LogoURL = "";

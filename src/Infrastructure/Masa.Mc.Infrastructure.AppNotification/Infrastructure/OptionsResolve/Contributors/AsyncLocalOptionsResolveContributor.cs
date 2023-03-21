@@ -1,7 +1,7 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
-namespace Masa.Mc.Infrastructure.Getui.Infrastructure.OptionsResolve.Contributors;
+namespace Masa.Mc.Infrastructure.AppNotification.Infrastructure.OptionsResolve.Contributors;
 
 public class AsyncLocalOptionsResolveContributor : IAppNotificationOptionsResolveContributor
 {
@@ -22,7 +22,7 @@ public class AsyncLocalOptionsResolveContributor : IAppNotificationOptionsResolv
     }
 }
 
-public class GetuiAsyncLocalAccessor : IAppNotificationAsyncLocalAccessor
+public class AppAsyncLocalAccessor : IAppNotificationAsyncLocalAccessor
 {
     public IAppNotificationOptions Current
     {
@@ -32,34 +32,34 @@ public class GetuiAsyncLocalAccessor : IAppNotificationAsyncLocalAccessor
 
     private readonly AsyncLocal<IAppNotificationOptions> _asyncLocal;
 
-    public GetuiAsyncLocalAccessor()
+    public AppAsyncLocalAccessor()
     {
         _asyncLocal = new AsyncLocal<IAppNotificationOptions>();
     }
 }
 
-public class GetuiAsyncLocal : IAppNotificationAsyncLocal
+public class AppAsyncLocal : IAppNotificationAsyncLocal
 {
     public IAppNotificationOptions CurrentOptions { get; private set; }
 
-    private readonly IAppNotificationAsyncLocalAccessor _getuiAsyncLocalAccessor;
+    private readonly IAppNotificationAsyncLocalAccessor _appAsyncLocalAccessor;
 
-    public GetuiAsyncLocal(IAppNotificationAsyncLocalAccessor getuiAsyncLocalAccessor)
+    public AppAsyncLocal(IAppNotificationAsyncLocalAccessor appAsyncLocalAccessor)
     {
-        _getuiAsyncLocalAccessor = getuiAsyncLocalAccessor;
+        _appAsyncLocalAccessor = appAsyncLocalAccessor;
 
-        CurrentOptions = getuiAsyncLocalAccessor.Current;
+        CurrentOptions = appAsyncLocalAccessor.Current;
     }
 
-    public IDisposable Change(IAppNotificationOptions getuiOptions)
+    public IDisposable Change(IAppNotificationOptions appOptions)
     {
-        var parentScope = _getuiAsyncLocalAccessor.Current;
+        var parentScope = _appAsyncLocalAccessor.Current;
 
-        _getuiAsyncLocalAccessor.Current = getuiOptions;
+        _appAsyncLocalAccessor.Current = appOptions;
 
         return new DisposeAction(() =>
         {
-            _getuiAsyncLocalAccessor.Current = parentScope;
+            _appAsyncLocalAccessor.Current = parentScope;
         });
     }
 }

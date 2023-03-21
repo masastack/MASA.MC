@@ -1,9 +1,9 @@
-// Copyright (c) MASA Stack All rights reserved.
+﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
-namespace Masa.Mc.Infrastructure.Getui;
+namespace Masa.Mc.Infrastructure.AppNotification;
 
-public class GetuiOptions : IAppNotificationOptions
+public class AppOptions : IAppNotificationOptions
 {
     public string AppID { get; set; } = string.Empty;
 

@@ -185,7 +185,6 @@ global using Masa.BuildingBlocks.Ddd.Domain.SeedWork;
 global using Masa.Mc.Service.Admin.Infrastructure.MessageTaskJobService;
 global using Masa.Mc.Infrastructure.AppNotification;
 global using Masa.Mc.Infrastructure.AppNotification.Infrastructure.OptionsResolve;
-global using Masa.Mc.Infrastructure.Getui;
 global using Masa.Mc.Service.Admin.Infrastructure.Constants;
 global using Masa.BuildingBlocks.Globalization.I18n;
 global using static AlibabaCloud.SDK.Dysmsapi20170525.Models.QuerySmsTemplateListResponseBody;

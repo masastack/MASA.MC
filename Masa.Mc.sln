@@ -64,8 +64,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Masa.Mc.Infrastructure.Mail
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Masa.Mc.Infrastructure.Tsc", "src\Infrastructure\Masa.Mc.Infrastructure.Tsc\Masa.Mc.Infrastructure.Tsc.csproj", "{51A2EFBF-42A7-45EC-A68D-B674FD39FCF2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Masa.Mc.Infrastructure.Getui", "src\Infrastructure\Masa.Mc.Infrastructure.Getui\Masa.Mc.Infrastructure.Getui.csproj", "{7DCBB420-B8E2-41BE-A763-88506A43ED71}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Masa.Mc.Infrastructure.AppNotification", "src\Infrastructure\Masa.Mc.Infrastructure.AppNotification\Masa.Mc.Infrastructure.AppNotification.csproj", "{7F2708C3-F1EE-4BFD-9321-F8D90390BF3C}"
 EndProject
 Global
@@ -220,14 +218,6 @@ Global
 		{51A2EFBF-42A7-45EC-A68D-B674FD39FCF2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{51A2EFBF-42A7-45EC-A68D-B674FD39FCF2}.Release|x86.ActiveCfg = Release|Any CPU
 		{51A2EFBF-42A7-45EC-A68D-B674FD39FCF2}.Release|x86.Build.0 = Release|Any CPU
-		{7DCBB420-B8E2-41BE-A763-88506A43ED71}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7DCBB420-B8E2-41BE-A763-88506A43ED71}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7DCBB420-B8E2-41BE-A763-88506A43ED71}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{7DCBB420-B8E2-41BE-A763-88506A43ED71}.Debug|x86.Build.0 = Debug|Any CPU
-		{7DCBB420-B8E2-41BE-A763-88506A43ED71}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7DCBB420-B8E2-41BE-A763-88506A43ED71}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7DCBB420-B8E2-41BE-A763-88506A43ED71}.Release|x86.ActiveCfg = Release|Any CPU
-		{7DCBB420-B8E2-41BE-A763-88506A43ED71}.Release|x86.Build.0 = Release|Any CPU
 		{7F2708C3-F1EE-4BFD-9321-F8D90390BF3C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7F2708C3-F1EE-4BFD-9321-F8D90390BF3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7F2708C3-F1EE-4BFD-9321-F8D90390BF3C}.Debug|x86.ActiveCfg = Debug|Any CPU
@@ -264,7 +254,6 @@ Global
 		{52353216-56EB-4F38-A6BA-7A23801569C3} = {4660010F-BB9B-4C8E-B4F7-34AF77080EA0}
 		{3FDC5EC6-5B52-46E4-82D8-E9B39F017D7F} = {4660010F-BB9B-4C8E-B4F7-34AF77080EA0}
 		{51A2EFBF-42A7-45EC-A68D-B674FD39FCF2} = {4660010F-BB9B-4C8E-B4F7-34AF77080EA0}
-		{7DCBB420-B8E2-41BE-A763-88506A43ED71} = {4660010F-BB9B-4C8E-B4F7-34AF77080EA0}
 		{7F2708C3-F1EE-4BFD-9321-F8D90390BF3C} = {4660010F-BB9B-4C8E-B4F7-34AF77080EA0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution

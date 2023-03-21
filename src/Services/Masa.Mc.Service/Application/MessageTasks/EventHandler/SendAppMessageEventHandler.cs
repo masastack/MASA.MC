@@ -6,7 +6,7 @@ namespace Masa.Mc.Service.Admin.Application.MessageTasks.EventHandler;
 public class SendAppMessageEventHandler
 {
     private readonly IAppNotificationAsyncLocal _appNotificationAsyncLocal;
-    private readonly IAppNotificationSender _appNotificationSender;
+    private readonly AppNotificationSenderFactory _appNotificationSenderFactory;
     private readonly ITemplateRenderer _templateRenderer;
     private readonly IChannelRepository _channelRepository;
     private readonly IMessageRecordRepository _messageRecordRepository;
@@ -18,7 +18,7 @@ public class SendAppMessageEventHandler
     private readonly II18n<DefaultResource> _i18n;
 
     public SendAppMessageEventHandler(IAppNotificationAsyncLocal appNotificationAsyncLocal
-        , IAppNotificationSender appNotificationSender
+        , AppNotificationSenderFactory appNotificationSenderFactory
         , ITemplateRenderer templateRenderer
         , IChannelRepository channelRepository
         , IMessageRecordRepository messageRecordRepository
@@ -30,7 +30,7 @@ public class SendAppMessageEventHandler
         , II18n<DefaultResource> i18n)
     {
         _appNotificationAsyncLocal = appNotificationAsyncLocal;
-        _appNotificationSender = appNotificationSender;
+        _appNotificationSenderFactory = appNotificationSenderFactory;
         _templateRenderer = templateRenderer;
         _channelRepository = channelRepository;
         _messageRecordRepository = messageRecordRepository;
@@ -46,7 +46,7 @@ public class SendAppMessageEventHandler
     public async Task HandleEventAsync(SendAppMessageEvent eto)
     {
         var channel = await _channelRepository.FindAsync(x => x.Id == eto.ChannelId);
-        var options = new GetuiOptions
+        var options = new AppOptions
         {
             AppID = channel.ExtraProperties.GetProperty<string>(nameof(AppChannelOptions.AppID)),
             AppKey = channel.ExtraProperties.GetProperty<string>(nameof(AppChannelOptions.AppKey)),
@@ -60,9 +60,12 @@ public class SendAppMessageEventHandler
             var appChannel = channel.Type as ChannelType.AppsChannel;
             var transmissionContent = appChannel.GetMessageTransmissionContent(eto.MessageData.MessageContent);
 
+            var provider = channel.ExtraProperties.GetProperty<int>(nameof(AppChannelOptions.Provider));
+            var appNotificationSender = _appNotificationSenderFactory.GetAppNotificationSender((Providers)provider);
+
             if (taskHistory.MessageTask.ReceiverType == ReceiverTypes.Broadcast)
             {
-                var response = await _appNotificationSender.SendAllAsync(new AppMessage(eto.MessageData.MessageContent.Title, eto.MessageData.MessageContent.Content, transmissionContent));
+                var response = await appNotificationSender.SendAllAsync(new AppMessage(eto.MessageData.MessageContent.Title, eto.MessageData.MessageContent.Content, transmissionContent));
                 taskHistory.SetResult(response.Success ? MessageTaskHistoryStatuses.Success : MessageTaskHistoryStatuses.Fail);
 
                 await _messageTaskHistoryRepository.UpdateAsync(taskHistory);
@@ -97,7 +100,7 @@ public class SendAppMessageEventHandler
                         await _websiteMessageRepository.AddAsync(websiteMessage);
                     }
 
-                    var response = await _appNotificationSender.SendAsync(new SingleAppMessage(item.ChannelUserIdentity, eto.MessageData.MessageContent.Title, eto.MessageData.MessageContent.Content, transmissionContent));
+                    var response = await appNotificationSender.SendAsync(new SingleAppMessage(item.ChannelUserIdentity, eto.MessageData.MessageContent.Title, eto.MessageData.MessageContent.Content, transmissionContent));
                     if (response.Success)
                     {
                         messageRecord.SetResult(true, string.Empty);

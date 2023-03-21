@@ -19,13 +19,11 @@ public partial class ChannelAppExtraProperties : AdminCompontentBase
     private AppChannelOptions _model = new();
     private bool _passwordShow;
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    protected override async Task OnInitializedAsync()
     {
-        if (firstRender)
-        {
-            _model = ExtensionPropertyHelper.ConvertToType<AppChannelOptions>(Value);
-        }
-        await base.OnAfterRenderAsync(firstRender);
+        await base.OnInitializedAsync();
+
+        _model = ExtensionPropertyHelper.ConvertToType<AppChannelOptions>(Value);
     }
 
     public async Task HandleChangeAsync()
