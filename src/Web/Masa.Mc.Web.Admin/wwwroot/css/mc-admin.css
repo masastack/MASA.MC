@@ -467,3 +467,13 @@
     height: 43px !important;
     border-bottom: solid 1px #E2E7F4 !important;
 }
+
+.search {
+    width: 300px;
+    flex: none;
+}
+
+.m-application .rounded-r-4 {
+    border-top-right-radius: 16px !important;
+    border-bottom-right-radius: 16px !important;
+}
