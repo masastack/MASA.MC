@@ -19,10 +19,10 @@ public partial class ReceiverGroupManagement : AdminCompontentBase
         var _prefix = "DisplayName.ReceiverGroup";
         Headers = new()
         {
-            new() { Text = T($"{_prefix}{nameof(ReceiverGroupDto.DisplayName)}"), Value = nameof(ReceiverGroupDto.DisplayName), Sortable = false, Width = "520px" },
-            new() { Text = T("Modifier"), Value = nameof(MessageTemplateDto.ModifierName), Sortable = false, Width = "460px" },
-            new() { Text = T("ModificationTime"), Value = nameof(ReceiverGroupDto.ModificationTime), Sortable = false, Width = "460px" },
-            new() { Text = T("Action"), Value = "Action", Sortable = false, Width = 72, Align = DataTableHeaderAlign.Center },
+            new() { Text = T($"{_prefix}{nameof(ReceiverGroupDto.DisplayName)}"), Value = nameof(ReceiverGroupDto.DisplayName), Sortable = false, Width = "14.6875rem" },
+            new() { Text = T("Modifier"), Value = nameof(MessageTemplateDto.ModifierName), Sortable = false, Width = "6.625rem" },
+            new() { Text = T("ModificationTime"), Value = nameof(ReceiverGroupDto.ModificationTime), Sortable = false},
+            new() { Text = T("Action"), Value = "Action", Sortable = false, Width = 108, Align = DataTableHeaderAlign.Center },
         };
     }
 

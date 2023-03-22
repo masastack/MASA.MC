@@ -136,7 +136,7 @@
   "DisplayName.MessageTemplateSign": "签名",
   "DisplayName.MessageTemplateModificationTime": "修改时间",
   "DisplayName.MessageTemplateStatus": "模板状态",
-  "DisplayName.MessageTemplateAuditStatus": "服务商审核状态",
+  "DisplayName.MessageTemplateAuditStatus": "审核状态",
   "DisplayName.MessageTemplateTemplateId": "模板ID",
   "DisplayName.MessageTemplateIsJump": "是否跳转",
   "DisplayName.MessageTemplateJumpUrl": "跳转地址",

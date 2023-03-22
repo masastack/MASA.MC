@@ -1,6 +1,6 @@
 ﻿@inherits AdminCompontentBase
-<MCard Class="d-flex flex-column px-2 rounded-xl" MinHeight=Height>
-    <MCardTitle class="px-0 py-1">
+<MCard Class="@($"{Class} d-flex flex-column px-2 rounded-xl")">
+    <MCardTitle class="px-0 py-2">
         <MListItem>
             <MListItemTitle Class="overflow-visible">
                 <ColorTag>@T(Channel.Type.ToString())</ColorTag>
@@ -33,9 +33,6 @@
 @code {
     [Parameter]
     public EventCallback OnEditClick { get; set; }
-
-    [Parameter]
-    public int Height { get; set; } = 230;
 
     [EditorRequired]
     [Parameter]

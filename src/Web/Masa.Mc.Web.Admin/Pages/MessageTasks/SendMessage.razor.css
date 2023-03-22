@@ -1,0 +1,19 @@
+.grid {
+    display: grid;
+    grid-template-columns: repeat(2, 33.3%);
+    gap: 24px;
+    width: 100%;
+    justify-content: center;
+}
+
+    .grid .item {
+        height: 0;
+        padding-bottom: 100%;
+        position: relative;
+    }
+
+        .grid .item ::deep .m-card {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+        }

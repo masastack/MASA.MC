@@ -11,16 +11,13 @@
     </HeaderContent>
     <AutoHeightContent>
         <MCard Class="page-content">
-            <SDataTable Headers="Headers" Items="_entities.Result" TItem="ReceiverGroupDto" ItemsPerPage="_queryParam.PageSize" HideDefaultFooter FixedRight Width="@("120%")" Class="mt-6 d-flex full-height flex-column">
+            <SDataTable Headers="Headers" Items="_entities.Result" TItem="ReceiverGroupDto" ItemsPerPage="_queryParam.PageSize" HideDefaultFooter Class="mt-6 d-flex full-height flex-column">
                 <HeaderColContent Context="header">
                     <span class="text-btn">@header.Text</span>
                 </HeaderColContent>
                 <ItemColContent>
                     @switch (context.Header.Value)
                     {
-                        case (nameof(ReceiverGroupDto.DisplayName)):
-                            <span class="h8 emphasis--text">@context.Value</span>
-                            break;
                         case "Action":
                             <DefaultIcon Small Color="emphasis2" Tooltip="@(T("Edit"))" OnClick="async()=>await _editModal.OpenModalAsync(context.Item)">mdi-pencil</DefaultIcon>
                             break;
