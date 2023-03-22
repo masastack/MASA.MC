@@ -50,3 +50,7 @@
     .task-history-box ::deep .m-icon {
         background: #ffff !important;
     }
+
+    .task-history-box ::deep .theme--light.m-timeline::before {
+        background: #E2E7F4;
+    }

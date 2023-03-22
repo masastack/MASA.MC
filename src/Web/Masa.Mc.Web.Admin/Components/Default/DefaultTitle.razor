@@ -1,0 +1,9 @@
+﻿<span class="h5 emphasis--text @Class">@ChildContent</span>
+
+@code {
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    [Parameter]
+    public string Class { get; set; } = "";
+}

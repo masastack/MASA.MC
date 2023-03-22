@@ -467,3 +467,39 @@
     height: 43px !important;
     border-bottom: solid 1px #E2E7F4 !important;
 }
+
+.search {
+    width: 300px;
+}
+
+.m-application .rounded-r-4 {
+    border-top-right-radius: 16px !important;
+    border-bottom-right-radius: 16px !important;
+}
+.m-application .rounded-r-10 {
+    border-top-right-radius: 40px !important;
+    border-bottom-right-radius: 40px !important;
+}
+
+.flex-none {
+    flex: none;
+}
+
+
+.grid-card {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+}
+
+    .grid-card .item {
+        height: 0;
+        padding-bottom: 100%;
+        position: relative;
+    }
+
+        .grid-card .item .m-card {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+        }

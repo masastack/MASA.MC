@@ -1,6 +1,6 @@
 ﻿@inherits AdminCompontentBase
-<MCard Class="d-flex flex-column px-2 rounded-xl" MinHeight=Height>
-    <MCardTitle class="px-0 py-1">
+<MCard Class="@($"{Class} d-flex flex-column px-2 rounded-xl")">
+    <MCardTitle class="px-0 py-2">
         <MListItem>
             <MListItemTitle Class="overflow-visible">
                 <ColorTag>@T(Channel.Type.ToString())</ColorTag>
@@ -11,13 +11,13 @@
         </MListItem>
     </MCardTitle>
     <MCardText class="flex-grow-1 px-0 d-flex flex-column justify-center align-center px-12 text-center">
-        <div class="h6 emphasis--text text-truncate full-width">@Channel.DisplayName</div>
-        <div class="caption regular3--text text-truncate full-width">@Channel.Code</div>
+        <div class="h5 emphasis--text text-truncate full-width">@Channel.DisplayName</div>
+        <div class="body2 regular3--text text-truncate full-width">@Channel.Code</div>
     </MCardText>
     <div style="height:42px;line-height:19px">
         @if (!string.IsNullOrEmpty(Channel.Description))
         {
-            <div class="fill-hover caption px-2 py-1 regular2--text text-justify line-clamp-2 rounded-lg">@Channel.Description</div>
+            <div class="fill-hover body px-2 py-1 regular2--text text-justify line-clamp-2 rounded">@Channel.Description</div>
         }
     </div>
     <MCardActions class="px-3 pb-3">
@@ -33,9 +33,6 @@
 @code {
     [Parameter]
     public EventCallback OnEditClick { get; set; }
-
-    [Parameter]
-    public int Height { get; set; } = 230;
 
     [EditorRequired]
     [Parameter]

@@ -7,7 +7,7 @@
                     <HeaderContent>
                         <div class="subtitle2 emphasis2--text">@T("DisplayName.MessageTaskHistory")</div>
                         <Masa.Mc.Web.Admin.Components.Pickers.DateRangePicker Class="btn-fill-line mt-6" IconClass="mr-9" @bind-StartTime="_queryParam.StartTime" @bind-EndTime="_queryParam.EndTime" OnChange="LoadData" />
-                        <div class="status-select">
+                        <div class="status-select mb-9">
                             <MSelect @bind-Value="@_queryParam.Status"
                                      Items="@(GetEnumList<MessageTaskHistoryStatuses>())"
                                      Label="@T("DisplayName.MessageTaskHistoryStatus")"
@@ -120,7 +120,7 @@
                     <FooterContent>
                         @if (_info.Channel.Type == ChannelTypes.WebsiteMessage && _historyInfo.Status != MessageTaskHistoryStatuses.Withdrawn)
                         {
-                            <div Class="d-flex">
+                            <div Class="d-flex pt-2">
                                 <MSpacer></MSpacer>
                                 <MButton Rounded Color="primary" Class="px-6" Width="100" OnClick="HandleWithdrawnAsync">
                                     <span>@T("Withdraw")</span>

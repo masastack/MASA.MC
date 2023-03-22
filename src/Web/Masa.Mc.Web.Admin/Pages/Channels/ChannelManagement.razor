@@ -6,23 +6,24 @@
     <HeaderContent>
         <div class="search-panel mb-6">
             <div class="d-flex search-panel-right full-width">
-                <DefaultSearch @bind-Value="_queryParam.Filter" Clearable Class="rounded-2 search" Placeholder="@T("Search")" Dense OnEnter="RefreshAsync" OnClearClick="HandleClearAsync" />
+                <DefaultTitle>@T("DisplayName.Channel")</DefaultTitle>
+                <MSpacer></MSpacer>
+                <DefaultSearch @bind-Value="_queryParam.Filter" Clearable Class="rounded-2 search flex-none" Placeholder="@T("Search")" Dense OnEnter="RefreshAsync" OnClearClick="HandleClearAsync" />
                 <SButton Small Color="primary" BorderRadiusClass="rounded-lg" Class="ml-6" OnClick="()=> _createModal.OpenModalAsync()">@T("Permission.Create")</SButton>
             </div>
         </div>
     </HeaderContent>
     <AutoHeightContent>
-        <MRow Style="height:0px">
+        <div class="grid-card">
             @foreach (var _entitie in _entities.Result)
             {
-                <MCol Md="3">
-                    <ChannelCard Height="375" Channel="_entitie" OnEditClick="async()=>await _editModal.OpenModalAsync(_entitie)" />
-                </MCol>
+                <div class="item">
+                    <ChannelCard Channel="_entitie" OnEditClick="async()=>await _editModal.OpenModalAsync(_entitie)" />
+                </div>
             }
-        </MRow>
+        </div>
     </AutoHeightContent>
 </AutoHeight>
 
 <ChannelEditModal @ref="_editModal" OnOk="HandleOk" />
 <ChannelCreateModal @ref="_createModal" OnOk="HandleOk" />
-

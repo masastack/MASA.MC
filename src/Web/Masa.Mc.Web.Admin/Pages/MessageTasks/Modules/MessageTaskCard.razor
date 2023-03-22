@@ -1,5 +1,5 @@
 ﻿@inherits AdminCompontentBase
-<MCard Class="d-flex flex-column px-2 rounded-xl" MinHeight=Height>
+<MCard Class="d-flex flex-column px-2 rounded-4">
     <MCardTitle class="px-0 py-1">
         <MListItem>
             <MListItemTitle Class="overflow-visible">
@@ -65,12 +65,12 @@
     </MCardTitle>
     <MDivider></MDivider>
     <MCardText class="flex-grow-1 px-0 d-flex flex-column">
-        <div class="@($"h8 text-truncate {(MessageTask.IsEnabled?"emphasis--text":"regular3--text")}")" style="line-height: 24px;">@MessageTask.DisplayName</div>
+        <div class="@($"h6 text-truncate {(MessageTask.IsEnabled?"emphasis--text":"regular3--text")}")" style="line-height: 24px;">@MessageTask.DisplayName</div>
         <div class="caption regular3--text" style="line-height: 18px;">@((MessageTask.SendTime?.ToOffset(JsInitVariables.TimezoneOffset) ?? MessageTask.ExpectSendTime?.ToOffset(JsInitVariables.TimezoneOffset))?.ToString(T("$DateTimeFormat")))</div>
     </MCardText>
-    <div class="@($"message-content fill-background caption px-2 py-1 text-justify rounded-lg {(MessageTask.IsEnabled?"regular2--text":"regular3--text")}")">@MessageTask.Content</div>
-    <MCardActions class="px-3 pb-3">
-        <span class="@($"body2 {(MessageTask.IsEnabled?"emphasis2--text":"regular3--text")}")">@T($"DisplayName.MessageEntityType.{((MessageEntityTypes)MessageTask.EntityType).ToString()}")</span>
+    <div class="@($"message-content fill-background body px-2 py-1 text-justify rounded-sm {(MessageTask.IsEnabled?"regular--text":"regular3--text")}")">@MessageTask.Content</div>
+    <MCardActions class="px-3 py-4">
+        <span class="@($"caption {(MessageTask.IsEnabled?"emphasis2--text":"regular3--text")}")">@T($"DisplayName.MessageEntityType.{((MessageEntityTypes)MessageTask.EntityType).ToString()}")</span>
         @if (MessageTask.IsDraft == false)
         {
             <span class="d-flex px-1" style="height: 8px">
@@ -88,9 +88,6 @@
 </MCard>
 
 @code {
-    [Parameter]
-    public int Height { get; set; } = 230;
-
     [EditorRequired]
     [Parameter]
     public MessageTaskDto MessageTask { get; set; } = null!;

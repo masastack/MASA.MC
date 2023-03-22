@@ -2,48 +2,46 @@
 
 <div class="full-height flex-column">
     <MCard Class="flex-height-auto d-flex flex-column justify-center align-center">
-        <MContainer Fluid>
-            <MRow Align="AlignTypes.Center" Justify="JustifyTypes.Center">
-                <MCol Cols="4">
-                    <MHover>
-                        <MCard @attributes="context.Attrs" Height="408" Width="408" Class="@($"d-flex flex-column justify-center align-center {(context.Hover ? "primary" : "fill-background")}")"
-                               OnClick="_ordinaryCreateModal.OpenModalAsync">
-                            @if (context.Hover)
-                            {
-                                <MIcon Size=33 Color="#FFFFFF">mdi-email</MIcon>
-                                <div class="h6 pt-10" style="color:#FAFAFA">@T("DisplayName.MessageEntityType.Ordinary")</div>
-                            }
-                            else
-                            {
-                                <MIcon Size=33 Color="#323D6F">mdi-email</MIcon>
-                                <div class="h6 pt-10 regular--text">@T("DisplayName.MessageEntityType.Ordinary")</div>
-                            }
-                        </MCard>
-                    </MHover>
-                </MCol>
-                <MCol Cols="4">
-                    <MHover>
-                        <MCard @attributes="context.Attrs" Height="408" Width="408" Class="@($"d-flex flex-column justify-center align-center {(context.Hover ? "primary" : "fill-background")}")"
-                               OnClick="_templateCreateModal.OpenModalAsync">
-                            @if (context.Hover)
-                            {
-                                <MIcon Size=33 Color="#FFFFFF">mdi-email</MIcon>
-                                <div class="h6 pt-10" style="color:#FAFAFA">@T("DisplayName.MessageEntityType.Template")</div>
-                            }
-                            else
-                            {
-                                <MIcon Size=33 Color="#323D6F">mdi-email</MIcon>
-                                <div class="h6 pt-10 regular--text">@T("DisplayName.MessageEntityType.Template")</div>
-                            }
-                        </MCard>
-                    </MHover>
-                </MCol>
-            </MRow>
-        </MContainer>
+        <div class="grid">
+            <div class="item">
+                <MHover>
+                    <MCard @attributes="context.Attrs" Class="@($"d-flex flex-column justify-center align-center {(context.Hover ? "primary" : "fill-background")}")"
+                           OnClick="_ordinaryCreateModal.OpenModalAsync">
+                        @if (context.Hover)
+                        {
+                            <MIcon Size=33 Color="fill">mdi-email</MIcon>
+                            <div class="h6 pt-10" style="color:#FAFAFA">@T("DisplayName.MessageEntityType.Ordinary")</div>
+                        }
+                        else
+                        {
+                            <MIcon Size=33 Color="emphasis2">mdi-email</MIcon>
+                            <div class="h6 pt-10 regular--text">@T("DisplayName.MessageEntityType.Ordinary")</div>
+                        }
+                    </MCard>
+                </MHover>
+            </div>
+            <div class="item">
+                <MHover>
+                    <MCard @attributes="context.Attrs" Class="@($"d-flex flex-column justify-center align-center {(context.Hover ? "primary" : "fill-background")}")"
+                           OnClick="_templateCreateModal.OpenModalAsync">
+                        @if (context.Hover)
+                        {
+                            <MIcon Size=33 Color="fill">mdi-email</MIcon>
+                            <div class="h6 pt-10" style="color:#FAFAFA">@T("DisplayName.MessageEntityType.Template")</div>
+                        }
+                        else
+                        {
+                            <MIcon Size=33 Color="emphasis2">mdi-email</MIcon>
+                            <div class="h6 pt-10 regular--text">@T("DisplayName.MessageEntityType.Template")</div>
+                        }
+                    </MCard>
+                </MHover>
+            </div>
+        </div>
     </MCard>
 
     <div class="mt-6 fill rounded-2 d-flex justify-center align-center px-6 py-3" style="height:56px">
-        <MButton Ripple=false Plain IsActive Class="emphasis2--text h6" OnClick="NavigateToList"><MIcon Left>fas fa-tasks</MIcon>@T("DisplayName.MessageTaskList")</MButton>
+        <MButton Ripple=false Plain IsActive Class="emphasis2--text h8" OnClick="NavigateToList"><MIcon Size="20" Left>fas fa-tasks</MIcon>@T("DisplayName.MessageTaskList")</MButton>
     </div>
 </div>
 
