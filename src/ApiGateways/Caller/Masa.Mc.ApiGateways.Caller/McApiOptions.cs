@@ -5,10 +5,11 @@ namespace Masa.Mc.ApiGateways.Caller;
 
 public class McApiOptions
 {
-    public string McServiceBaseAddress { get; set; }
+    public string McServiceBaseAddress { get; set; } = string.Empty;
 
-    public McApiOptions(string mcServiceBaseAddress)
-    {
-        McServiceBaseAddress = mcServiceBaseAddress;
-    }
+    public string AuthorityEndpoint { get; set; } = string.Empty;
+
+    public string ClientId { get; set; } = string.Empty;
+
+    public string ClientSecret { get; set; } = string.Empty;
 }

@@ -98,10 +98,6 @@ builder.Services.AddAuthChannelUserFinder();
 builder.Services.AddMessageTaskHttpJobService();
 TypeAdapterConfig.GlobalSettings.Scan(Assembly.GetExecutingAssembly(), Assembly.Load("Masa.Mc.Contracts.Admin"));
 
-builder.Services.AddHealthChecks()
-    .AddCheck("self", () => HealthCheckResult.Healthy("A healthy result."))
-    .AddDbContextCheck<McDbContext>();
-
 builder.Services.AddScoped(service =>
 {
     var content = service.GetRequiredService<IHttpContextAccessor>();
@@ -194,7 +190,7 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseAddStackMiddleware();
+app.UseStackMiddleware();
 app.UseCloudEvents();
 app.UseEndpoints(endpoints =>
 {

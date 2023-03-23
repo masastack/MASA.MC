@@ -14,7 +14,7 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "DOMAIN_NAME": "masastack.com",
-        "NAMESPACE": "masastack",
+        "NAMESPACE": "",
         "TLS_NAME": "",
         "VERSION": "1.0-Preview1",
         "IS_DEMO": "False",

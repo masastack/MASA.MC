@@ -3,7 +3,7 @@
 
 namespace Masa.Mc.ApiGateways.Caller;
 
-public class McCaller : HttpClientCallerBase
+public class McCaller : StackHttpClientCaller
 {
     private const string DEFAULT_SCHEME = "Bearer";
 
@@ -18,7 +18,7 @@ public class McCaller : HttpClientCallerBase
     MessageTaskHistoryService? _messageTaskHistoryService;
     WebsiteMessageService? _websiteMessageService;
     OssService? _ossService;
-    TokenProvider _tokenProvider;
+    McApiOptions _options;
     #endregion
 
     public ChannelService ChannelService => _channelService ?? (_channelService = new(Caller));
@@ -43,22 +43,9 @@ public class McCaller : HttpClientCallerBase
 
     protected override string BaseAddress { get; set; }
 
-    public McCaller(
-        IServiceProvider serviceProvider,
-        TokenProvider tokenProvider,
-        McApiOptions options) : base(serviceProvider)
+    public McCaller(McApiOptions options)
     {
         BaseAddress = options.McServiceBaseAddress;
-        _tokenProvider = tokenProvider;
-    }
-
-    protected override async Task ConfigHttpRequestMessageAsync(HttpRequestMessage requestMessage)
-    {
-        if (!string.IsNullOrWhiteSpace(_tokenProvider.AccessToken))
-        {
-            requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _tokenProvider.AccessToken);
-        }
-
-        await base.ConfigHttpRequestMessageAsync(requestMessage);
+        _options = options;
     }
 }
