@@ -6,6 +6,7 @@ namespace Masa.Mc.Service.Admin.Infrastructure.Caller;
 public class TokenGenerater : ITokenGenerater
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private const string SCHEME = "Bearer ";
 
     public TokenGenerater(IHttpContextAccessor httpContextAccessor)
     {
@@ -16,11 +17,9 @@ public class TokenGenerater : ITokenGenerater
     {
         var token = _httpContextAccessor.HttpContext?.Request.Headers.Authorization.ToString();
 
-        string scheme = "Bearer ";
-
-        if (!string.IsNullOrEmpty(token) && token.IndexOf(scheme) > -1)
+        if (!string.IsNullOrEmpty(token) && token.IndexOf(SCHEME) > -1)
         {
-            token = token.Replace(scheme, "");
+            token = token.Replace(SCHEME, "");
         }
 
         return new TokenProvider { AccessToken = token };
