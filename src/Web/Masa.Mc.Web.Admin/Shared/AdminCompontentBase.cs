@@ -1,6 +1,8 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
+using Masa.Stack.Components.Extensions;
+
 namespace Masa.Mc.Web.Admin;
 
 public abstract class AdminCompontentBase : BDomComponentBase
@@ -101,7 +103,7 @@ public abstract class AdminCompontentBase : BDomComponentBase
 
     public async Task ConfirmAsync(string messgae, Func<Task> callback, AlertTypes type = AlertTypes.Warning)
     {
-        if (await PopupService.ConfirmAsync(I18n.T("OperationConfirmation"), messgae, type)) await callback.Invoke();
+        if (await PopupService.SimpleConfirmAsync(I18n.T("OperationConfirmation"), messgae, type)) await callback.Invoke();
     }
 
     public async Task SuccessMessageAsync(string message)
