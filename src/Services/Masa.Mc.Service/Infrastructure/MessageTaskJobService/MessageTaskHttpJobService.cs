@@ -45,7 +45,8 @@ public class MessageTaskHttpJobService : IMessageTaskJobService
                 HttpMethod = BuildingBlocks.StackSdks.Scheduler.Enum.HttpMethods.POST,
                 RequestUrl = $"{mcUrl}/api/message-task/Execute",
                 HttpParameters = parameters
-            }
+            },
+            NotifyUrl = $"{mcUrl}/api/message-task/HandleJobStatusNotify"
         };
 
         var jobId = await _schedulerClient.SchedulerJobService.AddAsync(request);
