@@ -11,7 +11,7 @@ public static class ServiceCollectionExtensions
         var options = new McApiOptions();
         configure.Invoke(options);
         services.AddSingleton(options);
-        services.AddStackCaller(Assembly.Load("Masa.Mc.ApiGateways.Caller"), (serviceProvider) => { return new TokenProvider(); }, jwtTokenValidatorOptions =>
+        services.AddStackCaller(Assembly.Load("Masa.Mc.ApiGateways.Caller"), jwtTokenValidatorOptions =>
         {
             jwtTokenValidatorOptions.AuthorityEndpoint = options.AuthorityEndpoint;
         }, clientRefreshTokenOptions =>

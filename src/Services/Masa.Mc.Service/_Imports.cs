@@ -201,3 +201,4 @@ global using Masa.Utils.Configuration.Json;
 global using Microsoft.EntityFrameworkCore.Design;
 global using Masa.Mc.Contracts.Admin.Scheduler;
 global using Masa.Contrib.StackSdks.Caller;
+global using Masa.Mc.Service.Admin.Infrastructure.Caller;
