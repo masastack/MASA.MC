@@ -6,10 +6,12 @@ namespace Masa.Mc.Service.Admin.Infrastructure.MessageTaskJobService;
 public class MessageTaskAppJobService : IMessageTaskJobService
 {
     private readonly ISchedulerClient _schedulerClient;
+    private readonly IMasaStackConfig _masaStackConfig;
 
-    public MessageTaskAppJobService(ISchedulerClient schedulerClient)
+    public MessageTaskAppJobService(ISchedulerClient schedulerClient, IMasaStackConfig masaStackConfig)
     {
         _schedulerClient = schedulerClient;
+        _masaStackConfig = masaStackConfig;
     }
 
     public async Task<bool> DisableJobAsync(Guid jobId, Guid operatorId)
@@ -24,6 +26,7 @@ public class MessageTaskAppJobService : IMessageTaskJobService
 
     public async Task<Guid> RegisterJobAsync(Guid messageTaskId, string cronExpression, Guid operatorId, string jobName)
     {
+        var mcUrl = _masaStackConfig.GetMcServiceDomain();
         var request = new AddSchedulerJobRequest
         {
             ProjectIdentity = MasaStackConsts.MC_SYSTEM_ID,
@@ -37,7 +40,8 @@ public class MessageTaskAppJobService : IMessageTaskJobService
                 JobEntryAssembly = MessageTaskExecuteJobConsts.JOB_ENTRY_ASSEMBLY,
                 JobEntryClassName = MessageTaskExecuteJobConsts.JOB_ENTRY_METHOD,
                 JobParams = messageTaskId.ToString(),
-            }
+            },
+            NotifyUrl = $"{mcUrl}/api/message-task/HandleJobStatusNotify"
         };
 
         var jobId = await _schedulerClient.SchedulerJobService.AddAsync(request);

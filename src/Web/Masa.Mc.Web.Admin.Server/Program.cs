@@ -54,7 +54,6 @@ if (string.IsNullOrEmpty(mcBaseAddress))
     mcBaseAddress = masaStackConfig.GetMcServiceDomain();
 }
 
-builder.Services.AddMcApiGateways(option => option.McServiceBaseAddress = mcBaseAddress);
 builder.AddMasaStackComponentsForServer("wwwroot/i18n", authBaseAddress, mcBaseAddress);
 
 builder.Services.AddHttpContextAccessor();
@@ -71,6 +70,14 @@ MasaOpenIdConnectOptions masaOpenIdConnectOptions = new MasaOpenIdConnectOptions
 
 IdentityModelEventSource.ShowPII = true;
 builder.Services.AddMasaOpenIdConnect(masaOpenIdConnectOptions);
+
+builder.Services.AddMcApiGateways(option =>
+{
+    option.McServiceBaseAddress = mcBaseAddress;
+    option.AuthorityEndpoint = masaOpenIdConnectOptions.Authority;
+    option.ClientId = masaOpenIdConnectOptions.ClientId;
+    option.ClientSecret = masaOpenIdConnectOptions.ClientSecret;
+});
 
 StaticWebAssetsLoader.UseStaticWebAssets(builder.Environment, builder.Configuration);
 

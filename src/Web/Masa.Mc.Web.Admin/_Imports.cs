@@ -75,3 +75,4 @@ global using Masa.Blazor.Presets;
 global using static Masa.Stack.Components.JsInitVariables;
 global using Masa.BuildingBlocks.StackSdks.Auth;
 global using Masa.BuildingBlocks.StackSdks.Auth.Contracts.Model;
+global using Masa.Stack.Components.Extensions;

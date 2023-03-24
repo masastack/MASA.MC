@@ -82,6 +82,7 @@ var redisOptions = new RedisConfigurationOptions
     Password = masaStackConfig.RedisModel.RedisPassword
 };
 var configuration = builder.Services.GetMasaConfiguration().ConfigurationApi.GetDefault();
+builder.Services.AddScoped<ITokenGenerater, TokenGenerater>();
 builder.Services.AddAuthClient(masaStackConfig.GetAuthServiceDomain(), redisOptions);
 builder.Services.AddMcClient(masaStackConfig.GetMcServiceDomain());
 builder.Services.AddSchedulerClient(masaStackConfig.GetSchedulerServiceDomain());
@@ -97,17 +98,6 @@ builder.Services.AddTransient<NotificationsHub>();
 builder.Services.AddAuthChannelUserFinder();
 builder.Services.AddMessageTaskHttpJobService();
 TypeAdapterConfig.GlobalSettings.Scan(Assembly.GetExecutingAssembly(), Assembly.Load("Masa.Mc.Contracts.Admin"));
-
-builder.Services.AddHealthChecks()
-    .AddCheck("self", () => HealthCheckResult.Healthy("A healthy result."))
-    .AddDbContextCheck<McDbContext>();
-
-builder.Services.AddScoped(service =>
-{
-    var content = service.GetRequiredService<IHttpContextAccessor>();
-    AuthenticationHeaderValue.TryParse(content.HttpContext?.Request.Headers.Authorization.ToString(), out var auth);
-    return new TokenProvider { AccessToken = auth?.Parameter };
-});
 
 builder.Services
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -194,7 +184,7 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseAddStackMiddleware();
+app.UseStackMiddleware();
 app.UseCloudEvents();
 app.UseEndpoints(endpoints =>
 {
