@@ -16,9 +16,11 @@ public class TokenGenerater : ITokenGenerater
     {
         var token = _httpContextAccessor.HttpContext?.Request.Headers.Authorization.ToString();
 
-        if (!string.IsNullOrEmpty(token) && token.IndexOf("Bearer ") > -1)
+        string scheme = "Bearer ";
+
+        if (!string.IsNullOrEmpty(token) && token.IndexOf(scheme) > -1)
         {
-            token = token.Replace("Bearer ", "");
+            token = token.Replace(scheme, "");
         }
 
         return new TokenProvider { AccessToken = token };
