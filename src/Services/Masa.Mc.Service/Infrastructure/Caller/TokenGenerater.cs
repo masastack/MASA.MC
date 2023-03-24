@@ -15,6 +15,12 @@ public class TokenGenerater : ITokenGenerater
     public TokenProvider Generater()
     {
         var token = _httpContextAccessor.HttpContext?.Request.Headers.Authorization.ToString();
+
+        if (!string.IsNullOrEmpty(token) && token.IndexOf("Bearer ") > -1)
+        {
+            token = token.Replace("Bearer ", "");
+        }
+
         return new TokenProvider { AccessToken = token };
     }
 }
