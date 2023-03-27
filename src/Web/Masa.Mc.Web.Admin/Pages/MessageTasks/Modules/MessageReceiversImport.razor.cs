@@ -32,13 +32,30 @@ public partial class MessageReceiversImport
 
     MessageTaskService MessageTaskService => McCaller.MessageTaskService;
 
-    private async void HandleFileChange(InputFileChangeEventArgs e)
+    private async Task handleCartoon()
     {
+        if (_progress == 0)
+        {
+            return;
+        }
+
+        _progress = 0;
+        _fileName = string.Empty;
+        _importResult = default!;
+        _isUpload = false;
+        await Task.Delay(400);
+    }
+
+    private async void HandleFileChange(InputFileChangeEventArgs e)
+    {	
         var file = e.File;
         if (file == null)
         {
             return;
         }
+	
+        await handleCartoon();
+
         if (!ChannelType.HasValue)
         {
             await WarningAsync(T("Description.ChannelType.Required"));
