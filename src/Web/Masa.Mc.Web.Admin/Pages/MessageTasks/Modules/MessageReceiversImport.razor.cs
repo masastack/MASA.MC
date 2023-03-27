@@ -32,7 +32,7 @@ public partial class MessageReceiversImport
 
     MessageTaskService MessageTaskService => McCaller.MessageTaskService;
 
-    private async Task handleCartoon()
+    private async Task handleResetAnimation()
     {
         if (_progress == 0)
         {
@@ -54,7 +54,7 @@ public partial class MessageReceiversImport
             return;
         }
 	
-        await handleCartoon();
+        await handleResetAnimation();
 
         if (!ChannelType.HasValue)
         {
