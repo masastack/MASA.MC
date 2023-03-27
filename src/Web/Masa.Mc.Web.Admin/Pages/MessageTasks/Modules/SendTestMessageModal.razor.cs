@@ -12,12 +12,15 @@ public partial class SendTestMessageModal : AdminCompontentBase
     private bool _visible;
     private List<Guid> _userIds = new List<Guid>();
     private Components.Modules.Subjects.UserAutoComplete _userRef = default!;
+    private ChannelTypes? _type;
 
     MessageTaskService MessageTaskService => McCaller.MessageTaskService;
 
     public async Task OpenModalAsync(Guid messageTaskId, ChannelTypes? type)
     {
         _input.Id = messageTaskId;
+        _type = type;
+
         await InvokeAsync(() =>
         {
             _visible = true;
@@ -57,9 +60,18 @@ public partial class SendTestMessageModal : AdminCompontentBase
         _input.ReceiverUsers = _userRef.UserSelect.Select(x => new MessageReceiverUserDto
         {
             UserId = x.Id,
-            DisplayName = x.Name ?? string.Empty,
-            PhoneNumber = x.PhoneNumber ?? string.Empty,
-            Email = x.Email ?? string.Empty,
+            ChannelUserIdentity = GetChannelUserIdentity(x, _type)
         }).ToList();
+    }
+
+    private string GetChannelUserIdentity(UserSelectModel user, ChannelTypes? type)
+    {
+        return type switch
+        {
+            ChannelTypes.Sms => user.PhoneNumber ?? string.Empty,
+            ChannelTypes.Email => user.Email ?? string.Empty,
+            ChannelTypes.WebsiteMessage => user.Id.ToString(),
+            _ => string.Empty
+        };
     }
 }

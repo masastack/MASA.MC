@@ -31,7 +31,7 @@
                 <MListItemAvatar Size=40 Class="ma-0" Color="primary">
                     @if (string.IsNullOrEmpty(data.Item.Avatar))
                     {
-                        <SEmptyAvatar Value="@(data.Item.Name)" />
+                        <SEmptyAvatar Value="@(data.Item.DisplayName)" />
                     }
                     else
                     {
