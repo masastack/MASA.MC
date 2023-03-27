@@ -58,9 +58,7 @@
                 }
                 </tbody>
             </MSimpleTable>
-            <FooterContent>
-                <SPagination Class="full-width" Page="@_queryParam.Page" PageSize="@_queryParam.PageSize" Total="Value.Count" PageChanged="HandlePageChanged" PageSizeChanged="HandlePageSizeChanged" />
-            </FooterContent>
+            <SPagination Class="full-width" Page="@_queryParam.Page" PageSize="@_queryParam.PageSize" Total="Value.Count" PageChanged="HandlePageChanged" PageSizeChanged="HandlePageSizeChanged" />
         </ChildContent>
     </SSimpleModal>
 </div>
