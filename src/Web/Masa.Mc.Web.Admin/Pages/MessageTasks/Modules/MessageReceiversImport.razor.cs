@@ -32,6 +32,15 @@ public partial class MessageReceiversImport
 
     MessageTaskService MessageTaskService => McCaller.MessageTaskService;
 
+    protected override void OnParametersSet()
+    {
+        if (!_isUpload && Value != null && Value.Any())
+        {
+            _isUpload = true;
+            _progress = 100;
+        }
+    }
+
     private async void HandleFileChange(InputFileChangeEventArgs e)
     {
         var file = e.File;
