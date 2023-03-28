@@ -41,13 +41,30 @@ public partial class MessageReceiversImport
         }
     }
 
-    private async void HandleFileChange(InputFileChangeEventArgs e)
+    private async Task handleResetAnimation()
     {
+        if (_progress == 0)
+        {
+            return;
+        }
+
+        _progress = 0;
+        _fileName = string.Empty;
+        _importResult = default!;
+        _isUpload = false;
+        await Task.Delay(400);
+    }
+
+    private async void HandleFileChange(InputFileChangeEventArgs e)
+    {	
         var file = e.File;
         if (file == null)
         {
             return;
         }
+	
+        await handleResetAnimation();
+
         if (!ChannelType.HasValue)
         {
             await WarningAsync(T("Description.ChannelType.Required"));
