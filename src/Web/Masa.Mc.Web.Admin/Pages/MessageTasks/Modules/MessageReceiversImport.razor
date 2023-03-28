@@ -2,18 +2,27 @@
 <div class="mt-8 rounded-xl d-flex flex-column align-center" style="border: 4px dashed #E2E7F4;">
     <MHover OpenDelay="200">
         <div @attributes="context.Attrs" class="@($"mt-8")">
-    	    <label class="uploadImage" for="upload">
+            <label class="uploadImage" for="upload">
                 <InputFile accept="text/csv" OnChange="HandleFileChange" id="upload" />
                 <MProgressCircular Value="_progress" Size="258" Width="18" Color="@(_importResult?.HasError==true?"warning-disabled":"gradient")">
-		            <MImage Width=80 Height=80 Class="d-flex justify-center align-center" ContentClass="text-center"
-				        Src="@(_isUpload?(_importResult?.HasError==true?"_content/Masa.Mc.Web.Admin/img/upload/upload-error.png":"_content/Masa.Mc.Web.Admin/img/upload/upload-complete.png"):context.Hover?"_content/Masa.Mc.Web.Admin/img/upload/upload-active.png":"_content/Masa.Mc.Web.Admin/img/upload/upload.png")">
-		            </MImage>
-		        </MProgressCircular>
-	        </label>
+                    @if (_isUpload)
+                    {
+                        <MImage Width=80 Height=80 Class="d-flex justify-center align-center" ContentClass="text-center"
+                            Src="@(_importResult?.HasError==true?"_content/Masa.Mc.Web.Admin/img/upload/upload-error.png":"_content/Masa.Mc.Web.Admin/img/upload/upload-complete.png")">
+                        </MImage>
+                    }
+                    else
+                    {
+                        <MImage Width=80 Height=80 Class="d-flex justify-center align-center" ContentClass="text-center"
+                            Src="@(Value.Any()?"_content/Masa.Mc.Web.Admin/img/upload/upload-complete.png":context.Hover?"_content/Masa.Mc.Web.Admin/img/upload/upload-active.png":"_content/Masa.Mc.Web.Admin/img/upload/upload.png")">
+                        </MImage>
+                    }
+                </MProgressCircular>
+            </label>
         </div>
     </MHover>
     <div class="d-flex flex-column align-center mt-6">
-        <div class="h6 regular--text">@(_importResult?.HasError == false ? T("UploadComplete") : T("UploadFile"))</div>
+        <div class="h6 regular--text">@(_isUpload && Value != null && Value.Any() ? T("UploadComplete") : T("UploadFile"))</div>
         <div class="body regular3--text">@_fileName</div>
     </div>
 </div>
@@ -33,7 +42,7 @@
         Text
         Icon="@("mdi-close")"
         Type="AlertTypes.Error" Style="border: 1px solid #FF5252;height: 56px;">
-        @T("Description.MessageReceiversImport.ErrorMsg")
+    @T("Description.MessageReceiversImport.ErrorMsg")
     </MAlert>
 }
 @if (Value != null && Value.Any())
@@ -42,8 +51,8 @@
         Text
         Icon="@("mdi-check")"
         Type="AlertTypes.Success" Style="height: 56px;">
-        <div class="d-flex justify-space-between">
-            <span>@(string.Format(T("Description.MessageReceiversImport.Tips"), Value.Count))</span>
+    <div class="d-flex justify-space-between">
+        <span>@(string.Format(T("Description.MessageReceiversImport.Tips"), Value.Count))</span>
             <span class="hover-pointer" @onclick="()=>_importReceiversDetailModal.OpenModal()">@T("View")</span>
         </div>
     </MAlert>

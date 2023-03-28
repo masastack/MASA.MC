@@ -110,14 +110,22 @@
         </div>
     </HeaderContent>
     <AutoHeightContent>
-        <div class="grid-card">
-            @foreach (var _entitie in _entities.Result)
-            {
-                <div class="item">
-                    <MessageTaskCard MessageTask="_entitie" OnEdit="()=>HandleEditAsync(_entitie)" OnView="()=>_detailModal.OpenModalAsync(_entitie)" OnTest="()=>_sendTestModal.OpenModalAsync(_entitie.Id,_entitie.Channel?.Type)" OnDelete="()=>HandleDelAsync(_entitie.Id,_entitie.DisplayName)" OnIsEnabled="()=>HandleIsEnabled(_entitie)" />
-                </div>
-            }
-        </div>
+        @if (_entities.Result.Any())
+        {
+           <div class="grid-card">
+                @foreach (var _entitie in _entities.Result)
+                {
+                    <div class="item">
+                        <MessageTaskCard MessageTask="_entitie" OnEdit="()=>HandleEditAsync(_entitie)" OnView="()=>_detailModal.OpenModalAsync(_entitie)" OnTest="()=>_sendTestModal.OpenModalAsync(_entitie.Id,_entitie.Channel?.Type)" OnDelete="()=>HandleDelAsync(_entitie.Id,_entitie.DisplayName)" OnIsEnabled="()=>HandleIsEnabled(_entitie)" />
+                    </div>
+                }
+            </div> 
+        }
+        else
+        {
+            <SEmptyPlaceholder />
+        }
+        
     </AutoHeightContent>
     <FooterContent>
         <div class="mt-6 fill rounded-2 pa-0">

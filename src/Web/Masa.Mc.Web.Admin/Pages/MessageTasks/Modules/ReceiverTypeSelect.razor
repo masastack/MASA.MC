@@ -7,12 +7,12 @@
                        OnClick="()=>HandleReceiverType(ReceiverTypes.Assign)">
                     @if (IsReceiverTypeActive(hoverContext.Hover, ReceiverTypes.Assign))
                     {
-                        <MIcon Size=40 Color="#FFFFFF">mdi-account-supervisor-circle</MIcon>
+                        <MIcon Size=40 Color="fill">mdi-account-supervisor-circle</MIcon>
                         <div class="h6 pt-10" style="color:#FAFAFA">@T("DisplayName.ReceiverType.Assign")</div>
                     }
                     else
                     {
-                        <MIcon Size=40 Color="#323D6F">mdi-account-supervisor-circle</MIcon>
+                        <MIcon Size=40 Color="emphasis2">mdi-account-supervisor-circle</MIcon>
                         <div class="h6 pt-10 regular--text">@T("DisplayName.ReceiverType.Assign")</div>
                     }
                 </MCard>
@@ -24,12 +24,12 @@
                        OnClick="()=>HandleReceiverType(ReceiverTypes.Broadcast)">
                     @if (IsReceiverTypeActive(hoverContext.Hover, ReceiverTypes.Broadcast))
                     {
-                        <MIcon Size=40 Color="#FFFFFF">mdi-email-outline</MIcon>
+                        <MIcon Size=40 Color="fill">mdi-email-outline</MIcon>
                         <div class="h6 pt-10" style="color:#FAFAFA">@T("DisplayName.ReceiverType.Broadcast")</div>
                     }
                     else
                     {
-                        <MIcon Size=40 Color="#323D6F">mdi-email</MIcon>
+                        <MIcon Size=40 Color="emphasis2">mdi-email</MIcon>
                         <div class="h6 pt-10 regular--text">@T("DisplayName.ReceiverType.Broadcast")</div>
                     }
                 </MCard>
@@ -63,14 +63,11 @@
 
     private void HandleHoverChanged(bool val, ReceiverTypes hoverType)
     {
-        if (val)
-        {
-            _hoverType = hoverType;
-        }
+        _hoverType = val ? hoverType : default;
     }
 
     private bool IsReceiverTypeActive(bool hover, ReceiverTypes type)
     {
-        return hover || (_hoverType == default && Value == type);
+        return _hoverType == type || (Value == type && _hoverType == default);
     }
 }

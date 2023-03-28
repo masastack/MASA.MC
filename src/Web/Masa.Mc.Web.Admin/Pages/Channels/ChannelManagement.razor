@@ -14,14 +14,21 @@
         </div>
     </HeaderContent>
     <AutoHeightContent>
-        <div class="grid-card">
-            @foreach (var _entitie in _entities.Result)
-            {
-                <div class="item">
-                    <ChannelCard Channel="_entitie" OnEditClick="async()=>await _editModal.OpenModalAsync(_entitie)" />
-                </div>
-            }
-        </div>
+        @if (_entities.Result.Any())
+        {
+            <div class="grid-card">
+                @foreach (var _entitie in _entities.Result)
+                {
+                    <div class="item">
+                        <ChannelCard Channel="_entitie" OnEditClick="async()=>await _editModal.OpenModalAsync(_entitie)" />
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <SEmptyPlaceholder />
+        } 
     </AutoHeightContent>
 </AutoHeight>
 
