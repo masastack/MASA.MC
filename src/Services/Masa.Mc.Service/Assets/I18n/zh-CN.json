@@ -30,7 +30,7 @@
   "ChannelCannotRepeated": "渠道编码不能重复",
   "ChannelTypeDoesNotMatchChannel": "渠道类型与渠道不匹配",
   "TemplateCodeCannotRepeated": "模板编码不能重复",
-  "TemplateIdCannotRepeated": "模板Id不能重复",
+  "TemplateIdCannotRepeated": "模板不能重复",
   "ReceiverGroupNameCannotRepeated": "消息组名称不能重复",
   "SyncSmsTemplateErrorMessage": "短信模板同步失败，请检查渠道信息是否正确"
 }
