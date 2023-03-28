@@ -55,5 +55,10 @@ public class Channel : FullAggregateRoot<Guid, Guid>
     {
         ExtraProperties.SetProperty(name, value);
     }
+
+    public void Remove()
+    {
+        AddDomainEvent(new RemoveChannelTemplatesDomainEvent(Id));
+    }
 }
 

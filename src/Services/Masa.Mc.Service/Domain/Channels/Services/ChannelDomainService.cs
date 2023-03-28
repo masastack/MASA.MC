@@ -38,6 +38,9 @@ public class ChannelDomainService : DomainService
         {
             throw new UserFriendlyException(errorCode: UserFriendlyExceptionCodes.CHANNEL_CANNOT_DELETED);
         }
+
+        channel.Remove();
+
         return await _repository.RemoveAsync(channel);
     }
 
