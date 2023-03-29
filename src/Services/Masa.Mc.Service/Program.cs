@@ -151,9 +151,9 @@ builder.Services
         {
             eventBusBuilder.UseMiddleware(typeof(ValidatorMiddleware<>));
         })
-        .UseIsolationUoW<McDbContext>(isolationBuilder => isolationBuilder.UseMultiEnvironment("env_key"), null)
+        .UseUoW<McDbContext>()
         .UseRepository<McDbContext>();
-    });
+    }).AddIsolation(isolationBuilder => isolationBuilder.UseMultiEnvironment("env_key"));
 
 builder.Services.AddStackMiddleware();
 await builder.MigrateDbContextAsync<McDbContext>();

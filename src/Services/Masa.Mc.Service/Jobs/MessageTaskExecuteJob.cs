@@ -49,11 +49,9 @@ public class MessageTaskExecuteJob : SchedulerJob
                     eventBusBuilder.UseMiddleware(typeof(ValidatorMiddleware<>));
                     eventBusBuilder.UseMiddleware(typeof(LogMiddleware<>));
                 })
-                .UseIsolationUoW<McDbContext>(
-                    isolationBuilder => isolationBuilder.UseMultiEnvironment("env_key"),
-                    dbOptions => dbOptions.UseSqlServer().UseFilter())
+                .UseUoW<McDbContext>(dbOptions => dbOptions.UseSqlServer().UseFilter())
                 .UseRepository<McDbContext>();
-            });
+            }).AddIsolation(isolationBuilder => isolationBuilder.UseMultiEnvironment("env_key"));
 
             serviceCollection.AddLogging();
 
