@@ -83,7 +83,7 @@ var redisOptions = new RedisConfigurationOptions
 };
 var configuration = builder.Services.GetMasaConfiguration().ConfigurationApi.GetDefault();
 builder.Services.AddScoped<ITokenGenerater, TokenGenerater>();
-builder.Services.AddAuthClient(masaStackConfig.GetAuthServiceDomain(), redisOptions);
+builder.Services.AddAuthClient("http://auth-service-staging.masastack.com", redisOptions);
 builder.Services.AddMcClient(masaStackConfig.GetMcServiceDomain());
 builder.Services.AddSchedulerClient(masaStackConfig.GetSchedulerServiceDomain());
 builder.Services.AddMultilevelCache(options => options.UseStackExchangeRedisCache(redisOptions));

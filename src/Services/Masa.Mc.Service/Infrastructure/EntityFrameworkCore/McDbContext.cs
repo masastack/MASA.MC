@@ -9,7 +9,7 @@ public class McDbContext : MasaDbContext<McDbContext>
     public DbSet<IntegrationEventLog> EventLogs { get; set; }
     public McDbContext(MasaDbContextOptions<McDbContext> options) : base(options)
     {
-
+        base.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.TrackAll;
     }
 
     protected override void OnModelCreatingExecuting(ModelBuilder builder)
