@@ -39,7 +39,9 @@ builder.Services.AddObservable(builder.Logging, () =>
     {
         ServiceNameSpace = builder.Environment.EnvironmentName,
         ServiceVersion = masaStackConfig.Version,
-        ServiceName = masaStackConfig.GetServerId(MasaStackConstant.MC)
+        ServiceName = masaStackConfig.GetServerId(MasaStackConstant.MC),
+        Layer = masaStackConfig.Namespace,
+        ServiceInstanceId = builder.Configuration.GetValue<string>("HOSTNAME")
     };
 }, () =>
 {
@@ -82,8 +84,7 @@ var redisOptions = new RedisConfigurationOptions
     Password = masaStackConfig.RedisModel.RedisPassword
 };
 var configuration = builder.Services.GetMasaConfiguration().ConfigurationApi.GetDefault();
-builder.Services.AddScoped<ITokenGenerater, TokenGenerater>();
-builder.Services.AddAuthClient("http://auth-service-staging.masastack.com", redisOptions);
+builder.Services.AddAuthClient(masaStackConfig.GetAuthServiceDomain(), redisOptions);
 builder.Services.AddMcClient(masaStackConfig.GetMcServiceDomain());
 builder.Services.AddSchedulerClient(masaStackConfig.GetSchedulerServiceDomain());
 builder.Services.AddMultilevelCache(options => options.UseStackExchangeRedisCache(redisOptions));
