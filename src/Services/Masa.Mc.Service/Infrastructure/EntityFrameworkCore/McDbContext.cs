@@ -1,17 +1,15 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
-using Masa.BuildingBlocks.Dispatcher.IntegrationEvents.Logs;
-
 namespace Masa.Mc.Service.Admin.Infrastructure.EntityFrameworkCore;
 
 [ConnectionStringName("DefaultConnection")]
-public class McDbContext : IsolationDbContext
+public class McDbContext : MasaDbContext<McDbContext>
 {
     public DbSet<IntegrationEventLog> EventLogs { get; set; }
     public McDbContext(MasaDbContextOptions<McDbContext> options) : base(options)
     {
-
+        base.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.TrackAll;
     }
 
     protected override void OnModelCreatingExecuting(ModelBuilder builder)

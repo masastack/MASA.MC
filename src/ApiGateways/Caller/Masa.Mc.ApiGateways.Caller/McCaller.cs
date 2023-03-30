@@ -18,7 +18,6 @@ public class McCaller : StackHttpClientCaller
     MessageTaskHistoryService? _messageTaskHistoryService;
     WebsiteMessageService? _websiteMessageService;
     OssService? _ossService;
-    McApiOptions _options;
     #endregion
 
     public ChannelService ChannelService => _channelService ?? (_channelService = new(Caller));
@@ -46,6 +45,5 @@ public class McCaller : StackHttpClientCaller
     public McCaller(McApiOptions options)
     {
         BaseAddress = options.McServiceBaseAddress;
-        _options = options;
     }
 }
