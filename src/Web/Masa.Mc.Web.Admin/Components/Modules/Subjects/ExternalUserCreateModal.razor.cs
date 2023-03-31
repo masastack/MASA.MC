@@ -14,6 +14,8 @@ public partial class ExternalUserCreateModal : AdminCompontentBase
     private CreateExternalUserDto _model = new();
     private bool _visible;
 
+    private MForm _form;
+
     public async Task OpenModalAsync()
     {
         ResetForm();
@@ -22,6 +24,8 @@ public partial class ExternalUserCreateModal : AdminCompontentBase
             _visible = true;
             StateHasChanged();
         });
+
+        _form?.ResetValidation();
     }
 
     private void HandleCancel()

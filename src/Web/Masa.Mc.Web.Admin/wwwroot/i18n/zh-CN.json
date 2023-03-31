@@ -370,5 +370,7 @@
   "TaskWithdrawnConfirmationMessage": "确定撤销任务{0}吗？",
   "DisplayName.AppChannelProviders": "提供商",
   "DisplayName.AppChannelProviders.GeTui": "个推",
-  "DisplayName.AppChannelProviders.JPush": "极光"
+  "DisplayName.AppChannelProviders.JPush": "极光",
+  "DisplayName": "用户昵称",
+  "Provider": "提供商"
 }

@@ -8,7 +8,7 @@
             @if (advanced)
             {
                 <div class="fold d-inline-flex">
-                    <MRow NoGutters>
+                    <MRow NoGutters Class="pt-1">
                         <MCol Md="2">
                             <SSelect Small @bind-Value="@_queryParam.TimeType"
                                  Items="@(GetEnumList<MessageRecordTimeTypes>())"
@@ -54,7 +54,7 @@
                     </MRow>
                 </div>
             }
-            <div class="d-flex search-panel-right @(!isAnimate?"full-width":"") @(isAnimate?"animate__animated":"") @(!advanced?"animate__searchOpen":"animate__searchShrink")">
+            <div class="d-flex search-panel-right pt-1 @(!isAnimate?"full-width":"") @(isAnimate?"animate__animated":"") @(!advanced?"animate__searchOpen":"animate__searchShrink")">
                 <DefaultSearch @bind-Value="_queryParam.Filter" Clearable Class="rounded-2 search" Placeholder="@T("Search")" Dense OnEnter="RefreshAsync" OnClearClick="HandleClearAsync" />
                 <div @onclick="ToggleAdvanced" class="ml-6 d-flex button fill">
                     <MIcon Class="ma-auto" Color="emphasis2" Size=20>
