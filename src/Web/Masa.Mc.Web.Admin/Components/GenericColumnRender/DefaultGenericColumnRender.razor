@@ -8,12 +8,17 @@ else if (Value is DateTimeOffset dateTimeOffset)
 }
 else
 {
-    if(Width != null)
+    if (Width != null)
     {
-        <div class="body regular--text" style="@($"width:{(Width.IsT0? Width.AsT0 : Width.AsT1 + "px")}")">
-            <EllipsisText>
-                @Value
-            </EllipsisText>
+        <div class="body regular--text text-truncate" style="@($"width:{(Width.IsT0? Width.AsT0 : Width.AsT1 + "px")}")">
+            <MTooltip Bottom>
+                <ActivatorContent>
+                    <span @attributes="@context.Attrs">@Value</span>
+                </ActivatorContent>
+                <ChildContent>
+                    <span>@Value</span>
+                </ChildContent>
+            </MTooltip>
         </div>
     }
     else
