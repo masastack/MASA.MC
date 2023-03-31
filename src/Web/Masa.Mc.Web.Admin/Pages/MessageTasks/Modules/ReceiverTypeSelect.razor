@@ -3,34 +3,43 @@
     <MRow Align="AlignTypes.Center" Justify="JustifyTypes.SpaceBetween">
         <MCol>
             <MHover Context="hoverContext" ValueChanged="(v)=>HandleHoverChanged(v,ReceiverTypes.Assign)">
-                <MCard @attributes="hoverContext.Attrs" Height="320" Class="@($"d-flex flex-column justify-center align-center {(IsReceiverTypeActive(hoverContext.Hover, ReceiverTypes.Assign) ? "primary" : "fill-background")}")"
+                <MCard @attributes="hoverContext.Attrs" Height="320" Class="@($"d-flex flex-column justify-center align-center {(hoverContext.Hover ? "primary" : "fill-background")}")"
                        OnClick="()=>HandleReceiverType(ReceiverTypes.Assign)">
-                    @if (IsReceiverTypeActive(hoverContext.Hover, ReceiverTypes.Assign))
+                    @if (hoverContext.Hover)
                     {
-                        <MIcon Size=40 Color="fill">mdi-account-supervisor-circle</MIcon>
-                        <div class="h6 pt-10" style="color:#FAFAFA">@T("DisplayName.ReceiverType.Assign")</div>
+                        <MIcon Size=60 Color="fill">mdi-account-supervisor-circle</MIcon>
+                        <div class="h6 pt-11 fill--text">@T("DisplayName.ReceiverType.Assign")</div>
                     }
-                    else
+                    else if (Value == ReceiverTypes.Assign)
                     {
+                        <MIcon Size=60 Color="primary">mdi-account-supervisor-circle</MIcon>
+                        <div class="h6 pt-11 primary--text">@T("DisplayName.ReceiverType.Assign")</div>
+                    }
+                    else{
                         <MIcon Size=40 Color="emphasis2">mdi-account-supervisor-circle</MIcon>
-                        <div class="h6 pt-10 regular--text">@T("DisplayName.ReceiverType.Assign")</div>
+                        <div class="h6 pt-14 regular--text">@T("DisplayName.ReceiverType.Assign")</div>
                     }
                 </MCard>
             </MHover>
         </MCol>
         <MCol>
             <MHover Context="hoverContext" ValueChanged="(v)=>HandleHoverChanged(v,ReceiverTypes.Broadcast)">
-                <MCard @attributes="hoverContext.Attrs" Height="320" Class="@($"d-flex flex-column justify-center align-center {(IsReceiverTypeActive(hoverContext.Hover, ReceiverTypes.Broadcast) ? "primary" : "fill-background")}")"
+                <MCard @attributes="hoverContext.Attrs" Height="320" Class="@($"d-flex flex-column justify-center align-center {(hoverContext.Hover ? "primary" : "fill-background")}")"
                        OnClick="()=>HandleReceiverType(ReceiverTypes.Broadcast)">
-                    @if (IsReceiverTypeActive(hoverContext.Hover, ReceiverTypes.Broadcast))
+                    @if (hoverContext.Hover)
                     {
-                        <MIcon Size=40 Color="fill">mdi-email-outline</MIcon>
-                        <div class="h6 pt-10" style="color:#FAFAFA">@T("DisplayName.ReceiverType.Broadcast")</div>
+                        <MIcon Size=60 Color="fill">mdi-email</MIcon>
+                        <div class="h6 pt-11 fill--text">@T("DisplayName.ReceiverType.Broadcast")</div>
+                    }
+                    else if (Value == ReceiverTypes.Broadcast)
+                    {
+                        <MIcon Size=60 Color="primary">mdi-email</MIcon>
+                        <div class="h6 pt-11 primary--text">@T("DisplayName.ReceiverType.Broadcast")</div>
                     }
                     else
                     {
                         <MIcon Size=40 Color="emphasis2">mdi-email</MIcon>
-                        <div class="h6 pt-10 regular--text">@T("DisplayName.ReceiverType.Broadcast")</div>
+                        <div class="h6 pt-14 regular--text">@T("DisplayName.ReceiverType.Broadcast")</div>
                     }
                 </MCard>
             </MHover>
@@ -64,10 +73,5 @@
     private void HandleHoverChanged(bool val, ReceiverTypes hoverType)
     {
         _hoverType = val ? hoverType : default;
-    }
-
-    private bool IsReceiverTypeActive(bool hover, ReceiverTypes type)
-    {
-        return _hoverType == type || (Value == type && _hoverType == default);
     }
 }

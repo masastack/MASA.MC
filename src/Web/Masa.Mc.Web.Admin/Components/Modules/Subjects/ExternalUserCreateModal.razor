@@ -5,7 +5,6 @@
             Title="@T("AddExternalMember")"
             HideCancelAction
             Width="398"
-            FormModel="_model"
             HideTitleDivider
             HideActionsDivider
             HeaderClass="h6 emphasis2--text pa-6 pb-0"
@@ -13,12 +12,14 @@
             OnSave="HandleOk"
             OnCancel="HandleCancel">
         <ChildContent>
-            <STextField Label="@T("User.DisplayName")" @bind-Value="_model.DisplayName"></STextField>
-            <STextField Class="mt-6" Label="@T("PhoneNumber")" @bind-Value="_model.PhoneNumber"></STextField>
-            <STextField Class="mt-6" Label="@T("Email")" @bind-Value="_model.Email"></STextField>
+            <MForm Model="_model" EnableValidation EnableI18n Class="full-height">
+                <STextField Label="@T("User.DisplayName")" @bind-Value="_model.DisplayName"></STextField>
+                <STextField Class="mt-6" Label="@T("PhoneNumber")" @bind-Value="_model.PhoneNumber"></STextField>
+                <STextField Class="mt-6" Label="@T("Email")" @bind-Value="_model.Email"></STextField>
+            </MForm>
         </ChildContent>
-        <SaveContent>
-            <MButton OnClick="async()=>await HandleOk() " Class="btn-form-full" Color="primary" >@(T("Submit"))</MButton>
+        <SaveContent Context="save" >
+            <MButton OnClick="save.Click" Class="btn-form-full" Color="primary">@(T("Submit"))</MButton>
         </SaveContent>
     </PModal>
 </div>

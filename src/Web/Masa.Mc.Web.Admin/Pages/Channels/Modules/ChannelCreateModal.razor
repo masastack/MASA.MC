@@ -11,16 +11,21 @@
                                 <MRow Align="AlignTypes.Center" Justify="JustifyTypes.Center">
                                     <MCol Md="6">
                                         <MHover ValueChanged="(v)=>HandleHoverChanged(v,ChannelTypes.Sms)">
-                                            <MCard @attributes="context.Attrs" Height="240" Width="240" Class="@($"d-flex flex-column justify-center align-center ml-auto {(IsChannelActive(context.Hover, ChannelTypes.Sms) ? "primary" : "fill-background")}")"
+                                            <MCard @attributes="context.Attrs" Height="240" Width="240" Class="@($"d-flex flex-column justify-center align-center ml-auto {(context.Hover ? "primary" : "fill-background")}")"
                                                    OnClick="()=> HandleSelectType(ChannelTypes.Sms)">
-                                                @if (IsChannelActive(context.Hover, ChannelTypes.Sms))
+                                                @if (context.Hover)
                                                 {
-                                                    <MIcon Size=33 Color="#FFFFFF">mdi-cellphone</MIcon>
-                                                    <div class="h6 pt-10" style="color:#FAFAFA">@T("Sms")</div>
+                                                    <MIcon Size=54 Color="fill">mdi-cellphone</MIcon>
+                                                    <div class="h6 pt-10 fill--text">@T("Sms")</div>
+                                                }
+                                                else if (_model.Type == ChannelTypes.Sms)
+                                                {
+                                                    <MIcon Size=54 Color="primary">mdi-cellphone</MIcon>
+                                                    <div class="h6 pt-10 primary--text">@T("Sms")</div>
                                                 }
                                                 else
                                                 {
-                                                    <MIcon Size=33 Color="#323D6F">mdi-cellphone</MIcon>
+                                                    <MIcon Size=36 Color="emphasis2">mdi-cellphone</MIcon>
                                                     <div class="h6 pt-10 regular--text">@T("Sms")</div>
                                                 }
                                             </MCard>
@@ -28,16 +33,21 @@
                                     </MCol>
                                     <MCol Md="6">
                                         <MHover ValueChanged="(v)=>HandleHoverChanged(v,ChannelTypes.Email)">
-                                            <MCard @attributes="context.Attrs" Height="240" Width="240" Class="@($"d-flex flex-column justify-center align-center mr-auto {(IsChannelActive(context.Hover, ChannelTypes.Email) ? "primary" : "fill-background")}")"
+                                            <MCard @attributes="context.Attrs" Height="240" Width="240" Class="@($"d-flex flex-column justify-center align-center mr-auto {(context.Hover ? "primary" : "fill-background")}")"
                                                    OnClick="()=>HandleSelectType(ChannelTypes.Email)">
-                                                @if (IsChannelActive(context.Hover, ChannelTypes.Email))
+                                                @if (context.Hover)
                                                 {
-                                                    <MIcon Size=33 Color="#FFFFFF">mdi-email-outline</MIcon>
-                                                    <div class="h6 pt-10" style="color:#FAFAFA">@T("Email")</div>
+                                                    <MIcon Size=54 Color="fill">mdi-email</MIcon>
+                                                    <div class="h6 pt-10 fill--text">@T("Email")</div>
+                                                }
+                                                else if (_model.Type == ChannelTypes.Email)
+                                                {
+                                                    <MIcon Size=54 Color="primary">mdi-email</MIcon>
+                                                    <div class="h6 pt-10 primary--text">@T("Email")</div>
                                                 }
                                                 else
                                                 {
-                                                    <MIcon Size=33 Color="#323D6F">mdi-email</MIcon>
+                                                    <MIcon Size=36 Color="emphasis2">mdi-email</MIcon>
                                                     <div class="h6 pt-10 regular--text">@T("Email")</div>
                                                 }
                                             </MCard>
@@ -45,16 +55,21 @@
                                     </MCol>
                                     <MCol Md="6">
                                         <MHover ValueChanged="(v)=>HandleHoverChanged(v,ChannelTypes.WebsiteMessage)">
-                                            <MCard @attributes="context.Attrs" Height="240" Width="240" Class="@($"d-flex flex-column justify-center align-center ml-auto {(IsChannelActive(context.Hover, ChannelTypes.WebsiteMessage) ? "primary" : "fill-background")}")"
+                                            <MCard @attributes="context.Attrs" Height="240" Width="240" Class="@($"d-flex flex-column justify-center align-center ml-auto {(context.Hover ? "primary" : "fill-background")}")"
                                                    OnClick="()=>HandleSelectType(ChannelTypes.WebsiteMessage)">
-                                                @if (IsChannelActive(context.Hover, ChannelTypes.WebsiteMessage))
+                                                @if (context.Hover)
                                                 {
-                                                    <MIcon Size=33 Color="#FFFFFF">mdi-bell-outline</MIcon>
-                                                    <div class="h6 pt-10" style="color:#FAFAFA">@T("WebsiteMessage")</div>
+                                                    <MIcon Size=54 Color="fill">mdi-bell</MIcon>
+                                                    <div class="h6 pt-10 fill--text">@T("WebsiteMessage")</div>
+                                                }
+                                                else if (_model.Type == ChannelTypes.WebsiteMessage)
+                                                {
+                                                    <MIcon Size=54 Color="primary">mdi-bell</MIcon>
+                                                    <div class="h6 pt-10 primary--text">@T("WebsiteMessage")</div>
                                                 }
                                                 else
                                                 {
-                                                    <MIcon Size=33 Color="#323D6F">mdi-bell</MIcon>
+                                                    <MIcon Size=36 Color="emphasis2">mdi-bell</MIcon>
                                                     <div class="h6 pt-10 regular--text">@T("WebsiteMessage")</div>
                                                 }
                                             </MCard>
@@ -62,16 +77,21 @@
                                     </MCol>
                                     <MCol Md="6">
                                         <MHover ValueChanged="(v)=>HandleHoverChanged(v,ChannelTypes.App)">
-                                            <MCard @attributes="context.Attrs" Height="240" Width="240" Class="@($"d-flex flex-column justify-center align-center mr-auto {(IsChannelActive(context.Hover, ChannelTypes.App) ? "primary" : "fill-background")}")"
+                                            <MCard @attributes="context.Attrs" Height="240" Width="240" Class="@($"d-flex flex-column justify-center align-center mr-auto {(context.Hover ? "primary" : "fill-background")}")"
                                                    OnClick="()=>HandleSelectType(ChannelTypes.App)">
-                                                @if (IsChannelActive(context.Hover, ChannelTypes.App))
+                                                @if (context.Hover)
                                                 {
-                                                    <MIcon Size=33 Color="#FFFFFF">mdi-cellphone</MIcon>
-                                                    <div class="h6 pt-10" style="color:#FAFAFA">@T("App")</div>
+                                                    <MIcon Size=54 Color="fill">mdi-cellphone</MIcon>
+                                                    <div class="h6 pt-10 fill--text">@T("App")</div>
+                                                }
+                                                else if (_model.Type == ChannelTypes.App)
+                                                {
+                                                    <MIcon Size=54 Color="primary">mdi-cellphone</MIcon>
+                                                    <div class="h6 pt-10 primary--text">@T("App")</div>
                                                 }
                                                 else
                                                 {
-                                                    <MIcon Size=33 Color="#323D6F">mdi-cellphone</MIcon>
+                                                    <MIcon Size=36 Color="emphasis2">mdi-cellphone</MIcon>
                                                     <div class="h6 pt-10 regular--text">@T("App")</div>
                                                 }
                                             </MCard>

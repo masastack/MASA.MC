@@ -85,9 +85,4 @@ public partial class ChannelCreateModal : AdminCompontentBase
             _hoverType = hoverType;
         }
     }
-
-    private bool IsChannelActive(bool hover, ChannelTypes type)
-    {
-        return hover || (_hoverType == default && _model.Type == type);
-    }
 }
