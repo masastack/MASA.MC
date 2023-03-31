@@ -371,6 +371,8 @@
   "DisplayName.AppChannelProviders": "提供商",
   "DisplayName.AppChannelProviders.GeTui": "个推",
   "DisplayName.AppChannelProviders.JPush": "极光",
-  "DisplayName": "用户昵称",
+  "UserDisplayNameRequired": "用户昵称是必需的",
+  "UserDisplayNameLength": "用户昵称的长度必须在 2 到 50 字符。",
+  "UserDisplayNameChineseLetterNumber": "用户昵称必须是中文、数字、字母。",
   "Provider": "提供商"
 }

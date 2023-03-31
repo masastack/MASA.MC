@@ -248,5 +248,8 @@
   "TaskWithdrawnConfirmationMessage": "Are you sure withdrawn task {0}?",
   "DisplayName.AppChannelProviders": "Provider",
   "DisplayName.AppChannelProviders.GeTui": "GeTui",
-  "DisplayName.AppChannelProviders.JPush": "JPush"
+  "DisplayName.AppChannelProviders.JPush": "JPush",
+  "UserDisplayNameRequired": "Please fill in the displayName",
+  "UserDisplayNameLength": "The length of displayName can only be between 2 and 50",
+  "UserDisplayNameChineseLetterNumber": "DisplayName can only be Chinese/letter/number"
 }
