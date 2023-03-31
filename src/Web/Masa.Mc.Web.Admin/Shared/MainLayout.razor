@@ -16,6 +16,9 @@
     [Inject]
     public IPopupService PopupService { get; set; } = default!;
 
+    [Inject]
+    public I18n I18N { get; set; } = default!;
+
     private Task OnError(Exception exception)
     {
         PopupService.EnqueueSnackbarAsync(exception.Message, AlertTypes.Error);
@@ -28,5 +31,29 @@
     {
         Navigation.NavigateTo("/Logout",true);
         return true;
+    }
+
+    protected bool TranslateFluentValidationProperty { get; set; } = true;
+
+    private void UsingI18nToResolveFluentValidationDisplayName(I18n i18N)
+    {
+        ValidatorOptions.Global.DisplayNameResolver = (type, member, expression) =>
+        {
+            if (member != null)
+            {
+                var memberName = i18N.T(member.Name);
+                return memberName;
+            }
+            return null;
+        };
+    }
+
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (TranslateFluentValidationProperty)
+        {
+            UsingI18nToResolveFluentValidationDisplayName(I18N);
+        }
+        return base.OnAfterRenderAsync(firstRender);
     }
 }

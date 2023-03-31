@@ -61,8 +61,7 @@ public class MessageTaskCommandHandler
             throw new UserFriendlyException(errorCode: UserFriendlyExceptionCodes.CHANNEL_REQUIRED);
         if (entity.Channel.Type == ChannelType.Sms && string.IsNullOrEmpty(entity.Sign))
             throw new UserFriendlyException(errorCode: UserFriendlyExceptionCodes.SIGN_REQUIRED);
-        if (entity.Variables.Any(x => string.IsNullOrEmpty(x.Value.ToString())))
-            throw new UserFriendlyException(errorCode: UserFriendlyExceptionCodes.TEMPLATE_VARIABLES_REQUIRED);
+
         var receiverUsers = inputDto.ReceiverUsers.Adapt<List<MessageReceiverUser>>();
         var history = new MessageTaskHistory(entity.Id, receiverUsers, true);
         await _messageTaskHistoryRepository.AddAsync(history);
