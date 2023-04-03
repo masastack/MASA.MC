@@ -110,7 +110,7 @@ public class MessageTaskService : ServiceBase
         return command.Result;
     }
 
-    public async Task<List<MessageTaskReceiverDto>> GetMessageTaskReceiverListAsync(IEventBus eventBus, IAuthClient authClient,[FromQuery] string filter = "")
+    public async Task<List<MessageTaskReceiverDto>> GetMessageTaskReceiverListAsync(IEventBus eventBus, IAuthClient authClient, [FromQuery] string filter = "")
     {
         var list = new List<MessageTaskReceiverDto>();
         var subjectList = await authClient.SubjectService.GetListAsync(filter);
@@ -199,9 +199,9 @@ public class MessageTaskService : ServiceBase
     }
 
     [RoutePattern(HttpMethod = "Post")]
-    public async Task HandleJobStatusNotifyAsync(IEventBus eventBus, [FromQuery] Guid jobId, [FromQuery] JobNotifyStatus status)
+    public async Task HandleJobStatusNotifyAsync(IEventBus eventBus, [FromBody] HandleJobStatusNotifyInputDto inputDto)
     {
-        var command = new HandleJobStatusNotifyCommand(jobId, status);
+        var command = new HandleJobStatusNotifyCommand(inputDto.JobId, inputDto.Status);
         await eventBus.PublishAsync(command);
     }
 }
