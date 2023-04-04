@@ -17,10 +17,20 @@ public class HandleJobStatusNotifyCommandHandler
     [EventHandler]
     public async Task HandleEventAsync(HandleJobStatusNotifyCommand command)
     {
-        if (command.status != JobNotifyStatus.Delete && command.status != JobNotifyStatus.Failure) return;
+        if (command.Status != JobNotifyStatus.Delete && command.Status != JobNotifyStatus.Failure) return;
 
         var messageTask = await _repository.FindAsync(x => x.SchedulerJobId == command.JobId, false);
         if (messageTask == null) return;
+
+        if (command.Status == JobNotifyStatus.Failure)
+        {
+            var taskHistory = await _taskHistoryRepository.FindWaitSendAsync(messageTask.Id, false);
+            if (taskHistory == null) return;
+
+            taskHistory.SetResult(MessageTaskHistoryStatuses.Fail);
+            await _taskHistoryRepository.UpdateAsync(taskHistory);
+            return;
+        }
 
         var taskHistorys = await _taskHistoryRepository.GetListAsync(x => x.MessageTaskId == messageTask.Id && x.Status == MessageTaskHistoryStatuses.WaitSend);
 

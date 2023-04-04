@@ -3,6 +3,6 @@
 
 namespace Masa.Mc.Service.Admin.Application.MessageTasks.Commands;
 
-public record HandleJobStatusNotifyCommand(Guid JobId, JobNotifyStatus status) : Command
+public record HandleJobStatusNotifyCommand(Guid JobId, JobNotifyStatus Status) : Command
 {
 }
