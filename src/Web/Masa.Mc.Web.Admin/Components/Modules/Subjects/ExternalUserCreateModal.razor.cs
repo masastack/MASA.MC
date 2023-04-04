@@ -24,13 +24,12 @@ public partial class ExternalUserCreateModal : AdminCompontentBase
             _visible = true;
             StateHasChanged();
         });
-
-        _form?.ResetValidation();
     }
 
     private void HandleCancel()
     {
         _visible = false;
+        _form?.Reset();
     }
 
     private async Task HandleOk()
@@ -38,6 +37,7 @@ public partial class ExternalUserCreateModal : AdminCompontentBase
         var user = await CreateExternalUserAsync(_model);
 
         _visible = false;
+        _form?.Reset();
 
         if (OnOk.HasDelegate)
         {
