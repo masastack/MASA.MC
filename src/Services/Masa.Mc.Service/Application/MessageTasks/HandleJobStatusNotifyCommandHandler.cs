@@ -22,6 +22,16 @@ public class HandleJobStatusNotifyCommandHandler
         var messageTask = await _repository.FindAsync(x => x.SchedulerJobId == command.JobId, false);
         if (messageTask == null) return;
 
+        if (command.status == JobNotifyStatus.Failure)
+        {
+            var taskHistory = await _taskHistoryRepository.FindWaitSendAsync(messageTask.Id, false);
+            if (taskHistory == null) return;
+
+            taskHistory.SetResult(MessageTaskHistoryStatuses.Fail);
+            await _taskHistoryRepository.UpdateAsync(taskHistory);
+            return;
+        }
+
         var taskHistorys = await _taskHistoryRepository.GetListAsync(x => x.MessageTaskId == messageTask.Id && x.Status == MessageTaskHistoryStatuses.WaitSend);
 
         foreach (var item in taskHistorys)
