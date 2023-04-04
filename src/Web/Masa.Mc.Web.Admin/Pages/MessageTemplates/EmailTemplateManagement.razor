@@ -8,7 +8,7 @@
             @if (advanced)
             {
                 <div class="fold">
-                    <MRow NoGutters>
+                    <MRow>
                         <MCol Md="3">
                             <Masa.Mc.Web.Admin.Components.Pickers.DateRangePicker @bind-StartTime="_queryParam.StartTime" @bind-EndTime="_queryParam.EndTime" OnChange="RefreshAsync" />
                         </MCol>
