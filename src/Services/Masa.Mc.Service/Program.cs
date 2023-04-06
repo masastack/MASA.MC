@@ -99,7 +99,7 @@ builder.Services.AddTransient<NotificationsHub>();
 builder.Services.AddAuthChannelUserFinder();
 builder.Services.AddMessageTaskHttpJobService();
 TypeAdapterConfig.GlobalSettings.Scan(Assembly.GetExecutingAssembly(), Assembly.Load("Masa.Mc.Contracts.Admin"));
-
+var connectionString = "Server=.;Database=mc_dev;User Id=sa;Password=Tcsnwzh425;";
 builder.Services
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     .AddEndpointsApiExplorer()
@@ -135,12 +135,12 @@ builder.Services
     })
     .AddMasaDbContext<McDbContext>(builder =>
     {
-        builder.UseSqlServer(masaStackConfig.GetConnectionString(AppSettings.Get("DBName")));
+        builder.UseSqlServer(connectionString);
         builder.UseFilter(options => options.EnableSoftDelete = true);
     })
     .AddMasaDbContext<McQueryContext>(builder =>
     {
-        builder.UseSqlServer(masaStackConfig.GetConnectionString(AppSettings.Get("DBName")));
+        builder.UseSqlServer(connectionString);
         builder.UseFilter(options => options.EnableSoftDelete = true);
     })
     .AddScoped<IMcQueryContext, McQueryContext>()
