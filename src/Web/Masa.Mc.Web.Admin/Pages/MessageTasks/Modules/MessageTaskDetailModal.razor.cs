@@ -38,6 +38,7 @@ public partial class MessageTaskDetailModal : AdminCompontentBase
     {
         _entityId = model.Id;
         _queryParam.MessageTaskId = _entityId;
+        _queryParam.Page = 1;
         await GetFormDataAsync();
         await InvokeAsync(() =>
         {
