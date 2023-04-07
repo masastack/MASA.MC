@@ -83,6 +83,7 @@ public partial class MessageTaskDetailModal : AdminCompontentBase
     {
         _info = new();
         _historyInfo = new();
+        _queryParam.Page = 1;
     }
 
     private async Task HandleVisibleChanged(bool val)
