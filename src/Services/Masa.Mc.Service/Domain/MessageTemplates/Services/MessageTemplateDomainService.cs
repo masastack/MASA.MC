@@ -77,7 +77,7 @@ public class MessageTemplateDomainService : DomainService
     {
         var perDayLimit = messageTemplate.PerDayLimit;
         var sendNum = await _messageRecordRepository.GetCountAsync(x => x.SendTime.Value.Date == DateTime.Now.Date && x.ChannelUserIdentity == channelUserIdentity && x.MessageEntityId == messageTemplate.Id);
-        if (sendNum > perDayLimit)
+        if (sendNum >= perDayLimit)
         {
             return false;
         }
