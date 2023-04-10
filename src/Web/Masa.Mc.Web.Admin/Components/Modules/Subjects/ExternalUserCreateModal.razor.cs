@@ -34,6 +34,11 @@ public partial class ExternalUserCreateModal : AdminCompontentBase
 
     private async Task HandleOk()
     {
+        if (!_form.Validate())
+        {
+            return;
+        }
+
         var user = await CreateExternalUserAsync(_model);
 
         _visible = false;
