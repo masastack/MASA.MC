@@ -45,7 +45,7 @@ public class ExecuteMessageTaskEventHandler
         var messageData = await _domainService.GetMessageDataAsync(history.MessageTask.EntityType, history.MessageTask.EntityId, history.MessageTask.Variables);
         history.SetSending();
 
-        if (!history.MessageTask.SendTime.HasValue)
+        if (!eto.IsTest && !history.MessageTask.SendTime.HasValue)
         {
             history.MessageTask.SetSending();
         }
