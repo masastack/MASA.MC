@@ -81,7 +81,7 @@
                             </SSelect>
                         </MCol>
                         <MCol Md="1">
-                            <BooleanSelect @bind-Value="_queryParam.IsEnabled" Label="@T("DisplayName.MessageTaskIsEnabled")" Class="ml-6" Style="width:130px;flex: none;" OnClearClick="RefreshAsync"
+                            <BooleanSelect @bind-Value="_queryParam.IsEnabled" Label="@T("DisplayName.MessageTaskIsEnabled")" Class="ml-6" Style="min-width:120px;" OnClearClick="RefreshAsync"
                                        OnSelectedItemUpdate="RefreshAsync" />
                         </MCol>
                     </MRow>
