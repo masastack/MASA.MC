@@ -8,7 +8,7 @@
             <div class="d-flex search-panel-right full-width">
                 <DefaultTitle>@T("DisplayName.Channel")</DefaultTitle>
                 <MSpacer></MSpacer>
-                <SSearch @bind-Value="_queryParam.Filter" BackgroundColor="#fff" Dense OnEnter="RefreshAsync" OnClearClick="HandleClearAsync" />
+                <SSearch @bind-Value="_queryParam.Filter" BackgroundColor="white" Dense OnEnter="RefreshAsync" OnClearClick="HandleClearAsync" />
                 <SButton Small BorderRadiusClass="rounded-lg" Class="ml-6" OnClick="()=> _createModal.OpenModalAsync()">@T("Permission.Create")</SButton>
             </div>
         </div>

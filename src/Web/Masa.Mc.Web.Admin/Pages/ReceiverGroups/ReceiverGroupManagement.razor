@@ -5,7 +5,7 @@
 <AutoHeight>
     <HeaderContent>
         <div class="search-panel d-flex">
-            <SSearch @bind-Value="_queryParam.Filter" BackgroundColor="#fff" MaxWidth="0" Dense OnEnter="RefreshAsync" OnClearClick="HandleClearAsync" />
+            <SSearch @bind-Value="_queryParam.Filter" BackgroundColor="white" MaxWidth="0" Dense OnEnter="RefreshAsync" OnClearClick="HandleClearAsync" />
             <SButton Small BorderRadiusClass="rounded-lg" Class="ml-6" OnClick="()=> _createModal.OpenModalAsync()">@T("Permission.Create")</SButton>
         </div>
     </HeaderContent>
