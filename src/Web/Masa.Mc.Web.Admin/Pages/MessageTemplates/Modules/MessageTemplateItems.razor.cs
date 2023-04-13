@@ -16,7 +16,6 @@ public partial class MessageTemplateItems : AdminCompontentBase
 
     private List<DataTableHeader<MessageTemplateItemDto>> _headers = new();
     private bool _dialog;
-    private bool _dialogDelete;
     private MessageTemplateItemDto _editedItem = new MessageTemplateItemDto();
     private int _editedIndex = -1;
 
@@ -81,18 +80,6 @@ public partial class MessageTemplateItems : AdminCompontentBase
         //_dialog = true;
     }
 
-    public void DeleteItem(MessageTemplateItemDto item)
-    {
-        _editedIndex = Value.IndexOf(item);
-        _editedItem = new MessageTemplateItemDto()
-        {
-            Code = item.Code,
-            MappingCode = item.MappingCode,
-            DisplayText = item.DisplayText
-        };
-        _dialogDelete = true;
-    }
-
     public async Task DeleteItemConfirmAsync()
     {
         Value.RemoveAt(_editedIndex);
@@ -102,7 +89,6 @@ public partial class MessageTemplateItems : AdminCompontentBase
 
     public void CloseDelete()
     {
-        _dialogDelete = false;
         _editedItem = new();
         _editedIndex = -1;
     }
