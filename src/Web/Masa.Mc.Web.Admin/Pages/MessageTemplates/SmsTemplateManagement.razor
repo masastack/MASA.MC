@@ -86,9 +86,9 @@
             <div class="d-flex search-panel-right @(!isAnimate?"full-width":"") @(isAnimate?"animate__animated":"") @(!advanced?"animate__searchOpen":"animate__searchShrink")">
                 <DefaultSearch @bind-Value="_queryParam.Filter" Clearable Class="rounded-2 search" Placeholder="@T("Search")" Dense OnEnter="RefreshAsync" OnClearClick="HandleClearAsync" />
                 <div @onclick="ToggleAdvanced" class="ml-6 d-flex button fill">
-                    <MIcon Class="ma-auto" Color="emphasis2" Size=20>
+                    <SIcon Class="ma-auto" Color="emphasis2" Size=20>
                         @(!advanced?"mdi-filter":"mdi-filter-off")
-                    </MIcon>
+                    </SIcon>
                 </div>
                 <SButton Small Color="primary" BorderRadiusClass="rounded-lg" Class="ml-6" OnClick="()=> _createModal.OpenModalAsync()">@T("Permission.Create")</SButton>
             </div>

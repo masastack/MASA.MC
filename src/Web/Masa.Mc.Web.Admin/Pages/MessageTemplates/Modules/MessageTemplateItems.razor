@@ -93,17 +93,20 @@
                 case "actions":
                     if (Value.IndexOf(context.Item)==_editedIndex)
                     {
-                        <MIcon Small Color="warning"
-                            OnClick="CloseDelete">mdi-close</MIcon>
-                        <MIcon Small Color="green"
-                            Class="ml-6"
-                            OnClick="SaveAsync">mdi-check</MIcon>
+                        <div class="d-flex">
+                            <MButton Small Class="mr-4" Icon OnClick="CloseDelete">
+                                <SIcon Small Color="warning">mdi-close</SIcon>
+                            </MButton>
+                            <MButton Small Class="mr-4" Icon OnClick="SaveAsync">
+                                <SIcon Small Color="green">mdi-check</SIcon>
+                            </MButton>
+                        </div>
                     }
                     else
                     {
-                        <MIcon Small
-                            Class="mr-2"
-                            OnClick="()=>EditItem(context.Item)">mdi-pencil</MIcon>
+                        <MButton Small Class="mr-4" Icon OnClick="()=>EditItem(context.Item)">
+                            <SIcon Small Color="green">mdi-check</SIcon>
+                        </MButton>
                     }
                     break;
                 default:

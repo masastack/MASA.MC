@@ -2,7 +2,7 @@
 <AutoHeight Overflow>
     <HeaderContent>
         <div class="fill rounded-2 d-flex justify-center align-center px-6 py-3 mb-6" style="height:56px">
-            <MButton Ripple=false Plain IsActive Class="emphasis2--text h6 primary--text" OnClick="NavigateToSend"><MIcon Size=22 Left>mdi-message</MIcon>@T("Permission.SendMessage")</MButton>
+            <MButton Ripple=false Plain IsActive Class="emphasis2--text h6 primary--text" OnClick="NavigateToSend"><SIcon Size=22 Left>mdi-message</SIcon>@T("Permission.SendMessage")</MButton>
         </div>
         <div class="ma-0 search-panel mb-6">
             @if (advanced)
@@ -90,16 +90,16 @@
             <div class="d-flex search-panel-right @(!isAnimate?"full-width":"") @(isAnimate?"animate__animated":"") @(!advanced?"animate__searchOpen":"animate__searchShrink")">
                 <DefaultSearch @bind-Value="_queryParam.Filter" Clearable Class="rounded-2 search" Placeholder="@T("Search")" Dense OnEnter="RefreshAsync" OnClearClick="HandleClearAsync" />
                 <div @onclick="ToggleAdvanced" class="ml-6 d-flex button fill">
-                    <MIcon Class="ma-auto" Color="emphasis2" Size=20>
+                    <SIcon Class="ma-auto" Color="emphasis2" Size=20>
                         @(!advanced?"mdi-filter":"mdi-filter-off")
-                    </MIcon>
+                    </SIcon>
                 </div>
                 <MTooltip Bottom>
                     <ActivatorContent>
                         <div class="ml-6 d-flex button fill" @onclick="HandleIsDraft" @attributes="@context.Attrs">
-                            <MIcon Class="ma-auto" Color="@(_queryParam.IsDraft==true?"primary":"emphasis2")" Size=20>
+                            <SIcon Class="ma-auto" Color="@(_queryParam.IsDraft==true?"primary":"emphasis2")" Size=20>
                                 mdi-file
-                            </MIcon>
+                            </SIcon>
                         </div>
                     </ActivatorContent>
                     <ChildContent>

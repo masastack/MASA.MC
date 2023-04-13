@@ -1,46 +1,46 @@
 ﻿@switch (Value)
 {
     case MessageTaskHistoryStatuses.WaitSend:
-        <MIcon Size=@Size
+        <SIcon Size=@Size
        Dark
        Color="emphasis2">
             mdi-clock-outline
-        </MIcon>
+        </SIcon>
         break;
     case MessageTaskHistoryStatuses.Sending:
-        <MIcon Size=@Size
+        <SIcon Size=@Size
        Dark
        Color="regular3">
             mdi-dots-horizontal-circle-outline
-        </MIcon>
+        </SIcon>
         break;
     case MessageTaskHistoryStatuses.Withdrawn:
-        <MIcon Size=@Size
+        <SIcon Size=@Size
        Dark
        Color="emphasis2">
             mdi-keyboard-return
-        </MIcon>
+        </SIcon>
         break;
     case MessageTaskHistoryStatuses.Success:
-        <MIcon Size=@Size
+        <SIcon Size=@Size
        Dark
        Color="success">
             mdi-check-circle-outline
-        </MIcon>
+        </SIcon>
         break;
     case MessageTaskHistoryStatuses.Fail:
-        <MIcon Size=@Size
+        <SIcon Size=@Size
        Dark
        Color="error">
             mdi-close-circle-outline
-        </MIcon>
+        </SIcon>
         break;
     case MessageTaskHistoryStatuses.PartialFailure:
-        <MIcon Size=@Size
+        <SIcon Size=@Size
        Dark
        Color="error">
             mdi-minus-circle-outline
-        </MIcon>
+        </SIcon>
         break;
 }
 

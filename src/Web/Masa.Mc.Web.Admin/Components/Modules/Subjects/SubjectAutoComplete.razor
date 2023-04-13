@@ -20,14 +20,14 @@
                HideSelected
                OnSelectedItemUpdate="HandleOnSelectedItemUpdate">
     <PrependInnerContent>
-        <MIcon Size=16 Class="mr-2 default-lighten-1--text">mdi-magnify</MIcon>
+        <SIcon Size=16 Class="mr-2 default-lighten-1--text">mdi-magnify</SIcon>
     </PrependInnerContent>
     <ItemContent Context="data">
         <div class="d-flex full-width pa-4 pl-0">
             <MListItemAvatar Size=40 Class="ma-0" Color="primary">
                 @if (data.Item.SubjectType != SubjectTypes.User)
                 {
-                    <MIcon Size=24 Color="fill">mdi-animation</MIcon>
+                    <SIcon Size=24 Color="fill">mdi-animation</SIcon>
                 }
                 else
                 {

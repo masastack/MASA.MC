@@ -7,16 +7,16 @@
                        OnClick="()=>HandleReceiverType(ReceiverTypes.Assign)">
                     @if (hoverContext.Hover)
                     {
-                        <MIcon Size=60 Color="fill">mdi-account-supervisor-circle</MIcon>
+                        <SIcon Size=60 Color="fill">mdi-account-supervisor-circle</SIcon>
                         <div class="h6 pt-11 fill--text">@T("DisplayName.ReceiverType.Assign")</div>
                     }
                     else if (Value == ReceiverTypes.Assign)
                     {
-                        <MIcon Size=60 Color="primary">mdi-account-supervisor-circle</MIcon>
+                        <SIcon Size=60 Color="primary">mdi-account-supervisor-circle</SIcon>
                         <div class="h6 pt-11 primary--text">@T("DisplayName.ReceiverType.Assign")</div>
                     }
                     else{
-                        <MIcon Size=40 Color="emphasis2">mdi-account-supervisor-circle</MIcon>
+                        <SIcon Size=40 Color="emphasis2">mdi-account-supervisor-circle</SIcon>
                         <div class="h6 pt-14 regular--text">@T("DisplayName.ReceiverType.Assign")</div>
                     }
                 </MCard>
@@ -28,17 +28,17 @@
                        OnClick="()=>HandleReceiverType(ReceiverTypes.Broadcast)">
                     @if (hoverContext.Hover)
                     {
-                        <MIcon Size=60 Color="fill">mdi-email</MIcon>
+                        <SIcon Size=60 Color="fill">mdi-email</SIcon>
                         <div class="h6 pt-11 fill--text">@T("DisplayName.ReceiverType.Broadcast")</div>
                     }
                     else if (Value == ReceiverTypes.Broadcast)
                     {
-                        <MIcon Size=60 Color="primary">mdi-email</MIcon>
+                        <SIcon Size=60 Color="primary">mdi-email</SIcon>
                         <div class="h6 pt-11 primary--text">@T("DisplayName.ReceiverType.Broadcast")</div>
                     }
                     else
                     {
-                        <MIcon Size=40 Color="emphasis2">mdi-email</MIcon>
+                        <SIcon Size=40 Color="emphasis2">mdi-email</SIcon>
                         <div class="h6 pt-14 regular--text">@T("DisplayName.ReceiverType.Broadcast")</div>
                     }
                 </MCard>

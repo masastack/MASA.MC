@@ -3,13 +3,13 @@
         <MMenu OffsetX Left OffsetY>
             <ActivatorContent Context="menuContext">
                 <span>Hello, @context.User.Identity?.Name!</span>
-                <MButton Icon Large @attributes="menuContext.Attrs"><MIcon>mdi-account-circle-outline</MIcon></MButton>
+                <MButton Icon Large @attributes="menuContext.Attrs"><SIcon>mdi-account-circle-outline</SIcon></MButton>
             </ActivatorContent>
             <ChildContent>
                 <MList Dense>
                     <MListItem Link>
                         <MListItemIcon>
-                            <MIcon>far fa-envelope</MIcon>
+                            <SIcon>far fa-envelope</SIcon>
                         </MListItemIcon>
                         <MListItemContent>
                             <MListItemTitle>
@@ -19,7 +19,7 @@
                     </MListItem>
                     <MListItem Link Href="/Identity/Account/Manage">
                         <MListItemIcon>
-                            <MIcon>far fa-user</MIcon>
+                            <SIcon>far fa-user</SIcon>
                         </MListItemIcon>
                         <MListItemContent>
                             <MListItemTitle>
@@ -29,7 +29,7 @@
                     </MListItem>
                     <MListItem Link Href="/Identity/Account/LogOut">
                         <MListItemIcon>
-                            <MIcon>fas fa-sign-out-alt</MIcon>
+                            <SIcon>fas fa-sign-out-alt</SIcon>
                         </MListItemIcon>
                         <MListItemContent>
                             <MListItemTitle>
@@ -54,7 +54,7 @@
                 <MList Dense>
                     <MListItem Link Href="/pages/authentication/login-v1">
                         <MListItemIcon Class="mr-4">
-                            <MIcon Size=20 Color="neutral-lighten-4">fas fa-user-circle</MIcon>
+                            <SIcon Size=20 Color="neutral-lighten-4">fas fa-user-circle</SIcon>
                         </MListItemIcon>
                         <MListItemContent>
                             <MListItemTitle>
@@ -64,7 +64,7 @@
                     </MListItem>
                     <MListItem Link Href="/pages/authentication/login-v2">
                         <MListItemIcon Class="mr-4">
-                            <MIcon Size=20 Color="neutral-lighten-4">fas fa-sign-in-alt</MIcon>
+                            <SIcon Size=20 Color="neutral-lighten-4">fas fa-sign-in-alt</SIcon>
                         </MListItemIcon>
                         <MListItemContent>
                             <MListItemTitle>
