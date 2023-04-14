@@ -2,10 +2,10 @@
 <MRow Class="mt-6">
     <MCol Class="d-flex align-self-stretch">
         <MessageTaskReceiverAutoComplete Class="d-flex" @bind-Value="_userIds" SelectedValues="Value.Select(x=>x.SubjectId).ToList()" OnAdd="HandleOnAdd"></MessageTaskReceiverAutoComplete>
-        <MButton Color="fill" Class="d-flex ml-6 rounded-lg btn small-btn pa-0 btn-fill-line" OnClick="_createModal.OpenModalAsync">
+        <SButton Color="fill" BorderRadiusClass="btn-fill-line" Class="d-flex ml-6 small-btn pa-0" OnClick="_createModal.OpenModalAsync">
             <MIcon Size=18>mdi-plus</MIcon>
             <span>@T("ExternalMember")</span>
-        </MButton>
+        </SButton>
     </MCol>
 </MRow>
 @if (Value != null && Value.Count > 0)
@@ -53,9 +53,9 @@
                             }
                         </MListItemContent>
                         <div style="@(context.Hover?"display:flex":"display:none")" class="justify-end align-center">
-                            <MButton Icon OnClick="()=>RemoveValue(item)">
+                            <SButton Icon OnClick="()=>RemoveValue(item)">
                                 <MIcon Color="emphasis">mdi-close</MIcon>
-                            </MButton>
+                            </SButton>
                         </div>
                     </MListItem>
                 </MHover>

@@ -2,7 +2,7 @@
 <AutoHeight Overflow>
     <HeaderContent>
         <div class="fill rounded-2 d-flex justify-center align-center px-6 py-3 mb-6" style="height:56px">
-            <MButton Ripple=false Plain IsActive Class="emphasis2--text h6 primary--text" OnClick="NavigateToSend"><MIcon Size=22 Left>mdi-message</MIcon>@T("Permission.SendMessage")</MButton>
+            <SButton Ripple=false Plain IsActive Class="h6" OnClick="NavigateToSend"><MIcon Size=22 Left>mdi-message</MIcon>@T("Permission.SendMessage")</SButton>
         </div>
         <div class="ma-0 search-panel mb-6">
             @if (advanced)
@@ -88,7 +88,7 @@
                 </div>
             }
             <div class="d-flex search-panel-right @(!isAnimate?"full-width":"") @(isAnimate?"animate__animated":"") @(!advanced?"animate__searchOpen":"animate__searchShrink")">
-                <DefaultSearch @bind-Value="_queryParam.Filter" Clearable Class="rounded-2 search" Placeholder="@T("Search")" Dense OnEnter="RefreshAsync" OnClearClick="HandleClearAsync" />
+                <SSearch @bind-Value="_queryParam.Filter" BackgroundColor="white" MaxWidth="0" Dense OnEnter="RefreshAsync" OnClearClick="HandleClearAsync" />
                 <div @onclick="ToggleAdvanced" class="ml-6 d-flex button fill">
                     <MIcon Class="ma-auto" Color="emphasis2" Size=20>
                         @(!advanced?"mdi-filter":"mdi-filter-off")
