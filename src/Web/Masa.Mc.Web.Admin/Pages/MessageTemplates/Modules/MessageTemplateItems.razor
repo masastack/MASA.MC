@@ -94,10 +94,10 @@
                     if (Value.IndexOf(context.Item)==_editedIndex)
                     {
                         <div class="d-flex">
-                            <MButton Small Class="mr-4" Icon OnClick="CloseDelete">
+                            <MButton Small Icon OnClick="CloseDelete">
                                 <SIcon Small Color="warning">mdi-close</SIcon>
                             </MButton>
-                            <MButton Small Class="mr-4" Icon OnClick="SaveAsync">
+                            <MButton Small Class="ml-6" Icon OnClick="SaveAsync">
                                 <SIcon Small Color="green">mdi-check</SIcon>
                             </MButton>
                         </div>
@@ -105,7 +105,7 @@
                     else
                     {
                         <MButton Small Class="mr-4" Icon OnClick="()=>EditItem(context.Item)">
-                            <SIcon Small Color="green">mdi-check</SIcon>
+                            <SIcon Small Color="green">mdi-pencil</SIcon>
                         </MButton>
                     }
                     break;
