@@ -6,11 +6,6 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 	</PropertyGroup>
 
-	<ItemGroup>
-		<None Include="wwwroot\js\oss\aliyun-oss-sdk.min.js" />
-		<None Include="wwwroot\js\oss\upload.js" />
-	</ItemGroup>
-
 
 	<ItemGroup>
 		<SupportedPlatform Include="browser" />
