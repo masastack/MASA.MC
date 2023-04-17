@@ -15,17 +15,17 @@
                                                    OnClick="()=> HandleSelectType(ChannelTypes.Sms)">
                                                 @if (context.Hover)
                                                 {
-                                                    <MIcon Size=54 Color="fill">mdi-cellphone</MIcon>
+                                                    <SIcon Size=54 Color="fill">mdi-cellphone</SIcon>
                                                     <div class="h6 pt-10 fill--text">@T("Sms")</div>
                                                 }
                                                 else if (_model.Type == ChannelTypes.Sms)
                                                 {
-                                                    <MIcon Size=54 Color="primary">mdi-cellphone</MIcon>
+                                                    <SIcon Size=54 Color="primary">mdi-cellphone</SIcon>
                                                     <div class="h6 pt-10 primary--text">@T("Sms")</div>
                                                 }
                                                 else
                                                 {
-                                                    <MIcon Size=36 Color="emphasis2">mdi-cellphone</MIcon>
+                                                    <SIcon Size=36 Color="emphasis2">mdi-cellphone</SIcon>
                                                     <div class="h6 pt-10 regular--text">@T("Sms")</div>
                                                 }
                                             </MCard>
@@ -37,17 +37,17 @@
                                                    OnClick="()=>HandleSelectType(ChannelTypes.Email)">
                                                 @if (context.Hover)
                                                 {
-                                                    <MIcon Size=54 Color="fill">mdi-email</MIcon>
+                                                    <SIcon Size=54 Color="fill">mdi-email</SIcon>
                                                     <div class="h6 pt-10 fill--text">@T("Email")</div>
                                                 }
                                                 else if (_model.Type == ChannelTypes.Email)
                                                 {
-                                                    <MIcon Size=54 Color="primary">mdi-email</MIcon>
+                                                    <SIcon Size=54 Color="primary">mdi-email</SIcon>
                                                     <div class="h6 pt-10 primary--text">@T("Email")</div>
                                                 }
                                                 else
                                                 {
-                                                    <MIcon Size=36 Color="emphasis2">mdi-email</MIcon>
+                                                    <SIcon Size=36 Color="emphasis2">mdi-email</SIcon>
                                                     <div class="h6 pt-10 regular--text">@T("Email")</div>
                                                 }
                                             </MCard>
@@ -59,17 +59,17 @@
                                                    OnClick="()=>HandleSelectType(ChannelTypes.WebsiteMessage)">
                                                 @if (context.Hover)
                                                 {
-                                                    <MIcon Size=54 Color="fill">mdi-bell</MIcon>
+                                                    <SIcon Size=54 Color="fill">mdi-bell</SIcon>
                                                     <div class="h6 pt-10 fill--text">@T("WebsiteMessage")</div>
                                                 }
                                                 else if (_model.Type == ChannelTypes.WebsiteMessage)
                                                 {
-                                                    <MIcon Size=54 Color="primary">mdi-bell</MIcon>
+                                                    <SIcon Size=54 Color="primary">mdi-bell</SIcon>
                                                     <div class="h6 pt-10 primary--text">@T("WebsiteMessage")</div>
                                                 }
                                                 else
                                                 {
-                                                    <MIcon Size=36 Color="emphasis2">mdi-bell</MIcon>
+                                                    <SIcon Size=36 Color="emphasis2">mdi-bell</SIcon>
                                                     <div class="h6 pt-10 regular--text">@T("WebsiteMessage")</div>
                                                 }
                                             </MCard>
@@ -81,17 +81,17 @@
                                                    OnClick="()=>HandleSelectType(ChannelTypes.App)">
                                                 @if (context.Hover)
                                                 {
-                                                    <MIcon Size=54 Color="fill">mdi-cellphone</MIcon>
+                                                    <SIcon Size=54 Color="fill">mdi-cellphone</SIcon>
                                                     <div class="h6 pt-10 fill--text">@T("App")</div>
                                                 }
                                                 else if (_model.Type == ChannelTypes.App)
                                                 {
-                                                    <MIcon Size=54 Color="primary">mdi-cellphone</MIcon>
+                                                    <SIcon Size=54 Color="primary">mdi-cellphone</SIcon>
                                                     <div class="h6 pt-10 primary--text">@T("App")</div>
                                                 }
                                                 else
                                                 {
-                                                    <MIcon Size=36 Color="emphasis2">mdi-cellphone</MIcon>
+                                                    <SIcon Size=36 Color="emphasis2">mdi-cellphone</SIcon>
                                                     <div class="h6 pt-10 regular--text">@T("App")</div>
                                                 }
                                             </MCard>
@@ -141,7 +141,9 @@
         <DeleteContent Context="delete">
             @if (_step == 2)
             {
-                <MIcon Size="24" Color="emphasis2" OnClick="delete.Click">mdi-keyboard-backspace</MIcon>
+                <MButton Class="mr-4" Icon OnClick="delete.Click">
+                    <SIcon Size="24" Color="emphasis2">mdi-keyboard-backspace</SIcon>
+                </MButton>
             }
         </DeleteContent>
         <SaveContent Context="save">

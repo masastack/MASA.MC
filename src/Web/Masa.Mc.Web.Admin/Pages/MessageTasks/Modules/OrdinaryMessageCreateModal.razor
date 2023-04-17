@@ -69,7 +69,7 @@
                                                 <MCheckbox Class="mt-0" @bind-Value="_model.MessageInfo.IsJump"></MCheckbox>
                                             </PrependContent>
                                             <PrependInnerContent>
-                                                <MIcon Size=16 Class="mt-2">fas fa-link</MIcon>
+                                                <SIcon Size=16 Class="mt-2">fas fa-link</SIcon>
                                             </PrependInnerContent>
                                         </STextField>
                                     </MCol>
@@ -116,11 +116,15 @@
         <DeleteContent Context="delete">
             @if (_model.Step == 2)
             {
-                <MIcon Size="24" Color="emphasis2" OnClick="HandleReceiverBack">mdi-keyboard-backspace</MIcon>
-            }
-            @if (_model.Step == 3)
+                <MButton Icon OnClick="HandleReceiverBack">
+                    <SIcon Size="24" Color="emphasis2">mdi-keyboard-backspace</SIcon>
+                </MButton>
+            } 
+            else if (_model.Step == 3)
             {
-                <MIcon Size="24" Color="emphasis2" OnClick="HandleSendingRuleBack">mdi-keyboard-backspace</MIcon>
+                <MButton Icon OnClick="HandleSendingRuleBack">
+                    <SIcon Size="24" Color="emphasis2">mdi-keyboard-backspace</SIcon>
+                </MButton>
             }
         </DeleteContent>
         <SaveContent Context="save">

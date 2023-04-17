@@ -113,11 +113,15 @@
         <DeleteContent Context="delete">
             @if (_model.Step == 2)
             {
-                <MIcon Size="24" Color="emphasis2" OnClick="HandleReceiverBack">mdi-keyboard-backspace</MIcon>
+                <MButton Icon OnClick="HandleReceiverBack">
+                    <SIcon Size="24" Color="emphasis2">mdi-keyboard-backspace</SIcon>
+                </MButton>
             }
-            @if (_model.Step == 3)
+            else if (_model.Step == 3)
             {
-                <MIcon Size="24" Color="emphasis2" OnClick="HandleSendingRuleBack">mdi-keyboard-backspace</MIcon>
+                <MButton Icon OnClick="HandleSendingRuleBack">
+                    <SIcon Size="24" Color="emphasis2">mdi-keyboard-backspace</SIcon>
+                </MButton>
             }
         </DeleteContent>
         <SaveContent Context="save">

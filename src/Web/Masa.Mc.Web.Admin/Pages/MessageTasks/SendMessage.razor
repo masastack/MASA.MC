@@ -7,7 +7,7 @@
                 <MHover>
                     <MCard @attributes="context.Attrs" Class="@($"d-flex flex-column justify-center align-center {(context.Hover ? "primary" : "fill-background")}")"
                            OnClick="_ordinaryCreateModal.OpenModalAsync">
-                        <MIcon Size="context.Hover?54:36" Color="@(context.Hover?"fill":"emphasis2")">mdi-email</MIcon>
+                        <SIcon Size="context.Hover?54:36" Color="@(context.Hover?"fill":"emphasis2")">mdi-email</SIcon>
                         <div class="h6 @(context.Hover?"pt-10 fill--text":"pt-12 regular--text")">@T("DisplayName.MessageEntityType.Ordinary")</div>
                     </MCard>
                 </MHover>
@@ -16,7 +16,7 @@
                 <MHover>
                     <MCard @attributes="context.Attrs" Class="@($"d-flex flex-column justify-center align-center {(context.Hover ? "primary" : "fill-background")}")"
                            OnClick="_templateCreateModal.OpenModalAsync">
-                        <MIcon Size="context.Hover?54:36" Color="@(context.Hover?"fill":"emphasis2")">mdi-email</MIcon>
+                        <SIcon Size="context.Hover?54:36" Color="@(context.Hover?"fill":"emphasis2")">mdi-email</SIcon>
                         <div class="h6 @(context.Hover?"pt-10 fill--text":"pt-12 regular--text")">@T("DisplayName.MessageEntityType.Template")</div>
                     </MCard>
                 </MHover>
@@ -28,7 +28,6 @@
         <SButton Ripple=false Plain IsActive Color="emphasis2" Class="h8" OnClick="NavigateToList"><MIcon Size="20" Left>fas fa-tasks</MIcon>@T("DisplayName.MessageTaskList")</SButton>
     </div>
 </div>
-
 
 <OrdinaryMessageCreateModal @ref="_ordinaryCreateModal" />
 <TemplateMessageCreateModal @ref="_templateCreateModal" />

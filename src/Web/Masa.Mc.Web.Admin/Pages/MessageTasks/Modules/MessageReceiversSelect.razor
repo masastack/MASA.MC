@@ -2,8 +2,8 @@
 <MRow Class="mt-6">
     <MCol Class="d-flex align-self-stretch">
         <MessageTaskReceiverAutoComplete Class="d-flex" @bind-Value="_userIds" SelectedValues="Value.Select(x=>x.SubjectId).ToList()" OnAdd="HandleOnAdd"></MessageTaskReceiverAutoComplete>
-        <SButton Color="fill" BorderRadiusClass="btn-fill-line" Class="d-flex ml-6 small-btn pa-0" OnClick="_createModal.OpenModalAsync">
-            <MIcon Size=18>mdi-plus</MIcon>
+        <SButton Color="fill" BorderRadiusClass="btn-fill-line" Class="d-flex ml-6 rounded-lg btn small-btn pa-0 btn-fill-line" OnClick="_createModal.OpenModalAsync">
+            <SIcon Size=18>mdi-plus</SIcon>
             <span>@T("ExternalMember")</span>
         </SButton>
     </MCol>
@@ -19,7 +19,7 @@
                         <MListItemAvatar Size=40 Class="ma-0" Color="primary" Style="z-index:2">
                             @if (item.Type != MessageTaskReceiverTypes.User)
                             {
-                                <MIcon Size=24 Color="fill">mdi-animation</MIcon>
+                                <SIcon Size=24 Color="fill">mdi-animation</SIcon>
                             }
                             else
                             {
@@ -54,7 +54,7 @@
                         </MListItemContent>
                         <div style="@(context.Hover?"display:flex":"display:none")" class="justify-end align-center">
                             <SButton Icon OnClick="()=>RemoveValue(item)">
-                                <MIcon Color="emphasis">mdi-close</MIcon>
+                                <SIcon Color="emphasis">mdi-close</SIcon>
                             </SButton>
                         </div>
                     </MListItem>

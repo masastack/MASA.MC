@@ -19,7 +19,9 @@
                     @switch (context.Header.Value)
                     {
                         case "Action":
-                            <DefaultIcon Small Color="emphasis2" Tooltip="@(T("Edit"))" OnClick="async()=>await _editModal.OpenModalAsync(context.Item)">mdi-pencil</DefaultIcon>
+                            <MButton Icon OnClick="async()=>await _editModal.OpenModalAsync(context.Item)">
+                                <SIcon Small Color="emphasis2" Tooltip="@(T("Edit"))">mdi-pencil</SIcon>
+                            </MButton>
                             break;
                         default:
                             <DefaultGenericColumnRender Value="@context.Value" Width="@context.Header.Width"></DefaultGenericColumnRender>
