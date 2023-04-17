@@ -41,27 +41,16 @@
 
                         <MCardActions>
                             <MSpacer></MSpacer>
-                            <MButton Color="blue darken-1"
+                            <SButton Color="blue darken-1"
                                      Text
                                      OnClick="Close">
                                 @T("Cancel")
-                            </MButton>
-                            <MButton Color="blue darken-1"
+                            </SButton>
+                            <SButton Color="blue darken-1"
                                      Text
                                      OnClick="SaveAsync">
                                 @T("Save")
-                            </MButton>
-                        </MCardActions>
-                    </MCard>
-                </MDialog>
-                <MDialog @bind-Value="_dialogDelete" MaxWidth="500">
-                    <MCard>
-                        <MCardTitle Class="text-subtitle-2">@T("DeletionConfirmationMessage")</MCardTitle>
-                        <MCardActions>
-                            <MSpacer></MSpacer>
-                            <MButton Color="blue darken-1" Text OnClick="CloseDelete">@T("Cancel")</MButton>
-                            <MButton Color="blue darken-1" Text OnClick="DeleteItemConfirmAsync">@T("OK")</MButton>
-                            <MSpacer></MSpacer>
+                            </SButton>
                         </MCardActions>
                     </MCard>
                 </MDialog>
@@ -71,10 +60,10 @@
             @switch (context.Header.Value)
             {
                 case (nameof(MessageTemplateItemDto.Code)):
-                if (Value.IndexOf(context.Item) == _editedIndex)
-                {
-                        <MTextField Class="mr-6" @bind-Value="_editedItem.Code" Dense Outlined HideDetails="@("auto")" Attributes="@(new Dictionary<string,object>{["maxLength"]=16})"></MTextField>
-            }
+                    if (Value.IndexOf(context.Item) == _editedIndex)
+                    {
+                            <MTextField Class="mr-6" @bind-Value="_editedItem.Code" Dense Outlined HideDetails="@("auto")" Attributes="@(new Dictionary<string,object>{["maxLength"]=16})"></MTextField>
+                    }
                     else
                     {
                         <div class="text-truncate mr-6" style="max-width:172px">@context.Value</div>

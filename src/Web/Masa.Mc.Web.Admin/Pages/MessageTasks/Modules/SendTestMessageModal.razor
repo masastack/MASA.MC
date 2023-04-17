@@ -17,7 +17,7 @@
             <MInput @bind-Value="_input.ReceiverUsers" />
         </ChildContent>
         <SaveContent Context="save">
-            <MButton Class="btn-form-rounded caption" Color="primary" OnClick="save.Click">@(T("SendTestMessage"))</MButton>
+            <SButton BorderRadiusClass="btn-form-rounded" OnClick="save.Click">@(T("SendTestMessage"))</SButton>
         </SaveContent>
     </PModal>
 </div>

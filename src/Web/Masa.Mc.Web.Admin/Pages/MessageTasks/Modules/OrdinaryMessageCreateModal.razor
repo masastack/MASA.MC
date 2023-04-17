@@ -130,18 +130,18 @@
         <SaveContent Context="save">
             @if (_model.Step == 1)
             {
-                <MButton Color="fill" Class="btn-form btn-fill-line rounded-3 emphasis2--text" OnClick="async() => await Throttle(HandleSaveAsync)">@T("Save")</MButton>
-                <MButton Color="primary" Class="btn-form ml-6" OnClick="()=> HandleNextStep()">@T("NextStep")</MButton>
+                <SButton Color="fill" BorderRadiusClass="btn-form" Class="btn-fill-line emphasis2--text" OnClick="async() => await Throttle(HandleSaveAsync)">@T("Save")</SButton>
+                <SButton BorderRadiusClass="btn-form" Class="ml-6" OnClick="()=> HandleNextStep()">@T("NextStep")</SButton>
             }
             @if (_model.Step == 2 && (_model.ChannelType != ChannelTypes.WebsiteMessage || _selectReceiverType))
             {
-                <MButton Color="fill" Class="btn-form btn-fill-line rounded-3 emphasis2--text" OnClick="async() => await Throttle(HandleSaveAsync)">@T("Save")</MButton>
-                <MButton Color="primary" Class="btn-form ml-6" OnClick="()=> HandleNextStep()">@T("NextStep")</MButton>
+                <SButton Color="fill" BorderRadiusClass="btn-form" Class="btn-fill-line emphasis2--text" OnClick="async() => await Throttle(HandleSaveAsync)">@T("Save")</SButton>
+                <SButton BorderRadiusClass="btn-form" Class="ml-6" OnClick="()=> HandleNextStep()">@T("NextStep")</SButton>
             }
             @if (_model.Step == 3)
             {
-                <MButton Color="fill" Class="btn-form btn-fill-line rounded-3 emphasis2--text" OnClick="async() => await Throttle(HandleSaveAsync)">@T("Save")</MButton>
-                <MButton Color="primary" Class="btn-form ml-6" OnClick="async() => await Throttle(HandleSendAsync)">@T("SaveSend")</MButton>
+                <SButton Color="fill" BorderRadiusClass="btn-form" Class="btn-fill-line emphasis2--text" OnClick="async() => await Throttle(HandleSaveAsync)">@T("Save")</SButton>
+                <SButton BorderRadiusClass="btn-form" Class="ml-6" OnClick="async() => await Throttle(HandleSendAsync)">@T("SaveSend")</SButton>
             }
         </SaveContent>
     </SSimpleModal>

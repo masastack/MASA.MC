@@ -80,9 +80,9 @@
                     <HeaderContent>
                         @if (_historyInfo.SendTime.HasValue)
                         {
-                            <MButton Color="primary" Class="rounded-lg btn small-btn info full-width mb-8">
+                            <SButton BorderRadiusClass="rounded-lg" Class="small-btn info full-width mb-8">
                                 <span>@T(string.Format(T("Description.MessageTaskHistory.SendTimeTips"),_historyInfo.SendTime?.ToOffset(JsInitVariables.TimezoneOffset).ToString(T("$DateTimeFormat"))))</span>
-                            </MButton>
+                            </SButton>
                         }
                     </HeaderContent>
                     <AutoHeightContent>
@@ -122,9 +122,9 @@
                         {
                             <div Class="d-flex pt-2">
                                 <MSpacer></MSpacer>
-                                <MButton Rounded Color="primary" Class="px-6" Width="100" OnClick="HandleWithdrawnAsync">
+                                <SButton Class="px-6" Width="100" OnClick="HandleWithdrawnAsync">
                                     <span>@T("Withdraw")</span>
-                                </MButton>
+                                </SButton>
                             </div>
                         }
                     </FooterContent>
