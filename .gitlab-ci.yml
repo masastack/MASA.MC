@@ -62,8 +62,6 @@ deploy-dev:
   image: registry.cn-hangzhou.aliyuncs.com/masa/library:helm3_latest
   variables:
     EnviromentPath: Develop
-  tags:
-    - ydy-runner
   only:
     - main  
   script:
@@ -73,27 +71,25 @@ deploy-dev:
     - cat ./config
     - helm version 
     - helm --kubeconfig ./config list   -n $NAMESPACE_DEV 
-    - helm upgrade --install $MC_Service_Name ./charts/masa-service --set ingress.servertype=service --set domain.name=$ServiceDomain_dev  --set domain.secret=masastack  --set service.port=80  --set environment.path=$EnviromentPath --set image.tag=dev-$CI_PIPELINE_ID -n $NAMESPACE_DEV
-    - helm upgrade --install $MC_Web_Name ./charts/masa-service --set ingress.servertype=web  --set domain.name=$WebDomain_dev  --set domain.secret=masastack  --set service.port=443  --set environment.path=$EnviromentPath --set image.tag=dev-$CI_PIPELINE_ID -n $NAMESPACE_DEV
+    - helm --kubeconfig ./config  upgrade --install $MC_Service_Name ./charts/masa-service --set ingress.servertype=service --set domain.name=$ServiceDomain_dev  --set domain.secret=masastack  --set service.port=80  --set environment.path=$EnviromentPath --set image.tag=dev-$CI_PIPELINE_ID -n $NAMESPACE_DEV
+    - helm --kubeconfig ./config  upgrade --install $MC_Web_Name ./charts/masa-service --set ingress.servertype=web  --set domain.name=$WebDomain_dev  --set domain.secret=masastack  --set service.port=443  --set environment.path=$EnviromentPath --set image.tag=dev-$CI_PIPELINE_ID -n $NAMESPACE_DEV
 
 deploy-test:
   stage: deploy-test
   image: registry.cn-hangzhou.aliyuncs.com/masa/library:helm3_latest
   variables:
     EnviromentPath: Staging
-  tags:
-    - ydy-runner
   only:
     - main  
   script:
     - ls
     - pwd 
-    - echo $KUBE_CONFIG_DEV_YDY | base64 -d > ./config
+    - echo $KUBE_CONFIG_DEV_YDY | base64 -d > $HOME/config
     - cat ./config
     - helm version 
     - helm --kubeconfig ./config list   -n $NAMESPACE_TEST
-    - helm upgrade --install $MC_Service_Name ./charts/masa-service  --set ingress.servertype=service --set domain.name=$ServiceDomain_test  --set domain.secret=masastack  --set service.port=80  --set environment.path=$EnviromentPath --set image.tag=dev-$CI_PIPELINE_ID -n $NAMESPACE_STAGING
-    - helm upgrade --install $MC_Web_Name ./charts/masa-service --set ingress.servertype=web  --set domain.name=$WebDomain_test  --set domain.secret=masastack  --set service.port=443  --set environment.path=$EnviromentPath --set image.tag=dev-$CI_PIPELINE_ID -n $NAMESPACE_STAGING
+    - helm --kubeconfig ./config  upgrade --install $MC_Service_Name ./charts/masa-service  --set ingress.servertype=service --set domain.name=$ServiceDomain_test  --set domain.secret=masastack  --set service.port=80  --set environment.path=$EnviromentPath --set image.tag=dev-$CI_PIPELINE_ID -n $NAMESPACE_STAGING
+    - helm --kubeconfig ./config  upgrade --install $MC_Web_Name ./charts/masa-service --set ingress.servertype=web  --set domain.name=$WebDomain_test  --set domain.secret=masastack  --set service.port=443  --set environment.path=$EnviromentPath --set image.tag=dev-$CI_PIPELINE_ID -n $NAMESPACE_STAGING
 
 # docker-build-prd:
 #   stage: docker-prd
