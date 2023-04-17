@@ -55,8 +55,8 @@ public partial class MessageReceiversImport
         await Task.Delay(400);
     }
 
-    private async void HandleFileChange(InputFileChangeEventArgs e)
-    {	
+    private async Task HandleFileChange(InputFileChangeEventArgs e)
+    {
         var file = e.File;
         if (file == null)
         {
