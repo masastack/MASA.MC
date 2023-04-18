@@ -57,11 +57,7 @@ if (string.IsNullOrEmpty(mcBaseAddress))
 }
 
 builder.AddMasaStackComponentsForServer("wwwroot/i18n", authBaseAddress, mcBaseAddress);
-var assembly = Assembly.GetExecutingAssembly();
-var availableResources = assembly.GetManifestResourceNames()
-                                 .Select(s => Regex.Match(s, @"^.*Locales\.(.+)\.json"))
-                                 .Where(s => s.Success && s.Groups[1].Value != "supportedCultures")
-                                 .ToDictionary(s => s.Groups[1].Value, s => s.Value);
+
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddGlobalForServer();
 builder.Services.AddScoped<TokenProvider>();
