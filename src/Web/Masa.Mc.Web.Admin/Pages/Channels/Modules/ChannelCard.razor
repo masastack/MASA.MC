@@ -16,7 +16,7 @@
         <div class="h5 emphasis--text text-truncate full-width">@Channel.DisplayName</div>
         <div class="body2 regular3--text text-truncate full-width">@Channel.Code</div>
     </MCardText>
-    <div style="height:42px;line-height:19px">
+    <div style="max-height:64px;">
         @if (!string.IsNullOrEmpty(Channel.Description))
         {
             <div class="fill-hover body px-2 py-1 regular2--text text-justify line-clamp-2 rounded">@Channel.Description</div>
