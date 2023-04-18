@@ -135,12 +135,12 @@ builder.Services
     })
     .AddMasaDbContext<McDbContext>(builder =>
     {
-        builder.UseSqlServer(masaStackConfig.GetConnectionString(AppSettings.Get("DBName")));
+        builder.UseSqlServer(masaStackConfig.GetConnectionString(MasaStackConstant.MC));
         builder.UseFilter(options => options.EnableSoftDelete = true);
     })
     .AddMasaDbContext<McQueryContext>(builder =>
     {
-        builder.UseSqlServer(masaStackConfig.GetConnectionString(AppSettings.Get("DBName")));
+        builder.UseSqlServer(masaStackConfig.GetConnectionString(MasaStackConstant.MC));
         builder.UseFilter(options => options.EnableSoftDelete = true);
     })
     .AddScoped<IMcQueryContext, McQueryContext>()
