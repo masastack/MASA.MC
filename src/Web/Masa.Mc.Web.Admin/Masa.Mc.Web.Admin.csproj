@@ -30,6 +30,15 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<Content Update="C:\Users\Administrator\.nuget\packages\masa.stack.components\0.0.332\contentFiles\any\net6.0\Locales\en-US.json">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Update="C:\Users\Administrator\.nuget\packages\masa.stack.components\0.0.332\contentFiles\any\net6.0\Locales\supportedCultures.json">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Update="C:\Users\Administrator\.nuget\packages\masa.stack.components\0.0.332\contentFiles\any\net6.0\Locales\zh-CN.json">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
 		<Content Update="wwwroot\i18n\en-US.json">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>

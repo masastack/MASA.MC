@@ -1,10 +1,13 @@
 // Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
+using BlazorComponent.I18n;
+using Masa.Mc.Web.Admin.Global;
+
 var builder = WebApplication.CreateBuilder(args);
 
-ValidatorOptions.Global.LanguageManager = new MasaLanguageManager();
-GlobalValidationOptions.SetDefaultCulture("zh-CN");
+//ValidatorOptions.Global.LanguageManager = new MasaLanguageManager();
+//GlobalValidationOptions.SetDefaultCulture("zh-CN");
 
 await builder.Services.AddMasaStackConfigAsync();
 var masaStackConfig = builder.Services.GetMasaStackConfig();
@@ -58,6 +61,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddGlobalForServer();
 builder.Services.AddScoped<TokenProvider>();
 builder.Services.AddSingleton<ChannelUpsertDtoValidator>();
+builder.Services.AddScoped<I18n, MyI18n>();
 TypeAdapterConfig.GlobalSettings.Scan(Assembly.GetExecutingAssembly(), Assembly.Load("Masa.Mc.Contracts.Admin"));
 MasaOpenIdConnectOptions masaOpenIdConnectOptions = new MasaOpenIdConnectOptions
 {
