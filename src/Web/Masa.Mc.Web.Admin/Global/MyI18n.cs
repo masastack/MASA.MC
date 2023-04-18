@@ -20,7 +20,7 @@ public class MyI18n: I18n
         string cultureName;
         if (httpContextAccessor.HttpContext is not null)
         {
-            cultureName = httpContextAccessor.HttpContext.Request.Cookies[CultureCookieKey];
+            cultureName = httpContextAccessor.HttpContext.Request.Cookies[CultureCookieKey]??"";
             Console.WriteLine("httpContextAccessor.HttpContext.Request.Cookies:" + cultureName);
             Console.WriteLine("CookieStorage:" + _cookieStorage.GetCookie(CultureCookieKey));
             //if (cultureName is null)
@@ -46,7 +46,7 @@ public class MyI18n: I18n
             cultureName = _cookieStorage.GetCookie(CultureCookieKey) ?? "";
             Console.WriteLine("cultureName:" + cultureName);
         }
-
+        Console.WriteLine("StartGetValidCulture:" + cultureName);
         CultureInfo validCulture = GetValidCulture(cultureName);
         //SetCulture(validCulture);
     }
@@ -60,6 +60,7 @@ public class MyI18n: I18n
         }
         catch (Exception ex)
         {
+            Console.WriteLine($"GetValidCulture：ex:{ex.Message}");
             cultureInfo = CultureInfo.CurrentUICulture;
         }
         Console.WriteLine($"GetValidCulture：{cultureName}: {cultureInfo.Name}"); 

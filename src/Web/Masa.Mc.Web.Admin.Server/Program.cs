@@ -1,6 +1,7 @@
 // Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
+using System.Text.RegularExpressions;
 using BlazorComponent.I18n;
 using Masa.Mc.Web.Admin.Global;
 
@@ -56,7 +57,11 @@ if (string.IsNullOrEmpty(mcBaseAddress))
 }
 
 builder.AddMasaStackComponentsForServer("wwwroot/i18n", authBaseAddress, mcBaseAddress);
-
+var assembly = Assembly.GetExecutingAssembly();
+var availableResources = assembly.GetManifestResourceNames()
+                                 .Select(s => Regex.Match(s, @"^.*Locales\.(.+)\.json"))
+                                 .Where(s => s.Success && s.Groups[1].Value != "supportedCultures")
+                                 .ToDictionary(s => s.Groups[1].Value, s => s.Value);
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddGlobalForServer();
 builder.Services.AddScoped<TokenProvider>();

@@ -1,4 +1,5 @@
 {
+  "$DefaultCulture": "true",
   "Channel": "渠道",
   "MessageInfo": "消息信息",
   "MessageRecord": "消息记录",
