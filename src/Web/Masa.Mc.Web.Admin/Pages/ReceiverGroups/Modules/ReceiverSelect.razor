@@ -54,7 +54,7 @@
                         </MListItemContent>
                         <div style="@(context.Hover?"display:flex":"display:none")" class="justify-end align-center">
                             <SButton Icon OnClick="()=>RemoveValue(item)">
-                                <SIcon Color="emphasis">mdi-close</SIcon>
+                                <SIcon Color="emphasis" Tooltip="@T("Delete")">mdi-close</SIcon>
                             </SButton>
                         </div>
                     </MListItem>
