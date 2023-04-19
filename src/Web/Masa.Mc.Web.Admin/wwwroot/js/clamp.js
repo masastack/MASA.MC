@@ -12,9 +12,9 @@
             opt = {
                 clamp: options.clamp || 2,
                 useNativeClamp: typeof (options.useNativeClamp) != 'undefined' ? options.useNativeClamp : true,
-                splitOnChars: options.splitOnChars || ['.', '-', '¨C', '¡ª', ' '], //Split on sentences (periods), hypens, en-dashes, em-dashes, and words (spaces).
+                splitOnChars: options.splitOnChars || ['.', '-', 'â€“', 'â€”', ' '], //Split on sentences (periods), hypens, en-dashes, em-dashes, and words (spaces).
                 animate: options.animate || false,
-                truncationChar: options.truncationChar || '¡­',
+                truncationChar: options.truncationChar || 'â€¦',
                 truncationHTML: options.truncationHTML
             },
 
