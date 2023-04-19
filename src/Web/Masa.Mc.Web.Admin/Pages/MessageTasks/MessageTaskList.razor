@@ -5,7 +5,7 @@
             <SButton Ripple=false Plain IsActive Class="emphasis2--text h6 primary--text" OnClick="NavigateToSend"><MIcon Size=22 Left>mdi-message</MIcon>@T("Permission.SendMessage")</SButton>
         </div>
         <div class="ma-0 search-panel mb-6">
-            @if (advanced)
+            @if (_advanced)
             {
                 <div class="fold d-inline-flex">
                     <MRow NoGutters>
@@ -26,9 +26,7 @@
                                  OnSelectedItemUpdate="RefreshAsync">
                             </SSelect>
                         </MCol>
-                        <MCol Md="3">
-                            <Masa.Mc.Web.Admin.Components.Pickers.DateRangePicker @bind-StartTime="_queryParam.StartTime" @bind-EndTime="_queryParam.EndTime" Class="ml-6" OnChange="RefreshAsync" />
-                        </MCol>
+                        <SDateRangePicker StartTime="_startTime" EndTime="_endTime" DateRangeChanged="OnDateChanged" Class="ml-6" />
                         <MCol Md="2">
                             <SSelect Small @bind-Value="_queryParam.ChannelId"
                                  Items="@_channelItems"
@@ -87,11 +85,11 @@
                     </MRow>
                 </div>
             }
-            <div class="d-flex search-panel-right @(!isAnimate?"full-width":"") @(isAnimate?"animate__animated":"") @(!advanced?"animate__searchOpen":"animate__searchShrink")">
+            <div class="d-flex search-panel-right @(!_isAnimate?"full-width":"") @(_isAnimate?"animate__animated":"") @(!_advanced?"animate__searchOpen":"animate__searchShrink")">
                 <SSearch @bind-Value="_queryParam.Filter" BackgroundColor="white" MaxWidth="0" Dense OnEnter="RefreshAsync" OnClearClick="HandleClearAsync" />
                 <div @onclick="ToggleAdvanced" class="ml-6 d-flex button fill">
                     <SIcon Class="ma-auto" Color="emphasis2" Size=20>
-                        @(!advanced?"mdi-filter":"mdi-filter-off")
+                        @(!_advanced?"mdi-filter":"mdi-filter-off")
                     </SIcon>
                 </div>
                 <MTooltip Bottom>
