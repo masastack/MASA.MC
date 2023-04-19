@@ -1,0 +1,23 @@
+﻿@inherits AdminCompontentBase
+<div @ref="Ref" class="@Class">@_childContent</div>
+
+@code {
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    private RenderFragment? _childContent { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+
+        if (firstRender)
+        {
+            await Js.InvokeVoidAsync("$clamp", Ref, new { clamp = "auto" });
+
+            _childContent = ChildContent;
+
+            StateHasChanged();
+        }
+    }
+}
