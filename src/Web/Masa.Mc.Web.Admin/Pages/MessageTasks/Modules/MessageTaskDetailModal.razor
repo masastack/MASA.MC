@@ -6,7 +6,7 @@
                 <AutoHeight Overflow>
                     <HeaderContent>
                         <div class="subtitle2 emphasis2--text">@T("DisplayName.MessageTaskHistory")</div>
-                        <Masa.Mc.Web.Admin.Components.Pickers.DateRangePicker Class="btn-fill-line mt-6" IconClass="mr-9" @bind-StartTime="_queryParam.StartTime" @bind-EndTime="_queryParam.EndTime" OnChange="LoadData" />
+                        <SDateRangePicker StartTime="_startTime" EndTime="_endTime" DateRangeChanged="OnDateChanged" Class="ml-6" />
                         <div class="status-select mb-9">
                             <MSelect @bind-Value="@_queryParam.Status"
                                      Items="@(GetEnumList<MessageTaskHistoryStatuses>())"
@@ -28,11 +28,11 @@
                         </div>
                     </HeaderContent>
                     <AutoHeightContent>
-                        @if (_historys.Result.Any())
+                        @if (_histories.Result.Any())
                         {
                             <div class="task-history-box">
                                 <MTimeline Dense=false>
-                                    @foreach (var item in _historys.Result)
+                                    @foreach (var item in _histories.Result)
                                     {
                                         <MTimelineItem Color="fill" Small FillDot Right @onclick="()=>HandleItemSelect(item)">
                                             <OppositeContent>
@@ -68,7 +68,7 @@
                         }
                     </AutoHeightContent>
                     <FooterContent>
-                        <SPagination Class="mt-5 d-flex" Page="@_queryParam.Page" PageSize="@_queryParam.PageSize" Total="_historys.Total" PageChanged="HandlePageChanged" PageSizeChanged="HandlePageSizeChanged" />
+                        <SPagination Class="mt-5 d-flex" Page="@_queryParam.Page" PageSize="@_queryParam.PageSize" Total="_histories.Total" PageChanged="HandlePageChanged" PageSizeChanged="HandlePageSizeChanged" />
                     </FooterContent>
                 </AutoHeight>
             </div>
