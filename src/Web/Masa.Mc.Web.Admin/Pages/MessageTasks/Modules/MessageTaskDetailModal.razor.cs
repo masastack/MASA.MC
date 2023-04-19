@@ -15,22 +15,26 @@ public partial class MessageTaskDetailModal : AdminCompontentBase
     private Guid _entityId;
     private bool _visible;
     private GetMessageTaskHistoryInputDto _queryParam = new();
-    private List<DateOnly> _dates = new List<DateOnly> { };
-    private string DateRangeText => string.Join(" ~ ", _dates.Select(date => date.ToString("yyyy-MM-dd")));
-    private PaginatedListDto<MessageTaskHistoryDto> _historys = new();
 
-    MessageTaskService MessageTaskService => McCaller.MessageTaskService;
-    MessageTaskHistoryService MessageTaskHistoryService => McCaller.MessageTaskHistoryService;
+    private List<DateOnly> _dates = new() { };
 
-    protected override async Task OnInitializedAsync()
+    private PaginatedListDto<MessageTaskHistoryDto> _histories = new();
+    private DateOnly? _endTime;
+    private DateOnly? _startTime;
+
+    private MessageTaskService MessageTaskService => McCaller.MessageTaskService;
+
+    private MessageTaskHistoryService MessageTaskHistoryService => McCaller.MessageTaskHistoryService;
+
+    protected async override Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        var _prefix = "DisplayName.MessageTaskHistory";
+        string prefix = "DisplayName.MessageTaskHistory";
         _headers = new()
         {
-            new() { Text = T($"{_prefix}{nameof(MessageTaskHistoryDto.Status)}"), Value = nameof(MessageTaskHistoryDto.Status), Sortable = false },
-            new() { Text = T($"{_prefix}{nameof(MessageTaskHistoryDto.TaskHistoryNo)}"), Value = nameof(MessageTaskHistoryDto.TaskHistoryNo), Sortable = false },
-            new() { Text = T($"{_prefix}{nameof(MessageTaskHistoryDto.SendTime)}"), Value = nameof(MessageTaskHistoryDto.SendTime), Sortable = false },
+            new() { Text = T($"{prefix}{nameof(MessageTaskHistoryDto.Status)}"), Value = nameof(MessageTaskHistoryDto.Status), Sortable = false },
+            new() { Text = T($"{prefix}{nameof(MessageTaskHistoryDto.TaskHistoryNo)}"), Value = nameof(MessageTaskHistoryDto.TaskHistoryNo), Sortable = false },
+            new() { Text = T($"{prefix}{nameof(MessageTaskHistoryDto.SendTime)}"), Value = nameof(MessageTaskHistoryDto.SendTime), Sortable = false },
         };
     }
 
@@ -50,14 +54,13 @@ public partial class MessageTaskDetailModal : AdminCompontentBase
     {
         _info = await MessageTaskService.GetAsync(_entityId) ?? new();
         await LoadData();
-        if (_historys.Result.Any()) _historyInfo = _historys.Result[0];
+        if (_histories.Result.Any()) _historyInfo = _histories.Result[0];
     }
 
-    private async Task HandleCancel()
+    private void HandleCancel()
     {
         _visible = false;
         ResetForm();
-        await JsInvokeAsync("util.scrollTop", null, $"{Id}_dialog-box");
     }
 
     private async Task HandleDelAsync()
@@ -86,9 +89,17 @@ public partial class MessageTaskDetailModal : AdminCompontentBase
         _queryParam.Page = 1;
     }
 
-    private async Task HandleVisibleChanged(bool val)
+    private void HandleVisibleChanged(bool val)
     {
-        if (!val) await HandleCancel();
+        if (!val) HandleCancel();
+    }
+
+    private Task OnDateChanged((DateOnly? startDate,DateOnly? endDate) args)
+    {
+        (_startTime, _endTime) = args;
+        _queryParam.StartTime = _startTime?.ToDateTime(TimeOnly.MinValue);
+        _queryParam.EndTime = _endTime?.ToDateTime(TimeOnly.MaxValue);
+        return Refresh();
     }
 
     private async Task Refresh()
@@ -101,7 +112,7 @@ public partial class MessageTaskDetailModal : AdminCompontentBase
     {
         StateHasChanged();
         Loading = true;
-        _historys = (await MessageTaskHistoryService.GetListAsync(_queryParam));
+        _histories = (await MessageTaskHistoryService.GetListAsync(_queryParam));
         Loading = false;
         StateHasChanged();
     }

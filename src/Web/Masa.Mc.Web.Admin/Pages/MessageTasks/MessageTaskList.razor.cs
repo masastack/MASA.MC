@@ -15,14 +15,16 @@ public partial class MessageTaskList : AdminCompontentBase
     private GetMessageTaskInputDto _queryParam = new(20) { TimeType = MessageTaskTimeTypes.ModificationTime, Source = MessageTaskSources.Management };
     private PaginatedListDto<MessageTaskDto> _entities = new();
     private List<ChannelDto> _channelItems = new();
-    private bool advanced = false;
-    private bool isAnimate;
+    private bool _advanced = false;
+    private bool _isAnimate;
+    private DateOnly? _endTime;
+    private DateOnly? _startTime;
 
-    ChannelService ChannelService => McCaller.ChannelService;
+    private ChannelService ChannelService => McCaller.ChannelService;
 
-    MessageTaskService MessageTaskService => McCaller.MessageTaskService;
+    private MessageTaskService MessageTaskService => McCaller.MessageTaskService;
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    protected async override Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
@@ -38,6 +40,14 @@ public partial class MessageTaskList : AdminCompontentBase
         _channelItems = (await ChannelService.GetListAsync(new GetChannelInputDto(99))).Result;
         Loading = false;
         StateHasChanged();
+    }
+
+    private Task OnDateChanged((DateOnly? startDate, DateOnly? endDate) args)
+    {
+        (_startTime, _endTime) = args;
+        _queryParam.StartTime = _startTime?.ToDateTime(TimeOnly.MinValue);
+        _queryParam.EndTime = _endTime?.ToDateTime(TimeOnly.MaxValue);
+        return RefreshAsync();
     }
 
     private async Task HandleOk()
@@ -71,8 +81,8 @@ public partial class MessageTaskList : AdminCompontentBase
 
     private void ToggleAdvanced()
     {
-        advanced = !advanced;
-        isAnimate = true;
+        _advanced = !_advanced;
+        _isAnimate = true;
     }
 
     private async Task HandleEditAsync(MessageTaskDto model)

@@ -12,38 +12,48 @@ public partial class SmsTemplateManagement : AdminCompontentBase
     private GetMessageTemplateInputDto _queryParam = new() { ChannelType = ChannelTypes.Sms };
     private PaginatedListDto<MessageTemplateDto> _entities = new();
     private List<ChannelDto> _channelItems = new();
-    private bool advanced = false;
-    private bool isAnimate;
+    private bool _advanced = false;
+    private bool _isAnimate;
+    private DateOnly? _endTime;
+    private DateOnly? _startTime;
 
-    ChannelService ChannelService => McCaller.ChannelService;
+    private ChannelService ChannelService => McCaller.ChannelService;
 
-    MessageTemplateService MessageTemplateService => McCaller.MessageTemplateService;
+    private MessageTemplateService MessageTemplateService => McCaller.MessageTemplateService;
 
-    protected override async Task OnInitializedAsync()
+    protected async override Task OnInitializedAsync()
     {
-        var _prefix = "DisplayName.MessageTemplate";
+        const string prefix = "DisplayName.MessageTemplate";
         Headers = new()
         {
-            new() { Text = T($"{_prefix}{nameof(MessageTemplateDto.Code)}"), Value = nameof(MessageTemplateDto.Code), Sortable = false, Width = "13.125rem" },
-            new() { Text = T($"{_prefix}{nameof(MessageTemplateDto.DisplayName)}"), Value = nameof(MessageTemplateDto.DisplayName), Sortable = false, Width = "13.125rem"},
-            new() { Text = T($"{_prefix}{nameof(MessageTemplateDto.TemplateType)}"), Value = nameof(MessageTemplateDto.TemplateType), Sortable = false, Width = "6.5625rem" },
-            new() { Text = T($"{_prefix}ChannelDisplayName"), Value = "ChannelDisplayName", Sortable = false, Width = "6.5625rem" },
-            new() { Text = T($"{_prefix}{nameof(MessageTemplateDto.AuditStatus)}"), Value = nameof(MessageTemplateDto.AuditStatus), Sortable = false, Width = "6.5625rem" },
+            new() { Text = T($"{prefix}{nameof(MessageTemplateDto.Code)}"), Value = nameof(MessageTemplateDto.Code), Sortable = false, Width = "13.125rem" },
+            new() { Text = T($"{prefix}{nameof(MessageTemplateDto.DisplayName)}"), Value = nameof(MessageTemplateDto.DisplayName), Sortable = false, Width = "13.125rem"},
+            new() { Text = T($"{prefix}{nameof(MessageTemplateDto.TemplateType)}"), Value = nameof(MessageTemplateDto.TemplateType), Sortable = false, Width = "6.5625rem" },
+            new() { Text = T($"{prefix}ChannelDisplayName"), Value = "ChannelDisplayName", Sortable = false, Width = "6.5625rem" },
+            new() { Text = T($"{prefix}{nameof(MessageTemplateDto.AuditStatus)}"), Value = nameof(MessageTemplateDto.AuditStatus), Sortable = false, Width = "6.5625rem" },
             new() { Text = T("Modifier"), Value = nameof(MessageTemplateDto.ModifierName), Sortable = false, Width = "6.5625rem" },
             new() { Text = T("ModificationTime"), Value = nameof(MessageTemplateDto.ModificationTime), Sortable = true, Width = "6.5625rem" },
-             new() { Text = T($"{_prefix}{nameof(MessageTemplateDto.Status)}"), Value = nameof(MessageTemplateDto.Status), Sortable = true, Width = "6.5625rem" },
+             new() { Text = T($"{prefix}{nameof(MessageTemplateDto.Status)}"), Value = nameof(MessageTemplateDto.Status), Sortable = true, Width = "6.5625rem" },
             new() { Text = T("Action"), Value = "Action", Sortable = false, Width = 105, Align = DataTableHeaderAlign.Center },
         };
         _channelItems = await ChannelService.GetListByTypeAsync(ChannelTypes.Sms);
     }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    protected async override Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
             await LoadData();
         }
         await base.OnAfterRenderAsync(firstRender);
+    }
+
+    private Task OnDateChanged((DateOnly? startDate, DateOnly? endDate) args)
+    {
+        (_startTime, _endTime) = args;
+        _queryParam.StartTime = _startTime?.ToDateTime(TimeOnly.MinValue);
+        _queryParam.EndTime = _endTime?.ToDateTime(TimeOnly.MaxValue);
+        return RefreshAsync();
     }
 
     private async Task LoadData()
@@ -85,7 +95,7 @@ public partial class SmsTemplateManagement : AdminCompontentBase
 
     private void ToggleAdvanced()
     {
-        advanced = !advanced;
-        isAnimate = true;
+        _advanced = !_advanced;
+        _isAnimate = true;
     }
 }

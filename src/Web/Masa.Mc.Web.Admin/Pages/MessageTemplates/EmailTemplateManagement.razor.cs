@@ -12,14 +12,16 @@ public partial class EmailTemplateManagement : AdminCompontentBase
     private GetMessageTemplateInputDto _queryParam = new() { ChannelType = ChannelTypes.Email };
     private PaginatedListDto<MessageTemplateDto> _entities = new();
     private List<ChannelDto> _channelItems = new();
-    private bool advanced = false;
-    private bool isAnimate;
+    private bool _advanced = false;
+    private bool _isAnimate;
+    private DateOnly? _endTime;
+    private DateOnly? _startTime;
 
-    ChannelService ChannelService => McCaller.ChannelService;
+    private ChannelService ChannelService => McCaller.ChannelService;
 
-    MessageTemplateService MessageTemplateService => McCaller.MessageTemplateService;
+    private MessageTemplateService MessageTemplateService => McCaller.MessageTemplateService;
 
-    protected override async Task OnInitializedAsync()
+    protected async override Task OnInitializedAsync()
     {
         var _prefix = "DisplayName.MessageTemplate";
         Headers = new()
@@ -34,13 +36,21 @@ public partial class EmailTemplateManagement : AdminCompontentBase
         _channelItems = await ChannelService.GetListByTypeAsync(ChannelTypes.Email);
     }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    protected async override Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
             await LoadData();
         }
         await base.OnAfterRenderAsync(firstRender);
+    }
+
+    private Task OnDateChanged((DateOnly? startDate, DateOnly? endDate) args)
+    {
+        (_startTime, _endTime) = args;
+        _queryParam.StartTime = _startTime?.ToDateTime(TimeOnly.MinValue);
+        _queryParam.EndTime = _endTime?.ToDateTime(TimeOnly.MaxValue);
+        return RefreshAsync();
     }
 
     private async Task LoadData()
@@ -82,7 +92,7 @@ public partial class EmailTemplateManagement : AdminCompontentBase
 
     private void ToggleAdvanced()
     {
-        advanced = !advanced;
-        isAnimate = true;
+        _advanced = !_advanced;
+        _isAnimate = true;
     }
 }

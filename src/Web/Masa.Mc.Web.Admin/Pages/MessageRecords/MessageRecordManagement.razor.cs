@@ -11,27 +11,27 @@ public partial class MessageRecordManagement : AdminCompontentBase
     private GetMessageRecordInputDto _queryParam = new() { TimeType = MessageRecordTimeTypes.ExpectSendTime };
     private PaginatedListDto<MessageRecordDto> _entities = new();
     private List<ChannelDto> _channelItems = new();
-    private bool advanced = false;
-    private List<KeyValuePair<string, bool>> _successItems { get; set; } = new();
-    private bool isAnimate;
+    private bool _advanced;
+    private List<KeyValuePair<string, bool>> _successItems = new();
+    private bool _isAnimate;
+    private ChannelService ChannelService => McCaller.ChannelService;
+    private MessageRecordService MessageRecordService => McCaller.MessageRecordService;
+    private DateOnly? _endTime;
+    private DateOnly? _startTime;
 
-    ChannelService ChannelService => McCaller.ChannelService;
-
-    MessageRecordService MessageRecordService => McCaller.MessageRecordService;
-
-    protected override async Task OnInitializedAsync()
+    protected async override Task OnInitializedAsync()
     {
-        var _prefix = "DisplayName.MessageRecord";
+        string prefix = "DisplayName.MessageRecord";
         Headers = new()
         {
             new() { Text = T("DisplayName.MessageTaskReceiver"), Value = "Receiver", Sortable = false, Width = "10rem" },
             new() { Text = T(nameof(MessageTaskReceiverDto.Email)), Value = nameof(MessageTaskReceiverDto.Email), Sortable = false, Width = "10rem" },
             new() { Text = T("DisplayName.Channel"), Value = "ChannelDisplayName", Sortable = false, Width = "6rem" },
-            new() { Text = T($"{_prefix}{nameof(MessageRecordDto.DisplayName)}"), Value = nameof(MessageRecordDto.DisplayName), Sortable = false, Width = "8rem" },
-            new() { Text = T($"{_prefix}{nameof(MessageRecordDto.ExpectSendTime)}"), Value = nameof(MessageRecordDto.ExpectSendTime), Sortable = false, Width = "6rem" },
-            new() { Text = T($"{_prefix}{nameof(MessageRecordDto.SendTime)}"), Value = nameof(MessageRecordDto.SendTime), Sortable = false, Width = "6rem" },
-            new() { Text = T($"{_prefix}{nameof(MessageRecordDto.Success)}"), Value = nameof(MessageRecordDto.Success), Sortable = false, Width = "6.5625rem" },
-            new() { Text = T($"{_prefix}{nameof(MessageRecordDto.FailureReason)}"), Value = nameof(MessageRecordDto.FailureReason), Sortable = false, Width = "5rem" },
+            new() { Text = T($"{prefix}{nameof(MessageRecordDto.DisplayName)}"), Value = nameof(MessageRecordDto.DisplayName), Sortable = false, Width = "8rem" },
+            new() { Text = T($"{prefix}{nameof(MessageRecordDto.ExpectSendTime)}"), Value = nameof(MessageRecordDto.ExpectSendTime), Sortable = false, Width = "6rem" },
+            new() { Text = T($"{prefix}{nameof(MessageRecordDto.SendTime)}"), Value = nameof(MessageRecordDto.SendTime), Sortable = false, Width = "6rem" },
+            new() { Text = T($"{prefix}{nameof(MessageRecordDto.Success)}"), Value = nameof(MessageRecordDto.Success), Sortable = false, Width = "6.5625rem" },
+            new() { Text = T($"{prefix}{nameof(MessageRecordDto.FailureReason)}"), Value = nameof(MessageRecordDto.FailureReason), Sortable = false, Width = "5rem" },
             new() { Text = T("Action"), Value = "Action", Sortable = false, Width = 105, Align=DataTableHeaderAlign.Center },
         };
         _channelItems = (await ChannelService.GetListAsync(new GetChannelInputDto(99))).Result;
@@ -42,13 +42,20 @@ public partial class MessageRecordManagement : AdminCompontentBase
         };
     }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    protected async override Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
             await LoadData();
         }
         await base.OnAfterRenderAsync(firstRender);
+    }
+    private Task OnDateChanged((DateOnly? startDate, DateOnly? endDate) args)
+    {
+        (_startTime, _endTime) = args;
+        _queryParam.StartTime = _startTime?.ToDateTime(TimeOnly.MinValue);
+        _queryParam.EndTime = _endTime?.ToDateTime(TimeOnly.MaxValue);
+        return RefreshAsync();
     }
 
     private async Task LoadData()
@@ -90,7 +97,7 @@ public partial class MessageRecordManagement : AdminCompontentBase
 
     private void ToggleAdvanced()
     {
-        advanced = !advanced;
-        isAnimate = true;
+        _advanced = !_advanced;
+        _isAnimate = true;
     }
 }
