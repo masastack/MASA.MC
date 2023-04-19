@@ -45,7 +45,7 @@ public class ChannelCommandHandler
     {
         var entity = await _repository.FindAsync(x => x.Id == createCommand.ChannelId);
         MasaArgumentException.ThrowIfNull(entity, _i18n.T("Channel"));
-        if (await _messageTaskRepository.FindAsync(x => x.ChannelId == createCommand.ChannelId && (x.Status == MessageTaskStatuses.WaitSend || x.Status == MessageTaskStatuses.Sending), false) != null)
+        if (await _messageTaskRepository.FindAsync(x => x.ChannelId == createCommand.ChannelId && !x.IsDraft && (x.Status == MessageTaskStatuses.WaitSend || x.Status == MessageTaskStatuses.Sending), false) != null)
         {
             throw new UserFriendlyException(errorCode: UserFriendlyExceptionCodes.MESSAGE_TASK_TO_BE_SENT_OR_BEING_SENT_CANNOT_BE_DELETED);
         }

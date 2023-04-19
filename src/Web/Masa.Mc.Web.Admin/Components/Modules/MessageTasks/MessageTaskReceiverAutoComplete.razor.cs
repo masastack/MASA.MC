@@ -26,7 +26,7 @@ public partial class MessageTaskReceiverAutoComplete : AdminCompontentBase
         else if (Search == search)
         {
             var items = await MessageTaskService.GetMessageTaskReceiverListAsync(search);
-            Items = items.Where(x => !SelectedValues.Contains(x.SubjectId)).ToList();
+            Items = items;
         }
     }
 

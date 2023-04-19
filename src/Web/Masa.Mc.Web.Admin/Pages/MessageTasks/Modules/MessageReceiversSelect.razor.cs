@@ -35,6 +35,8 @@ public partial class MessageReceiversSelect : AdminCompontentBase
     private async Task RemoveValue(MessageTaskReceiverDto item)
     {
         Value.Remove(item);
+        _userIds.Remove(item.SubjectId);
+
         if (ValueChanged.HasDelegate)
         {
             await ValueChanged.InvokeAsync(Value);
