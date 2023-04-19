@@ -67,7 +67,9 @@
     <MCardText class="flex-grow-1 px-0 d-flex flex-column pb-0">
         <div class="@($"h6 text-truncate {(MessageTask.IsEnabled?"emphasis--text":"regular3--text")}")" style="line-height: 24px;">@MessageTask.DisplayName</div>
         <div class="caption regular3--text" style="line-height: 18px;">@((MessageTask.SendTime?.ToOffset(JsInitVariables.TimezoneOffset) ?? MessageTask.ExpectSendTime?.ToOffset(JsInitVariables.TimezoneOffset))?.ToString(T("$DateTimeFormat")))</div>
-        <div class="@($"message-content fill-background body px-2 py-1 text-justify mt-4 {(MessageTask.IsEnabled?"regular--text":"regular3--text")}")">@MessageTask.Content</div>
+        <Clamp Class="@($"flex-grow-1 rounded fill-background body px-2 py-1 text-justify mt-4 {(MessageTask.IsEnabled?"regular--text":"regular3--text")}")">
+           @MessageTask.Content
+        </Clamp>
     </MCardText>
     <MCardActions class="px-3 py-4">
         <span class="@($"caption {(MessageTask.IsEnabled?"emphasis2--text":"regular3--text")}")">@T($"DisplayName.MessageEntityType.{((MessageEntityTypes)MessageTask.EntityType).ToString()}")</span>
