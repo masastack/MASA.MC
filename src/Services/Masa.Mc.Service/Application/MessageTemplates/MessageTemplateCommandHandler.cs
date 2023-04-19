@@ -53,7 +53,7 @@ public class MessageTemplateCommandHandler
         var entity = await _repository.FindAsync(x => x.Id == createCommand.MessageTemplateId);
         MasaArgumentException.ThrowIfNull(entity, _i18n.T("MessageTemplate"));
 
-        if (await _messageTaskRepository.FindAsync(x => x.EntityType == MessageEntityTypes.Template && x.EntityId == createCommand.MessageTemplateId, false) != null)
+        if (await _messageTaskRepository.FindAsync(x => x.EntityType == MessageEntityTypes.Template && x.EntityId == createCommand.MessageTemplateId && !x.IsDraft && (x.Status == MessageTaskStatuses.WaitSend || x.Status == MessageTaskStatuses.Sending), false) != null)
         {
             throw new UserFriendlyException(errorCode: UserFriendlyExceptionCodes.MESSAGE_TEMPLATE_CANNOT_DELETE_BY_MESSAGE_TASK);
         }
