@@ -4,7 +4,8 @@
     let fileInput = element.querySelector('input[type=file]')
     let files = fileInput.files;
 
-    ossUpload(files[index], ossParamter).then(fileUrl => {
+    UploadImage([files[index]], ossParamter).then(fileUrls => {
+        let fileUrl = fileUrls[0];
         let succFileText = "";
         if (vditor && vditor.vditor.currentMode === "wysiwyg") {
             succFileText += `\n <img alt=${fileUrl} src="${fileUrl}">`;
