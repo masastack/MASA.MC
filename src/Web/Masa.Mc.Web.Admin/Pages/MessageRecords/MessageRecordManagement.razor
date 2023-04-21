@@ -11,19 +11,21 @@
                     <MRow NoGutters>
                         <MCol Md="2">
                             <SSelect Small @bind-Value="@_queryParam.TimeType"
-                                 Items="@(GetEnumList<MessageRecordTimeTypes>())"
-                                 Label="@T("DisplayName.MessageRecordTimeTypes")"
-                                 ItemText="@(item => T($"DisplayName.MessageRecordTimeTypes.{item.ToString()}"))"
-                                 ItemValue="item => item"
-                                 BackgroundColor="white"
-                                 TItem="MessageRecordTimeTypes"
-                                 TItemValue="MessageRecordTimeTypes"
-                                 TValue="MessageRecordTimeTypes?"
-                                 Class="fill-card body2"
-                                 OnSelectedItemUpdate="RefreshAsync">
+                                     Items="@(GetEnumList<MessageRecordTimeTypes>())"
+                                     Label="@T("DisplayName.MessageRecordTimeTypes")"
+                                     ItemText="@(item => T($"DisplayName.MessageRecordTimeTypes.{item.ToString()}"))"
+                                     ItemValue="item => item"
+                                     BackgroundColor="white"
+                                     TItem="MessageRecordTimeTypes"
+                                     TItemValue="MessageRecordTimeTypes"
+                                     TValue="MessageRecordTimeTypes?"
+                                     Class="fill-card body2"
+                                     OnSelectedItemUpdate="RefreshAsync">
                             </SSelect>
                         </MCol>
-                        <SDateRangePicker StartTime="_startTime" EndTime="_endTime" DateRangeChanged="OnDateChanged" Class="ml-6" />
+                        <MCol Class="ml-6" Md="3">
+                            <SDateRangePicker StartTime="_startTime" EndTime="_endTime" DateRangeChanged="OnDateChanged" Class="full-width" />
+                        </MCol>
                         <MCol Md="2">
                             <SSelect Small @bind-Value="_queryParam.ChannelId"
                                  Items="@_channelItems"
