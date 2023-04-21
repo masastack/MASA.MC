@@ -9,7 +9,9 @@
             {
                 <div class="fold">
                     <MRow>
-                        <SDateRangePicker  Class="ma-3"  StartTime="_startTime" EndTime="_endTime" DateRangeChanged="OnDateChanged"/>
+                        <MCol Md="3" class="pa-3">
+                            <SDateRangePicker StartTime="_startTime" EndTime="_endTime" DateRangeChanged="OnDateChanged" class="full-width"/>
+                        </MCol>
                         <MCol Md="2">
                             <SSelect Small @bind-Value="_queryParam.ChannelId"
                                      Items="@_channelItems"
