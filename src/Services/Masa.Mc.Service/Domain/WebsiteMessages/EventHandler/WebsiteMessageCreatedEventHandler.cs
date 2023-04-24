@@ -32,14 +32,19 @@ public class WebsiteMessageCreatedEventHandler
     {
         var currentUser = await _authClient.UserService.GetCurrentUserAsync();
         if (currentUser == null)
-        {
             return;
-        }
-        var checkStatus = new List<MessageTaskHistoryStatuses> { MessageTaskHistoryStatuses.Sending, MessageTaskHistoryStatuses.Success, MessageTaskHistoryStatuses.Fail, MessageTaskHistoryStatuses.PartialFailure };
+
         var checkTime = @event.CheckTime;
-        var taskHistorys = (await _messageTaskHistoryRepository.WithDetailsAsync()).Where(x => x.CompletionTime >= checkTime && x.MessageTask.ChannelType == ChannelType.WebsiteMessage && x.MessageTask.ReceiverType == ReceiverTypes.Broadcast && checkStatus.Contains(x.Status)).ToList();
+
+        var taskHistorys = (await _messageTaskHistoryRepository.WithDetailsAsync()).Where(x => x.CompletionTime >= checkTime && x.MessageTask.ReceiverType == ReceiverTypes.Broadcast && x.Status == MessageTaskHistoryStatuses.Success).ToList();
+
+        int okCount = 0;
+
         foreach (var taskHistory in taskHistorys)
         {
+            if (taskHistory.MessageTask.ChannelType == ChannelType.App && !taskHistory.MessageTask.IsAppInWebsiteMessage())
+                continue;
+
             var messageData = await _messageTaskDomainService.GetMessageDataAsync(taskHistory.MessageTask.EntityType, taskHistory.MessageTask.EntityId, taskHistory.MessageTask.Variables);
             var messageRecord = new MessageRecord(currentUser.Id, currentUser.Id.ToString(), taskHistory.MessageTask.ChannelId.Value, taskHistory.MessageTaskId, taskHistory.Id, taskHistory.MessageTask.Variables, messageData.MessageContent.Title, taskHistory.SendTime, taskHistory.MessageTask.SystemId);
             messageRecord.SetMessageEntity(taskHistory.MessageTask.EntityType, taskHistory.MessageTask.EntityId);
@@ -48,8 +53,14 @@ public class WebsiteMessageCreatedEventHandler
             var websiteMessage = new WebsiteMessage(messageRecord.ChannelId, currentUser.Id, messageData.MessageContent.Title, messageData.MessageContent.Content, messageData.MessageContent.GetJumpUrl(), taskHistory.SendTime ?? DateTimeOffset.Now, messageData.MessageContent.ExtraProperties);
             await _messageRecordRepository.AddAsync(messageRecord);
             await _websiteMessageRepository.AddAsync(websiteMessage);
+
+            okCount++;
         }
-        var onlineClients = _hubContext.Clients.User(@event.UserId.ToString());
-        await onlineClients.SendAsync(SignalRMethodConsts.GET_NOTIFICATION);
+
+        if (okCount > 0)
+        {
+            var onlineClients = _hubContext.Clients.User(@event.UserId.ToString());
+            await onlineClients.SendAsync(SignalRMethodConsts.GET_NOTIFICATION);
+        }
     }
 }
