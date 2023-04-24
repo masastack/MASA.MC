@@ -68,6 +68,15 @@ builder.Services.AddAuthentication(options =>
     options.RequireHttpsMetadata = false;
     options.TokenValidationParameters.ValidateAudience = false;
     options.MapInboundClaims = false;
+    options.BackchannelHttpHandler = new HttpClientHandler
+    {
+        ServerCertificateCustomValidationCallback = (
+            sender,
+            certificate,
+            chain,
+            sslPolicyErrors) =>
+        { return true; }
+    };
 });
 builder.Services.AddSequentialGuidGenerator();
 builder.Services.AddI18n(Path.Combine("Assets", "I18n"));
