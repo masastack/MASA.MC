@@ -32,14 +32,21 @@ public class WebsiteMessageCreatedEventHandler
     {
         var currentUser = await _authClient.UserService.GetCurrentUserAsync();
         if (currentUser == null)
-        {
             return;
-        }
+
         var checkStatus = new List<MessageTaskHistoryStatuses> { MessageTaskHistoryStatuses.Sending, MessageTaskHistoryStatuses.Success, MessageTaskHistoryStatuses.Fail, MessageTaskHistoryStatuses.PartialFailure };
         var checkTime = @event.CheckTime;
-        var taskHistorys = (await _messageTaskHistoryRepository.WithDetailsAsync()).Where(x => x.CompletionTime >= checkTime && x.MessageTask.ChannelType == ChannelType.WebsiteMessage && x.MessageTask.ReceiverType == ReceiverTypes.Broadcast && checkStatus.Contains(x.Status)).ToList();
+
+        var taskHistorys = (await _messageTaskHistoryRepository.WithDetailsAsync()).Where(x => x.CompletionTime >= checkTime && x.MessageTask.ReceiverType == ReceiverTypes.Broadcast && checkStatus.Contains(x.Status)).ToList();
+
         foreach (var taskHistory in taskHistorys)
         {
+            if (taskHistory.Status != MessageTaskHistoryStatuses.Success)
+                continue;
+
+            if (taskHistory.MessageTask.ChannelType == ChannelType.App && !taskHistory.MessageTask.IsAppInWebsiteMessage())
+                continue;
+
             var messageData = await _messageTaskDomainService.GetMessageDataAsync(taskHistory.MessageTask.EntityType, taskHistory.MessageTask.EntityId, taskHistory.MessageTask.Variables);
             var messageRecord = new MessageRecord(currentUser.Id, currentUser.Id.ToString(), taskHistory.MessageTask.ChannelId.Value, taskHistory.MessageTaskId, taskHistory.Id, taskHistory.MessageTask.Variables, messageData.MessageContent.Title, taskHistory.SendTime, taskHistory.MessageTask.SystemId);
             messageRecord.SetMessageEntity(taskHistory.MessageTask.EntityType, taskHistory.MessageTask.EntityId);
