@@ -34,16 +34,14 @@ public class WebsiteMessageCreatedEventHandler
         if (currentUser == null)
             return;
 
-        var checkStatus = new List<MessageTaskHistoryStatuses> { MessageTaskHistoryStatuses.Sending, MessageTaskHistoryStatuses.Success, MessageTaskHistoryStatuses.Fail, MessageTaskHistoryStatuses.PartialFailure };
         var checkTime = @event.CheckTime;
 
-        var taskHistorys = (await _messageTaskHistoryRepository.WithDetailsAsync()).Where(x => x.CompletionTime >= checkTime && x.MessageTask.ReceiverType == ReceiverTypes.Broadcast && checkStatus.Contains(x.Status)).ToList();
+        var taskHistorys = (await _messageTaskHistoryRepository.WithDetailsAsync()).Where(x => x.CompletionTime >= checkTime && x.MessageTask.ReceiverType == ReceiverTypes.Broadcast && x.Status == MessageTaskHistoryStatuses.Success).ToList();
+
+        int okCount = 0;
 
         foreach (var taskHistory in taskHistorys)
         {
-            if (taskHistory.Status != MessageTaskHistoryStatuses.Success)
-                continue;
-
             if (taskHistory.MessageTask.ChannelType == ChannelType.App && !taskHistory.MessageTask.IsAppInWebsiteMessage())
                 continue;
 
@@ -55,8 +53,14 @@ public class WebsiteMessageCreatedEventHandler
             var websiteMessage = new WebsiteMessage(messageRecord.ChannelId, currentUser.Id, messageData.MessageContent.Title, messageData.MessageContent.Content, messageData.MessageContent.GetJumpUrl(), taskHistory.SendTime ?? DateTimeOffset.Now, messageData.MessageContent.ExtraProperties);
             await _messageRecordRepository.AddAsync(messageRecord);
             await _websiteMessageRepository.AddAsync(websiteMessage);
+
+            okCount++;
         }
-        var onlineClients = _hubContext.Clients.User(@event.UserId.ToString());
-        await onlineClients.SendAsync(SignalRMethodConsts.GET_NOTIFICATION);
+
+        if (okCount > 0)
+        {
+            var onlineClients = _hubContext.Clients.User(@event.UserId.ToString());
+            await onlineClients.SendAsync(SignalRMethodConsts.GET_NOTIFICATION);
+        }
     }
 }
