@@ -11,6 +11,7 @@
   "NoValidData": "未检测到有效数据",
   "PhoneCannotEmpty": "电话号码不能为空",
   "EmailCannotEmpty": "邮箱不能为空",
+  "ErrorUserIdFormat": "用户Id格式不正确",
   "ChannelTypeCannotBeModified": "渠道类型不能修改",
   "ChannelCodeCannotBeModified": "渠道编码不能修改",
   "MessageTaskToBeSentOrBeingSentCannotBeDeleted": "存在待发送或发送中的消息任务，无法删除",
