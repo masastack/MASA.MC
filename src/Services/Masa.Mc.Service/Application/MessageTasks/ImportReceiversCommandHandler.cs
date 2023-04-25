@@ -134,7 +134,7 @@ public class ImportReceiversCommandHandler
         }
     }
 
-    private void ValidateSubjectIdInImportDtos()
+    private void ValidateWebsiteMessageImportDtos()
     {
         _importDtos = _importDtos.GroupBy(x => x.SubjectId).Select(x => x.First()).ToList();
 
