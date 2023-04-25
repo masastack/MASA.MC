@@ -6,7 +6,7 @@
                 <AutoHeight Overflow>
                     <HeaderContent>
                         <div class="subtitle2 emphasis2--text">@T("DisplayName.MessageTaskHistory")</div>
-                        <SDateRangePicker StartTime="_startTime" EndTime="_endTime" DateRangeChanged="OnDateChanged" Class="btn-fill-line mt-6 full-width" />
+                        <SDateRangePicker StartTime="_startTime"  EndTime="_endTime" Attach="true" DateRangeChanged="OnDateChanged" Class="btn-fill-line mt-6 full-width" />
                         <div class="status-select mb-9">
                             <MSelect @bind-Value="@_queryParam.Status"
                                      Items="@(GetEnumList<MessageTaskHistoryStatuses>())"
