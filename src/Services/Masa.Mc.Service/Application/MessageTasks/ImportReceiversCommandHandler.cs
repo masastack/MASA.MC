@@ -127,14 +127,14 @@ public class ImportReceiversCommandHandler
                 ValidateEmailImportDtos();
                 break;
             case ChannelTypes.WebsiteMessage:
-                ValidateSubjectIdInImportDtos();
+                ValidateWebsiteMessageImportDtos();
                 break;
             default:
                 break;
         }
     }
 
-    private void ValidateSubjectIdInImportDtos()
+    private void ValidateWebsiteMessageImportDtos()
     {
         _importDtos = _importDtos.GroupBy(x => x.SubjectId).Select(x => x.First()).ToList();
 
