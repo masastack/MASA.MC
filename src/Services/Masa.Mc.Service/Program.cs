@@ -39,7 +39,7 @@ builder.Services.AddObservable(builder.Logging, () =>
     {
         ServiceNameSpace = builder.Environment.EnvironmentName,
         ServiceVersion = masaStackConfig.Version,
-        ServiceName = masaStackConfig.GetServerId(MasaStackConstant.MC),
+        ServiceName = masaStackConfig.GetServiceId(MasaStackConstant.MC),
         Layer = masaStackConfig.Namespace,
         ServiceInstanceId = builder.Configuration.GetValue<string>("HOSTNAME")
     };
@@ -68,6 +68,15 @@ builder.Services.AddAuthentication(options =>
     options.RequireHttpsMetadata = false;
     options.TokenValidationParameters.ValidateAudience = false;
     options.MapInboundClaims = false;
+    options.BackchannelHttpHandler = new HttpClientHandler
+    {
+        ServerCertificateCustomValidationCallback = (
+            sender,
+            certificate,
+            chain,
+            sslPolicyErrors) =>
+        { return true; }
+    };
 });
 builder.Services.AddSequentialGuidGenerator();
 builder.Services.AddI18n(Path.Combine("Assets", "I18n"));
