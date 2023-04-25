@@ -20,7 +20,7 @@ public partial class ReceiverGroupManagement : AdminCompontentBase
         Headers = new()
         {
             new() { Text = T($"{_prefix}{nameof(ReceiverGroupDto.DisplayName)}"), Value = nameof(ReceiverGroupDto.DisplayName), Sortable = false, Width = "14.6875rem" },
-            new() { Text = T("Modifier"), Value = nameof(MessageTemplateDto.ModifierName), Sortable = false, Width = "6.625rem" },
+            new() { Text = T("Modifier"), Value = nameof(MessageTemplateDto.ModifierName), Sortable = false, Width = "9.625rem" },
             new() { Text = T("ModificationTime"), Value = nameof(ReceiverGroupDto.ModificationTime), Sortable = false},
             new() { Text = T("Action"), Value = "Action", Sortable = false, Width = 108, Align = DataTableHeaderAlign.Center },
         };
@@ -76,7 +76,7 @@ public partial class ReceiverGroupManagement : AdminCompontentBase
 
     private async Task HandleClearAsync()
     {
-        _queryParam=new();
+        _queryParam = new();
         await LoadData();
     }
 }
