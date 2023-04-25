@@ -6,7 +6,7 @@
                 <AutoHeight Overflow>
                     <HeaderContent>
                         <div class="subtitle2 emphasis2--text">@T("DisplayName.MessageTaskHistory")</div>
-                        <SDateRangePicker StartTime="_startTime" EndTime="_endTime" DateRangeChanged="OnDateChanged" Class="ml-6" />
+                        <SDateRangePicker StartTime="_startTime" EndTime="_endTime" DateRangeChanged="OnDateChanged" Class="btn-fill-line mt-6 full-width" />
                         <div class="status-select mb-9">
                             <MSelect @bind-Value="@_queryParam.Status"
                                      Items="@(GetEnumList<MessageTaskHistoryStatuses>())"
@@ -16,6 +16,7 @@
                                      Dense
                                      Outlined
                                      Clearable
+                                     Attach="true"
                                      HideDetails="@("auto")"
                                      MenuProps="@(props => { props.OffsetY = true; })"
                                      Class="mt-6 justify-center"
@@ -104,7 +105,7 @@
                         @if (_info.Channel.Type == ChannelTypes.Sms || _info.SendRules.IsCustom)
                         {
                             <div class="subtitle2 emphasis2--text mt-8">@T("DisplayName.MessageTaskSendingRule")</div>
-                        }                        
+                        }
                         @if (_info.Channel.Type == ChannelTypes.Sms)
                         {
                             <dl class="mt-8">

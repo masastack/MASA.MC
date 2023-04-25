@@ -110,7 +110,6 @@ public partial class MessageTaskDetailModal : AdminCompontentBase
 
     private async Task LoadData()
     {
-        StateHasChanged();
         Loading = true;
         _histories = (await MessageTaskHistoryService.GetListAsync(_queryParam));
         Loading = false;
