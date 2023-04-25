@@ -12,7 +12,7 @@ public class ChannelUpsertDtoValidator : AbstractValidator<ChannelUpsertDto>
             .Length(2, 50).WithMessage("ChannelDisplayNameRequiredLength");
         RuleFor(inputDto => inputDto.Code)
             .Required("ChannelCodeRequired")
-            .LetterNumberSymbol().WithMessage("ChannelDisplayNameChineseLetterNumberSymbol")
+            .LetterNumberSymbol().WithMessage("ChannelCodeLetterNumberSymbol")
             .Length(2, 50).WithMessage("ChannelDisplayNameRequiredLength");
         RuleFor(inputDto => inputDto.Type).IsInEnum();
         RuleFor(inputDto => inputDto.Description).Length(0, 255);
