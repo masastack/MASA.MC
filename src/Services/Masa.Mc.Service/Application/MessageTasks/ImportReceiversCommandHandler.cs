@@ -103,8 +103,12 @@ public class ImportReceiversCommandHandler
                 receiver.Email = obj?.GetOrDefault(GetImporterHeaderDisplayName(typeof(EmailReceiverImportDto), nameof(EmailReceiverImportDto.Email)))?.ToString() ?? string.Empty;
                 break;
             case ChannelTypes.WebsiteMessage:
-                var subjectId = obj?.GetOrDefault(GetImporterHeaderDisplayName(typeof(WebsiteMessageReceiverImportDto), nameof(WebsiteMessageReceiverImportDto.UserId)));
-                receiver.SubjectId = subjectId == null ? default : Guid.Parse(subjectId.ToString());
+                receiver.SubjectId = Guid.Empty;
+                object? subjectIdObj = obj.GetOrDefault(GetImporterHeaderDisplayName(typeof(WebsiteMessageReceiverImportDto), nameof(WebsiteMessageReceiverImportDto.UserId)));
+                if (Guid.TryParse(subjectIdObj?.ToString(), out var subjectId))
+                {
+                    receiver.SubjectId = subjectId;
+                }
                 break;
             default:
                 throw new UserFriendlyException(errorCode: UserFriendlyExceptionCodes.UNKNOWN_CHANNEL_TYPE);
@@ -123,9 +127,21 @@ public class ImportReceiversCommandHandler
                 ValidateEmailImportDtos();
                 break;
             case ChannelTypes.WebsiteMessage:
+                ValidateWebsiteMessageImportDtos();
                 break;
             default:
                 break;
+        }
+    }
+
+    private void ValidateWebsiteMessageImportDtos()
+    {
+        _importDtos = _importDtos.GroupBy(x => x.SubjectId).Select(x => x.First()).ToList();
+
+        if (_importDtos.Any(x => x.SubjectId == Guid.Empty))
+        {
+            _importResult.Exception = new Exception(_i18n.T("ErrorUserIdFormat"));
+            _importDtos = new();
         }
     }
 

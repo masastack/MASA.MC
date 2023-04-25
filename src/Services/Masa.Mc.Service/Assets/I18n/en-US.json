@@ -11,6 +11,7 @@
   "NoValidData": "no valid data detected",
   "PhoneCannotEmpty": "Phone number cannot be empty",
   "EmailCannotEmpty": "Email cannot be empty",
+  "ErrorUserIdFormat": "The user ID format is incorrect",
   "ChannelTypeCannotBeModified": "Channel type cannot be modified",
   "ChannelCodeCannotBeModified": "Channel code cannot be modified",
   "MessageTaskToBeSentOrBeingSentCannotBeDeleted": "The message task to be sent or being sent cannot be deleted",
