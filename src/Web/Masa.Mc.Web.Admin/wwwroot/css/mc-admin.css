@@ -280,6 +280,10 @@
     margin-top: 14px !important;
 }
 
+.masa-stack-components .m-input--dense-48 .m-input__append-inner {
+    margin-top: 0px !important;
+}
+
 .m-application .overflow-x-visible {
     overflow-x: visible !important;
 }
