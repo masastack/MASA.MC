@@ -5,8 +5,6 @@ namespace Masa.Mc.Web.Admin.Pages.MessageTemplates;
 
 public partial class SmsTemplateManagement : AdminCompontentBase
 {
-    public List<DataTableHeader<MessageTemplateDto>> Headers { get; set; } = new();
-
     private SmsTemplateEditModal _editModal = default!;
     private SmsTemplateCreateModal _createModal = default!;
     private GetMessageTemplateInputDto _queryParam = new() { ChannelType = ChannelTypes.Sms };
@@ -23,8 +21,23 @@ public partial class SmsTemplateManagement : AdminCompontentBase
 
     protected async override Task OnInitializedAsync()
     {
-        const string prefix = "DisplayName.MessageTemplate";
-        Headers = new()
+        _channelItems = await ChannelService.GetListByTypeAsync(ChannelTypes.Sms);
+    }
+
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await LoadData();
+        }
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    public List<DataTableHeader<MessageTemplateDto>> GetHeaders()
+    {
+        var prefix = "DisplayName.MessageTemplate";
+
+        return new()
         {
             new() { Text = T($"{prefix}{nameof(MessageTemplateDto.Code)}"), Value = nameof(MessageTemplateDto.Code), Sortable = false, Width = "13.125rem" },
             new() { Text = T($"{prefix}{nameof(MessageTemplateDto.DisplayName)}"), Value = nameof(MessageTemplateDto.DisplayName), Sortable = false, Width = "13.125rem"},
@@ -36,16 +49,6 @@ public partial class SmsTemplateManagement : AdminCompontentBase
              new() { Text = T($"{prefix}{nameof(MessageTemplateDto.Status)}"), Value = nameof(MessageTemplateDto.Status), Sortable = true, Width = "6.5625rem" },
             new() { Text = T("Action"), Value = "Action", Sortable = false, Width = 105, Align = DataTableHeaderAlign.Center },
         };
-        _channelItems = await ChannelService.GetListByTypeAsync(ChannelTypes.Sms);
-    }
-
-    protected async override Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            await LoadData();
-        }
-        await base.OnAfterRenderAsync(firstRender);
     }
 
     private Task OnDateChanged((DateOnly? startDate, DateOnly? endDate) args)

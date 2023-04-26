@@ -23,16 +23,6 @@ public partial class EmailTemplateManagement : AdminCompontentBase
 
     protected async override Task OnInitializedAsync()
     {
-        var _prefix = "DisplayName.MessageTemplate";
-        Headers = new()
-        {
-            new() { Text = T($"{_prefix}{nameof(MessageTemplateDto.Code)}"), Value = nameof(MessageTemplateDto.Code), Sortable = false, Width = "13.125rem" },
-            new() { Text = T($"{_prefix}{nameof(MessageTemplateDto.Title)}"), Value = nameof(MessageTemplateDto.Title), Sortable = false, Width = "13.125rem" },
-            new() { Text = T($"{_prefix}ChannelDisplayName"), Value = "ChannelDisplayName", Sortable = false, Width = "6.5625rem" },
-            new() { Text = T("Modifier"), Value = nameof(MessageTemplateDto.ModifierName), Sortable = false, Width = "6.5625rem" },
-            new() { Text = T("ModificationTime"), Value = nameof(MessageTemplateDto.ModificationTime), Sortable = true, Width = "13.125rem" },
-            new() { Text = T("Action"), Value = "Action", Sortable = false, Width = 105, Align = DataTableHeaderAlign.Center },
-        };
         _channelItems = await ChannelService.GetListByTypeAsync(ChannelTypes.Email);
     }
 
@@ -43,6 +33,21 @@ public partial class EmailTemplateManagement : AdminCompontentBase
             await LoadData();
         }
         await base.OnAfterRenderAsync(firstRender);
+    }
+
+    public List<DataTableHeader<MessageTemplateDto>> GetHeaders()
+    {
+        var _prefix = "DisplayName.MessageTemplate";
+
+        return new()
+        {
+            new() { Text = T($"{_prefix}{nameof(MessageTemplateDto.Code)}"), Value = nameof(MessageTemplateDto.Code), Sortable = false, Width = "13.125rem" },
+            new() { Text = T($"{_prefix}{nameof(MessageTemplateDto.Title)}"), Value = nameof(MessageTemplateDto.Title), Sortable = false, Width = "13.125rem" },
+            new() { Text = T($"{_prefix}ChannelDisplayName"), Value = "ChannelDisplayName", Sortable = false, Width = "6.5625rem" },
+            new() { Text = T("Modifier"), Value = nameof(MessageTemplateDto.ModifierName), Sortable = false, Width = "6.5625rem" },
+            new() { Text = T("ModificationTime"), Value = nameof(MessageTemplateDto.ModificationTime), Sortable = true, Width = "13.125rem" },
+            new() { Text = T("Action"), Value = "Action", Sortable = false, Width = 105, Align = DataTableHeaderAlign.Center },
+        };
     }
 
     private Task OnDateChanged((DateOnly? startDate, DateOnly? endDate) args)

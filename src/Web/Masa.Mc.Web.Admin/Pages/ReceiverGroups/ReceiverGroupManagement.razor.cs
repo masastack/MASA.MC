@@ -5,26 +5,12 @@ namespace Masa.Mc.Web.Admin.Pages.ReceiverGroups;
 
 public partial class ReceiverGroupManagement : AdminCompontentBase
 {
-    public List<DataTableHeader<ReceiverGroupDto>> Headers { get; set; } = new();
-
     private ReceiverGroupEditModal _editModal = default!;
     private ReceiverGroupCreateModal _createModal = default!;
     private GetReceiverGroupInputDto _queryParam = new(10);
     private PaginatedListDto<ReceiverGroupDto> _entities = new();
 
     ReceiverGroupService ReceiverGroupService => McCaller.ReceiverGroupService;
-
-    protected override void OnInitialized()
-    {
-        var _prefix = "DisplayName.ReceiverGroup";
-        Headers = new()
-        {
-            new() { Text = T($"{_prefix}{nameof(ReceiverGroupDto.DisplayName)}"), Value = nameof(ReceiverGroupDto.DisplayName), Sortable = false, Width = "14.6875rem" },
-            new() { Text = T("Modifier"), Value = nameof(MessageTemplateDto.ModifierName), Sortable = false, Width = "9.625rem" },
-            new() { Text = T("ModificationTime"), Value = nameof(ReceiverGroupDto.ModificationTime), Sortable = false},
-            new() { Text = T("Action"), Value = "Action", Sortable = false, Width = 108, Align = DataTableHeaderAlign.Center },
-        };
-    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -33,6 +19,19 @@ public partial class ReceiverGroupManagement : AdminCompontentBase
             await LoadData();
         }
         await base.OnAfterRenderAsync(firstRender);
+    }
+
+    public List<DataTableHeader<ReceiverGroupDto>> GetHeaders()
+    {
+        var _prefix = "DisplayName.ReceiverGroup";
+
+        return new()
+        {
+            new() { Text = T($"{_prefix}{nameof(ReceiverGroupDto.DisplayName)}"), Value = nameof(ReceiverGroupDto.DisplayName), Sortable = false, Width = "14.6875rem" },
+            new() { Text = T("Modifier"), Value = nameof(MessageTemplateDto.ModifierName), Sortable = false, Width = "9.625rem" },
+            new() { Text = T("ModificationTime"), Value = nameof(ReceiverGroupDto.ModificationTime), Sortable = false},
+            new() { Text = T("Action"), Value = "Action", Sortable = false, Width = 108, Align = DataTableHeaderAlign.Center },
+        };
     }
 
     private async Task LoadData()
