@@ -5,8 +5,6 @@ namespace Masa.Mc.Web.Admin.Pages.MessageRecords;
 
 public partial class MessageRecordManagement : AdminCompontentBase
 {
-    public List<DataTableHeader<MessageRecordDto>> Headers { get; set; } = new();
-
     private MessageRecordDetailModal _detailModal = default!;
     private GetMessageRecordInputDto _queryParam = new() { TimeType = MessageRecordTimeTypes.ExpectSendTime };
     private PaginatedListDto<MessageRecordDto> _entities = new();
@@ -22,7 +20,19 @@ public partial class MessageRecordManagement : AdminCompontentBase
     protected async override Task OnInitializedAsync()
     {
         string prefix = "DisplayName.MessageRecord";
-        Headers = new()
+        _channelItems = (await ChannelService.GetListAsync(new GetChannelInputDto(99))).Result;
+        _successItems = new()
+        {
+            new(T("Success"), true),
+            new(T("Failure"), false)
+        };
+    }
+
+    public List<DataTableHeader<MessageRecordDto>> GetHeaders() 
+    {
+        string prefix = "DisplayName.MessageRecord";
+
+        return new()
         {
             new() { Text = T("DisplayName.MessageTaskReceiver"), Value = "Receiver", Sortable = false, Width = "10rem" },
             new() { Text = T(nameof(MessageTaskReceiverDto.Email)), Value = nameof(MessageTaskReceiverDto.Email), Sortable = false, Width = "10rem" },
@@ -33,12 +43,6 @@ public partial class MessageRecordManagement : AdminCompontentBase
             new() { Text = T($"{prefix}{nameof(MessageRecordDto.Success)}"), Value = nameof(MessageRecordDto.Success), Sortable = false, Width = "6.5625rem" },
             new() { Text = T($"{prefix}{nameof(MessageRecordDto.FailureReason)}"), Value = nameof(MessageRecordDto.FailureReason), Sortable = false, Width = "5rem" },
             new() { Text = T("Action"), Value = "Action", Sortable = false, Width = 105, Align=DataTableHeaderAlign.Center },
-        };
-        _channelItems = (await ChannelService.GetListAsync(new GetChannelInputDto(99))).Result;
-        _successItems = new()
-        {
-            new(T("Success"), true),
-            new(T("Failure"), false)
         };
     }
 

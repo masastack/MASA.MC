@@ -5,8 +5,6 @@ namespace Masa.Mc.Web.Admin.Pages.MessageTemplates;
 
 public partial class WebsiteMessageTemplateManagement : AdminCompontentBase
 {
-    public List<DataTableHeader<MessageTemplateDto>> Headers { get; set; } = new();
-
     private WebsiteMessageTemplateEditModal _editModal = default!;
     private WebsiteMessageTemplateCreateModal _createModal = default!;
     private GetMessageTemplateInputDto _queryParam = new() { ChannelType = ChannelTypes.WebsiteMessage };
@@ -23,16 +21,6 @@ public partial class WebsiteMessageTemplateManagement : AdminCompontentBase
 
     protected async override Task OnInitializedAsync()
     {
-        var prefix = "DisplayName.MessageTemplate";
-        Headers = new()
-        {
-            new() { Text = T($"{prefix}{nameof(MessageTemplateDto.Code)}"), Value = nameof(MessageTemplateDto.Code), Sortable = false, Width = "13.125rem" },
-            new() { Text = T($"{prefix}{nameof(MessageTemplateDto.Title)}"), Value = nameof(MessageTemplateDto.Title), Sortable = false, Width = "13.125rem" },
-            new() { Text = T($"{prefix}ChannelDisplayName"), Value = "ChannelDisplayName", Sortable = false, Width = "6.5625rem" },
-            new() { Text = T("Modifier"), Value = nameof(MessageTemplateDto.ModifierName), Sortable = false, Width = "6.5625rem" },
-            new() { Text = T("ModificationTime"), Value = nameof(MessageTemplateDto.ModificationTime), Sortable = true, Width = "13.125rem" },
-            new() { Text = T("Action"), Value = "Action", Sortable = false, Width = 105, Align = DataTableHeaderAlign.Center },
-        };
         _channelItems = await ChannelService.GetListByTypeAsync(ChannelTypes.WebsiteMessage);
     }
     protected async override Task OnAfterRenderAsync(bool firstRender)
@@ -42,6 +30,21 @@ public partial class WebsiteMessageTemplateManagement : AdminCompontentBase
             await LoadData();
         }
         await base.OnAfterRenderAsync(firstRender);
+    }
+
+    public List<DataTableHeader<MessageTemplateDto>> GetHeaders()
+    {
+        var prefix = "DisplayName.MessageTemplate";
+
+        return new()
+        {
+            new() { Text = T($"{prefix}{nameof(MessageTemplateDto.Code)}"), Value = nameof(MessageTemplateDto.Code), Sortable = false, Width = "13.125rem" },
+            new() { Text = T($"{prefix}{nameof(MessageTemplateDto.Title)}"), Value = nameof(MessageTemplateDto.Title), Sortable = false, Width = "13.125rem" },
+            new() { Text = T($"{prefix}ChannelDisplayName"), Value = "ChannelDisplayName", Sortable = false, Width = "6.5625rem" },
+            new() { Text = T("Modifier"), Value = nameof(MessageTemplateDto.ModifierName), Sortable = false, Width = "6.5625rem" },
+            new() { Text = T("ModificationTime"), Value = nameof(MessageTemplateDto.ModificationTime), Sortable = true, Width = "13.125rem" },
+            new() { Text = T("Action"), Value = "Action", Sortable = false, Width = 105, Align = DataTableHeaderAlign.Center },
+        };
     }
 
     private Task OnDateChanged((DateOnly? startDate, DateOnly? endDate) args)
