@@ -327,7 +327,7 @@
   "ChannelDisplayNameChineseLetterNumberSymbol": "渠道名称只能是中文/字母/数字/部分特殊字符",
   "ChannelDisplayNameRequiredLength": "渠道名称长度只能介于2和50之间",
   "ChannelCodeRequired": "请填写渠道ID",
-  "ChannelCodeLetterNumberSymbol": "渠道ID只能是中文/字母/数字/部分特殊字符",
+  "ChannelCodeLetterNumberSymbol": "渠道ID只能是字母/数字/部分特殊字符",
   "ChannelCodeRequiredLength": "渠道ID长度只能介于2和50之间",
   "ChannelTypeRequired": "请选择渠道类型",
   "ChannelIdRequired": "请选择渠道",
