@@ -86,7 +86,7 @@ public partial class MessageTaskDetailModal : AdminCompontentBase
     {
         _info = new();
         _historyInfo = new();
-        _queryParam.Page = 1;
+        _queryParam = new() { Page = 1 };
     }
 
     private void HandleVisibleChanged(bool val)
@@ -110,7 +110,6 @@ public partial class MessageTaskDetailModal : AdminCompontentBase
 
     private async Task LoadData()
     {
-        StateHasChanged();
         Loading = true;
         _histories = (await MessageTaskHistoryService.GetListAsync(_queryParam));
         Loading = false;

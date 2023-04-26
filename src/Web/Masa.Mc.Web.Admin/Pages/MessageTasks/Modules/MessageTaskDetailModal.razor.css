@@ -1,28 +1,4 @@
-﻿.status-select ::deep .m-select__selection {
-    width: 100%;
-    text-align: center;
-}
-
-.status-select ::deep input::-ms-input-placeholder {
-    width: 100%;
-    text-align: center;
-}
-
-.status-select ::deep input::-webkit-input-placeholder {
-    width: 100%;
-    text-align: center;
-}
-
-.status-select ::deep label {
-    width: 100%;
-    text-align: center;
-}
-
-.status-select ::deep .m-label--active {
-    text-align: left !important;
-}
-
-.task-detail-left {
+﻿.task-detail-left {
     width: 428px;
 }
 
