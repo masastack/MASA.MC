@@ -3,7 +3,7 @@
     <MCol Class="d-flex align-self-stretch">
         <MessageTaskReceiverAutoComplete Class="d-flex" @bind-Value="_userIds" SelectedValues="Value.Select(x=>x.SubjectId).ToList()" OnAdd="HandleOnAdd"></MessageTaskReceiverAutoComplete>
         <SButton Color="fill" BorderRadiusClass="btn-fill-line" Class="d-flex ml-6 rounded-lg btn small-btn pa-0 btn-fill-line" OnClick="_createModal.OpenModalAsync">
-            <SIcon Size=18>mdi-plus</SIcon>
+            <SIcon Size=18 IsDefaultToolTip="false">mdi-plus</SIcon>
             <span>@T("ExternalMember")</span>
         </SButton>
     </MCol>
