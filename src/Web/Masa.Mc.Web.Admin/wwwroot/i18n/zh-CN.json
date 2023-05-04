@@ -318,8 +318,23 @@
   "SelectTemplate": "选择模板",
   "CronExpressionInvalid": "Cron表达式不合法",
   "CronExpressionNotHasNextRunTime": "您的表达式计算不出下一次运行时间",
+  "ChannelBlock": {
+    "Title": "渠道"
+  },
   "MessageTaskBlock": {
+    "Title": "消息任务",
     "MessageDetails": "消息详情"
+  },
+  "MessageRecordBlock": {
+    "Title": "消息记录"
+  },
+  "MessageTemplateBlock": {
+    "SmsTemplateTitle": "短信",
+    "EmailTemplateTitle": "邮箱",
+    "WebsiteMessageTitle": "站内信"
+  },
+  "ReceiverGroupBlock": {
+    "Title": "消息组"
   },
   "Required": "{0}必须填写",
   "RequiredLength": "{0}只能介于{1}和{2}之间",

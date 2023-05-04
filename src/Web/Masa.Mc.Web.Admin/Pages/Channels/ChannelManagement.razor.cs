@@ -12,6 +12,8 @@ public partial class ChannelManagement : AdminCompontentBase
 
     ChannelService ChannelService => McCaller.ChannelService;
 
+    protected override string? PageName { get; set; } = "ChannelBlock";
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)

@@ -4,69 +4,68 @@
 <PageTitle>@T("Permission.MessageRecord")</PageTitle>
 <AutoHeight>
     <HeaderContent>
-        <div class="search-panel">
-            @if (_advanced)
-            {
-                <div class="fold d-inline-flex">
-                    <MRow NoGutters>
-                        <MCol Md="2">
-                            <SSelect Small @bind-Value="@_queryParam.TimeType"
-                                     Items="@(GetEnumList<MessageRecordTimeTypes>())"
-                                     Label="@T("DisplayName.MessageRecordTimeTypes")"
-                                     ItemText="@(item => T($"DisplayName.MessageRecordTimeTypes.{item.ToString()}"))"
-                                     ItemValue="item => item"
-                                     BackgroundColor="white"
-                                     TItem="MessageRecordTimeTypes"
-                                     TItemValue="MessageRecordTimeTypes"
-                                     TValue="MessageRecordTimeTypes?"
-                                     Class="fill-card body2"
-                                     OnSelectedItemUpdate="RefreshAsync">
-                            </SSelect>
-                        </MCol>
-                        <MCol Class="ml-6" Md="3">
-                            <SDateRangePicker StartTime="_startTime" EndTime="_endTime" DateRangeChanged="OnDateChanged" Class="full-width" />
-                        </MCol>
-                        <MCol Md="2">
-                            <SSelect Small @bind-Value="_queryParam.ChannelId"
-                                 Items="@_channelItems"
-                                 Label="@T("DisplayName.Channel")"
-                                 ItemText="item => item.DisplayName"
-                                 ItemValue="item => item.Id"
-                                 BackgroundColor="white"
-                                 Clearable
-                                 HideDetails="@("auto")"
-                                 TItem="ChannelDto"
-                                 TItemValue="Guid"
-                                 TValue="Guid?"
-                                 Class="fill-card body2 ml-6"
-                                 OnClearClick="RefreshAsync"
-                                 OnSelectedItemUpdate="RefreshAsync">
-                            </SSelect>
-                        </MCol>
-                        <MCol Md="2">
-                            <UserSelect @bind-Value="_queryParam.UserId" Label="@T("DisplayName.MessageRecordUserId")" Class="ml-6" OnClearClick="RefreshAsync"
-                                    OnSelectedItemUpdate="RefreshAsync" />
-                        </MCol>
-                        <MCol Md="2">
-                            <BooleanSelect @bind-Value="_queryParam.Success" Items="_successItems" Label="@T("DisplayName.MessageRecordSuccess")" Class="ml-6" OnClearClick="RefreshAsync"
-                                       OnSelectedItemUpdate="RefreshAsync" />
-                        </MCol>
-                    </MRow>
-                </div>
-            }
-            <div class="d-flex search-panel-right @(!_isAnimate?"full-width":"") @(_isAnimate?"animate__animated":"") @(!_advanced?"animate__searchOpen":"animate__searchShrink")">
+        <div class="search-panel mb-6">
+            <div class="d-flex">
+                <DefaultTitle>@T("Title")</DefaultTitle>
+                <MSpacer></MSpacer>
                 <SSearch @bind-Value="_queryParam.Filter" BackgroundColor="white" MaxWidth="0" Dense OnEnter="RefreshAsync" OnClearClick="HandleClearAsync" />
                 <div @onclick="ToggleAdvanced" class="ml-6 d-flex button fill">
                     <SIcon Class="ma-auto" Color="emphasis2" Size=20>
-                        @(!_advanced?"mdi-filter":"mdi-filter-off")
+                        @(!_advanced ? "mdi-filter" : "mdi-filter-off")
                     </SIcon>
                 </div>
             </div>
         </div>
+        @if (_advanced)
+        {
+            <MRow Class="@($"mb-6 flex-none {(_isAnimate ? "animate__animated" : "")} {(!_advanced ? "animate__fadeOut" : "animate__fadeIn")}")" NoGutters>
+                <MCol Md="2">
+                    <SSelect Small @bind-Value="@_queryParam.TimeType"
+                         Items="@(GetEnumList<MessageRecordTimeTypes>())"
+                         Label="@T("DisplayName.MessageRecordTimeTypes")"
+                         ItemText="@(item => T($"DisplayName.MessageRecordTimeTypes.{item.ToString()}"))"
+                         ItemValue="item => item"
+                         BackgroundColor="white"
+                         TItem="MessageRecordTimeTypes"
+                         TItemValue="MessageRecordTimeTypes"
+                         TValue="MessageRecordTimeTypes?"
+                         Class="rounded-lg body2"
+                         OnSelectedItemUpdate="RefreshAsync">
+                    </SSelect>
+                </MCol>
+                <div class="ml-6">
+                    <SDateRangePicker StartTime="_startTime" EndTime="_endTime" DateRangeChanged="OnDateChanged" />
+                </div>
+                <MCol Md="2">
+                    <SSelect Small @bind-Value="_queryParam.ChannelId"
+                         Items="@_channelItems"
+                         Label="@T("DisplayName.Channel")"
+                         ItemText="item => item.DisplayName"
+                         ItemValue="item => item.Id"
+                         BackgroundColor="white"
+                         Clearable
+                         HideDetails="@("auto")"
+                         TItem="ChannelDto"
+                         TItemValue="Guid"
+                         TValue="Guid?"
+                         Class="rounded-lg body2 ml-6"
+                         OnClearClick="RefreshAsync"
+                         OnSelectedItemUpdate="RefreshAsync">
+                    </SSelect>
+                </MCol>
+                <MCol Md="2">
+                    <UserSelect @bind-Value="_queryParam.UserId" Label="@T("DisplayName.MessageRecordUserId")" Class="ml-6" OnClearClick="RefreshAsync"
+                            OnSelectedItemUpdate="RefreshAsync" />
+                </MCol>
+                <MCol Md="2">
+                    <BooleanSelect @bind-Value="_queryParam.Success" Items="_successItems" Label="@T("DisplayName.MessageRecordSuccess")" Class="ml-6" OnClearClick="RefreshAsync" OnSelectedItemUpdate="RefreshAsync" />
+                </MCol>
+            </MRow>
+        }
     </HeaderContent>
     <AutoHeightContent>
-        <MCard Class="page-content">
-            <SDataTable Headers="GetHeaders()" Items="_entities.Result" TItem="MessageRecordDto" ItemsPerPage="_queryParam.PageSize" HideDefaultFooter Class="mt-6 d-flex full-height flex-column">
+        <MCard Class="@(!_advanced?"page-content":"page-content-advanced")">
+            <SDataTable Headers="GetHeaders()" Items="_entities.Result" TItem="MessageRecordDto" ItemsPerPage="_queryParam.PageSize" HideDefaultFooter FixedRight Class="d-flex full-height flex-column">
                 <HeaderColContent Context="header">
                     <span class="text-btn">@header.Text</span>
                 </HeaderColContent>
@@ -80,11 +79,11 @@
                                 </MListItemAvatar>
                                 <MListItemContent>
                                     <MListItemTitle class="subtitle emphasis--text">
-                                        @(!string.IsNullOrEmpty(context.Item.User.DisplayName)?context.Item.User.DisplayName:!string.IsNullOrEmpty(context.Item.User.PhoneNumber)?context.Item.User.PhoneNumber:context.Item.User.Account)
+                                        @(!string.IsNullOrEmpty(context.Item.User.DisplayName) ? context.Item.User.DisplayName : !string.IsNullOrEmpty(context.Item.User.PhoneNumber) ? context.Item.User.PhoneNumber : context.Item.User.Account)
                                     </MListItemTitle>
-                                    <MListItemSubtitle class="caption regular2--text">@(!string.IsNullOrEmpty(context.Item.User.DisplayName)&&!string.IsNullOrEmpty(context.Item.User.PhoneNumber)?context.Item.User.PhoneNumber:context.Item.User.Account)</MListItemSubtitle>
-                                </MListItemContent>
-                            </MListItem>
+                                    <MListItemSubtitle class="caption regular2--text">@(!string.IsNullOrEmpty(context.Item.User.DisplayName) && !string.IsNullOrEmpty(context.Item.User.PhoneNumber) ? context.Item.User.PhoneNumber : context.Item.User.Account)</MListItemSubtitle>
+                                    </MListItemContent>
+                                </MListItem>
                             break;
                         case (nameof(MessageTaskReceiverDto.Email)):
                             <DefaultGenericColumnRender Value="@(context.Item.User.Email)" Width="@context.Header.Width"></DefaultGenericColumnRender>

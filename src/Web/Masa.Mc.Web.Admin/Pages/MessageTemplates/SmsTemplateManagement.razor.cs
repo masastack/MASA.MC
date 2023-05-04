@@ -19,6 +19,8 @@ public partial class SmsTemplateManagement : AdminCompontentBase
 
     private MessageTemplateService MessageTemplateService => McCaller.MessageTemplateService;
 
+    protected override string? PageName { get; set; } = "MessageTemplateBlock";
+
     protected async override Task OnInitializedAsync()
     {
         _channelItems = await ChannelService.GetListByTypeAsync(ChannelTypes.Sms);
@@ -39,7 +41,7 @@ public partial class SmsTemplateManagement : AdminCompontentBase
 
         return new()
         {
-            new() { Text = T($"{prefix}{nameof(MessageTemplateDto.Code)}"), Value = nameof(MessageTemplateDto.Code), Sortable = false, Width = "13.125rem" },
+            new() { Text = T($"{prefix}{nameof(MessageTemplateDto.Code)}"), Value = nameof(MessageTemplateDto.Code), Sortable = false, Width = "8rem" },
             new() { Text = T($"{prefix}{nameof(MessageTemplateDto.DisplayName)}"), Value = nameof(MessageTemplateDto.DisplayName), Sortable = false, Width = "13.125rem"},
             new() { Text = T($"{prefix}{nameof(MessageTemplateDto.TemplateType)}"), Value = nameof(MessageTemplateDto.TemplateType), Sortable = false, Width = "6.5625rem" },
             new() { Text = T($"{prefix}ChannelDisplayName"), Value = "ChannelDisplayName", Sortable = false, Width = "6.5625rem" },

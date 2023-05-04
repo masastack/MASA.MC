@@ -24,6 +24,8 @@ public partial class MessageTaskList : AdminCompontentBase
 
     private MessageTaskService MessageTaskService => McCaller.MessageTaskService;
 
+    protected override string? PageName { get; set; } = "MessageTaskBlock";
+
     protected async override Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
