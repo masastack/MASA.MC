@@ -1,5 +1,5 @@
 ﻿@inherits AdminCompontentBase
-<AutoHeight Overflow>
+<AutoHeight Overflow="_entities.Result.Any()">
     <HeaderContent>
         <div class="fill rounded-2 d-flex justify-center align-center px-6 py-3 mb-6" style="height:56px">
             <SButton Ripple=false Plain IsActive Class="emphasis2--text h6 primary--text" OnClick="NavigateToSend"><MIcon Size=22 Left>mdi-message</MIcon>@T("Permission.SendMessage")</SButton>
@@ -26,8 +26,10 @@
                                  OnSelectedItemUpdate="RefreshAsync">
                             </SSelect>
                         </MCol>
-                        <MCol Class="ml-6" Md="3">
-                            <SDateRangePicker StartTime="_startTime" EndTime="_endTime" DateRangeChanged="OnDateChanged" Class="full-width" />
+                        <MCol Md="3">
+                            <div class="ml-6">
+                                <SDateRangePicker StartTime="_startTime" EndTime="_endTime" DateRangeChanged="OnDateChanged" Class="full-width" />
+                            </div>
                         </MCol>
                         <MCol Md="2">
                             <SSelect Small @bind-Value="_queryParam.ChannelId"
@@ -81,7 +83,7 @@
                             </SSelect>
                         </MCol>
                         <MCol Md="1">
-                            <BooleanSelect @bind-Value="_queryParam.IsEnabled" Label="@T("DisplayName.MessageTaskIsEnabled")" Class="ml-6" Style="min-width:120px;" OnClearClick="RefreshAsync"
+                            <BooleanSelect @bind-Value="_queryParam.IsEnabled" Label="@T("DisplayName.MessageTaskIsEnabled")" Class="ml-6" OnClearClick="RefreshAsync"
                                        OnSelectedItemUpdate="RefreshAsync" />
                         </MCol>
                     </MRow>
