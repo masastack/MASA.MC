@@ -20,7 +20,7 @@ public class MessageTemplateUpsertDtoValidator : AbstractValidator<MessageTempla
             .ChineseLetterNumber().WithMessage("SignChineseLetterNumber").When(x => x.ChannelType == ChannelTypes.Sms);
         RuleFor(inputDto => inputDto.PerDayLimit).InclusiveBetween(1, 500).WithMessage("MessageTemplatePerDayLimitBetween");
         RuleFor(inputDto => inputDto.TemplateId).Required("MessageTemplateTemplateIdRequired").When(x => x.ChannelType == ChannelTypes.Sms);
-        RuleFor(inputDto => inputDto.Title).Required("TitleRequired")
+        RuleFor(inputDto => inputDto.Title).Required()
             .Length(2, 50).WithMessage("TitleLength")
             .When(x => x.ChannelType == ChannelTypes.Email || x.ChannelType == ChannelTypes.WebsiteMessage);
         RuleFor(inputDto => inputDto.Content).Required("ContentRequired");

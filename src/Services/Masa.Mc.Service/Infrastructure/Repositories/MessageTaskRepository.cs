@@ -24,7 +24,7 @@ public class MessageTaskRepository : Repository<McDbContext, MessageTask>, IMess
     public async Task<MessageTask?> FindAsync(Expression<Func<MessageTask, bool>> predicate, bool include = true, CancellationToken cancellationToken = default(CancellationToken))
     {
         return include
-            ? await (await WithDetailsAsync()).Where(predicate).FirstOrDefaultAsync(cancellationToken)
-            : await Context.Set<MessageTask>().Where(predicate).FirstOrDefaultAsync(cancellationToken);
+            ? await (await WithDetailsAsync()).Where(predicate).AsTracking().FirstOrDefaultAsync(cancellationToken)
+            : await Context.Set<MessageTask>().Where(predicate).AsTracking().FirstOrDefaultAsync(cancellationToken);
     }
 }
