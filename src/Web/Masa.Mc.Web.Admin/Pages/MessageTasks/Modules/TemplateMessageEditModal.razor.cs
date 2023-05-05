@@ -171,6 +171,10 @@ public partial class TemplateMessageEditModal : AdminCompontentBase
         {
             _model.ReceiverType = default;
         }
+        if (_channelItems.Count > 0 && !_channelItems.Any(c => c.Id == _model.ChannelId))
+        {
+            _model.ChannelId = null;
+        }
     }
 
     private async Task HandleChannelChangeAsync()
