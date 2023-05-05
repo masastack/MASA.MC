@@ -33,6 +33,12 @@ public class WebsiteMessageQueryHandler
     public async Task GetListAsync(GetWebsiteMessageListQuery query)
     {
         var options = query.Input;
+
+        if (!options.ChannelId.HasValue && !string.IsNullOrEmpty(options.ChannelCode))
+        {
+            options.ChannelId = (await _context.ChannelQueryQueries.FirstOrDefaultAsync(x => x.Code == options.ChannelCode))?.Id;
+        }
+
         var condition = await CreateFilteredPredicate(options);
         var resultList = await _context.WebsiteMessageQueries.Include(x => x.Channel).GetPaginatedListAsync(condition, new()
         {
