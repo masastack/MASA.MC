@@ -4,14 +4,18 @@
 <PageTitle>@T("Permission.ReceiverGroupManagement")</PageTitle>
 <AutoHeight>
     <HeaderContent>
-        <div class="search-panel d-flex">
-            <SSearch @bind-Value="_queryParam.Filter" BackgroundColor="white" MaxWidth="0" Dense OnEnter="RefreshAsync" OnClearClick="HandleClearAsync" />
-            <SButton Small BorderRadiusClass="rounded-lg" Class="ml-6" OnClick="()=> _createModal.OpenModalAsync()">@T("Permission.Create")</SButton>
+        <div class="search-panel mb-6">
+            <div class="d-flex">
+                <DefaultTitle>@T("Title")</DefaultTitle>
+                <MSpacer></MSpacer>
+                <SSearch @bind-Value="_queryParam.Filter" BackgroundColor="white" Dense OnEnter="RefreshAsync" OnClearClick="HandleClearAsync" />
+                <SButton Small BorderRadiusClass="rounded-lg" Class="ml-6" OnClick="()=> _createModal.OpenModalAsync()">@T("Permission.Create")</SButton>
+            </div>
         </div>
     </HeaderContent>
     <AutoHeightContent>
         <MCard Class="page-content">
-            <SDataTable Headers="GetHeaders()" Items="_entities.Result" TItem="ReceiverGroupDto" ItemsPerPage="_queryParam.PageSize" HideDefaultFooter Class="mt-6 d-flex full-height flex-column">
+            <SDataTable Headers="GetHeaders()" Items="_entities.Result" TItem="ReceiverGroupDto" ItemsPerPage="_queryParam.PageSize" HideDefaultFooter Class="d-flex full-height flex-column">
                 <HeaderColContent Context="header">
                     <span class="text-btn">@header.Text</span>
                 </HeaderColContent>

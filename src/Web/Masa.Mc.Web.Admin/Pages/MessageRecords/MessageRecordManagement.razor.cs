@@ -17,6 +17,8 @@ public partial class MessageRecordManagement : AdminCompontentBase
     private DateOnly? _endTime;
     private DateOnly? _startTime;
 
+    protected override string? PageName { get; set; } = "MessageRecordBlock";
+
     protected async override Task OnInitializedAsync()
     {
         string prefix = "DisplayName.MessageRecord";
@@ -34,14 +36,14 @@ public partial class MessageRecordManagement : AdminCompontentBase
 
         return new()
         {
-            new() { Text = T("DisplayName.MessageTaskReceiver"), Value = "Receiver", Sortable = false, Width = "10rem" },
-            new() { Text = T(nameof(MessageTaskReceiverDto.Email)), Value = nameof(MessageTaskReceiverDto.Email), Sortable = false, Width = "10rem" },
+            new() { Text = T("DisplayName.MessageTaskReceiver"), Value = "Receiver", Sortable = false, Width = "8rem" },
+            new() { Text = T(nameof(MessageTaskReceiverDto.Email)), Value = nameof(MessageTaskReceiverDto.Email), Sortable = false, Width = "8rem" },
             new() { Text = T("DisplayName.Channel"), Value = "ChannelDisplayName", Sortable = false, Width = "6rem" },
             new() { Text = T($"{prefix}{nameof(MessageRecordDto.DisplayName)}"), Value = nameof(MessageRecordDto.DisplayName), Sortable = false, Width = "8rem" },
-            new() { Text = T($"{prefix}{nameof(MessageRecordDto.ExpectSendTime)}"), Value = nameof(MessageRecordDto.ExpectSendTime), Sortable = false, Width = "6rem" },
-            new() { Text = T($"{prefix}{nameof(MessageRecordDto.SendTime)}"), Value = nameof(MessageRecordDto.SendTime), Sortable = false, Width = "6rem" },
+            new() { Text = T($"{prefix}{nameof(MessageRecordDto.ExpectSendTime)}"), Value = nameof(MessageRecordDto.ExpectSendTime), Sortable = false, Width = "8rem" },
+            new() { Text = T($"{prefix}{nameof(MessageRecordDto.SendTime)}"), Value = nameof(MessageRecordDto.SendTime), Sortable = false, Width = "8rem" },
             new() { Text = T($"{prefix}{nameof(MessageRecordDto.Success)}"), Value = nameof(MessageRecordDto.Success), Sortable = false, Width = "6.5625rem" },
-            new() { Text = T($"{prefix}{nameof(MessageRecordDto.FailureReason)}"), Value = nameof(MessageRecordDto.FailureReason), Sortable = false, Width = "5rem" },
+            new() { Text = T($"{prefix}{nameof(MessageRecordDto.FailureReason)}"), Value = nameof(MessageRecordDto.FailureReason), Sortable = false, Width = "6.5625rem" },
             new() { Text = T("Action"), Value = "Action", Sortable = false, Width = 105, Align=DataTableHeaderAlign.Center },
         };
     }

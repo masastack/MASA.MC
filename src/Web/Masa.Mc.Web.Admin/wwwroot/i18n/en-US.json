@@ -201,6 +201,24 @@
   "SelectTemplate": "Select template",
   "CronExpressionInvalid": "Cron expression is invalid",
   "CronExpressionNotHasNextRunTime": "Cannot calculate the next run time from this expression",
+  "ChannelBlock": {
+    "Title": "Channel"
+  },
+  "MessageTaskBlock": {
+    "Title": "MessageTask",
+    "MessageDetails": "MessageDetails"
+  },
+  "MessageRecordBlock": {
+    "Title": "MessageRecord"
+  },
+  "MessageTemplateBlock": {
+    "SmsTemplateTitle": "SmsTemplate",
+    "EmailTemplateTitle": "EmailTemplate",
+    "WebsiteMessageTitle": "WebsiteMessage"
+  },
+  "ReceiverGroupBlock": {
+    "Title": "ReceiverGroup"
+  },
   "ChannelDisplayNameRequired": "Please fill in the channel name",
   "ChannelDisplayNameChineseLetterNumberSymbol": "Channel name can only be Chinese/letter/number/some special characters",
   "ChannelDisplayNameRequiredLength": "The length of channel name can only be between 2 and 50",

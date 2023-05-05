@@ -5,8 +5,8 @@
 <AutoHeight Overflow="_entities.Result.Any()">
     <HeaderContent>
         <div class="search-panel mb-6">
-            <div class="d-flex search-panel-right full-width">
-                <DefaultTitle>@T("DisplayName.Channel")</DefaultTitle>
+            <div class="d-flex">
+                <DefaultTitle>@T("Title")</DefaultTitle>
                 <MSpacer></MSpacer>
                 <SSearch @bind-Value="_queryParam.Filter" BackgroundColor="white" Dense OnEnter="RefreshAsync" OnClearClick="HandleClearAsync" />
                 <SButton Small BorderRadiusClass="rounded-lg" Class="ml-6" OnClick="()=> _createModal.OpenModalAsync()">@T("Permission.Create")</SButton>

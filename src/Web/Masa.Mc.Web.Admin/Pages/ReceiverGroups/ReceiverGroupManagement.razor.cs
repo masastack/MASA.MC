@@ -12,6 +12,8 @@ public partial class ReceiverGroupManagement : AdminCompontentBase
 
     ReceiverGroupService ReceiverGroupService => McCaller.ReceiverGroupService;
 
+    protected override string? PageName { get; set; } = "ReceiverGroupBlock";
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
