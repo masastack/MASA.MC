@@ -8,13 +8,15 @@ public class UpdateOrdinaryMessageTaskCommandHandler
     private readonly MessageTaskDomainService _domainService;
     private readonly IMessageTaskRepository _repository;
     private readonly IMessageInfoRepository _messageInfoRepository;
+    private readonly IChannelRepository _channelRepository;
     private readonly II18n<DefaultResource> _i18n;
 
-    public UpdateOrdinaryMessageTaskCommandHandler(MessageTaskDomainService domainService, IMessageTaskRepository repository, IMessageInfoRepository messageInfoRepositor, II18n<DefaultResource> i18n)
+    public UpdateOrdinaryMessageTaskCommandHandler(MessageTaskDomainService domainService, IMessageTaskRepository repository, IMessageInfoRepository messageInfoRepositor, IChannelRepository channelRepository, II18n<DefaultResource> i18n)
     {
         _domainService = domainService;
         _repository = repository;
         _messageInfoRepository = messageInfoRepositor;
+        _channelRepository = channelRepository;
         _i18n = i18n;
     }
 
@@ -25,6 +27,12 @@ public class UpdateOrdinaryMessageTaskCommandHandler
         MasaArgumentException.ThrowIfNull(entity, _i18n.T("MessageTask"));
 
         var dto = updateCommand.MessageTask;
+
+        if (!dto.ChannelId.HasValue && !string.IsNullOrEmpty(dto.ChannelCode))
+        {
+            dto.ChannelId = await _channelRepository.GetIdByCode(dto.ChannelCode);
+        }
+
         var messageInfo = await _messageInfoRepository.FindAsync(x => x.Id == entity.EntityId);
         MasaArgumentException.ThrowIfNull(messageInfo, _i18n.T("MessageInfo"));
         dto.MessageInfo.Adapt(messageInfo);

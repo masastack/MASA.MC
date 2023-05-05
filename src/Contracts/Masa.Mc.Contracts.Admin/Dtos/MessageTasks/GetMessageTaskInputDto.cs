@@ -6,15 +6,27 @@ namespace Masa.Mc.Contracts.Admin.Dtos.MessageTasks;
 public class GetMessageTaskInputDto : PaginatedOptionsDto
 {
     public string Filter { get; set; } = string.Empty;
+
     public Guid? ChannelId { get; set; }
+
+    public string ChannelCode { get; set; } = string.Empty;
+
     public MessageEntityTypes? EntityType { get; set; }
+
     public bool? IsDraft { get; set; }
+
     public bool? IsEnabled { get; set; }
+
     public MessageTaskTimeTypes? TimeType { get; set; }
+
     public DateTime? StartTime { get; set; }
+
     public DateTime? EndTime { get; set; }
+
     public MessageTaskStatuses? Status { get; set; }
+
     public MessageTaskSources? Source { get; set; }
+
     public string SystemId { get; set; } = string.Empty;
 
     public GetMessageTaskInputDto()
@@ -26,10 +38,11 @@ public class GetMessageTaskInputDto : PaginatedOptionsDto
     {
     }
 
-    public GetMessageTaskInputDto(string filter, Guid? channelId, MessageEntityTypes? entityType, bool? isDraft, bool? isEnabled, MessageTaskTimeTypes? timeType, DateTime? startTime, DateTime? endTime, MessageTaskStatuses? status, MessageTaskSources? source, string systemId, string sorting, int page, int pageSize) : base(sorting, page, pageSize)
+    public GetMessageTaskInputDto(string filter, Guid? channelId, string channelCode, MessageEntityTypes? entityType, bool? isDraft, bool? isEnabled, MessageTaskTimeTypes? timeType, DateTime? startTime, DateTime? endTime, MessageTaskStatuses? status, MessageTaskSources? source, string systemId, string sorting, int page, int pageSize) : base(sorting, page, pageSize)
     {
         Filter = filter;
         ChannelId = channelId;
+        ChannelCode = channelCode;
         EntityType = entityType;
         IsDraft = isDraft;
         IsEnabled = isEnabled;
