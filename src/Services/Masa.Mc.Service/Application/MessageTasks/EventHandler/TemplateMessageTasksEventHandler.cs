@@ -3,19 +3,19 @@
 
 namespace Masa.Mc.Service.Admin.Application.MessageTasks.EventHandler;
 
-public class RemoveChannelMessageTasksEventHandler
+public class TemplateMessageTasksEventHandler
 {
     private readonly IMessageTaskRepository _repository;
 
-    public RemoveChannelMessageTasksEventHandler(IMessageTaskRepository repository)
+    public TemplateMessageTasksEventHandler(IMessageTaskRepository repository)
     {
         _repository = repository;
     }
 
     [EventHandler]
-    public async Task HandleEventAsync(RemoveChannelMessageTasksDomainEvent eto)
+    public async Task HandleEventAsync(RemoveTemplateMessageTasksDomainEvent eto)
     {
-        var list = await _repository.GetListAsync(x => x.ChannelId == eto.ChannelId);
+        var list = await _repository.GetListAsync(x => x.EntityType == MessageEntityTypes.Template && x.EntityId == eto.MessageTemplateId);
 
         await _repository.RemoveRangeAsync(list);
     }
