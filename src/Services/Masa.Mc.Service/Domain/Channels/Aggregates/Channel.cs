@@ -59,6 +59,6 @@ public class Channel : FullAggregateRoot<Guid, Guid>
     public void Remove()
     {
         AddDomainEvent(new RemoveChannelTemplatesDomainEvent(Id));
+        AddDomainEvent(new RemoveChannelMessageTasksDomainEvent(Id));
     }
 }
-
