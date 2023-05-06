@@ -9,12 +9,15 @@ public class AppMessage
 
     public string Text { get; }
 
+    public string Url { get; }
+
     public ConcurrentDictionary<string, object> TransmissionContent { get; }
 
-    public AppMessage(string title, string text, ConcurrentDictionary<string, object> transmissionContent)
+    public AppMessage(string title, string text, string url, ConcurrentDictionary<string, object> transmissionContent)
     {
         Title = title;
         Text = text;
+        Url = url;
         TransmissionContent = transmissionContent;
     }
 }
