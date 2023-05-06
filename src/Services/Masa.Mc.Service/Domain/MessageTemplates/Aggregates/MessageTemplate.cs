@@ -84,4 +84,9 @@ public class MessageTemplate : FullAggregateRoot<Guid, Guid>
         InvalidTime = DateTimeOffset.Now;
         Status = MessageTemplateStatuses.Invalid;
     }
+
+    public void Remove()
+    {
+        AddDomainEvent(new RemoveTemplateMessageTasksDomainEvent(Id));
+    }
 }

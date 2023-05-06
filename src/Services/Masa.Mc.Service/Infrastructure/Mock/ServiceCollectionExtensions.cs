@@ -9,7 +9,7 @@ public static class ServiceCollectionExtensions
     {
         var smsSenderMock = new Mock<ISmsSender>();
 
-        smsSenderMock.Setup(x => x.SendAsync(It.IsAny<SmsMessage>())).ReturnsAsync(new SmsSendResponse(true,"ok",null));
+        smsSenderMock.Setup(x => x.SendAsync(It.IsAny<SmsMessage>())).ReturnsAsync(new SmsSendResponse(true, "ok", null));
         services.Replace(ServiceDescriptor.Singleton<ISmsSender>(smsSenderMock.Object));
 
         return services;

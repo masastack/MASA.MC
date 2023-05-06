@@ -37,6 +37,8 @@ public class MessageTemplateDomainService : DomainService
             throw new UserFriendlyException("The template cannot be deleted");
         }
 
+        template.Remove();
+
         return await _repository.RemoveAsync(template);
     }
 
