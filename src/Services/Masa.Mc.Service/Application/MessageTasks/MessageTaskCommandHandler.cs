@@ -62,6 +62,8 @@ public class MessageTaskCommandHandler
         if (entity.Channel.Type == ChannelType.Sms && string.IsNullOrEmpty(entity.Sign))
             throw new UserFriendlyException(errorCode: UserFriendlyExceptionCodes.SIGN_REQUIRED);
 
+        await CheckDataIsExistsAsync(entity);
+
         var receiverUsers = inputDto.ReceiverUsers.Adapt<List<MessageReceiverUser>>();
         var history = new MessageTaskHistory(entity.Id, receiverUsers, true);
         await _messageTaskHistoryRepository.AddAsync(history);
@@ -207,5 +209,18 @@ public class MessageTaskCommandHandler
         await _unitOfWork.SaveChangesAsync();
 
         await _eventBus.PublishAsync(new UpdateMessageTaskStatusEvent(command.MessageTaskId));
+    }
+
+    private async Task CheckDataIsExistsAsync(MessageTask entity)
+    {
+        var channel = await _channelRepository.FindAsync(e => e.Id == entity.ChannelId);
+        if (channel == null)
+            throw new UserFriendlyException(errorCode: UserFriendlyExceptionCodes.CHANNEL_REQUIRED);
+        if (entity.EntityType == MessageEntityTypes.Template)
+        {
+            var messageTemplate = await _messageTemplateRepository.FindAsync(e => e.Id == entity.EntityId);
+            if (messageTemplate == null)
+                throw new UserFriendlyException(errorCode: UserFriendlyExceptionCodes.MESSAGE_TEMPLATE_NOT_EXIST);
+        }
     }
 }
