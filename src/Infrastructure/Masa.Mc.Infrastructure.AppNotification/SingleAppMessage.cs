@@ -3,11 +3,11 @@
 
 namespace Masa.Mc.Infrastructure.AppNotification;
 
-public class SingleAppMessage: AppMessage
+public class SingleAppMessage : AppMessage
 {
     public string ClientId { get; }
 
-    public SingleAppMessage(string clientId,string title, string text, ConcurrentDictionary<string, object> transmissionContent) : base(title, text, transmissionContent)
+    public SingleAppMessage(string clientId, string title, string text, string url, ConcurrentDictionary<string, object> transmissionContent) : base(title, text, url, transmissionContent)
     {
         ClientId = clientId;
     }

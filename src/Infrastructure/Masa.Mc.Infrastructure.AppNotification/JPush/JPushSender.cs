@@ -31,11 +31,20 @@ public class JPushSender : IAppNotificationSender
                 Alert = appMessage.Title,
                 Android = new Android
                 {
-                    Alert = appMessage.Title,
+                    Alert = appMessage.Text,
+                    Title = appMessage.Title,
+                    Indent = new Dictionary<string, object>
+                    {
+                        ["url"] = appMessage.Url
+                    }
                 },
                 IOS = new IOS
                 {
-                    Alert = appMessage.Title,
+                    Alert = new
+                    {
+                        Title = appMessage.Title,
+                        Body = appMessage.Text
+                    },
                     Badge = "+1"
                 }
             },
