@@ -1,6 +1,8 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
+using Masa.BuildingBlocks.Ddd.Domain.Entities;
+
 namespace Masa.Mc.Service.Admin.Application.MessageTasks;
 
 public class MessageTaskCommandHandler
@@ -61,6 +63,8 @@ public class MessageTaskCommandHandler
             throw new UserFriendlyException(errorCode: UserFriendlyExceptionCodes.CHANNEL_REQUIRED);
         if (entity.Channel.Type == ChannelType.Sms && string.IsNullOrEmpty(entity.Sign))
             throw new UserFriendlyException(errorCode: UserFriendlyExceptionCodes.SIGN_REQUIRED);
+
+        await CheckDataIsExistsAsync(entity);
 
         var receiverUsers = inputDto.ReceiverUsers.Adapt<List<MessageReceiverUser>>();
         var history = new MessageTaskHistory(entity.Id, receiverUsers, true);
@@ -207,5 +211,18 @@ public class MessageTaskCommandHandler
         await _unitOfWork.SaveChangesAsync();
 
         await _eventBus.PublishAsync(new UpdateMessageTaskStatusEvent(command.MessageTaskId));
+    }
+
+    private async Task CheckDataIsExistsAsync(MessageTask entity)
+    {
+        var channel = await _channelRepository.FindAsync(e => e.Id == entity.ChannelId);
+        if (channel == null)
+            throw new UserFriendlyException(errorCode: UserFriendlyExceptionCodes.CHANNEL_REQUIRED);
+        if (entity.EntityType == MessageEntityTypes.Template)
+        {
+            var messageTemplate = await _messageTemplateRepository.FindAsync(e => e.Id == entity.EntityId);
+            if (messageTemplate == null)
+                throw new UserFriendlyException(errorCode: UserFriendlyExceptionCodes.MESSAGE_TEMPLATE_NOT_EXIST);
+        }
     }
 }
