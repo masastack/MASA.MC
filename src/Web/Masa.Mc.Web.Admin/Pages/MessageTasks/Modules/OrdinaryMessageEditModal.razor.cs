@@ -126,6 +126,10 @@ public partial class OrdinaryMessageEditModal : AdminCompontentBase
         {
             _model.ReceiverType = default;
         }
+        if (_channelItems.Count > 0 && !_channelItems.Any(c => c.Id == _model.ChannelId))
+        {
+            _model.ChannelId = null;
+        }
     }
 
     private void HandleReceiverType(ReceiverTypes receiverType)
