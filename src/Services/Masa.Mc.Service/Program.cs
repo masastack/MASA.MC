@@ -107,6 +107,12 @@ builder.Services.AddSignalR();
 builder.Services.AddTransient<NotificationsHub>();
 builder.Services.AddAuthChannelUserFinder();
 builder.Services.AddMessageTaskHttpJobService();
+var mock = builder.Services.GetMasaConfiguration().ConfigurationApi.GetDefault().GetValue<bool>("Mock:Enable");
+if (mock)
+{
+    builder.Services.ConfigureMockService();
+}
+
 TypeAdapterConfig.GlobalSettings.Scan(Assembly.GetExecutingAssembly(), Assembly.Load("Masa.Mc.Contracts.Admin"));
 
 builder.Services
