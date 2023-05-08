@@ -1,10 +1,10 @@
 ﻿.task-detail-left {
-    width: 428px;
+    width: 482px;
 }
 
 .task-detail-right {
     padding: 48px 114px;
-    width: calc(100% - 428px);
+    width: calc(100% - 482px);
 }
 
 .task-history-box {

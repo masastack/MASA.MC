@@ -242,12 +242,6 @@
     padding: 4px !important;
 }
 
-.medium-btn {
-    min-width: 100px !important;
-    height: 48px !important;
-    padding: 4px !important;
-}
-
 .linear--text {
     color: #A18BFF !important;
 }
@@ -445,4 +439,9 @@
     font-weight: 700 !important;
     line-height: 1.5rem !important;
     letter-spacing: 0.03125em !important;
+}
+
+.m-input__append-outer {
+    margin-top: auto !important;
+    margin-bottom: auto !important;
 }
