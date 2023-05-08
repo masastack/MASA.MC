@@ -14,7 +14,10 @@
                         @(!_advanced ? "mdi-filter" : "mdi-filter-off")
                     </SIcon>
                 </div>
-                <SButton Small BorderRadiusClass="rounded-lg" Class="ml-6" OnClick="()=> _createModal.OpenModalAsync()">@T("Permission.Create")</SButton>
+                <SButton Small BorderRadiusClass="rounded-lg" Class="ml-6" OnClick="()=> _createModal.OpenModalAsync()">
+                    <SIcon Size=18 IsDefaultToolTip=false>@IconConstants.Add</SIcon>
+                    <span class="ml-2 btn">@T("Permission.Create")</span>
+                </SButton>
             </div>
         </div>
         @if (_advanced)
@@ -94,7 +97,7 @@
     </HeaderContent>
     <AutoHeightContent>
         <MCard Class="@(!_advanced?"page-content":"page-content-advanced")">
-            <SDataTable Headers="GetHeaders()" Items="_entities.Result" TItem="MessageTemplateDto" ItemsPerPage="_queryParam.PageSize" HideDefaultFooter Class="d-flex full-height flex-column">
+            <SDataTable Headers="GetHeaders()" Items="_entities.Result" TItem="MessageTemplateDto" ItemsPerPage="_queryParam.PageSize" HideDefaultFooter FixedRight Class="d-flex full-height flex-column">
                 <HeaderColContent Context="header">
                     <span class="text-btn">@header.Text</span>
                 </HeaderColContent>
