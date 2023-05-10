@@ -8,19 +8,23 @@ public class MessageTemplateQueryHandler
     private readonly IMcQueryContext _context;
     private readonly IAuthClient _authClient;
     private readonly II18n<DefaultResource> _i18n;
+    private readonly IDataFilter _dataFilter;
 
     public MessageTemplateQueryHandler(IMcQueryContext context
         , IAuthClient authClient
-        , II18n<DefaultResource> i18n)
+        , II18n<DefaultResource> i18n
+        , IDataFilter dataFilter)
     {
         _context = context;
         _authClient = authClient;
         _i18n = i18n;
+        _dataFilter = dataFilter;
     }
 
     [EventHandler]
     public async Task GetAsync(GetMessageTemplateQuery query)
     {
+        using var dataFilter = _dataFilter.Disable<ISoftDelete>();
         var entity = await _context.MessageTemplateQueries.Include(x => x.Channel).Include(x=>x.Items).FirstOrDefaultAsync(x => x.Id == query.MessageTemplateId);
         MasaArgumentException.ThrowIfNull(entity, _i18n.T("MessageTemplate"));
 
