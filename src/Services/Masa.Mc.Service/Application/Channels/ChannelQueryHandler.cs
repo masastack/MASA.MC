@@ -78,7 +78,7 @@ public class ChannelQueryHandler
         var userInfos = await _authClient.UserService.GetListByIdsAsync(modifierUserIds);
         foreach (var item in dtos)
         {
-            item.ModifierName = userInfos.FirstOrDefault(x => x.Id == item.Modifier)?.StaffDislpayName ?? string.Empty;
+            item.ModifierName = userInfos.FirstOrDefault(x => x.Id == item.Modifier)?.StaffDisplayName ?? string.Empty;
         }
     }
 }
