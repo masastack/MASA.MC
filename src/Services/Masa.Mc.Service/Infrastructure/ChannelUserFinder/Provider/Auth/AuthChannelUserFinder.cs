@@ -109,18 +109,18 @@ public class AuthChannelUserFinder : IChannelUserFinder
         var authUsers = await GetAuthUsers(type, subjectIds);
         var receiverUsers = authUsers.Select(async x =>
         {
-            var receiver = new Receiver(x.UserId, x.DisplayName, x.Avatar, x.PhoneNumber, x.Email);
+            var receiver = new Receiver(x.Id, x.DisplayName, x.Avatar, x.PhoneNumber, x.Email);
             var channelUserIdentity = await GetChannelUserIdentity(channel, receiver);
-            return new MessageReceiverUser(x.UserId, channelUserIdentity, variables);
+            return new MessageReceiverUser(x.Id, channelUserIdentity, variables);
         }).ToList();
 
         var result = await Task.WhenAll(receiverUsers);
         return result;
     }
 
-    private async Task<List<StaffModel>> GetAuthUsers(ReceiverGroupItemTypes type, List<Guid> subjectIds)
+    private async Task<List<UserModel>> GetAuthUsers(ReceiverGroupItemTypes type, List<Guid> subjectIds)
     {
-        var userList = new List<StaffModel>();
+        var userList = new List<UserModel>();
         switch (type)
         {
             case ReceiverGroupItemTypes.User:
@@ -129,7 +129,7 @@ public class AuthChannelUserFinder : IChannelUserFinder
                 foreach (var orgId in subjectIds)
                 {
                     var departmentUsers = await _authClient.UserService.GetListByDepartmentAsync(orgId);
-                    userList.AddRange(departmentUsers);
+                    userList.AddRange(GetUserModelByStaff(departmentUsers));
                 }
                 break;
             case ReceiverGroupItemTypes.Role:
@@ -143,7 +143,7 @@ public class AuthChannelUserFinder : IChannelUserFinder
                 foreach (var teamId in subjectIds)
                 {
                     var teamUsers = await _authClient.UserService.GetListByTeamAsync(teamId);
-                    userList.AddRange(teamUsers);
+                    userList.AddRange(GetUserModelByStaff(teamUsers));
                 }
                 break;
             default:
@@ -171,5 +171,17 @@ public class AuthChannelUserFinder : IChannelUserFinder
             }
         }
         return channelUserIdentity;
+    }
+
+    private List<UserModel> GetUserModelByStaff(List<StaffModel> staff)
+    {
+        return staff.Select(x => new UserModel
+        {
+            Id = x.UserId,
+            DisplayName = x.DisplayName,
+            Avatar = x.Avatar,
+            PhoneNumber = x.PhoneNumber,
+            Email = x.Email
+        }).ToList();
     }
 }

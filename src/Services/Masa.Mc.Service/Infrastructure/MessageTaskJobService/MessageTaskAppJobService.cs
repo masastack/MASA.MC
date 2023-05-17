@@ -27,7 +27,7 @@ public class MessageTaskAppJobService : IMessageTaskJobService
     public async Task<Guid> RegisterJobAsync(Guid messageTaskId, string cronExpression, Guid operatorId, string jobName)
     {
         var mcUrl = _masaStackConfig.GetMcServiceDomain();
-        var request = new AddSchedulerJobRequest
+        var request = new UpsertSchedulerJobRequest
         {
             ProjectIdentity = MasaStackConsts.MC_SYSTEM_ID,
             Name = jobName,

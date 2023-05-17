@@ -33,7 +33,7 @@ public class MessageTaskHttpJobService : IMessageTaskJobService
         var mcUrl = _masaStackConfig.GetMcServiceDomain();
         var parameters = new List<KeyValuePair<string, string>>() { new(nameof(messageTaskId), messageTaskId.ToString()) };
 
-        var request = new AddSchedulerJobRequest
+        var request = new UpsertSchedulerJobRequest
         {
             ProjectIdentity = MasaStackConsts.MC_SYSTEM_ID,
             Name = jobName,
