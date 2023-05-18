@@ -148,6 +148,7 @@ public static class McDbContextModelBuilderExtensions
                 c.HasKey("Id");
                 c.Property(x => x.Tag).HasMaxLength(128).HasColumnName("Tag");
                 c.Property<DateTime>("CreationTime").HasDefaultValueSql("getdate()");
+                c.HasIndex(x => x.Tag);
             });
         });
 
