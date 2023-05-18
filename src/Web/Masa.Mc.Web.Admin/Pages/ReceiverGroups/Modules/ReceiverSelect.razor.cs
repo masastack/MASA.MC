@@ -13,7 +13,6 @@ public partial class ReceiverSelect : AdminCompontentBase
 
     private ExternalUserCreateModal _createModal = default!;
     private SubjectAutoComplete _subjectAutoComplete = default!;
-    private List<Guid> _userIds = new List<Guid>();
 
     public async Task RemoveValue(ReceiverGroupItemDto item)
     {
@@ -65,7 +64,6 @@ public partial class ReceiverSelect : AdminCompontentBase
 
     public void ResetForm()
     {
-        _userIds = new();
         _subjectAutoComplete.ResetForm();
     }
 

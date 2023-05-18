@@ -15,7 +15,6 @@ public partial class MessageReceiversSelect : AdminCompontentBase
     public ChannelTypes? Type { get; set; }
 
     private ExternalUserCreateModal _createModal = default!;
-    private List<Guid> _userIds = new List<Guid>();
 
     private async Task HandleOk(UserDto user)
     {
@@ -35,7 +34,6 @@ public partial class MessageReceiversSelect : AdminCompontentBase
     private async Task RemoveValue(MessageTaskReceiverDto item)
     {
         Value.Remove(item);
-        _userIds.Remove(item.SubjectId);
 
         if (ValueChanged.HasDelegate)
         {

@@ -10,14 +10,13 @@
                Label="@T("Search")"
                ItemText="u=>TextView(u)"
                ItemValue="u=>u.SubjectId"
-               Filter="(item,search,value) => true"
                Flat
                Dense
                Solo
                BackgroundColor="fill-background"
                HideDetails="@("auto")"
+               HideSelected="false"
                Class="@($"{Class} rounded-2")"
-               HideSelected
                OnSelectedItemUpdate="HandleOnSelectedItemUpdate">
     <PrependInnerContent>
         <SIcon Size=16 Class="mr-2 default-lighten-1--text" IsDefaultToolTip="false">mdi-magnify</SIcon>
