@@ -3,7 +3,7 @@
 
 namespace Masa.Mc.Service.Admin.Application.WebsiteMessages.Queries;
 
-public record GetListByTagQuery(string Tags) : Query<List<WebsiteMessageDto>>
+public record GetListByTagQuery(string Tags, string ChannelCode) : Query<List<WebsiteMessageDto>>
 {
     public override List<WebsiteMessageDto> Result { get; set; } = default!;
 }

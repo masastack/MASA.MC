@@ -153,6 +153,7 @@ public class WebsiteMessageQueryHandler
     [EventHandler]
     public async Task GetListByTagAsync(GetListByTagQuery query)
     {
+        var channelId = (await _context.ChannelQueryQueries.FirstOrDefaultAsync(x => x.Code == query.ChannelCode))?.Id;
         var userId = _userContext.GetUserId<Guid>();
         var tags = query.Tags.Split(',');
 
@@ -167,6 +168,11 @@ public class WebsiteMessageQueryHandler
                            from message in messageJoined.DefaultIfEmpty()
                            where message != null && message.UserId == userId
                            select message;
+
+        if (channelId.HasValue)
+        {
+            messageQuery = messageQuery.Where(x => x.ChannelId == channelId);
+        }
 
         var dtos = messageQuery.Adapt<List<WebsiteMessageDto>>();
         query.Result = dtos;
