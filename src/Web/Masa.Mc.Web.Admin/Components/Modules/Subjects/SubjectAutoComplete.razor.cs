@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using Masa.BuildingBlocks.StackSdks.Auth;
-using Masa.Contrib.StackSdks.Auth;
-
-namespace Masa.Mc.Web.Admin.Components.Modules.Subjects;
+﻿namespace Masa.Mc.Web.Admin.Components.Modules.Subjects;
 public partial class SubjectAutoComplete : AdminCompontentBase
 {
     [Parameter]
