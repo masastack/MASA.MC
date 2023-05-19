@@ -32,11 +32,7 @@ public class JPushSender : IAppNotificationSender
                 Android = new Android
                 {
                     Alert = appMessage.Text,
-                    Title = appMessage.Title,
-                    Indent = new Dictionary<string, object>
-                    {
-                        ["url"] = appMessage.Url
-                    }
+                    Title = appMessage.Title
                 },
                 IOS = new IOS
                 {
