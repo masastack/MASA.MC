@@ -77,9 +77,9 @@ public class WebsiteMessageService : ServiceBase
         await eventbus.PublishAsync(command);
     }
 
-    public async Task<List<WebsiteMessageDto>> GetListByTagAsync(IEventBus eventbus, string tags)
+    public async Task<List<WebsiteMessageDto>> GetListByTagAsync(IEventBus eventbus, string tags, string channelCode)
     {
-        var query = new GetListByTagQuery(tags);
+        var query = new GetListByTagQuery(tags, channelCode);
         await eventbus.PublishAsync(query);
         return query.Result;
     }
