@@ -77,7 +77,7 @@ public class WebsiteMessageService : ServiceBase
         await eventbus.PublishAsync(command);
     }
 
-    public async Task<List<WebsiteMessageByTagDto>> GetListByTagAsync(IEventBus eventbus, string tags, string? channelCode)
+    public async Task<List<WebsiteMessageTagDto>> GetListByTagAsync(IEventBus eventbus, string tags, string? channelCode)
     {
         var query = new GetListByTagQuery(tags, channelCode ?? string.Empty);
         await eventbus.PublishAsync(query);
@@ -86,7 +86,7 @@ public class WebsiteMessageService : ServiceBase
 
     public async Task<int> GetUnreadAsync(IEventBus eventbus, string channelCode)
     {
-        var query = new GetUnreadQuery(channelCode);
+        var query = new GetUnreadMessageCountQuery(channelCode);
         await eventbus.PublishAsync(query);
         return query.Result;
     }

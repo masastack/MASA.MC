@@ -3,7 +3,7 @@
 
 namespace Masa.Mc.Service.Admin.Application.WebsiteMessages.Queries;
 
-public record GetUnreadQuery(string ChannelCode) : Query<int>
+public record GetUnreadMessageCountQuery(string ChannelCode) : Query<int>
 {
     public override int Result { get; set; } = default!;
 }
