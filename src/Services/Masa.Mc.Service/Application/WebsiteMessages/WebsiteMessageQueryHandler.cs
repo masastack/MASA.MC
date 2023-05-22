@@ -151,7 +151,7 @@ public class WebsiteMessageQueryHandler
     }
 
     [EventHandler]
-    public async Task GetListByTagAsync(GetListByTagQuery query)
+    public async Task GetListByTagAsync(GetWebsiteMessageTagsQuery query)
     {
         var channelId = (await _context.ChannelQueryQueries.FirstOrDefaultAsync(x => x.Code == query.ChannelCode))?.Id;
         var userId = _userContext.GetUserId<Guid>();
