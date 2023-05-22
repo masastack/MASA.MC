@@ -151,7 +151,7 @@ public class WebsiteMessageQueryHandler
     }
 
     [EventHandler]
-    public async Task GetListByTagAsync(GetListByTagQuery query)
+    public async Task GetListByTagAsync(GetWebsiteMessageTagsQuery query)
     {
         var channelId = (await _context.ChannelQueryQueries.FirstOrDefaultAsync(x => x.Code == query.ChannelCode))?.Id;
         var userId = _userContext.GetUserId<Guid>();
@@ -163,18 +163,44 @@ public class WebsiteMessageQueryHandler
             .Distinct()
             .SelectMany(x => sorted.Where(y => y.Tag == x).Take(1));
 
-        var messageQuery = from tag in tagQuery
+        var messageTagQuery = from tag in tagQuery
                            join message in _context.WebsiteMessageQueries on tag.WebsiteMessageId equals message.Id into messageJoined
                            from message in messageJoined.DefaultIfEmpty()
                            where message != null && message.UserId == userId
-                           select message;
+                           select new WebsiteMessageTagDto
+                           {
+                               Tag = tag.Tag,
+                               ChannelId = message.ChannelId,
+                               Title = message.Title,
+                               SendTime = message.SendTime,
+                               UserId = message.UserId
+                           };
 
         if (channelId.HasValue)
         {
-            messageQuery = messageQuery.Where(x => x.ChannelId == channelId);
+            messageTagQuery = messageTagQuery.Where(x => x.ChannelId == channelId);
         }
 
-        var dtos = messageQuery.Adapt<List<WebsiteMessageDto>>();
-        query.Result = dtos;
+        var messageTags = await messageTagQuery.ToListAsync();
+
+        foreach (var messageTag in messageTags)
+        {
+            var unread = _context.WebsiteMessageQueries.Include(x => x.Tags).Count(x => x.UserId == messageTag.UserId && x.ChannelId == messageTag.ChannelId && !x.IsRead && x.Tags.Any(y => y.Tag == messageTag.Tag));
+            messageTag.Unread = unread;
+        }
+
+        query.Result = messageTags;
+    }
+
+    [EventHandler]
+    public async Task GetUnreadAsync(GetUnreadMessageCountQuery query)
+    {
+        var userId = _userContext.GetUserId<Guid>();
+
+        var channelId = (await _context.ChannelQueryQueries.FirstOrDefaultAsync(x => x.Code == query.ChannelCode))?.Id;
+
+        var unread = await _context.WebsiteMessageQueries.CountAsync(x => x.UserId == userId && x.ChannelId == channelId && !x.IsRead);
+
+        query.Result = unread;
     }
 }
