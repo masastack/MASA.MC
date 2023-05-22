@@ -114,7 +114,7 @@ if (mock)
 }
 
 TypeAdapterConfig.GlobalSettings.Scan(Assembly.GetExecutingAssembly(), Assembly.Load("Masa.Mc.Contracts.Admin"));
-
+var connectionString = "Server=10.175.171.201,32679;Database=mc_staging;User Id=ss;Password=Hzss@123;";
 builder.Services
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     .AddEndpointsApiExplorer()
@@ -150,12 +150,12 @@ builder.Services
     })
     .AddMasaDbContext<McDbContext>(builder =>
     {
-        builder.UseSqlServer(masaStackConfig.GetConnectionString(MasaStackConstant.MC));
+        builder.UseSqlServer(connectionString);
         builder.UseFilter(options => options.EnableSoftDelete = true);
     })
     .AddMasaDbContext<McQueryContext>(builder =>
     {
-        builder.UseSqlServer(masaStackConfig.GetConnectionString(MasaStackConstant.MC));
+        builder.UseSqlServer(connectionString);
         builder.UseFilter(options => options.EnableSoftDelete = true);
     })
     .AddScoped<IMcQueryContext, McQueryContext>()

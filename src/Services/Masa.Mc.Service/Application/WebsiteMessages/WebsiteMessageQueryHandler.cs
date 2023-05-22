@@ -167,14 +167,44 @@ public class WebsiteMessageQueryHandler
                            join message in _context.WebsiteMessageQueries on tag.WebsiteMessageId equals message.Id into messageJoined
                            from message in messageJoined.DefaultIfEmpty()
                            where message != null && message.UserId == userId
-                           select message;
+                           select new
+                           {
+                               Message = message,
+                               Tag = tag.Tag
+                           };
 
         if (channelId.HasValue)
         {
-            messageQuery = messageQuery.Where(x => x.ChannelId == channelId);
+            messageQuery = messageQuery.Where(x => x.Message.ChannelId == channelId);
         }
 
-        var dtos = messageQuery.Adapt<List<WebsiteMessageDto>>();
+        var messages = await messageQuery.ToListAsync();
+
+        var dtos = messages.Select(x =>
+        {
+            var dto = x.Message.Adapt<WebsiteMessageByTagDto>();
+            dto.Tag = x.Tag;
+            return dto;
+        }).ToList();
+
+        foreach (var dto in dtos)
+        {
+            var unread = _context.WebsiteMessageQueries.Include(x => x.Tags).Count(x => x.UserId == dto.UserId && x.ChannelId == dto.ChannelId && !x.IsRead && x.Tags.Any(y => y.Tag == dto.Tag));
+            dto.Unread = unread;
+        }
+
         query.Result = dtos;
+    }
+
+    [EventHandler]
+    public async Task GetUnreadAsync(GetUnreadQuery query)
+    {
+        var userId = _userContext.GetUserId<Guid>();
+
+        var channelId = (await _context.ChannelQueryQueries.FirstOrDefaultAsync(x => x.Code == query.ChannelCode))?.Id;
+
+        var unread = await _context.WebsiteMessageQueries.CountAsync(x => x.UserId == userId && x.ChannelId == channelId && !x.IsRead);
+
+        query.Result = unread;
     }
 }
