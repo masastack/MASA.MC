@@ -52,6 +52,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{005D59A3-CC5C-4CF6-80A5-4CC9E0BE07EC}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		power.ps1 = power.ps1
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Masa.Mc.Infrastructure.Email", "src\Infrastructure\Masa.Mc.Infrastructure.Email\Masa.Mc.Infrastructure.Email.csproj", "{C816B922-18A4-4F6A-9A7A-4D0E7F2AE129}"
