@@ -76,7 +76,7 @@ public class RetryAppMessageEventHandler
 
                 var provider = channel.ExtraProperties.GetProperty<int>(nameof(AppChannelOptions.Provider));
                 var appNotificationSender = _appNotificationSenderFactory.GetAppNotificationSender((Providers)provider);
-                var response = await appNotificationSender.SendAsync(new SingleAppMessage(messageRecord.ChannelUserIdentity, messageData.MessageContent.Title, messageData.MessageContent.Content, messageData.MessageContent.GetJumpUrl(), transmissionContent));
+                var response = await appNotificationSender.SendAsync(new SingleAppMessage(messageRecord.ChannelUserIdentity, messageData.MessageContent.Title, messageData.MessageContent.Content, messageData.GetDataValue<string>(BusinessConsts.INTENT_URL), transmissionContent));
                 if (response.Success)
                 {
                     messageRecord.SetResult(true, string.Empty);

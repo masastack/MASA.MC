@@ -42,7 +42,7 @@ public class ExecuteMessageTaskEventHandler
             return;
         }
         history.SetTaskId(eto.TaskId);
-        var messageData = await _domainService.GetMessageDataAsync(history.MessageTask.EntityType, history.MessageTask.EntityId, history.MessageTask.Variables);
+        var messageData = await _domainService.GetMessageDataAsync(history.MessageTask, history.MessageTask.Variables);
         history.SetSending();
 
         if (!eto.IsTest && !history.MessageTask.SendTime.HasValue)

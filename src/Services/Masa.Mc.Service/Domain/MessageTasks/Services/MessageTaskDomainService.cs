@@ -62,20 +62,21 @@ public class MessageTaskDomainService : DomainService
         }
     }
 
-    public virtual async Task<MessageData?> GetMessageDataAsync(MessageEntityTypes entityType, Guid entityId, ExtraPropertyDictionary variables)
+    public virtual async Task<MessageData?> GetMessageDataAsync(MessageTask messageTask, ExtraPropertyDictionary variables)
     {
-        if (entityType == MessageEntityTypes.Ordinary)
+        if (messageTask.EntityType == MessageEntityTypes.Ordinary)
         {
-            var messageInfo = await _messageInfoRepository.FindAsync(x => x.Id == entityId);
+            var messageInfo = await _messageInfoRepository.FindAsync(x => x.Id == messageTask.EntityId);
             if (messageInfo == null) return null;
 
             var messageData = new MessageData(messageInfo.MessageContent, MessageEntityTypes.Ordinary);
             messageData.RenderContent(variables);
+            messageData.SetDataValue(BusinessConsts.INTENT_URL, messageTask.GetAppIntentUrl());
             return messageData;
         }
-        if (entityType == MessageEntityTypes.Template)
+        if (messageTask.EntityType == MessageEntityTypes.Template)
         {
-            var messageTemplate = await _messageTemplateRepository.FindAsync(x => x.Id == entityId);
+            var messageTemplate = await _messageTemplateRepository.FindAsync(x => x.Id == messageTask.EntityId);
             if (messageTemplate == null) return null;
 
             var messageData = new MessageData(messageTemplate.MessageContent, MessageEntityTypes.Template);
@@ -93,7 +94,7 @@ public class MessageTaskDomainService : DomainService
         var messageTask = await _repository.FindAsync(x => x.Id == messageTaskId);
         MasaArgumentException.ThrowIfNull(messageTask, _i18n.T("MessageTask"));
 
-        return await GetMessageDataAsync(messageTask.EntityType, messageTask.EntityId, variables);
+        return await GetMessageDataAsync(messageTask, variables);
     }
 
     protected async Task ValidateChannelAsync(MessageTask messageTask)
