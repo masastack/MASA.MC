@@ -180,6 +180,11 @@ public class MessageTask : FullAggregateRoot<Guid, Guid>
 
     public bool IsAppInWebsiteMessage()
     {
-        return ChannelType?.Id == ChannelType.App.Id && ExtraProperties.GetProperty<bool>("IsWebsiteMessage");
+        return ChannelType?.Id == ChannelType.App.Id && ExtraProperties.GetProperty<bool>(BusinessConsts.IS_WEBSITE_MESSAGE);
+    }
+
+    public string GetAppIntentUrl()
+    {
+        return ExtraProperties.GetProperty<string>(BusinessConsts.INTENT_URL);
     }
 }

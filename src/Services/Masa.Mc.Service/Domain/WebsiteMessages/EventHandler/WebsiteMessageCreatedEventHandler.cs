@@ -45,7 +45,7 @@ public class WebsiteMessageCreatedEventHandler
             if (taskHistory.MessageTask.ChannelType == ChannelType.App && !taskHistory.MessageTask.IsAppInWebsiteMessage())
                 continue;
 
-            var messageData = await _messageTaskDomainService.GetMessageDataAsync(taskHistory.MessageTask.EntityType, taskHistory.MessageTask.EntityId, taskHistory.MessageTask.Variables);
+            var messageData = await _messageTaskDomainService.GetMessageDataAsync(taskHistory.MessageTask, taskHistory.MessageTask.Variables);
             var messageRecord = new MessageRecord(currentUser.Id, currentUser.Id.ToString(), taskHistory.MessageTask.ChannelId.Value, taskHistory.MessageTaskId, taskHistory.Id, taskHistory.MessageTask.Variables, messageData.MessageContent.Title, taskHistory.SendTime, taskHistory.MessageTask.SystemId);
             messageRecord.SetMessageEntity(taskHistory.MessageTask.EntityType, taskHistory.MessageTask.EntityId);
             messageRecord.SetResult(true, string.Empty, taskHistory.SendTime);

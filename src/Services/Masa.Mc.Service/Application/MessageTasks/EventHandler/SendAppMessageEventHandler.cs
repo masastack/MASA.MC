@@ -65,7 +65,7 @@ public class SendAppMessageEventHandler
 
             if (taskHistory.MessageTask.ReceiverType == ReceiverTypes.Broadcast)
             {
-                var response = await appNotificationSender.SendAllAsync(new AppMessage(eto.MessageData.MessageContent.Title, eto.MessageData.MessageContent.Content, eto.MessageData.MessageContent.GetJumpUrl(), transmissionContent));
+                var response = await appNotificationSender.SendAllAsync(new AppMessage(eto.MessageData.MessageContent.Title, eto.MessageData.MessageContent.Content, eto.MessageData.GetDataValue<string>(BusinessConsts.INTENT_URL), transmissionContent));
                 taskHistory.SetResult(response.Success ? MessageTaskHistoryStatuses.Success : MessageTaskHistoryStatuses.Fail);
 
                 await _messageTaskHistoryRepository.UpdateAsync(taskHistory);
@@ -100,7 +100,7 @@ public class SendAppMessageEventHandler
                         await _websiteMessageRepository.AddAsync(websiteMessage);
                     }
 
-                    var response = await appNotificationSender.SendAsync(new SingleAppMessage(item.ChannelUserIdentity, eto.MessageData.MessageContent.Title, eto.MessageData.MessageContent.Content, eto.MessageData.MessageContent.GetJumpUrl(), transmissionContent));
+                    var response = await appNotificationSender.SendAsync(new SingleAppMessage(item.ChannelUserIdentity, eto.MessageData.MessageContent.Title, eto.MessageData.MessageContent.Content, eto.MessageData.GetDataValue<string>(BusinessConsts.INTENT_URL), transmissionContent));
                     if (response.Success)
                     {
                         messageRecord.SetResult(true, string.Empty);
