@@ -2,19 +2,13 @@
 @page "/channels/channelManagement"
 
 <PageTitle>@T("Permission.ChannelManagement")</PageTitle>
-<AutoHeight Overflow="_entities.Result.Any()">
+<AutoHeight Overflow="_entities.Result.Any()" AutoClass="mt-6">
     <HeaderContent>
-        <div class="search-panel mb-6">
-            <div class="d-flex">
+        <DefaultSearchPanel @bind-Value="@_queryParam.Filter" OnEnter="RefreshAsync" OnClearClick="HandleClearAsync" OnClick="()=> _createModal.OpenModalAsync()">
+            <ChildContent>
                 <DefaultTitle>@T("Title")</DefaultTitle>
-                <MSpacer></MSpacer>
-                <SSearch @bind-Value="_queryParam.Filter" BackgroundColor="white" Dense OnEnter="RefreshAsync" OnClearClick="HandleClearAsync" />
-                <SButton Small BorderRadiusClass="rounded-lg" Class="ml-6" OnClick="()=> _createModal.OpenModalAsync()">
-                    <SIcon Size=18 IsDefaultToolTip=false>@IconConstants.Add</SIcon>
-                    <span class="ml-2 btn">@T("Permission.Create")</span>
-                </SButton>
-            </div>
-        </div>
+            </ChildContent>
+        </DefaultSearchPanel>
     </HeaderContent>
     <AutoHeightContent>
         @if (_entities.Result.Any())

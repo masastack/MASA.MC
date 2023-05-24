@@ -2,22 +2,16 @@
 @page "/receiverGroups/receiverGroupManagement"
 
 <PageTitle>@T("Permission.ReceiverGroupManagement")</PageTitle>
-<AutoHeight>
+<AutoHeight AutoClass="mt-6">
     <HeaderContent>
-        <div class="search-panel mb-6">
-            <div class="d-flex">
+        <DefaultSearchPanel @bind-Value="@_queryParam.Filter" OnEnter="RefreshAsync" OnClearClick="HandleClearAsync" OnClick="()=> _createModal.OpenModalAsync()">
+            <ChildContent>
                 <DefaultTitle>@T("Title")</DefaultTitle>
-                <MSpacer></MSpacer>
-                <SSearch @bind-Value="_queryParam.Filter" BackgroundColor="white" Dense OnEnter="RefreshAsync" OnClearClick="HandleClearAsync" />
-                <SButton Small BorderRadiusClass="rounded-lg" Class="ml-6" OnClick="()=> _createModal.OpenModalAsync()">
-                    <SIcon Size=18 IsDefaultToolTip=false>@IconConstants.Add</SIcon>
-                    <span class="ml-2 btn">@T("Permission.Create")</span>
-                </SButton>
-            </div>
-        </div>
+            </ChildContent>
+        </DefaultSearchPanel>
     </HeaderContent>
     <AutoHeightContent>
-        <MCard Class="page-content">
+        <MCard Class="full-height">
             <SDataTable Headers="GetHeaders()" Items="_entities.Result" TItem="ReceiverGroupDto" ItemsPerPage="_queryParam.PageSize" HideDefaultFooter FixedRight Class="d-flex full-height flex-column">
                 <HeaderColContent Context="header">
                     <span class="text-btn">@header.Text</span>

@@ -1,0 +1,86 @@
+﻿<div class="d-flex @Class">
+    @ChildContent
+    <MSpacer></MSpacer>
+    <div class="d-flex">
+        <SSearch Value="@Value" ValueChanged="ValueChanged" BackgroundColor="white" OnEnter="OnEnter" OnClearClick="OnClearClick" />
+        @if (Advanced)
+        {
+            <div @onclick="ToggleAdvanced" class="ml-6 d-flex button fill">
+                <SIcon Class="ma-auto" Color="emphasis2" Size=20>
+                    @(!_advanced ? "mdi-filter" : "mdi-filter-off")
+                </SIcon>
+            </div>
+        }
+        @if (ButtonContent!=null)
+        {
+            @ButtonContent
+        }
+        else if (OnClick.HasDelegate)
+        {
+            <SButton Small BorderRadiusClass="rounded-lg" Class="ml-6" OnClick="OnClick">
+            <SIcon Size=18 IsDefaultToolTip=false>@IconConstants.Add</SIcon>
+            <span class="ml-2 btn">@I18n.T("Permission.Create")</span>
+            </SButton>
+        }
+    </div>
+</div>
+@if (Advanced && _advanced)
+{
+    <MRow Class="@($"mt-6 flex-none animate__animated {_animate}")" NoGutters>
+    @AdvancedContent
+</MRow>
+}
+
+@code {
+    [Inject]
+    public I18n I18n { get; set; } = default!;
+
+    [Parameter]
+    public string Value { get; set; } = string.Empty;
+
+    [Parameter]
+    public EventCallback<string> ValueChanged { get; set; }
+
+    [Parameter]
+    public string Class { get; set; } = string.Empty;
+
+    [Parameter]
+    public bool Advanced { get; set; }
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    [Parameter]
+    public RenderFragment? AdvancedContent { get; set; }
+
+    [Parameter]
+    public RenderFragment? ButtonContent { get; set; }
+
+    [Parameter]
+    public EventCallback OnEnter { get; set; }
+
+    [Parameter]
+    public EventCallback<MouseEventArgs> OnClearClick { get; set; }
+
+    [Parameter]
+    public EventCallback<MouseEventArgs> OnClick { get; set; }
+
+    private bool _advanced;
+
+    private string _animate = string.Empty;
+
+    public async Task ToggleAdvanced()
+    {
+        if (_advanced)
+        {
+            _animate = "animate__fadeOut";
+            await Task.Delay(500);
+            _advanced = false;
+        }
+        else
+        {
+            _animate = "animate__fadeIn";
+            _advanced = true;
+        }
+    }
+}

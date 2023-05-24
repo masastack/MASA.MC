@@ -2,35 +2,25 @@
 @page "/messageRecords/messageRecordManagement"
 
 <PageTitle>@T("Permission.MessageRecord")</PageTitle>
-<AutoHeight>
+<AutoHeight AutoClass="mt-6">
     <HeaderContent>
-        <div class="search-panel mb-6">
-            <div class="d-flex">
+        <DefaultSearchPanel @bind-Value="@_queryParam.Filter" Advanced OnEnter="RefreshAsync" OnClearClick="HandleClearAsync">
+            <ChildContent>
                 <DefaultTitle>@T("Title")</DefaultTitle>
-                <MSpacer></MSpacer>
-                <SSearch @bind-Value="_queryParam.Filter" BackgroundColor="white" MaxWidth="0" Dense OnEnter="RefreshAsync" OnClearClick="HandleClearAsync" />
-                <div @onclick="ToggleAdvanced" class="ml-6 d-flex button fill">
-                    <SIcon Class="ma-auto" Color="emphasis2" Size=20>
-                        @(!_advanced ? "mdi-filter" : "mdi-filter-off")
-                    </SIcon>
-                </div>
-            </div>
-        </div>
-        @if (_advanced)
-        {
-            <MRow Class="@($"mb-6 flex-none {(_isAnimate ? "animate__animated" : "")} {(!_advanced ? "animate__fadeOut" : "animate__fadeIn")}")" NoGutters>
+            </ChildContent>
+            <AdvancedContent>
                 <MCol Md="2">
                     <SSelect Small @bind-Value="@_queryParam.TimeType"
-                         Items="@(GetEnumList<MessageRecordTimeTypes>())"
-                         Label="@T("DisplayName.MessageRecordTimeTypes")"
-                         ItemText="@(item => T($"DisplayName.MessageRecordTimeTypes.{item.ToString()}"))"
-                         ItemValue="item => item"
-                         BackgroundColor="white"
-                         TItem="MessageRecordTimeTypes"
-                         TItemValue="MessageRecordTimeTypes"
-                         TValue="MessageRecordTimeTypes?"
-                         Class="rounded-lg body2"
-                         OnSelectedItemUpdate="RefreshAsync">
+                             Items="@(GetEnumList<MessageRecordTimeTypes>())"
+                             Label="@T("DisplayName.MessageRecordTimeTypes")"
+                             ItemText="@(item => T($"DisplayName.MessageRecordTimeTypes.{item.ToString()}"))"
+                             ItemValue="item => item"
+                             BackgroundColor="white"
+                             TItem="MessageRecordTimeTypes"
+                             TItemValue="MessageRecordTimeTypes"
+                             TValue="MessageRecordTimeTypes?"
+                             Class="rounded-lg body2"
+                             OnSelectedItemUpdate="RefreshAsync">
                     </SSelect>
                 </MCol>
                 <div class="ml-6">
@@ -38,33 +28,33 @@
                 </div>
                 <MCol Md="2">
                     <SSelect Small @bind-Value="_queryParam.ChannelId"
-                         Items="@_channelItems"
-                         Label="@T("DisplayName.Channel")"
-                         ItemText="item => item.DisplayName"
-                         ItemValue="item => item.Id"
-                         BackgroundColor="white"
-                         Clearable
-                         HideDetails="@("auto")"
-                         TItem="ChannelDto"
-                         TItemValue="Guid"
-                         TValue="Guid?"
-                         Class="rounded-lg body2 ml-6"
-                         OnClearClick="RefreshAsync"
-                         OnSelectedItemUpdate="RefreshAsync">
+                             Items="@_channelItems"
+                             Label="@T("DisplayName.Channel")"
+                             ItemText="item => item.DisplayName"
+                             ItemValue="item => item.Id"
+                             BackgroundColor="white"
+                             Clearable
+                             HideDetails="@("auto")"
+                             TItem="ChannelDto"
+                             TItemValue="Guid"
+                             TValue="Guid?"
+                             Class="rounded-lg body2 ml-6"
+                             OnClearClick="RefreshAsync"
+                             OnSelectedItemUpdate="RefreshAsync">
                     </SSelect>
                 </MCol>
                 <MCol Md="2">
                     <UserSelect @bind-Value="_queryParam.UserId" Label="@T("DisplayName.MessageRecordUserId")" Class="ml-6" OnClearClick="RefreshAsync"
-                            OnSelectedItemUpdate="RefreshAsync" />
+                                OnSelectedItemUpdate="RefreshAsync" />
                 </MCol>
                 <MCol Md="2">
                     <BooleanSelect @bind-Value="_queryParam.Success" Items="_successItems" Label="@T("DisplayName.MessageRecordSuccess")" Class="ml-6" OnClearClick="RefreshAsync" OnSelectedItemUpdate="RefreshAsync" />
                 </MCol>
-            </MRow>
-        }
+            </AdvancedContent>
+        </DefaultSearchPanel>
     </HeaderContent>
     <AutoHeightContent>
-        <MCard Class="@(!_advanced?"page-content":"page-content-advanced")">
+        <MCard Class="full-height">
             <SDataTable Headers="GetHeaders()" Items="_entities.Result" TItem="MessageRecordDto" ItemsPerPage="_queryParam.PageSize" HideDefaultFooter FixedRight Class="d-flex full-height flex-column">
                 <HeaderColContent Context="header">
                     <span class="text-btn">@header.Text</span>

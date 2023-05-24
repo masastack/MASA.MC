@@ -2,102 +2,88 @@
 @page "/messageTemplates/smsTemplateManagement"
 
 <PageTitle>@T("Sms")</PageTitle>
-<AutoHeight>
+<AutoHeight AutoClass="mt-6">
     <HeaderContent>
-        <div class="search-panel mb-6">
-            <div class="d-flex">
+        <DefaultSearchPanel @bind-Value="@_queryParam.Filter" Advanced OnEnter="RefreshAsync" OnClearClick="HandleClearAsync" OnClick="()=> _createModal.OpenModalAsync()">
+            <ChildContent>
                 <DefaultTitle>@T("SmsTemplateTitle")</DefaultTitle>
-                <MSpacer></MSpacer>
-                <SSearch @bind-Value="_queryParam.Filter" BackgroundColor="white" Dense OnEnter="RefreshAsync" OnClearClick="HandleClearAsync" />
-                <div @onclick="ToggleAdvanced" class="ml-6 d-flex button fill">
-                    <SIcon Class="ma-auto" Color="emphasis2" Size=20>
-                        @(!_advanced ? "mdi-filter" : "mdi-filter-off")
-                    </SIcon>
-                </div>
-                <SButton Small BorderRadiusClass="rounded-lg" Class="ml-6" OnClick="()=> _createModal.OpenModalAsync()">
-                    <SIcon Size=18 IsDefaultToolTip=false>@IconConstants.Add</SIcon>
-                    <span class="ml-2 btn">@T("Permission.Create")</span>
-                </SButton>
-            </div>
-        </div>
-        @if (_advanced)
-        {
-            <MRow Class="@($"mb-6 flex-none {(_isAnimate ? "animate__animated" : "")} {(!_advanced ? "animate__fadeOut" : "animate__fadeIn")}")" NoGutters>
-                <SDateRangePicker StartTime="_startTime" EndTime="_endTime" DateRangeChanged="OnDateChanged"/>
+            </ChildContent>
+            <AdvancedContent>
+                <SDateRangePicker StartTime="_startTime" EndTime="_endTime" DateRangeChanged="OnDateChanged" />
                 <MCol Md="2">
                     <SSelect Small @bind-Value="@_queryParam.TemplateType"
-                         Items="@(GetEnumList<SmsTemplateTypes>())"
-                         Label="@T("DisplayName.MessageTemplateTemplateType")"
-                         ItemText="@(item => T($"DisplayName.SmsTemplateType.{item.ToString()}"))"
-                         ItemValue="item => (int)item"
-                         BackgroundColor="white"
-                         Clearable
-                         HideDetails="@("auto")"
-                         TItem="SmsTemplateTypes"
-                         TItemValue="int"
-                         TValue="int"
-                         Class="rounded-lg body2 ml-6"
-                         OnClearClick="RefreshAsync"
-                         OnSelectedItemUpdate="RefreshAsync">
+                             Items="@(GetEnumList<SmsTemplateTypes>())"
+                             Label="@T("DisplayName.MessageTemplateTemplateType")"
+                             ItemText="@(item => T($"DisplayName.SmsTemplateType.{item.ToString()}"))"
+                             ItemValue="item => (int)item"
+                             BackgroundColor="white"
+                             Clearable
+                             HideDetails="@("auto")"
+                             TItem="SmsTemplateTypes"
+                             TItemValue="int"
+                             TValue="int"
+                             Class="rounded-lg body2 ml-6"
+                             OnClearClick="RefreshAsync"
+                             OnSelectedItemUpdate="RefreshAsync">
                     </SSelect>
                 </MCol>
                 <MCol Md="2">
                     <SSelect Small @bind-Value="_queryParam.ChannelId"
-                         Items="@_channelItems"
-                         Label="@T("DisplayName.Channel")"
-                         ItemText="item => item.DisplayName"
-                         ItemValue="item => item.Id"
-                         BackgroundColor="white"
-                         Clearable
-                         HideDetails="@("auto")"
-                         TItem="ChannelDto"
-                         TItemValue="Guid"
-                         TValue="Guid?"
-                         Class="rounded-lg body2 ml-6"
-                         OnClearClick="RefreshAsync"
-                         OnSelectedItemUpdate="RefreshAsync">
+                             Items="@_channelItems"
+                             Label="@T("DisplayName.Channel")"
+                             ItemText="item => item.DisplayName"
+                             ItemValue="item => item.Id"
+                             BackgroundColor="white"
+                                  Clearable
+                             HideDetails="@("auto")"
+                             TItem="ChannelDto"
+                             TItemValue="Guid"
+                             TValue="Guid?"
+                             Class="rounded-lg body2 ml-6"
+                             OnClearClick="RefreshAsync"
+                             OnSelectedItemUpdate="RefreshAsync">
                     </SSelect>
                 </MCol>
                 <MCol Md="2">
                     <SSelect Small @bind-Value="@_queryParam.AuditStatus"
-                         Items="@(GetEnumList<MessageTemplateAuditStatuses>())"
-                         Label="@T("DisplayName.MessageTemplateAuditStatus")"
-                         ItemText="item => T(item.ToString())"
-                         ItemValue="item => item"
-                         BackgroundColor="white"
-                         Clearable
-                         HideDetails="@("auto")"
-                         TItem="MessageTemplateAuditStatuses"
-                         TItemValue="MessageTemplateAuditStatuses"
-                         TValue="MessageTemplateAuditStatuses?"
-                         Class="rounded-lg body2 ml-6"
-                         OnClearClick="RefreshAsync"
-                         OnSelectedItemUpdate="RefreshAsync">
+                             Items="@(GetEnumList<MessageTemplateAuditStatuses>())"
+                             Label="@T("DisplayName.MessageTemplateAuditStatus")"
+                             ItemText="item => T(item.ToString())"
+                             ItemValue="item => item"
+                             BackgroundColor="white"
+                             Clearable
+                             HideDetails="@("auto")"
+                             TItem="MessageTemplateAuditStatuses"
+                             TItemValue="MessageTemplateAuditStatuses"
+                             TValue="MessageTemplateAuditStatuses?"
+                             Class="rounded-lg body2 ml-6"
+                             OnClearClick="RefreshAsync"
+                             OnSelectedItemUpdate="RefreshAsync">
                     </SSelect>
                 </MCol>
                 <MCol Md="2">
                     <SSelect Small @bind-Value="@_queryParam.Status"
-                         Items="@(GetEnumList<MessageTemplateStatuses>())"
-                         Label="@T("DisplayName.MessageTemplateStatus")"
-                         ItemText="item => T(item.ToString())"
-                         ItemValue="item => item"
-                         BackgroundColor="white"
-                         Clearable
-                         HideDetails="@("auto")"
-                         TItem="MessageTemplateStatuses"
-                         TItemValue="MessageTemplateStatuses"
-                         TValue="MessageTemplateStatuses?"
-                         Class="rounded-lg body2 ml-6"
-                         OnClearClick="RefreshAsync"
-                         OnSelectedItemUpdate="RefreshAsync">
+                             Items="@(GetEnumList<MessageTemplateStatuses>())"
+                             Label="@T("DisplayName.MessageTemplateStatus")"
+                             ItemText="item => T(item.ToString())"
+                             ItemValue="item => item"
+                             BackgroundColor="white"
+                             Clearable
+                             HideDetails="@("auto")"
+                             TItem="MessageTemplateStatuses"
+                             TItemValue="MessageTemplateStatuses"
+                             TValue="MessageTemplateStatuses?"
+                             Class="rounded-lg body2 ml-6"
+                             OnClearClick="RefreshAsync"
+                             OnSelectedItemUpdate="RefreshAsync">
                     </SSelect>
-                 </MCol>
-            </MRow>
-        }
+                </MCol>
+            </AdvancedContent>
+        </DefaultSearchPanel>
     </HeaderContent>
     <AutoHeightContent>
-        <MCard Class="@(!_advanced?"page-content":"page-content-advanced")">
-            <SDataTable Headers="GetHeaders()" Items="_entities.Result" TItem="MessageTemplateDto" ItemsPerPage="_queryParam.PageSize" HideDefaultFooter FixedRight Class="d-flex full-height flex-column">
+                <MCard Class="full-height">
+                <SDataTable Headers="GetHeaders()" Items="_entities.Result" TItem="MessageTemplateDto" ItemsPerPage="_queryParam.PageSize" HideDefaultFooter FixedRight Class="d-flex full-height flex-column">
                 <HeaderColContent Context="header">
                     <span class="text-btn">@header.Text</span>
                 </HeaderColContent>

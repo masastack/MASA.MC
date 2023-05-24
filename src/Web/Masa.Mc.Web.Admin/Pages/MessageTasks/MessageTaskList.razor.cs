@@ -15,8 +15,6 @@ public partial class MessageTaskList : AdminCompontentBase
     private GetMessageTaskInputDto _queryParam = new(20) { TimeType = MessageTaskTimeTypes.ModificationTime, Source = MessageTaskSources.Management };
     private PaginatedListDto<MessageTaskDto> _entities = new();
     private List<ChannelDto> _channelItems = new();
-    private bool _advanced = false;
-    private bool _isAnimate;
     private DateOnly? _endTime;
     private DateOnly? _startTime;
 
@@ -79,12 +77,6 @@ public partial class MessageTaskList : AdminCompontentBase
     {
         _queryParam = new(20) { TimeType = MessageTaskTimeTypes.ModificationTime, Source = MessageTaskSources.Management };
         await LoadData();
-    }
-
-    private void ToggleAdvanced()
-    {
-        _advanced = !_advanced;
-        _isAnimate = true;
     }
 
     private async Task HandleEditAsync(MessageTaskDto model)
