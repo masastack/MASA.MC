@@ -4,7 +4,7 @@
         <div class="fill rounded-2 d-flex justify-center align-center px-6 py-3 mb-6" style="height:56px">
             <SButton Ripple=false Plain IsActive Class="emphasis2--text h6 primary--text" OnClick="NavigateToSend"><MIcon Size=22 Left>mdi-message</MIcon>@T("Permission.SendMessage")</SButton>
         </div>
-        <DefaultSearchPanel @bind-Value="@_queryParam.Filter" Advanced OnEnter="RefreshAsync" OnClearClick="HandleClearAsync">
+        <SSearchPanel @bind-Value="@_queryParam.Filter" Advanced OnEnter="RefreshAsync" OnClearClick="HandleClearAsync">
             <ChildContent>
                 <DefaultTitle>@T("Title")</DefaultTitle>
             </ChildContent>
@@ -100,7 +100,7 @@
                     </ChildContent>
                 </MTooltip>
             </ButtonContent>
-        </DefaultSearchPanel>
+        </SSearchPanel>
     </HeaderContent>
     <AutoHeightContent>
         @if (_entities.Result.Any())

@@ -4,11 +4,11 @@
 <PageTitle>@T("Permission.ChannelManagement")</PageTitle>
 <AutoHeight Overflow="_entities.Result.Any()" AutoClass="mt-6">
     <HeaderContent>
-        <DefaultSearchPanel @bind-Value="@_queryParam.Filter" OnEnter="RefreshAsync" OnClearClick="HandleClearAsync" OnClick="()=> _createModal.OpenModalAsync()">
+        <SSearchPanel @bind-Value="@_queryParam.Filter" OnEnter="RefreshAsync" OnClearClick="HandleClearAsync" OnClick="()=> _createModal.OpenModalAsync()">
             <ChildContent>
                 <DefaultTitle>@T("Title")</DefaultTitle>
             </ChildContent>
-        </DefaultSearchPanel>
+        </SSearchPanel>
     </HeaderContent>
     <AutoHeightContent>
         @if (_entities.Result.Any())

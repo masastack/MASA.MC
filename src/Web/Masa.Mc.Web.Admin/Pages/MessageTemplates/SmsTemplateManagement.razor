@@ -4,7 +4,7 @@
 <PageTitle>@T("Sms")</PageTitle>
 <AutoHeight AutoClass="mt-6">
     <HeaderContent>
-        <DefaultSearchPanel @bind-Value="@_queryParam.Filter" Advanced OnEnter="RefreshAsync" OnClearClick="HandleClearAsync" OnClick="()=> _createModal.OpenModalAsync()">
+        <SSearchPanel @bind-Value="@_queryParam.Filter" Advanced OnEnter="RefreshAsync" OnClearClick="HandleClearAsync" OnClick="()=> _createModal.OpenModalAsync()">
             <ChildContent>
                 <DefaultTitle>@T("SmsTemplateTitle")</DefaultTitle>
             </ChildContent>
@@ -79,7 +79,7 @@
                     </SSelect>
                 </MCol>
             </AdvancedContent>
-        </DefaultSearchPanel>
+        </SSearchPanel>
     </HeaderContent>
     <AutoHeightContent>
                 <MCard Class="full-height">

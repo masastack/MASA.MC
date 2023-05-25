@@ -4,7 +4,7 @@
 <PageTitle>@T("Permission.MessageRecord")</PageTitle>
 <AutoHeight AutoClass="mt-6">
     <HeaderContent>
-        <DefaultSearchPanel @bind-Value="@_queryParam.Filter" Advanced OnEnter="RefreshAsync" OnClearClick="HandleClearAsync">
+        <SSearchPanel @bind-Value="@_queryParam.Filter" Advanced OnEnter="RefreshAsync" OnClearClick="HandleClearAsync">
             <ChildContent>
                 <DefaultTitle>@T("Title")</DefaultTitle>
             </ChildContent>
@@ -51,7 +51,7 @@
                     <BooleanSelect @bind-Value="_queryParam.Success" Items="_successItems" Label="@T("DisplayName.MessageRecordSuccess")" Class="ml-6" OnClearClick="RefreshAsync" OnSelectedItemUpdate="RefreshAsync" />
                 </MCol>
             </AdvancedContent>
-        </DefaultSearchPanel>
+        </SSearchPanel>
     </HeaderContent>
     <AutoHeightContent>
         <MCard Class="full-height">
