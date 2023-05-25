@@ -18,3 +18,4 @@ global using com.gexin.rp.sdk.dto;
 global using Jiguang.JPush;
 global using Jiguang.JPush.Model;
 global using Masa.Mc.Infrastructure.AppNotification.JPush;
+global using Newtonsoft.Json;

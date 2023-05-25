@@ -40,7 +40,7 @@ public class JPushSender : IAppNotificationSender
                 },
                 IOS = new IOS
                 {
-                    Alert = new
+                    Alert = new NotificationIOSAlert
                     {
                         Title = appMessage.Title,
                         Body = appMessage.Text
@@ -99,7 +99,11 @@ public class JPushSender : IAppNotificationSender
                 },
                 IOS = new IOS
                 {
-                    Alert = appMessage.Title,
+                    Alert = new NotificationIOSAlert
+                    {
+                        Title = appMessage.Title,
+                        Body = appMessage.Text
+                    },
                     Badge = "+1"
                 }
             },
