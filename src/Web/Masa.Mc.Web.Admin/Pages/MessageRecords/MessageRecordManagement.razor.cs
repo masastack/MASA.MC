@@ -9,9 +9,7 @@ public partial class MessageRecordManagement : AdminCompontentBase
     private GetMessageRecordInputDto _queryParam = new() { TimeType = MessageRecordTimeTypes.ExpectSendTime };
     private PaginatedListDto<MessageRecordDto> _entities = new();
     private List<ChannelDto> _channelItems = new();
-    private bool _advanced;
     private List<KeyValuePair<string, bool>> _successItems = new();
-    private bool _isAnimate;
     private ChannelService ChannelService => McCaller.ChannelService;
     private MessageRecordService MessageRecordService => McCaller.MessageRecordService;
     private DateOnly? _endTime;
@@ -99,11 +97,5 @@ public partial class MessageRecordManagement : AdminCompontentBase
     {
         _queryParam = new() { TimeType = MessageRecordTimeTypes.ExpectSendTime };
         await LoadData();
-    }
-
-    private void ToggleAdvanced()
-    {
-        _advanced = !_advanced;
-        _isAnimate = true;
     }
 }

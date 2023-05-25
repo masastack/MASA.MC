@@ -12,8 +12,6 @@ public partial class EmailTemplateManagement : AdminCompontentBase
     private GetMessageTemplateInputDto _queryParam = new() { ChannelType = ChannelTypes.Email };
     private PaginatedListDto<MessageTemplateDto> _entities = new();
     private List<ChannelDto> _channelItems = new();
-    private bool _advanced = false;
-    private bool _isAnimate;
     private DateOnly? _endTime;
     private DateOnly? _startTime;
 
@@ -95,11 +93,5 @@ public partial class EmailTemplateManagement : AdminCompontentBase
     {
         _queryParam = new() { ChannelType = ChannelTypes.Email };
         await LoadData();
-    }
-
-    private void ToggleAdvanced()
-    {
-        _advanced = !_advanced;
-        _isAnimate = true;
     }
 }
