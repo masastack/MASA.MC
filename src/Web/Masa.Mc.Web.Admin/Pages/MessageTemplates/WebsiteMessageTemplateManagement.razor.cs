@@ -10,8 +10,8 @@ public partial class WebsiteMessageTemplateManagement : AdminCompontentBase
     private GetMessageTemplateInputDto _queryParam = new() { ChannelType = ChannelTypes.WebsiteMessage };
     private PaginatedListDto<MessageTemplateDto> _entities = new();
     private List<ChannelDto> _channelItems = new();
-    private DateOnly? _endTime;
-    private DateOnly? _startTime;
+    private DateTimeOffset? _endTime;
+    private DateTimeOffset? _startTime;
 
     private ChannelService ChannelService => McCaller.ChannelService;
 
@@ -47,11 +47,11 @@ public partial class WebsiteMessageTemplateManagement : AdminCompontentBase
         };
     }
 
-    private Task OnDateChanged((DateOnly? startDate, DateOnly? endDate) args)
+    private Task DateRangChangedAsync((DateTimeOffset? startDate, DateTimeOffset? endDate) args)
     {
         (_startTime, _endTime) = args;
-        _queryParam.StartTime = _startTime?.ToDateTime(TimeOnly.MinValue);
-        _queryParam.EndTime = _endTime?.ToDateTime(TimeOnly.MaxValue);
+        _queryParam.StartTime = _startTime?.UtcDateTime;
+        _queryParam.EndTime = _endTime?.UtcDateTime;
         return RefreshAsync();
     }
 

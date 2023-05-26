@@ -12,8 +12,8 @@ public partial class MessageRecordManagement : AdminCompontentBase
     private List<KeyValuePair<string, bool>> _successItems = new();
     private ChannelService ChannelService => McCaller.ChannelService;
     private MessageRecordService MessageRecordService => McCaller.MessageRecordService;
-    private DateOnly? _endTime;
-    private DateOnly? _startTime;
+    private DateTimeOffset? _endTime;
+    private DateTimeOffset? _startTime;
 
     protected override string? PageName { get; set; } = "MessageRecordBlock";
 
@@ -54,11 +54,12 @@ public partial class MessageRecordManagement : AdminCompontentBase
         }
         await base.OnAfterRenderAsync(firstRender);
     }
-    private Task OnDateChanged((DateOnly? startDate, DateOnly? endDate) args)
+
+    private Task DateRangChangedAsync((DateTimeOffset? startDate, DateTimeOffset? endDate) args)
     {
         (_startTime, _endTime) = args;
-        _queryParam.StartTime = _startTime?.ToDateTime(TimeOnly.MinValue);
-        _queryParam.EndTime = _endTime?.ToDateTime(TimeOnly.MaxValue);
+        _queryParam.StartTime = _startTime?.UtcDateTime;
+        _queryParam.EndTime = _endTime?.UtcDateTime;
         return RefreshAsync();
     }
 

@@ -9,7 +9,9 @@
                 <DefaultTitle>@T("EmailTemplateTitle")</DefaultTitle>
             </ChildContent>
             <AdvancedContent>
-                <SDateRangePicker StartTime="_startTime" EndTime="_endTime" DateRangeChanged="OnDateChanged" />
+                <MCol Class="flex-grow-0">
+                    <SDateTimeRangeToolbar StartDateTime="_startTime" EndDateTime="_endTime" OnUpdate="DateRangChangedAsync" ShowQuickChange="false" />
+                </MCol>
                 <MCol Md="3">
                     <SSelect Small @bind-Value="_queryParam.ChannelId"
                              Items="@_channelItems"
@@ -22,7 +24,7 @@
                              TItem="ChannelDto"
                              TItemValue="Guid"
                              TValue="Guid?"
-                             Class="rounded-lg body2 ml-6"
+                             Class="rounded-lg body2"
                              OnClearClick="RefreshAsync"
                              OnSelectedItemUpdate="RefreshAsync">
                     </SSelect>

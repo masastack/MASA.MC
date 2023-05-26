@@ -9,7 +9,9 @@
                 <DefaultTitle>@T("SmsTemplateTitle")</DefaultTitle>
             </ChildContent>
             <AdvancedContent>
-                <SDateRangePicker StartTime="_startTime" EndTime="_endTime" DateRangeChanged="OnDateChanged" />
+                <MCol Class="flex-grow-0">
+                    <SDateTimeRangeToolbar StartDateTime="_startTime" EndDateTime="_endTime" OnUpdate="DateRangChangedAsync" ShowQuickChange="false" />
+                </MCol>
                 <MCol Md="2">
                     <SSelect Small @bind-Value="@_queryParam.TemplateType"
                              Items="@(GetEnumList<SmsTemplateTypes>())"
@@ -22,7 +24,7 @@
                              TItem="SmsTemplateTypes"
                              TItemValue="int"
                              TValue="int"
-                             Class="rounded-lg body2 ml-6"
+                             Class="rounded-lg body2"
                              OnClearClick="RefreshAsync"
                              OnSelectedItemUpdate="RefreshAsync">
                     </SSelect>
@@ -39,7 +41,7 @@
                              TItem="ChannelDto"
                              TItemValue="Guid"
                              TValue="Guid?"
-                             Class="rounded-lg body2 ml-6"
+                             Class="rounded-lg body2"
                              OnClearClick="RefreshAsync"
                              OnSelectedItemUpdate="RefreshAsync">
                     </SSelect>
@@ -56,7 +58,7 @@
                              TItem="MessageTemplateAuditStatuses"
                              TItemValue="MessageTemplateAuditStatuses"
                              TValue="MessageTemplateAuditStatuses?"
-                             Class="rounded-lg body2 ml-6"
+                             Class="rounded-lg body2"
                              OnClearClick="RefreshAsync"
                              OnSelectedItemUpdate="RefreshAsync">
                     </SSelect>
@@ -73,7 +75,7 @@
                              TItem="MessageTemplateStatuses"
                              TItemValue="MessageTemplateStatuses"
                              TValue="MessageTemplateStatuses?"
-                             Class="rounded-lg body2 ml-6"
+                             Class="rounded-lg body2"
                              OnClearClick="RefreshAsync"
                              OnSelectedItemUpdate="RefreshAsync">
                     </SSelect>
