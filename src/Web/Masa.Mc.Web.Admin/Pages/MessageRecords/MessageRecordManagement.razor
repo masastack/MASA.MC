@@ -23,9 +23,9 @@
                              OnSelectedItemUpdate="RefreshAsync">
                     </SSelect>
                 </MCol>
-                <div class="ml-6">
-                    <SDateRangePicker StartTime="_startTime" EndTime="_endTime" DateRangeChanged="OnDateChanged" />
-                </div>
+                <MCol Class="flex-grow-0">
+                    <SDateTimeRangeToolbar StartDateTime="_startTime" EndDateTime="_endTime" OnUpdate="DateRangChangedAsync" ShowQuickChange="false" />
+                </MCol>
                 <MCol Md="2">
                     <SSelect Small @bind-Value="_queryParam.ChannelId"
                              Items="@_channelItems"
@@ -38,17 +38,17 @@
                              TItem="ChannelDto"
                              TItemValue="Guid"
                              TValue="Guid?"
-                             Class="rounded-lg body2 ml-6"
+                             Class="rounded-lg body2"
                              OnClearClick="RefreshAsync"
                              OnSelectedItemUpdate="RefreshAsync">
                     </SSelect>
                 </MCol>
                 <MCol Md="2">
-                    <UserSelect @bind-Value="_queryParam.UserId" Label="@T("DisplayName.MessageRecordUserId")" Class="ml-6" OnClearClick="RefreshAsync"
+                    <UserSelect @bind-Value="_queryParam.UserId" Label="@T("DisplayName.MessageRecordUserId")" OnClearClick="RefreshAsync"
                                 OnSelectedItemUpdate="RefreshAsync" />
                 </MCol>
                 <MCol Md="2">
-                    <BooleanSelect @bind-Value="_queryParam.Success" Items="_successItems" Label="@T("DisplayName.MessageRecordSuccess")" Class="ml-6" OnClearClick="RefreshAsync" OnSelectedItemUpdate="RefreshAsync" />
+                    <BooleanSelect @bind-Value="_queryParam.Success" Items="_successItems" Label="@T("DisplayName.MessageRecordSuccess")" OnClearClick="RefreshAsync" OnSelectedItemUpdate="RefreshAsync" />
                 </MCol>
             </AdvancedContent>
         </SSearchPanel>

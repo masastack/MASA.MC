@@ -15,8 +15,8 @@ public partial class MessageTaskList : AdminCompontentBase
     private GetMessageTaskInputDto _queryParam = new(20) { TimeType = MessageTaskTimeTypes.ModificationTime, Source = MessageTaskSources.Management };
     private PaginatedListDto<MessageTaskDto> _entities = new();
     private List<ChannelDto> _channelItems = new();
-    private DateOnly? _endTime;
-    private DateOnly? _startTime;
+    private DateTimeOffset? _endTime;
+    private DateTimeOffset? _startTime;
 
     private ChannelService ChannelService => McCaller.ChannelService;
 
@@ -42,11 +42,11 @@ public partial class MessageTaskList : AdminCompontentBase
         StateHasChanged();
     }
 
-    private Task OnDateChanged((DateOnly? startDate, DateOnly? endDate) args)
+    private Task DateRangChangedAsync((DateTimeOffset? startDate, DateTimeOffset? endDate) args)
     {
         (_startTime, _endTime) = args;
-        _queryParam.StartTime = _startTime?.ToDateTime(TimeOnly.MinValue);
-        _queryParam.EndTime = _endTime?.ToDateTime(TimeOnly.MaxValue);
+        _queryParam.StartTime = _startTime?.UtcDateTime;
+        _queryParam.EndTime = _endTime?.UtcDateTime;
         return RefreshAsync();
     }
 

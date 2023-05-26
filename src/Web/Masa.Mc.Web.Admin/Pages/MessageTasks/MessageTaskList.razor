@@ -26,11 +26,10 @@
                              OnSelectedItemUpdate="RefreshAsync">
                     </SSelect>
                 </MCol>
-                <MCol Md="3">
-                    <div class="ml-6">
-                        <SDateRangePicker StartTime="_startTime" EndTime="_endTime" DateRangeChanged="OnDateChanged" Class="full-width" />
-                    </div>
+                <MCol Class="flex-grow-0">
+                    <SDateTimeRangeToolbar StartDateTime="_startTime" EndDateTime="_endTime" OnUpdate="DateRangChangedAsync" ShowQuickChange="false" />
                 </MCol>
+                   
                 <MCol Md="2">
                     <SSelect Small @bind-Value="_queryParam.ChannelId"
                              Items="@_channelItems"
@@ -43,7 +42,7 @@
                              TItem="ChannelDto"
                              TItemValue="Guid"
                              TValue="Guid?"
-                             Class="rounded-lg body2 ml-6"
+                             Class="rounded-lg body2"
                              OnClearClick="RefreshAsync"
                              OnSelectedItemUpdate="RefreshAsync">
                     </SSelect>
@@ -60,7 +59,7 @@
                              TItem="MessageTaskStatuses"
                              TItemValue="MessageTaskStatuses"
                              TValue="MessageTaskStatuses?"
-                             Class="rounded-lg body2 ml-6"
+                             Class="rounded-lg body2"
                              OnClearClick="RefreshAsync"
                              OnSelectedItemUpdate="RefreshAsync">
                     </SSelect>
@@ -77,13 +76,13 @@
                              TItem="MessageEntityTypes"
                              TItemValue="MessageEntityTypes"
                              TValue="MessageEntityTypes?"
-                             Class="rounded-lg body2 ml-6"
+                             Class="rounded-lg body2"
                              OnClearClick="RefreshAsync"
                              OnSelectedItemUpdate="RefreshAsync">
                     </SSelect>
                 </MCol>
                 <MCol Md="1">
-                    <BooleanSelect @bind-Value="_queryParam.IsEnabled" Label="@T("DisplayName.MessageTaskIsEnabled")" Class="ml-6" Style="min-width:85px;" OnSelectedItemUpdate="RefreshAsync" />
+                    <BooleanSelect @bind-Value="_queryParam.IsEnabled" Label="@T("DisplayName.MessageTaskIsEnabled")" Style="min-width:85px;" OnSelectedItemUpdate="RefreshAsync" />
                 </MCol>
             </AdvancedContent>
             <ButtonContent>
