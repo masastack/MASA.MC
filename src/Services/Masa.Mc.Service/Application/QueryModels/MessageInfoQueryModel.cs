@@ -24,4 +24,6 @@ public class MessageInfoQueryModel : Entity<Guid>, ISoftDelete
     public DateTime ModificationTime { get; set; }
 
     public bool IsDeleted { get; set; }
+
+    public ExtraPropertyDictionary ExtraProperties { get; set; } = new();
 }

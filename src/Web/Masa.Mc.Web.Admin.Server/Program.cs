@@ -51,6 +51,7 @@ if (string.IsNullOrEmpty(mcBaseAddress))
 {
     mcBaseAddress = masaStackConfig.GetMcServiceDomain();
 }
+mcBaseAddress = "https://localhost:19501";
 
 builder.AddMasaStackComponentsForServer("wwwroot/i18n", authBaseAddress, mcBaseAddress);
 
@@ -58,7 +59,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddGlobalForServer();
 builder.Services.AddScoped<TokenProvider>();
 builder.Services.AddSingleton<ChannelUpsertDtoValidator>();
-TypeAdapterConfig.GlobalSettings.Scan(Assembly.GetExecutingAssembly(), Assembly.Load("Masa.Mc.Contracts.Admin"));
+TypeAdapterConfig.GlobalSettings.Scan(Assembly.GetExecutingAssembly(), Assembly.Load("Masa.Mc.Contracts.Admin"), Assembly.Load("Masa.Mc.Web.Admin"));
 MasaOpenIdConnectOptions masaOpenIdConnectOptions = new MasaOpenIdConnectOptions
 {
     Authority = masaStackConfig.GetSsoDomain(),

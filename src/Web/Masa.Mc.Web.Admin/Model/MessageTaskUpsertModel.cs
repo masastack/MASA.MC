@@ -36,4 +36,6 @@ public class MessageTaskUpsertModel
     public int Step { get; set; } = 1;
 
     public string SystemId { get; set; } = string.Empty;
+
+    public AppMessageExtraPropertys ExtraProperties { get; set; } = new();
 }

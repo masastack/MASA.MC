@@ -9,5 +9,11 @@ public class MessageTaskRegister : IRegister
     {
         config.ForType<MessageTaskDto, MessageTaskUpsertDto>().MapToConstructor(true)
             .Map(dest => dest.ChannelType, src => src.Channel.Type);
+
+        config.ForType<MessageTaskUpsertModel, MessageTaskUpsertDto>()
+            .Map(dest => dest.ExtraProperties, src => src.ExtraProperties);
+
+        config.ForType<MessageTaskDto, MessageTaskUpsertModel>()
+            .Map(dest => dest.ExtraProperties, src => ExtensionPropertyHelper.ConvertToType<AppMessageExtraPropertys>(src.ExtraProperties));
     }
 }

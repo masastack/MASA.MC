@@ -19,6 +19,16 @@ public partial class OrdinaryMessageCreateModal : AdminCompontentBase
     MessageTaskService MessageTaskService => McCaller.MessageTaskService;
     ChannelService ChannelService => McCaller.ChannelService;
 
+    protected override string? PageName { get; set; } = "MessageTaskBlock";
+
+    private bool ComputedJumpUrlShow
+    {
+        get
+        {
+            return _model.ChannelType == ChannelTypes.WebsiteMessage || (_model.ChannelType == ChannelTypes.App && _model.ExtraProperties.IsWebsiteMessage);
+        }
+    }
+
     public async Task OpenModalAsync()
     {
         await InvokeAsync(() =>
