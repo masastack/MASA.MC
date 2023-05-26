@@ -51,7 +51,6 @@ if (string.IsNullOrEmpty(mcBaseAddress))
 {
     mcBaseAddress = masaStackConfig.GetMcServiceDomain();
 }
-mcBaseAddress = "https://localhost:19501";
 
 builder.AddMasaStackComponentsForServer("wwwroot/i18n", authBaseAddress, mcBaseAddress);
 
