@@ -21,6 +21,16 @@ public partial class OrdinaryMessageEditModal : AdminCompontentBase
     ChannelService ChannelService => McCaller.ChannelService;
     MessageInfoService MessageInfoService => McCaller.MessageInfoService;
 
+    protected override string? PageName { get; set; } = "MessageTaskBlock";
+
+    private bool ComputedJumpUrlShow
+    {
+        get
+        {
+            return _model.ChannelType == ChannelTypes.WebsiteMessage || (_model.ChannelType == ChannelTypes.App && _model.ExtraProperties.IsWebsiteMessage);
+        }
+    }
+
     public async Task OpenModalAsync(MessageTaskDto model)
     {
         _entityId = model.Id;

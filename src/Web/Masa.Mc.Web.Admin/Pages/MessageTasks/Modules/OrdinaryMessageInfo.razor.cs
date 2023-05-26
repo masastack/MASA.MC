@@ -15,6 +15,8 @@ public partial class OrdinaryMessageInfo : AdminCompontentBase
 
     MessageInfoService MessageInfoService => McCaller.MessageInfoService;
 
+    protected override string? PageName { get; set; } = "MessageTaskBlock";
+
     protected override async Task OnParametersSetAsync()
     {
         MessageInfo = await MessageInfoService.GetAsync(MessageInfoId) ?? new();

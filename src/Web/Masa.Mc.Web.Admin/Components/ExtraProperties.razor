@@ -1,0 +1,74 @@
+﻿@inherits AdminCompontentBase
+
+<div class="d-flex align-center justify-space-between">
+    <DefaultSubTitle>@T("AdditionalFields")</DefaultSubTitle>
+    <MButton Small Fab Color="fill" IsActive="false" OnClick="HandleAdd">
+        <SIcon Size="20" Color="primary">mdi-plus</SIcon>
+    </MButton>
+</div>
+<MRow>
+    @foreach (var item in _items)
+    {
+        <MCol Md="6">
+            <STextField @bind-Value="item.Name" Label="@T("Key")" TValue="string" OnChange="HandleChangeAsync">
+                <AppendOuterContent>:</AppendOuterContent>
+            </STextField>
+        </MCol>
+        <MCol Md="6">
+            <STextField @bind-Value="item.Value" Label="@T("Value")" TValue="string" OnChange="HandleChangeAsync">
+                <AppendOuterContent>
+                    <MButton Small Fab Color="fill" IsActive="false" OnClick="()=>HandleDel(item)">
+                        <SIcon Size="20" Color="error">mdi-delete</SIcon>
+                    </MButton>
+                </AppendOuterContent>
+            </STextField>
+        </MCol>
+    }
+</MRow>
+
+@code {
+    [Parameter]
+    public ExtraPropertyDictionary Value { get; set; } = new();
+
+    [Parameter]
+    public EventCallback<ExtraPropertyDictionary> ValueChanged { get; set; }
+
+    private List<ItemDto> _items = new();
+
+    protected override void OnParametersSet()
+    {
+        if (!_items.Any() || (_items.Count == 1 && string.IsNullOrWhiteSpace(_items[0].Name)))
+        {
+            _items = Value.Select(x => new ItemDto(x.Key, x.Value?.ToString() ?? string.Empty)).ToList();
+        }
+
+        if (!_items.Any())
+        {
+            _items.Add(new ItemDto());
+        }
+
+    }
+
+    public async Task HandleChangeAsync()
+    {
+        foreach (var item in _items)
+        {
+            if (string.IsNullOrWhiteSpace(item.Name))
+                continue;
+
+            Value.AddOrUpdate(item.Name, item.Value, (a,b) => item.Value);
+        }
+
+        await ValueChanged.InvokeAsync(Value);
+    }
+
+    public void HandleAdd()
+    {
+        _items.Add(new ItemDto());
+    }
+
+    public void HandleDel(ItemDto item)
+    {
+        _items.Remove(item);
+    }
+}

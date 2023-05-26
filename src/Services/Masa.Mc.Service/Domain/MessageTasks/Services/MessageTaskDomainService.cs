@@ -28,7 +28,7 @@ public class MessageTaskDomainService : DomainService
         _i18n = i18n;
     }
 
-    public virtual async Task CreateAsync(MessageTask messageTask, Guid operatorId = default)
+    public virtual async Task CreateAsync(MessageTask messageTask,string systemId)
     {
         if (!messageTask.IsDraft)
         {
@@ -37,6 +37,8 @@ public class MessageTaskDomainService : DomainService
 
         messageTask.SetDraft(messageTask.IsDraft);
         messageTask.SetExpectSendTime();
+        messageTask.SetSystemId(systemId);
+
         await _repository.AddAsync(messageTask);
         if (!messageTask.IsDraft)
         {

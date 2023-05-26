@@ -51,7 +51,7 @@ public class MessageTask : FullAggregateRoot<Guid, Guid>
 
     private MessageTask() { }
 
-    public MessageTask(string displayName, ChannelType? channelType, Guid? channelId, MessageEntityTypes entityType, Guid entityId, bool isDraft, string sign, ReceiverTypes receiverType, MessageTaskSelectReceiverTypes selectReceiverType, List<MessageTaskReceiver> receivers, MessageTaskSendingRule sendRules, MessageTaskSources source, string systemId, ExtraPropertyDictionary extraProperties)
+    public MessageTask(string displayName, ChannelType? channelType, Guid? channelId, MessageEntityTypes entityType, Guid entityId, bool isDraft, string sign, ReceiverTypes receiverType, MessageTaskSelectReceiverTypes selectReceiverType, List<MessageTaskReceiver> receivers, MessageTaskSendingRule sendRules, MessageTaskSources source, ExtraPropertyDictionary extraProperties)
     {
         DisplayName = displayName;
         ChannelType = channelType;
@@ -65,7 +65,6 @@ public class MessageTask : FullAggregateRoot<Guid, Guid>
         SendRules = sendRules;
         Status = MessageTaskStatuses.WaitSend;
         Source = source;
-        SystemId = systemId;
         ExtraProperties = extraProperties;
     }
 
@@ -145,6 +144,11 @@ public class MessageTask : FullAggregateRoot<Guid, Guid>
     public void SetJobId(Guid jobId)
     {
         SchedulerJobId = jobId;
+    }
+
+    public void SetSystemId(string systemId)
+    {
+        SystemId = systemId;
     }
 
     public int GetSendingCount()
