@@ -75,6 +75,7 @@ public class McQueryContext : MasaDbContext<McQueryContext>, IMcQueryContext
         builder.Entity<MessageInfoQueryModel>(b =>
         {
             b.ToView(MCConsts.DbTablePrefix + "MessageInfos", MCConsts.DbSchema);
+            b.Property(x => x.ExtraProperties).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
         });
 
         builder.Entity<MessageRecordQueryModel>(b =>

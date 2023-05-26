@@ -19,69 +19,111 @@
                     </MStepperHeader>
                     <MStepperItems Class="flex-grow-1">
                         <MStepperContent Class="full-height pa-0" Step="1">
-                            <MRow Class="mt-6">
-                                <MCol>
-                                    <SSelect @bind-Value="@_model.ChannelType"
-                                             Items="@(GetEnumList<ChannelTypes>().Where(x=>x!=ChannelTypes.Sms).ToList())"
-                                             Label="@T("DisplayName.ChannelType")"
-                                             ItemText="item => T(item.ToString())"
-                                             ItemValue="item => item"
-                                             TItem="ChannelTypes"
-                                             TItemValue="ChannelTypes"
-                                             TValue="ChannelTypes?"
-                                             OnSelectedItemUpdate="HandleChannelTypeChangeAsync">
-                                    </SSelect>
-                                </MCol>
-                            </MRow>
-                            <MRow Class="mt-6">
-                                <MCol>
-                                    <SSelect @bind-Value="_model.ChannelId"
-                                             Items="@_channelItems"
-                                             Label="@T("DisplayName.Channel")"
-                                             ItemText="item => item.DisplayName"
-                                             ItemValue="item => item.Id">
-                                    </SSelect>
-                                </MCol>
-                            </MRow>
-                            @if (_model.ChannelType != ChannelTypes.Sms)
-                            {
-                                <MRow Class="mt-6">
-                                    <MCol>
-                                        <STextField @bind-Value="_model.MessageInfo.Title"
-                                                Label="@T("DisplayName.MessageInfoTitle")">
-                                        </STextField>
-                                    </MCol>
-                                </MRow>
-                            }
-                            <MRow Class="mt-6">
-                                <MCol>
-                                    <DefaultMarkdown @bind-Html="_model.MessageInfo.Content" @bind-Value="_model.MessageInfo.Markdown"></DefaultMarkdown>
-                                    <MInput @bind-Value="_model.MessageInfo.Content" />
-                                </MCol>
-                            </MRow>
-                            @if (_model.ChannelType == ChannelTypes.WebsiteMessage)
-                            {
-                                <MRow Class="mt-6">
-                                    <MCol>
-                                        <STextField @bind-Value="_model.MessageInfo.JumpUrl"
-                                                Label="@T("DisplayName.MessageTemplateJumpUrl")">
-                                            <PrependContent>
-                                                <MCheckbox Class="mt-0" @bind-Value="_model.MessageInfo.IsJump"></MCheckbox>
-                                            </PrependContent>
-                                        </STextField>
-                                    </MCol>
-                                </MRow>
-                            }
-                            @if (_model.ChannelType == ChannelTypes.Sms)
-                            {
-                                <MRow Class="mt-6">
-                                    <MCol>
-                                        <STextField @bind-Value="_model.Sign"
-                                                Label="@T("DisplayName.MessageTemplateSign")">
-                                        </STextField>
-                                    </MCol>
-                                </MRow>
-                            }
+                            <AutoHeight Overflow>
+                                <AutoHeightContent>
+                                    <MRow Class="mt-6">
+                                        <MCol>
+                                            <SSelect @bind-Value="@_model.ChannelType"
+                                                     Items="@(GetEnumList<ChannelTypes>().Where(x=>x!=ChannelTypes.Sms).ToList())"
+                                                     Label="@T("DisplayName.ChannelType")"
+                                                     ItemText="item => T(item.ToString())"
+                                                     ItemValue="item => item"
+                                                     TItem="ChannelTypes"
+                                                     TItemValue="ChannelTypes"
+                                                     TValue="ChannelTypes?"
+                                                     OnSelectedItemUpdate="HandleChannelTypeChangeAsync">
+                                            </SSelect>
+                                        </MCol>
+                                    </MRow>
+                                    <MRow Class="mt-6">
+                                        <MCol>
+                                            <SSelect @bind-Value="_model.ChannelId"
+                                                     Items="@_channelItems"
+                                                     Label="@T("DisplayName.Channel")"
+                                                     ItemText="item => item.DisplayName"
+                                                     ItemValue="item => item.Id">
+                                            </SSelect>
+                                        </MCol>
+                                    </MRow>
+                                    @if (_model.ChannelType == ChannelTypes.App)
+                                    {
+                                        <MRow>
+                                            <MCol Class="d-flex">
+                                                <SCheckbox Value="true" Disabled Label="@T("NotificationMessage")"></SCheckbox>
+                                                <SCheckbox @bind-Value="_model.ExtraProperties.IsWebsiteMessage" Class="ml-6" Label="@T("InAppMessages")" Tooltip="@T("InAppMessagesTips")"></SCheckbox>
+                                            </MCol>
+                                        </MRow>
+                                    }
+                                    @if (_model.ChannelType != ChannelTypes.Sms)
+                                    {
+                                        <MRow Class="mt-6">
+                                            <MCol>
+                                                <STextField @bind-Value="_model.MessageInfo.Title"
+                                                        Label="@T("DisplayName.MessageInfoTitle")">
+                                                </STextField>
+                                            </MCol>
+                                        </MRow>
+                                    }
+                                    <MRow Class="mt-6">
+                                        <MCol>
+                                            @if (_model.ChannelType != ChannelTypes.App)
+                                            {
+                                                <DefaultMarkdown @bind-Html="_model.MessageInfo.Content" @bind-Value="_model.MessageInfo.Markdown"></DefaultMarkdown>
+                                                <MInput @bind-Value="_model.MessageInfo.Content" />
+                                            }
+                                            else
+                                            {
+                                                <STextarea @bind-Value="_model.MessageInfo.Content"
+                                                       Label="@T("DisplayName.MessageInfoContent")">
+                                                </STextarea>
+                                            }
+                                        </MCol>
+                                    </MRow>
+                                    @if (ComputedJumpUrlShow)
+                                    {
+                                        <MRow Class="mt-6">
+                                            <MCol>
+                                                <STextField @bind-Value="_model.MessageInfo.JumpUrl"
+                                                        Label="@T("DisplayName.MessageTemplateJumpUrl")" Tooltip="@T("JumpUrlTips")">
+                                                    <PrependContent>
+                                                        <MCheckbox Class="mt-0" @bind-Value="_model.MessageInfo.IsJump"></MCheckbox>
+                                                    </PrependContent>
+                                                </STextField>
+                                            </MCol>
+                                        </MRow>
+                                    }
+                                    @if (_model.ChannelType == ChannelTypes.Sms)
+                                    {
+                                        <MRow Class="mt-6">
+                                            <MCol>
+                                                <STextField @bind-Value="_model.Sign"
+                                                        Label="@T("DisplayName.MessageTemplateSign")">
+                                                </STextField>
+                                            </MCol>
+                                        </MRow>
+                                    }
+                                    @if (_model.ChannelType == ChannelTypes.App)
+                                    {
+                                        <ExtraProperties @bind-Value="_model.MessageInfo.ExtraProperties"></ExtraProperties>
+                                        <MExpansionPanels Accordion Flat>
+                                        <MExpansionPanel>
+                                            <MExpansionPanelHeader Context="PanelHeader" Class="pa-0">
+                                                <DefaultSubTitle Class="">@T("OptionalConfiguration")</DefaultSubTitle>
+                                            </MExpansionPanelHeader>
+                                            <MExpansionPanelContent Class="pa-0">
+                                                <DefaultSubTitle Class="mb-6">Android</DefaultSubTitle>
+                                                <STextField @bind-Value="_model.ExtraProperties.IntentUrl"
+                                                            Label="@T("IntentUrl")">
+                                                    <AppendOuterContent>
+                                                        <MenuTooltip Class="ml-2" Tooltip="@T("IntentUrlTips")" />
+                                                    </AppendOuterContent>
+                                                </STextField>
+                                            </MExpansionPanelContent>
+                                        </MExpansionPanel>
+                                    </MExpansionPanels>
+                                    }
+                                </AutoHeightContent>
+                            </AutoHeight>
                         </MStepperContent>
                         <MStepperContent Class="full-height pa-0" Step="2">
                             <AutoHeight Overflow>

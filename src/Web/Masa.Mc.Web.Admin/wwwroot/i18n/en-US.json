@@ -207,8 +207,15 @@
     "Title": "Channel"
   },
   "MessageTaskBlock": {
-    "Title": "MessageTask",
-    "MessageDetails": "MessageDetails"
+    "Title": "Message task",
+    "MessageDetails": "Message details",
+    "NotificationMessage": "Notification message",
+    "InAppMessages": "In app messages",
+    "InAppMessagesTips": "Generate internal message or not",
+    "JumpUrlTips": "Internal message forwarding address",
+    "OptionalConfiguration": "Optional configuration",
+    "IntentUrl": "Click on the notification to open the specified page",
+    "IntentUrlTips": "<h3 style='color: rgb(255, 255, 255);'>Open the specified page</h3><p>There are two ways to open a specified page</p><p>1. Fill in the complete package name and activity in the following format:</p><p>intent:#Intent;component=com.jiguang.push/com.example.jpushdemo.SettingActivity;end</p><p>2. The client activity is configured in the manifest as:</p><p>&lt;activity android:name='.MyActivity' android:exported='true'&gt; &lt;intent-filter&gt; &lt;action android:name='android.intent.action.VIEW' /&gt; &lt;category android:name='android.intent.category.DEFAULT' /&gt; &lt;data android:scheme='app' android:host='example' android:path='/MyActivity/' /&gt; &lt;/intent-filter&gt; &lt;/activity&gt;</p><p>The path filled in is:app://example/MyActivity/</p>"
   },
   "MessageRecordBlock": {
     "Title": "MessageRecord"
