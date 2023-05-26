@@ -8,9 +8,4 @@ public class AppMessageExtraPropertys
     public bool IsWebsiteMessage { get; set; }
 
     public string IntentUrl { get; set; } = string.Empty;
-
-    public AppMessageExtraPropertys()
-    {
-
-    }
 }
