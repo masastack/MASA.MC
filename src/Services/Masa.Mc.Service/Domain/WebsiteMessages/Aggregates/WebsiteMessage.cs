@@ -29,7 +29,7 @@ public class WebsiteMessage : FullAggregateRoot<Guid, Guid>
 
     public ExtraPropertyDictionary ExtraProperties { get; protected set; } = new();
 
-    public List<WebsiteMessageTag> Tags { get; protected set; } = new ();
+    public List<WebsiteMessageTag> Tags { get; protected set; } = new();
 
 
     public WebsiteMessage(Guid channelId, Guid userId, string title, string content, string linkUrl, DateTimeOffset sendTime, ExtraPropertyDictionary extraProperties) : this(channelId, userId, title, content, linkUrl, sendTime, false, null, extraProperties)
@@ -68,7 +68,7 @@ public class WebsiteMessage : FullAggregateRoot<Guid, Guid>
 
         if (!string.IsNullOrEmpty(tag))
         {
-            Tags.Add(new WebsiteMessageTag(tag));
+            Tags.Add(new WebsiteMessageTag(tag, ChannelId, UserId));
         }
     }
 }

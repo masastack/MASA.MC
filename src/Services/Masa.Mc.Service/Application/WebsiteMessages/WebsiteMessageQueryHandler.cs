@@ -157,29 +157,30 @@ public class WebsiteMessageQueryHandler
         var userId = _userContext.GetUserId<Guid>();
         var tags = query.Tags.Split(',');
 
-        var set = _context.WebsiteMessageTagQueries.AsNoTracking().Where(x => tags.Contains(x.Tag));
+        var set = _context.WebsiteMessageTagQueries.AsNoTracking().Where(x => x.UserId == userId && tags.Contains(x.Tag));
+
+        if (channelId.HasValue)
+        {
+            set = set.Where(x => x.ChannelId == channelId);
+        }
+
         var sorted = set.OrderByDescending(x => x.CreationTime);
         var tagQuery = set.Select(x => x.Tag)
             .Distinct()
             .SelectMany(x => sorted.Where(y => y.Tag == x).Take(1));
 
         var messageTagQuery = from tag in tagQuery
-                           join message in _context.WebsiteMessageQueries on tag.WebsiteMessageId equals message.Id into messageJoined
-                           from message in messageJoined.DefaultIfEmpty()
-                           where message != null && message.UserId == userId
-                           select new WebsiteMessageTagDto
-                           {
-                               Tag = tag.Tag,
-                               ChannelId = message.ChannelId,
-                               Title = message.Title,
-                               SendTime = message.SendTime,
-                               UserId = message.UserId
-                           };
-
-        if (channelId.HasValue)
-        {
-            messageTagQuery = messageTagQuery.Where(x => x.ChannelId == channelId);
-        }
+                              join message in _context.WebsiteMessageQueries on tag.WebsiteMessageId equals message.Id into messageJoined
+                              from message in messageJoined.DefaultIfEmpty()
+                              where message != null
+                              select new WebsiteMessageTagDto
+                              {
+                                  Tag = tag.Tag,
+                                  ChannelId = message.ChannelId,
+                                  Title = message.Title,
+                                  SendTime = message.SendTime,
+                                  UserId = message.UserId
+                              };
 
         var messageTags = await messageTagQuery.ToListAsync();
 

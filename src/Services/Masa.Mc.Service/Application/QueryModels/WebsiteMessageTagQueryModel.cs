@@ -12,4 +12,8 @@ public class WebsiteMessageTagQueryModel
     public string Tag { get; set; } = string.Empty;
 
     public DateTime CreationTime { get; set; }
+
+    public Guid ChannelId { get; set; }
+
+    public Guid UserId { get; set; }
 }

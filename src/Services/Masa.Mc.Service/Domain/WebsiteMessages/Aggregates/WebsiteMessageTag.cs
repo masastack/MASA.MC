@@ -7,13 +7,19 @@ public class WebsiteMessageTag : ValueObject
 {
     public string Tag { get; set; } = string.Empty;
 
+    public Guid ChannelId { get; protected set; }
+
+    public Guid UserId { get; protected set; }
+
     protected override IEnumerable<object> GetEqualityValues()
     {
         yield return Tag;
     }
 
-    public WebsiteMessageTag(string tag)
+    public WebsiteMessageTag(string tag, Guid channelId, Guid userId)
     {
         Tag = tag;
+        ChannelId = channelId;
+        UserId = userId;
     }
 }
