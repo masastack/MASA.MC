@@ -56,7 +56,7 @@ public class JPushSender : IAppNotificationSender
             },
             Options = new Jiguang.JPush.Model.Options
             {
-                IsApnsProduction = true // 设置 iOS 推送生产环境。不设置默认为开发环境。
+                IsApnsProduction = appMessage.IsApnsProduction
             }
         };
 
@@ -115,7 +115,7 @@ public class JPushSender : IAppNotificationSender
             },
             Options = new Jiguang.JPush.Model.Options
             {
-                IsApnsProduction = true // 设置 iOS 推送生产环境。不设置默认为开发环境。
+                IsApnsProduction = appMessage.IsApnsProduction
             }
         };
 

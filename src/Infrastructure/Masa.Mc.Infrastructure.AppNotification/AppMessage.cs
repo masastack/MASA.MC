@@ -13,11 +13,14 @@ public class AppMessage
 
     public ConcurrentDictionary<string, object> TransmissionContent { get; }
 
-    public AppMessage(string title, string text, string url, ConcurrentDictionary<string, object> transmissionContent)
+    public bool IsApnsProduction { get; }
+
+    public AppMessage(string title, string text, string url, ConcurrentDictionary<string, object> transmissionContent, bool isApnsProduction = true)
     {
         Title = title;
         Text = text;
         Url = url;
         TransmissionContent = transmissionContent;
+        IsApnsProduction = isApnsProduction;
     }
 }

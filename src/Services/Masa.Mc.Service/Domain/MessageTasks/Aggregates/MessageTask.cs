@@ -187,8 +187,19 @@ public class MessageTask : FullAggregateRoot<Guid, Guid>
         return ChannelType?.Id == ChannelType.App.Id && ExtraProperties.GetProperty<bool>(BusinessConsts.IS_WEBSITE_MESSAGE);
     }
 
-    public string GetAppIntentUrl()
+    public string AppIntentUrl
     {
-        return ExtraProperties.GetProperty<string>(BusinessConsts.INTENT_URL);
+        get
+        {
+            return ExtraProperties.GetProperty<string>(BusinessConsts.INTENT_URL);
+        }
+    }
+
+    public string IsApnsProduction
+    {
+        get
+        {
+            return ExtraProperties.GetProperty<string>(BusinessConsts.IS_APNS_PRODUCTION);
+        }
     }
 }
