@@ -1,6 +1,8 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
+using Masa.Mc.Service.Admin.Domain.MessageRecords.Aggregates;
+
 namespace Masa.Mc.Service.Admin.Application.MessageTasks.EventHandler;
 
 public class SendAppMessageEventHandler
@@ -65,7 +67,7 @@ public class SendAppMessageEventHandler
 
             if (taskHistory.MessageTask.ReceiverType == ReceiverTypes.Broadcast)
             {
-                var response = await appNotificationSender.SendAllAsync(new AppMessage(eto.MessageData.MessageContent.Title, eto.MessageData.MessageContent.Content, eto.MessageData.GetDataValue<string>(BusinessConsts.INTENT_URL), transmissionContent));
+                var response = await appNotificationSender.SendAllAsync(new AppMessage(eto.MessageData.MessageContent.Title, eto.MessageData.MessageContent.Content, eto.MessageData.GetDataValue<string>(BusinessConsts.INTENT_URL), transmissionContent, eto.MessageData.GetDataValue<bool>(BusinessConsts.IS_APNS_PRODUCTION)));
                 taskHistory.SetResult(response.Success ? MessageTaskHistoryStatuses.Success : MessageTaskHistoryStatuses.Fail);
 
                 await _messageTaskHistoryRepository.UpdateAsync(taskHistory);
@@ -100,7 +102,7 @@ public class SendAppMessageEventHandler
                         await _websiteMessageRepository.AddAsync(websiteMessage);
                     }
 
-                    var response = await appNotificationSender.SendAsync(new SingleAppMessage(item.ChannelUserIdentity, eto.MessageData.MessageContent.Title, eto.MessageData.MessageContent.Content, eto.MessageData.GetDataValue<string>(BusinessConsts.INTENT_URL), transmissionContent));
+                    var response = await appNotificationSender.SendAsync(new SingleAppMessage(item.ChannelUserIdentity, eto.MessageData.MessageContent.Title, eto.MessageData.MessageContent.Content, eto.MessageData.GetDataValue<string>(BusinessConsts.INTENT_URL), transmissionContent, eto.MessageData.GetDataValue<bool>(BusinessConsts.IS_APNS_PRODUCTION)));
                     if (response.Success)
                     {
                         messageRecord.SetResult(true, string.Empty);

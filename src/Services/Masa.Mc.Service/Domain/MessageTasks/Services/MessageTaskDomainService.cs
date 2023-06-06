@@ -73,7 +73,8 @@ public class MessageTaskDomainService : DomainService
 
             var messageData = new MessageData(messageInfo.MessageContent, MessageEntityTypes.Ordinary);
             messageData.RenderContent(variables);
-            messageData.SetDataValue(BusinessConsts.INTENT_URL, messageTask.GetAppIntentUrl());
+            messageData.SetDataValue(BusinessConsts.INTENT_URL, messageTask.AppIntentUrl);
+            messageData.SetDataValue(BusinessConsts.IS_APNS_PRODUCTION, messageTask.IsApnsProduction);
             return messageData;
         }
         if (messageTask.EntityType == MessageEntityTypes.Template)
