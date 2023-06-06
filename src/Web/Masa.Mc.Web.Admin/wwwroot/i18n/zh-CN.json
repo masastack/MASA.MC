@@ -330,7 +330,9 @@
     "JumpUrlTips": "站内信跳转地址",
     "OptionalConfiguration": "可选配置",
     "IntentUrl": "点击通知打开指定页面",
-    "IntentUrlTips": "<h3 style='color: rgb(255, 255, 255);'>打开指定页面</h3><p>打开指定页面有两种方式</p><p>1、填写完整的包名和 Activity，具体格式为：</p><p>intent:#Intent;component=com.jiguang.push/com.example.jpushdemo.SettingActivity;end</p><p>2、客户端Activity 在 manifest 配置为：</p><p>&lt;activity android:name='.MyActivity' android:exported='true'&gt; &lt;intent-filter&gt; &lt;action android:name='android.intent.action.VIEW' /&gt; &lt;category android:name='android.intent.category.DEFAULT' /&gt; &lt;data android:scheme='app' android:host='example' android:path='/MyActivity/' /&gt; &lt;/intent-filter&gt; &lt;/activity&gt;</p><p>填写的路径为：app://example/MyActivity/</p>"
+    "IntentUrlTips": "<h3 style='color: rgb(255, 255, 255);'>打开指定页面</h3><p>打开指定页面有两种方式</p><p>1、填写完整的包名和 Activity，具体格式为：</p><p>intent:#Intent;component=com.jiguang.push/com.example.jpushdemo.SettingActivity;end</p><p>2、客户端Activity 在 manifest 配置为：</p><p>&lt;activity android:name='.MyActivity' android:exported='true'&gt; &lt;intent-filter&gt; &lt;action android:name='android.intent.action.VIEW' /&gt; &lt;category android:name='android.intent.category.DEFAULT' /&gt; &lt;data android:scheme='app' android:host='example' android:path='/MyActivity/' /&gt; &lt;/intent-filter&gt; &lt;/activity&gt;</p><p>填写的路径为：app://example/MyActivity/</p>",
+    "development": "开发环境",
+    "production": "生产环境"
 
   },
   "MessageRecordBlock": {
