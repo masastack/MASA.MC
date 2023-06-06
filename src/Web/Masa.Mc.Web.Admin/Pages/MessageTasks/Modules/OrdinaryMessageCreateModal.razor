@@ -121,6 +121,15 @@
                                                         <MenuTooltip Class="ml-2" Tooltip="@T("IntentUrlTips")" />
                                                     </AppendOuterContent>
                                                 </STextField>
+                                                <DefaultSubTitle Class="my-6">Ios</DefaultSubTitle>
+                                                <MRadioGroup @bind-Value="_model.ExtraProperties.IsApnsProduction"Row>
+                                                    <MRadio Label="@T("development")"
+                                                            Value="false">
+                                                    </MRadio>
+                                                    <MRadio Label="@T("production")"
+                                                            Value="true">
+                                                    </MRadio>
+                                                </MRadioGroup>
                                             </MExpansionPanelContent>
                                             </MExpansionPanel>
                                         </MExpansionPanels>
