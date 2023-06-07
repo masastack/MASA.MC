@@ -45,7 +45,8 @@ public class JPushSender : IAppNotificationSender
                         Title = appMessage.Title,
                         Body = appMessage.Text
                     },
-                    Badge = "+1"
+                    Badge = "+1",
+                    Extras = appMessage.TransmissionContent.ToDictionary(x => x.Key, x => x.Value)
                 }
             },
             Message = new Jiguang.JPush.Model.Message
@@ -104,7 +105,8 @@ public class JPushSender : IAppNotificationSender
                         Title = appMessage.Title,
                         Body = appMessage.Text
                     },
-                    Badge = "+1"
+                    Badge = "+1",
+                    Extras = appMessage.TransmissionContent.ToDictionary(x => x.Key, x => x.Value)
                 }
             },
             Message = new Jiguang.JPush.Model.Message
