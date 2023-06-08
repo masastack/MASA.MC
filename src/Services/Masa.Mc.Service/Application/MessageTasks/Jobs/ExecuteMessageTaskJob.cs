@@ -1,9 +1,9 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
-namespace Masa.Mc.Service.Admin.Domain.MessageTasks.EventHandler;
+namespace Masa.Mc.Service.Admin.Application.MessageTasks.Jobs;
 
-public class ExecuteMessageTaskEventHandler
+public class ExecuteMessageTaskJob : BackgroundJobBase<ExecuteMessageTaskJobArgs>
 {
     private readonly IChannelRepository _channelRepository;
     private readonly IMessageTaskRepository _messageTaskRepository;
@@ -11,13 +11,16 @@ public class ExecuteMessageTaskEventHandler
     private readonly IDomainEventBus _eventBus;
     private readonly MessageTaskDomainService _domainService;
     private readonly IMessageTaskJobService _messageTaskJobService;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public ExecuteMessageTaskEventHandler(IChannelRepository channelRepository
+    public ExecuteMessageTaskJob(ILogger<BackgroundJobBase<ExecuteMessageTaskJobArgs>>? logger
+        ,IChannelRepository channelRepository
         , IMessageTaskRepository messageTaskRepository
         , IMessageTaskHistoryRepository messageTaskHistoryRepository
         , IDomainEventBus eventBus
         , MessageTaskDomainService domainService
-        , IMessageTaskJobService messageTaskJobService)
+        , IMessageTaskJobService messageTaskJobService
+        , IUnitOfWork unitOfWork) : base(logger)
     {
         _channelRepository = channelRepository;
         _messageTaskRepository = messageTaskRepository;
@@ -25,41 +28,37 @@ public class ExecuteMessageTaskEventHandler
         _eventBus = eventBus;
         _domainService = domainService;
         _messageTaskJobService = messageTaskJobService;
+        _unitOfWork = unitOfWork;
     }
 
-    [EventHandler]
-    public async Task HandleEventAsync(ExecuteMessageTaskEvent eto)
+    protected override async Task ExecutingAsync(ExecuteMessageTaskJobArgs args)
     {
-        var history = await _messageTaskHistoryRepository.FindWaitSendAsync(eto.MessageTaskId, eto.IsTest);
+        var history = await _messageTaskHistoryRepository.FindWaitSendAsync(args.MessageTaskId, args.IsTest);
 
         if (history == null)
         {
-            var messageTask = await _messageTaskRepository.FindAsync(x => x.Id == eto.MessageTaskId, false);
+            var messageTask = await _messageTaskRepository.FindAsync(x => x.Id == args.MessageTaskId, false);
             if (messageTask == null) return;
 
             Guid userId = Guid.Empty;
             await _messageTaskJobService.DisableJobAsync(messageTask.SchedulerJobId, userId);
             return;
         }
-        history.SetTaskId(eto.TaskId);
+        history.SetTaskId(args.TaskId);
         var messageData = await _domainService.GetMessageDataAsync(history.MessageTask, history.MessageTask.Variables);
         history.SetSending();
 
-        if (!eto.IsTest && !history.MessageTask.SendTime.HasValue)
+        if (!args.IsTest && !history.MessageTask.SendTime.HasValue)
         {
             history.MessageTask.SetSending();
         }
 
         await _messageTaskHistoryRepository.UpdateAsync(history);
-        await _messageTaskHistoryRepository.UnitOfWork.SaveChangesAsync();
-        await SendMessagesAsync(history.MessageTask.ChannelId.Value, messageData, history);
-    }
+        await _unitOfWork.SaveChangesAsync();
 
-    private async Task SendMessagesAsync(Guid channelId, MessageData messageData, MessageTaskHistory messageTaskHistory)
-    {
-        var channel = await _channelRepository.FindAsync(x => x.Id == channelId);
+        var channel = await _channelRepository.FindAsync(x => x.Id == history.MessageTask.ChannelId);
 
-        var eto = channel.Type.GetSendMessageEvent(channelId, messageData, messageTaskHistory);
+        var eto = channel.Type.GetSendMessageEvent(history.MessageTask.ChannelId.Value, messageData, history);
         await _eventBus.PublishAsync(eto);
     }
 }

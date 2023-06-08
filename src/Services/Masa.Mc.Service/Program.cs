@@ -107,6 +107,10 @@ builder.Services.AddSignalR();
 builder.Services.AddTransient<NotificationsHub>();
 builder.Services.AddAuthChannelUserFinder();
 builder.Services.AddMessageTaskHttpJobService();
+builder.Services.AddBackgroundJob(options =>
+{
+    options.UseInMemoryDatabase();
+});
 var mock = builder.Services.GetMasaConfiguration().ConfigurationApi.GetDefault().GetValue<bool>("Mock:Enable");
 if (mock)
 {

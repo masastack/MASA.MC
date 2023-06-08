@@ -206,3 +206,5 @@ global using Masa.Mc.Infrastructure.Sms.Model.Response;
 global using Moq;
 global using Microsoft.Extensions.DependencyInjection.Extensions;
 global using Masa.Mc.Service.Admin.Infrastructure.Mock;
+global using Masa.BuildingBlocks.Extensions.BackgroundJobs;
+global using Masa.Mc.Service.Admin.Application.MessageTasks.Jobs;

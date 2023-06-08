@@ -3,19 +3,21 @@
 
 namespace Masa.Mc.Service.Admin.Application.MessageTasks.EventHandler;
 
-public class ResolveMessageTaskEventHandler
+public class ExecuteMessageTaskEventHandler
 {
-    public ResolveMessageTaskEventHandler()
+    public ExecuteMessageTaskEventHandler()
     {
     }
 
     [EventHandler]
-    public async Task HandleEventAsync(ResolveMessageTaskEvent eto)
+    public async Task HandleEventAsync(ExecuteMessageTaskEvent eto)
     {
-        var args = new ResolveMessageTaskJobArgs()
+        var args = new ExecuteMessageTaskJobArgs()
         {
             MessageTaskId = eto.MessageTaskId,
-            OperatorId = eto.OperatorId
+            IsTest = eto.IsTest,
+            JobId = eto.JobId,
+            TaskId = eto.TaskId
         };
 
         await BackgroundJobManager.EnqueueAsync(args);

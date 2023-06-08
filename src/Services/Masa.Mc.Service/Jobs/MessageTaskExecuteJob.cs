@@ -5,7 +5,7 @@ namespace Masa.Mc.Service.Admin.Jobs;
 
 public class MessageTaskExecuteJob : SchedulerJob
 {
-    public override async Task<object?> ExcuteAsync(JobContext context)
+    public override async Task<object?> ExcuteAsync(BuildingBlocks.StackSdks.Scheduler.Model.JobContext context)
     {
         try
         {
@@ -24,22 +24,39 @@ public class MessageTaskExecuteJob : SchedulerJob
                 options.Environment = "environment";
                 options.UserName = "name";
                 options.UserId = "sub";
+                options.Mapping(nameof(MasaUser.CurrentTeamId), IdentityClaimConsts.CURRENT_TEAM);
+                options.Mapping(nameof(MasaUser.StaffId), IdentityClaimConsts.STAFF);
+                options.Mapping(nameof(MasaUser.Account), IdentityClaimConsts.ACCOUNT);
             });
             builder.Services.AddSequentialGuidGenerator();
-            builder.Services.AddMasaConfiguration(configurationBuilder =>
-            {
-                configurationBuilder.UseDcc();
-            });
+            //builder.Services.AddMasaConfiguration(configurationBuilder =>
+            //{
+            //    configurationBuilder.UseDcc();
+            //});
+            await builder.Services.AddMasaStackConfigAsync();
+            var masaStackConfig = builder.Services.GetMasaStackConfig();
             var configuration = builder.Services.GetMasaConfiguration().ConfigurationApi.GetDefault();
-            var publicConfiguration = builder.Services.GetMasaConfiguration().ConfigurationApi.GetPublic();
-            var redisOptions = publicConfiguration.GetSection("$public.RedisConfig").Get<RedisConfigurationOptions>();
-            serviceCollection.AddAuthClient(publicConfiguration.GetValue<string>("$public.AppSettings:AuthClient:Url"), redisOptions);
-            serviceCollection.AddMcClient(publicConfiguration.GetValue<string>("$public.AppSettings:McClient:Url"));
-            serviceCollection.AddSchedulerClient(publicConfiguration.GetValue<string>("$public.AppSettings:SchedulerClient:Url"));
+            var redisOptions = new RedisConfigurationOptions
+            {
+                Servers = new List<RedisServerOptions> {
+                    new RedisServerOptions()
+                    {
+                        Host= masaStackConfig.RedisModel.RedisHost,
+                        Port=   masaStackConfig.RedisModel.RedisPort
+                    }
+                },
+                DefaultDatabase = masaStackConfig.RedisModel.RedisDb,
+                Password = masaStackConfig.RedisModel.RedisPassword
+            };
+            serviceCollection.AddAuthClient(masaStackConfig.GetAuthServiceDomain(), redisOptions);
+            serviceCollection.AddMcClient(masaStackConfig.GetMcServiceDomain());
+            serviceCollection.AddSchedulerClient(masaStackConfig.GetSchedulerServiceDomain());
             serviceCollection.AddAliyunSms();
             serviceCollection.AddMailKit();
+            serviceCollection.AddAppNotification();
             serviceCollection.AddSignalR();
             serviceCollection.AddSingleton<ITemplateRenderer, TextTemplateRenderer>();
+            serviceCollection.AddAuthChannelUserFinder();
             serviceCollection.AddDomainEventBus(dispatcherOptions =>
             {
                 dispatcherOptions

@@ -29,7 +29,7 @@ public class MessageTaskAppJobService : IMessageTaskJobService
         var mcUrl = _masaStackConfig.GetMcServiceDomain();
         var request = new UpsertSchedulerJobRequest
         {
-            ProjectIdentity = MasaStackConsts.MC_SYSTEM_ID,
+            ProjectIdentity = MasaStackConstant.MC,
             Name = jobName,
             JobType = JobTypes.JobApp,
             CronExpression = cronExpression,
