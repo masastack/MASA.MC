@@ -32,12 +32,13 @@ public class WebsiteMessage : FullAggregateRoot<Guid, Guid>
     public List<WebsiteMessageTag> Tags { get; protected set; } = new();
 
 
-    public WebsiteMessage(Guid channelId, Guid userId, string title, string content, string linkUrl, DateTimeOffset sendTime, ExtraPropertyDictionary extraProperties) : this(channelId, userId, title, content, linkUrl, sendTime, false, null, extraProperties)
+    public WebsiteMessage(Guid messageTaskHistoryId, Guid channelId, Guid userId, string title, string content, string linkUrl, DateTimeOffset sendTime, ExtraPropertyDictionary extraProperties) : this(messageTaskHistoryId, channelId, userId, title, content, linkUrl, sendTime, false, null, extraProperties)
     {
     }
 
-    public WebsiteMessage(Guid channelId, Guid userId, string title, string content, string linkUrl, DateTimeOffset sendTime, bool isRead, DateTimeOffset? readTime, ExtraPropertyDictionary extraProperties)
+    public WebsiteMessage(Guid messageTaskHistoryId, Guid channelId, Guid userId, string title, string content, string linkUrl, DateTimeOffset sendTime, bool isRead, DateTimeOffset? readTime, ExtraPropertyDictionary extraProperties)
     {
+        MessageTaskHistoryId = messageTaskHistoryId;
         ChannelId = channelId;
         UserId = userId;
         Title = title;
