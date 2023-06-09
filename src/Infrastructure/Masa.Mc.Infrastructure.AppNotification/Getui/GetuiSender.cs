@@ -92,4 +92,9 @@ public class GetuiSender : IAppNotificationSender
 
         return template;
     }
+
+    public Task<AppNotificationResponseBase> WithdrawnAsync(string msgId)
+    {
+        throw new NotImplementedException();
+    }
 }

@@ -62,7 +62,7 @@ public class MessageTaskHistory : FullAggregateRoot<Guid, Guid>
         WithdrawTime = DateTimeOffset.Now;
         Status = MessageTaskHistoryStatuses.Withdrawn;
 
-        AddDomainEvent(new WithdrawMessageRecordEvent(Id));
+        AddDomainEvent(new WithdrawMessageRecordEvent(Id, MessageTaskId));
 
         if (MessageTask.ChannelType == ChannelType.WebsiteMessage)
         {

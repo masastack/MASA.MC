@@ -80,6 +80,7 @@ public class RetryAppMessageEventHandler
                 if (response.Success)
                 {
                     messageRecord.SetResult(true, string.Empty);
+                    messageRecord.SetDataValue(BusinessConsts.APP_PUSH_MSG_ID, response.MsgId);
                 }
                 else
                 {
