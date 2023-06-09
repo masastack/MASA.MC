@@ -70,7 +70,9 @@ public class JPushSender : IAppNotificationSender
                 return new AppNotificationResponseBase(false, response.Content);
             }
 
-            return new AppNotificationResponseBase(true, "ok");
+            var successResponse = JsonConvert.DeserializeObject<SendPushSuccessResponse>(response.Content);
+
+            return new AppNotificationResponseBase(true, "ok", successResponse.MsgId);
         }
         catch (Exception e)
         {
@@ -136,5 +138,21 @@ public class JPushSender : IAppNotificationSender
         {
             return new AppNotificationResponseBase(false, e.Message);
         }
+    }
+
+    public async Task<AppNotificationResponseBase> WithdrawnAsync(string msgId)
+    {
+        var options = await _jPushOptionsResolver.ResolveAsync();
+        JPushClient client = new JPushClient(options.AppKey, options.MasterSecret);
+
+        HttpResponseMessage response = await JPushClient.HttpClient.DeleteAsync($"{JPushClient.BASE_URL_PUSH_DEFAULT}/{msgId}");
+        var content = await response.Content.ReadAsStringAsync();
+
+        if (response.StatusCode != HttpStatusCode.OK)
+        {
+            return new AppNotificationResponseBase(false, content);
+        }
+
+        return new AppNotificationResponseBase(true, "ok");
     }
 }

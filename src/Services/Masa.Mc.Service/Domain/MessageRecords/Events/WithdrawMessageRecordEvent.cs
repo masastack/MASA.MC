@@ -3,6 +3,6 @@
 
 namespace Masa.Mc.Service.Admin.Domain.MessageRecords.Events;
 
-public record WithdrawMessageRecordEvent(Guid MessageTaskHistoryId) : DomainEvent
+public record WithdrawMessageRecordEvent(Guid MessageTaskHistoryId, Guid MessageTaskId) : DomainEvent
 {
 }

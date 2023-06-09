@@ -9,9 +9,12 @@ public class AppNotificationResponseBase
 
     public string Message { get; }
 
-    public AppNotificationResponseBase(bool success, string message)
+    public string MsgId { get; set; } = string.Empty;
+
+    public AppNotificationResponseBase(bool success, string message, string msgId = "")
     {
         Success = success;
         Message = message;
+        MsgId = msgId;
     }
 }
