@@ -1,8 +1,6 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
-using Masa.Mc.Service.Admin.Domain.MessageTasks.Aggregates;
-
 namespace Masa.Mc.Service.Admin.Domain.WebsiteMessages.Aggregates;
 
 public class WebsiteMessage : FullAggregateRoot<Guid, Guid>
