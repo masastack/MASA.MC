@@ -66,6 +66,7 @@ public class ResolveMessageTaskJob : BackgroundJobBase<ResolveMessageTaskJobArgs
         {
             var history = new MessageTaskHistory(messageTask.Id, messageTask.ReceiverUsers, false, sendTime);
             history.ExecuteTask();
+            await _messageTaskRepository.UpdateAsync(messageTask);
             await _messageTaskHistoryRepository.AddAsync(history);
             await _unitOfWork.SaveChangesAsync();
             await _unitOfWork.CommitAsync();
