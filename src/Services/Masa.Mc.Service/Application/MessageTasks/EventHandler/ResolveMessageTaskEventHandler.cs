@@ -5,13 +5,23 @@ namespace Masa.Mc.Service.Admin.Application.MessageTasks.EventHandler;
 
 public class ResolveMessageTaskEventHandler
 {
-    public ResolveMessageTaskEventHandler()
+    private readonly IMessageTaskRepository _messageTaskRepository;
+
+    public ResolveMessageTaskEventHandler(IMessageTaskRepository messageTaskRepository)
     {
+        _messageTaskRepository = messageTaskRepository;
     }
 
     [EventHandler]
     public async Task HandleEventAsync(ResolveMessageTaskEvent eto)
     {
+        var messageTask = await _messageTaskRepository.FindAsync(x => x.Id == eto.MessageTaskId);
+
+        if (!messageTask.SendRules.IsCustom) {
+            messageTask.SetSending();
+            await _messageTaskRepository.UpdateAsync(messageTask);
+        }
+
         var args = new ResolveMessageTaskJobArgs()
         {
             MessageTaskId = eto.MessageTaskId,
