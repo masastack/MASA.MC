@@ -72,4 +72,14 @@ public static class ExtensionPropertyHelper
         }
         return JsonSerializer.Deserialize<T>(extraPropertiesAsJson) ?? Activator.CreateInstance<T>();
     }
+
+    public static ExtraPropertyDictionary ConvertToExtraProperty(object obj)
+    {
+        var objAsJson = JsonSerializer.Serialize(obj);
+        if (string.IsNullOrEmpty(objAsJson) || objAsJson == "{}")
+        {
+            return Activator.CreateInstance<ExtraPropertyDictionary>();
+        }
+        return JsonSerializer.Deserialize<ExtraPropertyDictionary>(objAsJson) ?? Activator.CreateInstance<ExtraPropertyDictionary>();
+    }
 }

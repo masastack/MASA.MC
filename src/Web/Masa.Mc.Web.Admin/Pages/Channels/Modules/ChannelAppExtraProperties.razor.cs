@@ -14,6 +14,9 @@ public partial class ChannelAppExtraProperties : AdminCompontentBase
     [Parameter]
     public bool PasswordView { get; set; }
 
+    [Parameter]
+    public bool IsAdd { get; set; }
+
     public MForm? Form { get; set; }
 
     private AppChannelOptions _model = new();
@@ -26,9 +29,19 @@ public partial class ChannelAppExtraProperties : AdminCompontentBase
         _model = ExtensionPropertyHelper.ConvertToType<AppChannelOptions>(Value);
     }
 
+    protected override void OnParametersSet()
+    {
+        if (_model.Provider == default && Value.HasProperty(nameof(AppChannelOptions.Provider)))
+        {
+            var provider = Value.GetProperty<string>(nameof(AppChannelOptions.Provider));
+
+            _model.Provider = (AppChannelProviders)Enum.Parse(typeof(AppChannelProviders), provider);
+        }
+    }
+
     public async Task HandleChangeAsync()
     {
-        Value = ExtensionPropertyHelper.ObjMapToExtraProperty(_model);
+        Value = ExtensionPropertyHelper.ConvertToExtraProperty(_model);
         await ValueChanged.InvokeAsync(Value);
     }
 }

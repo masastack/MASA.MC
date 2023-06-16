@@ -1,17 +1,20 @@
 ﻿@inherits AdminCompontentBase
 <MForm Model="_model" @ref="Form" EnableValidation EnableI18n Class="my-3">
-    <MRow Class="row-box">
-        <MCol>
-            <MRadioGroup @bind-Value="_model.Provider" Label="@T("DisplayName.AppChannelProviders")" Class="mt-0" Row OnClick="HandleChangeAsync">
+    @if (!IsAdd)
+    {
+        <MRow Class="row-box">
+            <MCol>
+                <MRadioGroup @bind-Value="_model.Provider" Label="@T("DisplayName.AppChannelProviders")" Class="mt-0" Row>
                 @foreach (var item in GetEnumList<AppChannelProviders>())
-                {
-                    <MRadio Label="@T($"DisplayName.AppChannelProviders.{item.ToString()}")" )
+                    {
+                        <MRadio Label="@T($"DisplayName.AppChannelProviders.{item.ToString()}")" )
                         Value="item">
-                    </MRadio>
-                }
-            </MRadioGroup>
-        </MCol>
-    </MRow>
+                        </MRadio>
+                    }
+                </MRadioGroup>
+            </MCol>
+        </MRow>
+    }
     <MRow Class="row-box">
         @if (_model.Provider == AppChannelProviders.GeTui)
         {

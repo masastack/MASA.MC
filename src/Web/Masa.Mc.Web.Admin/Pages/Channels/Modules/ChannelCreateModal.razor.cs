@@ -16,10 +16,36 @@ public partial class ChannelCreateModal : AdminCompontentBase
     private List<string> _colors = new List<string> { "purple", "green", "yellow", "red", "blue" };
     private ChannelExtraProperties _channelExtraPropertiesRef = default!;
     private ChannelTypes _hoverType;
-
+    private AppChannelProviders _appHoverType;
+    
     int _step = 1;
 
+    Dictionary<string, object> _svgAttributes = new Dictionary<string, object> { ["viewBox"] = "0 0 1024 1024" };
+
     ChannelService ChannelService => McCaller.ChannelService;
+
+    private int _nextStep
+    {
+        get
+        {
+            return _model.Type == ChannelTypes.App ? 2 : 3;
+        }
+    }
+
+    private int _previousStep
+    {
+        get
+        {
+            if (_step == 3)
+            {
+                return _model.Type == ChannelTypes.App ? 2 : 1;
+            }
+            else
+            {
+                return 1;
+            }
+        }
+    }
 
     public async Task OpenModalAsync()
     {
@@ -43,7 +69,8 @@ public partial class ChannelCreateModal : AdminCompontentBase
     {
         _hoverType = default;
         _model.Type = Type;
-        _step++;
+
+        _step = _nextStep;
     }
 
     private async Task HandleOkAsync()
@@ -84,5 +111,20 @@ public partial class ChannelCreateModal : AdminCompontentBase
         {
             _hoverType = hoverType;
         }
+    }
+
+    private void HandleAppHoverChanged(bool val, AppChannelProviders hoverType)
+    {
+        if (val)
+        {
+            _appHoverType = hoverType;
+        }
+    }
+
+    private void HandleAppSelectType(AppChannelProviders Type)
+    {
+        _hoverType = default;
+        _model.ExtraProperties.SetProperty(nameof(AppChannelOptions.Provider), (int)Type);
+        _step = 3;
     }
 }

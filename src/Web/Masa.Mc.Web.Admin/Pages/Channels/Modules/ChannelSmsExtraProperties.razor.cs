@@ -30,7 +30,7 @@ public partial class ChannelSmsExtraProperties : AdminCompontentBase
 
     public async Task HandleChangeAsync()
     {
-        Value = ExtensionPropertyHelper.ObjMapToExtraProperty(_model);
+        Value = ExtensionPropertyHelper.ConvertToExtraProperty(_model);
         await ValueChanged.InvokeAsync(Value);
     }
 }

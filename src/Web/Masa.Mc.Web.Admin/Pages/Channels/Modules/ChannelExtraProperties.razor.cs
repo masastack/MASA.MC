@@ -27,6 +27,9 @@ public partial class ChannelExtraProperties : AdminCompontentBase
     [Parameter]
     public bool PasswordView { get; set; }
 
+    [Parameter]
+    public bool IsAdd { get; set; }
+
     private ChannelEmailExtraProperties? _emailExtraPropertiesRef;
     private ChannelSmsExtraProperties? _smsExtraPropertiesRef;
     private ChannelAppExtraProperties? _appExtraPropertiesRef;
