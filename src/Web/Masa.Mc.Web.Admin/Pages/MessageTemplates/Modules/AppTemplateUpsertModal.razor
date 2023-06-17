@@ -1,0 +1,113 @@
+﻿@inherits AdminCompontentBase
+<div @ref="Ref">
+    <SSimpleModal Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T(_entityId == default?"Permission.CreateMessageTemplate":"Permission.EditMessageTemplate")" HeaderClass="mr-4" BodyStyle="height: 617px;" SaveText="@T(_entityId == default?"Submit":"Save")" OnCancel="HandleCancel" OnSave="async() => await Throttle(HandleOkAsync)">
+        <ChildContent>
+            <MForm Model="_model" EnableValidation EnableI18n @ref="_form" Class="full-height">
+                <MRow Class="row-box">
+                    <MCol>
+                        <STextField @bind-Value="_model.Code"
+                                    Label="@T("DisplayName.MessageTemplateCode")">
+                        </STextField>
+                    </MCol>
+                </MRow>
+                <MRow Class="row-box">
+                    <MCol>
+                        <SSelect Value="@_model.ChannelType"
+                                 Items="@(GetEnumList<ChannelTypes>())"
+                                 Label="@T("DisplayName.ChannelType")"
+                                 ItemText="item => T(item.ToString())"
+                                 ItemValue="item => item"
+                                      Disabled
+                                 TItem="ChannelTypes"
+                                 TItemValue="ChannelTypes"
+                                 TValue="ChannelTypes"
+                                 ValueChanged="HandleSelectChannelTypeAsync">
+                        </SSelect>
+                    </MCol>
+                </MRow>
+                <MRow Class="row-box">
+                    <MCol>
+                        <SSelect @bind-Value="_model.ChannelId"
+                                 Items="@_channelItems"
+                                 Label="@T("DisplayName.Channel")"
+                                 ItemText="item => item.DisplayName"
+                                 ItemValue="item => item.Id">
+                        </SSelect>
+                    </MCol>
+                </MRow>
+                <MRow>
+                    <MCol Class="d-flex">
+                        <SCheckbox Value="true" Disabled Label="@T("NotificationMessage")"></SCheckbox>
+                        <SCheckbox @bind-Value="@_model.Options.IsWebsiteMessage" Class="ml-6" Label="@T("InAppMessages")" Tooltip="@T("InAppMessagesTips")"></SCheckbox>
+                    </MCol>
+                </MRow>
+                <MRow Class="row-box">
+                    <MCol>
+                        <STextField @bind-Value="_model.Title"
+                                    Label="@T("DisplayName.MessageTemplateTitle")">
+                        </STextField>
+                    </MCol>
+                </MRow>
+                <MRow Class="row-box">
+                   <MCol>
+                        <STextarea @bind-Value="_model.Content"
+                                   Label="@T("DisplayName.MessageTemplateContent")">
+                        </STextarea>
+                   </MCol>
+                </MRow>
+                <MRow Class="row-box">
+                    <MCol>
+                        <STextField @bind-Value="_model.JumpUrl"
+                                    Label="@T("DisplayName.MessageTemplateJumpUrl")" Tooltip="@T("JumpUrlTips")">
+                            <PrependContent>
+                                <MCheckbox Class="mt-0" @bind-Value="_model.IsJump"></MCheckbox>
+                            </PrependContent>
+                        </STextField>
+                    </MCol>
+                </MRow>
+                <ExtraProperties @bind-Value="_model.ExtraProperties"></ExtraProperties>
+                <MExpansionPanels Accordion Flat>
+                    <MExpansionPanel>
+                        <MExpansionPanelHeader Context="PanelHeader" Class="pa-0">
+                            <DefaultSubTitle Class="">@T("OptionalConfiguration")</DefaultSubTitle>
+                        </MExpansionPanelHeader>
+                        <MExpansionPanelContent Class="pa-0">
+                            <DefaultSubTitle Class="mb-6">Android</DefaultSubTitle>
+                            <STextField @bind-Value="_model.Options.IntentUrl"
+                                        Label="@T("IntentUrl")">
+                                <AppendOuterContent>
+                                    <MenuTooltip Class="ml-2" Tooltip="@T("IntentUrlTips")" />
+                                </AppendOuterContent>
+                            </STextField>
+                            <DefaultSubTitle Class="my-6">Ios</DefaultSubTitle>
+                            <MRadioGroup @bind-Value="_model.Options.IsApnsProduction" Row>
+                                <MRadio Label="@T("development")"
+                                        Value="false">
+                                </MRadio>
+                                <MRadio Label="@T("production")"
+                                        Value="true">
+                                </MRadio>
+                            </MRadioGroup>
+                        </MExpansionPanelContent>
+                    </MExpansionPanel>
+                </MExpansionPanels>
+                 <MRow Class="row-box">
+                    <MCol>
+                        <div class="d-flex align-center justify-start">
+                            <span class="body2 regular--text mr-2">@T("Description.MessageTemplate.PerDayLimit.Tips") </span>
+                            <div style="width:80px;">
+                                <MTextField @bind-Value="_model.PerDayLimit"
+                                            Type="number"
+                                            Dense
+                                            Outlined
+                                            HideDetails="@("auto")">
+                                </MTextField>
+                            </div>
+                            <span class="body2 regular--text ml-2">@T("Unit.Bar") </span>
+                        </div>
+                    </MCol>
+                </MRow>
+            </MForm>
+        </ChildContent>
+    </SSimpleModal>
+</div>

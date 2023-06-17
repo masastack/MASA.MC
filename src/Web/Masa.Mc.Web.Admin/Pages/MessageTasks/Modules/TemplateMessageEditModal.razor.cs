@@ -54,6 +54,8 @@ public partial class TemplateMessageEditModal : AdminCompontentBase
         if (_model.EntityId != default)
         {
             _messageInfo = await MessageTemplateService.GetAsync(_model.EntityId) ?? new();
+
+            FillVariables(_model.Variables,_messageInfo.Items);
         }
 
         await HandleChannelChangeAsync();
@@ -124,18 +126,22 @@ public partial class TemplateMessageEditModal : AdminCompontentBase
         _messageInfo = item;
         if (item.Channel != null) _model.ChannelId = item.Channel.Id;
         _model.Sign = item.Sign;
-        _model.Variables = FillVariables(_messageInfo.Items);
+        FillVariables(null, _messageInfo.Items);
         HandleChannelTypeChanged();
     }
 
-    private ExtraPropertyDictionary FillVariables(List<MessageTemplateItemDto> items)
+    private void FillVariables(ExtraPropertyDictionary? variables, List<MessageTemplateItemDto> items)
     {
-        var source = new ExtraPropertyDictionary();
+        if (variables == null)
+            variables = new ExtraPropertyDictionary();
+
         foreach (var item in items)
         {
-            source.TryAdd(item.Code, string.Empty);
+            if (!variables.Any(x => x.Key == item.Code))
+            {
+                variables.TryAdd(item.Code, string.Empty);
+            }
         }
-        return source;
     }
 
     private void HandleChannelTypeChanged()

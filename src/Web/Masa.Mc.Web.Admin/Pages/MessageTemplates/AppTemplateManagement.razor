@@ -1,0 +1,89 @@
+﻿@inherits AdminCompontentBase
+@page "/messageTemplates/appTemplateManagement"
+
+<PageTitle>@T("App")</PageTitle>
+<AutoHeight AutoClass="mt-6">
+    <HeaderContent>
+        <SSearchPanel @bind-Value="@_queryParam.Filter" Advanced OnEnter="RefreshAsync" OnClearClick="HandleClearAsync" OnClick="()=> _upsertModal.OpenModalAsync()">
+            <ChildContent>
+                <DefaultTitle>@T("AppTitle")</DefaultTitle>
+            </ChildContent>
+            <AdvancedContent>
+                <MCol Class="flex-grow-0">
+                    <SDateTimeRangeToolbar StartDateTime="_startTime" EndDateTime="_endTime" OnUpdate="DateRangChangedAsync" ShowQuickChange="false" />
+                </MCol>
+                <MCol Md="3">
+                    <SSelect Small @bind-Value="_queryParam.ChannelId"
+                             Items="@_channelItems"
+                             Label="@T("DisplayName.Channel")"
+                             ItemText="item => item.DisplayName"
+                             ItemValue="item => item.Id"
+                             BackgroundColor="white"
+                                  Clearable
+                             HideDetails="@("auto")"
+                             TItem="ChannelDto"
+                             TItemValue="Guid"
+                             TValue="Guid?"
+                             Class="rounded-lg body2"
+                             OnClearClick="RefreshAsync"
+                             OnSelectedItemUpdate="RefreshAsync">
+                    </SSelect>
+                    </MCol>
+                </AdvancedContent>
+                </SSearchPanel>
+            </HeaderContent>
+            <AutoHeightContent>
+                <MCard Class="full-height">
+                <SDataTable Headers="GetHeaders()" Items="_entities.Result" TItem="MessageTemplateDto" ItemsPerPage="_queryParam.PageSize" HideDefaultFooter FixedRight Class="d-flex full-height flex-column">
+                <HeaderColContent Context="header">
+                    <span class="text-btn">@header.Text</span>
+                </HeaderColContent>
+                <ItemColContent>
+                    @switch (context.Header.Value)
+                    {
+                        case ("ChannelDisplayName"):
+                            <DefaultGenericColumnRender Value="@context.Item.Channel?.DisplayName" Width="@context.Header.Width"></DefaultGenericColumnRender>
+                            break;
+                        case nameof(MessageTemplateDto.AuditStatus):
+                            string color = string.Empty;
+                            switch (context.Item.AuditStatus)
+                            {
+                                case MessageTemplateAuditStatuses.WaitAudit:
+                                    color = "orange";
+                                    break;
+                                case MessageTemplateAuditStatuses.Adopt:
+                                    color = "sample-green";
+                                    break;
+                                case MessageTemplateAuditStatuses.Fail:
+                                    color = "error";
+                                    break;
+                                default:
+                                    break;
+                            }
+                            <MChip Color="@($"{color}-lighten-5")" TextColor="@color" Ripple="false">
+                                <span class="body regular--text">@T($"DisplayName.MessageTemplateAuditStatus.{context.Item.AuditStatus.ToString()}")</span>
+                            </MChip>
+                            break;
+                        case nameof(MessageTemplateDto.Status):
+                            <MChip Ripple="false">
+                                <span class="body regular--text">@T($"DisplayName.MessageTemplateStatus.{context.Item.Status.ToString()}")</span>
+                            </MChip>
+                            break;
+                        case "Action":
+                            <DefaultIcon Small Color="emphasis2" Tooltip="@(T("Edit"))" OnClick="async()=>await _upsertModal.OpenModalAsync(context.Item)">mdi-pencil</DefaultIcon>
+                            break;
+                        default:
+                            <DefaultGenericColumnRender Value="@context.Value" Width="@context.Header.Width"></DefaultGenericColumnRender>
+                            break;
+                    }
+                </ItemColContent>
+                <FooterContent>
+                    <SPagination Class="mt-3 mx-6 pb-6" Page="@_queryParam.Page" PageSize="@_queryParam.PageSize" Total="_entities.Total" PageChanged="HandlePageChanged" PageSizeChanged="HandlePageSizeChanged" />
+                </FooterContent>
+            </SDataTable>
+        </MCard>
+    </AutoHeightContent>
+</AutoHeight>
+
+<AppTemplateUpsertModal @ref="_upsertModal" OnOk="HandleOk" />
+

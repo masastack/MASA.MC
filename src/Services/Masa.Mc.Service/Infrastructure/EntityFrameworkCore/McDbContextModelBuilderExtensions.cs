@@ -29,6 +29,7 @@ public static class McDbContextModelBuilderExtensions
             b.Property(x => x.Code).IsRequired().HasMaxLength(64);
             b.Property(x => x.TemplateId).IsRequired().HasMaxLength(128);
             b.Property(x => x.Sign).HasMaxLength(128);
+            b.Property(x => x.Options).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
             b.HasMany(x => x.Items).WithOne().HasForeignKey(x => x.MessageTemplateId).IsRequired();
             b.HasIndex(x => x.ChannelId);
             b.HasIndex(x => x.Code);
@@ -39,7 +40,7 @@ public static class McDbContextModelBuilderExtensions
                 b.Property(x => x.Markdown).HasColumnName("Markdown");
                 b.Property(x => x.IsJump).HasMaxLength(128).HasColumnName("IsJump");
                 b.Property(x => x.JumpUrl).HasMaxLength(256).HasColumnName("JumpUrl");
-                b.Ignore(x => x.ExtraProperties);
+                b.Property(x => x.ExtraProperties).HasColumnName("ExtraProperties").HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
             });
         });
 

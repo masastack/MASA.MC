@@ -1,0 +1,79 @@
+﻿@inherits AdminCompontentBase
+
+@if (Template.Channel?.Type == ChannelTypes.App)
+{
+    <MRow>
+        <MCol Class="d-flex">
+            <SCheckbox Value="true" Readonly Label="@T("NotificationMessage")"></SCheckbox>
+            <SCheckbox Value="@(Template.Options.GetProperty<bool>("IsWebsiteMessage"))" Readonly Class="ml-6" Label="@T("InAppMessages")" Tooltip="@T("InAppMessagesTips")">
+            </SCheckbox>
+        </MCol>
+    </MRow>
+}
+@if (Template.Channel != null && Template.Channel.Type != ChannelTypes.Sms)
+{
+    <MRow Class="mt-6">
+        <MCol>
+            <STextField Value="Template.Title"
+                 Label="@T("DisplayName.MessageTemplateTitle")"
+                 Disabled>
+        </STextField>
+    </MCol>
+</MRow>
+}
+<MRow Class="mt-6">
+    <MCol>
+        <DefaultRichText Value="@Template.Content" Label="@T("DisplayName.MessageTemplateContent")"></DefaultRichText>
+    </MCol>
+</MRow>
+@if (ComputedJumpUrlShow)
+{
+    <MRow Class="mt-6">
+        <MCol>
+            <STextField Value="Template.JumpUrl" Readonly
+                Label="@T("DisplayName.MessageTemplateJumpUrl")" Disabled>
+            <PrependInnerContent>
+                <SIcon Size=16 Class="mt-2">fa:fas fa-link</SIcon>
+            </PrependInnerContent>
+        </STextField>
+    </MCol>
+</MRow>
+}
+@if (Template.Channel?.Type == ChannelTypes.App)
+{
+    <ExtraProperties Value="Template.ExtraProperties" Readonly></ExtraProperties>
+    <MExpansionPanels Accordion Flat>
+    <MExpansionPanel>
+        <MExpansionPanelHeader Context="PanelHeader" Class="pa-0">
+            <DefaultSubTitle Class="">@T("OptionalConfiguration")</DefaultSubTitle>
+        </MExpansionPanelHeader>
+        <MExpansionPanelContent Class="pa-0">
+            <DefaultSubTitle Class="mb-6">Android</DefaultSubTitle>
+            <STextField Value="@(Template.Options.GetProperty<string>("IntentUrl"))" Readonly
+                        Label="@T("IntentUrl")">
+                <AppendOuterContent>
+                    <MenuTooltip Class="ml-2" Tooltip="@T("IntentUrlTips")" />
+                </AppendOuterContent>
+                </STextField>
+                <DefaultSubTitle Class="my-6">Ios</DefaultSubTitle>
+                <MRadioGroup Value="@(Template.Options.GetProperty<bool>("IsApnsProduction"))" Readonly Row>
+                <MRadio Label="@T("development")" Value="false"></MRadio>
+                <MRadio Label="@T("production")" Value="true"></MRadio>
+            </MRadioGroup>
+        </MExpansionPanelContent>
+    </MExpansionPanel>
+</MExpansionPanels>
+}
+
+@code {
+    [Parameter]
+    public MessageTemplateDto Template { get; set; } = new();
+
+    private bool ComputedJumpUrlShow
+    {
+        get
+        {
+            return Template.IsJump && (Template.Channel?.Type == ChannelTypes.WebsiteMessage || (Template.Channel?.Type == ChannelTypes.App && Template.Options.GetProperty<bool>("IsWebsiteMessage")));
+        }
+    }
+}

@@ -33,4 +33,8 @@ public class MessageTemplateDto : AuditEntityDto<Guid, Guid>
     public ChannelDto Channel { get; set; }
 
     public string ModifierName { get; set; } = string.Empty;
+
+    public ExtraPropertyDictionary Options { get; set; } = new();
+
+    public ExtraPropertyDictionary ExtraProperties { get; set; } = new();
 }

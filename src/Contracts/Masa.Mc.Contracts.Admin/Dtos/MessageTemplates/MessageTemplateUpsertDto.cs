@@ -31,4 +31,6 @@ public class MessageTemplateUpsertDto
     public bool IsStatic { get; set; }
     public List<MessageTemplateItemDto> Items { get; set; }
     public MessageInfoUpsertDto MessageInfo { get; set; } = new();
+    public ExtraPropertyDictionary ExtraProperties { get; set; } = new();
+    public ExtraPropertyDictionary Options { get; set; } = new();
 }

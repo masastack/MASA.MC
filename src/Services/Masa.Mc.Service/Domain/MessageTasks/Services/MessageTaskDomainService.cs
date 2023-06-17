@@ -86,6 +86,8 @@ public class MessageTaskDomainService : DomainService
             messageData.RenderContent(variables);
             messageData.SetDataValue(nameof(MessageTemplate.TemplateId), messageTemplate.TemplateId);
             messageData.SetDataValue(nameof(MessageTemplate.Sign), messageTemplate.Sign);
+            messageData.SetDataValue(BusinessConsts.INTENT_URL, messageTemplate.Options.GetProperty<string>(BusinessConsts.INTENT_URL));
+            messageData.SetDataValue(BusinessConsts.IS_APNS_PRODUCTION, messageTemplate.Options.GetProperty<string>(BusinessConsts.IS_APNS_PRODUCTION));
             return messageData;
         }
 

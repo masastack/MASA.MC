@@ -10,7 +10,7 @@ public class MessageTemplateRegister : IRegister
         config.ForType<MessageTemplate, MessageTemplateDto>().MapToConstructor(true);
         config.ForType<MessageTemplateItemDto, MessageTemplateItem>().MapToConstructor(true);
         config.ForType<MessageTemplateUpsertDto, MessageTemplate>().MapToConstructor(true).Ignore(x => x.Items)
-            .Map(dest => dest.MessageContent, src => new MessageContent(src.Title, src.Content, src.Markdown, src.IsJump, src.JumpUrl, new ExtraPropertyDictionary())); ;
+            .Map(dest => dest.MessageContent, src => new MessageContent(src.Title, src.Content, src.Markdown, src.IsJump, src.JumpUrl, src.ExtraProperties)); ;
         config.ForType<SmsTemplate, SmsTemplateDto>().MapToConstructor(true);
     }
 }

@@ -101,6 +101,18 @@ public abstract class AdminCompontentBase : BDomComponentBase
         await PopupService.EnqueueSnackbarAsync(message, AlertTypes.Success);
     }
 
+    public async Task UpsertSuccessfulMessage(Guid entityId, string displayName)
+    {
+        if (entityId == default)
+        {
+            await SuccessMessageAsync(T("CreateSuccessfulMessage", displayName));
+        }
+        else
+        {
+            await SuccessMessageAsync(T("EditSuccessfulMessage", displayName));
+        }
+    }
+
     public async Task WarningAsync(string message)
     {
         await PopupService.EnqueueSnackbarAsync(message, AlertTypes.Warning);

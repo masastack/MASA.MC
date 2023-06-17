@@ -3,7 +3,7 @@
 
 namespace Masa.Mc.Web.Admin.Model;
 
-public class AppMessageExtraPropertys
+public class AppMessageOptions
 {
     public bool IsWebsiteMessage { get; set; }
 

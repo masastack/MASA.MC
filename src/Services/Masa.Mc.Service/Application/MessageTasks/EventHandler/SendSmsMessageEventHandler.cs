@@ -1,6 +1,8 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
+using Masa.Mc.Service.Admin.Domain.MessageRecords.Aggregates;
+
 namespace Masa.Mc.Service.Admin.Application.MessageTasks.EventHandler;
 
 public class SendSmsMessageEventHandler
@@ -50,6 +52,9 @@ public class SendSmsMessageEventHandler
             var taskHistory = eto.MessageTaskHistory;
             int okCount = 0;
             int totalCount = taskHistory.ReceiverUsers.Count;
+
+            var messageTemplate = await _templateRepository.FindAsync(x => x.Id == taskHistory.MessageTask.EntityId, false);
+
             foreach (var item in taskHistory.ReceiverUsers)
             {
                 var messageRecord = new MessageRecord(item.UserId, item.ChannelUserIdentity, channel.Id, taskHistory.MessageTaskId, taskHistory.Id, item.Variables, eto.MessageData.MessageContent.Title, taskHistory.SendTime, taskHistory.MessageTask.SystemId);
@@ -60,7 +65,6 @@ public class SendSmsMessageEventHandler
                 var variables = messageRecord.Variables;
                 if (eto.MessageData.MessageType == MessageEntityTypes.Template)
                 {
-                    var messageTemplate = await _templateRepository.FindAsync(x => x.Id == messageRecord.MessageEntityId, false);
                     messageRecord.SetDisplayName(messageTemplate.DisplayName);
                     if (!await _messageTemplateDomainService.CheckSendUpperLimitAsync(messageTemplate, messageRecord.ChannelUserIdentity))
                     {

@@ -37,5 +37,5 @@ public class MessageTaskUpsertModel
 
     public string SystemId { get; set; } = string.Empty;
 
-    public AppMessageExtraPropertys ExtraProperties { get; set; } = new();
+    public AppMessageOptions ExtraProperties { get; set; } = new();
 }

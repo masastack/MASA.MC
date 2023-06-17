@@ -42,7 +42,7 @@ public class WebsiteMessageCreatedEventHandler
 
         foreach (var taskHistory in taskHistorys)
         {
-            if (taskHistory.MessageTask.ChannelType == ChannelType.App && !taskHistory.MessageTask.IsAppInWebsiteMessage())
+            if (taskHistory.MessageTask.ChannelType == ChannelType.App && !taskHistory.MessageTask.IsAppInWebsiteMessage)
                 continue;
 
             var messageData = await _messageTaskDomainService.GetMessageDataAsync(taskHistory.MessageTask, taskHistory.MessageTask.Variables);
