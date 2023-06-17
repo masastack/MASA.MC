@@ -4,7 +4,7 @@
         <div @attributes="context.Attrs" class="@($"mt-8")">
             <label class="uploadImage" for="upload">
                 <InputFile accept="text/csv" OnChange="HandleFileChange" id="upload" />
-                <MProgressCircular Value="_progress" Size="258" Width="18" Color="@(_importResult?.HasError==true?"warning-disabled":"gradient")">
+                <MProgressCircular Value="_progress" Size="458" Width="18" Color="@(_importResult?.HasError==true?"warning-disabled":"gradient")">
                     @if (_isUpload)
                     {
                         <MImage Width=80 Height=80 Class="d-flex justify-center align-center" ContentClass="text-center"

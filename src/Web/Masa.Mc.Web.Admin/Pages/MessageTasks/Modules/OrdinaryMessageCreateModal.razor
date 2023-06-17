@@ -1,6 +1,6 @@
 ﻿@inherits AdminCompontentBase
 <div @ref="Ref">
-    <SSimpleModal Value="@_visible" ValueChanged="HandleVisibleChanged" Class="full-height" HeaderClass="mr-4" Title="@T("Permission.SendOrdinaryMessage")" OnDelete="HandleReceiverBack" OnCancel="HandleCancel" OnSave="HandleSaveAsync">
+    <DefaultSheetDialog Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.SendOrdinaryMessage")">
         <ChildContent>
             <MForm Model="_model" EnableValidation EnableI18n @ref="_form" Class="full-height mt-n2 pt-3">
                 <MStepper Value="_model.Step" Elevation=0 Class="d-flex flex-column full-height">
@@ -68,7 +68,7 @@
                                         <MCol>
                                             @if (_model.ChannelType != ChannelTypes.App)
                                             {
-                                                <DefaultMarkdown @bind-Html="_model.MessageInfo.Content" @bind-Value="_model.MessageInfo.Markdown"></DefaultMarkdown>
+                                                <DefaultMarkdown @bind-Html="_model.MessageInfo.Content" @bind-Value="_model.MessageInfo.Markdown" Style="height:400px"></DefaultMarkdown>
                                                 <MInput @bind-Value="_model.MessageInfo.Content" />
                                             }
                                             else
@@ -108,8 +108,8 @@
                                     @if (_model.ChannelType == ChannelTypes.App)
                                     {
                                         <ExtraProperties @bind-Value="_model.MessageInfo.ExtraProperties"></ExtraProperties>
-                                            <MExpansionPanels Accordion Flat>
-                                            <MExpansionPanel>
+                                        <MExpansionPanels Accordion Flat>
+                                        <MExpansionPanel>
                                             <MExpansionPanelHeader Context="PanelHeader" Class="pa-0">
                                                 <DefaultSubTitle Class="">@T("OptionalConfiguration")</DefaultSubTitle>
                                             </MExpansionPanelHeader>
@@ -122,7 +122,7 @@
                                                     </AppendOuterContent>
                                                 </STextField>
                                                 <DefaultSubTitle Class="my-6">Ios</DefaultSubTitle>
-                                                <MRadioGroup @bind-Value="_model.ExtraProperties.IsApnsProduction"Row>
+                                                <MRadioGroup @bind-Value="_model.ExtraProperties.IsApnsProduction" Row>
                                                     <MRadio Label="@T("development")"
                                                             Value="false">
                                                     </MRadio>
@@ -131,14 +131,21 @@
                                                     </MRadio>
                                                 </MRadioGroup>
                                             </MExpansionPanelContent>
-                                            </MExpansionPanel>
-                                        </MExpansionPanels>
+                                        </MExpansionPanel>
+                                    </MExpansionPanels>
                                     }
                                 </AutoHeightContent>
-                            </AutoHeight>
-                        </MStepperContent>
-                        <MStepperContent Class="full-height pa-0" Step="2">
-                            <AutoHeight Overflow>
+                                <FooterContent>
+                                    <div class="d-flex mt-6">
+                                        <MSpacer></MSpacer>
+                                        <SButton Medium OnClick="async() => await Throttle(HandleSaveAsync)" Outlined>@T("Save")</SButton>
+                                        <SButton Medium OnClick="()=> HandleNextStep()" Class="ml-6">@T("NextStep")</SButton>
+                                    </div>
+                                </FooterContent>
+                                </AutoHeight>
+                                </MStepperContent>
+                                <MStepperContent Class="full-height pa-0" Step="2">
+                                <AutoHeight Overflow>
                                 <AutoHeightContent>
                                     @if ((_model.ChannelType == ChannelTypes.WebsiteMessage || _model.ChannelType == ChannelTypes.App) && !_selectReceiverType)
                                     {
@@ -154,46 +161,42 @@
                                                       ChannelType="_model.ChannelType" />
                                     }
                                 </AutoHeightContent>
+                                <FooterContent>
+                                    <div class="d-flex mt-6">
+                                        <MButton Icon OnClick="HandleReceiverBack">
+                                            <SIcon Size="24" Color="emphasis2">mdi-keyboard-backspace</SIcon>
+                                        </MButton>
+                                        <MSpacer />
+                                        @if (_model.ChannelType != ChannelTypes.WebsiteMessage || _selectReceiverType)
+                                        {
+                                            <SButton Medium OnClick="async() => await Throttle(HandleSaveAsync)" Outlined>@T("Save")</SButton>
+                                            <SButton Medium Class="ml-6" OnClick="()=> HandleNextStep()">@T("NextStep")</SButton>
+                                        }
+                                    </div>
+                                </FooterContent>
                             </AutoHeight>
                         </MStepperContent>
                         <MStepperContent Class="full-height pa-0" Step="3">
-                            <MInput @bind-Value="_model.SendRules" />
-                            <MessageSendingRules Class="mt-2" @bind-Value="_model.SendRules" />
-                        </MStepperContent>
-                    </MStepperItems>
-                </MStepper>
-            </MForm>
-        </ChildContent>
-        <DeleteContent Context="delete">
-            @if (_model.Step == 2)
-            {
-                <MButton Icon OnClick="HandleReceiverBack">
-                <SIcon Size="24" Color="emphasis2">mdi-keyboard-backspace</SIcon>
-                </MButton>
-            }
-            else if (_model.Step == 3)
-            {
-                <MButton Icon OnClick="HandleSendingRuleBack">
-                <SIcon Size="24" Color="emphasis2">mdi-keyboard-backspace</SIcon>
-                </MButton>
-            }
-        </DeleteContent>
-        <SaveContent Context="save">
-            @if (_model.Step == 1)
-            {
-                <SButton Color="fill" BorderRadiusClass="btn-form" Class="btn-fill-line emphasis2--text" OnClick="async() => await Throttle(HandleSaveAsync)">@T("Save")</SButton>
-                <SButton BorderRadiusClass="btn-form" Class="ml-6" OnClick="()=> HandleNextStep()">@T("NextStep")</SButton>
-            }
-            @if (_model.Step == 2 && (_model.ChannelType != ChannelTypes.WebsiteMessage || _selectReceiverType))
-            {
-                <SButton Color="fill" BorderRadiusClass="btn-form" Class="btn-fill-line emphasis2--text" OnClick="async() => await Throttle(HandleSaveAsync)">@T("Save")</SButton>
-                <SButton BorderRadiusClass="btn-form" Class="ml-6" OnClick="()=> HandleNextStep()">@T("NextStep")</SButton>
-            }
-            @if (_model.Step == 3)
-            {
-                <SButton Color="fill" BorderRadiusClass="btn-form" Class="btn-fill-line emphasis2--text" OnClick="async() => await Throttle(HandleSaveAsync)">@T("Save")</SButton>
-                <SButton BorderRadiusClass="btn-form" Class="ml-6" OnClick="async() => await Throttle(HandleSendAsync)">@T("SaveSend")</SButton>
-            }
-        </SaveContent>
-    </SSimpleModal>
+                            <AutoHeight Overflow>
+                                <AutoHeightContent>
+                                    <MInput @bind-Value="_model.SendRules" />
+                                    <MessageSendingRules Class="mt-2" @bind-Value="_model.SendRules" />
+                                </AutoHeightContent>
+                                <FooterContent>
+                                    <div class="d-flex mt-6">
+                                        <MButton Icon OnClick="HandleSendingRuleBack">
+                                            <SIcon Size="24" Color="emphasis2">mdi-keyboard-backspace</SIcon>
+                                        </MButton>
+                                        <MSpacer />
+                                        <SButton Medium OnClick="async() => await Throttle(HandleSaveAsync)" Outlined>@T("Save")</SButton>
+                                        <SButton Medium Class="ml-6" OnClick="async() => await Throttle(HandleSendAsync)">@T("SaveSend")</SButton>
+                                    </div>
+                                </FooterContent>
+                            </AutoHeight>
+                         </MStepperContent>
+                     </MStepperItems>
+                 </MStepper>
+             </MForm>
+         </ChildContent>
+     </DefaultSheetDialog>
 </div>
