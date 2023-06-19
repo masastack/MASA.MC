@@ -14,6 +14,6 @@ public class MessageTaskRegister : IRegister
             .Map(dest => dest.ExtraProperties, src => src.ExtraProperties);
 
         config.ForType<MessageTaskDto, MessageTaskUpsertModel>()
-            .Map(dest => dest.ExtraProperties, src => ExtensionPropertyHelper.ConvertToType<AppMessageExtraPropertys>(src.ExtraProperties));
+            .Map(dest => dest.ExtraProperties, src => ExtensionPropertyHelper.ConvertToType<AppMessageOptions>(src.ExtraProperties));
     }
 }

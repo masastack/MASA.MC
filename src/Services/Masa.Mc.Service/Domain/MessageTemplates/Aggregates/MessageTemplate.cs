@@ -21,6 +21,7 @@ public class MessageTemplate : FullAggregateRoot<Guid, Guid>
     public long PerDayLimit { get; protected set; }
     public virtual bool IsStatic { get; protected set; }
     public ICollection<MessageTemplateItem> Items { get; protected set; } = new List<MessageTemplateItem>();
+    public ExtraPropertyDictionary Options { get; set; } = new();
 
     private MessageTemplate() { }
 
@@ -88,5 +89,13 @@ public class MessageTemplate : FullAggregateRoot<Guid, Guid>
     public void Remove()
     {
         AddDomainEvent(new RemoveTemplateMessageTasksDomainEvent(Id));
+    }
+
+    public bool IsWebsiteMessage
+    {
+        get
+        {
+            return Options.GetProperty<bool>(BusinessConsts.IS_WEBSITE_MESSAGE);
+        }
     }
 }

@@ -2,24 +2,30 @@
 
 <div class="d-flex align-center justify-space-between">
     <DefaultSubTitle>@T("AdditionalFields")</DefaultSubTitle>
-    <MButton Small Fab Color="fill" IsActive="false" OnClick="HandleAdd">
-        <SIcon Size="20" Color="primary">mdi-plus</SIcon>
-    </MButton>
+    @if (!Readonly)
+    {
+        <MButton Small Fab Color="fill" IsActive="false" OnClick="HandleAdd">
+            <SIcon Size="20" Color="primary">mdi-plus</SIcon>
+        </MButton>
+    }
 </div>
 <MRow>
     @foreach (var item in _items)
     {
         <MCol Md="6">
-            <STextField @bind-Value="item.Name" Label="@T("Key")" TValue="string" OnChange="HandleChangeAsync">
+            <STextField @bind-Value="item.Name" Label="@T("Key")" TValue="string" Readonly="Readonly" OnChange="HandleChangeAsync">
                 <AppendOuterContent>:</AppendOuterContent>
             </STextField>
         </MCol>
         <MCol Md="6">
-            <STextField @bind-Value="item.Value" Label="@T("Value")" TValue="string" OnChange="HandleChangeAsync">
+            <STextField @bind-Value="item.Value" Label="@T("Value")" TValue="string" Readonly="Readonly" OnChange="HandleChangeAsync">
                 <AppendOuterContent>
-                    <MButton Small Fab Color="fill" IsActive="false" OnClick="()=>HandleDel(item)">
+                    @if (!Readonly)
+                    {
+                        <MButton Small Fab Color="fill" IsActive="false" OnClick="()=>HandleDel(item)">
                         <SIcon Size="20" Color="error">mdi-delete</SIcon>
-                    </MButton>
+                        </MButton>
+                    }
                 </AppendOuterContent>
             </STextField>
         </MCol>
@@ -32,6 +38,9 @@
 
     [Parameter]
     public EventCallback<ExtraPropertyDictionary> ValueChanged { get; set; }
+
+    [Parameter]
+    public bool Readonly { get; set; }
 
     private List<ItemDto> _items = new();
 

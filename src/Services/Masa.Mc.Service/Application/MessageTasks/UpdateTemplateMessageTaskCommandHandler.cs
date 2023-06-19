@@ -35,6 +35,11 @@ public class UpdateTemplateMessageTaskCommandHandler
         if (messageTemplate != null)
         {
             updateCommand.MessageTask.DisplayName = string.IsNullOrEmpty(messageTemplate.MessageContent.Title) ? messageTemplate.DisplayName : messageTemplate.MessageContent.Title;
+
+            if (messageTemplate.IsWebsiteMessage)
+            {
+                updateCommand.MessageTask.ExtraProperties.SetProperty(BusinessConsts.IS_WEBSITE_MESSAGE, messageTemplate.IsWebsiteMessage);
+            }
         }
     }
 

@@ -57,14 +57,17 @@ public class SendEmailMessageEventHandler
             var taskHistory = eto.MessageTaskHistory;
             int okCount = 0;
             int totalCount = taskHistory.ReceiverUsers.Count;
+
+            var messageTemplate = await _repository.FindAsync(x => x.Id == taskHistory.MessageTask.EntityId, false);
+
             foreach (var item in taskHistory.ReceiverUsers)
             {
                 var messageRecord = new MessageRecord(item.UserId, item.ChannelUserIdentity, channel.Id, taskHistory.MessageTaskId, taskHistory.Id, item.Variables, eto.MessageData.MessageContent.Title, taskHistory.SendTime, taskHistory.MessageTask.SystemId);
                 messageRecord.SetMessageEntity(taskHistory.MessageTask.EntityType, taskHistory.MessageTask.EntityId);
                 eto.MessageData.RenderContent(item.Variables);
+
                 if (eto.MessageData.MessageType == MessageEntityTypes.Template)
                 {
-                    var messageTemplate = await _repository.FindAsync(x => x.Id == messageRecord.MessageEntityId, false);
                     if (!await _messageTemplateDomainService.CheckSendUpperLimitAsync(messageTemplate, messageRecord.ChannelUserIdentity))
                     {
                         messageRecord.SetResult(false, _i18n.T("DailySendingLimit"));

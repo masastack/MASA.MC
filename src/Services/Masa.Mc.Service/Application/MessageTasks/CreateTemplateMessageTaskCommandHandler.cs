@@ -28,6 +28,11 @@ public class CreateTemplateMessageTaskCommandHandler
             {
                 createCommand.MessageTask.Sign = messageTemplate.Sign;
             }
+
+            if (messageTemplate.IsWebsiteMessage)
+            {
+                createCommand.MessageTask.ExtraProperties.SetProperty(BusinessConsts.IS_WEBSITE_MESSAGE, messageTemplate.IsWebsiteMessage);
+            }
         }
     }
 

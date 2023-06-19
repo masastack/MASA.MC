@@ -40,6 +40,8 @@ public class McQueryContext : MasaDbContext<McQueryContext>, IMcQueryContext
         {
             b.ToView(MCConsts.DbTablePrefix + "MessageTemplates", MCConsts.DbSchema);
             b.HasMany(x => x.Items).WithOne().HasForeignKey(x => x.MessageTemplateId).IsRequired();
+            b.Property(x => x.Options).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
+            b.Property(x => x.ExtraProperties).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
         });
 
         builder.Entity<MessageTemplateItemQueryModel>(b =>

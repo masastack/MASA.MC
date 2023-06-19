@@ -45,6 +45,9 @@ public class SendWebsiteMessageEventHandler
         var userIds = new List<string>();
         int okCount = 0;
         int totalCount = taskHistory.ReceiverUsers.Count;
+
+        var messageTemplate = await _templateRepository.FindAsync(x => x.Id == taskHistory.MessageTask.EntityId, false);
+
         if (taskHistory.IsTest || taskHistory.MessageTask.ReceiverType == ReceiverTypes.Assign)
         {
             foreach (var item in taskHistory.ReceiverUsers)
@@ -55,7 +58,6 @@ public class SendWebsiteMessageEventHandler
 
                 if (eto.MessageData.MessageType == MessageEntityTypes.Template)
                 {
-                    var messageTemplate = await _templateRepository.FindAsync(x => x.Id == messageRecord.MessageEntityId, false);
                     if (!await _messageTemplateDomainService.CheckSendUpperLimitAsync(messageTemplate, messageRecord.ChannelUserIdentity))
                     {
                         messageRecord.SetResult(false, _i18n.T("DailySendingLimit"));

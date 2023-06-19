@@ -182,9 +182,12 @@ public class MessageTask : FullAggregateRoot<Guid, Guid>
         return ReceiverUsers.Skip(historyNum * sendingCount).Take(sendingCount).ToList(); ;
     }
 
-    public bool IsAppInWebsiteMessage()
+    public bool IsAppInWebsiteMessage
     {
-        return ChannelType?.Id == ChannelType.App.Id && ExtraProperties.GetProperty<bool>(BusinessConsts.IS_WEBSITE_MESSAGE);
+        get
+        {
+            return ChannelType?.Id == ChannelType.App.Id && ExtraProperties.GetProperty<bool>(BusinessConsts.IS_WEBSITE_MESSAGE);
+        }
     }
 
     public string AppIntentUrl
