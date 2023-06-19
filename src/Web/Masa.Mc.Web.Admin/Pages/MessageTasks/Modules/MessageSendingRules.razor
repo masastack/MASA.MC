@@ -7,44 +7,35 @@
 @if (Value.IsCustom)
 {
     <MRow Class="mt-6">
-        <MCol>
-            <div class="d-flex align-center justify-start btn regular--text">
-                <span>@T("DisplayName.SendingRule.CronExpression")</span>
-                <div class="mx-2" style="width:120px">
-                    <MTextField @bind-Value="Value.CronExpression"
-                            Outlined
-                            Dense
-                            Disabled="ReadOnly"
-                            HideDetails="@("auto")"
-                            TValue="string"
-                            AppendIcon="mdi-clock" OnAppendClick="OpenCronModal" OnChange="()=>GetNextRunTime()">
-                    </MTextField>
-                </div>
-                <div class="d-inline-flex mx-6" style="height: 24px">
-                    <MDivider Vertical />
-                </div>
-                <span>@T("DisplayName.SendingRule.SendingCount")</span>
-                <div class="mx-2" style="width:120px">
-                    <MTextField @bind-Value="Value.SendingCount"
-                            Outlined
-                            Dense
-                            Disabled="ReadOnly"
-                            HideDetails="@("auto")"
-                            Type="number">
-                    </MTextField>
-                </div>
-                <span>(@T("DisplayName.SendingRule.SendingCount.Tips"))</span>
-            </div>
+        <MCol Md="12">
+            <STextField @bind-Value="Value.CronExpression"
+                    Label="@T("DisplayName.SendingRule.CronExpression")"
+                    Disabled="ReadOnly"
+                    TValue="string"
+                    AppendIcon="mdi-clock" OnAppendClick="OpenCronModal" OnChange="()=>GetNextRunTime()">
+            </STextField>
+        </MCol>
+    </MRow>
+    <MRow Class="mt-6">
+        <MCol Md="6">
+            <STextField @bind-Value="Value.SendingCount"
+                    Label="@T("DisplayName.SendingRule.SendingCount")"
+                    Disabled="ReadOnly"
+                    Type="number">
+                <AppendOuterContent>
+                    <span class="regular2--text body2 my-auto flex-shrink-0">@T("DisplayName.SendingRule.SendingCount.Tips")</span>
+                </AppendOuterContent>
+            </STextField>
         </MCol>
     </MRow>
     @if (!string.IsNullOrEmpty(Value.CronExpression))
     {
         <MRow Class="mt-6">
             <MCol>
-                <MTextarea @bind-Value="_nextRunTimeStr" Readonly Outlined Rows="11" Label="@T("$masaBlazor.cron.demo.nextTenRunTime")">
-                </MTextarea>
-            </MCol>
-        </MRow>
+                <STextarea @bind-Value="_nextRunTimeStr" Readonly Outlined Rows="11" Label="@T("$masaBlazor.cron.demo.nextTenRunTime")">
+                </STextarea>
+                </MCol>
+                </MRow>
     }
 }
 

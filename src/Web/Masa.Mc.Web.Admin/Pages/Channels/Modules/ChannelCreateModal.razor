@@ -1,6 +1,6 @@
 ﻿@inherits AdminCompontentBase
 <div @ref="Ref">
-    <SSimpleModal Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.CreateChannel")" HeaderClass="mr-4" BodyStyle="height: 597px;" SaveText="@T("Submit")" OnDelete="()=> _step-- " OnCancel="HandleCancel" OnSave="async() => await Throttle(HandleOkAsync)">
+    <SSimpleModal Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.CreateChannel")" HeaderClass="mr-4" BodyStyle="height: 597px;" SaveText="@T("Submit")" OnDelete="()=> _step =_previousStep " OnCancel="HandleCancel" OnSave="async() => await Throttle(HandleOkAsync)">
         <ChildContent>
             <MForm Model="_model" @ref="_form" EnableValidation EnableI18n Context="form" Class="full-height">
                 <MStepper Value="_step" Class="full-height" Style="box-shadow:none">
@@ -100,7 +100,39 @@
                                 </MRow>
                             </MContainer>
                         </MStepperContent>
-                        <MStepperContent Step="2" Class="pa-0 full-height">
+                        <MStepperContent Step="2" Class="pa-0">
+                            <MContainer Fluid Class="pt-6 px-1">
+                                <div class="subtitle3 regular--text mb-8">@T("DisplayName.AppChannelProviders")</div>
+                                <MRow Align="AlignTypes.Center" Justify="JustifyTypes.Center" Class="px-10" Style="height:480px">
+                                    @foreach (var item in GetEnumList<AppChannelProviders>())
+                                    {
+                                        <MCol Md="6">
+                                            <MHover ValueChanged="(v)=>HandleAppHoverChanged(v,item)">
+                                                <MCard @attributes="context.Attrs" Height="240" Width="240" Class="@($"d-flex flex-column justify-center align-center ma-auto {(context.Hover ? "primary" : "fill-background")}")"
+                                                   OnClick="()=>HandleAppSelectType(item)">
+                                                    @if (context.Hover)
+                                                    {
+                                                        <SIcon Size=54 Color="fill" SvgAttributes="_svgAttributes">@(item == AppChannelProviders.GeTui ? IconConsts.GETUI_SVG : IconConsts.J_PUSH_SVG)</SIcon>
+                                                        <div class="h6 pt-10 fill--text">@T($"DisplayName.AppChannelProviders.{item.ToString()}")</div>
+                                                    }
+                                                    else if (_model.ExtraProperties.GetProperty<int>(nameof(AppChannelOptions.Provider)) == (int)item)
+                                                    {
+                                                        <SIcon Size=54 Color="primary" SvgAttributes="_svgAttributes">@(item == AppChannelProviders.GeTui ? IconConsts.GETUI_SVG : IconConsts.J_PUSH_SVG)</SIcon>
+                                                        <div class="h6 pt-10 primary--text">@T($"DisplayName.AppChannelProviders.{item.ToString()}")</div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <SIcon Size=36 Color="emphasis2" SvgAttributes="_svgAttributes">@(item == AppChannelProviders.GeTui ? IconConsts.GETUI_SVG : IconConsts.J_PUSH_SVG)</SIcon>
+                                                        <div class="h6 pt-10 regular--text">@T($"DisplayName.AppChannelProviders.{item.ToString()}")</div>
+                                                    }
+                                                </MCard>
+                                            </MHover>
+                                        </MCol>
+                                    }
+                                </MRow>
+                            </MContainer>
+                        </MStepperContent>
+                        <MStepperContent Step="3" Class="pa-0 full-height">
                             <MRow Class="row-box">
                                 <MCol Md="6">
                                     <STextField @bind-Value="_model.DisplayName"
@@ -113,7 +145,7 @@
                                     </STextField>
                                 </MCol>
                             </MRow>
-                            <ChannelExtraProperties @ref="_channelExtraPropertiesRef" @bind-Value="_model.ExtraProperties" @bind-Type="_model.Type" PasswordView />
+                            <ChannelExtraProperties @ref="_channelExtraPropertiesRef" @bind-Value="_model.ExtraProperties" @bind-Type="_model.Type" PasswordView IsAdd />
                             <MRow Class="row-box">
                                 <MCol>
                                     <div class="subtitle3 regular--text">@T("DisplayName.Color.Lable")</div>
@@ -139,7 +171,7 @@
             </MForm>
         </ChildContent>
         <DeleteContent Context="delete">
-            @if (_step == 2)
+            @if (_step > 1)
             {
                 <MButton Icon Class="mr-4" OnClick="delete.Click">
                     <SIcon Size="24" Color="emphasis2" Tooltip="@T("PreviousStep")">mdi-keyboard-backspace</SIcon>
@@ -147,7 +179,7 @@
             }
         </DeleteContent>
         <SaveContent Context="save">
-            @if (_step == 2)
+            @if (_step == 3)
             {
                 <SButton BorderRadiusClass="btn-form" OnClick="save.Click">@T("Submit")</SButton>
             }

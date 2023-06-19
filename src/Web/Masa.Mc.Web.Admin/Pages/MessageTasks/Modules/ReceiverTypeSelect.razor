@@ -1,51 +1,55 @@
 ﻿@inherits AdminCompontentBase
-<MContainer Fluid Class="pt-9 px-1 full-height">
-    <MRow Align="AlignTypes.Center" Justify="JustifyTypes.SpaceBetween">
-        <MCol>
-            <MHover Context="hoverContext" ValueChanged="(v)=>HandleHoverChanged(v,ReceiverTypes.Assign)">
-                <MCard @attributes="hoverContext.Attrs" Height="320" Class="@($"d-flex flex-column justify-center align-center {(hoverContext.Hover ? "primary" : "fill-background")}")"
-                       OnClick="()=>HandleReceiverType(ReceiverTypes.Assign)">
-                    @if (hoverContext.Hover)
-                    {
-                        <SIcon Size=60 Color="fill">mdi-account-supervisor-circle</SIcon>
-                        <div class="h6 pt-11 fill--text">@T("DisplayName.ReceiverType.Assign")</div>
-                    }
-                    else if (Value == ReceiverTypes.Assign)
-                    {
-                        <SIcon Size=60 Color="primary">mdi-account-supervisor-circle</SIcon>
-                        <div class="h6 pt-11 primary--text">@T("DisplayName.ReceiverType.Assign")</div>
-                    }
-                    else{
-                        <SIcon Size=40 Color="emphasis2">mdi-account-supervisor-circle</SIcon>
-                        <div class="h6 pt-14 regular--text">@T("DisplayName.ReceiverType.Assign")</div>
-                    }
-                </MCard>
-            </MHover>
-        </MCol>
-        <MCol>
-            <MHover Context="hoverContext" ValueChanged="(v)=>HandleHoverChanged(v,ReceiverTypes.Broadcast)">
-                <MCard @attributes="hoverContext.Attrs" Height="320" Class="@($"d-flex flex-column justify-center align-center {(hoverContext.Hover ? "primary" : "fill-background")}")"
-                       OnClick="()=>HandleReceiverType(ReceiverTypes.Broadcast)">
-                    @if (hoverContext.Hover)
-                    {
-                        <SIcon Size=60 Color="fill">mdi-email</SIcon>
-                        <div class="h6 pt-11 fill--text">@T("DisplayName.ReceiverType.Broadcast")</div>
-                    }
-                    else if (Value == ReceiverTypes.Broadcast)
-                    {
-                        <SIcon Size=60 Color="primary">mdi-email</SIcon>
-                        <div class="h6 pt-11 primary--text">@T("DisplayName.ReceiverType.Broadcast")</div>
-                    }
-                    else
-                    {
-                        <SIcon Size=40 Color="emphasis2">mdi-email</SIcon>
-                        <div class="h6 pt-14 regular--text">@T("DisplayName.ReceiverType.Broadcast")</div>
-                    }
-                </MCard>
-            </MHover>
-        </MCol>
-    </MRow>
-</MContainer>
+
+<div class="full-height flex-column">
+    <MCard Class="flex-height-auto d-flex flex-column justify-center align-center">
+        <div class="grid grid-2">
+            <div class="item">
+                <MHover Context="hoverContext" ValueChanged="(v)=>HandleHoverChanged(v,ReceiverTypes.Assign)">
+                    <MCard @attributes="hoverContext.Attrs" Class="@($"d-flex flex-column justify-center align-center {(hoverContext.Hover ? "primary" : "fill-background")}")"
+                           OnClick="()=>HandleReceiverType(ReceiverTypes.Assign)">
+                        @if (hoverContext.Hover)
+                        {
+                            <SIcon Size=60 Color="fill">mdi-account-supervisor-circle</SIcon>
+                            <div class="h6 pt-11 fill--text">@T("DisplayName.ReceiverType.Assign")</div>
+                        }
+                        else if (Value == ReceiverTypes.Assign)
+                        {
+                            <SIcon Size=60 Color="primary">mdi-account-supervisor-circle</SIcon>
+                            <div class="h6 pt-11 primary--text">@T("DisplayName.ReceiverType.Assign")</div>
+                        }
+                        else
+                        {
+                            <SIcon Size=40 Color="emphasis2">mdi-account-supervisor-circle</SIcon>
+                            <div class="h6 pt-14 regular--text">@T("DisplayName.ReceiverType.Assign")</div>
+                        }
+                    </MCard>
+                </MHover>
+            </div>
+            <div class="item">
+                <MHover Context="hoverContext" ValueChanged="(v)=>HandleHoverChanged(v,ReceiverTypes.Broadcast)">
+                    <MCard @attributes="hoverContext.Attrs" Class="@($"d-flex flex-column justify-center align-center {(hoverContext.Hover ? "primary" : "fill-background")}")"
+                           OnClick="()=>HandleReceiverType(ReceiverTypes.Broadcast)">
+                        @if (hoverContext.Hover)
+                        {
+                            <SIcon Size=60 Color="fill">mdi-email</SIcon>
+                            <div class="h6 pt-11 fill--text">@T("DisplayName.ReceiverType.Broadcast")</div>
+                        }
+                        else if (Value == ReceiverTypes.Broadcast)
+                        {
+                            <SIcon Size=60 Color="primary">mdi-email</SIcon>
+                            <div class="h6 pt-11 primary--text">@T("DisplayName.ReceiverType.Broadcast")</div>
+                        }
+                        else
+                        {
+                            <SIcon Size=40 Color="emphasis2">mdi-email</SIcon>
+                            <div class="h6 pt-14 regular--text">@T("DisplayName.ReceiverType.Broadcast")</div>
+                        }
+                    </MCard>
+                </MHover>
+            </div>
+        </div>
+    </MCard>
+</div>
 
 @code {
     [Parameter]
