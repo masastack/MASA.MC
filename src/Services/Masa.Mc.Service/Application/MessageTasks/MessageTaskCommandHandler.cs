@@ -12,7 +12,6 @@ public class MessageTaskCommandHandler
     private readonly IUserContext _userContext;
     private readonly IChannelRepository _channelRepository;
     private readonly IMessageTemplateRepository _messageTemplateRepository;
-    private readonly IMessageRecordRepository _messageRecordRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly II18n<DefaultResource> _i18n;
 
@@ -23,7 +22,6 @@ public class MessageTaskCommandHandler
         , IUserContext userContext
         , IChannelRepository channelRepository
         , IMessageTemplateRepository messageTemplateRepository
-        , IMessageRecordRepository messageRecordRepository
         , IUnitOfWork unitOfWork
         , II18n<DefaultResource> i18n)
     {
@@ -34,7 +32,6 @@ public class MessageTaskCommandHandler
         _userContext = userContext;
         _channelRepository = channelRepository;
         _messageTemplateRepository = messageTemplateRepository;
-        _messageRecordRepository = messageRecordRepository;
         _unitOfWork = unitOfWork;
         _i18n = i18n;
     }
@@ -190,25 +187,12 @@ public class MessageTaskCommandHandler
     [EventHandler]
     public async Task ResendAsync(ResendMessageTaskCommand command)
     {
-        var records = await (await _messageRecordRepository.WithDetailsAsync()).Where(x => x.MessageTaskId == command.MessageTaskId && x.Success == false).ToListAsync();
-
-        foreach (var item in records)
+        var args = new ResendMessageTaskJobArgs()
         {
-            var eto = item.Channel.Type.GetRetryMessageEvent(item.Id);
-            await _eventBus.PublishAsync(eto);
-        }
+            MessageTaskId = command.MessageTaskId
+        };
 
-        await _unitOfWork.SaveChangesAsync();
-
-        var historys = await _messageTaskHistoryRepository.GetListAsync(x => x.MessageTaskId == command.MessageTaskId);
-        foreach (var item in historys)
-        {
-            await _eventBus.PublishAsync(new UpdateMessageTaskHistoryStatusEvent(item.Id));
-        }
-
-        await _unitOfWork.SaveChangesAsync();
-
-        await _eventBus.PublishAsync(new UpdateMessageTaskStatusEvent(command.MessageTaskId));
+        await BackgroundJobManager.EnqueueAsync(args);
     }
 
     private async Task CheckDataIsExistsAsync(MessageTask entity)

@@ -102,16 +102,24 @@ public class SendAppMessageEventHandler
                         await _websiteMessageRepository.AddAsync(websiteMessage);
                     }
 
-                    var response = await appNotificationSender.SendAsync(new SingleAppMessage(item.ChannelUserIdentity, eto.MessageData.MessageContent.Title, eto.MessageData.MessageContent.Content, eto.MessageData.GetDataValue<string>(BusinessConsts.INTENT_URL), transmissionContent, eto.MessageData.GetDataValue<bool>(BusinessConsts.IS_APNS_PRODUCTION)));
-                    if (response.Success)
+                    if (string.IsNullOrEmpty(item.ChannelUserIdentity))
                     {
-                        messageRecord.SetResult(true, string.Empty);
-                        messageRecord.SetDataValue(BusinessConsts.APP_PUSH_MSG_ID, response.MsgId);
-                        okCount++;
+                        messageRecord.SetResult(false, _i18n.T("ClientIdNotBound"));
                     }
                     else
                     {
-                        messageRecord.SetResult(false, response.Message);
+                        var response = await appNotificationSender.SendAsync(new SingleAppMessage(item.ChannelUserIdentity, eto.MessageData.MessageContent.Title, eto.MessageData.MessageContent.Content, eto.MessageData.GetDataValue<string>(BusinessConsts.INTENT_URL), transmissionContent, eto.MessageData.GetDataValue<bool>(BusinessConsts.IS_APNS_PRODUCTION)));
+
+                        if (response.Success)
+                        {
+                            messageRecord.SetResult(true, string.Empty);
+                            messageRecord.SetDataValue(BusinessConsts.APP_PUSH_MSG_ID, response.MsgId);
+                            okCount++;
+                        }
+                        else
+                        {
+                            messageRecord.SetResult(false, response.Message);
+                        }
                     }
                 }
                 catch (Exception ex)
