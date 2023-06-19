@@ -32,5 +32,6 @@
   "TemplateCodeCannotRepeated": "Template code cannot be repeated",
   "TemplateIdCannotRepeated": "Template id cannot be repeated",
   "ReceiverGroupNameCannotRepeated": "ReceiverGroup name cannot be repeated",
-  "SyncSmsTemplateErrorMessage": "SMS template synchronization failed. Please check whether the channel information is correct"
+  "SyncSmsTemplateErrorMessage": "SMS template synchronization failed. Please check whether the channel information is correct",
+  "ClientIdNotBound": "Client Id not bound"
 }
