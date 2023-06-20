@@ -39,7 +39,9 @@ public class ResolveMessageTaskJob : BackgroundJobBase<ResolveMessageTaskJobArgs
             return;
 
         var receiverUsers = await _channelUserFinder.GetReceiverUsersAsync(messageTask.Channel, messageTask.Variables, messageTask.Receivers);
-        messageTask.ReceiverUsers.AddRange(receiverUsers);
+        messageTask.SetReceiverUsers(receiverUsers.ToList());
+
+        await _messageTaskHistoryRepository.RemoveAsync(x => x.MessageTaskId == args.MessageTaskId);
 
         var sendTime = DateTimeOffset.Now;
         if (messageTask.SendRules.IsCustom)
@@ -77,7 +79,7 @@ public class ResolveMessageTaskJob : BackgroundJobBase<ResolveMessageTaskJobArgs
         var userId = _userContext.GetUserId<Guid>();
         var operatorId = userId == default ? args.OperatorId : userId;
 
-        var jobId = await _messageTaskJobService.RegisterJobAsync(args.MessageTaskId, messageTask.SendRules.CronExpression, operatorId, messageTask.DisplayName);
+        var jobId = await _messageTaskJobService.RegisterJobAsync(messageTask.SchedulerJobId, args.MessageTaskId, messageTask.SendRules.CronExpression, operatorId, messageTask.DisplayName);
         messageTask.SetJobId(jobId);
 
         await _messageTaskRepository.UpdateAsync(messageTask);
