@@ -110,6 +110,11 @@ public class MessageTask : FullAggregateRoot<Guid, Guid>
         }
     }
 
+    public void SetReceiverUsers(List<MessageReceiverUser> receiverUsers)
+    {
+        ReceiverUsers = receiverUsers;
+    }
+
     public virtual void UpdateVariables(ExtraPropertyDictionary variables)
     {
         Variables = variables;
