@@ -64,7 +64,7 @@ public partial class SendTestMessageModal : AdminCompontentBase
         }).ToList();
     }
 
-    private string GetChannelUserIdentity(UserSelectModel user, ChannelTypes? type)
+    private string GetChannelUserIdentity(UserSelectDto user, ChannelTypes? type)
     {
         return type switch
         {

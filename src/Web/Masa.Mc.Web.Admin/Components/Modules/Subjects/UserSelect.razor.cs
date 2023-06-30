@@ -36,11 +36,7 @@ public partial class UserSelect : AdminCompontentBase
     public string Search { get; set; } = "";
 
     [Inject]
-    public IAutoCompleteClient AutoCompleteClient
-    {
-        get => _autocompleteClient ?? throw new Exception("Please inject IAutoCompleteClient");
-        set => _autocompleteClient = value;
-    }
+    public IAuthClient AuthClient { get; set; } = default!;
 
     public async Task OnSearchChanged(string search)
     {
@@ -51,12 +47,8 @@ public partial class UserSelect : AdminCompontentBase
         }
         else if (Search == search)
         {
-            var response = await AutoCompleteClient.GetBySpecifyDocumentAsync<UserSelectModel>(search, new AutoCompleteOptions
-            {
-                Page = Page,
-                PageSize = PageSize,
-            });
-            Items = response.Data;
+            var response = await AuthClient.UserService.SearchAsync(Search);
+            Items = response;
         }
     }
 

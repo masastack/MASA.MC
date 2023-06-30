@@ -19,9 +19,9 @@ public partial class UserAutoComplete : AdminCompontentBase
     [Parameter]
     public EventCallback<List<Guid>> ValueChanged { get; set; }
 
-    public List<UserSelectModel> Items { get; set; } = new();
+    public List<UserSelectDto> Items { get; set; } = new();
 
-    public List<UserSelectModel> UserSelect { get; set; } = new();
+    public List<UserSelectDto> UserSelect { get; set; } = new();
 
     public string Search { get; set; } = "";
 
@@ -41,7 +41,7 @@ public partial class UserAutoComplete : AdminCompontentBase
         }
         else if (Search == search)
         {
-            var response = await AutoCompleteClient.GetBySpecifyDocumentAsync<UserSelectModel>(search, new AutoCompleteOptions
+            var response = await AutoCompleteClient.GetBySpecifyDocumentAsync<UserSelectDto>(search, new AutoCompleteOptions
             {
                 Page = Page,
                 PageSize = PageSize,
@@ -50,7 +50,7 @@ public partial class UserAutoComplete : AdminCompontentBase
         }
     }
 
-    public string TextView(UserSelectModel user)
+    public string TextView(UserSelectDto user)
     {
         if (!string.IsNullOrEmpty(user.DisplayName)) return user.DisplayName;
         if (!string.IsNullOrEmpty(user.Account)) return user.Account;

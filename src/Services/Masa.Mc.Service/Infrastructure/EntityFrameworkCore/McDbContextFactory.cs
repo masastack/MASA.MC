@@ -7,9 +7,7 @@ public class McDbContextFactory : IDesignTimeDbContextFactory<McDbContext>
 {
     public McDbContext CreateDbContext(string[] args)
     {
-        var optionsBuilder = new MasaDbContextOptionsBuilder<McDbContext>()
-        {
-        };
+        var optionsBuilder = new MasaDbContextOptionsBuilder<McDbContext>();
 
         var configurationBuilder = new ConfigurationBuilder();
         var configuration = configurationBuilder
