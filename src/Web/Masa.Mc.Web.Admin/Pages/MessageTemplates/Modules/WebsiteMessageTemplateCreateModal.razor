@@ -53,7 +53,7 @@
                         <STextField @bind-Value="_model.JumpUrl"
                                           Label="@T("DisplayName.MessageTemplateJumpUrl")">
                             <PrependContent>
-                                <MCheckbox Class="mt-0" @bind-Value="_model.IsJump"></MCheckbox>
+                                <MCheckbox Class="mt-0" @bind-Value="_model.IsJump" TValue="bool"></MCheckbox>
                             </PrependContent>
                         </STextField>
                     </MCol>
