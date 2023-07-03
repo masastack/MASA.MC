@@ -5,8 +5,6 @@ namespace Masa.Mc.Web.Admin.Components.Modules.Subjects;
 
 public partial class UserAutoComplete : AdminCompontentBase
 {
-    IAutoCompleteClient? _autocompleteClient;
-
     [Parameter]
     public List<Guid> Value { get; set; } = new();
 
@@ -19,18 +17,14 @@ public partial class UserAutoComplete : AdminCompontentBase
     [Parameter]
     public EventCallback<List<Guid>> ValueChanged { get; set; }
 
-    public List<UserSelectDto> Items { get; set; } = new();
+    public List<UserSelectModel> Items { get; set; } = new();
 
-    public List<UserSelectDto> UserSelect { get; set; } = new();
+    public List<UserSelectModel> UserSelect { get; set; } = new();
 
     public string Search { get; set; } = "";
 
     [Inject]
-    public IAutoCompleteClient AutoCompleteClient
-    {
-        get => _autocompleteClient ?? throw new Exception("Please inject IAutoCompleteClient");
-        set => _autocompleteClient = value;
-    }
+    public IAuthClient AuthClient { get; set; } = default!;
 
     public async Task OnSearchChanged(string search)
     {
@@ -41,16 +35,12 @@ public partial class UserAutoComplete : AdminCompontentBase
         }
         else if (Search == search)
         {
-            var response = await AutoCompleteClient.GetBySpecifyDocumentAsync<UserSelectDto>(search, new AutoCompleteOptions
-            {
-                Page = Page,
-                PageSize = PageSize,
-            });
-            Items = response.Data;
+            var response = await AuthClient.UserService.SearchAsync(search);
+            Items = response;
         }
     }
 
-    public string TextView(UserSelectDto user)
+    public string TextView(UserSelectModel user)
     {
         if (!string.IsNullOrEmpty(user.DisplayName)) return user.DisplayName;
         if (!string.IsNullOrEmpty(user.Account)) return user.Account;
