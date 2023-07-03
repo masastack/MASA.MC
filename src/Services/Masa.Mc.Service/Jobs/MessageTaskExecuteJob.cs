@@ -33,7 +33,7 @@ public class MessageTaskExecuteJob : SchedulerJob
             //{
             //    configurationBuilder.UseDcc();
             //});
-            await builder.Services.AddMasaStackConfigAsync();
+            await builder.Services.AddMasaStackConfigAsync(MasaStackProject.MC, MasaStackApp.Service);
             var masaStackConfig = builder.Services.GetMasaStackConfig();
             var configuration = builder.Services.GetMasaConfiguration().ConfigurationApi.GetDefault();
             var redisOptions = new RedisConfigurationOptions

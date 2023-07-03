@@ -3,7 +3,6 @@
 
 namespace Masa.Mc.Service.Admin.Infrastructure.EntityFrameworkCore;
 
-[ConnectionStringName("DefaultConnection")]
 public class McDbContext : MasaDbContext<McDbContext>
 {
     public DbSet<IntegrationEventLog> EventLogs { get; set; }
