@@ -5,8 +5,11 @@ namespace Masa.Mc.Service.Admin.Application.MessageTasks.EventHandler;
 
 public class ExecuteMessageTaskEventHandler
 {
-    public ExecuteMessageTaskEventHandler()
+    private readonly IMultiEnvironmentContext _multiEnvironmentContext;
+
+    public ExecuteMessageTaskEventHandler(IMultiEnvironmentContext multiEnvironmentContext)
     {
+        _multiEnvironmentContext = multiEnvironmentContext;
     }
 
     [EventHandler]
@@ -17,7 +20,8 @@ public class ExecuteMessageTaskEventHandler
             MessageTaskId = eto.MessageTaskId,
             IsTest = eto.IsTest,
             JobId = eto.JobId,
-            TaskId = eto.TaskId
+            TaskId = eto.TaskId,
+            Environment = _multiEnvironmentContext.CurrentEnvironment
         };
 
         await BackgroundJobManager.EnqueueAsync(args);
