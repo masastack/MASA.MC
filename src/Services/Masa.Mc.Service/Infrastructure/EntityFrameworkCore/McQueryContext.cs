@@ -3,7 +3,6 @@
 
 namespace Masa.Mc.Service.Admin.Infrastructure.EntityFrameworkCore;
 
-[ConnectionStringName("QueryConnection")]
 public class McQueryContext : MasaDbContext<McQueryContext>, IMcQueryContext
 {
     public IQueryable<MessageTaskQueryModel> MessageTaskQueries => Set<MessageTaskQueryModel>().AsQueryable();

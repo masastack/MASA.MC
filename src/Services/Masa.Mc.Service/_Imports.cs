@@ -208,3 +208,4 @@ global using Microsoft.Extensions.DependencyInjection.Extensions;
 global using Masa.Mc.Service.Admin.Infrastructure.Mock;
 global using Masa.BuildingBlocks.Extensions.BackgroundJobs;
 global using Masa.Mc.Service.Admin.Application.MessageTasks.Jobs;
+global using Masa.Contrib.StackSdks.Isolation;

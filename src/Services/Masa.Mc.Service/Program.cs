@@ -24,14 +24,7 @@ builder.Services.AddDaprStarter(opt =>
 builder.Services.AddAutoInject();
 builder.Services.AddDaprClient();
 
-var ossOptions = publicConfiguration.GetSection("$public.OSS").Get<OssOptions>();
-builder.Services.AddObjectStorage(option => option.UseAliyunStorage(new AliyunStorageOptions(ossOptions.AccessId, ossOptions.AccessSecret, ossOptions.Endpoint, ossOptions.RoleArn, ossOptions.RoleSessionName)
-{
-    Sts = new AliyunStsOptions()
-    {
-        RegionId = ossOptions.RegionId
-    }
-}));
+builder.Services.AddObjectStorage(option => option.UseAliyunStorage());
 
 builder.Services.AddObservable(builder.Logging, () =>
 {
@@ -95,8 +88,9 @@ var redisOptions = new RedisConfigurationOptions
 var configuration = builder.Services.GetMasaConfiguration().ConfigurationApi.GetDefault();
 builder.Services.AddAuthClient(masaStackConfig.GetAuthServiceDomain(), redisOptions);
 builder.Services.AddMcClient(masaStackConfig.GetMcServiceDomain());
+builder.Services.AddPmClient(masaStackConfig.GetPmServiceDomain());
 builder.Services.AddSchedulerClient(masaStackConfig.GetSchedulerServiceDomain());
-builder.Services.AddMultilevelCache(options => options.UseStackExchangeRedisCache(redisOptions));
+builder.Services.AddMultilevelCache(options => options.UseStackExchangeRedisCache());
 builder.Services.AddAliyunSms();
 builder.Services.AddMailKit();
 builder.Services.AddAppNotification();
@@ -154,12 +148,12 @@ builder.Services
     })
     .AddMasaDbContext<McDbContext>(builder =>
     {
-        builder.UseSqlServer(masaStackConfig.GetConnectionString(MasaStackProject.MC.Name));
+        builder.UseSqlServer();
         builder.UseFilter(options => options.EnableSoftDelete = true);
     })
     .AddMasaDbContext<McQueryContext>(builder =>
     {
-        builder.UseSqlServer(masaStackConfig.GetConnectionString(MasaStackProject.MC.Name));
+        builder.UseSqlServer();
         builder.UseFilter(options => options.EnableSoftDelete = true);
     })
     .AddScoped<IMcQueryContext, McQueryContext>()
@@ -173,7 +167,9 @@ builder.Services
         })
         .UseUoW<McDbContext>()
         .UseRepository<McDbContext>();
-    }).AddIsolation(isolationBuilder => isolationBuilder.UseMultiEnvironment("env_key"));
+    });
+
+await builder.Services.AddStackIsolationAsync(MasaStackProject.MC.Name);
 
 builder.Services.AddStackMiddleware();
 await builder.MigrateDbContextAsync<McDbContext>();
@@ -204,6 +200,7 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseStackIsolation();
 app.UseStackMiddleware();
 app.UseCloudEvents();
 app.UseMasaCloudEvents();
