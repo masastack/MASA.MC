@@ -179,7 +179,7 @@ global using Masa.Mc.Service.Admin.Application.QueryModels;
 global using Masa.Mc.Service.Admin.Application.QueryContext;
 global using Masa.BuildingBlocks.Ddd.Domain.Values;
 global using Masa.Mc.Service.Admin.Infrastructure.ChannelUserFinder.Provider.Auth;
-global using Masa.BuildingBlocks.Ddd.Domain.SeedWork;
+global using Masa.BuildingBlocks.Data.Contracts;
 global using Masa.Mc.Service.Admin.Infrastructure.MessageTaskJobService;
 global using Masa.Mc.Infrastructure.AppNotification;
 global using Masa.Mc.Infrastructure.AppNotification.Infrastructure.OptionsResolve;

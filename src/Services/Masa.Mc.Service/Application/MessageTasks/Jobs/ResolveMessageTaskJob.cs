@@ -38,16 +38,15 @@ public class ResolveMessageTaskJob : BackgroundJobBase<ResolveMessageTaskJobArgs
         if (messageTask == null || messageTask.ReceiverType == ReceiverTypes.Broadcast)
             return;
 
-        var receiverUsers = await _channelUserFinder.GetReceiverUsersAsync(messageTask.Channel, messageTask.Variables, messageTask.Receivers);
-        messageTask.SetReceiverUsers(receiverUsers.ToList());
+        var receiverUsers = (await _channelUserFinder.GetReceiverUsersAsync(messageTask.Channel, messageTask.Variables, messageTask.Receivers)).ToList();
 
         await _messageTaskHistoryRepository.RemoveAsync(x => x.MessageTaskId == args.MessageTaskId);
 
         var sendTime = DateTimeOffset.Now;
         if (messageTask.SendRules.IsCustom)
         {
-            var historyNum = messageTask.GetHistoryCount();
-            var sendingCount = messageTask.GetSendingCount();
+            var historyNum = messageTask.GetHistoryCount(receiverUsers);
+            var sendingCount = messageTask.GetSendingCount(receiverUsers);
 
             var cronExpression = new CronExpression(messageTask.SendRules.CronExpression);
             cronExpression.TimeZone = TimeZoneInfo.FindSystemTimeZoneById("China Standard Time");
@@ -58,7 +57,7 @@ public class ResolveMessageTaskJob : BackgroundJobBase<ResolveMessageTaskJobArgs
                 if (nextExcuteTime.HasValue)
                 {
                     sendTime = nextExcuteTime.Value;
-                    var historyReceiverUsers = messageTask.GetHistoryReceiverUsers(i, sendingCount);
+                    var historyReceiverUsers = messageTask.GetHistoryReceiverUsers(receiverUsers, i, sendingCount);
                     var history = new MessageTaskHistory(messageTask.Id, historyReceiverUsers, false, sendTime);
                     await _messageTaskHistoryRepository.AddAsync(history);
                 }
@@ -66,7 +65,7 @@ public class ResolveMessageTaskJob : BackgroundJobBase<ResolveMessageTaskJobArgs
         }
         else
         {
-            var history = new MessageTaskHistory(messageTask.Id, messageTask.ReceiverUsers, false, sendTime);
+            var history = new MessageTaskHistory(messageTask.Id, receiverUsers, false, sendTime);
             history.ExecuteTask();
             await _messageTaskRepository.UpdateAsync(messageTask);
             await _messageTaskHistoryRepository.AddAsync(history);

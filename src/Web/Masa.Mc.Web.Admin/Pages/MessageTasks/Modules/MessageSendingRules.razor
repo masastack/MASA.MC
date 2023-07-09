@@ -1,7 +1,7 @@
 ﻿@inherits AdminCompontentBase
 <MRow Class="mt-6">
     <MCol>
-        <MCheckbox Class="mt-0" @bind-Value="Value.IsCustom" Disabled="ReadOnly" Label="@T("DisplayName.SendingRule.IsCustom")"></MCheckbox>
+        <MCheckbox Class="mt-0" @bind-Value="Value.IsCustom" Disabled="ReadOnly" Label="@T("DisplayName.SendingRule.IsCustom")" TValue="bool"></MCheckbox>
     </MCol>
 </MRow>
 @if (Value.IsCustom)

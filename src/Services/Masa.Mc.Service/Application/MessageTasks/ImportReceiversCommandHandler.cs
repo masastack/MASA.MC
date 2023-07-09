@@ -86,6 +86,8 @@ public class ImportReceiversCommandHandler
                 return await _importer.DynamicImport<EmailReceiverImportDto>(stream);
             case ChannelTypes.WebsiteMessage:
                 return await _importer.DynamicImport<WebsiteMessageReceiverImportDto>(stream);
+            case ChannelTypes.App:
+                return await _importer.DynamicImport<AppReceiverImportDto>(stream);
             default:
                 throw new UserFriendlyException(errorCode: UserFriendlyExceptionCodes.UNKNOWN_CHANNEL_TYPE);
         }
@@ -108,6 +110,14 @@ public class ImportReceiversCommandHandler
                 if (Guid.TryParse(subjectIdObj?.ToString(), out var subjectId))
                 {
                     receiver.SubjectId = subjectId;
+                }
+                break;
+            case ChannelTypes.App:
+                receiver.SubjectId = Guid.Empty;
+                object? userIdObj = obj.GetOrDefault(GetImporterHeaderDisplayName(typeof(AppReceiverImportDto), nameof(AppReceiverImportDto.UserId)));
+                if (Guid.TryParse(userIdObj?.ToString(), out var userId))
+                {
+                    receiver.SubjectId = userId;
                 }
                 break;
             default:

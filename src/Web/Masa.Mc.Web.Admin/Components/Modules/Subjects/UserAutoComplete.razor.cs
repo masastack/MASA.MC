@@ -5,16 +5,8 @@ namespace Masa.Mc.Web.Admin.Components.Modules.Subjects;
 
 public partial class UserAutoComplete : AdminCompontentBase
 {
-    IAutoCompleteClient? _autocompleteClient;
-
     [Parameter]
     public List<Guid> Value { get; set; } = new();
-
-    [Parameter]
-    public int Page { get; set; } = 1;
-
-    [Parameter]
-    public int PageSize { get; set; } = 10;
 
     [Parameter]
     public EventCallback<List<Guid>> ValueChanged { get; set; }
@@ -26,11 +18,7 @@ public partial class UserAutoComplete : AdminCompontentBase
     public string Search { get; set; } = "";
 
     [Inject]
-    public IAutoCompleteClient AutoCompleteClient
-    {
-        get => _autocompleteClient ?? throw new Exception("Please inject IAutoCompleteClient");
-        set => _autocompleteClient = value;
-    }
+    public IAuthClient AuthClient { get; set; } = default!;
 
     public async Task OnSearchChanged(string search)
     {
@@ -41,12 +29,8 @@ public partial class UserAutoComplete : AdminCompontentBase
         }
         else if (Search == search)
         {
-            var response = await AutoCompleteClient.GetBySpecifyDocumentAsync<UserSelectModel>(search, new AutoCompleteOptions
-            {
-                Page = Page,
-                PageSize = PageSize,
-            });
-            Items = response.Data;
+            var response = await AuthClient.UserService.SearchAsync(search);
+            Items = response;
         }
     }
 

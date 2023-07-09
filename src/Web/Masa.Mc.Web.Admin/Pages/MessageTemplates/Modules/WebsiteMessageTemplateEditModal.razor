@@ -45,7 +45,7 @@
                     </MCol>
                 </MRow>
                 <div class="mt-9 d-flex">
-                    <MCheckbox Class="mt-2" @bind-Value="_model.IsJump"></MCheckbox>
+                    <MCheckbox Class="mt-2" @bind-Value="_model.IsJump" TValue="bool"></MCheckbox>
                     <STextField @bind-Value="_model.JumpUrl" Class="ml-2"
                                       Label="@T("DisplayName.MessageTemplateJumpUrl")" Disabled="!_model.IsJump">
                     </STextField>

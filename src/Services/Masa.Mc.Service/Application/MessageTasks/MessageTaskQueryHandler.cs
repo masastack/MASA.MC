@@ -211,6 +211,8 @@ public class MessageTaskQueryHandler
                 return typeof(EmailReceiverImportDto);
             case ChannelTypes.WebsiteMessage:
                 return typeof(WebsiteMessageReceiverImportDto);
+            case ChannelTypes.App:
+                return typeof(AppReceiverImportDto);
             default:
                 throw new UserFriendlyException(errorCode: UserFriendlyExceptionCodes.UNKNOWN_CHANNEL_TYPE);
         }
