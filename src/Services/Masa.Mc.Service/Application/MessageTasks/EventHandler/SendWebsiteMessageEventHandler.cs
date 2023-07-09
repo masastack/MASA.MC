@@ -47,6 +47,8 @@ public class SendWebsiteMessageEventHandler
         int totalCount = taskHistory.ReceiverUsers.Count;
 
         var messageTemplate = await _templateRepository.FindAsync(x => x.Id == taskHistory.MessageTask.EntityId, false);
+        var insertMessageRecords = new List<MessageRecord>();
+        var insertWebsiteMessages = new List<WebsiteMessage>();
 
         if (taskHistory.IsTest || taskHistory.MessageTask.ReceiverType == ReceiverTypes.Assign)
         {
@@ -61,7 +63,7 @@ public class SendWebsiteMessageEventHandler
                     if (!await _messageTemplateDomainService.CheckSendUpperLimitAsync(messageTemplate, messageRecord.ChannelUserIdentity))
                     {
                         messageRecord.SetResult(false, _i18n.T("DailySendingLimit"));
-                        await _messageRecordRepository.AddAsync(messageRecord);
+                        insertMessageRecords.Add(messageRecord);
                         continue;
                     }
                 }
@@ -69,13 +71,17 @@ public class SendWebsiteMessageEventHandler
                 messageRecord.SetResult(true, string.Empty);
 
                 var websiteMessage = new WebsiteMessage(messageRecord.MessageTaskHistoryId, messageRecord.ChannelId, item.UserId, eto.MessageData.MessageContent.Title, eto.MessageData.MessageContent.Content, eto.MessageData.MessageContent.GetJumpUrl(), DateTimeOffset.Now, eto.MessageData.MessageContent.ExtraProperties);
-                await _messageRecordRepository.AddAsync(messageRecord);
-                await _websiteMessageRepository.AddAsync(websiteMessage);
+                insertMessageRecords.Add(messageRecord);
+                insertWebsiteMessages.Add(websiteMessage);
 
                 userIds.Add(item.ChannelUserIdentity);
                 okCount++;
             }
         }
+
+        await _messageRecordRepository.AddRangeAsync(insertMessageRecords);
+        await _websiteMessageRepository.AddRangeAsync(insertWebsiteMessages);
+
         taskHistory.SetResult((okCount == totalCount || taskHistory.MessageTask.ReceiverType == ReceiverTypes.Broadcast) ? MessageTaskHistoryStatuses.Success : (okCount > 0 ? MessageTaskHistoryStatuses.PartialFailure : MessageTaskHistoryStatuses.Fail));
         await _messageTaskHistoryRepository.UpdateAsync(taskHistory);
         await _messageTaskHistoryRepository.UnitOfWork.SaveChangesAsync();

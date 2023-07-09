@@ -17,6 +17,7 @@ public class ChannelDomainService : DomainService
 
     public virtual async Task CreateAsync(Channel channel)
     {
+        _unitOfWork.UseTransaction = false;
         await ValidateChannelAsync(channel.Code);
         await _repository.AddAsync(channel);
         if (channel.Type.Id == ChannelType.Sms.Id)

@@ -52,6 +52,7 @@ public class SendSmsMessageEventHandler
             int totalCount = taskHistory.ReceiverUsers.Count;
 
             var messageTemplate = await _templateRepository.FindAsync(x => x.Id == taskHistory.MessageTask.EntityId, false);
+            var insertMessageRecords = new List<MessageRecord>();
 
             foreach (var item in taskHistory.ReceiverUsers)
             {
@@ -67,7 +68,7 @@ public class SendSmsMessageEventHandler
                     if (!await _messageTemplateDomainService.CheckSendUpperLimitAsync(messageTemplate, messageRecord.ChannelUserIdentity))
                     {
                         messageRecord.SetResult(false, _i18n.T("DailySendingLimit"));
-                        await _messageRecordRepository.AddAsync(messageRecord);
+                        insertMessageRecords.Add(messageRecord);
                         continue;
                     }
 
@@ -96,8 +97,11 @@ public class SendSmsMessageEventHandler
                     messageRecord.SetResult(false, ex.Message);
                 }
 
-                await _messageRecordRepository.AddAsync(messageRecord);
+                insertMessageRecords.Add(messageRecord);
             }
+
+            await _messageRecordRepository.AddRangeAsync(insertMessageRecords);
+
             taskHistory.SetResult(okCount == totalCount ? MessageTaskHistoryStatuses.Success : (okCount > 0 ? MessageTaskHistoryStatuses.PartialFailure : MessageTaskHistoryStatuses.Fail));
             await _messageTaskHistoryRepository.UpdateAsync(taskHistory);
         }
