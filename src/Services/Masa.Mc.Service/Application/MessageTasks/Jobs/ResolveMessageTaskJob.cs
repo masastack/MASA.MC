@@ -31,7 +31,7 @@ public class ResolveMessageTaskJob : BackgroundJobBase<ResolveMessageTaskJobArgs
         if (messageTask == null || messageTask.ReceiverType == ReceiverTypes.Broadcast)
             return;
 
-        var receiverUsers = (await _channelUserFinder.GetReceiverUsersAsync(messageTask.Channel, messageTask.Variables, messageTask.Receivers)).ToList();
+        var receiverUsers = (await channelUserFinder.GetReceiverUsersAsync(messageTask.Channel, messageTask.Variables, messageTask.Receivers)).ToList();
 
         await messageTaskHistoryRepository.RemoveAsync(x => x.MessageTaskId == args.MessageTaskId);
 
