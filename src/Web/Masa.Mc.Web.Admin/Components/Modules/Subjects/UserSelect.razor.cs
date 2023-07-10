@@ -5,8 +5,6 @@ namespace Masa.Mc.Web.Admin.Components.Modules.Subjects;
 
 public partial class UserSelect : AdminCompontentBase
 {
-    IAutoCompleteClient? _autocompleteClient;
-
     [Parameter]
     public Guid? Value { get; set; }
 
@@ -18,12 +16,6 @@ public partial class UserSelect : AdminCompontentBase
 
     [Parameter]
     public string Label { get; set; } = default!;
-
-    [Parameter]
-    public int Page { get; set; } = 1;
-
-    [Parameter]
-    public int PageSize { get; set; } = 10;
 
     [Parameter]
     public EventCallback<MouseEventArgs> OnClearClick { get; set; }
@@ -47,7 +39,7 @@ public partial class UserSelect : AdminCompontentBase
         }
         else if (Search == search)
         {
-            var response = await AuthClient.UserService.SearchAsync(Search);
+            var response = await AuthClient.UserService.SearchAsync(search);
             Items = response;
         }
     }

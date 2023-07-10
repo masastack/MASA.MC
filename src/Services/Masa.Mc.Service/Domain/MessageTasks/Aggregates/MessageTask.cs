@@ -33,8 +33,6 @@ public class MessageTask : FullAggregateRoot<Guid, Guid>
 
     public List<MessageTaskReceiver> Receivers { get; protected set; } = new();
 
-    public List<MessageReceiverUser> ReceiverUsers { get; protected set; } = new();
-
     public MessageTaskSendingRule SendRules { get; protected set; } = default!;
 
     public ExtraPropertyDictionary Variables { get; protected set; } = new();
@@ -110,11 +108,6 @@ public class MessageTask : FullAggregateRoot<Guid, Guid>
         }
     }
 
-    public void SetReceiverUsers(List<MessageReceiverUser> receiverUsers)
-    {
-        ReceiverUsers = receiverUsers;
-    }
-
     public virtual void UpdateVariables(ExtraPropertyDictionary variables)
     {
         Variables = variables;
@@ -156,21 +149,21 @@ public class MessageTask : FullAggregateRoot<Guid, Guid>
         SystemId = systemId;
     }
 
-    public int GetSendingCount()
+    public int GetSendingCount(List<MessageReceiverUser> receiverUsers)
     {
         var sendingCount = (int)SendRules.SendingCount;
         if (sendingCount == 0)
         {
-            sendingCount = ReceiverUsers.Count;
+            sendingCount = receiverUsers.Count;
         }
         return sendingCount;
     }
 
-    public long GetHistoryCount()
+    public long GetHistoryCount(List<MessageReceiverUser> receiverUsers)
     {
-        var totalCount = ReceiverUsers.Count;
+        var totalCount = receiverUsers.Count;
 
-        var sendingCount = GetSendingCount();
+        var sendingCount = GetSendingCount(receiverUsers);
 
         var historyNum = (long)Math.Ceiling((double)totalCount / sendingCount);
 
@@ -182,9 +175,9 @@ public class MessageTask : FullAggregateRoot<Guid, Guid>
         return historyNum;
     }
 
-    public List<MessageReceiverUser> GetHistoryReceiverUsers(int historyNum, int sendingCount)
+    public List<MessageReceiverUser> GetHistoryReceiverUsers(List<MessageReceiverUser> receiverUsers, int historyNum, int sendingCount)
     {
-        return ReceiverUsers.Skip(historyNum * sendingCount).Take(sendingCount).ToList(); ;
+        return receiverUsers.Skip(historyNum * sendingCount).Take(sendingCount).ToList(); ;
     }
 
     public bool IsAppInWebsiteMessage

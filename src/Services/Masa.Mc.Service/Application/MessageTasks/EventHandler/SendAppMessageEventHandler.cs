@@ -7,7 +7,6 @@ public class SendAppMessageEventHandler
 {
     private readonly IAppNotificationAsyncLocal _appNotificationAsyncLocal;
     private readonly AppNotificationSenderFactory _appNotificationSenderFactory;
-    private readonly ITemplateRenderer _templateRenderer;
     private readonly IChannelRepository _channelRepository;
     private readonly IMessageRecordRepository _messageRecordRepository;
     private readonly IMessageTaskHistoryRepository _messageTaskHistoryRepository;
@@ -19,7 +18,6 @@ public class SendAppMessageEventHandler
 
     public SendAppMessageEventHandler(IAppNotificationAsyncLocal appNotificationAsyncLocal
         , AppNotificationSenderFactory appNotificationSenderFactory
-        , ITemplateRenderer templateRenderer
         , IChannelRepository channelRepository
         , IMessageRecordRepository messageRecordRepository
         , IMessageTaskHistoryRepository messageTaskHistoryRepository
@@ -31,7 +29,6 @@ public class SendAppMessageEventHandler
     {
         _appNotificationAsyncLocal = appNotificationAsyncLocal;
         _appNotificationSenderFactory = appNotificationSenderFactory;
-        _templateRenderer = templateRenderer;
         _channelRepository = channelRepository;
         _messageRecordRepository = messageRecordRepository;
         _messageTaskHistoryRepository = messageTaskHistoryRepository;
@@ -78,6 +75,9 @@ public class SendAppMessageEventHandler
 
             var messageTemplate = await _messageTemplateRepository.FindAsync(x => x.Id == taskHistory.MessageTask.EntityId, false);
 
+            var insertMessageRecords = new List<MessageRecord>();
+            var insertWebsiteMessages = new List<WebsiteMessage>();
+
             foreach (var item in taskHistory.ReceiverUsers)
             {
                 var messageRecord = new MessageRecord(item.UserId, item.ChannelUserIdentity, channel.Id, taskHistory.MessageTaskId, taskHistory.Id, item.Variables, eto.MessageData.MessageContent.Title, taskHistory.SendTime, taskHistory.MessageTask.SystemId);
@@ -89,7 +89,7 @@ public class SendAppMessageEventHandler
                     if (!await _messageTemplateDomainService.CheckSendUpperLimitAsync(messageTemplate, messageRecord.ChannelUserIdentity))
                     {
                         messageRecord.SetResult(false, _i18n.T("DailySendingLimit"));
-                        await _messageRecordRepository.AddAsync(messageRecord);
+                        insertMessageRecords.Add(messageRecord);
                         continue;
                     }
                 }
@@ -99,7 +99,7 @@ public class SendAppMessageEventHandler
                     if (taskHistory.MessageTask.IsAppInWebsiteMessage || messageTemplate?.IsWebsiteMessage == true)
                     {
                         var websiteMessage = new WebsiteMessage(messageRecord.MessageTaskHistoryId, messageRecord.ChannelId, item.UserId, eto.MessageData.MessageContent.Title, eto.MessageData.MessageContent.Content, eto.MessageData.MessageContent.GetJumpUrl(), DateTimeOffset.Now, eto.MessageData.MessageContent.ExtraProperties);
-                        await _websiteMessageRepository.AddAsync(websiteMessage);
+                        insertWebsiteMessages.Add(websiteMessage);
                     }
 
                     if (string.IsNullOrEmpty(item.ChannelUserIdentity))
@@ -128,8 +128,12 @@ public class SendAppMessageEventHandler
                     messageRecord.SetResult(false, ex.Message);
                 }
 
-                await _messageRecordRepository.AddAsync(messageRecord);
+                insertMessageRecords.Add(messageRecord);
             }
+
+            await _messageRecordRepository.AddRangeAsync(insertMessageRecords);
+            await _websiteMessageRepository.AddRangeAsync(insertWebsiteMessages);
+
             taskHistory.SetResult(okCount == totalCount ? MessageTaskHistoryStatuses.Success : (okCount > 0 ? MessageTaskHistoryStatuses.PartialFailure : MessageTaskHistoryStatuses.Fail));
 
             await _messageTaskHistoryRepository.UpdateAsync(taskHistory);

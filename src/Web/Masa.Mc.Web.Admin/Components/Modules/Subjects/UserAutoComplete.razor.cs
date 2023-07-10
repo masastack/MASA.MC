@@ -9,12 +9,6 @@ public partial class UserAutoComplete : AdminCompontentBase
     public List<Guid> Value { get; set; } = new();
 
     [Parameter]
-    public int Page { get; set; } = 1;
-
-    [Parameter]
-    public int PageSize { get; set; } = 10;
-
-    [Parameter]
     public EventCallback<List<Guid>> ValueChanged { get; set; }
 
     public List<UserSelectModel> Items { get; set; } = new();

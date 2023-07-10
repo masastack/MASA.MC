@@ -7,7 +7,6 @@ public class SendEmailMessageEventHandler
 {
     private readonly IEmailAsyncLocal _emailAsyncLocal;
     private readonly IEmailSender _emailSender;
-    private readonly ITemplateRenderer _templateRenderer;
     private readonly IChannelRepository _channelRepository;
     private readonly IMessageRecordRepository _messageRecordRepository;
     private readonly IMessageTaskHistoryRepository _messageTaskHistoryRepository;
@@ -18,7 +17,6 @@ public class SendEmailMessageEventHandler
 
     public SendEmailMessageEventHandler(IEmailAsyncLocal emailAsyncLocal
         , IEmailSender emailSender
-        , ITemplateRenderer templateRenderer
         , IChannelRepository channelRepository
         , IMessageRecordRepository messageRecordRepository
         , IMessageTaskHistoryRepository messageTaskHistoryRepository
@@ -29,7 +27,6 @@ public class SendEmailMessageEventHandler
     {
         _emailAsyncLocal = emailAsyncLocal;
         _emailSender = emailSender;
-        _templateRenderer = templateRenderer;
         _channelRepository = channelRepository;
         _messageRecordRepository = messageRecordRepository;
         _messageTaskHistoryRepository = messageTaskHistoryRepository;
@@ -59,6 +56,7 @@ public class SendEmailMessageEventHandler
             int totalCount = taskHistory.ReceiverUsers.Count;
 
             var messageTemplate = await _repository.FindAsync(x => x.Id == taskHistory.MessageTask.EntityId, false);
+            var insertMessageRecords = new List<MessageRecord>();
 
             foreach (var item in taskHistory.ReceiverUsers)
             {
@@ -71,7 +69,7 @@ public class SendEmailMessageEventHandler
                     if (!await _messageTemplateDomainService.CheckSendUpperLimitAsync(messageTemplate, messageRecord.ChannelUserIdentity))
                     {
                         messageRecord.SetResult(false, _i18n.T("DailySendingLimit"));
-                        await _messageRecordRepository.AddAsync(messageRecord);
+                        insertMessageRecords.Add(messageRecord);
                         continue;
                     }
                 }
@@ -92,8 +90,11 @@ public class SendEmailMessageEventHandler
                     messageRecord.SetResult(false, ex.Message);
                 }
 
-                await _messageRecordRepository.AddAsync(messageRecord);
+                insertMessageRecords.Add(messageRecord);
             }
+
+            await _messageRecordRepository.AddRangeAsync(insertMessageRecords);
+
             taskHistory.SetResult(okCount == totalCount ? MessageTaskHistoryStatuses.Success : (okCount > 0 ? MessageTaskHistoryStatuses.PartialFailure : MessageTaskHistoryStatuses.Fail));
             await _messageTaskHistoryRepository.UpdateAsync(taskHistory);
         }
