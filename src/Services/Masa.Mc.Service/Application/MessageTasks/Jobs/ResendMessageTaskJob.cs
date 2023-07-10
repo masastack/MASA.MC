@@ -5,44 +5,43 @@ namespace Masa.Mc.Service.Admin.Application.MessageTasks.Jobs;
 
 public class ResendMessageTaskJob : BackgroundJobBase<ResendMessageTaskJobArgs>
 {
-    private readonly IMessageRecordRepository _messageRecordRepository;
-    private readonly IMessageTaskHistoryRepository _messageTaskHistoryRepository;
-    private readonly IEventBus _eventBus;
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IServiceProvider _serviceProvider;
 
     public ResendMessageTaskJob(ILogger<BackgroundJobBase<ResendMessageTaskJobArgs>>? logger
-        , IMessageRecordRepository messageRecordRepository
-        , IMessageTaskHistoryRepository messageTaskHistoryRepository
-        , IEventBus eventBus
-        , IUnitOfWork unitOfWork) : base(logger)
+        , IServiceProvider serviceProvider) : base(logger)
     {
-        _eventBus = eventBus;
-        _unitOfWork = unitOfWork;
-        _messageRecordRepository = messageRecordRepository;
-        _messageTaskHistoryRepository = messageTaskHistoryRepository;
+        _serviceProvider = serviceProvider;
     }
 
     protected override async Task ExecutingAsync(ResendMessageTaskJobArgs args)
     {
-        var records = await (await _messageRecordRepository.WithDetailsAsync()).Where(x => x.MessageTaskId == args.MessageTaskId && x.Success == false).ToListAsync();
+        await using var scope = _serviceProvider.CreateAsyncScope();
+        var multiEnvironmentSetter = scope.ServiceProvider.GetRequiredService<IMultiEnvironmentSetter>();
+        multiEnvironmentSetter.SetEnvironment(args.Environment);
+        var messageRecordRepository = scope.ServiceProvider.GetRequiredService<IMessageRecordRepository>();
+        var messageTaskHistoryRepository = scope.ServiceProvider.GetRequiredService<IMessageTaskHistoryRepository>();
+        var eventBus = scope.ServiceProvider.GetRequiredService<IEventBus>();
+        var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
+
+        var records = await (await messageRecordRepository.WithDetailsAsync()).Where(x => x.MessageTaskId == args.MessageTaskId && x.Success == false).ToListAsync();
 
         foreach (var item in records)
         {
             var eto = item.Channel.Type.GetRetryMessageEvent(item.Id);
-            await _eventBus.PublishAsync(eto);
+            await eventBus.PublishAsync(eto);
         }
 
-        await _unitOfWork.SaveChangesAsync();
+        await unitOfWork.SaveChangesAsync();
 
-        var historys = await _messageTaskHistoryRepository.GetListAsync(x => x.MessageTaskId == args.MessageTaskId);
+        var historys = await messageTaskHistoryRepository.GetListAsync(x => x.MessageTaskId == args.MessageTaskId);
         foreach (var item in historys)
         {
-            await _eventBus.PublishAsync(new UpdateMessageTaskHistoryStatusEvent(item.Id));
+            await eventBus.PublishAsync(new UpdateMessageTaskHistoryStatusEvent(item.Id));
         }
 
-        await _unitOfWork.SaveChangesAsync();
+        await unitOfWork.SaveChangesAsync();
 
-        await _eventBus.PublishAsync(new UpdateMessageTaskStatusEvent(args.MessageTaskId));
+        await eventBus.PublishAsync(new UpdateMessageTaskStatusEvent(args.MessageTaskId));
     }
 }
 

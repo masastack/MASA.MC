@@ -11,13 +11,15 @@ public class MessageTaskQueryHandler
     private readonly ITemplateRenderer _templateRenderer;
     private readonly II18n<DefaultResource> _i18n;
     private readonly IDataFilter _dataFilter;
+    private readonly McQueryContext _queryContext;
 
     public MessageTaskQueryHandler(IMcQueryContext context
         , ICsvExporter exporter
         , IAuthClient authClient
         , ITemplateRenderer templateRenderer
         , II18n<DefaultResource> i18n
-        , IDataFilter dataFilter)
+        , IDataFilter dataFilter
+        , McQueryContext queryContext)
     {
         _context = context;
         _exporter = exporter;
@@ -25,6 +27,7 @@ public class MessageTaskQueryHandler
         _templateRenderer = templateRenderer;
         _i18n = i18n;
         _dataFilter = dataFilter;
+        _queryContext = queryContext;
     }
 
     [EventHandler]
@@ -48,6 +51,8 @@ public class MessageTaskQueryHandler
     [EventHandler]
     public async Task GetListAsync(GetMessageTaskListQuery query)
     {
+        var ac = _queryContext.Database.GetConnectionString();
+
         var options = query.Input;
 
         if (!options.ChannelId.HasValue && !string.IsNullOrEmpty(options.ChannelCode))
