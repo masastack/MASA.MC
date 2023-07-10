@@ -6,10 +6,12 @@ namespace Masa.Mc.Service.Admin.Application.MessageTasks.EventHandler;
 public class ResolveMessageTaskEventHandler
 {
     private readonly IMessageTaskRepository _messageTaskRepository;
+    private readonly IMultiEnvironmentContext _multiEnvironmentContext;
 
-    public ResolveMessageTaskEventHandler(IMessageTaskRepository messageTaskRepository)
+    public ResolveMessageTaskEventHandler(IMessageTaskRepository messageTaskRepository, IMultiEnvironmentContext multiEnvironmentContext)
     {
         _messageTaskRepository = messageTaskRepository;
+        _multiEnvironmentContext = multiEnvironmentContext;
     }
 
     [EventHandler]
@@ -25,7 +27,8 @@ public class ResolveMessageTaskEventHandler
         var args = new ResolveMessageTaskJobArgs()
         {
             MessageTaskId = eto.MessageTaskId,
-            OperatorId = eto.OperatorId
+            OperatorId = eto.OperatorId,
+            Environment = _multiEnvironmentContext.CurrentEnvironment
         };
 
         await BackgroundJobManager.EnqueueAsync(args);

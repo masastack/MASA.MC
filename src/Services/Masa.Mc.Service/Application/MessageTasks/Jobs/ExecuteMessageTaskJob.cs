@@ -5,47 +5,40 @@ namespace Masa.Mc.Service.Admin.Application.MessageTasks.Jobs;
 
 public class ExecuteMessageTaskJob : BackgroundJobBase<ExecuteMessageTaskJobArgs>
 {
-    private readonly IChannelRepository _channelRepository;
-    private readonly IMessageTaskRepository _messageTaskRepository;
-    private readonly IMessageTaskHistoryRepository _messageTaskHistoryRepository;
-    private readonly IDomainEventBus _eventBus;
-    private readonly MessageTaskDomainService _domainService;
-    private readonly IMessageTaskJobService _messageTaskJobService;
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IServiceProvider _serviceProvider;
 
     public ExecuteMessageTaskJob(ILogger<BackgroundJobBase<ExecuteMessageTaskJobArgs>>? logger
-        ,IChannelRepository channelRepository
-        , IMessageTaskRepository messageTaskRepository
-        , IMessageTaskHistoryRepository messageTaskHistoryRepository
-        , IDomainEventBus eventBus
-        , MessageTaskDomainService domainService
-        , IMessageTaskJobService messageTaskJobService
-        , IUnitOfWork unitOfWork) : base(logger)
+        , IServiceProvider serviceProvider) : base(logger)
     {
-        _channelRepository = channelRepository;
-        _messageTaskRepository = messageTaskRepository;
-        _messageTaskHistoryRepository = messageTaskHistoryRepository;
-        _eventBus = eventBus;
-        _domainService = domainService;
-        _messageTaskJobService = messageTaskJobService;
-        _unitOfWork = unitOfWork;
+        _serviceProvider = serviceProvider;
     }
 
     protected override async Task ExecutingAsync(ExecuteMessageTaskJobArgs args)
     {
-        var history = await _messageTaskHistoryRepository.FindWaitSendAsync(args.MessageTaskId, args.IsTest);
+        await using var scope = _serviceProvider.CreateAsyncScope();
+        var multiEnvironmentSetter = scope.ServiceProvider.GetRequiredService<IMultiEnvironmentSetter>();
+        multiEnvironmentSetter.SetEnvironment(args.Environment);
+        var channelRepository = scope.ServiceProvider.GetRequiredService<IChannelRepository>();
+        var messageTaskRepository = scope.ServiceProvider.GetRequiredService<IMessageTaskRepository>();
+        var messageTaskHistoryRepository = scope.ServiceProvider.GetRequiredService<IMessageTaskHistoryRepository>();
+        var eventBus = scope.ServiceProvider.GetRequiredService<IDomainEventBus>();
+        var domainService = scope.ServiceProvider.GetRequiredService<MessageTaskDomainService>();
+        var messageTaskJobService = scope.ServiceProvider.GetRequiredService<IMessageTaskJobService>();
+        var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
+
+        var history = await messageTaskHistoryRepository.FindWaitSendAsync(args.MessageTaskId, args.IsTest);
 
         if (history == null)
         {
-            var messageTask = await _messageTaskRepository.FindAsync(x => x.Id == args.MessageTaskId, false);
+            var messageTask = await messageTaskRepository.FindAsync(x => x.Id == args.MessageTaskId, false);
             if (messageTask == null) return;
 
             Guid userId = Guid.Empty;
-            await _messageTaskJobService.DisableJobAsync(messageTask.SchedulerJobId, userId);
+            await messageTaskJobService.DisableJobAsync(messageTask.SchedulerJobId, userId);
             return;
         }
         history.SetTaskId(args.TaskId);
-        var messageData = await _domainService.GetMessageDataAsync(history.MessageTask, history.MessageTask.Variables);
+        var messageData = await domainService.GetMessageDataAsync(history.MessageTask, history.MessageTask.Variables);
         history.SetSending();
 
         if (!args.IsTest && !history.MessageTask.SendTime.HasValue)
@@ -53,13 +46,13 @@ public class ExecuteMessageTaskJob : BackgroundJobBase<ExecuteMessageTaskJobArgs
             history.MessageTask.SetSending();
         }
 
-        await _messageTaskHistoryRepository.UpdateAsync(history);
-        await _unitOfWork.SaveChangesAsync();
-        await _unitOfWork.CommitAsync();
+        await messageTaskHistoryRepository.UpdateAsync(history);
+        await unitOfWork.SaveChangesAsync();
+        await unitOfWork.CommitAsync();
 
-        var channel = await _channelRepository.FindAsync(x => x.Id == history.MessageTask.ChannelId);
+        var channel = await channelRepository.FindAsync(x => x.Id == history.MessageTask.ChannelId);
 
         var eto = channel.Type.GetSendMessageEvent(history.MessageTask.ChannelId.Value, messageData, history);
-        await _eventBus.PublishAsync(eto);
+        await eventBus.PublishAsync(eto);
     }
 }

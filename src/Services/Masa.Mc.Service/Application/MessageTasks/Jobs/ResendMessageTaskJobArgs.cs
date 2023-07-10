@@ -3,7 +3,7 @@
 
 namespace Masa.Mc.Service.Admin.Application.MessageTasks.Jobs;
 
-public class ResendMessageTaskJobArgs
+public class ResendMessageTaskJobArgs : MultiEnvironment
 {
     public Guid MessageTaskId { get; set; }
 }

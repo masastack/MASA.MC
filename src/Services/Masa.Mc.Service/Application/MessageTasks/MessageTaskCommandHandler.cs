@@ -14,6 +14,7 @@ public class MessageTaskCommandHandler
     private readonly IMessageTemplateRepository _messageTemplateRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly II18n<DefaultResource> _i18n;
+    private readonly IMultiEnvironmentContext _multiEnvironmentContext;
 
     public MessageTaskCommandHandler(IMessageTaskRepository repository
         , IMessageTaskHistoryRepository messageTaskHistoryRepository
@@ -23,7 +24,8 @@ public class MessageTaskCommandHandler
         , IChannelRepository channelRepository
         , IMessageTemplateRepository messageTemplateRepository
         , IUnitOfWork unitOfWork
-        , II18n<DefaultResource> i18n)
+        , II18n<DefaultResource> i18n
+        , IMultiEnvironmentContext multiEnvironmentContext)
     {
         _repository = repository;
         _messageTaskHistoryRepository = messageTaskHistoryRepository;
@@ -34,6 +36,7 @@ public class MessageTaskCommandHandler
         _messageTemplateRepository = messageTemplateRepository;
         _unitOfWork = unitOfWork;
         _i18n = i18n;
+        _multiEnvironmentContext = multiEnvironmentContext;
     }
 
     [EventHandler]
@@ -189,7 +192,8 @@ public class MessageTaskCommandHandler
     {
         var args = new ResendMessageTaskJobArgs()
         {
-            MessageTaskId = command.MessageTaskId
+            MessageTaskId = command.MessageTaskId,
+            Environment = _multiEnvironmentContext.CurrentEnvironment
         };
 
         await BackgroundJobManager.EnqueueAsync(args);

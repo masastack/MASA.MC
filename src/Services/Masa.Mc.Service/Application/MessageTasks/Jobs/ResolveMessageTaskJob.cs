@@ -5,43 +5,36 @@ namespace Masa.Mc.Service.Admin.Application.MessageTasks.Jobs;
 
 public class ResolveMessageTaskJob : BackgroundJobBase<ResolveMessageTaskJobArgs>
 {
-    private readonly IChannelUserFinder _channelUserFinder;
-    private readonly IMessageTaskRepository _messageTaskRepository;
-    private readonly IMessageTaskHistoryRepository _messageTaskHistoryRepository;
-    private readonly IDomainEventBus _eventBus;
-    private readonly IUserContext _userContext;
-    private readonly IMessageTaskJobService _messageTaskJobService;
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IServiceProvider _serviceProvider;
+
 
     public ResolveMessageTaskJob(ILogger<BackgroundJobBase<ResolveMessageTaskJobArgs>>? logger
-        , IChannelUserFinder channelUserFinder
-        , IMessageTaskRepository messageTaskRepository
-        , IMessageTaskHistoryRepository messageTaskHistoryRepository
-        , IDomainEventBus eventBus
-        , IUserContext userContext
-        , IMessageTaskJobService messageTaskJobService
-        , IUnitOfWork unitOfWork) : base(logger)
+        , IServiceProvider serviceProvider) : base(logger)
     {
-        _channelUserFinder = channelUserFinder;
-        _messageTaskRepository = messageTaskRepository;
-        _messageTaskHistoryRepository = messageTaskHistoryRepository;
-        _eventBus = eventBus;
-        _userContext = userContext;
-        _messageTaskJobService = messageTaskJobService;
-        _unitOfWork = unitOfWork;
+        _serviceProvider = serviceProvider;
     }
 
     protected override async Task ExecutingAsync(ResolveMessageTaskJobArgs args)
     {
-        var messageTask = (await _messageTaskRepository.WithDetailsAsync()).FirstOrDefault(x => x.Id == args.MessageTaskId);
+        await using var scope = _serviceProvider.CreateAsyncScope();
+        var multiEnvironmentSetter = scope.ServiceProvider.GetRequiredService<IMultiEnvironmentSetter>();
+        multiEnvironmentSetter.SetEnvironment(args.Environment);
+        var channelUserFinder = scope.ServiceProvider.GetRequiredService<IChannelUserFinder>();
+        var messageTaskRepository = scope.ServiceProvider.GetRequiredService<IMessageTaskRepository>();
+        var messageTaskHistoryRepository = scope.ServiceProvider.GetRequiredService<IMessageTaskHistoryRepository>();
+        var messageTaskJobService = scope.ServiceProvider.GetRequiredService<IMessageTaskJobService>();
+        var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
+        var userContext = scope.ServiceProvider.GetRequiredService<IUserContext>();
+
+        var messageTask = (await messageTaskRepository.WithDetailsAsync()).FirstOrDefault(x => x.Id == args.MessageTaskId);
 
         if (messageTask == null || messageTask.ReceiverType == ReceiverTypes.Broadcast)
             return;
 
-        var receiverUsers = await _channelUserFinder.GetReceiverUsersAsync(messageTask.Channel, messageTask.Variables, messageTask.Receivers);
+        var receiverUsers = await channelUserFinder.GetReceiverUsersAsync(messageTask.Channel, messageTask.Variables, messageTask.Receivers);
         messageTask.SetReceiverUsers(receiverUsers.ToList());
 
-        await _messageTaskHistoryRepository.RemoveAsync(x => x.MessageTaskId == args.MessageTaskId);
+        await messageTaskHistoryRepository.RemoveAsync(x => x.MessageTaskId == args.MessageTaskId);
 
         var sendTime = DateTimeOffset.Now;
         if (messageTask.SendRules.IsCustom)
@@ -60,7 +53,7 @@ public class ResolveMessageTaskJob : BackgroundJobBase<ResolveMessageTaskJobArgs
                     sendTime = nextExcuteTime.Value;
                     var historyReceiverUsers = messageTask.GetHistoryReceiverUsers(i, sendingCount);
                     var history = new MessageTaskHistory(messageTask.Id, historyReceiverUsers, false, sendTime);
-                    await _messageTaskHistoryRepository.AddAsync(history);
+                    await messageTaskHistoryRepository.AddAsync(history);
                 }
             }
         }
@@ -68,27 +61,27 @@ public class ResolveMessageTaskJob : BackgroundJobBase<ResolveMessageTaskJobArgs
         {
             var history = new MessageTaskHistory(messageTask.Id, messageTask.ReceiverUsers, false, sendTime);
             history.ExecuteTask();
-            await _messageTaskRepository.UpdateAsync(messageTask);
-            await _messageTaskHistoryRepository.AddAsync(history);
-            await _unitOfWork.SaveChangesAsync();
-            await _unitOfWork.CommitAsync();
+            await messageTaskRepository.UpdateAsync(messageTask);
+            await messageTaskHistoryRepository.AddAsync(history);
+            await unitOfWork.SaveChangesAsync();
+            await unitOfWork.CommitAsync();
 
             return;
         }
 
-        var userId = _userContext.GetUserId<Guid>();
+        var userId = userContext.GetUserId<Guid>();
         var operatorId = userId == default ? args.OperatorId : userId;
 
-        var jobId = await _messageTaskJobService.RegisterJobAsync(messageTask.SchedulerJobId, args.MessageTaskId, messageTask.SendRules.CronExpression, operatorId, messageTask.DisplayName);
+        var jobId = await messageTaskJobService.RegisterJobAsync(messageTask.SchedulerJobId, args.MessageTaskId, messageTask.SendRules.CronExpression, operatorId, messageTask.DisplayName);
         messageTask.SetJobId(jobId);
 
-        await _messageTaskRepository.UpdateAsync(messageTask);
-        await _unitOfWork.SaveChangesAsync();
-        await _unitOfWork.CommitAsync();
+        await messageTaskRepository.UpdateAsync(messageTask);
+        await unitOfWork.SaveChangesAsync();
+        await unitOfWork.CommitAsync();
 
         if (string.IsNullOrEmpty(messageTask.SendRules.CronExpression) && jobId != default)
         {
-            await _messageTaskJobService.StartJobAsync(jobId, operatorId);
+            await messageTaskJobService.StartJobAsync(jobId, operatorId);
         }
     }
 }
