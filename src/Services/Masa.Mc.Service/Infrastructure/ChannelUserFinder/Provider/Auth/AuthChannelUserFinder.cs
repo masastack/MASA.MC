@@ -70,24 +70,8 @@ public class AuthChannelUserFinder : IChannelUserFinder
 
     private async Task<Dictionary<Guid, string>> GetUserClientIds(AppChannel channel, List<Guid> userIds)
     {
-        var userSystemDatas = await _authClient.UserService.GetSystemListDataAsync<string>(userIds, $"{MasaStackConsts.MC_SYSTEM_ID}:{channel.Code}");
-        return userIds.ToDictionary(x => x, x =>
-        {
-            var userSystemValue = userSystemDatas.GetValueOrDefault(x);
-            if (userSystemValue == null)
-                return string.Empty;
-
-            var userSystemData = JsonSerializer.Deserialize<UserSystemData>(userSystemValue);
-            return userSystemData?.ClientId ?? string.Empty;
-        });
-        //return userSystemDatas.ToDictionary(x => x.Key, x =>
-        //{
-        //    var userSystemData = JsonSerializer.Deserialize<UserSystemData>(x.Value);
-        //    return userSystemData?.ClientId ?? string.Empty;
-        //});
-
-        //var userSystemDatas = await _authClient.UserService.GetSystemListDataAsync<UserSystemData>(userIds, $"{MasaStackConsts.MC_SYSTEM_ID}:{channel.Code}");
-        //return userSystemDatas.ToDictionary(x => x.Key, x => x.Value.ClientId);
+        var userSystemDatas = await _authClient.UserService.GetSystemListDataAsync<UserSystemData>(userIds, $"{MasaStackConsts.MC_SYSTEM_ID}:{channel.Code}");
+        return userSystemDatas.ToDictionary(x => x.Key, x => x.Value.ClientId);
     }
 
     private async Task<IEnumerable<MessageReceiverUser>> TransformDepartmentReceiversAsync(AppChannel channel, ExtraPropertyDictionary variables, IEnumerable<MessageTaskReceiver> receivers)
