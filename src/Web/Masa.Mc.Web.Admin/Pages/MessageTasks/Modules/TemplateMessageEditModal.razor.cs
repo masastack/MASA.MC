@@ -9,7 +9,7 @@ public partial class TemplateMessageEditModal : AdminCompontentBase
     public EventCallback OnOk { get; set; }
 
     private MForm? _form;
-    private MessageTaskUpsertModel _model = new() { EntityType = MessageEntityTypes.Template, SystemId = MasaStackConsts.MC_SYSTEM_ID };
+    private MessageTaskUpsertModel _model = new() { EntityType = MessageEntityTypes.Template, SystemId = MasaStackProject.MC.Name };
     private Guid _entityId;
     private bool _visible;
     private List<MessageTemplateDto> _templateItems = new();
@@ -110,7 +110,7 @@ public partial class TemplateMessageEditModal : AdminCompontentBase
 
     private void ResetForm()
     {
-        _model = new() { EntityType = MessageEntityTypes.Template, SystemId = MasaStackConsts.MC_SYSTEM_ID };
+        _model = new() { EntityType = MessageEntityTypes.Template, SystemId = MasaStackProject.MC.Name };
         _selectReceivers = new();
         _importReceivers = new();
         _selectReceiverType = false;

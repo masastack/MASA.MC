@@ -31,7 +31,7 @@ public class UpdateMessageRecordUserEventHandler
 
         var user = await GetMessageRecordsUser(messageRecord);
 
-        if (messageRecord.SystemId == MasaStackConsts.MC_SYSTEM_ID && user == null)
+        if (messageRecord.SystemId == MasaStackProject.MC.Name && user == null)
         {
             user = await CreateExternalUserAsync(messageRecord);
         }

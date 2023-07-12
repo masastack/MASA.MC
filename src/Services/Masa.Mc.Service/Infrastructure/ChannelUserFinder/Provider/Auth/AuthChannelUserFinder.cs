@@ -70,24 +70,8 @@ public class AuthChannelUserFinder : IChannelUserFinder
 
     private async Task<Dictionary<Guid, string>> GetUserClientIds(AppChannel channel, List<Guid> userIds)
     {
-        var userSystemDatas = await _authClient.UserService.GetSystemListDataAsync<string>(userIds, $"{MasaStackConsts.MC_SYSTEM_ID}:{channel.Code}");
-        return userIds.ToDictionary(x => x, x =>
-        {
-            var userSystemValue = userSystemDatas.GetValueOrDefault(x);
-            if (userSystemValue == null)
-                return string.Empty;
-
-            var userSystemData = JsonSerializer.Deserialize<UserSystemData>(userSystemValue);
-            return userSystemData?.ClientId ?? string.Empty;
-        });
-        //return userSystemDatas.ToDictionary(x => x.Key, x =>
-        //{
-        //    var userSystemData = JsonSerializer.Deserialize<UserSystemData>(x.Value);
-        //    return userSystemData?.ClientId ?? string.Empty;
-        //});
-
-        //var userSystemDatas = await _authClient.UserService.GetSystemListDataAsync<UserSystemData>(userIds, $"{MasaStackConsts.MC_SYSTEM_ID}:{channel.Code}");
-        //return userSystemDatas.ToDictionary(x => x.Key, x => x.Value.ClientId);
+        var userSystemDatas = await _authClient.UserService.GetSystemListDataAsync<UserSystemData>(userIds, $"{MasaStackProject.MC.Name}:{channel.Code}");
+        return userSystemDatas.ToDictionary(x => x.Key, x => x.Value?.ClientId ?? string.Empty);
     }
 
     private async Task<IEnumerable<MessageReceiverUser>> TransformDepartmentReceiversAsync(AppChannel channel, ExtraPropertyDictionary variables, IEnumerable<MessageTaskReceiver> receivers)
@@ -205,7 +189,7 @@ public class AuthChannelUserFinder : IChannelUserFinder
         {
             if (Channel.Type == ChannelType.App)
             {
-                var userSystemData = await _authClient.UserService.GetSystemDataAsync<UserSystemData>(receiver.SubjectId, $"{MasaStackConsts.MC_SYSTEM_ID}:{Channel.Code}");
+                var userSystemData = await _authClient.UserService.GetSystemDataAsync<UserSystemData>(receiver.SubjectId, $"{MasaStackProject.MC.Name}:{Channel.Code}");
                 return userSystemData?.ClientId ?? string.Empty;
             }
 

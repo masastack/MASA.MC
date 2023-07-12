@@ -35,7 +35,7 @@ public class MessageTaskHttpJobService : IMessageTaskJobService
 
         var request = new UpsertSchedulerJobRequest
         {
-            ProjectIdentity = MasaStackConsts.MC_SYSTEM_ID,
+            ProjectIdentity = MasaStackProject.MC.Name,
             Name = jobName,
             JobType = JobTypes.Http,
             CronExpression = cronExpression,
