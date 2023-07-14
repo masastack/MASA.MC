@@ -60,7 +60,8 @@ public class ReceiverGroupQueryHandler
         var userInfos = await _authClient.UserService.GetListByIdsAsync(modifierUserIds);
         foreach (var item in dtos)
         {
-            item.ModifierName = userInfos.FirstOrDefault(x => x.Id == item.Modifier)?.StaffDisplayName ?? string.Empty;
+            var modifier = userInfos.FirstOrDefault(x => x.Id == item.Modifier);
+            item.ModifierName = modifier?.StaffDisplayName ?? modifier?.DisplayName ?? string.Empty;
         }
     }
 }
