@@ -202,7 +202,8 @@ public class MessageTaskQueryHandler
                 item.Content = HtmlHelper.CutString(messageContent, 500);
             }
 
-            item.ModifierName = userInfos.FirstOrDefault(x => x.Id == item.Modifier)?.StaffDisplayName ?? string.Empty;
+            var modifier = userInfos.FirstOrDefault(x => x.Id == item.Modifier);
+            item.ModifierName = modifier?.RealDisplayName ?? string.Empty;
         }
     }
 
