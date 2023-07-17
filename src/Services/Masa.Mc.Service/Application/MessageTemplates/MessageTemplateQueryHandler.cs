@@ -73,7 +73,7 @@ public class MessageTemplateQueryHandler
         foreach (var item in dtos)
         {
             var modifier = userInfos.FirstOrDefault(x => x.Id == item.Modifier);
-            item.ModifierName = modifier?.StaffDisplayName ?? modifier?.DisplayName ?? string.Empty;
+            item.ModifierName = modifier?.RealDisplayName ?? string.Empty;
         }
     }
 }
