@@ -46,7 +46,7 @@ public class MessageTaskHistoryQueryHandler
     }
 
     [EventHandler]
-    public async Task GetReceiverUsersAsync(GetMessageTaskHistoryReceiverUsersQuery query)
+    public async Task GetReceiversAsync(GetMessageTaskHistoryReceiversQuery query)
     {
         var messageTaskHistory = await _context.MessageTaskHistoryQueries.Include(x => x.MessageTask).FirstOrDefaultAsync(x=>x.Id == query.MessageTaskHistoryId);
         MasaArgumentException.ThrowIfNull(messageTaskHistory, _i18n.T("MessageTaskHistory"));

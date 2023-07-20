@@ -34,10 +34,10 @@ public class MessageTaskHistoryService : ServiceBase
         await eventBus.PublishAsync(command);
     }
 
-    [RoutePattern("{id}/receiverUsers", StartWithBaseUri = true, HttpMethod = "Get")]
-    public async Task<List<MessageTaskReceiverDto>> GetReceiverUsersAsync(IEventBus eventBus, Guid id)
+    [RoutePattern("{id}/receivers", StartWithBaseUri = true, HttpMethod = "Get")]
+    public async Task<List<MessageTaskReceiverDto>> GetReceiversAsync(IEventBus eventBus, Guid id)
     {
-        var query = new GetMessageTaskHistoryReceiverUsersQuery(id);
+        var query = new GetMessageTaskHistoryReceiversQuery(id);
         await eventBus.PublishAsync(query);
         return query.Result;
     }

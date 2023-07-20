@@ -46,7 +46,7 @@ public partial class MessageTaskDetailModal : AdminCompontentBase
         {
             _historyInfo = _histories.Result[0];
 
-            await GetReceiverUsersAsync(_historyInfo.Id);
+            await GetReceiversAsync(_historyInfo.Id);
         }
     }
 
@@ -112,7 +112,7 @@ public partial class MessageTaskDetailModal : AdminCompontentBase
     private async Task HandleItemSelect(MessageTaskHistoryDto item)
     {
         _historyInfo = item;
-        await GetReceiverUsersAsync(_historyInfo.Id);
+        await GetReceiversAsync(_historyInfo.Id);
     }
 
     private async Task HandlePageChanged(int page)
@@ -145,8 +145,8 @@ public partial class MessageTaskDetailModal : AdminCompontentBase
         }
     }
 
-    private async Task GetReceiverUsersAsync(Guid id)
+    private async Task GetReceiversAsync(Guid id)
     {
-        _receiverUsers = await MessageTaskHistoryService.GetReceiverUsersAsync(id);
+        _receiverUsers = await MessageTaskHistoryService.GetReceiversAsync(id);
     }
 }

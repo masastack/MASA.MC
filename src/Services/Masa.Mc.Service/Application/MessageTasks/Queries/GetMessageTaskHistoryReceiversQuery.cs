@@ -3,7 +3,7 @@
 
 namespace Masa.Mc.Service.Admin.Application.MessageTasks.Queries;
 
-public record GetMessageTaskHistoryReceiverUsersQuery(Guid MessageTaskHistoryId) : Query<List<MessageTaskReceiverDto>>
+public record GetMessageTaskHistoryReceiversQuery(Guid MessageTaskHistoryId) : Query<List<MessageTaskReceiverDto>>
 {
     public override List<MessageTaskReceiverDto> Result { get; set; } = new();
 }
