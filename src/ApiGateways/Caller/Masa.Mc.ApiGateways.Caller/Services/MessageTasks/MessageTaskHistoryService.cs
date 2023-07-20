@@ -22,6 +22,11 @@ public class MessageTaskHistoryService : ServiceBase
         return await GetAsync<MessageTaskHistoryDto>($"{id}");
     }
 
+    public async Task<List<MessageTaskReceiverDto>> GetReceiversAsync(Guid id)
+    {
+        return await GetAsync<List<MessageTaskReceiverDto>>($"{id}/receivers") ?? new();
+    }
+
     public async Task WithdrawnAsync(Guid id)
     {
         await PostAsync($"{id}/Withdrawn", new { });

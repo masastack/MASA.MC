@@ -23,6 +23,8 @@ public class McQueryContext : MasaDbContext<McQueryContext>, IMcQueryContext
 
     public IQueryable<WebsiteMessageTagQueryModel> WebsiteMessageTagQueries => Set<WebsiteMessageTagQueryModel>().AsQueryable();
 
+    public IQueryable<MessageReceiverUserQueryModel> MessageReceiverUserQueries => Set<MessageReceiverUserQueryModel>().AsQueryable();
+
     public McQueryContext(MasaDbContextOptions<McQueryContext> options) : base(options)
     {
     }

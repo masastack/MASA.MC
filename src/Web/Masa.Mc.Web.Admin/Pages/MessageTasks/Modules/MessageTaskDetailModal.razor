@@ -6,16 +6,16 @@
                 <AutoHeight Overflow>
                     <HeaderContent>
                         <div class="subtitle2 emphasis2--text">@T("DisplayName.MessageTaskHistory")</div>
-                        <SDateRangePicker StartTime="_startTime"  EndTime="_endTime" Attach="true" DateRangeChanged="OnDateChanged" Class="btn-fill-line mt-6 full-width" />
+                        <SDateRangePicker StartTime="_startTime" EndTime="_endTime" Attach="true" DateRangeChanged="OnDateChanged" Class="btn-fill-line mt-6 full-width" />
                         <div class="status-select mb-9">
                             <MSelect @bind-Value="@_queryParam.Status"
                                      Items="@(GetEnumList<MessageTaskHistoryStatuses>())"
                                      Label="@T("DisplayName.MessageTaskHistoryStatus")"
                                      ItemText="@(item => T($"DisplayName.MessageTaskHistoryStatus.{item.ToString()}"))"
                                      ItemValue="item => item"
-                                     Dense
-                                     Outlined
-                                     Clearable
+                                                      Dense
+                                                      Outlined
+                                                      Clearable
                                      Attach="true"
                                      HideDetails="@("auto")"
                                      MenuProps="@(props => { props.OffsetY = true; })"
@@ -79,7 +79,7 @@
             <div class="task-detail-right full-height flex-column">
                 <AutoHeight Overflow>
                     <HeaderContent>
-                        @if (_historyInfo.SendTime.HasValue)
+                        @if (_historyInfo.Status == MessageTaskHistoryStatuses.WaitSend && _historyInfo.SendTime.HasValue)
                         {
                             <SButton BorderRadiusClass="rounded-lg" Class="small-btn info full-width mb-8">
                                 <span>@T(string.Format(T("Description.MessageTaskHistory.SendTimeTips"),_historyInfo.SendTime?.ToOffset(JsInitVariables.TimezoneOffset).ToString(T("$DateTimeFormat"))))</span>
@@ -102,6 +102,46 @@
                             <dt class="overline regular3--text">@T("DisplayName.MessageTaskDetail.ReceiverType")</dt>
                             <dd class="body2 emphasis2--text mt-1">@T($"DisplayName.ReceiverType.{_info.ReceiverType.ToString()}")</dd>
                         </dl>
+
+                        @if (_receiverUsers.Any())
+                        {
+                            <MCard Class="mx-auto overflow-y-auto mt-0 pa-0">
+                                <MList>
+                                    @foreach (var item in _receiverUsers)
+                                    {
+                                        <MListItem Class="px-0 py-4">
+                                            <MListItemAvatar Size=40 Class="ma-0" Color="primary" Style="z-index:2">
+                                                @if (string.IsNullOrEmpty(item.Avatar))
+                                                {
+                                                    <SEmptyAvatar Value="@item.DisplayName" />
+                                                }
+                                                else
+                                                {
+                                                    <MImage Src="@item.Avatar"></MImage>
+                                                }
+                                            </MListItemAvatar>
+                                            <MListItemContent Class="ml-2 pa-0" Style="z-index:2">
+                                                <MListItemTitle>
+                                                    <span class="btn emphasis2--text">@(item.DisplayName)</span>
+                                                    <div class="d-inline-flex mx-2" style="height: 8px">
+                                                        <MDivider Vertical />
+                                                    </div>
+                                                    <span class="overline regular2--text">@T("DisplayName.SubjectTypes.User")</span>
+                                                </MListItemTitle>
+                                                <MListItemSubtitle>
+                                                    <span class="body2 regular2--text">@(item.PhoneNumber)</span>
+                                                    <div class="d-inline-flex mx-1" style="height: 8px">
+                                                        <MDivider Vertical />
+                                                    </div>
+                                                    <span class="body2 regular2--text">@(item.Email)</span>
+                                                </MListItemSubtitle>
+                                            </MListItemContent>
+                                        </MListItem>
+                                    }
+                                </MList>
+                            </MCard>
+                        }
+
                         @if (_info.Channel.Type == ChannelTypes.Sms || _info.SendRules.IsCustom)
                         {
                             <div class="subtitle2 emphasis2--text mt-8">@T("DisplayName.MessageTaskSendingRule")</div>
