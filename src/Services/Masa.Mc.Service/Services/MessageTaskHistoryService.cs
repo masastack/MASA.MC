@@ -33,4 +33,12 @@ public class MessageTaskHistoryService : ServiceBase
         var command = new WithdrawnMessageTaskHistoryCommand(id);
         await eventBus.PublishAsync(command);
     }
+
+    [RoutePattern("{id}/receiverUsers", StartWithBaseUri = true, HttpMethod = "Get")]
+    public async Task<List<MessageTaskReceiverDto>> GetReceiverUsersAsync(IEventBus eventBus, Guid id)
+    {
+        var query = new GetMessageTaskHistoryReceiverUsersQuery(id);
+        await eventBus.PublishAsync(query);
+        return query.Result;
+    }
 }

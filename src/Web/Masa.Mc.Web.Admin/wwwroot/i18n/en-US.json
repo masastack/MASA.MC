@@ -140,7 +140,7 @@
   "DisplayName.SendingRule.IsTiming": "IsTiming",
   "DisplayName.MessageTaskHistory": "Message task history",
   "DisplayName.MessageTaskHistoryNo": "Task history no",
-  "DisplayName.MessageTaskHistoryStatus": "Message task history status",
+  "DisplayName.MessageTaskHistoryStatus": "Message task status",
   "DisplayName.MessageTaskHistoryStatus.WaitSend": "WaitSend",
   "DisplayName.MessageTaskHistoryStatus.Sending": "Sending",
   "DisplayName.MessageTaskHistoryStatus.Completed": "Completed",

@@ -8,35 +8,23 @@ public partial class MessageTaskDetailModal : AdminCompontentBase
     [Parameter]
     public EventCallback OnOk { get; set; }
 
-    private List<DataTableHeader<MessageTaskHistoryDto>> _headers = new();
-
     private MessageTaskDto _info = new();
     private MessageTaskHistoryDto _historyInfo = new();
     private Guid _entityId;
     private bool _visible;
     private GetMessageTaskHistoryInputDto _queryParam = new();
 
-    private List<DateOnly> _dates = new() { };
-
     private PaginatedListDto<MessageTaskHistoryDto> _histories = new();
     private DateOnly? _endTime;
     private DateOnly? _startTime;
+    private List<MessageTaskReceiverDto> _receiverUsers = new();
 
     private MessageTaskService MessageTaskService => McCaller.MessageTaskService;
 
     private MessageTaskHistoryService MessageTaskHistoryService => McCaller.MessageTaskHistoryService;
 
-    protected async override Task OnInitializedAsync()
-    {
-        await base.OnInitializedAsync();
-        string prefix = "DisplayName.MessageTaskHistory";
-        _headers = new()
-        {
-            new() { Text = T($"{prefix}{nameof(MessageTaskHistoryDto.Status)}"), Value = nameof(MessageTaskHistoryDto.Status), Sortable = false },
-            new() { Text = T($"{prefix}{nameof(MessageTaskHistoryDto.TaskHistoryNo)}"), Value = nameof(MessageTaskHistoryDto.TaskHistoryNo), Sortable = false },
-            new() { Text = T($"{prefix}{nameof(MessageTaskHistoryDto.SendTime)}"), Value = nameof(MessageTaskHistoryDto.SendTime), Sortable = false },
-        };
-    }
+    protected override string? PageName { get; set; } = "MessageTaskBlock";
+
 
     public async Task OpenModalAsync(MessageTaskDto model)
     {
@@ -54,7 +42,12 @@ public partial class MessageTaskDetailModal : AdminCompontentBase
     {
         _info = await MessageTaskService.GetAsync(_entityId) ?? new();
         await LoadData();
-        if (_histories.Result.Any()) _historyInfo = _histories.Result[0];
+        if (_histories.Result.Any())
+        {
+            _historyInfo = _histories.Result[0];
+
+            await GetReceiverUsersAsync(_historyInfo.Id);
+        }
     }
 
     private void HandleCancel()
@@ -116,9 +109,10 @@ public partial class MessageTaskDetailModal : AdminCompontentBase
         StateHasChanged();
     }
 
-    private void HandleItemSelect(MessageTaskHistoryDto item)
+    private async Task HandleItemSelect(MessageTaskHistoryDto item)
     {
         _historyInfo = item;
+        await GetReceiverUsersAsync(_historyInfo.Id);
     }
 
     private async Task HandlePageChanged(int page)
@@ -149,5 +143,10 @@ public partial class MessageTaskDetailModal : AdminCompontentBase
         {
             await OnOk.InvokeAsync();
         }
+    }
+
+    private async Task GetReceiverUsersAsync(Guid id)
+    {
+        _receiverUsers = await MessageTaskHistoryService.GetReceiverUsersAsync(id);
     }
 }

@@ -5,7 +5,5 @@ namespace Masa.Mc.Web.Admin.Pages.MessageTasks;
 
 public partial class SendMessageManagement : AdminCompontentBase
 {
-    private SendMessage _sendMessage = default!;
-    private MessageTaskList _messageTaskList = default!;
     private bool _isSend = true;
 }

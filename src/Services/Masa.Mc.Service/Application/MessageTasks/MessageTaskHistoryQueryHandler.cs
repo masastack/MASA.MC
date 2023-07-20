@@ -1,17 +1,21 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
+using Masa.BuildingBlocks.Ddd.Domain.Entities;
+
 namespace Masa.Mc.Service.Admin.Application.MessageTaskHistorys;
 
 public class MessageTaskHistoryQueryHandler
 {
     private readonly IMcQueryContext _context;
     private readonly II18n<DefaultResource> _i18n;
+    private readonly IAuthClient _authClient;
 
-    public MessageTaskHistoryQueryHandler(IMcQueryContext context, II18n<DefaultResource> i18n)
+    public MessageTaskHistoryQueryHandler(IMcQueryContext context, II18n<DefaultResource> i18n, IAuthClient authClient)
     {
         _context = context;
         _i18n = i18n;
+        _authClient = authClient;
     }
 
     [EventHandler]
@@ -41,6 +45,49 @@ public class MessageTaskHistoryQueryHandler
         var dtos = resultList.Result.Adapt<List<MessageTaskHistoryDto>>();
         var result = new PaginatedListDto<MessageTaskHistoryDto>(resultList.Total, resultList.TotalPages, dtos);
         query.Result = result;
+    }
+
+    [EventHandler]
+    public async Task GetReceiverUsersAsync(GetMessageTaskHistoryReceiverUsersQuery query)
+    {
+        var messageTaskHistory = await _context.MessageTaskHistoryQueries.Include(x => x.MessageTask).FirstOrDefaultAsync(x=>x.Id == query.MessageTaskHistoryId);
+        MasaArgumentException.ThrowIfNull(messageTaskHistory, _i18n.T("MessageTaskHistory"));
+        MasaArgumentException.ThrowIfNull(messageTaskHistory.MessageTask.ChannelType, _i18n.T("ChannelType"));
+
+        var list = await _context.MessageReceiverUserQueries.Where(x => x.MessageTaskHistoryId == query.MessageTaskHistoryId).ToListAsync();
+
+        var userIds = list.Select(x => x.UserId);
+        var users = await _authClient.UserService.GetListByIdsAsync(userIds.ToArray());
+
+        var dtos = new List<MessageTaskReceiverDto>();
+
+        foreach (var item in list)
+        {
+            if (item.UserId == default)
+            {
+                var receiverDto = new MessageTaskReceiverDto() { Type = MessageTaskReceiverTypes.User };
+                receiverDto.SetChannelUserIdentity(messageTaskHistory.MessageTask.ChannelType.Value, item.ChannelUserIdentity);
+                dtos.Add(receiverDto);
+                continue;
+            }
+
+            var user = users.FirstOrDefault(x=>x.Id == item.UserId);
+            if (user == null)
+                continue;
+
+            var dto = new MessageTaskReceiverDto
+            {
+                Type = MessageTaskReceiverTypes.User,
+                SubjectId = item.UserId,
+                DisplayName = user.DisplayName,
+                Avatar = user.Avatar,
+                PhoneNumber = user.PhoneNumber ?? string.Empty,
+                Email = user?.Email ?? string.Empty,
+            };
+            dtos.Add(dto);
+        }
+
+        query.Result = dtos;
     }
 
     private async Task<Expression<Func<MessageTaskHistoryQueryModel, bool>>> CreateFilteredPredicate(GetMessageTaskHistoryInputDto inputDto)

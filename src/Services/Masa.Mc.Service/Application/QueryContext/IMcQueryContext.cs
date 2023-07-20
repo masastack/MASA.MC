@@ -22,4 +22,6 @@ public interface IMcQueryContext
     public IQueryable<WebsiteMessageQueryModel> WebsiteMessageQueries { get; }
 
     public IQueryable<WebsiteMessageTagQueryModel> WebsiteMessageTagQueries { get; }
+
+    public IQueryable<MessageReceiverUserQueryModel> MessageReceiverUserQueries { get; }
 }
