@@ -12,7 +12,7 @@
                     Label="@T("DisplayName.SendingRule.CronExpression")"
                     Disabled="ReadOnly"
                     TValue="string"
-                    AppendIcon="mdi-clock" OnAppendClick="OpenCronModal" OnChange="()=>GetNextRunTime()">
+                    AppendIcon="mdi-clock" OnAppendClick="OpenCronModal" OnBlur="()=>GetNextRunTime()">
             </STextField>
         </MCol>
     </MRow>
