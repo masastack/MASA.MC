@@ -28,7 +28,11 @@ public partial class MessageSendingRules : AdminCompontentBase
     private void OpenCronModal()
     {
         _cronVisible = true;
-        _tempCron = Value.CronExpression;
+
+        if (CronExpression.IsValidExpression(Value.CronExpression))
+        {
+            _tempCron = Value.CronExpression;
+        }
     }
 
     private async Task SetCronExpression()
