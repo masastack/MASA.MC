@@ -26,37 +26,21 @@ public class ResolveMessageTaskJob : BackgroundJobBase<ResolveMessageTaskJobArgs
         var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
         var userContext = scope.ServiceProvider.GetRequiredService<IUserContext>();
 
+        var sendTime = DateTimeOffset.Now;
         var messageTask = (await messageTaskRepository.WithDetailsAsync()).FirstOrDefault(x => x.Id == args.MessageTaskId);
-
-        if (messageTask == null || messageTask.ReceiverType == ReceiverTypes.Broadcast)
+        if (messageTask == null)
             return;
 
-        var receiverUsers = (await channelUserFinder.GetReceiverUsersAsync(messageTask.Channel, messageTask.Variables, messageTask.Receivers)).ToList();
+        var receiverUsers = new List<MessageReceiverUser>();
+
+        if (messageTask.ReceiverType != ReceiverTypes.Broadcast)
+        {
+            receiverUsers = (await channelUserFinder.GetReceiverUsersAsync(messageTask.Channel, messageTask.Variables, messageTask.Receivers)).ToList();
+        }
 
         await messageTaskHistoryRepository.RemoveAsync(x => x.MessageTaskId == args.MessageTaskId);
 
-        var sendTime = DateTimeOffset.Now;
-        if (messageTask.SendRules.IsCustom)
-        {
-            var historyNum = messageTask.GetHistoryCount(receiverUsers);
-            var sendingCount = messageTask.GetSendingCount(receiverUsers);
-
-            var cronExpression = new CronExpression(messageTask.SendRules.CronExpression);
-            cronExpression.TimeZone = TimeZoneInfo.FindSystemTimeZoneById("China Standard Time");
-
-            for (int i = 0; i < historyNum; i++)
-            {
-                var nextExcuteTime = cronExpression.GetNextValidTimeAfter(sendTime);
-                if (nextExcuteTime.HasValue)
-                {
-                    sendTime = nextExcuteTime.Value;
-                    var historyReceiverUsers = messageTask.GetHistoryReceiverUsers(receiverUsers, i, sendingCount);
-                    var history = new MessageTaskHistory(messageTask.Id, historyReceiverUsers, false, sendTime);
-                    await messageTaskHistoryRepository.AddAsync(history);
-                }
-            }
-        }
-        else
+        if (messageTask.ReceiverType == ReceiverTypes.Broadcast || !messageTask.SendRules.IsCustom)
         {
             var history = new MessageTaskHistory(messageTask.Id, receiverUsers, false, sendTime);
             history.ExecuteTask();
@@ -67,6 +51,25 @@ public class ResolveMessageTaskJob : BackgroundJobBase<ResolveMessageTaskJobArgs
 
             return;
         }
+
+        var historyNum = messageTask.GetHistoryCount(receiverUsers);
+        var sendingCount = messageTask.GetSendingCount(receiverUsers);
+
+        var cronExpression = new CronExpression(messageTask.SendRules.CronExpression);
+        cronExpression.TimeZone = TimeZoneInfo.FindSystemTimeZoneById("China Standard Time");
+
+        for (int i = 0; i < historyNum; i++)
+        {
+            var nextExcuteTime = cronExpression.GetNextValidTimeAfter(sendTime);
+            if (nextExcuteTime.HasValue)
+            {
+                sendTime = nextExcuteTime.Value;
+                var historyReceiverUsers = messageTask.GetHistoryReceiverUsers(receiverUsers, i, sendingCount);
+                var history = new MessageTaskHistory(messageTask.Id, historyReceiverUsers, false, sendTime);
+                await messageTaskHistoryRepository.AddAsync(history);
+            }
+        }
+
 
         var userId = userContext.GetUserId<Guid>();
         var operatorId = userId == default ? args.OperatorId : userId;
