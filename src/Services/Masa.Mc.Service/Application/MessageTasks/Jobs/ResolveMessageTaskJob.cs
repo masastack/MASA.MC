@@ -48,7 +48,7 @@ public class ResolveMessageTaskJob : BackgroundJobBase<ResolveMessageTaskJobArgs
 
         await _messageTaskHistoryRepository.RemoveAsync(x => x.MessageTaskId == args.MessageTaskId);
 
-        if (messageTask.ReceiverType == ReceiverTypes.Broadcast || !messageTask.SendRules.IsCustom)
+        if (!messageTask.SendRules.IsCustom)
         {
             var history = new MessageTaskHistory(messageTask.Id, receiverUsers, false, sendTime);
             history.ExecuteTask();
