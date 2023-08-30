@@ -63,7 +63,16 @@ public class AuthChannelUserFinder : IChannelUserFinder
     private async Task<Dictionary<Guid, string>> GetUserClientIds(AppChannel channel, List<Guid> userIds)
     {
         var userSystemDatas = await _authClient.UserService.GetSystemListDataAsync<UserSystemData>(userIds, $"{MasaStackProject.MC.Name}:{channel.Code}");
-        return userSystemDatas.ToDictionary(x => x.Key, x => x.Value?.ClientId ?? string.Empty);
+        var userClientIds = userIds.ToDictionary(x => x, x =>
+        {
+            if (!userSystemDatas.Any(y => y.Key == x))
+            {
+                return string.Empty;
+            }
+            var userSystemData = userSystemDatas.FirstOrDefault(y => y.Key == x);
+            return userSystemData.Value?.ClientId ?? string.Empty;
+        });
+        return userClientIds;
     }
 
     private async Task<IEnumerable<MessageReceiverUser>> TransformDepartmentReceiversAsync(AppChannel channel, ExtraPropertyDictionary variables, IEnumerable<MessageTaskReceiver> receivers)
