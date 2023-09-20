@@ -8,14 +8,17 @@ public class WebsiteMessageQueryHandler
     private readonly IMcQueryContext _context;
     private readonly IUserContext _userContext;
     private readonly II18n<DefaultResource> _i18n;
+    private IDistributedCacheClient _cache;
 
     public WebsiteMessageQueryHandler(IMcQueryContext context
         , IUserContext userContext
-        , II18n<DefaultResource> i18n)
+        , II18n<DefaultResource> i18n
+        , IDistributedCacheClient cache)
     {
         _context = context;
         _userContext = userContext;
         _i18n = i18n;
+        _cache = cache;
     }
 
     [EventHandler]
@@ -77,6 +80,15 @@ public class WebsiteMessageQueryHandler
     public async Task GetNoticeListAsync(GetNoticeListQuery query)
     {
         var userId = _userContext.GetUserId<Guid>();
+        var cacheKey = CacheKeys.GET_NOTICE_LIST + "-" + userId;
+
+        var response = _cache.Get<List<WebsiteMessageDto>>(cacheKey);
+        if (response != null)
+        {
+            query.Result = response;
+            return;
+        }
+
         var noticeNum = query.PageSize;
         var queryable = _context.WebsiteMessageQueries.Include(x => x.Channel).Where(x => x.Channel != null && x.UserId == userId && !x.IsWithdrawn);
         var list = await queryable.Where(x => !x.IsRead).OrderByDescending(x => x.CreationTime).Take(noticeNum).ToListAsync();
@@ -88,7 +100,13 @@ public class WebsiteMessageQueryHandler
         }
         var dtos = list.Adapt<List<WebsiteMessageDto>>();
         FillListDtos(dtos);
-        query.Result = dtos;
+
+        if (dtos.Any())
+        {
+            _cache.Set(cacheKey, dtos ?? new(), DateTimeOffset.Now.AddMinutes(10));
+        }
+
+        query.Result = dtos ?? new();
     }
 
     private async Task<Expression<Func<WebsiteMessageQueryModel, bool>>> CreateFilteredPredicate(GetWebsiteMessageInputDto inputDto)

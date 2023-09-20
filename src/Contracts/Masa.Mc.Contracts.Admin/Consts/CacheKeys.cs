@@ -6,4 +6,5 @@ namespace Masa.Mc.Contracts.Admin.Consts;
 public class CacheKeys
 {
     public const string MESSAGE_CURSOR_CHECK_COUNT = nameof(MESSAGE_CURSOR_CHECK_COUNT);
+    public const string GET_NOTICE_LIST = nameof(GET_NOTICE_LIST);
 }
