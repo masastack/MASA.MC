@@ -50,6 +50,11 @@ public class WebsiteMessage : FullAggregateRoot<Guid, Guid>
         ExtraProperties = extraProperties;
 
         AddTag();
+
+        if (userId != Guid.Empty)
+        {
+            AddDomainEvent(new RemoveWebsiteMessageCacheEvent(userId));
+        }
     }
 
     public void SetRead()
