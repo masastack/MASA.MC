@@ -17,7 +17,7 @@ public class MessageRecordUserDto
 
     public MessageRecordUserDto() { }
 
-    public MessageRecordUserDto(string channelUserIdentity, ChannelTypes type)
+    public void FillChannelUserIdentity(string channelUserIdentity, ChannelTypes type)
     {
         switch (type)
         {
@@ -26,8 +26,6 @@ public class MessageRecordUserDto
                 break;
             case ChannelTypes.Email:
                 Email = channelUserIdentity;
-                break;
-            default:
                 break;
         }
     }
