@@ -91,10 +91,8 @@ public class MessageRecordQueryHandler
                     item.User = user.Adapt<MessageRecordUserDto>();
                 }
             }
-            else
-            {
-                item.User = new MessageRecordUserDto(item.ChannelUserIdentity, item.Channel.Type);
-            }
+
+            item.User.FillChannelUserIdentity(item.ChannelUserIdentity, item.Channel.Type);
         }
     }
 }
