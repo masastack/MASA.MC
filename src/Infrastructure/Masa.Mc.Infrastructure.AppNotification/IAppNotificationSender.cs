@@ -7,6 +7,8 @@ public interface IAppNotificationSender
 {
     Task<AppNotificationResponseBase> SendAsync(SingleAppMessage appMessage);
 
+    Task<AppNotificationResponseBase> BatchSendAsync(BatchAppMessage appMessage);
+
     Task<AppNotificationResponseBase> SendAllAsync(AppMessage appMessage);
 
     Task<AppNotificationResponseBase> WithdrawnAsync(string msgId);
