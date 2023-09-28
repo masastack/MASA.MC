@@ -43,7 +43,7 @@ public class JPushSender : IAppNotificationSender
         }
     }
 
-    public async Task<AppNotificationResponseBase> SendBatchAsync(BatchAppMessage appMessage)
+    public async Task<AppNotificationResponseBase> BatchSendAsync(BatchAppMessage appMessage)
     {
         var options = await _jPushOptionsResolver.ResolveAsync();
         JPushClient client = new JPushClient(options.AppKey, options.MasterSecret);

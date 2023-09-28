@@ -97,4 +97,9 @@ public class GetuiSender : IAppNotificationSender
     {
         throw new NotImplementedException();
     }
+
+    public Task<AppNotificationResponseBase> BatchSendAsync(BatchAppMessage appMessage)
+    {
+        throw new NotImplementedException();
+    }
 }
