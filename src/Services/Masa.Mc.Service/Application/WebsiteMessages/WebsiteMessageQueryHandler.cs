@@ -218,6 +218,12 @@ public class WebsiteMessageQueryHandler
 
         var channelId = (await _context.ChannelQueryQueries.FirstOrDefaultAsync(x => x.Code == query.ChannelCode))?.Id;
 
+        if (!string.IsNullOrEmpty(query.Tag))
+        {
+            query.Result = await _context.WebsiteMessageQueries.Include(x => x.Tags).CountAsync(x => x.UserId == userId && x.ChannelId == channelId && !x.IsRead && x.Tags.Any(t=>t.Tag == query.Tag));
+            return;
+        }
+
         var unread = await _context.WebsiteMessageQueries.CountAsync(x => x.UserId == userId && x.ChannelId == channelId && !x.IsRead);
 
         query.Result = unread;
