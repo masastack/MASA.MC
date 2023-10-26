@@ -6,14 +6,20 @@ namespace Masa.Mc.Web.Admin.Pages.MessageRecords;
 public partial class MessageRecordManagement : AdminCompontentBase
 {
     private MessageRecordDetailModal _detailModal = default!;
-    private GetMessageRecordInputDto _queryParam = new() { TimeType = MessageRecordTimeTypes.ExpectSendTime };
+    private static GetMessageRecordInputDto defaultQueryParam = new()
+    {
+        TimeType = MessageRecordTimeTypes.ExpectSendTime,
+        StartTime = DateTime.Now.Date,
+        EndTime = DateTime.Now.Date.AddDays(1)
+    };
+    private GetMessageRecordInputDto _queryParam = defaultQueryParam;
     private PaginatedListDto<MessageRecordDto> _entities = new();
     private List<ChannelDto> _channelItems = new();
     private List<KeyValuePair<string, bool>> _successItems = new();
     private ChannelService ChannelService => McCaller.ChannelService;
     private MessageRecordService MessageRecordService => McCaller.MessageRecordService;
-    private DateTimeOffset? _endTime;
-    private DateTimeOffset? _startTime;
+    private DateTimeOffset? _endTime = defaultQueryParam.EndTime;
+    private DateTimeOffset? _startTime = defaultQueryParam.StartTime;
 
     protected override string? PageName { get; set; } = "MessageRecordBlock";
 
@@ -96,7 +102,7 @@ public partial class MessageRecordManagement : AdminCompontentBase
 
     private async Task HandleClearAsync()
     {
-        _queryParam = new() { TimeType = MessageRecordTimeTypes.ExpectSendTime };
+        _queryParam = defaultQueryParam;
         await LoadData();
     }
 }
