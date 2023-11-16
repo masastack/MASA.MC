@@ -76,27 +76,72 @@ public class SendAppMessageEventHandler
             int okCount = 0;
             int totalCount = taskHistory.ReceiverUsers.Count;
 
-            var messageTemplate = await _messageTemplateRepository.FindAsync(x => x.Id == taskHistory.MessageTask.EntityId, false);
-
-            foreach (var item in taskHistory.ReceiverUsers)
+            if (eto.MessageData.MessageType == MessageEntityTypes.Template)
             {
-                var messageRecord = new MessageRecord(item.UserId, item.ChannelUserIdentity, channel.Id, taskHistory.MessageTaskId, taskHistory.Id, item.Variables, eto.MessageData.MessageContent.Title, taskHistory.SendTime, taskHistory.MessageTask.SystemId);
-                messageRecord.SetMessageEntity(taskHistory.MessageTask.EntityType, taskHistory.MessageTask.EntityId);
-                eto.MessageData.RenderContent(item.Variables);
+                var messageTemplate = await _messageTemplateRepository.FindAsync(x => x.Id == taskHistory.MessageTask.EntityId, false);
 
-                if (eto.MessageData.MessageType == MessageEntityTypes.Template)
+                foreach (var item in taskHistory.ReceiverUsers)
                 {
+                    var messageRecord = new MessageRecord(item.UserId, item.ChannelUserIdentity, channel.Id, taskHistory.MessageTaskId, taskHistory.Id, item.Variables, eto.MessageData.MessageContent.Title, taskHistory.SendTime, taskHistory.MessageTask.SystemId);
+                    messageRecord.SetMessageEntity(taskHistory.MessageTask.EntityType, taskHistory.MessageTask.EntityId);
+                    eto.MessageData.RenderContent(item.Variables);
+
                     if (!await _messageTemplateDomainService.CheckSendUpperLimitAsync(messageTemplate, messageRecord.ChannelUserIdentity))
                     {
                         messageRecord.SetResult(false, _i18n.T("DailySendingLimit"));
                         await _messageRecordRepository.AddAsync(messageRecord);
                         continue;
                     }
-                }
 
-                try
+                    try
+                    {
+                        if (taskHistory.MessageTask.IsAppInWebsiteMessage || messageTemplate?.IsWebsiteMessage == true)
+                        {
+                            var websiteMessage = new WebsiteMessage(messageRecord.MessageTaskHistoryId, messageRecord.ChannelId, item.UserId, eto.MessageData.MessageContent.Title, eto.MessageData.MessageContent.Content, eto.MessageData.MessageContent.GetJumpUrl(), DateTimeOffset.Now, eto.MessageData.MessageContent.ExtraProperties);
+                            await _websiteMessageRepository.AddAsync(websiteMessage);
+                        }
+
+                        if (string.IsNullOrEmpty(item.ChannelUserIdentity))
+                        {
+                            messageRecord.SetResult(false, _i18n.T("ClientIdNotBound"));
+                        }
+                        else
+                        {
+                            var response = await appNotificationSender.SendAsync(new SingleAppMessage(item.ChannelUserIdentity, eto.MessageData.MessageContent.Title, eto.MessageData.MessageContent.Content, eto.MessageData.GetDataValue<string>(BusinessConsts.INTENT_URL), transmissionContent, eto.MessageData.GetDataValue<bool>(BusinessConsts.IS_APNS_PRODUCTION)));
+
+                            if (response.Success)
+                            {
+                                messageRecord.SetResult(true, string.Empty);
+                                messageRecord.SetDataValue(BusinessConsts.APP_PUSH_MSG_ID, response.MsgId);
+                                okCount++;
+                            }
+                            else
+                            {
+                                messageRecord.SetResult(false, response.Message);
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "SendAppMessageEventHandler");
+                        messageRecord.SetResult(false, ex.Message);
+                    }
+
+                    await _messageRecordRepository.AddAsync(messageRecord);
+                }
+            }
+            else
+            {
+                var clientIds = taskHistory.ReceiverUsers.Select(x => x.ChannelUserIdentity).ToList();
+
+                var response = await appNotificationSender.BatchSendAsync(new BatchAppMessage(clientIds, eto.MessageData.MessageContent.Title, eto.MessageData.MessageContent.Content, eto.MessageData.GetDataValue<string>(BusinessConsts.INTENT_URL), transmissionContent, eto.MessageData.GetDataValue<bool>(BusinessConsts.IS_APNS_PRODUCTION)));
+
+                foreach (var item in taskHistory.ReceiverUsers)
                 {
-                    if (taskHistory.MessageTask.IsAppInWebsiteMessage || messageTemplate?.IsWebsiteMessage == true)
+                    var messageRecord = new MessageRecord(item.UserId, item.ChannelUserIdentity, channel.Id, taskHistory.MessageTaskId, taskHistory.Id, item.Variables, eto.MessageData.MessageContent.Title, taskHistory.SendTime, taskHistory.MessageTask.SystemId);
+                    messageRecord.SetMessageEntity(taskHistory.MessageTask.EntityType, taskHistory.MessageTask.EntityId);
+
+                    if (taskHistory.MessageTask.IsAppInWebsiteMessage)
                     {
                         var websiteMessage = new WebsiteMessage(messageRecord.MessageTaskHistoryId, messageRecord.ChannelId, item.UserId, eto.MessageData.MessageContent.Title, eto.MessageData.MessageContent.Content, eto.MessageData.MessageContent.GetJumpUrl(), DateTimeOffset.Now, eto.MessageData.MessageContent.ExtraProperties);
                         await _websiteMessageRepository.AddAsync(websiteMessage);
@@ -108,28 +153,85 @@ public class SendAppMessageEventHandler
                     }
                     else
                     {
-                        var response = await appNotificationSender.SendAsync(new SingleAppMessage(item.ChannelUserIdentity, eto.MessageData.MessageContent.Title, eto.MessageData.MessageContent.Content, eto.MessageData.GetDataValue<string>(BusinessConsts.INTENT_URL), transmissionContent, eto.MessageData.GetDataValue<bool>(BusinessConsts.IS_APNS_PRODUCTION)));
-
-                        if (response.Success)
-                        {
-                            messageRecord.SetResult(true, string.Empty);
-                            messageRecord.SetDataValue(BusinessConsts.APP_PUSH_MSG_ID, response.MsgId);
-                            okCount++;
-                        }
-                        else
+                        if (!response.Success)
                         {
                             messageRecord.SetResult(false, response.Message);
                         }
+                        else
+                        {
+                            var recordResponse = response.Data?.GetOrDefault(item.ChannelUserIdentity);
+
+                            if (recordResponse?.Success == true)
+                            {
+                                messageRecord.SetResult(true, string.Empty);
+                                messageRecord.SetDataValue(BusinessConsts.APP_PUSH_MSG_ID, recordResponse.MsgId);
+                            }
+                            else
+                            {
+                                messageRecord.SetResult(false, recordResponse?.Message ?? string.Empty);
+                            }
+                        }
                     }
                 }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, "SendAppMessageEventHandler");
-                    messageRecord.SetResult(false, ex.Message);
-                }
-
-                await _messageRecordRepository.AddAsync(messageRecord);
             }
+
+
+
+
+            //var messageTemplate = await _messageTemplateRepository.FindAsync(x => x.Id == taskHistory.MessageTask.EntityId, false);
+
+            //foreach (var item in taskHistory.ReceiverUsers)
+            //{
+            //    var messageRecord = new MessageRecord(item.UserId, item.ChannelUserIdentity, channel.Id, taskHistory.MessageTaskId, taskHistory.Id, item.Variables, eto.MessageData.MessageContent.Title, taskHistory.SendTime, taskHistory.MessageTask.SystemId);
+            //    messageRecord.SetMessageEntity(taskHistory.MessageTask.EntityType, taskHistory.MessageTask.EntityId);
+            //    eto.MessageData.RenderContent(item.Variables);
+
+            //    if (eto.MessageData.MessageType == MessageEntityTypes.Template)
+            //    {
+            //        if (!await _messageTemplateDomainService.CheckSendUpperLimitAsync(messageTemplate, messageRecord.ChannelUserIdentity))
+            //        {
+            //            messageRecord.SetResult(false, _i18n.T("DailySendingLimit"));
+            //            await _messageRecordRepository.AddAsync(messageRecord);
+            //            continue;
+            //        }
+            //    }
+
+            //    try
+            //    {
+            //        if (taskHistory.MessageTask.IsAppInWebsiteMessage || messageTemplate?.IsWebsiteMessage == true)
+            //        {
+            //            var websiteMessage = new WebsiteMessage(messageRecord.MessageTaskHistoryId, messageRecord.ChannelId, item.UserId, eto.MessageData.MessageContent.Title, eto.MessageData.MessageContent.Content, eto.MessageData.MessageContent.GetJumpUrl(), DateTimeOffset.Now, eto.MessageData.MessageContent.ExtraProperties);
+            //            await _websiteMessageRepository.AddAsync(websiteMessage);
+            //        }
+
+            //        if (string.IsNullOrEmpty(item.ChannelUserIdentity))
+            //        {
+            //            messageRecord.SetResult(false, _i18n.T("ClientIdNotBound"));
+            //        }
+            //        else
+            //        {
+            //            var response = await appNotificationSender.SendAsync(new SingleAppMessage(item.ChannelUserIdentity, eto.MessageData.MessageContent.Title, eto.MessageData.MessageContent.Content, eto.MessageData.GetDataValue<string>(BusinessConsts.INTENT_URL), transmissionContent, eto.MessageData.GetDataValue<bool>(BusinessConsts.IS_APNS_PRODUCTION)));
+
+            //            if (response.Success)
+            //            {
+            //                messageRecord.SetResult(true, string.Empty);
+            //                messageRecord.SetDataValue(BusinessConsts.APP_PUSH_MSG_ID, response.MsgId);
+            //                okCount++;
+            //            }
+            //            else
+            //            {
+            //                messageRecord.SetResult(false, response.Message);
+            //            }
+            //        }
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        _logger.LogError(ex, "SendAppMessageEventHandler");
+            //        messageRecord.SetResult(false, ex.Message);
+            //    }
+
+            //    await _messageRecordRepository.AddAsync(messageRecord);
+            //}
             taskHistory.SetResult(okCount == totalCount ? MessageTaskHistoryStatuses.Success : (okCount > 0 ? MessageTaskHistoryStatuses.PartialFailure : MessageTaskHistoryStatuses.Fail));
 
             await _messageTaskHistoryRepository.UpdateAsync(taskHistory);

@@ -1,6 +1,11 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
+using System.Collections;
+using System.Collections.Generic;
+using com.igetui.api.openservice.igetui;
+using Jiguang.JPush.Model;
+
 namespace Masa.Mc.Infrastructure.AppNotification.JPush;
 
 public class JPushSender : IAppNotificationSender
@@ -22,6 +27,107 @@ public class JPushSender : IAppNotificationSender
             registration_id = new string[] { appMessage.ClientId }
         };
 
+        PushPayload pushPayload = PushPayloadTemplate(audience, appMessage);
+
+        try
+        {
+            var response = client.SendPush(pushPayload);
+
+            if (response.StatusCode != HttpStatusCode.OK)
+            {
+                return new AppNotificationResponseBase(false, response.Content);
+            }
+
+            var successResponse = JsonConvert.DeserializeObject<SendPushSuccessResponse>(response.Content);
+
+            return new AppNotificationResponseBase(true, "ok", successResponse.MsgId);
+        }
+        catch (Exception e)
+        {
+            return new AppNotificationResponseBase(false, e.Message);
+        }
+    }
+
+    public async Task<AppNotificationResponseBase> SendAllAsync(AppMessage appMessage)
+    {
+        var options = await _jPushOptionsResolver.ResolveAsync();
+        JPushClient client = new JPushClient(options.AppKey, options.MasterSecret);
+
+        PushPayload pushPayload = PushPayloadTemplate("all", appMessage);
+
+        try
+        {
+            var response = client.SendPush(pushPayload);
+
+            if (response.StatusCode != HttpStatusCode.OK)
+            {
+                return new AppNotificationResponseBase(false, response.Content);
+            }
+
+            return new AppNotificationResponseBase(true, "ok");
+        }
+        catch (Exception e)
+        {
+            return new AppNotificationResponseBase(false, e.Message);
+        }
+    }
+
+    public async Task<AppNotificationResponseBase> WithdrawnAsync(string msgId)
+    {
+        var options = await _jPushOptionsResolver.ResolveAsync();
+        JPushClient client = new JPushClient(options.AppKey, options.MasterSecret);
+
+        HttpResponseMessage response = await JPushClient.HttpClient.DeleteAsync($"{JPushClient.BASE_URL_PUSH_DEFAULT}/{msgId}");
+        var content = await response.Content.ReadAsStringAsync();
+
+        if (response.StatusCode != HttpStatusCode.OK)
+        {
+            return new AppNotificationResponseBase(false, content);
+        }
+
+        return new AppNotificationResponseBase(true, "ok");
+    }
+
+    public async Task<BatchSendPushSuccessResponse> BatchSendAsync(BatchAppMessage appMessage)
+    {
+        var options = await _jPushOptionsResolver.ResolveAsync();
+        JPushClient client = new JPushClient(options.AppKey, options.MasterSecret);
+
+        List<SinglePayload> singlePayLoadList = new List<SinglePayload>();
+
+        foreach (var item in appMessage.ClientIds)
+        {
+            singlePayLoadList.Add(SinglePayloadTemplate(item, appMessage));
+        }
+
+        try
+        {
+            var response = client.BatchPushByRegid(singlePayLoadList);
+
+            if (response.StatusCode != HttpStatusCode.OK)
+            {
+                return new BatchSendPushSuccessResponse(false, response.Content);
+            }
+
+            var successResponse = JsonConvert.DeserializeObject<Dictionary<string, JPushSendPushModel>>(response.Content);
+
+            var data = successResponse.ToDictionary(x => x.Key, x => new SendPushModelResponse
+            {
+                MsgId = x.Value.MsgId,
+                Success = x.Value.Error == null,
+                Message = JsonConvert.SerializeObject(x.Value.Error)
+            });
+
+            return new BatchSendPushSuccessResponse(true, "", new ConcurrentDictionary<string, SendPushModelResponse>(data));
+        }
+        catch (Exception e)
+        {
+            return new BatchSendPushSuccessResponse(false, e.Message);
+        }
+    }
+
+    private PushPayload PushPayloadTemplate(object audience, AppMessage appMessage)
+    {
         PushPayload pushPayload = new PushPayload()
         {
             Platform = new List<string> { "android", "ios" },
@@ -61,40 +167,22 @@ public class JPushSender : IAppNotificationSender
             }
         };
 
-        try
-        {
-            var response = client.SendPush(pushPayload);
-
-            if (response.StatusCode != HttpStatusCode.OK)
-            {
-                return new AppNotificationResponseBase(false, response.Content);
-            }
-
-            var successResponse = JsonConvert.DeserializeObject<SendPushSuccessResponse>(response.Content);
-
-            return new AppNotificationResponseBase(true, "ok", successResponse.MsgId);
-        }
-        catch (Exception e)
-        {
-            return new AppNotificationResponseBase(false, e.Message);
-        }
+        return pushPayload;
     }
 
-    public async Task<AppNotificationResponseBase> SendAllAsync(AppMessage appMessage)
+    private SinglePayload SinglePayloadTemplate(string target, AppMessage appMessage)
     {
-        var options = await _jPushOptionsResolver.ResolveAsync();
-        JPushClient client = new JPushClient(options.AppKey, options.MasterSecret);
-
-        PushPayload pushPayload = new PushPayload()
+        SinglePayload singlePayload = new SinglePayload()
         {
             Platform = new List<string> { "android", "ios" },
-            Audience = "all",
+            Target = target,
             Notification = new Notification
             {
                 Alert = appMessage.Title,
                 Android = new Android
                 {
-                    Alert = appMessage.Title,
+                    Alert = appMessage.Text,
+                    Title = appMessage.Title,
                     Indent = new Dictionary<string, object>
                     {
                         ["url"] = appMessage.Url ?? string.Empty
@@ -123,36 +211,6 @@ public class JPushSender : IAppNotificationSender
             }
         };
 
-        try
-        {
-            var response = client.SendPush(pushPayload);
-
-            if (response.StatusCode != HttpStatusCode.OK)
-            {
-                return new AppNotificationResponseBase(false, response.Content);
-            }
-
-            return new AppNotificationResponseBase(true, "ok");
-        }
-        catch (Exception e)
-        {
-            return new AppNotificationResponseBase(false, e.Message);
-        }
-    }
-
-    public async Task<AppNotificationResponseBase> WithdrawnAsync(string msgId)
-    {
-        var options = await _jPushOptionsResolver.ResolveAsync();
-        JPushClient client = new JPushClient(options.AppKey, options.MasterSecret);
-
-        HttpResponseMessage response = await JPushClient.HttpClient.DeleteAsync($"{JPushClient.BASE_URL_PUSH_DEFAULT}/{msgId}");
-        var content = await response.Content.ReadAsStringAsync();
-
-        if (response.StatusCode != HttpStatusCode.OK)
-        {
-            return new AppNotificationResponseBase(false, content);
-        }
-
-        return new AppNotificationResponseBase(true, "ok");
+        return singlePayload;
     }
 }

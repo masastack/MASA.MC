@@ -151,6 +151,11 @@ public class MessageTask : FullAggregateRoot<Guid, Guid>
         SystemId = systemId;
     }
 
+    public void SetReceiverUsers(List<MessageReceiverUser> receiverUsers)
+    {
+        ReceiverUsers = receiverUsers;
+    }
+
     public int GetSendingCount()
     {
         var sendingCount = (int)SendRules.SendingCount;

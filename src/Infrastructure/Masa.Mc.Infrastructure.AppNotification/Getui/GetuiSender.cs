@@ -1,6 +1,8 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
+using com.igetui.api.openservice.igetui;
+
 namespace Masa.Mc.Infrastructure.AppNotification.Getui;
 
 public class GetuiSender : IAppNotificationSender
@@ -94,6 +96,11 @@ public class GetuiSender : IAppNotificationSender
     }
 
     public Task<AppNotificationResponseBase> WithdrawnAsync(string msgId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<BatchSendPushSuccessResponse> BatchSendAsync(BatchAppMessage appMessage)
     {
         throw new NotImplementedException();
     }

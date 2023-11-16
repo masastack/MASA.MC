@@ -28,7 +28,7 @@ public class MessageTaskHttpJobService : IMessageTaskJobService
         return await _schedulerClient.SchedulerJobService.EnableAsync(new SchedulerJobRequestBase { JobId = jobId, OperatorId = operatorId });
     }
 
-    public async Task<Guid> RegisterJobAsync(Guid messageTaskId, string cronExpression, Guid operatorId, string jobName)
+    public async Task<Guid> RegisterJobAsync(Guid jobId, Guid messageTaskId, string cronExpression, Guid operatorId, string jobName)
     {
         var mcUrl = _masaStackConfig.GetMcServiceDomain();
         var parameters = new List<KeyValuePair<string, string>>() { new(nameof(messageTaskId), messageTaskId.ToString()) };
@@ -49,7 +49,14 @@ public class MessageTaskHttpJobService : IMessageTaskJobService
             NotifyUrl = $"{mcUrl}/api/message-task/HandleJobStatusNotify"
         };
 
-        var jobId = await _schedulerClient.SchedulerJobService.AddAsync(request);
+        if (jobId == default)
+        {
+            jobId = await _schedulerClient.SchedulerJobService.AddAsync(request);
+        }
+        else
+        {
+            await _schedulerClient.SchedulerJobService.UpdateAsync(jobId, request);
+        }
 
         return jobId;
     }

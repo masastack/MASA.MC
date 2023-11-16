@@ -1,6 +1,8 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
+using static Google.Api.ResourceDescriptor.Types;
+
 namespace Masa.Mc.Service.Admin.Application.MessageTasks.Jobs;
 
 public class ResolveMessageTaskJob : BackgroundJobBase<ResolveMessageTaskJobArgs>
@@ -39,9 +41,11 @@ public class ResolveMessageTaskJob : BackgroundJobBase<ResolveMessageTaskJobArgs
             return;
 
         var receiverUsers = await _channelUserFinder.GetReceiverUsersAsync(messageTask.Channel, messageTask.Variables, messageTask.Receivers);
-        messageTask.ReceiverUsers.AddRange(receiverUsers);
-
+        messageTask.SetReceiverUsers(receiverUsers.ToList());
         var sendTime = DateTimeOffset.Now;
+
+        await _messageTaskHistoryRepository.RemoveAsync(x => x.MessageTaskId == args.MessageTaskId);
+
         if (messageTask.SendRules.IsCustom)
         {
             var historyNum = messageTask.GetHistoryCount();
@@ -77,7 +81,8 @@ public class ResolveMessageTaskJob : BackgroundJobBase<ResolveMessageTaskJobArgs
         var userId = _userContext.GetUserId<Guid>();
         var operatorId = userId == default ? args.OperatorId : userId;
 
-        var jobId = await _messageTaskJobService.RegisterJobAsync(args.MessageTaskId, messageTask.SendRules.CronExpression, operatorId, messageTask.DisplayName);
+        var jobId = await _messageTaskJobService.RegisterJobAsync(messageTask.SchedulerJobId, args.MessageTaskId, messageTask.SendRules.CronExpression, operatorId, messageTask.DisplayName);
+
         messageTask.SetJobId(jobId);
 
         await _messageTaskRepository.UpdateAsync(messageTask);

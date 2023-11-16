@@ -5,7 +5,7 @@ namespace Masa.Mc.Service.Admin.Domain.MessageTasks.Services;
 
 public interface IMessageTaskJobService
 {
-    Task<Guid> RegisterJobAsync(Guid messageTaskId, string cronExpression, Guid operatorId, string jobName);
+    Task<Guid> RegisterJobAsync(Guid jobId, Guid messageTaskId, string cronExpression, Guid operatorId, string jobName);
 
     Task<bool> StartJobAsync(Guid jobId, Guid operatorId);
 
