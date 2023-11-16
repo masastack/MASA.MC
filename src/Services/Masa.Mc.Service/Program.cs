@@ -1,6 +1,8 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
+using Masa.Contrib.StackSdks.Isolation;
+
 var builder = WebApplication.CreateBuilder(args);
 
 ValidatorOptions.Global.LanguageManager = new MasaLanguageManager();
@@ -197,7 +199,6 @@ app.UseMasaExceptionHandler(opt =>
 app.UseSwagger();
 app.UseSwaggerUI();
 app.UseRouting();
-
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseStackIsolation();
@@ -209,7 +210,6 @@ app.UseEndpoints(endpoints =>
     endpoints.MapSubscribeHandler();
     endpoints.MapHub<NotificationsHub>("/signalr-hubs/notifications");
 });
-
 app.UseHttpsRedirection();
 
 app.Run();
