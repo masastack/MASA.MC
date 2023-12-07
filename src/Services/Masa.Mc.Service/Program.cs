@@ -197,7 +197,6 @@ app.UseMasaExceptionHandler(opt =>
 app.UseSwagger();
 app.UseSwaggerUI();
 app.UseRouting();
-
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseStackIsolation();
@@ -209,7 +208,6 @@ app.UseEndpoints(endpoints =>
     endpoints.MapSubscribeHandler();
     endpoints.MapHub<NotificationsHub>("/signalr-hubs/notifications");
 });
-
 app.UseHttpsRedirection();
 
 app.Run();
