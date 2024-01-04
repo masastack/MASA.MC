@@ -6,32 +6,40 @@ namespace Masa.Mc.Web.Admin.Pages.MessageRecords;
 public partial class MessageRecordManagement : AdminCompontentBase
 {
     private MessageRecordDetailModal _detailModal = default!;
-    private static GetMessageRecordInputDto defaultQueryParam = new()
-    {
-        TimeType = MessageRecordTimeTypes.ExpectSendTime,
-        StartTime = DateTime.Now.Date,
-        EndTime = DateTime.Now.Date.AddDays(1)
-    };
-    private GetMessageRecordInputDto _queryParam = defaultQueryParam;
+    private GetMessageRecordInputDto _queryParam = new();
     private PaginatedListDto<MessageRecordDto> _entities = new();
     private List<ChannelDto> _channelItems = new();
     private List<KeyValuePair<string, bool>> _successItems = new();
     private ChannelService ChannelService => McCaller.ChannelService;
     private MessageRecordService MessageRecordService => McCaller.MessageRecordService;
-    private DateTimeOffset? _endTime = defaultQueryParam.EndTime;
-    private DateTimeOffset? _startTime = defaultQueryParam.StartTime;
+    private DateTimeOffset? _endTime;
+    private DateTimeOffset? _startTime;
 
     protected override string? PageName { get; set; } = "MessageRecordBlock";
 
     protected async override Task OnInitializedAsync()
     {
-        string prefix = "DisplayName.MessageRecord";
         _channelItems = (await ChannelService.GetListAsync(new GetChannelInputDto(99))).Result;
         _successItems = new()
         {
             new(T("Success"), true),
             new(T("Failure"), false)
         };
+
+        SetDefaultParam();
+    }
+
+    private void SetDefaultParam()
+    {
+        var defaultQueryParam = new GetMessageRecordInputDto()
+        {
+            TimeType = MessageRecordTimeTypes.ExpectSendTime,
+            StartTime = DateTime.Now.Date,
+            EndTime = DateTime.Now.Date.AddDays(1)
+        };
+        _queryParam = defaultQueryParam;
+        _endTime = defaultQueryParam.EndTime;
+        _startTime = defaultQueryParam.StartTime;
     }
 
     public List<DataTableHeader<MessageRecordDto>> GetHeaders() 
@@ -102,7 +110,7 @@ public partial class MessageRecordManagement : AdminCompontentBase
 
     private async Task HandleClearAsync()
     {
-        _queryParam = defaultQueryParam;
+        SetDefaultParam();
         await LoadData();
     }
 }
