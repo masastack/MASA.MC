@@ -91,6 +91,7 @@ public static class McDbContextModelBuilderExtensions
             b.Property(x => x.ChannelType).HasConversion(x => x.Id, x => Enumeration.FromValue<ChannelType>(x));
             b.Property(x => x.SystemId).HasMaxLength(128);
             b.Property(x => x.ExtraProperties).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
+            b.HasIndex(x => x.Source);
         });
 
         builder.Entity<MessageTaskHistory>(b =>
