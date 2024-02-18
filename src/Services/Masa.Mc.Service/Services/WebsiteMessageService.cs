@@ -84,9 +84,9 @@ public class WebsiteMessageService : ServiceBase
         return query.Result;
     }
 
-    public async Task<int> GetUnreadAsync(IEventBus eventbus, string channelCode, string tag)
+    public async Task<int> GetUnreadAsync(IEventBus eventbus, string channelCode, string? tag)
     {
-        var query = new GetUnreadMessageCountQuery(channelCode, tag);
+        var query = new GetUnreadMessageCountQuery(channelCode, tag ?? string.Empty);
         await eventbus.PublishAsync(query);
         return query.Result;
     }
