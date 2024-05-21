@@ -25,8 +25,6 @@ public partial class MessageRecordManagement : AdminCompontentBase
             new(T("Success"), true),
             new(T("Failure"), false)
         };
-
-        SetDefaultParam();
     }
 
     private void SetDefaultParam()
@@ -64,6 +62,8 @@ public partial class MessageRecordManagement : AdminCompontentBase
     {
         if (firstRender)
         {
+            SetDefaultParam();
+
             await LoadData();
         }
         await base.OnAfterRenderAsync(firstRender);
