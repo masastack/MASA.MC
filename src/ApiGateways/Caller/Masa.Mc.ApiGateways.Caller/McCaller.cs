@@ -46,4 +46,10 @@ public class McCaller : StackHttpClientCaller
     {
         BaseAddress = options.McServiceBaseAddress;
     }
+
+    protected override void UseHttpClientPost(MasaHttpClientBuilder masaHttpClientBuilder)
+    {
+        masaHttpClientBuilder.UseI18n();
+        base.UseHttpClientPost(masaHttpClientBuilder);
+    }
 }
