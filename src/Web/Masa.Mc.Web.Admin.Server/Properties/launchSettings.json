@@ -19,7 +19,7 @@
         "DOMAIN_NAME": "masastack.com",
         "MASA_NAMESPACE": "masastack",
         "TLS_NAME": "masastack",
-        "MASA_VERSION": "1.0-Preview1",
+        "MASA_VERSION": "1.0-Prev",
         "IS_DEMO": "false",
         "MASA_ENVIRONMENT": "Development",
         "OTLP_URL": "http://otel-collector.masastack:9013",

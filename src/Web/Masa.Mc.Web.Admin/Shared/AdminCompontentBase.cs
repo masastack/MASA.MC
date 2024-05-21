@@ -160,10 +160,10 @@ public abstract class AdminCompontentBase : BDomComponentBase
         await HubConnection.StartAsync();
     }
 
-    protected override ValueTask DisposeAsync(bool disposing)
+    protected override ValueTask DisposeAsyncCore()
     {
         HubConnection?.DisposeAsync();
-        return base.DisposeAsync(disposing);
+        return base.DisposeAsyncCore();
     }
 
     public async Task Throttle(Func<Task> callback, int wait = 500, bool immediate = true)
