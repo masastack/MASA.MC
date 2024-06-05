@@ -23,40 +23,7 @@
         <SIcon Size=16 Class="mr-2 default-lighten-1--text" IsDefaultToolTip="false">mdi-magnify</SIcon>
     </PrependInnerContent>
     <ItemContent Context="data">
-        <div class="d-flex full-width pa-4 pl-0">
-            <MListItemAvatar Size=40 Class="ma-0" Color="primary">
-                @if (data.Item.SubjectType != SubjectTypes.User)
-                {
-                    <SIcon Size=24 Color="fill">mdi-animation</SIcon>
-                }
-                else
-                {
-                    @if (string.IsNullOrEmpty(data.Item.Avatar))
-                    {
-                        <SEmptyAvatar Value="@(string.IsNullOrEmpty(data.Item.DisplayName)?data.Item.Name:data.Item.DisplayName)" />
-                    }
-                    else
-                    {
-                        <MImage Src="@data.Item.Avatar"></MImage>
-                    }
-                }
-            </MListItemAvatar>
-            <MListItemContent Class="ml-2 pa-0">
-                <MListItemTitle>
-                    <span class="btn emphasis2--text">@(string.IsNullOrEmpty(data.Item.DisplayName)?data.Item.Name:data.Item.DisplayName)</span>
-                    <span class="vertical-divider d-inline-flex"></span>
-                    <span class="overline regular2--text">@T($"DisplayName.SubjectTypes.{data.Item.SubjectType}")</span>
-                </MListItemTitle>
-                @if (data.Item.SubjectType == SubjectTypes.User)
-                {
-                    <MListItemSubtitle>
-                        <span class="body2 regular2--text">@(data.Item.PhoneNumber)</span>
-                        <span class="vertical-divider d-inline-flex"></span>
-                        <span class="body2 regular2--text">@(data.Item.Email)</span>
-                    </MListItemSubtitle>
-                }
-            </MListItemContent>
-        </div>
+        @RenderFragments.UserSelectItem(data.Item.Avatar, data.Item.DisplayName, T($"DisplayName.SubjectTypes.{data.Item.SubjectType}"), data.Item.PhoneNumber, data.Item.Email)
     </ItemContent>
 
 </SAutoComplete>
