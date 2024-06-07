@@ -74,10 +74,15 @@ public class MessageTemplateDomainService : DomainService
         }
     }
 
-
     public async Task<bool> CheckSendUpperLimitAsync(MessageTemplate messageTemplate, string channelUserIdentity)
     {
         var perDayLimit = messageTemplate.PerDayLimit;
+
+        if (perDayLimit == 0)
+        {
+            return true;
+        }
+
         var sendNum = await _messageRecordRepository.GetCountAsync(x => x.SendTime.Value.Date == DateTime.Now.Date && x.ChannelUserIdentity == channelUserIdentity && x.MessageEntityId == messageTemplate.Id);
         if (sendNum >= perDayLimit)
         {
@@ -85,6 +90,25 @@ public class MessageTemplateDomainService : DomainService
         }
 
         return true;
+    }
+
+    public async Task<List<string>> CheckSendUpperLimitAsync(MessageTemplate messageTemplate, List<string> channelUserIdentitys)
+    {
+        var perDayLimit = messageTemplate.PerDayLimit;
+
+        if (perDayLimit == 0)
+        {
+            return new();
+        }
+
+        var query = await _messageRecordRepository.GetQueryableAsync();
+
+        return await query
+            .Where(x => x.SendTime.Value.Date == DateTime.Now.Date && channelUserIdentitys.Contains(x.ChannelUserIdentity) && x.MessageEntityId == messageTemplate.Id)
+            .GroupBy(x=>x.ChannelUserIdentity)
+            .Where(x => x.Count() >= perDayLimit)
+            .Select(x=>x.Key)
+            .ToListAsync();
     }
 
     public ExtraPropertyDictionary ConvertVariables(MessageTemplate messageTemplate, ExtraPropertyDictionary variables)

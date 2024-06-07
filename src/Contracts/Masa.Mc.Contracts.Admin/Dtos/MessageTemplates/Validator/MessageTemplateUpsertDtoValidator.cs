@@ -18,7 +18,7 @@ public class MessageTemplateUpsertDtoValidator : AbstractValidator<MessageTempla
         RuleFor(inputDto => inputDto.Sign).Required("SignRequired")
             .Length(2, 12).WithMessage("SignLength")
             .ChineseLetterNumber().WithMessage("SignChineseLetterNumber").When(x => x.ChannelType == ChannelTypes.Sms);
-        RuleFor(inputDto => inputDto.PerDayLimit).InclusiveBetween(1, 500).WithMessage("MessageTemplatePerDayLimitBetween");
+        RuleFor(inputDto => inputDto.PerDayLimit).InclusiveBetween(0, 500).WithMessage("MessageTemplatePerDayLimitBetween");
         RuleFor(inputDto => inputDto.TemplateId).Required("MessageTemplateTemplateIdRequired").When(x => x.ChannelType == ChannelTypes.Sms);
         RuleFor(inputDto => inputDto.Title).Required("TitleRequired")
             .Length(2, 50).WithMessage("TitleLength")

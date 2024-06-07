@@ -6,4 +6,6 @@ namespace Masa.Mc.Infrastructure.Sms;
 public interface ISmsSender
 {
     Task<SmsResponseBase> SendAsync(SmsMessage smsMessage);
+
+    Task<SmsResponseBase> SendBatchAsync(BatchSmsMessage smsMessage);
 }
