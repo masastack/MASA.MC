@@ -36,8 +36,60 @@ public class SendSmsMessageEventHandler
         _i18n = i18n;
     }
 
-    [EventHandler]
-    public async Task HandleEventAsync(SendSmsMessageEvent eto)
+    [EventHandler(1)]
+    public async Task ResolveAsync(SendSmsMessageEvent eto)
+    {
+        var channelId = eto.ChannelId;
+        var taskHistory = eto.MessageTaskHistory;
+
+        var messageTemplate = await _templateRepository.FindAsync(x => x.Id == taskHistory.MessageTask.EntityId, false);
+        var messageRecords = new List<MessageRecord>();
+
+        foreach (var item in taskHistory.ReceiverUsers)
+        {
+            var messageRecord = new MessageRecord(item.UserId, item.ChannelUserIdentity, channelId, taskHistory.MessageTaskId, taskHistory.Id, item.Variables, eto.MessageData.MessageContent.Title, taskHistory.SendTime, taskHistory.MessageTask.SystemId);
+            messageRecord.SetMessageEntity(taskHistory.MessageTask.EntityType, taskHistory.MessageTask.EntityId);
+            messageRecord.SetDataValue(nameof(MessageTemplate.Sign), taskHistory.MessageTask.Sign);
+            messageRecord.SetDataValue(nameof(MessageTemplate.TemplateId), eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.TemplateId)));
+
+            if (eto.MessageData.MessageType == MessageEntityTypes.Template)
+            {
+                messageRecord.SetDisplayName(messageTemplate.DisplayName);
+            }
+
+            messageRecords.Add(messageRecord);
+        }
+
+        eto.Sign = taskHistory.MessageTask.Sign;
+        eto.MessageRecords = messageRecords;
+        eto.MessageTemplate = messageTemplate;
+    }
+
+    [EventHandler(2)]
+    public async Task CheckAsync(SendSmsMessageEvent eto)
+    {
+        if (eto.MessageData.MessageType == MessageEntityTypes.Template)
+        {
+            var channelUserIdentitys = eto.MessageRecords.Select(x => x.ChannelUserIdentity).Distinct().ToList();
+            var checkChannelUserIdentitys = await _messageTemplateDomainService.CheckSendUpperLimitAsync(eto.MessageTemplate, channelUserIdentitys);
+
+            foreach (var messageRecord in eto.MessageRecords)
+            {
+                if (checkChannelUserIdentitys.Contains(messageRecord.ChannelUserIdentity))
+                {
+                    messageRecord.SetResult(false, _i18n.T("DailySendingLimit"));
+                    continue;
+                }
+
+                eto.PhoneNumbers.Add(messageRecord.ChannelUserIdentity);
+                var variables = _messageTemplateDomainService.ConvertVariables(eto.MessageTemplate, messageRecord.Variables);
+                eto.Variables.Add(variables);
+            }
+        }
+    }
+
+    [EventHandler(3)]
+    public async Task SendAsync(SendSmsMessageEvent eto)
     {
         var channel = await _channelRepository.FindAsync(x => x.Id == eto.ChannelId);
         var options = new AliyunSmsOptions
@@ -47,63 +99,50 @@ public class SendSmsMessageEventHandler
         };
         using (_aliyunSmsAsyncLocal.Change(options))
         {
-            var taskHistory = eto.MessageTaskHistory;
-            int okCount = 0;
-            int totalCount = taskHistory.ReceiverUsers.Count;
-
-            var messageTemplate = await _templateRepository.FindAsync(x => x.Id == taskHistory.MessageTask.EntityId, false);
-            var insertMessageRecords = new List<MessageRecord>();
-
-            foreach (var item in taskHistory.ReceiverUsers)
+            var batchSmsMessage = new BatchSmsMessage(eto.PhoneNumbers, JsonSerializer.Serialize(eto.Variables));
+            batchSmsMessage.Properties.Add("SignName", eto.Sign);
+            batchSmsMessage.Properties.Add("TemplateCode", eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.TemplateId)));
+            try
             {
-                var messageRecord = new MessageRecord(item.UserId, item.ChannelUserIdentity, channel.Id, taskHistory.MessageTaskId, taskHistory.Id, item.Variables, eto.MessageData.MessageContent.Title, taskHistory.SendTime, taskHistory.MessageTask.SystemId);
-                messageRecord.SetMessageEntity(taskHistory.MessageTask.EntityType, taskHistory.MessageTask.EntityId);
-                messageRecord.SetDataValue(nameof(MessageTemplate.Sign), taskHistory.MessageTask.Sign);
-                messageRecord.SetDataValue(nameof(MessageTemplate.TemplateId), eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.TemplateId)));
-
-                var variables = messageRecord.Variables;
-                if (eto.MessageData.MessageType == MessageEntityTypes.Template)
+                var response = await _smsSender.SendBatchAsync(batchSmsMessage) as BatchSmsSendResponse;
+                if (response.Success)
                 {
-                    messageRecord.SetDisplayName(messageTemplate.DisplayName);
-                    if (!await _messageTemplateDomainService.CheckSendUpperLimitAsync(messageTemplate, messageRecord.ChannelUserIdentity))
-                    {
-                        messageRecord.SetResult(false, _i18n.T("DailySendingLimit"));
-                        insertMessageRecords.Add(messageRecord);
-                        continue;
-                    }
-
-                    variables = _messageTemplateDomainService.ConvertVariables(messageTemplate, messageRecord.Variables);
+                    SetMessageRecordResult(eto, true, string.Empty);
                 }
-
-                var smsMessage = new SmsMessage(item.ChannelUserIdentity, JsonSerializer.Serialize(variables));
-                smsMessage.Properties.Add("SignName", taskHistory.MessageTask.Sign);
-                smsMessage.Properties.Add("TemplateCode", eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.TemplateId)));
-                try
+                else
                 {
-                    var response = await _smsSender.SendAsync(smsMessage) as SmsSendResponse;
-                    if (response.Success)
-                    {
-                        messageRecord.SetResult(true, string.Empty);
-                        okCount++;
-                    }
-                    else
-                    {
-                        messageRecord.SetResult(false, response.Message);
-                    }
+                    SetMessageRecordResult(eto, false, response.Message);
                 }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, "SendSmsMessageEventHandler");
-                    messageRecord.SetResult(false, ex.Message);
-                }
-
-                insertMessageRecords.Add(messageRecord);
             }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "SendSmsMessageEventHandler");
+                SetMessageRecordResult(eto, false, ex.Message);
+            }
+        }
+    }
 
-            await _messageRecordRepository.AddRangeAsync(insertMessageRecords);
+    [EventHandler(4)]
+    public async Task SaveAsync(SendSmsMessageEvent eto)
+    {
+        await _messageRecordRepository.AddRangeAsync(eto.MessageRecords);
 
-            taskHistory.SetResult(okCount == totalCount ? MessageTaskHistoryStatuses.Success : (okCount > 0 ? MessageTaskHistoryStatuses.PartialFailure : MessageTaskHistoryStatuses.Fail));
-            await _messageTaskHistoryRepository.UpdateAsync(taskHistory);
+        var messageTaskHistory = eto.MessageTaskHistory;
+
+        var result = !eto.MessageRecords.Any(x => x.Success != true) ? MessageTaskHistoryStatuses.Success : (!eto.MessageRecords.Any(x => x.Success == true) ? MessageTaskHistoryStatuses.Fail : MessageTaskHistoryStatuses.PartialFailure);
+        messageTaskHistory.SetResult(result);
+        await _messageTaskHistoryRepository.UpdateAsync(messageTaskHistory);
+    }
+
+    private void SetMessageRecordResult(SendSmsMessageEvent eto, bool success, string message)
+    {
+        foreach (var item in eto.PhoneNumbers)
+        {
+            var record = eto.MessageRecords.FirstOrDefault(x => !x.Success.HasValue && x.ChannelUserIdentity == item);
+            if (record == null)
+                continue;
+
+            record.SetResult(success, message);
         }
     }
 }

@@ -26,6 +26,24 @@ public class AliyunSmsSender : ISmsSender
         return new SmsSendResponse(response.Body.Code == "OK", response.Body.Message, response);
     }
 
+    public async Task<SmsResponseBase> SendBatchAsync(BatchSmsMessage smsMessage)
+    {
+        var client = await CreateClientAsync();
+
+        var signName = smsMessage.PhoneNumbers.Select(x => smsMessage.Properties["SignName"] as string).ToList();
+
+        var request = new SendBatchSmsRequest
+        {
+            PhoneNumberJson = JsonSerializer.Serialize(smsMessage.PhoneNumbers),
+            SignNameJson = JsonSerializer.Serialize(signName),
+            TemplateCode = smsMessage.Properties["TemplateCode"] as string,
+            TemplateParamJson = smsMessage.Text
+        };
+
+        var response = await client.SendBatchSmsAsync(request);
+        return new BatchSmsSendResponse(response.Body.Code == "OK", response.Body.Message, response);
+    }
+
     protected async Task<AliyunClient> CreateClientAsync()
     {
         var options = await _aliyunSmsOptionsResolver.ResolveAsync();

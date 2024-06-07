@@ -5,8 +5,12 @@ namespace Masa.Mc.Service.Admin.Domain.MessageRecords.Repositories;
 
 public interface IMessageRecordRepository : IRepository<MessageRecord>
 {
+    Task<IQueryable<MessageRecord>> GetQueryableAsync();
+
     Task<IQueryable<MessageRecord>> WithDetailsAsync();
+
     Task<MessageRecord?> FindAsync(Expression<Func<MessageRecord, bool>> predicate, bool include = true, CancellationToken cancellationToken = default(CancellationToken));
+
     Task<bool> IsExistsAsync(Guid taskHistoryId, Guid userId);
 
     Task<bool> AnyAsync(Expression<Func<MessageRecord, bool>> predicate);
