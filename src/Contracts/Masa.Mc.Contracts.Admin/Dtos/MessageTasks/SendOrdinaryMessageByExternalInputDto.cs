@@ -40,6 +40,7 @@ public class SendOrdinaryMessageByExternalInputDto
             {
                 var receiver = new MessageTaskReceiverDto() { Type = MessageTaskReceiverTypes.User };
                 receiver.SetChannelUserIdentity(dto.ChannelType, x.ChannelUserIdentity);
+                receiver.Variables = x.Variables;
                 return receiver;
             }).ToList(),
             SendRules = dto.SendRules,
