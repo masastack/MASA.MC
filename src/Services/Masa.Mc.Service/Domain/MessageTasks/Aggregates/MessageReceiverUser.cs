@@ -15,6 +15,12 @@ public class MessageReceiverUser : ValueObject
     {
         yield return UserId;
         yield return ChannelUserIdentity;
+
+        foreach (var variable in Variables.OrderBy(x => x.Key))
+        {
+            yield return variable.Key;
+            yield return variable.Value?.ToString() ?? string.Empty;
+        }
     }
 
     private MessageReceiverUser() { }
