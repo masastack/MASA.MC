@@ -35,8 +35,7 @@ public class AuthChannelUserFinder : IChannelUserFinder
         var groupReceivers = await TransformGroupReceiversAsync(channel, variables, receivers.Where(x => x.Type == MessageTaskReceiverTypes.Group));
         receiverUsers.AddRange(groupReceivers);
 
-        return receiverUsers.DistinctBy(x => new { x.UserId, x.ChannelUserIdentity });
-
+        return receiverUsers.Distinct();
     }
 
     public async Task<IEnumerable<MessageReceiverUser>> TransformUserReceivers(AppChannel Channel, ExtraPropertyDictionary variables, IEnumerable<MessageTaskReceiver> receivers)
