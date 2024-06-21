@@ -81,9 +81,8 @@ public class SendSmsMessageEventHandler
                     continue;
                 }
 
-                eto.PhoneNumbers.Add(messageRecord.ChannelUserIdentity);
                 var variables = _messageTemplateDomainService.ConvertVariables(eto.MessageTemplate, messageRecord.Variables);
-                eto.Variables.Add(variables);
+                eto.AddPhoneNumberVariable(messageRecord.ChannelUserIdentity, variables);
             }
         }
     }
@@ -99,25 +98,31 @@ public class SendSmsMessageEventHandler
         };
         using (_aliyunSmsAsyncLocal.Change(options))
         {
-            var batchSmsMessage = new BatchSmsMessage(eto.PhoneNumbers, JsonSerializer.Serialize(eto.Variables));
-            batchSmsMessage.Properties.Add("SignName", eto.Sign);
-            batchSmsMessage.Properties.Add("TemplateCode", eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.TemplateId)));
-            try
+            foreach (var item in eto.PhoneNumberVariables)
             {
-                var response = await _smsSender.SendBatchAsync(batchSmsMessage) as BatchSmsSendResponse;
-                if (response.Success)
+                var phoneNumbers = item.Select(x => x.Key).ToList();
+                var variables = item.Select(x => x.Value).ToList();
+                var batchSmsMessage = new BatchSmsMessage(phoneNumbers, JsonSerializer.Serialize(variables));
+                batchSmsMessage.Properties.Add("SignName", eto.Sign);
+                batchSmsMessage.Properties.Add("TemplateCode", eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.TemplateId)));
+                SetMessageRecordResult(eto, item, true, string.Empty);
+                try
                 {
-                    SetMessageRecordResult(eto, true, string.Empty);
+                    var response = await _smsSender.SendBatchAsync(batchSmsMessage) as BatchSmsSendResponse;
+                    if (response.Success)
+                    {
+                        SetMessageRecordResult(eto, item, true, string.Empty);
+                    }
+                    else
+                    {
+                        SetMessageRecordResult(eto, item, false, response.Message);
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    SetMessageRecordResult(eto, false, response.Message);
+                    _logger.LogError(ex, "SendSmsMessageEventHandler");
+                    SetMessageRecordResult(eto, item, false, ex.Message);
                 }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "SendSmsMessageEventHandler");
-                SetMessageRecordResult(eto, false, ex.Message);
             }
         }
     }
@@ -134,11 +139,11 @@ public class SendSmsMessageEventHandler
         await _messageTaskHistoryRepository.UpdateAsync(messageTaskHistory);
     }
 
-    private void SetMessageRecordResult(SendSmsMessageEvent eto, bool success, string message)
+    private void SetMessageRecordResult(SendSmsMessageEvent eto, Dictionary<string, ExtraPropertyDictionary> phoneNumberVariable, bool success, string message)
     {
-        foreach (var item in eto.PhoneNumbers)
+        foreach (var item in phoneNumberVariable)
         {
-            var record = eto.MessageRecords.FirstOrDefault(x => !x.Success.HasValue && x.ChannelUserIdentity == item);
+            var record = eto.MessageRecords.FirstOrDefault(x => !x.Success.HasValue && x.ChannelUserIdentity == item.Key);
             if (record == null)
                 continue;
 
