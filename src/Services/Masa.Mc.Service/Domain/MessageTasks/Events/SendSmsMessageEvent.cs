@@ -9,9 +9,7 @@ public record SendSmsMessageEvent : SendMessageEvent
 
     public MessageTemplate MessageTemplate { get; set; } = default!;
 
-    public List<string> PhoneNumbers { get; set; }= new ();
-
-    public List<ExtraPropertyDictionary> Variables { get; set; } = new();
+    public List<Dictionary<string, ExtraPropertyDictionary>> PhoneNumberVariables = new();
 
     public string Sign { get; set; }
 
@@ -19,5 +17,29 @@ public record SendSmsMessageEvent : SendMessageEvent
         : base(channelId, messageData, messageTaskHistory)
     {
 
+    }
+
+    public void AddPhoneNumberVariable(string key, ExtraPropertyDictionary value)
+    {
+        bool keyExistsInAllDictionaries = true;
+
+        foreach (var dict in PhoneNumberVariables)
+        {
+            if (!dict.ContainsKey(key))
+            {
+                dict[key] = value;
+                keyExistsInAllDictionaries = false;
+                break;
+            }
+        }
+
+        if (keyExistsInAllDictionaries)
+        {
+            var newDict = new Dictionary<string, ExtraPropertyDictionary>
+            {
+                { key, value }
+            };
+            PhoneNumberVariables.Add(newDict);
+        }
     }
 }
