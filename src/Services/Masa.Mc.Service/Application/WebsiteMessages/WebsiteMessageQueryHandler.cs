@@ -8,12 +8,12 @@ public class WebsiteMessageQueryHandler
     private readonly IMcQueryContext _context;
     private readonly IUserContext _userContext;
     private readonly II18n<DefaultResource> _i18n;
-    private IDistributedCacheClient _cache;
+    private IMultilevelCacheClient _cache;
 
     public WebsiteMessageQueryHandler(IMcQueryContext context
         , IUserContext userContext
         , II18n<DefaultResource> i18n
-        , IDistributedCacheClient cache)
+        , IMultilevelCacheClient cache)
     {
         _context = context;
         _userContext = userContext;
