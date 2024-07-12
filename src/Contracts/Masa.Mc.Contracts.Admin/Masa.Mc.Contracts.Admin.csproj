@@ -10,7 +10,7 @@
 	<PackageReference Include="FluentValidation" Version="11.4.0" />
     <PackageReference Include="Magicodes.IE.Csv" Version="2.6.4" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
-	<PackageReference Include="Masa.BuildingBlocks.StackSdks.Auth.Contracts" Version="$(MasaFrameworkPackageVersion)" />
+	<PackageReference Include="Masa.BuildingBlocks.StackSdks.Auth.Contracts" Version="$(MasaStackSdksPackageVersion)" />
 	<PackageReference Include="Masa.BuildingBlocks.SearchEngine.AutoComplete" Version="$(MasaFrameworkPackageVersion)" />
   </ItemGroup>
 

@@ -3,7 +3,7 @@
 
 namespace Masa.Mc.Web.Admin;
 
-public abstract class AdminCompontentBase : BDomComponentBase
+public abstract class AdminCompontentBase : Blazor.Core.MasaComponentBase
 {
     private GlobalConfig? _globalConfig;
     private NavigationManager? _navigationManager;
