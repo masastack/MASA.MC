@@ -5,7 +5,7 @@
 @inject NavigationManager Navigation
 @inject IMasaStackConfig MasaStackConfig
 
-<SLayout OnSignOut="SignOut" OnErrorAsync="OnError" IsShowEnvironmentSwitch WhiteUris="WhiteUris"
+<SLayout OnSignOut="SignOut" OnErrorAfterHandle="OnErrorAfterHandle" IsShowEnvironmentSwitch WhiteUris="WhiteUris" Class="fill-height"
          Logo="https://cdn.masastack.com/stack/images/logo/MASAStack/logo-h-en.png"
          MiniLogo="https://cdn.masastack.com/stack/images/logo/MASAStack/logo.png">
     @Body
@@ -21,9 +21,8 @@
 
     private List<string> WhiteUris = new List<string>() { "/channels/channelManagement", "/messageTasks/sendMessage" };
 
-    private Task OnError(Exception exception)
+    private Task OnErrorAfterHandle(Exception exception)
     {
-        PopupService.EnqueueSnackbarAsync(exception.Message, AlertTypes.Error);
         GlobalConfig.Loading = false;
         GlobalConfig.ThrottleFlag = false;
         return Task.CompletedTask;
