@@ -1,39 +1,34 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
-using Microsoft.AspNetCore.SignalR;
-
 namespace Masa.Mc.Service.Admin.Application.MessageTasks.EventHandler;
 
 public class SendWebsiteMessageEventHandler
 {
-    private readonly IMcClient _mcClient;
     private readonly IMessageTaskHistoryRepository _messageTaskHistoryRepository;
     private readonly IMessageRecordRepository _messageRecordRepository;
     private readonly IWebsiteMessageRepository _websiteMessageRepository;
-    private readonly ITemplateRenderer _templateRenderer;
     private readonly MessageTemplateDomainService _messageTemplateDomainService;
     private readonly IMessageTemplateRepository _templateRepository;
+    private readonly IChannelRepository _channelRepository;
     private readonly II18n<DefaultResource> _i18n;
     private readonly IHubContext<NotificationsHub> _hubContext;
 
-    public SendWebsiteMessageEventHandler(IMcClient mcClient
-        , IMessageTaskHistoryRepository messageTaskHistoryRepository
+    public SendWebsiteMessageEventHandler(IMessageTaskHistoryRepository messageTaskHistoryRepository
         , IMessageRecordRepository messageRecordRepository
         , IWebsiteMessageRepository websiteMessageRepository
-        , ITemplateRenderer templateRenderer
         , MessageTemplateDomainService messageTemplateDomainService
         , IMessageTemplateRepository templateRepository
+        , IChannelRepository channelRepository
         , II18n<DefaultResource> i18n
         , IHubContext<NotificationsHub> hubContext)
     {
-        _mcClient = mcClient;
         _messageTaskHistoryRepository = messageTaskHistoryRepository;
         _messageRecordRepository = messageRecordRepository;
         _websiteMessageRepository = websiteMessageRepository;
-        _templateRenderer = templateRenderer;
         _messageTemplateDomainService = messageTemplateDomainService;
         _templateRepository = templateRepository;
+        _channelRepository = channelRepository;
         _i18n = i18n;
         _hubContext = hubContext;
     }
@@ -87,15 +82,36 @@ public class SendWebsiteMessageEventHandler
         await _messageTaskHistoryRepository.UnitOfWork.SaveChangesAsync();
         await _messageTaskHistoryRepository.UnitOfWork.CommitAsync();
 
-        if (taskHistory.MessageTask.ReceiverType == ReceiverTypes.Broadcast)
+        await SendSignalRAsync(eto, insertWebsiteMessages);
+    }
+
+    private async Task SendSignalRAsync(SendWebsiteMessageEvent eto, List<WebsiteMessage> websiteMessages)
+    {
+        if (eto.MessageTaskHistory.MessageTask.ReceiverType == ReceiverTypes.Broadcast)
         {
-            var singalRGroup = _hubContext.Clients.Group("Global");
-            await singalRGroup.SendAsync(SignalRMethodConsts.CHECK_NOTIFICATION);
+            await _hubContext.Clients.Group("Global").SendAsync(SignalRMethodConsts.CHECK_NOTIFICATION);
+            return;
         }
-        if (taskHistory.MessageTask.ReceiverType == ReceiverTypes.Assign)
+
+        if (eto.MessageTaskHistory.MessageTask.ReceiverType == ReceiverTypes.Assign)
         {
-            var onlineClients = _hubContext.Clients.Users(userIds);
-            await onlineClients.SendAsync(SignalRMethodConsts.GET_NOTIFICATION);
+            var channel = await _channelRepository.FindAsync(x => x.Id == eto.ChannelId);
+
+            foreach (var item in websiteMessages)
+            {
+                var dto = new WebsiteMessageDto
+                {
+                    Id = item.Id,
+                    ChannelId = eto.ChannelId,
+                    Channel = new ChannelDto { 
+                        DisplayName = channel?.DisplayName ?? string.Empty
+                    },
+                    Title = item.Title,
+                    SendTime = item.SendTime
+                };
+
+                await _hubContext.Clients.User(item.UserId.ToString()).SendAsync(SignalRMethodConsts.GET_NOTIFICATION, dto);
+            }
         }
     }
 }
