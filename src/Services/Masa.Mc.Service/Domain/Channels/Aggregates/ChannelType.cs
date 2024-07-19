@@ -13,6 +13,8 @@ public class ChannelType : Enumeration
 
     public static ChannelType App = new AppsChannel();
 
+    public static ChannelType WeixinWork = new WeixinWorkChannel();
+
     public ChannelType(int id, string name) : base(id, name)
     {
     }
@@ -119,6 +121,26 @@ public class ChannelType : Enumeration
             }
 
             return messageContent.ExtraProperties;
+        }
+    }
+
+    public class WeixinWorkChannel : ChannelType
+    {
+        public WeixinWorkChannel() : base(5, nameof(WeixinWork)) { }
+
+        public override SendMessageEvent GetSendMessageEvent(Guid channelId, MessageData messageData, MessageTaskHistory messageTaskHistory)
+        {
+            return new SendAppMessageEvent(channelId, messageData, messageTaskHistory);
+        }
+
+        public override RetryMessageEvent GetRetryMessageEvent(Guid messageRecordId)
+        {
+            return new RetryAppMessageEvent(messageRecordId);
+        }
+
+        public override string GetChannelUserIdentity(Receiver receiver)
+        {
+            return string.Empty;
         }
     }
 }

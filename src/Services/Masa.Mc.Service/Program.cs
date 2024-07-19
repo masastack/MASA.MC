@@ -94,6 +94,7 @@ builder.Services.AddMultilevelCache(options => options.UseStackExchangeRedisCach
 builder.Services.AddAliyunSms();
 builder.Services.AddMailKit();
 builder.Services.AddAppNotification();
+builder.Services.AddWeixinWork(builder.Configuration);
 builder.Services.AddCsv();
 builder.Services.AddSingleton<ITemplateRenderer, TextTemplateRenderer>();
 builder.Services.AddTransient<Microsoft.AspNetCore.SignalR.IUserIdProvider, McUserIdProvider>();
@@ -182,7 +183,7 @@ var app = builder.AddServices(options =>
 app.UseMiddleware<AdminSafeListMiddleware>(publicConfiguration.GetSection("$public.WhiteListOptions").Get<WhiteListOptions>());
 
 app.UseI18n();
-
+app.UseWeixinWork(app.Environment);
 app.UseMasaExceptionHandler(opt =>
 {
     opt.ExceptionHandler = context =>

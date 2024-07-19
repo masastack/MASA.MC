@@ -79,6 +79,7 @@
 	  <ProjectReference Include="..\..\Infrastructure\Masa.Mc.Infrastructure.MailKit\Masa.Mc.Infrastructure.MailKit.csproj" />
 	  <ProjectReference Include="..\..\Infrastructure\Masa.Mc.Infrastructure.Sms.Aliyun\Masa.Mc.Infrastructure.Sms.Aliyun.csproj" />
 	  <ProjectReference Include="..\..\Infrastructure\Masa.Mc.Infrastructure.Sms\Masa.Mc.Infrastructure.Sms.csproj" />
+	  <ProjectReference Include="..\..\Infrastructure\Masa.Mc.Infrastructure.Weixin.Work\Masa.Mc.Infrastructure.Weixin.Work.csproj" />
 	</ItemGroup>
 	
 	<ItemGroup>
