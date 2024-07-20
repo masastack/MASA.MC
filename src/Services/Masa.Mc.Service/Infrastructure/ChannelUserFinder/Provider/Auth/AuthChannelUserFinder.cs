@@ -20,20 +20,35 @@ public class AuthChannelUserFinder : IChannelUserFinder
     {
         var receiverUsers = new List<MessageReceiverUser>();
 
-        var userReceivers = await TransformUserReceivers(channel, variables, receivers.Where(x => x.Type == MessageTaskReceiverTypes.User));
-        receiverUsers.AddRange(userReceivers);
+        if (receivers.Any(x => x.Type == MessageTaskReceiverTypes.User))
+        {
+            var userReceivers = await TransformUserReceivers(channel, variables, receivers.Where(x => x.Type == MessageTaskReceiverTypes.User));
+            receiverUsers.AddRange(userReceivers);
+        }
 
-        var orgReceivers = await TransformDepartmentReceiversAsync(channel, variables, receivers.Where(x => x.Type == MessageTaskReceiverTypes.Organization));
-        receiverUsers.AddRange(orgReceivers);
+        if (receivers.Any(x => x.Type == MessageTaskReceiverTypes.Organization))
+        {
+            var orgReceivers = await TransformDepartmentReceiversAsync(channel, variables, receivers.Where(x => x.Type == MessageTaskReceiverTypes.Organization));
+            receiverUsers.AddRange(orgReceivers);
+        }
 
-        var roleReceivers = await TransformRoleReceiversAsync(channel, variables, receivers.Where(x => x.Type == MessageTaskReceiverTypes.Role));
-        receiverUsers.AddRange(roleReceivers);
+        if (receivers.Any(x => x.Type == MessageTaskReceiverTypes.Role))
+        {
+            var roleReceivers = await TransformRoleReceiversAsync(channel, variables, receivers.Where(x => x.Type == MessageTaskReceiverTypes.Role));
+            receiverUsers.AddRange(roleReceivers);
+        }
 
-        var teamReceivers = await TransformTeamReceiversAsync(channel, variables, receivers.Where(x => x.Type == MessageTaskReceiverTypes.Team));
-        receiverUsers.AddRange(teamReceivers);
+        if (receivers.Any(x => x.Type == MessageTaskReceiverTypes.Team))
+        {
+            var teamReceivers = await TransformTeamReceiversAsync(channel, variables, receivers.Where(x => x.Type == MessageTaskReceiverTypes.Team));
+            receiverUsers.AddRange(teamReceivers);
+        }
 
-        var groupReceivers = await TransformGroupReceiversAsync(channel, variables, receivers.Where(x => x.Type == MessageTaskReceiverTypes.Group));
-        receiverUsers.AddRange(groupReceivers);
+        if (receivers.Any(x => x.Type == MessageTaskReceiverTypes.Group))
+        {
+            var groupReceivers = await TransformGroupReceiversAsync(channel, variables, receivers.Where(x => x.Type == MessageTaskReceiverTypes.Group));
+            receiverUsers.AddRange(groupReceivers);
+        }
 
         return receiverUsers.Distinct();
     }
@@ -228,6 +243,11 @@ public class AuthChannelUserFinder : IChannelUserFinder
             messageReceiverUsers.Add(new MessageReceiverUser(item.Receiver.SubjectId, channelUserIdentity, item.Variables.Any() ? item.Variables : variables));
         }
 
+        if (!newReceivers.Any())
+        {
+            return messageReceiverUsers;
+        }
+
         var authUsers = await _authClient.UserService.GetListByIdsAsync(newReceivers.Select(x => x.Receiver.SubjectId).ToArray());
         foreach (var item in newReceivers)
         {
@@ -244,6 +264,11 @@ public class AuthChannelUserFinder : IChannelUserFinder
         }
 
         return messageReceiverUsers;
+    }
+
+    private async Task<IEnumerable<MessageReceiverUser>> GetMessageReceiverUserByWeixinWork(ExtraPropertyDictionary variables, IEnumerable<MessageTaskReceiver> receivers)
+    {
+        
     }
 
     private List<UserModel> GetUserModelByStaff(List<StaffModel> staff)

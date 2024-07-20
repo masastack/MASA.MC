@@ -58,7 +58,7 @@ builder.Services.AddMasaOpenIdConnect(masaOpenIdConnectOptions);
 
 builder.Services.AddMcApiGateways(option =>
 {
-    option.McServiceBaseAddress = mcBaseAddress;
+    option.McServiceBaseAddress = "https://localhost:19501/";
     option.AuthorityEndpoint = masaOpenIdConnectOptions.Authority;
     option.ClientId = masaOpenIdConnectOptions.ClientId;
     option.ClientSecret = masaOpenIdConnectOptions.ClientSecret;

@@ -130,12 +130,12 @@ public class ChannelType : Enumeration
 
         public override SendMessageEvent GetSendMessageEvent(Guid channelId, MessageData messageData, MessageTaskHistory messageTaskHistory)
         {
-            return new SendAppMessageEvent(channelId, messageData, messageTaskHistory);
+            return new SendWeixinWorkMessageEvent(channelId, messageData, messageTaskHistory);
         }
 
         public override RetryMessageEvent GetRetryMessageEvent(Guid messageRecordId)
         {
-            return new RetryAppMessageEvent(messageRecordId);
+            return new RetryWeixinWorkMessageEvent(messageRecordId);
         }
 
         public override string GetChannelUserIdentity(Receiver receiver)

@@ -33,6 +33,7 @@ public partial class ChannelExtraProperties : AdminCompontentBase
     private ChannelEmailExtraProperties? _emailExtraPropertiesRef;
     private ChannelSmsExtraProperties? _smsExtraPropertiesRef;
     private ChannelAppExtraProperties? _appExtraPropertiesRef;
+    private ChannelWeixinWorkExtraProperties? _weixinWorkExtraPropertiesRef;
 
     public void HandleChangeAsync(string value, string key)
     {
@@ -53,6 +54,10 @@ public partial class ChannelExtraProperties : AdminCompontentBase
         {
             await _appExtraPropertiesRef.HandleChangeAsync();
         }
+        if (Type == ChannelTypes.WeixinWork && _weixinWorkExtraPropertiesRef != null)
+        {
+            await _weixinWorkExtraPropertiesRef.HandleChangeAsync();
+        }
         await ValueChanged.InvokeAsync(Value);
     }
 
@@ -69,6 +74,10 @@ public partial class ChannelExtraProperties : AdminCompontentBase
         if (Type == ChannelTypes.App && _appExtraPropertiesRef != null && _appExtraPropertiesRef.Form != null)
         {
             return _appExtraPropertiesRef.Form.Validate();
+        }
+        if (Type == ChannelTypes.WeixinWork && _weixinWorkExtraPropertiesRef != null && _weixinWorkExtraPropertiesRef.Form != null)
+        {
+            return _weixinWorkExtraPropertiesRef.Form.Validate();
         }
         return true;
     }

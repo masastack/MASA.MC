@@ -12,3 +12,7 @@ else if (Type == ChannelTypes.App)
 {
     <ChannelAppExtraProperties @ref="_appExtraPropertiesRef" @bind-Value="Value" PasswordView="PasswordView" IsAdd="IsAdd" />
 }
+else if (Type == ChannelTypes.WeixinWork)
+{
+    <ChannelWeixinWorkExtraProperties @ref="_weixinWorkExtraPropertiesRef" @bind-Value="Value" PasswordView="PasswordView"/>
+}

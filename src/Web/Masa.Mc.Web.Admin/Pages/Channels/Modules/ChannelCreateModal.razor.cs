@@ -11,12 +11,8 @@ public partial class ChannelCreateModal : AdminCompontentBase
     private MForm? _form;
     private ChannelUpsertDto _model = new();
     private bool _visible;
-    private List<ChannelTypes> channelTypeItems = Enum.GetValues(typeof(ChannelTypes))
-        .Cast<ChannelTypes>().ToList();
     private List<string> _colors = new List<string> { "purple", "green", "yellow", "red", "blue" };
     private ChannelExtraProperties _channelExtraPropertiesRef = default!;
-    private ChannelTypes _hoverType;
-    private AppChannelProviders _appHoverType;
     
     int _step = 1;
 
@@ -67,7 +63,6 @@ public partial class ChannelCreateModal : AdminCompontentBase
 
     private void HandleSelectType(ChannelTypes Type)
     {
-        _hoverType = default;
         _model.Type = Type;
 
         _step = _nextStep;
@@ -105,25 +100,8 @@ public partial class ChannelCreateModal : AdminCompontentBase
         if (!val) HandleCancel();
     }
 
-    private void HandleHoverChanged(bool val, ChannelTypes hoverType)
-    {
-        if (val)
-        {
-            _hoverType = hoverType;
-        }
-    }
-
-    private void HandleAppHoverChanged(bool val, AppChannelProviders hoverType)
-    {
-        if (val)
-        {
-            _appHoverType = hoverType;
-        }
-    }
-
     private void HandleAppSelectType(AppChannelProviders Type)
     {
-        _hoverType = default;
         _model.ExtraProperties.SetProperty(nameof(AppChannelOptions.Provider), (int)Type);
         _step = 3;
     }

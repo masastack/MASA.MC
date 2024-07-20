@@ -15,3 +15,4 @@ global using Senparc.Weixin.RegisterServices;
 global using Microsoft.AspNetCore.Builder;
 global using Microsoft.Extensions.Hosting;
 global using Senparc.Weixin.AspNet;
+global using Masa.Mc.Infrastructure.Weixin.Work.Infrastructure.OptionsResolve.Contributors;
