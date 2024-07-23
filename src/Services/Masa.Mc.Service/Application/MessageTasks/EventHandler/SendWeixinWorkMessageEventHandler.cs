@@ -36,24 +36,12 @@ public class SendWeixinWorkMessageEventHandler
     [EventHandler]
     public async Task HandleEventAsync(SendWeixinWorkMessageEvent eto)
     {
-        var channel = await _channelRepository.FindAsync(x => x.Id == eto.ChannelId);
-        var options = new WeixinWorkOptions
-        {
-            CorpId = channel?.ExtraProperties.GetProperty<string>(nameof(WeixinWorkOptions.CorpId)) ?? string.Empty,
-            CorpSecret = channel?.ExtraProperties.GetProperty<string>(nameof(WeixinWorkOptions.CorpSecret)) ?? string.Empty,
-            AgentId = channel?.ExtraProperties.GetProperty<string>(nameof(WeixinWorkOptions.AgentId)) ?? string.Empty,
-        };
+        var options = await GetOptionsAsync(eto.ChannelId);
 
         var taskHistory = eto.MessageTaskHistory;
         var messageRecords = new List<MessageRecord>();
 
-        var checkChannelUserIdentitys = new List<string>();
-        if (eto.MessageData.MessageType == MessageEntityTypes.Template)
-        {
-            var messageTemplate = await _templateRepository.FindAsync(x => x.Id == taskHistory.MessageTask.EntityId, false);
-            var channelUserIdentitys = eto.MessageTaskHistory.ReceiverUsers.Select(x => x.ChannelUserIdentity).Distinct().ToList();
-            checkChannelUserIdentitys = await _messageTemplateDomainService.CheckSendUpperLimitAsync(messageTemplate, channelUserIdentitys);
-        }
+        var checkChannelUserIdentitys = await GetCheckChannelUserIdentitysAsync(eto);
 
         foreach (var item in eto.MessageTaskHistory.ReceiverUsers)
         {
@@ -70,7 +58,8 @@ public class SendWeixinWorkMessageEventHandler
             messageRecords.Add(messageRecord);
         }
 
-        var toUser = GetToUser(taskHistory.MessageTask.ReceiverType, messageRecords.Select(x => x.ChannelUserIdentity).ToList());
+        var channelUserIdentitys = messageRecords.Where(x => !x.Success.HasValue).Select(x => x.ChannelUserIdentity).ToList();
+        var toUser = GetToUser(taskHistory.MessageTask.ReceiverType, channelUserIdentitys);
 
         using (_weixinWorkAsyncLocal.Change(options))
         {
@@ -93,8 +82,7 @@ public class SendWeixinWorkMessageEventHandler
 
         await _messageRecordRepository.AddRangeAsync(messageRecords);
 
-        taskHistory.SetResult(!messageRecords.Any(x => x.Success != true) ? MessageTaskHistoryStatuses.Success : (messageRecords.Any(x => x.Success == true) ? MessageTaskHistoryStatuses.PartialFailure : MessageTaskHistoryStatuses.Fail));
-        await _messageTaskHistoryRepository.UpdateAsync(taskHistory);
+        await UpdateTaskHistoryAsync(taskHistory, messageRecords);
     }
 
     private async Task<WeixinWorkMessageResponseBase> SendAsync(MessageData messageData, string toUser)
@@ -110,6 +98,35 @@ public class SendWeixinWorkMessageEventHandler
             var message = new WeixinWorkTextMessage(toUser, messageData.MessageContent.Content);
             return await _weixinWorkSender.SendTextAsync(message);
         }
+    }
+
+    private async Task<WeixinWorkOptions> GetOptionsAsync(Guid channelId)
+    {
+        var channel = await _channelRepository.FindAsync(x => x.Id == channelId);
+        var options = new WeixinWorkOptions
+        {
+            CorpId = channel?.ExtraProperties.GetProperty<string>(nameof(WeixinWorkOptions.CorpId)) ?? string.Empty,
+            CorpSecret = channel?.ExtraProperties.GetProperty<string>(nameof(WeixinWorkOptions.CorpSecret)) ?? string.Empty,
+            AgentId = channel?.ExtraProperties.GetProperty<string>(nameof(WeixinWorkOptions.AgentId)) ?? string.Empty,
+        };
+        return options;
+    }
+
+    private async Task<List<string>> GetCheckChannelUserIdentitysAsync(SendWeixinWorkMessageEvent eto)
+    {
+        var checkChannelUserIdentitys = new List<string>();
+        if (eto.MessageData.MessageType == MessageEntityTypes.Template)
+        {
+            var messageTemplate = await _templateRepository.FindAsync(x => x.Id == eto.MessageTaskHistory.MessageTask.EntityId, false);
+            checkChannelUserIdentitys = await _messageTemplateDomainService.CheckSendUpperLimitAsync(messageTemplate, eto.MessageTaskHistory.ReceiverUsers.Select(x => x.ChannelUserIdentity).Distinct().ToList());
+        }
+        return checkChannelUserIdentitys;
+    }
+
+    private async Task UpdateTaskHistoryAsync(MessageTaskHistory taskHistory, List<MessageRecord> messageRecords)
+    {
+        taskHistory.SetResult(!messageRecords.Any(x => x.Success != true) ? MessageTaskHistoryStatuses.Success : (messageRecords.Any(x => x.Success == true) ? MessageTaskHistoryStatuses.PartialFailure : MessageTaskHistoryStatuses.Fail));
+        await _messageTaskHistoryRepository.UpdateAsync(taskHistory);
     }
 
     private string GetToUser(ReceiverTypes receiverType, List<string> channelUserIdentitys)
@@ -128,14 +145,14 @@ public class SendWeixinWorkMessageEventHandler
 
         foreach (var item in invalidUsers)
         {
-            var messageRecord = messageRecords.FirstOrDefault(x => x.ChannelUserIdentity == item);
+            var messageRecord = messageRecords.FirstOrDefault(x => !x.Success.HasValue && x.ChannelUserIdentity == item);
             messageRecord?.SetResult(false, "invaliduser");
         }
     }
 
     private void SetResult(List<MessageRecord> messageRecords, bool success, string failureReason)
     {
-        foreach (var item in messageRecords.Where(x => x.Success == null))
+        foreach (var item in messageRecords.Where(x => !x.Success.HasValue))
         {
             item.SetResult(success, failureReason);
         }
