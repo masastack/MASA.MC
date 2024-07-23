@@ -1,6 +1,8 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
+using Masa.Mc.Service.Admin.Domain.MessageInfos.Aggregates;
+
 namespace Masa.Mc.Service.Admin.Domain.MessageTasks.Services;
 
 public class MessageTaskDomainService : DomainService
@@ -28,7 +30,7 @@ public class MessageTaskDomainService : DomainService
         _i18n = i18n;
     }
 
-    public virtual async Task CreateAsync(MessageTask messageTask,string systemId)
+    public virtual async Task CreateAsync(MessageTask messageTask, string systemId)
     {
         if (!messageTask.IsDraft)
         {
@@ -75,6 +77,7 @@ public class MessageTaskDomainService : DomainService
             messageData.RenderContent(variables);
             messageData.SetDataValue(BusinessConsts.INTENT_URL, messageTask.AppIntentUrl);
             messageData.SetDataValue(BusinessConsts.IS_APNS_PRODUCTION, messageTask.IsApnsProduction);
+            messageData.SetDataValue(BusinessConsts.MESSAGE_TYPE, messageInfo.Type.ToString());
             return messageData;
         }
         if (messageTask.EntityType == MessageEntityTypes.Template)
@@ -88,6 +91,7 @@ public class MessageTaskDomainService : DomainService
             messageData.SetDataValue(nameof(MessageTemplate.Sign), messageTemplate.Sign);
             messageData.SetDataValue(BusinessConsts.INTENT_URL, messageTemplate.Options.GetProperty<string>(BusinessConsts.INTENT_URL));
             messageData.SetDataValue(BusinessConsts.IS_APNS_PRODUCTION, messageTemplate.Options.GetProperty<string>(BusinessConsts.IS_APNS_PRODUCTION));
+            messageData.SetDataValue(BusinessConsts.MESSAGE_TYPE, messageTemplate.TemplateType.ToString());
             return messageData;
         }
 

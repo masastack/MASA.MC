@@ -3,10 +3,10 @@
 
 namespace Masa.Mc.Web.Admin.Pages.MessageTemplates;
 
-public partial class AppTemplateManagement : AdminCompontentBase
+public partial class WeixinWorkTemplateManagement : AdminCompontentBase
 {
-    private AppTemplateUpsertModal _upsertModal = default!;
-    private GetMessageTemplateInputDto _queryParam = new() { ChannelType = ChannelTypes.App };
+    private WeixinWorkUpsertModal _upsertModal = default!;
+    private GetMessageTemplateInputDto _queryParam = new() { ChannelType = ChannelTypes.WeixinWork };
     private PaginatedListDto<MessageTemplateDto> _entities = new();
     private List<ChannelDto> _channelItems = new();
     private DateTimeOffset? _endTime;
@@ -20,7 +20,7 @@ public partial class AppTemplateManagement : AdminCompontentBase
 
     protected async override Task OnInitializedAsync()
     {
-        _channelItems = await ChannelService.GetListByTypeAsync(ChannelTypes.App);
+        _channelItems = await ChannelService.GetListByTypeAsync(ChannelTypes.WeixinWork);
     }
     protected async override Task OnAfterRenderAsync(bool firstRender)
     {
@@ -37,11 +37,12 @@ public partial class AppTemplateManagement : AdminCompontentBase
 
         return new()
         {
-            new() { Text = T($"{prefix}{nameof(MessageTemplateDto.Code)}"), Value = nameof(MessageTemplateDto.Code), Sortable = false, Width = "8rem" },
-            new() { Text = T($"{prefix}{nameof(MessageTemplateDto.Title)}"), Value = nameof(MessageTemplateDto.Title), Sortable = false, Width = "13.125rem" },
-            new() { Text = T($"{prefix}ChannelDisplayName"), Value = "ChannelDisplayName", Sortable = false, Width = "6.5625rem" },
-            new() { Text = T("Modifier"), Value = nameof(MessageTemplateDto.ModifierName), Sortable = false, Width = "6.5625rem" },
-            new() { Text = T("ModificationTime"), Value = nameof(MessageTemplateDto.ModificationTime), Sortable = true, Width = "13.125rem" },
+            new() { Text = T($"{prefix}{nameof(MessageTemplateDto.Code)}"), Value = nameof(MessageTemplateDto.Code), Sortable = false },
+            new() { Text = T($"{prefix}{nameof(MessageTemplateDto.TemplateType)}"), Value = nameof(MessageTemplateDto.TemplateType)},
+            new() { Text = T($"{prefix}{nameof(MessageTemplateDto.Title)}"), Value = nameof(MessageTemplateDto.Title), Sortable = false },
+            new() { Text = T($"{prefix}ChannelDisplayName"), Value = "ChannelDisplayName", Sortable = false },
+            new() { Text = T("Modifier"), Value = nameof(MessageTemplateDto.ModifierName), Sortable = false },
+            new() { Text = T("ModificationTime"), Value = nameof(MessageTemplateDto.ModificationTime), Sortable = true },
             new() { Text = T("Action"), Value = "Action", Sortable = false, Width = 105, Align = DataTableHeaderAlign.Center },
         };
     }

@@ -47,8 +47,6 @@ public class ExecuteMessageTaskJob : BackgroundJobBase<ExecuteMessageTaskJobArgs
         }
 
         await messageTaskHistoryRepository.UpdateAsync(history);
-        await unitOfWork.SaveChangesAsync();
-        await unitOfWork.CommitAsync();
 
         var channel = await channelRepository.FindAsync(x => x.Id == history.MessageTask.ChannelId);
 

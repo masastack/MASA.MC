@@ -8,7 +8,7 @@ public class MessageTemplateUpsertDtoValidator : AbstractValidator<MessageTempla
     public MessageTemplateUpsertDtoValidator()
     {
         RuleFor(inputDto => inputDto.DisplayName).Required("MessageTemplateDisplayNameRequired")
-            .Length(2, 50).WithMessage("MessageTemplateDisplayNameLength");
+            .Length(2, 50).WithMessage("MessageTemplateDisplayNameLength").When(x => x.ChannelType != ChannelTypes.WeixinWork && x.TemplateType != (int)WeixinWorkTemplateTypes.Text);
         RuleFor(inputDto => inputDto.Code).Required("MessageTemplateCodeRequired")
             .LetterNumberSymbol().WithMessage("MessageTemplateCodeLetterNumberSymbol")
             .Length(2, 50).WithMessage("MessageTemplateCodeLength");

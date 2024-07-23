@@ -3,7 +3,9 @@
 
 namespace Masa.Mc.Infrastructure.Weixin.Work.Infrastructure.OptionsResolve;
 
-public interface IWeixinWorkMessageOptionsResolver
+public interface IWeixinWorkOptionsResolveContributor
 {
-    Task<IWeixinWorkMessageOptions> ResolveAsync();
+    string Name { get; }
+
+    Task ResolveAsync(WeixinWorkOptionsResolveContext context);
 }

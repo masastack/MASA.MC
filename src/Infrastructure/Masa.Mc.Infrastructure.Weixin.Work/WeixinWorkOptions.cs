@@ -3,7 +3,7 @@
 
 namespace Masa.Mc.Infrastructure.Weixin.Work;
 
-public class WeixinWorkMessageOptions : IWeixinWorkMessageOptions
+public class WeixinWorkOptions : IWeixinWorkOptions
 {
     public string CorpId { get; set; } = string.Empty;
 

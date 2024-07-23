@@ -3,13 +3,13 @@
 
 namespace Masa.Mc.Infrastructure.Weixin.Work.Infrastructure.OptionsResolve;
 
-public class WeixinWorkMessageOptionsResolveContext
+public class WeixinWorkOptionsResolveContext
 {
-    public IWeixinWorkMessageOptions Options { get; set; }
+    public IWeixinWorkOptions Options { get; set; }
 
     public IServiceProvider ServiceProvider { get; }
 
-    public WeixinWorkMessageOptionsResolveContext(IServiceProvider serviceProvider)
+    public WeixinWorkOptionsResolveContext(IServiceProvider serviceProvider)
     {
         ServiceProvider = serviceProvider;
     }

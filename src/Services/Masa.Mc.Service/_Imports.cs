@@ -180,3 +180,4 @@ global using Microsoft.Extensions.DependencyInjection.Extensions;
 global using Masa.Mc.Infrastructure.Weixin.Work;
 global using Masa.Mc.Infrastructure.Weixin.Work.Infrastructure.OptionsResolve.Contributors;
 global using Masa.Mc.Infrastructure.Weixin.Work.Model;
+global using Masa.Mc.Infrastructure.Weixin.Work.Model.Response;

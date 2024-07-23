@@ -27,7 +27,7 @@ public class MessageTemplateUpsertDto
     public DateTimeOffset? InvalidTime { get; set; }
     public string AuditReason { get; set; } = string.Empty;
     public int TemplateType { get; set; }
-    public long PerDayLimit { get; set; } = 10;
+    public long PerDayLimit { get; set; }
     public bool IsStatic { get; set; }
     public List<MessageTemplateItemDto> Items { get; set; }
     public MessageInfoUpsertDto MessageInfo { get; set; } = new();

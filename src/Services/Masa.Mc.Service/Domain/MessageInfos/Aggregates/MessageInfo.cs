@@ -7,6 +7,8 @@ public class MessageInfo : FullAggregateRoot<Guid, Guid>
 {
     public MessageContent MessageContent { get; protected set; } = default!;
 
+    public int Type { get;  set; }
+
     private MessageInfo() { }
 
     public MessageInfo(MessageContent messageContent)

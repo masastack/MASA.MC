@@ -67,7 +67,7 @@ public class MessageTaskQueryHandler
             PageSize = options.PageSize,
             Sorting = new Dictionary<string, bool>
             {
-                [nameof(MessageTaskQueryModel.Id)] = true
+                [nameof(MessageTaskQueryModel.CreationTime)] = true
             }
         });
         var dtos = resultList.Result.Adapt<List<MessageTaskDto>>();

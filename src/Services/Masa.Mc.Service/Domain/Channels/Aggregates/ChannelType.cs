@@ -34,6 +34,11 @@ public class ChannelType : Enumeration
         throw new NotImplementedException();
     }
 
+    public virtual string GetChannelUserIdentity(UserModel user)
+    {
+        throw new NotImplementedException();
+    }
+
     private class SmsChannel : ChannelType
     {
         public SmsChannel() : base(1, nameof(Sms)) { }
@@ -51,6 +56,11 @@ public class ChannelType : Enumeration
         public override string GetChannelUserIdentity(Receiver receiver)
         {
             return receiver.PhoneNumber;
+        }
+
+        public override string GetChannelUserIdentity(UserModel user)
+        {
+            return user?.PhoneNumber ?? string.Empty;
         }
     }
 
@@ -72,6 +82,11 @@ public class ChannelType : Enumeration
         {
             return receiver.Email;
         }
+
+        public override string GetChannelUserIdentity(UserModel user)
+        {
+            return user?.Email ?? string.Empty;
+        }
     }
 
     private class WebsiteMessageChannel : ChannelType
@@ -91,6 +106,11 @@ public class ChannelType : Enumeration
         public override string GetChannelUserIdentity(Receiver receiver)
         {
             return receiver.SubjectId.ToString();
+        }
+
+        public override string GetChannelUserIdentity(UserModel user)
+        {
+            return user.Id.ToString();
         }
     }
 
@@ -113,6 +133,11 @@ public class ChannelType : Enumeration
             return string.Empty;
         }
 
+        public override string GetChannelUserIdentity(UserModel user)
+        {
+            return string.Empty;
+        }
+
         public ExtraPropertyDictionary GetMessageTransmissionContent(MessageContent messageContent)
         {
             if (messageContent.IsJump && !messageContent.ExtraProperties.Any(x => x.Key == "url"))
@@ -124,7 +149,7 @@ public class ChannelType : Enumeration
         }
     }
 
-    public class WeixinWorkChannel : ChannelType
+    private class WeixinWorkChannel : ChannelType
     {
         public WeixinWorkChannel() : base(5, nameof(WeixinWork)) { }
 
@@ -141,6 +166,11 @@ public class ChannelType : Enumeration
         public override string GetChannelUserIdentity(Receiver receiver)
         {
             return string.Empty;
+        }
+
+        public override string GetChannelUserIdentity(UserModel user)
+        {
+            return user.Account;
         }
     }
 }

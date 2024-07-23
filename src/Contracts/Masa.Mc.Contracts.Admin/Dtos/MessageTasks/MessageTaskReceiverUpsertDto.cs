@@ -3,21 +3,13 @@
 
 namespace Masa.Mc.Contracts.Admin.Dtos.MessageTasks;
 
-public class InternalReceiverDto
+public class MessageTaskReceiverUpsertDto
 {
     public Guid SubjectId { get; set; }
+
+    public string ChannelUserIdentity { get; set; } = string.Empty;
 
     public MessageTaskReceiverTypes Type { get; set; }
 
     public ExtraPropertyDictionary Variables { get; set; } = new();
-
-    public static implicit operator MessageTaskReceiverUpsertDto(InternalReceiverDto dto)
-    {
-        return new MessageTaskReceiverUpsertDto
-        {
-            SubjectId = dto.SubjectId,
-            Type = dto.Type,
-            Variables = dto.Variables
-        };
-    }
 }

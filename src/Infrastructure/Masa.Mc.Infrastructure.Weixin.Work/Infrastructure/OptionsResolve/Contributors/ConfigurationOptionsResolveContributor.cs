@@ -3,14 +3,14 @@
 
 namespace Masa.Mc.Infrastructure.Weixin.Work.Infrastructure.OptionsResolve.Contributors;
 
-public class ConfigurationOptionsResolveContributor : IWeixinWorkMessageOptionsResolveContributor
+public class ConfigurationOptionsResolveContributor : IWeixinWorkOptionsResolveContributor
 {
     public const string CONTRIBUTOR_NAME = "Configuration";
     public string Name => CONTRIBUTOR_NAME;
 
-    public Task ResolveAsync(WeixinWorkMessageOptionsResolveContext context)
+    public Task ResolveAsync(WeixinWorkOptionsResolveContext context)
     {
-        context.Options = context.ServiceProvider.GetRequiredService<IOptions<WeixinWorkMessageOptions>>().Value;
+        context.Options = context.ServiceProvider.GetRequiredService<IOptions<WeixinWorkOptions>>().Value;
 
         return Task.CompletedTask;
     }

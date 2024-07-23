@@ -3,23 +3,23 @@
 
 namespace Masa.Mc.Infrastructure.Weixin.Work.Infrastructure.OptionsResolve;
 
-public class WeixinWorkMessageOptionsResolver : IWeixinWorkMessageOptionsResolver
+public class WeixinWorkOptionsResolver : IWeixinWorkOptionsResolver
 {
     private readonly IServiceProvider _serviceProvider;
-    private readonly WeixinWorkMessageResolveOptions _options;
+    private readonly WeixinWorkResolveOptions _options;
 
-    public WeixinWorkMessageOptionsResolver(IServiceProvider serviceProvider,
-        IOptions<WeixinWorkMessageResolveOptions> aliyunSmsResolveOptions)
+    public WeixinWorkOptionsResolver(IServiceProvider serviceProvider,
+        IOptions<WeixinWorkResolveOptions> aliyunSmsResolveOptions)
     {
         _serviceProvider = serviceProvider;
         _options = aliyunSmsResolveOptions.Value;
     }
 
-    public async Task<IWeixinWorkMessageOptions> ResolveAsync()
+    public async Task<IWeixinWorkOptions> ResolveAsync()
     {
         using (var serviceScope = _serviceProvider.CreateScope())
         {
-            var context = new WeixinWorkMessageOptionsResolveContext(serviceScope.ServiceProvider);
+            var context = new WeixinWorkOptionsResolveContext(serviceScope.ServiceProvider);
 
             foreach (var resolver in _options.Contributors)
             {
@@ -32,6 +32,6 @@ public class WeixinWorkMessageOptionsResolver : IWeixinWorkMessageOptionsResolve
             }
         }
 
-        return new WeixinWorkMessageOptions();
+        return new WeixinWorkOptions();
     }
 }

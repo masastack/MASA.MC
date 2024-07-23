@@ -5,7 +5,9 @@ namespace Masa.Mc.Service.Admin.Domain.MessageTasks.Aggregates;
 
 public class MessageTaskReceiver : ValueObject
 {
-    public Receiver Receiver { get; set; }
+    public Guid SubjectId { get; set; }
+
+    public string ChannelUserIdentity { get; set; } = string.Empty;
 
     public MessageTaskReceiverTypes Type { get; set; }
 
@@ -13,13 +15,15 @@ public class MessageTaskReceiver : ValueObject
 
     protected override IEnumerable<object> GetEqualityValues()
     {
-        yield return Receiver;
+        yield return SubjectId;
+        yield return ChannelUserIdentity;
         yield return Type;
     }
 
-    public MessageTaskReceiver(Receiver receiver, MessageTaskReceiverTypes type, ExtraPropertyDictionary variables)
+    public MessageTaskReceiver(Guid subjectId, string channelUserIdentity, MessageTaskReceiverTypes type, ExtraPropertyDictionary variables)
     {
-        Receiver = receiver;
+        SubjectId = subjectId;
+        ChannelUserIdentity = channelUserIdentity;
         Type = type;
         Variables = variables;
     }

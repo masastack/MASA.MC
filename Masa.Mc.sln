@@ -65,7 +65,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Masa.Mc.Infrastructure.Mail
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Masa.Mc.Infrastructure.AppNotification", "src\Infrastructure\Masa.Mc.Infrastructure.AppNotification\Masa.Mc.Infrastructure.AppNotification.csproj", "{7F2708C3-F1EE-4BFD-9321-F8D90390BF3C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Masa.Mc.Infrastructure.Weixin.Work", "src\Infrastructure\Masa.Mc.Infrastructure.Weixin.Work\Masa.Mc.Infrastructure.Weixin.Work.csproj", "{58E1DBB5-409C-4DF7-BDCA-A36715E0BB86}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Masa.Mc.Infrastructure.Weixin.Work", "src\Infrastructure\Masa.Mc.Infrastructure.Weixin.Work\Masa.Mc.Infrastructure.Weixin.Work.csproj", "{58E1DBB5-409C-4DF7-BDCA-A36715E0BB86}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,0 +1,67 @@
+﻿@inherits AdminCompontentBase
+@page "/messageTemplates/weixinWorkTemplateManagement"
+
+<PageTitle>@T("WeixinWork")</PageTitle>
+<AutoHeight AutoClass="mt-6">
+    <HeaderContent>
+        <SSearchPanel @bind-Value="@_queryParam.Filter" Advanced OnEnter="RefreshAsync" OnClearClick="HandleClearAsync" OnClick="()=> _upsertModal.OpenModalAsync()">
+            <ChildContent>
+                <DefaultTitle>@T("WeixinWork")</DefaultTitle>
+            </ChildContent>
+            <AdvancedContent>
+                <MCol Class="flex-grow-0">
+                    <SDateTimeRangeToolbar StartDateTime="_startTime" EndDateTime="_endTime" OnUpdate="DateRangChangedAsync" ShowQuickChange="false" />
+                </MCol>
+                <MCol Md="3">
+                    <SSelect Small @bind-Value="_queryParam.ChannelId"
+                             Items="@_channelItems"
+                             Label="@T("DisplayName.Channel")"
+                             ItemText="item => item.DisplayName"
+                             ItemValue="item => item.Id"
+                             BackgroundColor="white"
+                             Clearable
+                             HideDetails="@("auto")"
+                             TItem="ChannelDto"
+                             TItemValue="Guid"
+                             TValue="Guid?"
+                             Class="rounded-lg body2"
+                             OnClearClick="RefreshAsync"
+                             OnSelectedItemUpdate="RefreshAsync">
+                    </SSelect>
+                </MCol>
+            </AdvancedContent>
+        </SSearchPanel>
+    </HeaderContent>
+    <AutoHeightContent>
+        <MCard Class="full-height">
+            <SDataTable Headers="GetHeaders()" Items="_entities.Result" TItem="MessageTemplateDto" ItemsPerPage="_queryParam.PageSize" HideDefaultFooter Class="d-flex full-height flex-column">
+                <HeaderColContent Context="header">
+                    <span class="text-btn">@header.Text</span>
+                </HeaderColContent>
+                <ItemColContent>
+                    @switch (context.Header.Value)
+                    {
+                        case ("ChannelDisplayName"):
+                            <DefaultGenericColumnRender Value="@context.Item.Channel?.DisplayName" Width="@context.Header.Width"></DefaultGenericColumnRender>
+                            break;
+                        case nameof(MessageTemplateDto.TemplateType):
+                            <DefaultGenericColumnRender Value="@T(((WeixinWorkTemplateTypes)context.Item.TemplateType).ToString())" Width="@context.Header.Width"></DefaultGenericColumnRender>
+                            break;
+                        case "Action":
+                            <DefaultIcon Small Color="emphasis2" Tooltip="@(T("Edit"))" OnClick="async()=>await _upsertModal.OpenModalAsync(context.Item)">mdi-pencil</DefaultIcon>
+                            break;
+                        default:
+                            <DefaultGenericColumnRender Value="@context.Value" Width="@context.Header.Width"></DefaultGenericColumnRender>
+                            break;
+                    }
+                </ItemColContent>
+                <FooterContent>
+                    <SPagination Class="mt-3 mx-6 pb-6" Page="@_queryParam.Page" PageSize="@_queryParam.PageSize" Total="_entities.Total" PageChanged="HandlePageChanged" PageSizeChanged="HandlePageSizeChanged" />
+                </FooterContent>
+            </SDataTable>
+        </MCard>
+    </AutoHeightContent>
+</AutoHeight>
+
+<WeixinWorkUpsertModal @ref="_upsertModal" OnOk="HandleOk" />
+

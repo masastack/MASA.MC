@@ -3,11 +3,11 @@
 
 namespace Masa.Mc.Infrastructure.Weixin.Work;
 
-public class WeixinWorkMessageSender : IWeixinWorkMessageSender
+public class WeixinWorkSender : IWeixinWorkSender
 {
-    private readonly IWeixinWorkMessageOptionsResolver _optionsResolver;
+    private readonly IWeixinWorkOptionsResolver _optionsResolver;
 
-    public WeixinWorkMessageSender(IWeixinWorkMessageOptionsResolver optionsResolver)
+    public WeixinWorkSender(IWeixinWorkOptionsResolver optionsResolver)
     {
         _optionsResolver = optionsResolver;
     }

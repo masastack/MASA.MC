@@ -3,15 +3,15 @@
 
 namespace Masa.Mc.Infrastructure.Weixin.Work.Infrastructure.OptionsResolve.Contributors;
 
-public class AsyncLocalOptionsResolveContributor : IWeixinWorkMessageOptionsResolveContributor
+public class AsyncLocalOptionsResolveContributor : IWeixinWorkOptionsResolveContributor
 {
     public const string CONTRIBUTOR_NAME = "AsyncLocal";
 
     public string Name => CONTRIBUTOR_NAME;
 
-    public Task ResolveAsync(WeixinWorkMessageOptionsResolveContext context)
+    public Task ResolveAsync(WeixinWorkOptionsResolveContext context)
     {
-        var asyncLocal = context.ServiceProvider.GetRequiredService<IWeixinWorkMessageAsyncLocalAccessor>();
+        var asyncLocal = context.ServiceProvider.GetRequiredService<IWeixinWorkAsyncLocalAccessor>();
 
         if (asyncLocal.Current != null)
         {
@@ -22,56 +22,56 @@ public class AsyncLocalOptionsResolveContributor : IWeixinWorkMessageOptionsReso
     }
 }
 
-public interface IWeixinWorkMessageAsyncLocalAccessor
+public interface IWeixinWorkAsyncLocalAccessor
 {
-    IWeixinWorkMessageOptions Current { get; set; }
+    IWeixinWorkOptions Current { get; set; }
 }
 
-public class WeixinWorkMessageAsyncLocalAccessor : IWeixinWorkMessageAsyncLocalAccessor
+public class WeixinWorkAsyncLocalAccessor : IWeixinWorkAsyncLocalAccessor
 {
-    public IWeixinWorkMessageOptions Current
+    public IWeixinWorkOptions Current
     {
         get => _asyncLocal.Value;
         set => _asyncLocal.Value = value;
     }
 
-    private readonly AsyncLocal<IWeixinWorkMessageOptions> _asyncLocal;
+    private readonly AsyncLocal<IWeixinWorkOptions> _asyncLocal;
 
-    public WeixinWorkMessageAsyncLocalAccessor()
+    public WeixinWorkAsyncLocalAccessor()
     {
-        _asyncLocal = new AsyncLocal<IWeixinWorkMessageOptions>();
+        _asyncLocal = new AsyncLocal<IWeixinWorkOptions>();
     }
 }
 
-public interface IWeixinWorkMessageAsyncLocal
+public interface IWeixinWorkAsyncLocal
 {
-    IWeixinWorkMessageOptions CurrentOptions { get; }
+    IWeixinWorkOptions CurrentOptions { get; }
 
-    IDisposable Change(IWeixinWorkMessageOptions weChatMiniProgramOptions);
+    IDisposable Change(IWeixinWorkOptions weChatMiniProgramOptions);
 }
 
-public class WeixinWorkMessageAsyncLocal : IWeixinWorkMessageAsyncLocal
+public class WeixinWorkAsyncLocal : IWeixinWorkAsyncLocal
 {
-    public IWeixinWorkMessageOptions CurrentOptions { get; private set; }
+    public IWeixinWorkOptions CurrentOptions { get; private set; }
 
-    private readonly IWeixinWorkMessageAsyncLocalAccessor _weixinWorkMessageAsyncLocalAccessor;
+    private readonly IWeixinWorkAsyncLocalAccessor _weixinWorkAsyncLocalAccessor;
 
-    public WeixinWorkMessageAsyncLocal(IWeixinWorkMessageAsyncLocalAccessor weixinWorkMessageAsyncLocalAccessor)
+    public WeixinWorkAsyncLocal(IWeixinWorkAsyncLocalAccessor weixinWorkAsyncLocalAccessor)
     {
-        _weixinWorkMessageAsyncLocalAccessor = weixinWorkMessageAsyncLocalAccessor;
+        _weixinWorkAsyncLocalAccessor = weixinWorkAsyncLocalAccessor;
 
-        CurrentOptions = weixinWorkMessageAsyncLocalAccessor.Current;
+        CurrentOptions = weixinWorkAsyncLocalAccessor.Current;
     }
 
-    public IDisposable Change(IWeixinWorkMessageOptions weixinWorkMessageOptions)
+    public IDisposable Change(IWeixinWorkOptions weixinWorkOptions)
     {
-        var parentScope = _weixinWorkMessageAsyncLocalAccessor.Current;
+        var parentScope = _weixinWorkAsyncLocalAccessor.Current;
 
-        _weixinWorkMessageAsyncLocalAccessor.Current = weixinWorkMessageOptions;
+        _weixinWorkAsyncLocalAccessor.Current = weixinWorkOptions;
 
         return new DisposeAction(() =>
         {
-            _weixinWorkMessageAsyncLocalAccessor.Current = parentScope;
+            _weixinWorkAsyncLocalAccessor.Current = parentScope;
         });
     }
 }

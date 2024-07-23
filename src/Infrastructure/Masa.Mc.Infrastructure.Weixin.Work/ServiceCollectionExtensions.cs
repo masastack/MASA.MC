@@ -7,7 +7,7 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddWeixinWork(this IServiceCollection services, ConfigurationManager configuration)
     {
-        services.Configure<WeixinWorkMessageResolveOptions>(options =>
+        services.Configure<WeixinWorkResolveOptions>(options =>
         {
             if (!options.Contributors.Exists(x => x.Name == ConfigurationOptionsResolveContributor.CONTRIBUTOR_NAME))
             {
@@ -19,12 +19,12 @@ public static class ServiceCollectionExtensions
                 options.Contributors.Insert(0, new AsyncLocalOptionsResolveContributor());
             }
         });
-        services.TryAddSingleton<IWeixinWorkMessageAsyncLocalAccessor, WeixinWorkMessageAsyncLocalAccessor>();
-        services.TryAddTransient<IWeixinWorkMessageAsyncLocal, WeixinWorkMessageAsyncLocal>();
-        services.TryAddTransient<IWeixinWorkMessageOptionsResolver, WeixinWorkMessageOptionsResolver>();
+        services.TryAddSingleton<IWeixinWorkAsyncLocalAccessor, WeixinWorkAsyncLocalAccessor>();
+        services.TryAddTransient<IWeixinWorkAsyncLocal, WeixinWorkAsyncLocal>();
+        services.TryAddTransient<IWeixinWorkOptionsResolver, WeixinWorkOptionsResolver>();
         services.AddMemoryCache();
         services.AddSenparcWeixinServices(configuration);
-        services.TryAddSingleton<IWeixinWorkMessageSender, WeixinWorkMessageSender>();
+        services.TryAddSingleton<IWeixinWorkSender, WeixinWorkSender>();
         return services;
     }
 }

@@ -3,11 +3,7 @@
 
 namespace Masa.Mc.Infrastructure.Weixin.Work.Infrastructure.OptionsResolve;
 
-public interface IWeixinWorkMessageOptions
+public interface IWeixinWorkOptionsResolver
 {
-    public string CorpId { get; set; }
-
-    public string CorpSecret { get; set; }
-
-    public string AgentId { get; set; }
+    Task<IWeixinWorkOptions> ResolveAsync();
 }

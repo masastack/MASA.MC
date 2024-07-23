@@ -12,9 +12,9 @@
 
     private long Count { get; set; }
 
-    protected override async void OnParametersSet()
-    {
-        Count = await MessageTaskService.ResolveReceiversCountAsync(Value);
-        StateHasChanged();
-    }
+    // protected override async void OnParametersSet()
+    // {
+    //     Count = await MessageTaskService.ResolveReceiversCountAsync(Value);
+    //     StateHasChanged();
+    // }
 }

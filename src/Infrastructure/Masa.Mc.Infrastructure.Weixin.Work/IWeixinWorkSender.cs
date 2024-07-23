@@ -1,6 +1,6 @@
 ﻿namespace Masa.Mc.Infrastructure.Weixin.Work;
 
-public interface IWeixinWorkMessageSender
+public interface IWeixinWorkSender
 {
     Task<WeixinWorkMessageResponseBase> SendTextAsync(WeixinWorkTextMessage message);
 
