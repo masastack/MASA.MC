@@ -1,6 +1,8 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
+using System.Reflection;
+
 namespace Masa.Mc.Web.Admin.Pages.MessageTemplates;
 
 public partial class WeixinWorkTemplateManagement : AdminCompontentBase
@@ -28,7 +30,7 @@ public partial class WeixinWorkTemplateManagement : AdminCompontentBase
 
         LoadHeaders();
 
-        I18n.CultureChanged += (sender, args) => LoadHeaders();
+        I18n.CultureChanged += Changed;
     }
     protected async override Task OnAfterRenderAsync(bool firstRender)
     {
@@ -97,5 +99,16 @@ public partial class WeixinWorkTemplateManagement : AdminCompontentBase
             new() { Text = T("ModificationTime"), Value = nameof(MessageTemplateDto.ModificationTime), Sortable = true },
             new() { Text = T("Action"), Value = "Action", Sortable = false, Width = 105, Align = DataTableHeaderAlign.Center },
         };
+    }
+
+    void Changed(object? sender, EventArgs args)
+    {
+        LoadHeaders();
+    }
+
+    protected override async ValueTask DisposeAsyncCore()
+    {
+        I18n.CultureChanged -= Changed;
+        await base.DisposeAsyncCore();
     }
 }
