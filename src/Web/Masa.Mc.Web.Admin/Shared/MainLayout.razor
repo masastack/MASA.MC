@@ -5,7 +5,7 @@
 @inject NavigationManager Navigation
 @inject IMasaStackConfig MasaStackConfig
 
-<SLayout OnSignOut="SignOut" OnErrorAfterHandle="OnErrorAfterHandle" IsShowEnvironmentSwitch WhiteUris="WhiteUris" Class="fill-height"
+<SLayout OnSignOut="SignOut" OnErrorAfterHandle="OnErrorAfterHandle" IsShowEnvironmentSwitch Class="fill-height"
          Logo="https://cdn.masastack.com/stack/images/logo/MASAStack/logo-h-en.png"
          MiniLogo="https://cdn.masastack.com/stack/images/logo/MASAStack/logo.png">
     @Body
@@ -18,8 +18,6 @@
 
     [Inject]
     public I18n I18N { get; set; } = default!;
-
-    private List<string> WhiteUris = new List<string>() { "/channels/channelManagement", "/messageTasks/sendMessage", "/messageTemplates/weixinWorkTemplateManagement" };
 
     private Task OnErrorAfterHandle(Exception exception)
     {
