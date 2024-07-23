@@ -62,7 +62,11 @@
             }
         </MList>
     </MCard>
-    <ReceiversCount Value="Value" />
+
+    @if (_count > 0)
+    {
+        <span class="overline regular3--text mt-2">@(string.Format(T("ReceiversCount"), _count))</span>
+    }
 }
 
 <ExternalUserCreateModal @ref="_createModal" OnOk="HandleOk" />

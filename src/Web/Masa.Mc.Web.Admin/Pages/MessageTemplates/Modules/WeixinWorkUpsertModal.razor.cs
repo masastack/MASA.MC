@@ -118,6 +118,6 @@ public partial class WeixinWorkUpsertModal : AdminCompontentBase
 
     private void HandleSelectTemplateType(int type)
     {
-        _model.IsJump = type == (int)WeixinWorkTemplateTypes.Text ? false : true;
+        _model.MessageInfo.IsJump = type != (int)WeixinWorkTemplateTypes.Text;
     }
 }

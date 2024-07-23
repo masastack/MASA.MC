@@ -15,6 +15,9 @@ public partial class MessageReceiversSelect : AdminCompontentBase
     public ChannelTypes? Type { get; set; }
 
     private ExternalUserCreateModal _createModal = default!;
+    private long _count { get; set; }
+
+    MessageTaskService MessageTaskService => McCaller.MessageTaskService;
 
     private async Task HandleOk(UserDto user)
     {
@@ -35,10 +38,7 @@ public partial class MessageReceiversSelect : AdminCompontentBase
     {
         Value.Remove(item);
 
-        if (ValueChanged.HasDelegate)
-        {
-            await ValueChanged.InvokeAsync(Value);
-        }
+        await HandleValueChangedAsync();
     }
 
     private async Task HandleAddAsync(List<MessageTaskReceiverDto> receivers)
@@ -50,10 +50,7 @@ public partial class MessageReceiversSelect : AdminCompontentBase
             if (receiver.SubjectId != default && Value.Any(x => x.SubjectId == receiver.SubjectId)) continue;
             Value.Insert(0, receiver);
         }
-        if (ValueChanged.HasDelegate)
-        {
-            await ValueChanged.InvokeAsync(Value);
-        }
+        await HandleValueChangedAsync();
     }
 
     private async Task HandleOnAdd(MessageTaskReceiverDto item)
@@ -61,7 +58,7 @@ public partial class MessageReceiversSelect : AdminCompontentBase
         if (!Value.Any(x => x.SubjectId == item.SubjectId))
         {
             Value.Add(item);
-            await ValueChanged.InvokeAsync(Value);
+            await HandleValueChangedAsync();
         }
     }
 
@@ -70,7 +67,17 @@ public partial class MessageReceiversSelect : AdminCompontentBase
         if (Value.Any(x => x.SubjectId == item.SubjectId))
         {
             Value.RemoveAll(x => x.SubjectId == item.SubjectId);
+            await HandleValueChangedAsync();
+        }
+    }
+
+    private async Task HandleValueChangedAsync()
+    {
+        if (ValueChanged.HasDelegate)
+        {
             await ValueChanged.InvokeAsync(Value);
         }
+
+        _count = await MessageTaskService.ResolveReceiversCountAsync(Value);
     }
 }

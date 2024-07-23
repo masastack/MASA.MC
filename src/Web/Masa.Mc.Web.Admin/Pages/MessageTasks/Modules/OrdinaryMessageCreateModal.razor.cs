@@ -33,11 +33,7 @@ public partial class OrdinaryMessageCreateModal : AdminCompontentBase
     {
         get
         {
-            if (_model.ChannelType == ChannelTypes.Sms || (_model.ChannelType == ChannelTypes.WeixinWork && _model.MessageInfo.Type == (int)WeixinWorkTemplateTypes.Text))
-            {
-                return false;
-            }
-            return true;
+            return !(_model.ChannelType == ChannelTypes.Sms || (_model.ChannelType == ChannelTypes.WeixinWork && _model.MessageInfo.Type == (int)WeixinWorkTemplateTypes.Text));
         }
     }
 

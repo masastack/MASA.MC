@@ -35,11 +35,7 @@ public partial class OrdinaryMessageEditModal : AdminCompontentBase
     {
         get
         {
-            if (_model.ChannelType == ChannelTypes.Sms || (_model.ChannelType == ChannelTypes.WeixinWork && _model.MessageInfo.Type == (int)WeixinWorkTemplateTypes.Text))
-            {
-                return false;
-            }
-            return true;
+            return !(_model.ChannelType == ChannelTypes.Sms || (_model.ChannelType == ChannelTypes.WeixinWork && _model.MessageInfo.Type == (int)WeixinWorkTemplateTypes.Text));
         }
     }
 
@@ -220,6 +216,6 @@ public partial class OrdinaryMessageEditModal : AdminCompontentBase
 
     private void HandleSelectTemplateType(int type)
     {
-        _model.MessageInfo.IsJump = type == (int)WeixinWorkTemplateTypes.Text ? false : true;
+        _model.MessageInfo.IsJump = type != (int)WeixinWorkTemplateTypes.Text;
     }
 }

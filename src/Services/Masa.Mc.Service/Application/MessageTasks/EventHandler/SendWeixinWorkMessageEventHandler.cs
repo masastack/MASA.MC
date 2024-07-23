@@ -5,8 +5,8 @@ namespace Masa.Mc.Service.Admin.Application.MessageTasks.EventHandler;
 
 public class SendWeixinWorkMessageEventHandler
 {
-    private readonly IWeixinWorkMessageAsyncLocal _weixinWorkMessageAsyncLocal;
-    private readonly IWeixinWorkSender _weixinWorkMessageSender;
+    private readonly IWeixinWorkAsyncLocal _weixinWorkAsyncLocal;
+    private readonly IWeixinWorkSender _weixinWorkSender;
     private readonly IChannelRepository _channelRepository;
     private readonly IMessageRecordRepository _messageRecordRepository;
     private readonly IMessageTaskHistoryRepository _messageTaskHistoryRepository;
@@ -14,8 +14,8 @@ public class SendWeixinWorkMessageEventHandler
     private readonly MessageTemplateDomainService _messageTemplateDomainService;
     private readonly II18n<DefaultResource> _i18n;
 
-    public SendWeixinWorkMessageEventHandler(IWeixinWorkMessageAsyncLocal weixinWorkMessageAsyncLocal
-        , IWeixinWorkSender weixinWorkMessageSender
+    public SendWeixinWorkMessageEventHandler(IWeixinWorkAsyncLocal weixinWorkAsyncLocal
+        , IWeixinWorkSender weixinWorkSender
         , IChannelRepository channelRepository
         , IMessageRecordRepository messageRecordRepository
         , IMessageTaskHistoryRepository messageTaskHistoryRepository
@@ -23,8 +23,8 @@ public class SendWeixinWorkMessageEventHandler
         , MessageTemplateDomainService messageTemplateDomainService
         , II18n<DefaultResource> i18n)
     {
-        _weixinWorkMessageAsyncLocal = weixinWorkMessageAsyncLocal;
-        _weixinWorkMessageSender = weixinWorkMessageSender;
+        _weixinWorkAsyncLocal = weixinWorkAsyncLocal;
+        _weixinWorkSender = weixinWorkSender;
         _channelRepository = channelRepository;
         _messageRecordRepository = messageRecordRepository;
         _messageTaskHistoryRepository = messageTaskHistoryRepository;
@@ -72,7 +72,7 @@ public class SendWeixinWorkMessageEventHandler
 
         var toUser = GetToUser(taskHistory.MessageTask.ReceiverType, messageRecords.Select(x => x.ChannelUserIdentity).ToList());
 
-        using (_weixinWorkMessageAsyncLocal.Change(options))
+        using (_weixinWorkAsyncLocal.Change(options))
         {
             var response = await SendAsync(eto.MessageData, toUser);
 
@@ -103,12 +103,12 @@ public class SendWeixinWorkMessageEventHandler
         if (type == (int)WeixinWorkTemplateTypes.TextCard)
         {
             var message = new WeixinWorkTextCardMessage(toUser, messageData.MessageContent.Title, messageData.MessageContent.Content, messageData.MessageContent.JumpUrl);
-            return await _weixinWorkMessageSender.SendTextCardAsync(message);
+            return await _weixinWorkSender.SendTextCardAsync(message);
         }
         else
         {
             var message = new WeixinWorkTextMessage(toUser, messageData.MessageContent.Content);
-            return await _weixinWorkMessageSender.SendTextAsync(message);
+            return await _weixinWorkSender.SendTextAsync(message);
         }
     }
 
