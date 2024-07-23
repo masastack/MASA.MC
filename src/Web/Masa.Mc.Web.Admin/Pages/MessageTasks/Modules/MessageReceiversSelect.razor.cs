@@ -15,7 +15,7 @@ public partial class MessageReceiversSelect : AdminCompontentBase
     public ChannelTypes? Type { get; set; }
 
     private ExternalUserCreateModal _createModal = default!;
-    private long _count { get; set; }
+    private long _count;
 
     MessageTaskService MessageTaskService => McCaller.MessageTaskService;
 
