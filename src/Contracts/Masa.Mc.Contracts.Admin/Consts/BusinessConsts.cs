@@ -9,5 +9,6 @@ public static class BusinessConsts
     public const string INTENT_URL = "IntentUrl";
     public const string IS_APNS_PRODUCTION = "IsApnsProduction";
     public const string APP_PUSH_MSG_ID = "MsgId";
+    public const string MESSAGE_TYPE = "MessageType";
 }
 

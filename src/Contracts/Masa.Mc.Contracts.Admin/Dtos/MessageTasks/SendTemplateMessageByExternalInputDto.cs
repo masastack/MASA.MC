@@ -40,10 +40,12 @@ public class SendTemplateMessageByExternalInputDto
             Sign = dto.Sign,
             Receivers = dto.Receivers.Select(x =>
             {
-                var receiver = new MessageTaskReceiverDto() { Type = MessageTaskReceiverTypes.User };
-                receiver.SetChannelUserIdentity(dto.ChannelType, x.ChannelUserIdentity);
-                receiver.Variables = x.Variables;
-                return receiver;
+                return new MessageTaskReceiverUpsertDto
+                {
+                    ChannelUserIdentity = x.ChannelUserIdentity,
+                    Type = MessageTaskReceiverTypes.User,
+                    Variables = x.Variables
+                };
             }).ToList(),
             SendRules = dto.SendRules,
             Variables = dto.Variables,

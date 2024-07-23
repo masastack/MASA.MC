@@ -177,3 +177,7 @@ global using Masa.Mc.Service.Admin.Application.MessageTasks.Jobs;
 global using Masa.Contrib.StackSdks.Isolation;
 global using Masa.Mc.Contracts.Admin.Infrastructure;
 global using Microsoft.Extensions.DependencyInjection.Extensions;
+global using Masa.Mc.Infrastructure.Weixin.Work;
+global using Masa.Mc.Infrastructure.Weixin.Work.Infrastructure.OptionsResolve.Contributors;
+global using Masa.Mc.Infrastructure.Weixin.Work.Model;
+global using Masa.Mc.Infrastructure.Weixin.Work.Model.Response;

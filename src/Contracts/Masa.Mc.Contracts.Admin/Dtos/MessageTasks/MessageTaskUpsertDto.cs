@@ -27,7 +27,7 @@ public class MessageTaskUpsertDto
 
     public string Sign { get; set; } = string.Empty;
 
-    public List<MessageTaskReceiverDto> Receivers { get; set; } = new();
+    public List<MessageTaskReceiverUpsertDto> Receivers { get; set; } = new();
 
     public SendRuleDto SendRules { get; set; } = new();
 

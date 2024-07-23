@@ -6,7 +6,6 @@ namespace Masa.Mc.Service.Admin.Infrastructure.ChannelUserFinder.Provider.Auth;
 public class AuthChannelUserFinder : IChannelUserFinder
 {
     private readonly IAuthClient _authClient;
-    //Later, I will kill this IReceiverGroupRepository
     private readonly IReceiverGroupRepository _receiverGroupRepository;
 
     public AuthChannelUserFinder(IAuthClient authClient
@@ -20,87 +19,65 @@ public class AuthChannelUserFinder : IChannelUserFinder
     {
         var receiverUsers = new List<MessageReceiverUser>();
 
-        var userReceivers = await TransformUserReceivers(channel, variables, receivers.Where(x => x.Type == MessageTaskReceiverTypes.User));
-        receiverUsers.AddRange(userReceivers);
+        if (receivers.Any(x => x.Type == MessageTaskReceiverTypes.User))
+        {
+            var userReceivers = await TransformUserReceivers(channel, variables, receivers.Where(x => x.Type == MessageTaskReceiverTypes.User));
+            receiverUsers.AddRange(userReceivers);
+        }
 
-        var orgReceivers = await TransformDepartmentReceiversAsync(channel, variables, receivers.Where(x => x.Type == MessageTaskReceiverTypes.Organization));
-        receiverUsers.AddRange(orgReceivers);
+        if (receivers.Any(x => x.Type == MessageTaskReceiverTypes.Organization))
+        {
+            var orgIds = receivers.Where(x => x.Type == MessageTaskReceiverTypes.Organization).Select(x => x.SubjectId).Distinct();
+            var orgReceivers = await GetMessageReceiverUser(channel, ReceiverGroupItemTypes.Organization, orgIds.ToList(), variables);
+            receiverUsers.AddRange(orgReceivers);
+        }
 
-        var roleReceivers = await TransformRoleReceiversAsync(channel, variables, receivers.Where(x => x.Type == MessageTaskReceiverTypes.Role));
-        receiverUsers.AddRange(roleReceivers);
+        if (receivers.Any(x => x.Type == MessageTaskReceiverTypes.Role))
+        {
+            var roleIds = receivers.Where(x => x.Type == MessageTaskReceiverTypes.Role).Select(x => x.SubjectId).Distinct();
+            var roleReceivers = await GetMessageReceiverUser(channel, ReceiverGroupItemTypes.Role, roleIds.ToList(), variables);
+            receiverUsers.AddRange(roleReceivers);
+        }
 
-        var teamReceivers = await TransformTeamReceiversAsync(channel, variables, receivers.Where(x => x.Type == MessageTaskReceiverTypes.Team));
-        receiverUsers.AddRange(teamReceivers);
+        if (receivers.Any(x => x.Type == MessageTaskReceiverTypes.Team))
+        {
+            var teamIds = receivers.Where(x => x.Type == MessageTaskReceiverTypes.Team).Select(x => x.SubjectId).Distinct();
+            var teamReceivers = await GetMessageReceiverUser(channel, ReceiverGroupItemTypes.Team, teamIds.ToList(), variables);
+            receiverUsers.AddRange(teamReceivers);
+        }
 
-        var groupReceivers = await TransformGroupReceiversAsync(channel, variables, receivers.Where(x => x.Type == MessageTaskReceiverTypes.Group));
-        receiverUsers.AddRange(groupReceivers);
+        if (receivers.Any(x => x.Type == MessageTaskReceiverTypes.Group))
+        {
+            var groupReceivers = await TransformGroupReceiversAsync(channel, variables, receivers.Where(x => x.Type == MessageTaskReceiverTypes.Group));
+            receiverUsers.AddRange(groupReceivers);
+        }
 
         return receiverUsers.Distinct();
     }
 
-    public async Task<IEnumerable<MessageReceiverUser>> TransformUserReceivers(AppChannel Channel, ExtraPropertyDictionary variables, IEnumerable<MessageTaskReceiver> receivers)
+    public async Task<List<MessageReceiverUser>> TransformUserReceivers(AppChannel channel, ExtraPropertyDictionary variables, IEnumerable<MessageTaskReceiver> receivers)
     {
-        var receiverList = receivers.ToList();
+        var receiverUsers = new List<MessageReceiverUser>();
+        var externalReceiverUsers = receivers.Where(x => !string.IsNullOrEmpty(x.ChannelUserIdentity)).Select(x=> new MessageReceiverUser(x.SubjectId, x.ChannelUserIdentity, x.Variables.Any() ? x.Variables : variables)).ToList();
+        receiverUsers.AddRange(externalReceiverUsers);
 
-        if (Channel.Type == ChannelType.App)
+        var internalReceivers = receivers.Where(x => string.IsNullOrEmpty(x.ChannelUserIdentity)).ToList();
+
+        if (!internalReceivers.Any())
         {
-            var userIds = receiverList.Select(x => x.Receiver.SubjectId).ToList();
-            var clientIds = await GetUserClientIds(Channel, userIds);
-
-            return clientIds.Select(x =>
-            {
-                var receiver = receivers.FirstOrDefault(r => r.Receiver.SubjectId == x.UserId);
-                var receiverUser = new MessageReceiverUser(x.UserId, x.ClientId, receiver?.Variables == null || !receiver.Variables.Any() ? variables : receiver.Variables);
-                return receiverUser;
-            });
+            return receiverUsers;
         }
 
-        var receiverUsers = await GetReceiverUsers(Channel, receiverList, variables);
+        var internalReceiverUsers = await GetInternalReceiverUsers(channel, internalReceivers, variables);
+        receiverUsers.AddRange(internalReceiverUsers);
+
         return receiverUsers;
-    }
-
-    private async Task<List<UserClient>> GetUserClientIds(AppChannel channel, List<Guid> userIds)
-    {
-        var userSystemDatas = await _authClient.UserService.GetSystemListDataAsync<UserSystemData>(userIds, $"{MasaStackProject.MC.Name}:{channel.Code}");
-        var userClientIds = userIds.Select(x => new UserClient
-        {
-            UserId = x,
-            ClientId = GetClientId(x, userSystemDatas)
-        });
-        return userClientIds.ToList();
-    }
-
-    private string GetClientId(Guid userId, Dictionary<Guid, UserSystemData?> userSystemDatas)
-    {
-        if (!userSystemDatas.Any(y => y.Key == userId))
-            return string.Empty;
-
-        var userSystemData = userSystemDatas.FirstOrDefault(y => y.Key == userId);
-        return userSystemData.Value?.ClientId ?? string.Empty;
-    }
-
-    private async Task<IEnumerable<MessageReceiverUser>> TransformDepartmentReceiversAsync(AppChannel channel, ExtraPropertyDictionary variables, IEnumerable<MessageTaskReceiver> receivers)
-    {
-        var orgIds = receivers.Select(x => x.Receiver.SubjectId).Distinct();
-        return await GetMessageReceiverUser(channel, ReceiverGroupItemTypes.Organization, orgIds.ToList(), variables);
-    }
-
-    public async Task<IEnumerable<MessageReceiverUser>> TransformRoleReceiversAsync(AppChannel channel, ExtraPropertyDictionary variables, IEnumerable<MessageTaskReceiver> receivers)
-    {
-        var roleIds = receivers.Select(x => x.Receiver.SubjectId).Distinct();
-        return await GetMessageReceiverUser(channel, ReceiverGroupItemTypes.Role, roleIds.ToList(), variables);
-    }
-
-    public async Task<IEnumerable<MessageReceiverUser>> TransformTeamReceiversAsync(AppChannel channel, ExtraPropertyDictionary variables, IEnumerable<MessageTaskReceiver> receivers)
-    {
-        var teamIds = receivers.Select(x => x.Receiver.SubjectId).Distinct();
-        return await GetMessageReceiverUser(channel, ReceiverGroupItemTypes.Team, teamIds.ToList(), variables);
     }
 
     public async Task<IEnumerable<MessageReceiverUser>> TransformGroupReceiversAsync(AppChannel channel, ExtraPropertyDictionary variables, IEnumerable<MessageTaskReceiver> receivers)
     {
         var receiverUsers = new List<MessageReceiverUser>();
-        var receiverGroupIds = receivers.Select(x => x.Receiver.SubjectId).Distinct();
+        var receiverGroupIds = receivers.Select(x => x.SubjectId).Distinct();
         foreach (var receiverGroupId in receiverGroupIds)
         {
             var receiverGroup = await _receiverGroupRepository.FindAsync(x => x.Id == receiverGroupId);
@@ -110,7 +87,7 @@ public class AuthChannelUserFinder : IChannelUserFinder
             {
                 if (items.Key == ReceiverGroupItemTypes.User)
                 {
-                    var result = await GetReceiverUsers(channel, items.Select(x => x.Receiver).ToList(), variables);
+                    var result = await GetInternalReceiverUsers(channel, items.Select(x => x.Receiver.SubjectId).ToList(), variables);
                     receiverUsers.AddRange(result);
                 }
                 else
@@ -129,16 +106,12 @@ public class AuthChannelUserFinder : IChannelUserFinder
     {
         var authUsers = await GetAuthUsers(type, subjectIds);
 
-        if (channel.Type == ChannelType.App)
+        if (channel.Type == ChannelType.Email || channel.Type == ChannelType.Sms || channel.Type == ChannelType.WebsiteMessage)
         {
-            var userIds = authUsers.Select(x => x.Id).ToList();
-            var clientIds = await GetUserClientIds(channel, userIds);
-
-            return clientIds.Select(x => new MessageReceiverUser(x.UserId, x.ClientId, variables));
+            return authUsers.Select(x => new MessageReceiverUser(x.Id, channel.Type.GetChannelUserIdentity(x), variables)).ToList();
         }
 
-        var receivers = authUsers.Select(x => new Receiver(x.Id, x.DisplayName, x.Avatar, x.PhoneNumber ?? string.Empty, x.Email ?? string.Empty)).ToList();
-        var receiverUsers = await GetReceiverUsers(channel, receivers, variables);
+        var receiverUsers = await GetInternalReceiverUsers(channel, authUsers.Select(x => x.Id).ToList(), variables);
         return receiverUsers;
     }
 
@@ -176,74 +149,59 @@ public class AuthChannelUserFinder : IChannelUserFinder
         return userList;
     }
 
-    private async Task<List<MessageReceiverUser>> GetReceiverUsers(AppChannel channel, List<Receiver> receivers, ExtraPropertyDictionary variables)
+    private async Task<List<MessageReceiverUser>> GetInternalReceiverUsers(AppChannel channel, List<MessageTaskReceiver> receivers, ExtraPropertyDictionary variables)
     {
-        var messageReceiverUsers = new List<MessageReceiverUser>();
-        var userIds = new List<Guid>();
+        var userIds = receivers.Select(x => x.SubjectId).ToList();
+        var channelUserIdentitys = await GetChannelUserIdentitys(channel, userIds);
 
-        foreach (var receiver in receivers)
+        return channelUserIdentitys.Select(x =>
         {
-            var channelUserIdentity = channel.Type.GetChannelUserIdentity(receiver);
-            if (string.IsNullOrEmpty(channelUserIdentity))
-            {
-                userIds.Add(receiver.SubjectId);
-                continue;
-            }
-
-            messageReceiverUsers.Add(new MessageReceiverUser(receiver.SubjectId, channelUserIdentity, variables));
-        }
-
-        var authUsers = await _authClient.UserService.GetListByIdsAsync(userIds.ToArray());
-        foreach (var userId in userIds)
-        {
-            var authUser = authUsers.FirstOrDefault(x => x.Id == userId);
-            if (authUser == null)
-            {
-                messageReceiverUsers.Add(new MessageReceiverUser(userId, string.Empty, variables));
-                continue;
-            }
-
-            var receiver = new Receiver(authUser.Id, authUser.DisplayName, authUser.Avatar, authUser.PhoneNumber ?? string.Empty, authUser.Email ?? string.Empty);
-            var channelUserIdentity = channel.Type.GetChannelUserIdentity(receiver);
-            messageReceiverUsers.Add(new MessageReceiverUser(receiver.SubjectId, channelUserIdentity, variables));
-        }
-
-        return messageReceiverUsers;
+            var receiver = receivers.FirstOrDefault(r => r.SubjectId == x.Key);
+            var receiverUser = new MessageReceiverUser(x.Key, x.Value, receiver?.Variables == null || !receiver.Variables.Any() ? variables : receiver.Variables);
+            return receiverUser;
+        }).ToList();
     }
 
-    private async Task<List<MessageReceiverUser>> GetReceiverUsers(AppChannel channel, List<MessageTaskReceiver> receivers, ExtraPropertyDictionary variables)
+    private async Task<List<MessageReceiverUser>> GetInternalReceiverUsers(AppChannel channel, List<Guid> userIds, ExtraPropertyDictionary variables)
     {
-        var messageReceiverUsers = new List<MessageReceiverUser>();
-        var newReceivers = new List<MessageTaskReceiver>();
+        var channelUserIdentitys = await GetChannelUserIdentitys(channel, userIds);
 
-        foreach (var item in receivers)
+        return channelUserIdentitys.Select(x => new MessageReceiverUser(x.Key, x.Value, variables)).ToList();
+    }
+
+    private async Task<Dictionary<Guid, string>> GetChannelUserIdentitys(AppChannel channel, List<Guid> userIds)
+    {
+        var dic = new Dictionary<Guid, string>();
+        switch (channel.Type.Id)
         {
-            var channelUserIdentity = channel.Type.GetChannelUserIdentity(item.Receiver);
-            if (string.IsNullOrEmpty(channelUserIdentity))
-            {
-                newReceivers.Add(item);
-                continue;
-            }
-
-            messageReceiverUsers.Add(new MessageReceiverUser(item.Receiver.SubjectId, channelUserIdentity, item.Variables.Any() ? item.Variables : variables));
+            case (int)ChannelTypes.App:
+                var userSystemDatas = await _authClient.UserService.GetSystemListDataAsync<UserSystemData>(userIds, $"{MasaStackProject.MC.Name}:{channel.Code}");
+                dic = userSystemDatas.ToDictionary(x => x.Key, x => x.Value?.ClientId ?? string.Empty);
+                break;
+            case (int)ChannelTypes.WeixinWork:
+                dic = await _authClient.UserService.GetLdapUsersAccountAsync(userIds);
+                break;
+            case (int)ChannelTypes.Sms:
+            case (int)ChannelTypes.Email:
+                var authUsers = await _authClient.UserService.GetListByIdsAsync(userIds.ToArray());
+                dic = authUsers.ToDictionary(x => x.Id, x => channel.Type.GetChannelUserIdentity(x));
+                break;
+            case (int)ChannelTypes.WebsiteMessage:
+                dic = userIds.ToDictionary(x => x, x => x.ToString());
+                break;
+            default:
+                break;
         }
+        return userIds.ToDictionary(x => x, x => FindChannelUserIdentity(x, dic));
+    }
 
-        var authUsers = await _authClient.UserService.GetListByIdsAsync(newReceivers.Select(x => x.Receiver.SubjectId).ToArray());
-        foreach (var item in newReceivers)
-        {
-            var authUser = authUsers.FirstOrDefault(x => x.Id == item.Receiver.SubjectId);
-            if (authUser == null)
-            {
-                messageReceiverUsers.Add(new MessageReceiverUser(item.Receiver.SubjectId, string.Empty, item.Variables.Any() ? item.Variables : variables));
-                continue;
-            }
+    private string FindChannelUserIdentity(Guid userId, Dictionary<Guid, string> dic)
+    {
+        if (!dic.Any(y => y.Key == userId))
+            return string.Empty;
 
-            var receiver = new Receiver(authUser.Id, authUser.DisplayName, authUser.Avatar, authUser.PhoneNumber ?? string.Empty, authUser.Email ?? string.Empty);
-            var channelUserIdentity = channel.Type.GetChannelUserIdentity(receiver);
-            messageReceiverUsers.Add(new MessageReceiverUser(receiver.SubjectId, channelUserIdentity, item.Variables.Any() ? item.Variables : variables));
-        }
-
-        return messageReceiverUsers;
+        var userSystemData = dic.FirstOrDefault(y => y.Key == userId);
+        return userSystemData.Value ?? string.Empty;
     }
 
     private List<UserModel> GetUserModelByStaff(List<StaffModel> staff)

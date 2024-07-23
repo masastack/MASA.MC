@@ -464,3 +464,7 @@
 .grid-2 {
     grid-template-columns: repeat(2, 33.3%);
 }
+
+.form-content > * {
+    margin-top: 36px !important;
+}

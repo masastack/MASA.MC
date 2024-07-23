@@ -13,6 +13,8 @@ public class ChannelType : Enumeration
 
     public static ChannelType App = new AppsChannel();
 
+    public static ChannelType WeixinWork = new WeixinWorkChannel();
+
     public ChannelType(int id, string name) : base(id, name)
     {
     }
@@ -28,6 +30,11 @@ public class ChannelType : Enumeration
     }
 
     public virtual string GetChannelUserIdentity(Receiver receiver)
+    {
+        throw new NotImplementedException();
+    }
+
+    public virtual string GetChannelUserIdentity(UserModel user)
     {
         throw new NotImplementedException();
     }
@@ -50,6 +57,11 @@ public class ChannelType : Enumeration
         {
             return receiver.PhoneNumber;
         }
+
+        public override string GetChannelUserIdentity(UserModel user)
+        {
+            return user?.PhoneNumber ?? string.Empty;
+        }
     }
 
     private class EmailChannel : ChannelType
@@ -70,6 +82,11 @@ public class ChannelType : Enumeration
         {
             return receiver.Email;
         }
+
+        public override string GetChannelUserIdentity(UserModel user)
+        {
+            return user?.Email ?? string.Empty;
+        }
     }
 
     private class WebsiteMessageChannel : ChannelType
@@ -89,6 +106,11 @@ public class ChannelType : Enumeration
         public override string GetChannelUserIdentity(Receiver receiver)
         {
             return receiver.SubjectId.ToString();
+        }
+
+        public override string GetChannelUserIdentity(UserModel user)
+        {
+            return user.Id.ToString();
         }
     }
 
@@ -111,6 +133,11 @@ public class ChannelType : Enumeration
             return string.Empty;
         }
 
+        public override string GetChannelUserIdentity(UserModel user)
+        {
+            return string.Empty;
+        }
+
         public ExtraPropertyDictionary GetMessageTransmissionContent(MessageContent messageContent)
         {
             if (messageContent.IsJump && !messageContent.ExtraProperties.Any(x => x.Key == "url"))
@@ -119,6 +146,31 @@ public class ChannelType : Enumeration
             }
 
             return messageContent.ExtraProperties;
+        }
+    }
+
+    private class WeixinWorkChannel : ChannelType
+    {
+        public WeixinWorkChannel() : base(5, nameof(WeixinWork)) { }
+
+        public override SendMessageEvent GetSendMessageEvent(Guid channelId, MessageData messageData, MessageTaskHistory messageTaskHistory)
+        {
+            return new SendWeixinWorkMessageEvent(channelId, messageData, messageTaskHistory);
+        }
+
+        public override RetryMessageEvent GetRetryMessageEvent(Guid messageRecordId)
+        {
+            return new RetryWeixinWorkMessageEvent(messageRecordId);
+        }
+
+        public override string GetChannelUserIdentity(Receiver receiver)
+        {
+            return string.Empty;
+        }
+
+        public override string GetChannelUserIdentity(UserModel user)
+        {
+            return user.Account;
         }
     }
 }

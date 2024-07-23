@@ -11,9 +11,9 @@ public class InternalReceiverDto
 
     public ExtraPropertyDictionary Variables { get; set; } = new();
 
-    public static implicit operator MessageTaskReceiverDto(InternalReceiverDto dto)
+    public static implicit operator MessageTaskReceiverUpsertDto(InternalReceiverDto dto)
     {
-        return new MessageTaskReceiverDto
+        return new MessageTaskReceiverUpsertDto
         {
             SubjectId = dto.SubjectId,
             Type = dto.Type,

@@ -38,7 +38,7 @@ public class SendTemplateMessageByInternalInputDto
             ReceiverType = dto.ReceiverType,
             SelectReceiverType = MessageTaskSelectReceiverTypes.ManualSelection,
             Sign = dto.Sign,
-            Receivers = dto.Receivers.Select(x => (MessageTaskReceiverDto)x).ToList(),
+            Receivers = dto.Receivers.Select(x => (MessageTaskReceiverUpsertDto)x).ToList(),
             SendRules = dto.SendRules,
             Variables = dto.Variables,
             Source = MessageTaskSources.Sdk,

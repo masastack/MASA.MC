@@ -10,5 +10,6 @@ public class MessageInfoUpsertDto
     public string Markdown { get; set; } = string.Empty;
     public bool IsJump { get; set; }
     public string JumpUrl { get; set; } = string.Empty;
+    public int Type { get; set; }
     public ExtraPropertyDictionary ExtraProperties { get; set; } = new();
 }

@@ -56,7 +56,7 @@
                                         <MCol>
                                             <SAutoComplete Items="_templateItems" @bind-Value="_model.EntityId"
                                                            Label="@T("TemplateTemplate")"
-                                                           ItemText="@(x=>string.IsNullOrEmpty(x.TemplateId)?x.DisplayName:$"{x.DisplayName}({x.TemplateId})")"
+                                                           ItemText="@(x=>string.IsNullOrEmpty(x.DisplayName)?x.Code:$"{x.DisplayName}({x.Code})")"
                                                            ItemValue="x=>x.Id"
                                                            Dense
                                                            Outlined

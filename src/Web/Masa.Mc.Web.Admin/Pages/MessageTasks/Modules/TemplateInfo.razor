@@ -10,7 +10,7 @@
         </MCol>
     </MRow>
 }
-@if (Template.Channel != null && Template.Channel.Type != ChannelTypes.Sms)
+@if (ComputedTitleShow)
 {
     <MRow Class="mt-6">
         <MCol>
@@ -73,7 +73,19 @@
     {
         get
         {
-            return Template.IsJump && (Template.Channel?.Type == ChannelTypes.WebsiteMessage || (Template.Channel?.Type == ChannelTypes.App && Template.Options.GetProperty<bool>("IsWebsiteMessage")));
+            return Template.IsJump && (Template.Channel?.Type == ChannelTypes.WebsiteMessage || (Template.Channel?.Type == ChannelTypes.App && Template.Options.GetProperty<bool>("IsWebsiteMessage") || Template.Channel?.Type == ChannelTypes.WeixinWork));
+        }
+    }
+
+    private bool ComputedTitleShow
+    {
+        get
+        {
+            if (Template.Channel?.Type == ChannelTypes.Sms || (Template.Channel?.Type == ChannelTypes.WeixinWork && Template.TemplateType == (int)WeixinWorkTemplateTypes.Text))
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

@@ -1,0 +1,39 @@
+﻿@inherits AdminCompontentBase
+
+<MHover>
+    <MCard @attributes="context.Attrs" Height="240" Width="240" Class="@($"d-flex flex-column justify-center align-center ml-auto {(context.Hover ? "primary" : "fill-background")}")"
+           OnClick="async() => await ValueChanged.InvokeAsync(Type)">
+        @if (context.Hover)
+        {
+            <SIcon Size=54 Color="fill">@Icon</SIcon>
+            <div class="h6 pt-10 fill--text">@Text</div>
+        }
+        else if (Value == Type)
+        {
+            <SIcon Size=54 Color="primary">@Icon</SIcon>
+            <div class="h6 pt-10 primary--text">@Text</div>
+        }
+        else
+        {
+            <SIcon Size=36 Color="emphasis2">@Icon</SIcon>
+            <div class="h6 pt-10 regular--text">@Text</div>
+        }
+    </MCard>
+</MHover>
+
+@code {
+    [Parameter]
+    public ChannelTypes Value { get; set; }
+
+    [Parameter]
+    public string Text { get; set; } = string.Empty;
+
+    [Parameter]
+    public ChannelTypes Type { get; set; }
+
+    [Parameter]
+    public string Icon { get; set; } = string.Empty;
+
+    [Parameter]
+    public EventCallback<ChannelTypes> ValueChanged { get; set; }
+}

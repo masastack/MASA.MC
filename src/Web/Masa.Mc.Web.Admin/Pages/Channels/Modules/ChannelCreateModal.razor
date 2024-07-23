@@ -8,94 +8,21 @@
                         <MStepperContent Step="1" Class="pa-0">
                             <MContainer Fluid Class="pt-6 px-1">
                                 <div class="subtitle3 regular--text mb-8">@T("Description.Channel.Type.Required")</div>
-                                <MRow Align="AlignTypes.Center" Justify="JustifyTypes.Center">
-                                    <MCol Md="6">
-                                        <MHover ValueChanged="(v)=>HandleHoverChanged(v,ChannelTypes.Sms)">
-                                            <MCard @attributes="context.Attrs" Height="240" Width="240" Class="@($"d-flex flex-column justify-center align-center ml-auto {(context.Hover ? "primary" : "fill-background")}")"
-                                                   OnClick="()=> HandleSelectType(ChannelTypes.Sms)">
-                                                @if (context.Hover)
-                                                {
-                                                    <SIcon Size=54 Color="fill">mdi-cellphone</SIcon>
-                                                    <div class="h6 pt-10 fill--text">@T("Sms")</div>
-                                                }
-                                                else if (_model.Type == ChannelTypes.Sms)
-                                                {
-                                                    <SIcon Size=54 Color="primary">mdi-cellphone</SIcon>
-                                                    <div class="h6 pt-10 primary--text">@T("Sms")</div>
-                                                }
-                                                else
-                                                {
-                                                    <SIcon Size=36 Color="emphasis2">mdi-cellphone</SIcon>
-                                                    <div class="h6 pt-10 regular--text">@T("Sms")</div>
-                                                }
-                                            </MCard>
-                                        </MHover>
+                                <MRow Align="AlignTypes.Center" Justify="JustifyTypes.SpaceAround">
+                                    <MCol Md="4">
+                                        <ChannelSelectCard Value="_model.Type" Text="@T("Sms")" Type="ChannelTypes.Sms" Icon="mdi-cellphone" ValueChanged="HandleSelectType" />
                                     </MCol>
-                                    <MCol Md="6">
-                                        <MHover ValueChanged="(v)=>HandleHoverChanged(v,ChannelTypes.Email)">
-                                            <MCard @attributes="context.Attrs" Height="240" Width="240" Class="@($"d-flex flex-column justify-center align-center mr-auto {(context.Hover ? "primary" : "fill-background")}")"
-                                                   OnClick="()=>HandleSelectType(ChannelTypes.Email)">
-                                                @if (context.Hover)
-                                                {
-                                                    <SIcon Size=54 Color="fill">mdi-email</SIcon>
-                                                    <div class="h6 pt-10 fill--text">@T("Email")</div>
-                                                }
-                                                else if (_model.Type == ChannelTypes.Email)
-                                                {
-                                                    <SIcon Size=54 Color="primary">mdi-email</SIcon>
-                                                    <div class="h6 pt-10 primary--text">@T("Email")</div>
-                                                }
-                                                else
-                                                {
-                                                    <SIcon Size=36 Color="emphasis2">mdi-email</SIcon>
-                                                    <div class="h6 pt-10 regular--text">@T("Email")</div>
-                                                }
-                                            </MCard>
-                                        </MHover>
+                                    <MCol Md="4">
+                                        <ChannelSelectCard Value="_model.Type" Text="@T("Email")" Type="ChannelTypes.Email" Icon="mdi-email" ValueChanged="HandleSelectType" />
                                     </MCol>
-                                    <MCol Md="6">
-                                        <MHover ValueChanged="(v)=>HandleHoverChanged(v,ChannelTypes.WebsiteMessage)">
-                                            <MCard @attributes="context.Attrs" Height="240" Width="240" Class="@($"d-flex flex-column justify-center align-center ml-auto {(context.Hover ? "primary" : "fill-background")}")"
-                                                   OnClick="()=>HandleSelectType(ChannelTypes.WebsiteMessage)">
-                                                @if (context.Hover)
-                                                {
-                                                    <SIcon Size=54 Color="fill">mdi-bell</SIcon>
-                                                    <div class="h6 pt-10 fill--text">@T("WebsiteMessage")</div>
-                                                }
-                                                else if (_model.Type == ChannelTypes.WebsiteMessage)
-                                                {
-                                                    <SIcon Size=54 Color="primary">mdi-bell</SIcon>
-                                                    <div class="h6 pt-10 primary--text">@T("WebsiteMessage")</div>
-                                                }
-                                                else
-                                                {
-                                                    <SIcon Size=36 Color="emphasis2">mdi-bell</SIcon>
-                                                    <div class="h6 pt-10 regular--text">@T("WebsiteMessage")</div>
-                                                }
-                                            </MCard>
-                                        </MHover>
+                                    <MCol Md="4">
+                                        <ChannelSelectCard Value="_model.Type" Text="@T("WebsiteMessage")" Type="ChannelTypes.WebsiteMessage" Icon="mdi-bell" ValueChanged="HandleSelectType" />
                                     </MCol>
-                                    <MCol Md="6">
-                                        <MHover ValueChanged="(v)=>HandleHoverChanged(v,ChannelTypes.App)">
-                                            <MCard @attributes="context.Attrs" Height="240" Width="240" Class="@($"d-flex flex-column justify-center align-center mr-auto {(context.Hover ? "primary" : "fill-background")}")"
-                                                   OnClick="()=>HandleSelectType(ChannelTypes.App)">
-                                                @if (context.Hover)
-                                                {
-                                                    <SIcon Size=54 Color="fill">mdi-cellphone</SIcon>
-                                                    <div class="h6 pt-10 fill--text">@T("App")</div>
-                                                }
-                                                else if (_model.Type == ChannelTypes.App)
-                                                {
-                                                    <SIcon Size=54 Color="primary">mdi-cellphone</SIcon>
-                                                    <div class="h6 pt-10 primary--text">@T("App")</div>
-                                                }
-                                                else
-                                                {
-                                                    <SIcon Size=36 Color="emphasis2">mdi-cellphone</SIcon>
-                                                    <div class="h6 pt-10 regular--text">@T("App")</div>
-                                                }
-                                            </MCard>
-                                        </MHover>
+                                    <MCol Md="4">
+                                        <ChannelSelectCard Value="_model.Type" Text="@T("App")" Type="ChannelTypes.App" Icon="mdi-cellphone" ValueChanged="HandleSelectType" />
+                                    </MCol>
+                                    <MCol Md="4">
+                                        <ChannelSelectCard Value="_model.Type" Text="@T("WeixinWork")" Type="ChannelTypes.WeixinWork" Icon="mdi-wechat" ValueChanged="HandleSelectType" />
                                     </MCol>
                                 </MRow>
                             </MContainer>
@@ -107,7 +34,7 @@
                                     @foreach (var item in GetEnumList<AppChannelProviders>())
                                     {
                                         <MCol Md="6">
-                                            <MHover ValueChanged="(v)=>HandleAppHoverChanged(v,item)">
+                                            <MHover>
                                                 <MCard @attributes="context.Attrs" Height="240" Width="240" Class="@($"d-flex flex-column justify-center align-center ma-auto {(context.Hover ? "primary" : "fill-background")}")"
                                                    OnClick="()=>HandleAppSelectType(item)">
                                                     @if (context.Hover)

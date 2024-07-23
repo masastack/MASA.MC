@@ -201,6 +201,9 @@ namespace Masa.Mc.Service.Admin.Migrations
                     b.Property<Guid>("Modifier")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.ToTable("MessageInfos", (string)null);
@@ -374,10 +377,6 @@ namespace Masa.Mc.Service.Admin.Migrations
                     b.Property<int>("ReceiverType")
                         .HasColumnType("int");
 
-                    b.Property<string>("ReceiverUsers")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Receivers")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -418,6 +417,8 @@ namespace Masa.Mc.Service.Admin.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ChannelId");
+
+                    b.HasIndex("Source");
 
                     b.ToTable("MessageTasks", (string)null);
                 });

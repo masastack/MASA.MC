@@ -35,7 +35,7 @@ public class SendOrdinaryMessageByInternalInputDto
             IsEnabled = true,
             ReceiverType = dto.ReceiverType,
             SelectReceiverType = MessageTaskSelectReceiverTypes.ManualSelection,
-            Receivers = dto.Receivers.Select(x => (MessageTaskReceiverDto)x).ToList(),
+            Receivers = dto.Receivers.Select(x => (MessageTaskReceiverUpsertDto)x).ToList(),
             SendRules = dto.SendRules,
             MessageInfo = dto.MessageInfo,
             Variables = dto.Variables,

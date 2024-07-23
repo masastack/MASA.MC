@@ -25,7 +25,31 @@ public partial class OrdinaryMessageCreateModal : AdminCompontentBase
     {
         get
         {
-            return _model.ChannelType == ChannelTypes.WebsiteMessage || (_model.ChannelType == ChannelTypes.App && _model.ExtraProperties.IsWebsiteMessage);
+            return _model.ChannelType == ChannelTypes.WebsiteMessage || (_model.ChannelType == ChannelTypes.App && _model.ExtraProperties.IsWebsiteMessage) || (_model.ChannelType == ChannelTypes.WeixinWork && _model.MessageInfo.Type == (int)WeixinWorkTemplateTypes.TextCard);
+        }
+    }
+
+    private bool ComputedTitleShow
+    {
+        get
+        {
+            return !(_model.ChannelType == ChannelTypes.Sms || (_model.ChannelType == ChannelTypes.WeixinWork && _model.MessageInfo.Type == (int)WeixinWorkTemplateTypes.Text));
+        }
+    }
+
+    private bool ComputedJumpUrlRequired
+    {
+        get
+        {
+            return _model.ChannelType == ChannelTypes.WeixinWork && _model.MessageInfo.Type == (int)WeixinWorkTemplateTypes.TextCard;
+        }
+    }
+
+    private bool ComputedMarkdown
+    {
+        get
+        {
+            return _model.ChannelType != ChannelTypes.App && _model.ChannelType != ChannelTypes.WeixinWork;
         }
     }
 
@@ -159,5 +183,10 @@ public partial class OrdinaryMessageCreateModal : AdminCompontentBase
     private void SetReceivers()
     {
         _model.Receivers = _model.SelectReceiverType == MessageTaskSelectReceiverTypes.ManualSelection ? _selectReceivers : _importReceivers;
+    }
+
+    private void HandleSelectTemplateType(int type)
+    {
+        _model.MessageInfo.IsJump = type == (int)WeixinWorkTemplateTypes.Text ? false : true;
     }
 }
