@@ -122,6 +122,7 @@ public class SendWeixinWorkMessageEventHandler
         }
         return checkChannelUserIdentitys;
     }
+
     private async Task UpdateTaskHistoryAsync(MessageTaskHistory taskHistory, List<MessageRecord> messageRecords)
     {
         taskHistory.SetResult(!messageRecords.Any(x => x.Success != true) ? MessageTaskHistoryStatuses.Success : (messageRecords.Any(x => x.Success == true) ? MessageTaskHistoryStatuses.PartialFailure : MessageTaskHistoryStatuses.Fail));
