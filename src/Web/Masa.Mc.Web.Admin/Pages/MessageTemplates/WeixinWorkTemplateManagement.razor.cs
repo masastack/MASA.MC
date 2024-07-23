@@ -5,12 +5,16 @@ namespace Masa.Mc.Web.Admin.Pages.MessageTemplates;
 
 public partial class WeixinWorkTemplateManagement : AdminCompontentBase
 {
+    [Inject]
+    public I18n I18n { get; set; }
+
     private WeixinWorkUpsertModal _upsertModal = default!;
     private GetMessageTemplateInputDto _queryParam = new() { ChannelType = ChannelTypes.WeixinWork };
     private PaginatedListDto<MessageTemplateDto> _entities = new();
     private List<ChannelDto> _channelItems = new();
     private DateTimeOffset? _endTime;
     private DateTimeOffset? _startTime;
+    private List<DataTableHeader<MessageTemplateDto>> _headers = new();
 
     private ChannelService ChannelService => McCaller.ChannelService;
 
@@ -21,6 +25,10 @@ public partial class WeixinWorkTemplateManagement : AdminCompontentBase
     protected async override Task OnInitializedAsync()
     {
         _channelItems = await ChannelService.GetListByTypeAsync(ChannelTypes.WeixinWork);
+
+        LoadHeaders();
+
+        I18n.CultureChanged += (sender, args) => LoadHeaders();
     }
     protected async override Task OnAfterRenderAsync(bool firstRender)
     {
@@ -29,22 +37,6 @@ public partial class WeixinWorkTemplateManagement : AdminCompontentBase
             await LoadData();
         }
         await base.OnAfterRenderAsync(firstRender);
-    }
-
-    public List<DataTableHeader<MessageTemplateDto>> GetHeaders()
-    {
-        var prefix = "DisplayName.MessageTemplate";
-
-        return new()
-        {
-            new() { Text = T($"{prefix}{nameof(MessageTemplateDto.Code)}"), Value = nameof(MessageTemplateDto.Code), Sortable = false },
-            new() { Text = T($"{prefix}{nameof(MessageTemplateDto.TemplateType)}"), Value = nameof(MessageTemplateDto.TemplateType)},
-            new() { Text = T($"{prefix}{nameof(MessageTemplateDto.Title)}"), Value = nameof(MessageTemplateDto.Title), Sortable = false },
-            new() { Text = T($"{prefix}ChannelDisplayName"), Value = "ChannelDisplayName", Sortable = false },
-            new() { Text = T("Modifier"), Value = nameof(MessageTemplateDto.ModifierName), Sortable = false },
-            new() { Text = T("ModificationTime"), Value = nameof(MessageTemplateDto.ModificationTime), Sortable = true },
-            new() { Text = T("Action"), Value = "Action", Sortable = false, Width = 105, Align = DataTableHeaderAlign.Center },
-        };
     }
 
     private Task DateRangChangedAsync((DateTimeOffset? startDate, DateTimeOffset? endDate) args)
@@ -90,5 +82,20 @@ public partial class WeixinWorkTemplateManagement : AdminCompontentBase
     {
         _queryParam = new() { ChannelType = ChannelTypes.App };
         await LoadData();
+    }
+
+    private void LoadHeaders()
+    {
+        var prefix = "DisplayName.MessageTemplate";
+        _headers = new()
+        {
+            new() { Text = T($"{prefix}{nameof(MessageTemplateDto.Code)}"), Value = nameof(MessageTemplateDto.Code), Sortable = false },
+            new() { Text = T($"{prefix}{nameof(MessageTemplateDto.TemplateType)}"), Value = nameof(MessageTemplateDto.TemplateType)},
+            new() { Text = T($"{prefix}{nameof(MessageTemplateDto.Title)}"), Value = nameof(MessageTemplateDto.Title), Sortable = false },
+            new() { Text = T($"{prefix}ChannelDisplayName"), Value = "ChannelDisplayName", Sortable = false },
+            new() { Text = T("Modifier"), Value = nameof(MessageTemplateDto.ModifierName), Sortable = false },
+            new() { Text = T("ModificationTime"), Value = nameof(MessageTemplateDto.ModificationTime), Sortable = true },
+            new() { Text = T("Action"), Value = "Action", Sortable = false, Width = 105, Align = DataTableHeaderAlign.Center },
+        };
     }
 }

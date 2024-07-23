@@ -34,7 +34,7 @@
     </HeaderContent>
     <AutoHeightContent>
         <MCard Class="full-height">
-            <SDataTable Headers="GetHeaders()" Items="_entities.Result" TItem="MessageTemplateDto" ItemsPerPage="_queryParam.PageSize" HideDefaultFooter Class="d-flex full-height flex-column">
+            <SDataTable Headers="_headers" Items="_entities.Result" TItem="MessageTemplateDto" ItemsPerPage="_queryParam.PageSize" HideDefaultFooter Class="d-flex full-height flex-column">
                 <HeaderColContent Context="header">
                     <span class="text-btn">@header.Text</span>
                 </HeaderColContent>

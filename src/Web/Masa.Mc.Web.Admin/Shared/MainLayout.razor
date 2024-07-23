@@ -19,7 +19,7 @@
     [Inject]
     public I18n I18N { get; set; } = default!;
 
-    private List<string> WhiteUris = new List<string>() { "/channels/channelManagement", "/messageTasks/sendMessage" };
+    private List<string> WhiteUris = new List<string>() { "/channels/channelManagement", "/messageTasks/sendMessage", "/messageTemplates/weixinWorkTemplateManagement" };
 
     private Task OnErrorAfterHandle(Exception exception)
     {
