@@ -23,6 +23,18 @@
                             @T("Email")
                         </th>
                     }
+                    @if (ChannelType == ChannelTypes.App)
+                    {
+                        <th class="text-left body2 regular3--text rounded-0">
+                            @T("ClientId")
+                        </th>
+                    }
+                    @if (ChannelType == ChannelTypes.WeixinWork)
+                    {
+                        <th class="text-left body2 regular3--text rounded-0">
+                            @T("Account")
+                        </th>
+                    }
                     @if (Value.Count > 0)
                     {
                         foreach (var item in Value[0].Variables)
@@ -38,18 +50,7 @@
                 @foreach (var item in _items)
                 {
                     <tr class="body2 regular--text mt-4 mb-6">
-                    @if (ChannelType == ChannelTypes.WebsiteMessage)
-                    {
-                        <td class="body2 regular--text border-bottom-none">@item.SubjectId</td>
-                    }
-                    @if (ChannelType == ChannelTypes.Sms)
-                    {
-                        <td class="body2 regular--text border-bottom-none">@item.PhoneNumber</td>
-                    }
-                    @if (ChannelType == ChannelTypes.Email)
-                    {
-                        <td class="body2 regular--text border-bottom-none">@item.Email</td>
-                    }
+                        <td class="body2 regular--text border-bottom-none">@item.ChannelUserIdentity</td>
                     @foreach (var v in item.Variables)
                     {
                         <td class="body2 regular--text border-bottom-none">@v.Value</td>

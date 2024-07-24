@@ -209,19 +209,15 @@ public class MessageTaskQueryHandler
 
     private Type GetReceiverImportDtoType(ChannelTypes channelType)
     {
-        switch (channelType)
+        return channelType switch
         {
-            case ChannelTypes.Sms:
-                return typeof(SmsReceiverImportDto);
-            case ChannelTypes.Email:
-                return typeof(EmailReceiverImportDto);
-            case ChannelTypes.WebsiteMessage:
-                return typeof(WebsiteMessageReceiverImportDto);
-            case ChannelTypes.App:
-                return typeof(AppReceiverImportDto);
-            default:
-                throw new UserFriendlyException(errorCode: UserFriendlyExceptionCodes.UNKNOWN_CHANNEL_TYPE);
-        }
+            ChannelTypes.Sms => typeof(SmsReceiverImportDto),
+            ChannelTypes.Email => typeof(EmailReceiverImportDto),
+            ChannelTypes.WebsiteMessage => typeof(WebsiteMessageReceiverImportDto),
+            ChannelTypes.App => typeof(AppReceiverImportDto),
+            ChannelTypes.WeixinWork => typeof(WeixinWorkReceiverImportDto),
+            _ => throw new UserFriendlyException(errorCode: UserFriendlyExceptionCodes.UNKNOWN_CHANNEL_TYPE)
+        };
     }
 
     public async Task<string> GetMessageContentAsync(MessageEntityTypes entityType, Guid entityId)

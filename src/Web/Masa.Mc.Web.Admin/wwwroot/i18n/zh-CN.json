@@ -415,5 +415,6 @@
   "production": "生产环境",
   "TemplateType": "模板类型",
   "Text": "文本",
-  "TextCard": "文本卡片"
+  "TextCard": "文本卡片",
+  "ClientId": "客户端注册Id"
 }

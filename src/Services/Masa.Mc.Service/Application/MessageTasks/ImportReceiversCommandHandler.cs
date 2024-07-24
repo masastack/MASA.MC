@@ -78,19 +78,15 @@ public class ImportReceiversCommandHandler
 
     private async Task<ImportResult<dynamic>> GetDynamicImportDtos(ChannelTypes channelType, Stream stream)
     {
-        switch (channelType)
+        return channelType switch
         {
-            case ChannelTypes.Sms:
-                return await _importer.DynamicImport<SmsReceiverImportDto>(stream);
-            case ChannelTypes.Email:
-                return await _importer.DynamicImport<EmailReceiverImportDto>(stream);
-            case ChannelTypes.WebsiteMessage:
-                return await _importer.DynamicImport<WebsiteMessageReceiverImportDto>(stream);
-            case ChannelTypes.App:
-                return await _importer.DynamicImport<AppReceiverImportDto>(stream);
-            default:
-                throw new UserFriendlyException(errorCode: UserFriendlyExceptionCodes.UNKNOWN_CHANNEL_TYPE);
-        }
+            ChannelTypes.Sms => await _importer.DynamicImport<SmsReceiverImportDto>(stream),
+            ChannelTypes.Email => await _importer.DynamicImport<EmailReceiverImportDto>(stream),
+            ChannelTypes.WebsiteMessage => await _importer.DynamicImport<WebsiteMessageReceiverImportDto>(stream),
+            ChannelTypes.App => await _importer.DynamicImport<AppReceiverImportDto>(stream),
+            ChannelTypes.WeixinWork => await _importer.DynamicImport<WeixinWorkReceiverImportDto>(stream),
+            _ => throw new UserFriendlyException(errorCode: UserFriendlyExceptionCodes.UNKNOWN_CHANNEL_TYPE)
+        };
     }
 
     private MessageTaskReceiverDto GetMessageTaskReceiverDto(ChannelTypes channelType, ExpandoObject obj)
@@ -99,26 +95,25 @@ public class ImportReceiversCommandHandler
         switch (channelType)
         {
             case ChannelTypes.Sms:
-                receiver.PhoneNumber = obj?.GetOrDefault(GetImporterHeaderDisplayName(typeof(SmsReceiverImportDto), nameof(SmsReceiverImportDto.PhoneNumber)))?.ToString() ?? string.Empty;
+                receiver.ChannelUserIdentity = obj?.GetOrDefault(GetImporterHeaderDisplayName(typeof(SmsReceiverImportDto), nameof(SmsReceiverImportDto.PhoneNumber)))?.ToString() ?? string.Empty;
+                receiver.PhoneNumber = receiver.ChannelUserIdentity;
                 break;
             case ChannelTypes.Email:
-                receiver.Email = obj?.GetOrDefault(GetImporterHeaderDisplayName(typeof(EmailReceiverImportDto), nameof(EmailReceiverImportDto.Email)))?.ToString() ?? string.Empty;
+                receiver.ChannelUserIdentity = obj?.GetOrDefault(GetImporterHeaderDisplayName(typeof(EmailReceiverImportDto), nameof(EmailReceiverImportDto.Email)))?.ToString() ?? string.Empty;
+                receiver.Email = receiver.ChannelUserIdentity;
                 break;
             case ChannelTypes.WebsiteMessage:
-                receiver.SubjectId = Guid.Empty;
-                object? subjectIdObj = obj.GetOrDefault(GetImporterHeaderDisplayName(typeof(WebsiteMessageReceiverImportDto), nameof(WebsiteMessageReceiverImportDto.UserId)));
-                if (Guid.TryParse(subjectIdObj?.ToString(), out var subjectId))
+                receiver.ChannelUserIdentity = obj?.GetOrDefault(GetImporterHeaderDisplayName(typeof(WebsiteMessageReceiverImportDto), nameof(WebsiteMessageReceiverImportDto.UserId)))?.ToString() ?? string.Empty;
+                if (Guid.TryParse(receiver.ChannelUserIdentity, out var subjectId))
                 {
                     receiver.SubjectId = subjectId;
                 }
                 break;
             case ChannelTypes.App:
-                receiver.SubjectId = Guid.Empty;
-                object? userIdObj = obj.GetOrDefault(GetImporterHeaderDisplayName(typeof(AppReceiverImportDto), nameof(AppReceiverImportDto.UserId)));
-                if (Guid.TryParse(userIdObj?.ToString(), out var userId))
-                {
-                    receiver.SubjectId = userId;
-                }
+                receiver.ChannelUserIdentity = obj?.GetOrDefault(GetImporterHeaderDisplayName(typeof(AppReceiverImportDto), nameof(AppReceiverImportDto.ClientId)))?.ToString() ?? string.Empty;
+                break;
+            case ChannelTypes.WeixinWork:
+                receiver.ChannelUserIdentity = obj?.GetOrDefault(GetImporterHeaderDisplayName(typeof(WeixinWorkReceiverImportDto), nameof(WeixinWorkReceiverImportDto.Account)))?.ToString() ?? string.Empty;
                 break;
             default:
                 throw new UserFriendlyException(errorCode: UserFriendlyExceptionCodes.UNKNOWN_CHANNEL_TYPE);
