@@ -2,102 +2,69 @@
 <div @ref="Ref">
     <SSimpleModal Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T(_entityId == default?"Permission.CreateMessageTemplate":"Permission.EditMessageTemplate")" HeaderClass="mr-4" BodyStyle="height: 617px;" SaveText="@T(_entityId == default?"Submit":"Save")" OnCancel="HandleCancel" OnSave="async() => await Throttle(HandleOkAsync)">
         <ChildContent>
-            <MForm Model="_model" EnableValidation EnableI18n @ref="_form" Class="full-height">
-                <MRow Class="row-box">
-                    <MCol>
-                        <STextField @bind-Value="_model.Code" Required
-                                    Label="@T("DisplayName.MessageTemplateCode")">
-                        </STextField>
-                    </MCol>
-                </MRow>
-                <MRow Class="row-box">
-                    <MCol>
-                        <SSelect Value="@_model.ChannelType" Required
-                                 Items="@(GetEnumList<ChannelTypes>())"
-                                 Label="@T("DisplayName.ChannelType")"
-                                 ItemText="item => T(item.ToString())"
-                                 ItemValue="item => item"
-                                 Disabled
-                                 TItem="ChannelTypes"
-                                 TItemValue="ChannelTypes"
-                                 TValue="ChannelTypes"
-                                 ValueChanged="HandleSelectChannelTypeAsync">
-                        </SSelect>
-                    </MCol>
-                </MRow>
-                <MRow Class="row-box">
-                    <MCol>
-                        <SSelect @bind-Value="_model.ChannelId" Required
-                                 Items="@_channelItems"
-                                 Label="@T("DisplayName.Channel")"
-                                 ItemText="item => item.DisplayName"
-                                 ItemValue="item => item.Id">
-                        </SSelect>
-                    </MCol>
-                </MRow>
-                <MRow Class="row-box">
-                    <MCol>
-                        <SSelect @bind-Value="@_model.TemplateType" Required
-                                 Items="@(GetEnumList<WeixinWorkTemplateTypes>())"
-                                 Label="@T("TemplateType")"
-                                 ItemText="item => T(item.ToString())"
-                                 ItemValue="item => (int)item"
-                                 TItem="WeixinWorkTemplateTypes"
-                                 TItemValue="int"
-                                 TValue="int" OnChange="HandleSelectTemplateType">
-                        </SSelect>
-                    </MCol>
-                </MRow>
-                @if (_model.TemplateType == (int)WeixinWorkTemplateTypes.Text)
-                {
-                    <MRow Class="row-box">
-                        <MCol>
-                            <STextarea @bind-Value="_model.Content" Required
-                                       Label="@T("DisplayName.MessageTemplateContent")">
-                            </STextarea>
-                        </MCol>
-                    </MRow>
-                }
+            <MForm Model="_model" EnableValidation EnableI18n @ref="_form" Class="full-height form-content">
+                <STextField @bind-Value="_model.Code" Required
+                            Label="@T("DisplayName.MessageTemplateCode")">
+                </STextField>
+                <SSelect Value="@_model.ChannelType" Required
+                         Items="@(GetEnumList<ChannelTypes>())"
+                         Label="@T("DisplayName.ChannelType")"
+                         ItemText="item => T(item.ToString())"
+                         ItemValue="item => item"
+                         Disabled
+                         TItem="ChannelTypes"
+                         TItemValue="ChannelTypes"
+                         TValue="ChannelTypes"
+                         ValueChanged="HandleSelectChannelTypeAsync">
+                </SSelect>
+                <SSelect @bind-Value="_model.ChannelId" Required
+                         Items="@_channelItems"
+                         Label="@T("DisplayName.Channel")"
+                         ItemText="item => item.DisplayName"
+                         ItemValue="item => item.Id">
+                </SSelect>
+                <SSelect @bind-Value="@_model.TemplateType" Required
+                         Items="@(GetEnumList<WeixinWorkTemplateTypes>())"
+                         Label="@T("TemplateType")"
+                         ItemText="item => T(item.ToString())"
+                         ItemValue="item => (int)item"
+                         TItem="WeixinWorkTemplateTypes"
+                         TItemValue="int"
+                         TValue="int" OnChange="HandleSelectTemplateType">
+                </SSelect>
                 @if (_model.TemplateType == (int)WeixinWorkTemplateTypes.TextCard)
                 {
-                    <MRow Class="row-box">
-                        <MCol>
-                            <STextField @bind-Value="_model.Title" Required
-                                        Label="@T("DisplayName.MessageTemplateTitle")">
-                            </STextField>
-                        </MCol>
-                    </MRow>
-                    <MRow Class="row-box">
-                        <MCol>
-                            <STextarea @bind-Value="_model.Content" Required
-                                       Label="@T("DisplayName.MessageTemplateContent")">
-                            </STextarea>
-                        </MCol>
-                    </MRow>
-                    <MRow Class="row-box">
-                        <MCol>
-                            <STextField @bind-Value="_model.JumpUrl" Required
-                                        Label="@T("DisplayName.MessageTemplateJumpUrl")">
-                            </STextField>
-                        </MCol>
-                    </MRow>
+                    <STextField @bind-Value="_model.Title" Required
+                                Label="@T("DisplayName.MessageTemplateTitle")">
+                    </STextField>
                 }
-                <MRow Class="row-box">
-                    <MCol>
-                        <div class="d-flex align-center justify-start">
-                            <span class="body2 regular--text mr-2">@T("Description.MessageTemplate.PerDayLimit.Tips") </span>
-                            <div style="width:80px;">
-                                <MTextField @bind-Value="_model.PerDayLimit"
-                                            Type="number"
-                                            Dense
-                                            Outlined
-                                            HideDetails="@("auto")">
-                                </MTextField>
-                            </div>
-                            <span class="body2 regular--text ml-2">@T("Unit.Bar") </span>
-                        </div>
-                    </MCol>
-                </MRow>
+                else
+                {
+                    <STextField @bind-Value="_model.DisplayName" Required
+                                Label="@T("DisplayName.MessageTemplateDisplayName")">
+                    </STextField>
+                }
+                <STextarea @bind-Value="_model.Content" Required
+                           Label="@T("DisplayName.MessageTemplateContent")">
+                </STextarea>
+                @if (_model.TemplateType == (int)WeixinWorkTemplateTypes.TextCard)
+                {
+                    <STextField @bind-Value="_model.JumpUrl" Required
+                                Label="@T("DisplayName.MessageTemplateJumpUrl")">
+                    </STextField>
+                }
+                <div class="d-flex align-center justify-start">
+                    <span class="body2 regular--text mr-2">@T("Description.MessageTemplate.PerDayLimit.Tips") </span>
+                    <div style="width:80px;">
+                        <MTextField @bind-Value="_model.PerDayLimit"
+                                    Type="number"
+                                    Dense
+                                    Outlined
+                                    HideDetails="@("auto")">
+                        </MTextField>
+                    </div>
+                    <span class="body2 regular--text ml-2">@T("Unit.Bar") </span>
+                </div>
             </MForm>
         </ChildContent>
     </SSimpleModal>

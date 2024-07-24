@@ -73,7 +73,11 @@ public partial class WeixinWorkUpsertModal : AdminCompontentBase
     {
         Check.NotNull(_form, "form not found");
 
-        _model.DisplayName = _model.Title;
+        if (_model.DisplayName.IsNullOrEmpty())
+        {
+            _model.DisplayName = _model.Title;
+        }
+
         if (!_form.Validate())
         {
             return;
