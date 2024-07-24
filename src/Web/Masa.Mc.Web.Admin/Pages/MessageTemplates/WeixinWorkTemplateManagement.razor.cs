@@ -30,6 +30,7 @@ public partial class WeixinWorkTemplateManagement : AdminCompontentBase
 
         I18n.CultureChanged += Changed;
     }
+
     protected async override Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
