@@ -7,7 +7,7 @@
                 <MRadioGroup @bind-Value="_model.Provider" Label="@T("DisplayName.AppChannelProviders")" Class="mt-0" Row>
                 @foreach (var item in GetEnumList<AppChannelProviders>())
                     {
-                        <MRadio Label="@T($"DisplayName.AppChannelProviders.{item.ToString()}")" )
+                        <MRadio Label="@T($"DisplayName.AppChannelProviders.{item.ToString()}")"
                         Value="item">
                         </MRadio>
                     }
