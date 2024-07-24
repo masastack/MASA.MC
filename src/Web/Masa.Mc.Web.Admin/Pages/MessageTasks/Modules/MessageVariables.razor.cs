@@ -1,8 +1,6 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
-using System.Collections.Concurrent;
-
 namespace Masa.Mc.Web.Admin.Pages.MessageTasks.Modules;
 
 public partial class MessageVariables : AdminCompontentBase
@@ -16,12 +14,13 @@ public partial class MessageVariables : AdminCompontentBase
     [Parameter]
     public bool ReadOnly { get; set; }
 
-
     private List<ItemDto> _items = new();
 
-    protected override void OnParametersSet()
+    protected async override Task OnInitializedAsync()
     {
         _items = Value.Select(x => new ItemDto(x.Key, x.Value?.ToString() ?? string.Empty)).ToList();
+
+        await base.OnInitializedAsync();
     }
 
     public async Task HandleChangeAsync()
