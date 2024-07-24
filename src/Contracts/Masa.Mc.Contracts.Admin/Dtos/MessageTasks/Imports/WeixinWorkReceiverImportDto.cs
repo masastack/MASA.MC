@@ -3,9 +3,9 @@
 
 namespace Masa.Mc.Contracts.Admin.Dtos.MessageTasks.Imports;
 
-public class AppReceiverImportDto
+public class WeixinWorkReceiverImportDto
 {
-    [ImporterHeader(Name = "客户端注册Id", IsAllowRepeat = false)]
-    [Required(ErrorMessage = "客户端注册Id是必填的")]
-    public string ClientId { get; set; }
+    [ImporterHeader(Name = "用户名", IsAllowRepeat = false)]
+    [Required(ErrorMessage = "用户名是必填的")]
+    public string Account { get; set; }
 }

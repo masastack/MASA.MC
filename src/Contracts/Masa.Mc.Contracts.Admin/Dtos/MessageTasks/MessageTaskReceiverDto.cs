@@ -7,6 +7,8 @@ public class MessageTaskReceiverDto
 {
     public Guid SubjectId { get; set; }
 
+    public string ChannelUserIdentity { get; set; } = string.Empty;
+
     public string DisplayName { get; set; } = string.Empty;
 
     public string Account { get; set; } = string.Empty;
