@@ -4,7 +4,7 @@
     {
         <MRow Class="row-box">
             <MCol>
-                <MRadioGroup @bind-Value="_model.Provider" Label="@T("DisplayName.AppChannelProviders")" Class="mt-0" Row>
+                <MRadioGroup @bind-Value="_model.Provider" Required Label="@T("DisplayName.AppChannelProviders")" Class="mt-0" Row>
                 @foreach (var item in GetEnumList<AppChannelProviders>())
                     {
                         <MRadio Label="@T($"DisplayName.AppChannelProviders.{item.ToString()}")"
@@ -19,14 +19,14 @@
         @if (_model.Provider == AppChannelProviders.GeTui)
         {
             <MCol Md="6">
-                <STextField @bind-Value="_model.AppID"
+                <STextField @bind-Value="_model.AppID" Required
                         Label="@T("AppID")"
                         Hint="@T("ChannelOptions.Tips")">
                 </STextField>
             </MCol>
         }
         <MCol Md="6">
-            <STextField @bind-Value="_model.AppKey"
+            <STextField @bind-Value="_model.AppKey" Required
                         Label="@T("AppKey")"
                         Hint="@T("ChannelOptions.Tips")"
                         Type="@(!PasswordView?"password":_passwordShow ? "text" : "password")"
@@ -36,7 +36,7 @@
         @if (_model.Provider == AppChannelProviders.GeTui)
         {
             <MCol Md="6">
-                <STextField @bind-Value="_model.AppSecret"
+                <STextField @bind-Value="_model.AppSecret" Required
                         Label="@T("AppSecret")"
                         Hint="@T("ChannelOptions.Tips")"
                         Type="@(!PasswordView?"password":_passwordShow ? "text" : "password")"
@@ -45,7 +45,7 @@
             </MCol>
         }
         <MCol Md="6">
-            <STextField @bind-Value="_model.MasterSecret"
+            <STextField @bind-Value="_model.MasterSecret" Required
                         Label="@T("MasterSecret")"
                         Hint="@T("ChannelOptions.Tips")"
                         Type="@(!PasswordView?"password":_passwordShow ? "text" : "password")"

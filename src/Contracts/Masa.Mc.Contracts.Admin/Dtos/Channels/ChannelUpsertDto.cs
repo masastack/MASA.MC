@@ -18,4 +18,8 @@ public class ChannelUpsertDto
     public ExtraPropertyDictionary ExtraProperties { get; set; }=new();
 
     public string Color { get; set; } = string.Empty;
+
+    public string Scheme { get; set; } = string.Empty;
+
+    public string SchemeField { get; set; } = string.Empty;
 }

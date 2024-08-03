@@ -9,4 +9,6 @@ public class AppChannel : Entity<Guid>
     public string Color { get; protected set; } = string.Empty;
     public string Code { get; protected set; } = string.Empty;
     public ChannelType Type { get; protected set; } = default!;
+    public string Scheme { get; protected set; } = string.Empty;
+    public string SchemeField { get; protected set; } = string.Empty;
 }

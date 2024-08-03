@@ -20,6 +20,8 @@ public partial class ChannelCreateModal : AdminCompontentBase
 
     ChannelService ChannelService => McCaller.ChannelService;
 
+    protected override string? PageName { get; set; } = "ChannelBlock";
+
     private int _nextStep
     {
         get

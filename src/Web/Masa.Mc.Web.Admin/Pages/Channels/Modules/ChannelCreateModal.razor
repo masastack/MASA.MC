@@ -1,6 +1,6 @@
 ﻿@inherits AdminCompontentBase
 <div @ref="Ref">
-    <SSimpleModal Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.CreateChannel")" HeaderClass="mr-4" BodyStyle="height: 597px;" SaveText="@T("Submit")" OnDelete="()=> _step =_previousStep " OnCancel="HandleCancel" OnSave="async() => await Throttle(HandleOkAsync)">
+    <SSimpleModal Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.CreateChannel")" HeaderClass="mr-4" BodyStyle="height: 700px;" SaveText="@T("Submit")" OnDelete="()=> _step =_previousStep " OnCancel="HandleCancel" OnSave="async() => await Throttle(HandleOkAsync)">
         <ChildContent>
             <MForm Model="_model" @ref="_form" EnableValidation EnableI18n Context="form" Class="full-height">
                 <MStepper Value="_step" Class="full-height" Style="box-shadow:none">
@@ -62,29 +62,33 @@
                         <MStepperContent Step="3" Class="pa-0 full-height">
                             <MRow Class="row-box">
                                 <MCol Md="6">
-                                    <STextField @bind-Value="_model.DisplayName"
+                                    <STextField @bind-Value="_model.DisplayName" Required
                                                 Label="@T("DisplayName.ChannelDisplayName")">
                                     </STextField>
                                 </MCol>
                                 <MCol Md="6">
-                                    <STextField @bind-Value="_model.Code"
+                                    <STextField @bind-Value="_model.Code" Required
                                                 Label="@T("DisplayName.ChannelCode")">
                                     </STextField>
                                 </MCol>
                             </MRow>
                             <ChannelExtraProperties @ref="_channelExtraPropertiesRef" @bind-Value="_model.ExtraProperties" @bind-Type="_model.Type" PasswordView IsAdd />
                             <MRow Class="row-box">
-                                <MCol>
+                                <MCol Md="6">
+                                    <SThirdPartySchemeSelect @bind-Value="@_model.Scheme" FillBackground="false" Label="@T("DisplayName.Scheme")">
+                                    </SThirdPartySchemeSelect>
+                                </MCol>
+                                <MCol Md="6">
+                                    <STextField @bind-Value="_model.SchemeField" Label="@T("DisplayName.SchemeField")" Tooltip="@T("SchemeFieldTooltip")">
+                                    </STextField>
+                                </MCol>
+                                <MCol Md="12">
                                     <div class="subtitle3 regular--text">@T("DisplayName.Color.Lable")</div>
                                 </MCol>
-                            </MRow>
-                            <MRow Class="row-box">
-                                <MCol>
+                                <MCol Md="12">
                                     <ColorsGroup @bind-Value="_model.Color" Colors='_colors' />
                                 </MCol>
-                            </MRow>
-                            <MRow Class="row-box">
-                                <MCol>
+                                <MCol Md="12">
                                     <MTextarea @bind-Value="_model.Description"
                                                Label="@T("DisplayName.ChannelDescription")"
                                                Outlined

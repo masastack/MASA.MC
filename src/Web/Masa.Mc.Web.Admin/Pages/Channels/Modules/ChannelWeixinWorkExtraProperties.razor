@@ -2,13 +2,13 @@
 <MForm Model="_model" @ref="Form" EnableValidation EnableI18n Class="my-3">
     <MRow Class="row-box">
         <MCol Md="12">
-            <STextField @bind-Value="_model.CorpId"
+            <STextField @bind-Value="_model.CorpId" Required
                         Label="@T("WeixinWorkChannelOptions.CorpId")"
                         Hint="@T("ChannelOptions.Tips")">
             </STextField>
         </MCol>
         <MCol Md="12">
-            <STextField @bind-Value="_model.CorpSecret"
+            <STextField @bind-Value="_model.CorpSecret" Required
                         Label="@T("WeixinWorkChannelOptions.CorpSecret")"
                         Hint="@T("ChannelOptions.Tips")"
                         Type="@(!PasswordView?"password":_passwordShow ? "text" : "password")"
@@ -16,7 +16,7 @@
             </STextField>
         </MCol>
         <MCol Md="12">
-            <STextField @bind-Value="_model.AgentId"
+            <STextField @bind-Value="_model.AgentId" Required
                         Label="@T("WeixinWorkChannelOptions.AgentId")"
                         Hint="@T("ChannelOptions.Tips")">
             </STextField>

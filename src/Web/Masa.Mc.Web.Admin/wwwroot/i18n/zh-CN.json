@@ -117,6 +117,8 @@
   "DisplayName.ChannelCode": "ID",
   "DisplayName.ChannelType": "渠道类型",
   "DisplayName.ChannelDescription": "描述",
+  "DisplayName.Scheme": "第三方平台",
+  "DisplayName.SchemeField": "三方用户字段",
   "Description.Channel.Type.Required": "选择渠道类型",
   "ChannelCreateMessage": "新建渠道数据成功.",
   "ChannelEditMessage": "编辑渠道数据成功.",
@@ -323,7 +325,9 @@
   "CronExpressionInvalid": "Cron表达式不合法",
   "CronExpressionNotHasNextRunTime": "您的表达式计算不出下一次运行时间",
   "ChannelBlock": {
-    "Title": "渠道"
+    "Title": "渠道",
+    "SchemeTooltip": "选择三方用户作为推送用户标识的数据来源",
+    "SchemeFieldTooltip": "不填使用三方身份标识"
   },
   "MessageTaskBlock": {
     "Title": "消息任务",

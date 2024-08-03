@@ -18,6 +18,8 @@ public static class McDbContextModelBuilderExtensions
             b.Property(x => x.Description).HasMaxLength(512);
             b.Property(x => x.ExtraProperties).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
             b.Property(x => x.Type).HasConversion(x => x.Id, x => Enumeration.FromValue<ChannelType>(x)).HasColumnName(nameof(Channel.Type));
+            b.Property(x => x.Scheme).HasMaxLength(128).HasColumnName(nameof(Channel.Scheme));
+            b.Property(x => x.SchemeField).HasMaxLength(128).HasColumnName(nameof(Channel.SchemeField));
             b.HasIndex(x => x.Code);
             b.HasIndex(x => x.Type);
         });

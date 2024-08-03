@@ -19,10 +19,13 @@ public partial class ChannelEditModal : AdminCompontentBase
 
     ChannelService ChannelService => McCaller.ChannelService;
 
+    protected override string? PageName { get; set; } = "ChannelBlock";
+
     public async Task OpenModalAsync(ChannelDto model)
     {
         _entityId = model.Id;
         _model = model.Adapt<ChannelUpsertDto>();
+        _model.Scheme = "Ldap";
         await GetFormDataAsync();
         await InvokeAsync(() =>
         {
