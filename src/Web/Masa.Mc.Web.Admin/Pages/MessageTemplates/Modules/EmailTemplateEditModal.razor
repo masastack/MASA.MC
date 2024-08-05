@@ -1,65 +1,63 @@
 ﻿@inherits AdminCompontentBase
-<div @ref="Ref">
-    <SSimpleModal Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.EditMessageTemplate")" HeaderClass="mr-4" BodyStyle="height: 533px;" SaveText="@T("Save")" OnCancel="HandleCancel" OnDelete="HandleDelAsync" OnSave="async() => await Throttle(HandleOk)">
-        <ChildContent>
-            <MForm Model="_model" EnableValidation EnableI18n @ref="_form" Class="full-height">
-                <MRow Class="row-box">
-                    <MCol>
-                        <STextField @bind-Value="_model.Code"
-                                          Label="@T("DisplayName.MessageTemplateCode")" Disabled>
-                        </STextField>
-                    </MCol>
-                </MRow>
-                <MRow Class="row-box">
-                    <MCol>
-                        <SSelect Value="@_model.ChannelType"
-                                       Items="@(GetEnumList<ChannelTypes>())"
-                                       Label="@T("DisplayName.ChannelType")"
-                                       ItemText="item => T(item.ToString())"
-                                       ItemValue="item => item"
-                                       Disabled>
-                        </SSelect>
-                    </MCol>
-                </MRow>
-                <MRow Class="row-box">
-                    <MCol>
-                        <SSelect @bind-Value="_model.ChannelId"
-                                       Items="@_channelItems"
-                                       Label="@T("DisplayName.Channel")"
-                                       ItemText="item => item.DisplayName"
-                                       ItemValue="item => item.Id">
-                        </SSelect>
-                    </MCol>
-                </MRow>
-                <MRow Class="row-box">
-                    <MCol>
-                        <STextField @bind-Value="_model.Title"
-                                          Label="@T("DisplayName.MessageTemplateTitle")">
-                        </STextField>
-                    </MCol>
-                </MRow>
-                <MRow Class="row-box">
-                    <MCol>
-                        <DefaultMarkdown @bind-Html="_model.Content" @bind-Value="_model.Markdown"></DefaultMarkdown>
-                        <MInput @bind-Value="_model.Content" />
-                    </MCol>
-                </MRow>
-                <MRow Class="row-box">
-                    <MCol>
-                        <div class="d-flex align-center justify-start">
-                            <span class="body2 regular--text mr-2">@T("Description.MessageTemplate.PerDayLimit.Tips") </span>
-                            <div style="width:80px;">
-                                <MTextField @bind-Value="_model.PerDayLimit"
-                                            Type="number"
-                                            Dense
-                                            Outlined
-                                            HideDetails="@("auto")"></MTextField>
-                            </div>
-                            <span class="body2 regular--text ml-2">@T("Unit.Bar") </span>
-                        </div>
-                    </MCol>
-                </MRow>
-            </MForm>
-        </ChildContent>
-    </SSimpleModal>
-</div>
+ <SSimpleModal Value="@_visible" ValueChanged="HandleVisibleChanged" Title="@T("Permission.EditMessageTemplate")" HeaderClass="mr-4" BodyStyle="height: 533px;" SaveText="("Save")"OnCancel="HandleCancel" OnDelete="HandleDelAsync" OnSave="async() => await Throttle(HandleOk)">
+     <ChildContent>
+         <MForm Model="_model" EnableValidation EnableI18n @ref="_form" Class="full-height">
+             <MRow Class="row-box">
+                 <MCol>
+                     <STextField @bind-Value="_model.Code"
+                                       Label="@T("DisplayName.MessageTemplateCode")" Disabled>
+                     </STextField>
+                 </MCol>
+             </MRow>
+             <MRow Class="row-box">
+                 <MCol>
+                     <SSelect Value="@_model.ChannelType"
+                                    Items="@(GetEnumList<ChannelTypes>())"
+                                    Label="@T("DisplayName.ChannelType")"
+                                    ItemText="item => T(item.ToString())"
+                                    ItemValue="item => item"
+                                    Disabled>
+                     </SSelect>
+                 </MCol>
+             </MRow>
+             <MRow Class="row-box">
+                 <MCol>
+                     <SSelect @bind-Value="_model.ChannelId"
+                                    Items="@_channelItems"
+                                    Label="@T("DisplayName.Channel")"
+                                    ItemText="item => item.DisplayName"
+                                    ItemValue="item => item.Id">
+                     </SSelect>
+                 </MCol>
+             </MRow>
+             <MRow Class="row-box">
+                 <MCol>
+                     <STextField @bind-Value="_model.Title"
+                                       Label="@T("DisplayName.MessageTemplateTitle")">
+                     </STextField>
+                 </MCol>
+             </MRow>
+             <MRow Class="row-box">
+                 <MCol>
+                     <DefaultMarkdown @bind-Html="_model.Content" @bind-Value="_model.Markdown"></DefaultMarkdown>
+                     <MInput @bind-Value="_model.Content" />
+                 </MCol>
+             </MRow>
+             <MRow Class="row-box">
+                 <MCol>
+                     <div class="d-flex align-center justify-start">
+                         <span class="body2 regular--text mr-2">@T("Description.MessageTemplate.PerDayLimit.Tips") </span>
+                         <div style="width:80px;">
+                             <MTextField @bind-Value="_model.PerDayLimit"
+                                         Type="number"
+                                         Dense
+                                         Outlined
+                                         HideDetails="@("auto")"></MTextField>
+                         </div>
+                         <span class="body2 regular--text ml-2">@T("Unit.Bar") </span>
+                     </div>
+                 </MCol>
+             </MRow>
+         </MForm>
+     </ChildContent>
+ </SSimpleModal>
