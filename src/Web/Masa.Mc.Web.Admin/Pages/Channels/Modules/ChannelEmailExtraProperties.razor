@@ -2,20 +2,20 @@
 <MForm Model="_model" @ref="Form" EnableValidation EnableI18n Class="my-3">
     <MRow Class="row-box">
         <MCol Md="6">
-            <STextField @bind-Value="_model.UserName"
+            <STextField @bind-Value="_model.UserName" Required
                         Label="@T("EmailChannelOptions.UserName")"
                         Hint="@T("ChannelOptions.Tips")">
             </STextField>
         </MCol>
         <MCol Md="6">
-            <STextField @bind-Value="_model.Password"
+            <STextField @bind-Value="_model.Password" Required
                         Label="@T("EmailChannelOptions.Password")"
                         Type="@(!PasswordView?"password":_passwordShow ? "text" : "password")"
                         AppendIcon="@(!PasswordView?"":_passwordShow ? "mdi-eye" : "mdi-eye-off")" OnAppendClick="()=>_passwordShow = !_passwordShow">
             </STextField>
         </MCol>
         <MCol Md="6">
-            <STextField @bind-Value="_model.Smtp"
+            <STextField @bind-Value="_model.Smtp" Required
                         Label="@T("EmailChannelOptions.Smtp")"
                         Hint="@T("ChannelOptions.Tips")">
             </STextField>
@@ -28,7 +28,7 @@
                     </div>
                 </MCol>
                 <MCol>
-                    <STextField @bind-Value="_model.Port"
+                    <STextField @bind-Value="_model.Port" Required
                                 Label="@T("EmailChannelOptions.Port")">
                     </STextField>
                 </MCol>

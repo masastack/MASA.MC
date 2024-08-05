@@ -21,13 +21,6 @@ public class ChannelService : ServiceBase
         return query.Result;
     }
 
-    //public async Task<PaginatedListDto<ChannelDto>> GetListAsync([FromServices] IEventBus eventBus, GetChannelInput inputDto)
-    //{
-    //    var query = new GetListChannelQuery(inputDto);
-    //    await eventBus.PublishAsync(query);
-    //    return query.Result;
-    //}
-
     public async Task<ChannelDto> GetAsync(IEventBus eventBus, Guid id)
     {
         var query = new GetChannelQuery(id);
@@ -43,6 +36,7 @@ public class ChannelService : ServiceBase
 
     public async Task UpdateAsync(IEventBus eventBus, Guid id, [FromBody] ChannelUpsertDto inputDto)
     {
+        inputDto.Scheme ??= string.Empty;
         var command = new UpdateChannelCommand(id, inputDto);
         await eventBus.PublishAsync(command);
     }

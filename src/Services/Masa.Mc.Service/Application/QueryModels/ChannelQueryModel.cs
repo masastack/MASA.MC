@@ -17,6 +17,10 @@ public class ChannelQueryModel : Entity<Guid>, ISoftDelete
 
     public bool IsStatic { get; set; }
 
+    public string Scheme { get; set; }
+
+    public string SchemeField { get; set; }
+
     public ExtraPropertyDictionary ExtraProperties { get; set; } = new();
 
     public Guid Creator { get; set; }

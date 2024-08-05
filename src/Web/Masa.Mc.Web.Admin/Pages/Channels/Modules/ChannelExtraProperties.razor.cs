@@ -34,6 +34,7 @@ public partial class ChannelExtraProperties : AdminCompontentBase
     private ChannelSmsExtraProperties? _smsExtraPropertiesRef;
     private ChannelAppExtraProperties? _appExtraPropertiesRef;
     private ChannelWeixinWorkExtraProperties? _weixinWorkExtraPropertiesRef;
+    private ChannelWeixinWorkWebhookExtraProperties? _weixinWorkWebhookExtraPropertiesRef;
 
     public void HandleChangeAsync(string value, string key)
     {
@@ -58,6 +59,10 @@ public partial class ChannelExtraProperties : AdminCompontentBase
         {
             await _weixinWorkExtraPropertiesRef.HandleChangeAsync();
         }
+        if (Type == ChannelTypes.WeixinWorkWebhook && _weixinWorkWebhookExtraPropertiesRef != null)
+        {
+            await _weixinWorkWebhookExtraPropertiesRef.HandleChangeAsync();
+        }
         await ValueChanged.InvokeAsync(Value);
     }
 
@@ -78,6 +83,10 @@ public partial class ChannelExtraProperties : AdminCompontentBase
         if (Type == ChannelTypes.WeixinWork && _weixinWorkExtraPropertiesRef != null && _weixinWorkExtraPropertiesRef.Form != null)
         {
             return _weixinWorkExtraPropertiesRef.Form.Validate();
+        }
+        if (Type == ChannelTypes.WeixinWorkWebhook && _weixinWorkWebhookExtraPropertiesRef != null && _weixinWorkWebhookExtraPropertiesRef.Form != null)
+        {
+            return _weixinWorkWebhookExtraPropertiesRef.Form.Validate();
         }
         return true;
     }

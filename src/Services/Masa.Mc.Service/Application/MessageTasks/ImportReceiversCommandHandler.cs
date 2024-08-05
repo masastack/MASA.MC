@@ -85,6 +85,7 @@ public class ImportReceiversCommandHandler
             ChannelTypes.WebsiteMessage => await _importer.DynamicImport<WebsiteMessageReceiverImportDto>(stream),
             ChannelTypes.App => await _importer.DynamicImport<AppReceiverImportDto>(stream),
             ChannelTypes.WeixinWork => await _importer.DynamicImport<WeixinWorkReceiverImportDto>(stream),
+            ChannelTypes.WeixinWorkWebhook => await _importer.DynamicImport<WeixinWorkReceiverImportDto>(stream),
             _ => throw new UserFriendlyException(errorCode: UserFriendlyExceptionCodes.UNKNOWN_CHANNEL_TYPE)
         };
     }
@@ -113,6 +114,7 @@ public class ImportReceiversCommandHandler
                 receiver.ChannelUserIdentity = obj?.GetOrDefault(GetImporterHeaderDisplayName(typeof(AppReceiverImportDto), nameof(AppReceiverImportDto.ClientId)))?.ToString() ?? string.Empty;
                 break;
             case ChannelTypes.WeixinWork:
+            case ChannelTypes.WeixinWorkWebhook:
                 receiver.ChannelUserIdentity = obj?.GetOrDefault(GetImporterHeaderDisplayName(typeof(WeixinWorkReceiverImportDto), nameof(WeixinWorkReceiverImportDto.Account)))?.ToString() ?? string.Empty;
                 break;
             default:

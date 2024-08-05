@@ -9,5 +9,6 @@ public enum ChannelTypes
     Email,
     WebsiteMessage,
     App,
-    WeixinWork
+    WeixinWork,
+    WeixinWorkWebhook,
 }

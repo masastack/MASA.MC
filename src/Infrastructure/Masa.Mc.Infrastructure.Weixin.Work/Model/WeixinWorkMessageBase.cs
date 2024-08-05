@@ -5,18 +5,13 @@ namespace Masa.Mc.Infrastructure.Weixin.Work.Model;
 
 public class WeixinWorkMessageBase
 {
-    [JsonPropertyName("touser")]
-    public string ToUser { get; set; }
-    [JsonPropertyName("toparty")]
-    public string ToParty { get; set; } = string.Empty;
-    [JsonPropertyName("totag")]
-    public string ToTag { get; set; } = string.Empty;
-    [JsonPropertyName("msgtype")]
+    public List<string> UserId { get; set; }
+
     public string MsgType { get; set; }
 
-    public WeixinWorkMessageBase(string toUser, string msgType)
+    public WeixinWorkMessageBase(List<string> userId, string msgType)
     {
-        ToUser = toUser;
+        UserId = userId;
         MsgType = msgType;
     }
 }

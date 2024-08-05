@@ -58,7 +58,7 @@ public class AuthChannelUserFinder : IChannelUserFinder
     public async Task<List<MessageReceiverUser>> TransformUserReceivers(AppChannel channel, ExtraPropertyDictionary variables, IEnumerable<MessageTaskReceiver> receivers)
     {
         var receiverUsers = new List<MessageReceiverUser>();
-        var externalReceiverUsers = receivers.Where(x => !string.IsNullOrEmpty(x.ChannelUserIdentity)).Select(x=> new MessageReceiverUser(x.SubjectId, x.ChannelUserIdentity, x.Variables.Any() ? x.Variables : variables)).ToList();
+        var externalReceiverUsers = receivers.Where(x => !string.IsNullOrEmpty(x.ChannelUserIdentity)).Select(x => new MessageReceiverUser(x.SubjectId, x.ChannelUserIdentity, x.Variables.Any() ? x.Variables : variables)).ToList();
         receiverUsers.AddRange(externalReceiverUsers);
 
         var internalReceivers = receivers.Where(x => string.IsNullOrEmpty(x.ChannelUserIdentity)).ToList();
@@ -172,6 +172,12 @@ public class AuthChannelUserFinder : IChannelUserFinder
     private async Task<Dictionary<Guid, string>> GetChannelUserIdentitys(AppChannel channel, List<Guid> userIds)
     {
         var dic = new Dictionary<Guid, string>();
+
+        if (!channel.Scheme.IsNullOrEmpty())
+        {
+            return await GetThirdPartyUserPushIdentitys(channel, userIds);
+        }
+
         switch (channel.Type.Id)
         {
             case (int)ChannelTypes.App:
@@ -179,6 +185,7 @@ public class AuthChannelUserFinder : IChannelUserFinder
                 dic = userSystemDatas.ToDictionary(x => x.Key, x => x.Value?.ClientId ?? string.Empty);
                 break;
             case (int)ChannelTypes.WeixinWork:
+            case (int)ChannelTypes.WeixinWorkWebhook:
                 dic = await _authClient.UserService.GetLdapUsersAccountAsync(userIds);
                 break;
             case (int)ChannelTypes.Sms:
@@ -193,6 +200,18 @@ public class AuthChannelUserFinder : IChannelUserFinder
                 break;
         }
         return userIds.ToDictionary(x => x, x => FindChannelUserIdentity(x, dic));
+    }
+
+    private async Task<Dictionary<Guid, string>> GetThirdPartyUserPushIdentitys(AppChannel channel, List<Guid> userIds)
+    {
+        var input = new GetThirdPartyUserFieldValueModel
+        {
+            Scheme = channel.Scheme,
+            Field = channel.SchemeField,
+            UserIds = userIds
+        };
+        var thirdPartyUserPushIdentitys = await _authClient.UserService.GetThirdPartyUserFieldValueAsync(input);
+        return userIds.ToDictionary(x => x, x => FindChannelUserIdentity(x, thirdPartyUserPushIdentitys));
     }
 
     private string FindChannelUserIdentity(Guid userId, Dictionary<Guid, string> dic)

@@ -102,6 +102,20 @@ namespace Masa.Mc.Service.Admin.Migrations
                         .HasColumnType("nvarchar(128)")
                         .HasColumnName("DisplayName");
 
+                    b.Property<string>("Scheme")
+                        .IsRequired()
+                        .ValueGeneratedOnUpdateSometimes()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)")
+                        .HasColumnName("Scheme");
+
+                    b.Property<string>("SchemeField")
+                        .IsRequired()
+                        .ValueGeneratedOnUpdateSometimes()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)")
+                        .HasColumnName("SchemeField");
+
                     b.Property<int>("Type")
                         .ValueGeneratedOnUpdateSometimes()
                         .HasColumnType("int")
@@ -165,6 +179,20 @@ namespace Masa.Mc.Service.Admin.Migrations
 
                     b.Property<Guid>("Modifier")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Scheme")
+                        .IsRequired()
+                        .ValueGeneratedOnUpdateSometimes()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)")
+                        .HasColumnName("Scheme");
+
+                    b.Property<string>("SchemeField")
+                        .IsRequired()
+                        .ValueGeneratedOnUpdateSometimes()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)")
+                        .HasColumnName("SchemeField");
 
                     b.Property<int>("Type")
                         .ValueGeneratedOnUpdateSometimes()

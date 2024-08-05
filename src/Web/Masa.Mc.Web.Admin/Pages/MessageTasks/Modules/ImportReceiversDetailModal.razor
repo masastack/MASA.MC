@@ -29,7 +29,7 @@
                             @T("ClientId")
                         </th>
                     }
-                    @if (ChannelType == ChannelTypes.WeixinWork)
+                    @if (ChannelType == ChannelTypes.WeixinWork || ChannelType == ChannelTypes.WeixinWorkWebhook)
                     {
                         <th class="text-left body2 regular3--text rounded-0">
                             @T("Account")

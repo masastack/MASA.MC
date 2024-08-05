@@ -1,25 +1,25 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
-namespace Masa.Mc.Infrastructure.Weixin.Work.Infrastructure.OptionsResolve;
+namespace Masa.Mc.Infrastructure.Weixin.Work.Infrastructure.OptionsResolve.Work;
 
-public class WeixinWorkOptionsResolver : IWeixinWorkOptionsResolver
+public class WeixinWorkOptionsResolver : IOptionsResolver<IWeixinWorkOptions>
 {
     private readonly IServiceProvider _serviceProvider;
-    private readonly WeixinWorkResolveOptions _options;
+    private readonly ResolveOptions<IWeixinWorkOptions> _options;
 
     public WeixinWorkOptionsResolver(IServiceProvider serviceProvider,
-        IOptions<WeixinWorkResolveOptions> aliyunSmsResolveOptions)
+        IOptions<ResolveOptions<IWeixinWorkOptions>> resolveOptions)
     {
         _serviceProvider = serviceProvider;
-        _options = aliyunSmsResolveOptions.Value;
+        _options = resolveOptions.Value;
     }
 
     public async Task<IWeixinWorkOptions> ResolveAsync()
     {
         using (var serviceScope = _serviceProvider.CreateScope())
         {
-            var context = new WeixinWorkOptionsResolveContext(serviceScope.ServiceProvider);
+            var context = new OptionsResolveContext<IWeixinWorkOptions>(serviceScope.ServiceProvider);
 
             foreach (var resolver in _options.Contributors)
             {

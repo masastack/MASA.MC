@@ -16,3 +16,7 @@ else if (Type == ChannelTypes.WeixinWork)
 {
     <ChannelWeixinWorkExtraProperties @ref="_weixinWorkExtraPropertiesRef" @bind-Value="Value" PasswordView="PasswordView"/>
 }
+else if (Type == ChannelTypes.WeixinWorkWebhook)
+{
+    <ChannelWeixinWorkWebhookExtraProperties @ref="_weixinWorkWebhookExtraPropertiesRef" @bind-Value="Value" PasswordView="PasswordView" />
+}

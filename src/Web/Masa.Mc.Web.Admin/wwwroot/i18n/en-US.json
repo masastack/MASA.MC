@@ -207,7 +207,9 @@
   "CronExpressionInvalid": "Cron expression is invalid",
   "CronExpressionNotHasNextRunTime": "Cannot calculate the next run time from this expression",
   "ChannelBlock": {
-    "Title": "Channel"
+    "Title": "Channel",
+    "SchemeTooltip": "Select third-party-idp as the data source for pushing user IDs",
+    "SchemeFieldTooltip": "Do not use thridPartyIdentity"
   },
   "MessageTaskBlock": {
     "Title": "Message task",

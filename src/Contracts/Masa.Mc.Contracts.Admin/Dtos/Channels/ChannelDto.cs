@@ -20,4 +20,8 @@ public class ChannelDto : AuditEntityDto<Guid, Guid>
     public string ModifierName { get; set; } = string.Empty;
 
     public string Color { get; set; } = string.Empty;
+
+    public string Scheme { get; set; } = string.Empty;
+
+    public string SchemeField { get; set; } = string.Empty;
 }

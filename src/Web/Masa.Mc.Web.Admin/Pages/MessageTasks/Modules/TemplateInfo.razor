@@ -81,11 +81,7 @@
     {
         get
         {
-            if (Template.Channel?.Type == ChannelTypes.Sms || (Template.Channel?.Type == ChannelTypes.WeixinWork && Template.TemplateType == (int)WeixinWorkTemplateTypes.Text))
-            {
-                return false;
-            }
-            return true;
+            return !(Template.Channel?.Type == ChannelTypes.Sms || (Template.Channel?.Type == ChannelTypes.WeixinWork && Template.TemplateType == (int)WeixinWorkTemplateTypes.Text) || Template.Channel?.Type == ChannelTypes.WeixinWorkWebhook);
         }
     }
 }

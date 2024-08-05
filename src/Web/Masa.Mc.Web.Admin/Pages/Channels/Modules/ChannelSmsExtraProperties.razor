@@ -2,13 +2,13 @@
 <MForm Model="_model" @ref="Form" EnableValidation EnableI18n Class="my-3">
     <MRow Class="row-box">
         <MCol Md="12">
-            <STextField @bind-Value="_model.AccessKeyId"
+            <STextField @bind-Value="_model.AccessKeyId" Required
                         Label="@T("SmsChannelOptions.AccessKeyId")"
                         Hint="@T("ChannelOptions.Tips")">
             </STextField>
         </MCol>
         <MCol Md="12">
-            <STextField @bind-Value="_model.AccessKeySecret"
+            <STextField @bind-Value="_model.AccessKeySecret" Required
                         Label="@T("SmsChannelOptions.AccessKeySecret")"
                         Hint="@T("ChannelOptions.Tips")"
                         Type="@(!PasswordView?"password":_passwordShow ? "text" : "password")"
