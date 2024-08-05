@@ -327,7 +327,7 @@
   "CronExpressionNotHasNextRunTime": "您的表达式计算不出下一次运行时间",
   "ChannelBlock": {
     "Title": "渠道",
-    "SchemeTooltip": "选择三方用户作为推送用户标识的数据来源",
+    "SchemeTooltip": "选择三方平台作为推送用户标识的数据来源",
     "SchemeFieldTooltip": "不填使用三方身份标识"
   },
   "MessageTaskBlock": {

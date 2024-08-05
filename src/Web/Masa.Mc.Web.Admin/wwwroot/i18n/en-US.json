@@ -208,7 +208,7 @@
   "CronExpressionNotHasNextRunTime": "Cannot calculate the next run time from this expression",
   "ChannelBlock": {
     "Title": "Channel",
-    "SchemeTooltip": "Select third-party users as the data source for pushing user IDs",
+    "SchemeTooltip": "Select third-party-idp as the data source for pushing user IDs",
     "SchemeFieldTooltip": "Do not use thridPartyIdentity"
   },
   "MessageTaskBlock": {

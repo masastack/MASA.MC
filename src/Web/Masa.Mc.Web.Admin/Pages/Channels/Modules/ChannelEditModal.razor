@@ -29,7 +29,7 @@
                 <ChannelExtraProperties @ref="_channelExtraPropertiesRef" @bind-Value="_model.ExtraProperties" @bind-Type="_model.Type" />
                 <MRow Class="row-box">
                     <MCol Md="6">
-                        <SThirdPartySchemeSelect @bind-Value="@_model.Scheme" FillBackground="false" Label="@T("DisplayName.Scheme")">
+                        <SThirdPartySchemeSelect @bind-Value="@_model.Scheme" Clearable FillBackground="false" Label="@T("DisplayName.Scheme")" Tooltip="@T("SchemeTooltip")">
                         </SThirdPartySchemeSelect>
                     </MCol>
                     <MCol Md="6">
