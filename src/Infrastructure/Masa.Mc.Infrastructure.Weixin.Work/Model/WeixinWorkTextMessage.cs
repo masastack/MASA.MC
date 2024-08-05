@@ -5,9 +5,8 @@ namespace Masa.Mc.Infrastructure.Weixin.Work.Model;
 
 public class WeixinWorkTextMessage : WeixinWorkMessageBase
 {
-    [JsonPropertyName("content")]
     public string Content { get; set; }
-    public WeixinWorkTextMessage(string toUser, string content) : base(toUser, "text")
+    public WeixinWorkTextMessage(List<string> userId, string content) : base(userId, "text")
     {
         Content = content;
     }

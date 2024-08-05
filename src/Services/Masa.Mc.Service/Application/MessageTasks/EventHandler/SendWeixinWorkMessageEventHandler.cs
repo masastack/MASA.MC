@@ -5,7 +5,7 @@ namespace Masa.Mc.Service.Admin.Application.MessageTasks.EventHandler;
 
 public class SendWeixinWorkMessageEventHandler
 {
-    private readonly IWeixinWorkAsyncLocal _weixinWorkAsyncLocal;
+    private readonly IProviderAsyncLocal<IWeixinWorkOptions> _weixinWorkAsyncLocal;
     private readonly IWeixinWorkSender _weixinWorkSender;
     private readonly IChannelRepository _channelRepository;
     private readonly IMessageRecordRepository _messageRecordRepository;
@@ -14,7 +14,7 @@ public class SendWeixinWorkMessageEventHandler
     private readonly MessageTemplateDomainService _messageTemplateDomainService;
     private readonly II18n<DefaultResource> _i18n;
 
-    public SendWeixinWorkMessageEventHandler(IWeixinWorkAsyncLocal weixinWorkAsyncLocal
+    public SendWeixinWorkMessageEventHandler(IProviderAsyncLocal<IWeixinWorkOptions> weixinWorkAsyncLocal
         , IWeixinWorkSender weixinWorkSender
         , IChannelRepository channelRepository
         , IMessageRecordRepository messageRecordRepository
@@ -85,7 +85,7 @@ public class SendWeixinWorkMessageEventHandler
         await UpdateTaskHistoryAsync(taskHistory, messageRecords);
     }
 
-    private async Task<WeixinWorkMessageResponseBase> SendAsync(MessageData messageData, string toUser)
+    private async Task<WeixinWorkMessageResponse> SendAsync(MessageData messageData, List<string> toUser)
     {
         var type = messageData.GetDataValue<int>(BusinessConsts.MESSAGE_TYPE);
         if (type == (int)WeixinWorkTemplateTypes.TextCard)
@@ -129,14 +129,14 @@ public class SendWeixinWorkMessageEventHandler
         await _messageTaskHistoryRepository.UpdateAsync(taskHistory);
     }
 
-    private string GetToUser(ReceiverTypes receiverType, List<string> channelUserIdentitys)
+    private List<string> GetToUser(ReceiverTypes receiverType, List<string> channelUserIdentitys)
     {
         if (receiverType == ReceiverTypes.Broadcast)
         {
-            return "@all";
+            return new List<string> { "@all" };
         }
 
-        return string.Join("|", channelUserIdentitys);
+        return channelUserIdentitys;
     }
 
     private void SetInvalidResult(List<MessageRecord> messageRecords, string invalidUser)

@@ -1,0 +1,133 @@
+﻿// Copyright (c) MASA Stack All rights reserved.
+// Licensed under the Apache License. See LICENSE.txt in the project root for license information.
+
+namespace Masa.Mc.Service.Admin.Application.MessageTasks.EventHandler;
+
+public class SendWeixinWorkWebhookMessageEventHandler
+{
+    private readonly IProviderAsyncLocal<IWeixinWorkWebhookOptions> _asyncLocal;
+    private readonly IWeixinWorkWebhookSender _sender;
+    private readonly IChannelRepository _channelRepository;
+    private readonly IMessageRecordRepository _messageRecordRepository;
+    private readonly IMessageTaskHistoryRepository _messageTaskHistoryRepository;
+    private readonly IMessageTemplateRepository _templateRepository;
+    private readonly MessageTemplateDomainService _messageTemplateDomainService;
+    private readonly II18n<DefaultResource> _i18n;
+
+    public SendWeixinWorkWebhookMessageEventHandler(IProviderAsyncLocal<IWeixinWorkWebhookOptions> asyncLocal
+        , IWeixinWorkWebhookSender sender
+        , IChannelRepository channelRepository
+        , IMessageRecordRepository messageRecordRepository
+        , IMessageTaskHistoryRepository messageTaskHistoryRepository
+        , IMessageTemplateRepository templateRepository
+        , MessageTemplateDomainService messageTemplateDomainService
+        , II18n<DefaultResource> i18n)
+    {
+        _asyncLocal = asyncLocal;
+        _sender = sender;
+        _channelRepository = channelRepository;
+        _messageRecordRepository = messageRecordRepository;
+        _messageTaskHistoryRepository = messageTaskHistoryRepository;
+        _templateRepository = templateRepository;
+        _messageTemplateDomainService = messageTemplateDomainService;
+        _i18n = i18n;
+    }
+
+    [EventHandler]
+    public async Task HandleEventAsync(SendWeixinWorkWebhookMessageEvent eto)
+    {
+        var options = await GetOptionsAsync(eto.ChannelId);
+
+        var taskHistory = eto.MessageTaskHistory;
+        var messageRecords = new List<MessageRecord>();
+
+        var checkChannelUserIdentitys = await GetCheckChannelUserIdentitysAsync(eto);
+
+        foreach (var item in eto.MessageTaskHistory.ReceiverUsers)
+        {
+            var messageRecord = new MessageRecord(item.UserId, item.ChannelUserIdentity, eto.ChannelId, taskHistory.MessageTaskId, taskHistory.Id, item.Variables, eto.MessageData.MessageContent.Title, taskHistory.SendTime, taskHistory.MessageTask.SystemId);
+            messageRecord.SetMessageEntity(taskHistory.MessageTask.EntityType, taskHistory.MessageTask.EntityId);
+            messageRecord.SetDataValue(nameof(MessageTemplate.TemplateId), eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.TemplateId)));
+
+            if (checkChannelUserIdentitys.Contains(messageRecord.ChannelUserIdentity))
+            {
+                messageRecord.SetResult(false, _i18n.T("DailySendingLimit"));
+                continue;
+            }
+
+            messageRecords.Add(messageRecord);
+        }
+
+        var channelUserIdentitys = messageRecords.Where(x => !x.Success.HasValue).Select(x => x.ChannelUserIdentity).ToList();
+        var toUser = GetToUser(taskHistory.MessageTask.ReceiverType, channelUserIdentitys);
+
+        using (_asyncLocal.Change(options))
+        {
+            var response = await SendAsync(eto.MessageData, toUser);
+
+            if (response.ErrCode != 0)
+            {
+                SetResult(messageRecords, false, response.ErrMsg);
+            }
+            else
+            {
+                SetResult(messageRecords, true, string.Empty);
+            }
+        }
+
+        await _messageRecordRepository.AddRangeAsync(messageRecords);
+
+        await UpdateTaskHistoryAsync(taskHistory, messageRecords);
+    }
+
+    private async Task<WeixinWorkMessageResponseBase> SendAsync(MessageData messageData, List<string> toUser)
+    {
+        var message = new WeixinWorkTextMessage(toUser, messageData.MessageContent.Content);
+        return await _sender.SendTextAsync(message);
+    }
+
+    private async Task<WeixinWorkWebhookOptions> GetOptionsAsync(Guid channelId)
+    {
+        var channel = await _channelRepository.FindAsync(x => x.Id == channelId);
+        var options = new WeixinWorkWebhookOptions
+        {
+            Key = channel?.ExtraProperties.GetProperty<string>(nameof(WeixinWorkWebhookOptions.Key)) ?? string.Empty
+        };
+        return options;
+    }
+
+    private async Task<List<string>> GetCheckChannelUserIdentitysAsync(SendWeixinWorkWebhookMessageEvent eto)
+    {
+        var checkChannelUserIdentitys = new List<string>();
+        if (eto.MessageData.MessageType == MessageEntityTypes.Template)
+        {
+            var messageTemplate = await _templateRepository.FindAsync(x => x.Id == eto.MessageTaskHistory.MessageTask.EntityId, false);
+            checkChannelUserIdentitys = await _messageTemplateDomainService.CheckSendUpperLimitAsync(messageTemplate, eto.MessageTaskHistory.ReceiverUsers.Select(x => x.ChannelUserIdentity).Distinct().ToList());
+        }
+        return checkChannelUserIdentitys;
+    }
+
+    private async Task UpdateTaskHistoryAsync(MessageTaskHistory taskHistory, List<MessageRecord> messageRecords)
+    {
+        taskHistory.SetResult(!messageRecords.Any(x => x.Success != true) ? MessageTaskHistoryStatuses.Success : (messageRecords.Any(x => x.Success == true) ? MessageTaskHistoryStatuses.PartialFailure : MessageTaskHistoryStatuses.Fail));
+        await _messageTaskHistoryRepository.UpdateAsync(taskHistory);
+    }
+
+    private List<string> GetToUser(ReceiverTypes receiverType, List<string> channelUserIdentitys)
+    {
+        if (receiverType == ReceiverTypes.Broadcast)
+        {
+            return new List<string> { "@all" };
+        }
+
+        return channelUserIdentitys;
+    }
+
+    private void SetResult(List<MessageRecord> messageRecords, bool success, string failureReason)
+    {
+        foreach (var item in messageRecords.Where(x => !x.Success.HasValue))
+        {
+            item.SetResult(success, failureReason);
+        }
+    }
+}

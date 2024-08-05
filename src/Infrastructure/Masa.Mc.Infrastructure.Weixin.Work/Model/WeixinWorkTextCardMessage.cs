@@ -5,14 +5,13 @@ namespace Masa.Mc.Infrastructure.Weixin.Work.Model;
 
 public class WeixinWorkTextCardMessage : WeixinWorkMessageBase
 {
-    [JsonPropertyName("title")]
     public string Title { get; set; }
-    [JsonPropertyName("description")]
+
     public string Description { get; set; }
-    [JsonPropertyName("url")]
+
     public string Url { get; set; }
 
-    public WeixinWorkTextCardMessage(string toUser, string title, string description, string url) : base(toUser, "textcard")
+    public WeixinWorkTextCardMessage(List<string> userId, string title, string description, string url) : base(userId, "textcard")
     {
         Title = title;
         Description = description;

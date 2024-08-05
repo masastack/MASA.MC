@@ -1,0 +1,42 @@
+﻿@inherits AdminCompontentBase
+<MForm Model="_model" @ref="Form" EnableValidation EnableI18n Class="my-3">
+    <MRow Class="row-box">
+        <MCol Md="12">
+            <STextField @bind-Value="_model.Key" Required
+                        Label="@T("WeixinWorkWebhookChannelOptions.Key")"
+                        Hint="@T("ChannelOptions.Tips")">
+            </STextField>
+        </MCol>
+    </MRow>
+</MForm>
+
+@code {
+    [Parameter]
+    public ExtraPropertyDictionary Value { get; set; } = new();
+
+    [Parameter]
+    public EventCallback<ExtraPropertyDictionary> ValueChanged { get; set; }
+
+    [Parameter]
+    public bool PasswordView { get; set; }
+
+    public MForm Form { get; set; } = default!;
+
+    private WeixinWorkWebhookChannelOptions _model = new();
+    private bool _passwordShow;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _model = ExtensionPropertyHelper.ConvertToType<WeixinWorkWebhookChannelOptions>(Value);
+        }
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    public async Task HandleChangeAsync()
+    {
+        Value = ExtensionPropertyHelper.ConvertToExtraProperty(_model);
+        await ValueChanged.InvokeAsync(Value);
+    }
+}

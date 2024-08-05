@@ -11,4 +11,8 @@
 	<PackageReference Include="Senparc.Weixin.AspNet" Version="1.2.4" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Masa.Mc.Infrastructure.OptionsResolve\Masa.Mc.Infrastructure.OptionsResolve.csproj" />
+  </ItemGroup>
+
 </Project>

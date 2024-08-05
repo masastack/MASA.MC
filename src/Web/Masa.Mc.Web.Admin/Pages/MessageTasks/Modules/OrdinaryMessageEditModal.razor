@@ -56,14 +56,14 @@
                                                  TValue="int" OnChange="HandleSelectTemplateType">
                                         </SSelect>
                                     }
-                                    @if (ComputedTitleShow)
+                                    @if (_model.ComputedTitleShow)
                                     {
                                         <STextField @bind-Value="_model.MessageInfo.Title"
                                                     Label="@T("DisplayName.MessageInfoTitle")">
                                         </STextField>
                                     }
                                     <div>
-                                        @if (ComputedMarkdown)
+                                        @if (_model.ComputedMarkdown)
                                         {
                                             <DefaultMarkdown @bind-Html="_model.MessageInfo.Content" @bind-Value="_model.MessageInfo.Markdown" Style="height:400px"></DefaultMarkdown>
                                             <MInput @bind-Value="_model.MessageInfo.Content" />
@@ -75,12 +75,12 @@
                                             </STextarea>
                                         }
                                     </div>
-                                    @if (ComputedJumpUrlShow)
+                                    @if (_model.ComputedJumpUrlShow)
                                     {
                                         <STextField @bind-Value="_model.MessageInfo.JumpUrl"
                                                     Label="@T("DisplayName.MessageTemplateJumpUrl")" Tooltip="@T("JumpUrlTips")">
                                             <PrependContent>
-                                                <MCheckbox Class="mt-0" @bind-Value="_model.MessageInfo.IsJump" TValue="bool" Readonly="ComputedJumpUrlRequired"></MCheckbox>
+                                                <MCheckbox Class="mt-0" @bind-Value="_model.MessageInfo.IsJump" TValue="bool" Readonly="_model.ComputedJumpUrlRequired"></MCheckbox>
                                             </PrependContent>
                                         </STextField>
                                     }
@@ -132,7 +132,7 @@
                         <MStepperContent Class="full-height pa-0" Step="2">
                             <AutoHeight Overflow>
                                 <AutoHeightContent>
-                                    @if ((_model.ChannelType == ChannelTypes.WebsiteMessage || _model.ChannelType == ChannelTypes.App) && !_selectReceiverType)
+                                    @if (_model.ComputedBroadcast && !_selectReceiverType)
                                     {
                                         <ReceiverTypeSelect @bind-value="_model.ReceiverType" OnClick="HandleReceiverType" />
                                     }

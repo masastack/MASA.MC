@@ -185,6 +185,7 @@ public class AuthChannelUserFinder : IChannelUserFinder
                 dic = userSystemDatas.ToDictionary(x => x.Key, x => x.Value?.ClientId ?? string.Empty);
                 break;
             case (int)ChannelTypes.WeixinWork:
+            case (int)ChannelTypes.WeixinWorkWebhook:
                 dic = await _authClient.UserService.GetLdapUsersAccountAsync(userIds);
                 break;
             case (int)ChannelTypes.Sms:

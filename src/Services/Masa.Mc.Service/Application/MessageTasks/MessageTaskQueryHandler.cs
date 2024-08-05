@@ -216,6 +216,7 @@ public class MessageTaskQueryHandler
             ChannelTypes.WebsiteMessage => typeof(WebsiteMessageReceiverImportDto),
             ChannelTypes.App => typeof(AppReceiverImportDto),
             ChannelTypes.WeixinWork => typeof(WeixinWorkReceiverImportDto),
+            ChannelTypes.WeixinWorkWebhook => typeof(WeixinWorkReceiverImportDto),
             _ => throw new UserFriendlyException(errorCode: UserFriendlyExceptionCodes.UNKNOWN_CHANNEL_TYPE)
         };
     }

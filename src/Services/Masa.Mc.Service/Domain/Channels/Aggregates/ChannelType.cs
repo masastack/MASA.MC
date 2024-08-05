@@ -15,6 +15,8 @@ public class ChannelType : Enumeration
 
     public static ChannelType WeixinWork = new WeixinWorkChannel();
 
+    public static ChannelType WeixinWorkWebhook = new WeixinWorkWebhookChannel();
+
     public ChannelType(int id, string name) : base(id, name)
     {
     }
@@ -170,7 +172,32 @@ public class ChannelType : Enumeration
 
         public override string GetChannelUserIdentity(UserModel user)
         {
-            return user.Account;
+            return string.Empty;
+        }
+    }
+
+    private class WeixinWorkWebhookChannel : ChannelType
+    {
+        public WeixinWorkWebhookChannel() : base(6, nameof(WeixinWorkWebhook)) { }
+
+        public override SendMessageEvent GetSendMessageEvent(Guid channelId, MessageData messageData, MessageTaskHistory messageTaskHistory)
+        {
+            return new SendWeixinWorkWebhookMessageEvent(channelId, messageData, messageTaskHistory);
+        }
+
+        public override RetryMessageEvent GetRetryMessageEvent(Guid messageRecordId)
+        {
+            return new RetryWeixinWorkWebhookMessageEvent(messageRecordId);
+        }
+
+        public override string GetChannelUserIdentity(Receiver receiver)
+        {
+            return string.Empty;
+        }
+
+        public override string GetChannelUserIdentity(UserModel user)
+        {
+            return string.Empty;
         }
     }
 }

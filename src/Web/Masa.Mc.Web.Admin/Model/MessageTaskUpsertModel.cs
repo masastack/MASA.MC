@@ -38,4 +38,44 @@ public class MessageTaskUpsertModel
     public string SystemId { get; set; } = string.Empty;
 
     public AppMessageOptions ExtraProperties { get; set; } = new();
+
+    public bool ComputedJumpUrlShow
+    {
+        get
+        {
+            return ChannelType == ChannelTypes.WebsiteMessage || (ChannelType == ChannelTypes.App && ExtraProperties.IsWebsiteMessage) || (ChannelType == ChannelTypes.WeixinWork && MessageInfo.Type == (int)WeixinWorkTemplateTypes.TextCard);
+        }
+    }
+
+    public bool ComputedTitleShow
+    {
+        get
+        {
+            return !(ChannelType == ChannelTypes.Sms || (ChannelType == ChannelTypes.WeixinWork && MessageInfo.Type == (int)WeixinWorkTemplateTypes.Text) || ChannelType == ChannelTypes.WeixinWorkWebhook);
+        }
+    }
+
+    public bool ComputedJumpUrlRequired
+    {
+        get
+        {
+            return ChannelType == ChannelTypes.WeixinWork && MessageInfo.Type == (int)WeixinWorkTemplateTypes.TextCard;
+        }
+    }
+
+    public bool ComputedMarkdown
+    {
+        get
+        {
+            return ChannelType != ChannelTypes.App && ChannelType != ChannelTypes.WeixinWork && ChannelType != ChannelTypes.WeixinWorkWebhook;
+        }
+    }
+
+    public bool ComputedBroadcast
+    {
+        get
+        {
+            return ChannelType == ChannelTypes.WebsiteMessage || ChannelType == ChannelTypes.App || ChannelType == ChannelTypes.WeixinWork || ChannelType == ChannelTypes.WeixinWorkWebhook;
+        }
+    }
 }

@@ -21,38 +21,6 @@ public partial class OrdinaryMessageCreateModal : AdminCompontentBase
 
     protected override string? PageName { get; set; } = "MessageTaskBlock";
 
-    private bool ComputedJumpUrlShow
-    {
-        get
-        {
-            return _model.ChannelType == ChannelTypes.WebsiteMessage || (_model.ChannelType == ChannelTypes.App && _model.ExtraProperties.IsWebsiteMessage) || (_model.ChannelType == ChannelTypes.WeixinWork && _model.MessageInfo.Type == (int)WeixinWorkTemplateTypes.TextCard);
-        }
-    }
-
-    private bool ComputedTitleShow
-    {
-        get
-        {
-            return !(_model.ChannelType == ChannelTypes.Sms || (_model.ChannelType == ChannelTypes.WeixinWork && _model.MessageInfo.Type == (int)WeixinWorkTemplateTypes.Text));
-        }
-    }
-
-    private bool ComputedJumpUrlRequired
-    {
-        get
-        {
-            return _model.ChannelType == ChannelTypes.WeixinWork && _model.MessageInfo.Type == (int)WeixinWorkTemplateTypes.TextCard;
-        }
-    }
-
-    private bool ComputedMarkdown
-    {
-        get
-        {
-            return _model.ChannelType != ChannelTypes.App && _model.ChannelType != ChannelTypes.WeixinWork;
-        }
-    }
-
     public async Task OpenModalAsync()
     {
         await InvokeAsync(() =>
