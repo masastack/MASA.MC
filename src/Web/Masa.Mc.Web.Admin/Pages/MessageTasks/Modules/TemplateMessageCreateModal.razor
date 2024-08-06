@@ -110,7 +110,7 @@
                                             <SIcon Size="24" Color="emphasis2">mdi-keyboard-backspace</SIcon>
                                         </MButton>
                                         <MSpacer />
-                                        @if (_model.ComputedBroadcast || _selectReceiverType)
+                                        @if (!_model.ComputedBroadcast || _selectReceiverType)
                                         {
                                             <SButton Medium OnClick="async() => await Throttle(HandleSaveAsync)" Outlined>@T("Save")</SButton>
                                             <SButton Medium Class="ml-6" OnClick="()=> HandleNextStep()">@T("NextStep")</SButton>
