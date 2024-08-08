@@ -28,7 +28,8 @@ public class ResolveMessageTaskEventHandler
         {
             MessageTaskId = eto.MessageTaskId,
             OperatorId = eto.OperatorId,
-            Environment = _multiEnvironmentContext.CurrentEnvironment
+            Environment = _multiEnvironmentContext.CurrentEnvironment,
+            TraceParent = Activity.Current?.Id
         };
 
         await BackgroundJobManager.EnqueueAsync(args);

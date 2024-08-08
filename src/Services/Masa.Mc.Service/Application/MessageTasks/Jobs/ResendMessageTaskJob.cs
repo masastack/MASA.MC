@@ -7,6 +7,8 @@ public class ResendMessageTaskJob : BackgroundJobBase<ResendMessageTaskJobArgs>
 {
     private readonly IServiceProvider _serviceProvider;
 
+    public static ActivitySource ActivitySource { get; private set; } = new("Masa.Mc.Background");
+
     public ResendMessageTaskJob(ILogger<BackgroundJobBase<ResendMessageTaskJobArgs>>? logger
         , IServiceProvider serviceProvider) : base(logger)
     {
@@ -16,32 +18,48 @@ public class ResendMessageTaskJob : BackgroundJobBase<ResendMessageTaskJobArgs>
     protected override async Task ExecutingAsync(ResendMessageTaskJobArgs args)
     {
         await using var scope = _serviceProvider.CreateAsyncScope();
-        var multiEnvironmentSetter = scope.ServiceProvider.GetRequiredService<IMultiEnvironmentSetter>();
-        multiEnvironmentSetter.SetEnvironment(args.Environment);
-        var messageRecordRepository = scope.ServiceProvider.GetRequiredService<IMessageRecordRepository>();
-        var messageTaskHistoryRepository = scope.ServiceProvider.GetRequiredService<IMessageTaskHistoryRepository>();
-        var eventBus = scope.ServiceProvider.GetRequiredService<IEventBus>();
-        var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
+        var (messageRecordRepository, messageTaskHistoryRepository, eventBus, unitOfWork) = await GetRequiredServiceAsync(scope.ServiceProvider, args.Environment);
 
-        var records = await (await messageRecordRepository.WithDetailsAsync()).Where(x => x.MessageTaskId == args.MessageTaskId && x.Success == false).ToListAsync();
+        var activity = string.IsNullOrEmpty(args.TraceParent) ? default : ActivitySource.StartActivity("", ActivityKind.Consumer, args.TraceParent);
 
-        foreach (var item in records)
+        try
         {
-            var eto = item.Channel.Type.GetRetryMessageEvent(item.Id);
-            await eventBus.PublishAsync(eto);
+            var records = await (await messageRecordRepository.WithDetailsAsync()).Where(x => x.MessageTaskId == args.MessageTaskId && x.Success == false).ToListAsync();
+
+            foreach (var item in records)
+            {
+                var eto = item.Channel.Type.GetRetryMessageEvent(item.Id);
+                await eventBus.PublishAsync(eto);
+            }
+
+            await unitOfWork.SaveChangesAsync();
+
+            var historys = await messageTaskHistoryRepository.GetListAsync(x => x.MessageTaskId == args.MessageTaskId);
+            foreach (var item in historys)
+            {
+                await eventBus.PublishAsync(new UpdateMessageTaskHistoryStatusEvent(item.Id));
+            }
+
+            await unitOfWork.SaveChangesAsync();
+
+            await eventBus.PublishAsync(new UpdateMessageTaskStatusEvent(args.MessageTaskId));
         }
-
-        await unitOfWork.SaveChangesAsync();
-
-        var historys = await messageTaskHistoryRepository.GetListAsync(x => x.MessageTaskId == args.MessageTaskId);
-        foreach (var item in historys)
+        finally
         {
-            await eventBus.PublishAsync(new UpdateMessageTaskHistoryStatusEvent(item.Id));
+            activity?.Dispose();
         }
+    }
 
-        await unitOfWork.SaveChangesAsync();
+    private async Task<(IMessageRecordRepository, IMessageTaskHistoryRepository, IEventBus, IUnitOfWork)> GetRequiredServiceAsync(IServiceProvider serviceProvider, string environment)
+    {
+        var multiEnvironmentSetter = serviceProvider.GetRequiredService<IMultiEnvironmentSetter>();
+        multiEnvironmentSetter.SetEnvironment(environment);
+        var messageRecordRepository = serviceProvider.GetRequiredService<IMessageRecordRepository>();
+        var messageTaskHistoryRepository = serviceProvider.GetRequiredService<IMessageTaskHistoryRepository>();
+        var eventBus = serviceProvider.GetRequiredService<IEventBus>();
+        var unitOfWork = serviceProvider.GetRequiredService<IUnitOfWork>();
 
-        await eventBus.PublishAsync(new UpdateMessageTaskStatusEvent(args.MessageTaskId));
+        return (messageRecordRepository, messageTaskHistoryRepository, eventBus, unitOfWork);
     }
 }
 

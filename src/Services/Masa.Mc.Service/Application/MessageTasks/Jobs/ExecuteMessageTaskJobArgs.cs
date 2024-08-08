@@ -12,4 +12,6 @@ public class ExecuteMessageTaskJobArgs : MultiEnvironment
     public Guid JobId { get; set; } = default;
 
     public Guid TaskId { get; set; } = default;
+
+    public string? TraceParent { get; set; }
 }

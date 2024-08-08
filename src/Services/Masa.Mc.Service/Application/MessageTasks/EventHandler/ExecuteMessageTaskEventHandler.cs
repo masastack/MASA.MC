@@ -21,7 +21,8 @@ public class ExecuteMessageTaskEventHandler
             IsTest = eto.IsTest,
             JobId = eto.JobId,
             TaskId = eto.TaskId,
-            Environment = _multiEnvironmentContext.CurrentEnvironment
+            Environment = _multiEnvironmentContext.CurrentEnvironment,
+            TraceParent = Activity.Current?.Id
         };
 
         await BackgroundJobManager.EnqueueAsync(args);

@@ -8,4 +8,6 @@ public class ResolveMessageTaskJobArgs : MultiEnvironment
     public Guid MessageTaskId { get; set; }
 
     public Guid OperatorId { get; set; } = default;
+
+    public string? TraceParent { get; set; }
 }

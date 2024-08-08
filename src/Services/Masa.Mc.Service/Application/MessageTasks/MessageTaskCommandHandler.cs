@@ -193,7 +193,8 @@ public class MessageTaskCommandHandler
         var args = new ResendMessageTaskJobArgs()
         {
             MessageTaskId = command.MessageTaskId,
-            Environment = _multiEnvironmentContext.CurrentEnvironment
+            Environment = _multiEnvironmentContext.CurrentEnvironment,
+            TraceParent = Activity.Current?.Id
         };
 
         await BackgroundJobManager.EnqueueAsync(args);
