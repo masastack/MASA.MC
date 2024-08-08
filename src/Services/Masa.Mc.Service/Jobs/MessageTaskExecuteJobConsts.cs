@@ -8,4 +8,5 @@ public class MessageTaskExecuteJobConsts
     public const string JOB_APP_IDENTITY = "masa-mc-job";
     public const string JOB_ENTRY_ASSEMBLY = "Masa.Mc.Service.Admin.dll";
     public const string JOB_ENTRY_METHOD = "Masa.Mc.Service.Admin.Jobs.MessageTaskExecuteJob";
+    public static ActivitySource ActivitySource { get; private set; } = new("Masa.Mc.Background");
 }

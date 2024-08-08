@@ -7,7 +7,6 @@ public class ResolveMessageTaskJob : BackgroundJobBase<ResolveMessageTaskJobArgs
 {
     private readonly IServiceProvider _serviceProvider;
 
-
     public ResolveMessageTaskJob(ILogger<BackgroundJobBase<ResolveMessageTaskJobArgs>>? logger
         , IServiceProvider serviceProvider) : base(logger)
     {
@@ -17,20 +16,53 @@ public class ResolveMessageTaskJob : BackgroundJobBase<ResolveMessageTaskJobArgs
     protected override async Task ExecutingAsync(ResolveMessageTaskJobArgs args)
     {
         await using var scope = _serviceProvider.CreateAsyncScope();
-        var multiEnvironmentSetter = scope.ServiceProvider.GetRequiredService<IMultiEnvironmentSetter>();
-        multiEnvironmentSetter.SetEnvironment(args.Environment);
-        var channelUserFinder = scope.ServiceProvider.GetRequiredService<IChannelUserFinder>();
-        var messageTaskRepository = scope.ServiceProvider.GetRequiredService<IMessageTaskRepository>();
-        var messageTaskHistoryRepository = scope.ServiceProvider.GetRequiredService<IMessageTaskHistoryRepository>();
-        var messageTaskJobService = scope.ServiceProvider.GetRequiredService<IMessageTaskJobService>();
-        var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
-        var userContext = scope.ServiceProvider.GetRequiredService<IUserContext>();
+        var (channelUserFinder, messageTaskRepository, messageTaskHistoryRepository, messageTaskJobService, unitOfWork, userContext) = await GetRequiredServiceAsync(scope.ServiceProvider, args.Environment);
 
-        var sendTime = DateTimeOffset.Now;
-        var messageTask = (await messageTaskRepository.WithDetailsAsync()).FirstOrDefault(x => x.Id == args.MessageTaskId);
-        if (messageTask == null)
-            return;
+        var activity = string.IsNullOrEmpty(args.TraceParent) ? default : MessageTaskExecuteJobConsts.ActivitySource.StartActivity("", ActivityKind.Consumer, args.TraceParent);
 
+        try
+        {
+            var messageTask = (await messageTaskRepository.WithDetailsAsync()).FirstOrDefault(x => x.Id == args.MessageTaskId);
+            if (messageTask == null)
+                return;
+
+            var receiverUsers = await GetReceiverUsersAsync(channelUserFinder, messageTask);
+
+            await messageTaskHistoryRepository.RemoveAsync(x => x.MessageTaskId == args.MessageTaskId);
+
+            if (!messageTask.SendRules.IsCustom)
+            {
+                await GenerateSingleTaskHistoryAsync(messageTaskRepository, messageTaskHistoryRepository, messageTask, receiverUsers);
+                await unitOfWork.SaveChangesAsync();
+                await unitOfWork.CommitAsync();
+                return;
+            }
+
+            await GenerateTaskHistoryAsync(messageTaskHistoryRepository, messageTask, receiverUsers);
+
+            var userId = userContext.GetUserId<Guid>();
+            var operatorId = userId == default ? args.OperatorId : userId;
+
+            var jobId = await messageTaskJobService.RegisterJobAsync(messageTask.SchedulerJobId, args.MessageTaskId, messageTask.SendRules.CronExpression, operatorId, messageTask.DisplayName);
+            messageTask.SetJobId(jobId);
+
+            await messageTaskRepository.UpdateAsync(messageTask);
+            await unitOfWork.SaveChangesAsync();
+            await unitOfWork.CommitAsync();
+
+            if (string.IsNullOrEmpty(messageTask.SendRules.CronExpression) && jobId != default)
+            {
+                await messageTaskJobService.StartJobAsync(jobId, operatorId);
+            }
+        }
+        finally
+        {
+            activity?.Dispose();
+        }
+    }
+
+    private async Task<List<MessageReceiverUser>> GetReceiverUsersAsync(IChannelUserFinder channelUserFinder, MessageTask messageTask)
+    {
         var receiverUsers = new List<MessageReceiverUser>();
 
         if (messageTask.ReceiverType != ReceiverTypes.Broadcast)
@@ -38,20 +70,21 @@ public class ResolveMessageTaskJob : BackgroundJobBase<ResolveMessageTaskJobArgs
             receiverUsers = (await channelUserFinder.GetReceiverUsersAsync(messageTask.Channel, messageTask.Variables, messageTask.Receivers)).ToList();
         }
 
-        await messageTaskHistoryRepository.RemoveAsync(x => x.MessageTaskId == args.MessageTaskId);
+        return receiverUsers;
+    }
 
-        if (!messageTask.SendRules.IsCustom)
-        {
-            var history = new MessageTaskHistory(messageTask.Id, receiverUsers, false, sendTime);
-            history.ExecuteTask();
-            await messageTaskRepository.UpdateAsync(messageTask);
-            await messageTaskHistoryRepository.AddAsync(history);
-            await unitOfWork.SaveChangesAsync();
-            await unitOfWork.CommitAsync();
+    private async Task GenerateSingleTaskHistoryAsync(IMessageTaskRepository messageTaskRepository, IMessageTaskHistoryRepository messageTaskHistoryRepository, MessageTask messageTask, List<MessageReceiverUser> receiverUsers)
+    {
+        var sendTime = DateTimeOffset.Now;
+        var history = new MessageTaskHistory(messageTask.Id, receiverUsers, false, sendTime);
+        history.ExecuteTask();
+        await messageTaskRepository.UpdateAsync(messageTask);
+        await messageTaskHistoryRepository.AddAsync(history);
+    }
 
-            return;
-        }
-
+    private async Task GenerateTaskHistoryAsync(IMessageTaskHistoryRepository messageTaskHistoryRepository, MessageTask messageTask, List<MessageReceiverUser> receiverUsers)
+    {
+        var sendTime = DateTimeOffset.Now;
         var historyNum = messageTask.GetHistoryCount(receiverUsers);
         var sendingCount = messageTask.GetSendingCount(receiverUsers);
 
@@ -69,21 +102,19 @@ public class ResolveMessageTaskJob : BackgroundJobBase<ResolveMessageTaskJobArgs
                 await messageTaskHistoryRepository.AddAsync(history);
             }
         }
+    }
 
+    private async Task<(IChannelUserFinder, IMessageTaskRepository, IMessageTaskHistoryRepository, IMessageTaskJobService, IUnitOfWork, IUserContext)> GetRequiredServiceAsync(IServiceProvider serviceProvider, string environment)
+    {
+        var multiEnvironmentSetter = serviceProvider.GetRequiredService<IMultiEnvironmentSetter>();
+        multiEnvironmentSetter.SetEnvironment(environment);
+        var channelUserFinder = serviceProvider.GetRequiredService<IChannelUserFinder>();
+        var messageTaskRepository = serviceProvider.GetRequiredService<IMessageTaskRepository>();
+        var messageTaskHistoryRepository = serviceProvider.GetRequiredService<IMessageTaskHistoryRepository>();
+        var messageTaskJobService = serviceProvider.GetRequiredService<IMessageTaskJobService>();
+        var unitOfWork = serviceProvider.GetRequiredService<IUnitOfWork>();
+        var userContext = serviceProvider.GetRequiredService<IUserContext>();
 
-        var userId = userContext.GetUserId<Guid>();
-        var operatorId = userId == default ? args.OperatorId : userId;
-
-        var jobId = await messageTaskJobService.RegisterJobAsync(messageTask.SchedulerJobId, args.MessageTaskId, messageTask.SendRules.CronExpression, operatorId, messageTask.DisplayName);
-        messageTask.SetJobId(jobId);
-
-        await messageTaskRepository.UpdateAsync(messageTask);
-        await unitOfWork.SaveChangesAsync();
-        await unitOfWork.CommitAsync();
-
-        if (string.IsNullOrEmpty(messageTask.SendRules.CronExpression) && jobId != default)
-        {
-            await messageTaskJobService.StartJobAsync(jobId, operatorId);
-        }
+        return (channelUserFinder, messageTaskRepository, messageTaskHistoryRepository, messageTaskJobService, unitOfWork, userContext);
     }
 }
