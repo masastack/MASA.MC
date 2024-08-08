@@ -7,8 +7,6 @@ public class ResolveMessageTaskJob : BackgroundJobBase<ResolveMessageTaskJobArgs
 {
     private readonly IServiceProvider _serviceProvider;
 
-    public static ActivitySource ActivitySource { get; private set; } = new("Masa.Mc.Background");
-
     public ResolveMessageTaskJob(ILogger<BackgroundJobBase<ResolveMessageTaskJobArgs>>? logger
         , IServiceProvider serviceProvider) : base(logger)
     {
@@ -20,7 +18,7 @@ public class ResolveMessageTaskJob : BackgroundJobBase<ResolveMessageTaskJobArgs
         await using var scope = _serviceProvider.CreateAsyncScope();
         var (channelUserFinder, messageTaskRepository, messageTaskHistoryRepository, messageTaskJobService, unitOfWork, userContext) = await GetRequiredServiceAsync(scope.ServiceProvider, args.Environment);
 
-        var activity = string.IsNullOrEmpty(args.TraceParent) ? default : ActivitySource.StartActivity("", ActivityKind.Consumer, args.TraceParent);
+        var activity = string.IsNullOrEmpty(args.TraceParent) ? default : MessageTaskExecuteJobConsts.ActivitySource.StartActivity("", ActivityKind.Consumer, args.TraceParent);
 
         try
         {

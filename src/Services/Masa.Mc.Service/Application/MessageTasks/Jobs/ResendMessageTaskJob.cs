@@ -7,8 +7,6 @@ public class ResendMessageTaskJob : BackgroundJobBase<ResendMessageTaskJobArgs>
 {
     private readonly IServiceProvider _serviceProvider;
 
-    public static ActivitySource ActivitySource { get; private set; } = new("Masa.Mc.Background");
-
     public ResendMessageTaskJob(ILogger<BackgroundJobBase<ResendMessageTaskJobArgs>>? logger
         , IServiceProvider serviceProvider) : base(logger)
     {
@@ -20,7 +18,7 @@ public class ResendMessageTaskJob : BackgroundJobBase<ResendMessageTaskJobArgs>
         await using var scope = _serviceProvider.CreateAsyncScope();
         var (messageRecordRepository, messageTaskHistoryRepository, eventBus, unitOfWork) = await GetRequiredServiceAsync(scope.ServiceProvider, args.Environment);
 
-        var activity = string.IsNullOrEmpty(args.TraceParent) ? default : ActivitySource.StartActivity("", ActivityKind.Consumer, args.TraceParent);
+        var activity = string.IsNullOrEmpty(args.TraceParent) ? default : MessageTaskExecuteJobConsts.ActivitySource.StartActivity("", ActivityKind.Consumer, args.TraceParent);
 
         try
         {

@@ -45,7 +45,7 @@ public static class OpenTelemetryMcExtensions
             {
                 builder.SetResourceBuilder(resources);
                 builder.AddOtlpExporter(options => options.Endpoint = uri);
-                builder.AddSource(ResolveMessageTaskJob.ActivitySource.Name);
+                builder.AddSource(MessageTaskExecuteJobConsts.ActivitySource.Name);
             },
             builder =>
             {
