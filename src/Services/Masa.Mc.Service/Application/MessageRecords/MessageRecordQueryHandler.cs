@@ -45,7 +45,7 @@ public class MessageRecordQueryHandler
             PageSize = options.PageSize,
             Sorting = new Dictionary<string, bool>
             {
-                [nameof(MessageRecordQueryModel.CreationTime)] = true
+                [nameof(MessageRecordQueryModel.Id)] = true
             }
         });
         var dtos = resultList.Result.Adapt<List<MessageRecordDto>>();
