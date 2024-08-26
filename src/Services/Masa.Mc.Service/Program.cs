@@ -15,20 +15,14 @@ var publicConfiguration = builder.Services.GetMasaConfiguration().ConfigurationA
 
 var identityServerUrl = masaStackConfig.GetSsoDomain();
 
-builder.Services.AddMcObservable(builder.Logging, () =>
+builder.Services.AddObservable(builder.Logging, new MasaObservableOptions
 {
-    return new MasaObservableOptions
-    {
-        ServiceNameSpace = builder.Environment.EnvironmentName,
-        ServiceVersion = masaStackConfig.Version,
-        ServiceName = masaStackConfig.GetServiceId(MasaStackProject.MC),
-        Layer = masaStackConfig.Namespace,
-        ServiceInstanceId = builder.Configuration.GetValue<string>("HOSTNAME")
-    };
-}, () =>
-{
-    return masaStackConfig.OtlpUrl;
-});
+    ServiceNameSpace = builder.Environment.EnvironmentName,
+    ServiceVersion = masaStackConfig.Version,
+    ServiceName = masaStackConfig.GetServiceId(MasaStackProject.MC),
+    Layer = masaStackConfig.Namespace,
+    ServiceInstanceId = builder.Configuration.GetValue<string>("HOSTNAME")!
+}, masaStackConfig.OtlpUrl, activitySources: new string[] { MessageTaskExecuteJobConsts.ActivitySource.Name });
 
 #if DEBUG
 builder.Services.AddDaprStarter(opt =>
