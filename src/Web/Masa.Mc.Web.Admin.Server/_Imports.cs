@@ -29,3 +29,4 @@ global using FluentValidation.Resources;
 global using Masa.BuildingBlocks.StackSdks.Config;
 global using Masa.Contrib.Configuration.ConfigurationApi.Dcc;
 global using Masa.Contrib.StackSdks.Caller;
+global using Masa.Mc.Contracts.Admin.Infrastructure;
