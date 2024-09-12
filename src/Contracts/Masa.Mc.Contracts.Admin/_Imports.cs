@@ -26,3 +26,8 @@ global using System.Reflection;
 global using System.Collections.ObjectModel;
 global using System.ComponentModel.DataAnnotations;
 global using System.Collections.Concurrent;
+global using IdentityModel.Client;
+global using Masa.BuildingBlocks.StackSdks.Config;
+global using Masa.Contrib.StackSdks.Caller;
+global using Masa.Contrib.StackSdks.Config;
+global using Microsoft.Extensions.Primitives;
