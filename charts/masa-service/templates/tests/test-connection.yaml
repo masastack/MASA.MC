@@ -9,7 +9,7 @@ metadata:
 spec:
   containers:
     - name: wget
-      image: busybox
+      image: registry.cn-hangzhou.aliyuncs.com/masastack/busybox:latest
       command: ['wget']
       args: ['{{ include "masa-service.fullname" . }}:{{ .Values.service.port }}']
   restartPolicy: Never
