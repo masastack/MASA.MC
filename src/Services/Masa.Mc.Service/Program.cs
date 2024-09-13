@@ -96,11 +96,11 @@ var redisOptions = new RedisConfigurationOptions
 };
 var configuration = builder.Services.GetMasaConfiguration().ConfigurationApi.GetDefault();
 builder.Services.AddScoped<ITokenGenerater, TokenGenerater>();
+builder.Services.AddCache();
 builder.Services.AddAuthClient(masaStackConfig.GetAuthServiceDomain(), redisOptions);
 builder.Services.AddMcClient(masaStackConfig.GetMcServiceDomain());
 builder.Services.AddPmClient(masaStackConfig.GetPmServiceDomain());
 builder.Services.AddSchedulerClient(masaStackConfig.GetSchedulerServiceDomain());
-builder.Services.AddMultilevelCache(options => options.UseStackExchangeRedisCache());
 builder.Services.AddAliyunSms();
 builder.Services.AddMailKit();
 builder.Services.AddAppNotification();

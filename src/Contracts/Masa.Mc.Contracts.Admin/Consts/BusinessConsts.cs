@@ -10,5 +10,6 @@ public static class BusinessConsts
     public const string IS_APNS_PRODUCTION = "IsApnsProduction";
     public const string APP_PUSH_MSG_ID = "MsgId";
     public const string MESSAGE_TYPE = "MessageType";
+    public const string COMMON_SCOPE = "MasaStack";
 }
 
