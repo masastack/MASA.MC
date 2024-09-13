@@ -1,4 +1,4 @@
-﻿namespace Lonsid.Fusion.Infrastructure.Cache;
+﻿namespace Masa.Mc.Infrastructure.Cache;
 
 public static class ServiceCollectionExtensions
 {
