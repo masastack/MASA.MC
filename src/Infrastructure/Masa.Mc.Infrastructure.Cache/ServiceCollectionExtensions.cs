@@ -5,7 +5,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddCache(this IServiceCollection services)
     {
         services.AddMultilevelCache(options => options.UseStackExchangeRedisCache());
-        services.AddSingleton<ICacheContext, CacheContext>();
+        services.AddScoped<ICacheContext, CacheContext>();
         return services;
     }
 }
