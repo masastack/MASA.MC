@@ -95,8 +95,8 @@ var redisOptions = new RedisConfigurationOptions
     Password = masaStackConfig.RedisModel.RedisPassword
 };
 var configuration = builder.Services.GetMasaConfiguration().ConfigurationApi.GetDefault();
+builder.Services.AddCache(redisOptions);
 builder.Services.AddScoped<ITokenGenerater, TokenGenerater>();
-builder.Services.AddCache();
 builder.Services.AddAuthClient(masaStackConfig.GetAuthServiceDomain(), redisOptions);
 builder.Services.AddMcClient(masaStackConfig.GetMcServiceDomain());
 builder.Services.AddPmClient(masaStackConfig.GetPmServiceDomain());
