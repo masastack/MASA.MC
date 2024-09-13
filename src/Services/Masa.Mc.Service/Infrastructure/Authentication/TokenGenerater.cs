@@ -38,7 +38,6 @@ public class TokenGenerater : ITokenGenerater
         if (_httpContextAccessor.HttpContext == null)
         {
             var accessToken = GetClientCredentialsTokenAsync().Result;
-            var a = 1;
             return new TokenProvider { AccessToken = accessToken };
         }
 
