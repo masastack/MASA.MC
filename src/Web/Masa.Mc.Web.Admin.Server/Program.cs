@@ -39,6 +39,7 @@ if (string.IsNullOrEmpty(mcBaseAddress))
     mcBaseAddress = masaStackConfig.GetMcServiceDomain();
 }
 
+builder.Services.AddScoped<ITokenGenerater, TokenGenerater>();
 await builder.Services.AddMasaStackComponentsAsync(MasaStackProject.MC, "wwwroot/i18n", authBaseAddress);
 
 builder.Services.AddHttpContextAccessor();
