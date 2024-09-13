@@ -5,8 +5,6 @@ namespace Masa.Mc.ApiGateways.Caller;
 
 public class McCaller : StackHttpClientCaller
 {
-    private const string DEFAULT_SCHEME = "Bearer";
-
     #region Field
     ChannelService? _channelService;
     MessageTemplateService? _messageTemplateService;

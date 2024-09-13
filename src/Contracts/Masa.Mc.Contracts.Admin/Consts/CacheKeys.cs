@@ -7,4 +7,10 @@ public class CacheKeys
 {
     public const string MESSAGE_CURSOR_CHECK_COUNT = nameof(MESSAGE_CURSOR_CHECK_COUNT);
     public const string GET_NOTICE_LIST = nameof(GET_NOTICE_LIST);
+    public const string CLIENT_CREDENTIALS_TOKEN = "client_credentials_token:";
+
+    public static string ClientCredentialsTokenKey(string clientId)
+    {
+        return $"{CLIENT_CREDENTIALS_TOKEN}{clientId}";
+    }
 }
