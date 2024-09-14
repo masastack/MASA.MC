@@ -2,58 +2,48 @@
 
 internal class CacheContext : ICacheContext
 {
-    readonly IMultilevelCacheClient _multilevelCache;
-
-    readonly MultilevelCacheGlobalOptions _cacheOption;
+    readonly IDistributedCacheClient _distributedCache;
 
     public CacheContext(
-        IMultilevelCacheClient multilevelCache,
-        IOptions<MultilevelCacheGlobalOptions> cacheOption)
+        IDistributedCacheClient distributedCache)
     {
-        _multilevelCache = multilevelCache;
-        _cacheOption = cacheOption.Value;
+        _distributedCache = distributedCache;
     }
 
 
     public async Task SetAsync<T>(string key, T item, CacheEntryOptions? cacheEntryOptions)
     {
-        await _multilevelCache.SetAsync(key, item, cacheEntryOptions ?? _cacheOption.CacheEntryOptions);
+        await _distributedCache.SetAsync(key, item, cacheEntryOptions);
     }
 
 
     public async Task<T?> GetAsync<T>(string key)
     {
-        return await _multilevelCache.GetAsync<T>(key);
+        return await _distributedCache.GetAsync<T>(key);
     }
 
     public async Task Remove<T>(string key)
     {
-       await _multilevelCache.RemoveAsync<T>(key);
+       await _distributedCache.RemoveAsync<T>(key);
     }
 
     public async Task<T> GetOrSetAsync<T>(string key, Func<Task<T>> setter, CacheEntryOptions? cacheEntryOptions)
     {
-        cacheEntryOptions ??= _cacheOption.CacheEntryOptions!;
-
-        var value = await _multilevelCache.GetAsync<T>(key);
+        var value = await _distributedCache.GetAsync<T>(key);
 
         if (value != null)
             return value;
 
         value = await setter();
 
-        await _multilevelCache.SetAsync(key, value, new CombinedCacheEntryOptions
-        {
-            MemoryCacheEntryOptions = cacheEntryOptions,
-            DistributedCacheEntryOptions = cacheEntryOptions
-        });
+        await _distributedCache.SetAsync(key, value, cacheEntryOptions);
 
         return value;
     }
 
     public async Task<T> GetOrSetAsync<T>(string key, Func<Task<(T, CacheEntryOptions cacheEntryOptions)>> setter)
     {
-        var value = await _multilevelCache.GetAsync<T>(key);
+        var value = await _distributedCache.GetAsync<T>(key);
 
         if (value != null)
             return value;
@@ -62,11 +52,7 @@ internal class CacheContext : ICacheContext
         value = setterResult.Item1;
         var cacheEntryOptions = setterResult.Item2;
 
-        await _multilevelCache.SetAsync(key, value, new CombinedCacheEntryOptions
-        {
-            MemoryCacheEntryOptions = cacheEntryOptions,
-            DistributedCacheEntryOptions = cacheEntryOptions
-        });
+        await _distributedCache.SetAsync(key, value, cacheEntryOptions);
 
         return value;
     }

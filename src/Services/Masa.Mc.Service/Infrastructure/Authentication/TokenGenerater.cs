@@ -58,10 +58,7 @@ public class TokenGenerater : ITokenGenerater
                 };
                 var tokenResponse = await _httpClient.RequestClientCredentialsTokenAsync(request);
 
-                var cacheEntryOptions = new CacheEntryOptions
-                {
-                    AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(tokenResponse.ExpiresIn - 60)
-                };
+                var cacheEntryOptions = new CacheEntryOptions(TimeSpan.FromSeconds(tokenResponse.ExpiresIn - 60));
                 return (tokenResponse.AccessToken, cacheEntryOptions);
             }
             );
