@@ -35,20 +35,6 @@ builder.Services.AddDaprClient();
 
 builder.Services.AddObjectStorage(option => option.UseAliyunStorage());
 
-builder.Services.AddObservable(builder.Logging, () =>
-{
-    return new MasaObservableOptions
-    {
-        ServiceNameSpace = builder.Environment.EnvironmentName,
-        ServiceVersion = masaStackConfig.Version,
-        ServiceName = masaStackConfig.GetServiceId(MasaStackProject.MC),
-        Layer = masaStackConfig.Namespace,
-        ServiceInstanceId = builder.Configuration.GetValue<string>("HOSTNAME")
-    };
-}, () =>
-{
-    return masaStackConfig.OtlpUrl;
-});
 builder.Services.AddMasaIdentity(options =>
 {
     options.Environment = "environment";
@@ -92,7 +78,8 @@ var redisOptions = new RedisConfigurationOptions
         }
     },
     DefaultDatabase = masaStackConfig.RedisModel.RedisDb,
-    Password = masaStackConfig.RedisModel.RedisPassword
+    Password = masaStackConfig.RedisModel.RedisPassword,
+    ClientName = builder.Configuration.GetValue<string>("HOSTNAME") ?? masaStackConfig.GetServiceId(MasaStackProject.MC)
 };
 var configuration = builder.Services.GetMasaConfiguration().ConfigurationApi.GetDefault();
 builder.Services.AddCache(redisOptions);
