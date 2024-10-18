@@ -1,6 +1,8 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
+using Masa.Mc.Service.Admin.Application.MessageRecords.Jobs;
+
 namespace Masa.Mc.Service.Admin.Application.WebsiteMessages;
 
 public class WebsiteMessageCommandHandler
@@ -73,5 +75,27 @@ public class WebsiteMessageCommandHandler
         var query = await _repository.GetQueryableAsync()!;
         var condition = await CreateFilteredPredicate(inputDto);
         return query.Where(condition);
+    }
+
+    [EventHandler]
+    public async Task SyncClickHouseAsync(WebsiteMessageSyncCKCommand command)
+    {
+        var args = new WebsiteMessageSyncCKJobArgs()
+        {
+            Time = command.Time,
+        };
+
+        await BackgroundJobManager.EnqueueAsync(args);
+    }
+
+    [EventHandler]
+    public async Task TagsSyncClickHouseAsync(WebsiteMessageTagSyncCKCommand command)
+    {
+        var args = new WebsiteMessageTagSyncCKJobArgs()
+        {
+            Time = command.Time,
+        };
+
+        await BackgroundJobManager.EnqueueAsync(args);
     }
 }

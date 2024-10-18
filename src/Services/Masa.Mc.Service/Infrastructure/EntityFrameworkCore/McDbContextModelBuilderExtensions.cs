@@ -125,6 +125,7 @@ public static class McDbContextModelBuilderExtensions
             b.Property(x => x.Variables).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
             b.HasIndex(x => x.UserId);
             b.HasIndex(x => x.MessageTaskHistoryId);
+            b.HasIndex(x => x.CreationTime);
             b.Property(x => x.SystemId).HasMaxLength(128);
         });
 
@@ -143,6 +144,7 @@ public static class McDbContextModelBuilderExtensions
             b.Property(x => x.Title).IsRequired().HasMaxLength(128);
             b.Property(x => x.LinkUrl).HasMaxLength(256);
             b.HasIndex(x => new { x.UserId, x.ChannelId });
+            b.HasIndex(x => x.CreationTime);
             b.Property(x => x.ExtraProperties).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
             b.OwnsMany(x => x.Tags, c =>
             {
@@ -154,6 +156,7 @@ public static class McDbContextModelBuilderExtensions
                 c.HasIndex(x => x.Tag);
                 c.HasIndex(x => x.UserId);
                 c.HasIndex(x => x.ChannelId);
+                b.HasIndex("CreationTime");
             });
         });
 

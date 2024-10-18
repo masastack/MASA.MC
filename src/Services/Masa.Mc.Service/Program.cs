@@ -1,6 +1,8 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
+using ClickHouse.EntityFrameworkCore.Extensions;
+
 var builder = WebApplication.CreateBuilder(args);
 
 ValidatorOptions.Global.LanguageManager = new MasaLanguageManager();
@@ -103,11 +105,12 @@ builder.Services.AddBackgroundJob(options =>
 {
     options.UseInMemoryDatabase();
 });
-var mock = builder.Services.GetMasaConfiguration().ConfigurationApi.GetDefault().GetValue<bool>("Mock:Enable");
+var mock = configuration.GetValue<bool>("Mock:Enable");
 if (mock)
 {
     builder.Services.ConfigureMockService();
 }
+var clickHouseConnection = configuration.GetValue<string>("AppSettings:ClickHouse:Connection");
 
 TypeAdapterConfig.GlobalSettings.Scan(Assembly.GetExecutingAssembly(), Assembly.Load("Masa.Mc.Contracts.Admin"));
 
@@ -153,6 +156,10 @@ builder.Services
     {
         builder.UseSqlServer();
         builder.UseFilter(options => options.EnableSoftDelete = true);
+    })
+    .AddDbContext<McClickHouseContext>(builder =>
+    {
+        builder.UseClickHouse(clickHouseConnection);
     })
     .AddScoped<IMcQueryContext, McQueryContext>()
     .AddDomainEventBus(dispatcherOptions =>

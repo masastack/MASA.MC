@@ -1,6 +1,8 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
+using Masa.Mc.Service.Admin.Application.MessageRecords.Jobs;
+
 namespace Masa.Mc.Service.Admin.Application.MessageRecords;
 
 public class MessageRecordCommandHandler
@@ -29,5 +31,16 @@ public class MessageRecordCommandHandler
 
         var eto = entity.Channel.Type.GetRetryMessageEvent(entity.Id);
         await _eventBus.PublishAsync(eto);
+    }
+
+    [EventHandler]
+    public async Task SyncClickHouseAsync(MessageRecordSyncCKCommand command)
+    {
+        var args = new MessageRecordSyncCKJobArgs()
+        {
+            Time = command.Time,
+        };
+
+        await BackgroundJobManager.EnqueueAsync(args);
     }
 }

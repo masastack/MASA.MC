@@ -1,6 +1,8 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
+using Masa.Mc.Service.Admin.Application.MessageRecords.Jobs;
+
 namespace Masa.Mc.Service.Services;
 
 public class WebsiteMessageService : ServiceBase
@@ -89,5 +91,19 @@ public class WebsiteMessageService : ServiceBase
         var query = new GetUnreadMessageCountQuery(channelCode, tag ?? string.Empty);
         await eventbus.PublishAsync(query);
         return query.Result;
+    }
+
+    [RoutePattern("sync-ck", StartWithBaseUri = true, HttpMethod = "Post")]
+    public async Task SyncClickHouseAsync(IEventBus eventBus, [FromQuery] DateTimeOffset time)
+    {
+        var command = new WebsiteMessageSyncCKCommand(time);
+        await eventBus.PublishAsync(command);
+    }
+
+    [RoutePattern("tags-sync-ck", StartWithBaseUri = true, HttpMethod = "Post")]
+    public async Task TagsSyncClickHouseAsync(IEventBus eventBus, [FromQuery] DateTimeOffset time)
+    {
+        var command = new WebsiteMessageTagSyncCKCommand(time);
+        await eventBus.PublishAsync(command);
     }
 }

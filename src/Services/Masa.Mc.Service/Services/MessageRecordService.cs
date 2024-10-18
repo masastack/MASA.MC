@@ -1,6 +1,9 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
+using Masa.Mc.Service.Admin.Application.MessageRecords.Jobs;
+using Microsoft.AspNetCore.Components.Forms;
+
 namespace Masa.Mc.Service.Admin.Services;
 
 public class MessageRecordService : ServiceBase
@@ -29,6 +32,13 @@ public class MessageRecordService : ServiceBase
     public async Task RetryAsync(IEventBus eventBus, RetryMessageRecordInputDto inputDto)
     {
         var command = new RetryMessageRecordCommand(inputDto);
+        await eventBus.PublishAsync(command);
+    }
+
+    [RoutePattern("sync-ck", StartWithBaseUri = true, HttpMethod = "Post")]
+    public async Task SyncClickHouseAsync(IEventBus eventBus, [FromQuery] DateTimeOffset time)
+    {
+        var command = new MessageRecordSyncCKCommand(time);
         await eventBus.PublishAsync(command);
     }
 }
