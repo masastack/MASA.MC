@@ -145,10 +145,19 @@ public class MessageTaskService : ServiceBase
         return query.Result;
     }
 
-    public async Task ExecuteAsync(IEventBus eventBus, Guid messageTaskId, Guid taskId)
+    public async Task ExecuteAsync(IMultiEnvironmentContext multiEnvironmentContext, Guid messageTaskId, Guid taskId)
     {
-        var query = new ExecuteMessageTaskEvent(messageTaskId, false, default, taskId);
-        await eventBus.PublishAsync(query);
+        var args = new ExecuteMessageTaskJobArgs()
+        {
+            MessageTaskId = messageTaskId,
+            IsTest = false,
+            JobId = default,
+            TaskId = taskId,
+            Environment = multiEnvironmentContext.CurrentEnvironment,
+            TraceParent = Activity.Current?.Id
+        };
+
+        await BackgroundJobManager.EnqueueAsync(args);
     }
 
     public async Task SendOrdinaryMessageByInternalAsync(IEventBus eventBus, SendOrdinaryMessageByInternalInputDto inputDto)
