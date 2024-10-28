@@ -36,7 +36,7 @@ public class WebsiteMessageCreatedEventHandler
 
         var checkTime = @event.CheckTime;
 
-        var taskHistorys = (await _messageTaskHistoryRepository.WithDetailsAsync()).Where(x => x.CompletionTime >= checkTime && x.MessageTask.ReceiverType == ReceiverTypes.Broadcast && x.Status == MessageTaskHistoryStatuses.Success).ToList();
+        var taskHistorys = (await _messageTaskHistoryRepository.WithDetailsAsync()).Where(x => x.MessageTask.ChannelType != ChannelType.WeixinWork && x.MessageTask.ChannelType != ChannelType.WeixinWorkWebhook && x.CompletionTime >= checkTime && x.MessageTask.ReceiverType == ReceiverTypes.Broadcast && x.Status == MessageTaskHistoryStatuses.Success).ToList();
 
         int okCount = 0;
 
