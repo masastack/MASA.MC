@@ -200,6 +200,26 @@ public class MessageTaskCommandHandler
         await BackgroundJobManager.EnqueueAsync(args);
     }
 
+    [EventHandler]
+    public async Task SendSimpleMessageAsync(SendSimpleTemplateMessageCommand command)
+    {
+        var template = await _messageTemplateRepository.FindAsync(x => x.Code == command.InputDto.TemplateCode);
+        MasaArgumentException.ThrowIfNull(template, _i18n.T("MessageTemplate"));
+
+        var messageData = new MessageData(template.MessageContent, MessageEntityTypes.Template);
+        messageData.RenderContent(command.InputDto.Variables);
+        messageData.SetDataValue(nameof(MessageTemplate.TemplateId), template.TemplateId);
+        messageData.SetDataValue(nameof(MessageTemplate.DisplayName), template.DisplayName);
+        messageData.SetDataValue(nameof(MessageTemplate.Sign), template.Sign);
+        messageData.SetDataValue(BusinessConsts.MESSAGE_TYPE, template.TemplateType.ToString());
+        messageData.SetDataValue(nameof(MessageTemplate.Id), template.Id.ToString());
+
+        var channelType = Enumeration.FromValue<ChannelType>((int)command.InputDto.ChannelType);
+
+        var eto = channelType.GetSendSimpleMessageEvent(command.InputDto.ChannelUserIdentity, command.InputDto.ChannelCode, messageData, command.InputDto.Variables, command.InputDto.SystemId);
+        await _eventBus.PublishAsync(eto);
+    }
+
     private async Task CheckDataIsExistsAsync(MessageTask entity)
     {
         var channel = await _channelRepository.FindAsync(e => e.Id == entity.ChannelId);

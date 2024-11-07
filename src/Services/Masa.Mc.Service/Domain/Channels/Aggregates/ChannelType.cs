@@ -26,6 +26,11 @@ public class ChannelType : Enumeration
         throw new NotImplementedException();
     }
 
+    public virtual SendSimpleMessageEvent GetSendSimpleMessageEvent(string channelUserIdentity, string channelCode, MessageData messageData, ExtraPropertyDictionary variables, string systemId)
+    {
+        throw new NotImplementedException();
+    }
+
     public virtual RetryMessageEvent GetRetryMessageEvent(Guid messageRecordId)
     {
         throw new NotImplementedException();
@@ -48,6 +53,15 @@ public class ChannelType : Enumeration
         public override SendMessageEvent GetSendMessageEvent(Guid channelId, MessageData messageData, MessageTaskHistory messageTaskHistory)
         {
             return new SendSmsMessageEvent(channelId, messageData, messageTaskHistory);
+        }
+
+        public override SendSimpleMessageEvent GetSendSimpleMessageEvent(string channelUserIdentity, string channelCode, MessageData messageData, ExtraPropertyDictionary variables, string systemId)
+        {
+            return new SendSimpleSmsMessageEvent(channelUserIdentity, channelCode, messageData)
+            {
+                Variables = variables,
+                SystemId = systemId
+            };
         }
 
         public override RetryMessageEvent GetRetryMessageEvent(Guid messageRecordId)
