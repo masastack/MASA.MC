@@ -1,0 +1,152 @@
+﻿@inherits AdminCompontentBase
+<div class="template-message-info">
+    <dl class="mt-8">
+        <dt class="overline regular3--text">@T("DisplayName.ChannelType")</dt>
+        <dd class="body2 emphasis2--text mt-1">@T(MessageRecord.Channel.Type.ToString())</dd>
+    </dl>
+    <dl class="mt-8">
+        <dt class="overline regular3--text">@T("DisplayName.Channel")</dt>
+        <dd class="body2 emphasis2--text mt-1">@MessageRecord.Channel.DisplayName</dd>
+    </dl>
+    @if (MessageRecord.Channel.Type == ChannelTypes.App)
+    {
+        <MRow>
+            <MCol Class="d-flex">
+                <SCheckbox Value="true" Readonly Label="@T("NotificationMessage")"></SCheckbox>
+                <SCheckbox Value="@(MessageTemplate.Options.GetProperty<bool>(BusinessConsts.IS_WEBSITE_MESSAGE))" Readonly Class="ml-6" Label="@T("InAppMessages")"></SCheckbox>
+            </MCol>
+        </MRow>
+    }
+    <dl class="mt-8">
+        <dt class="overline regular3--text">@T("DisplayName.MessageInfoTitle")</dt>
+        <dd class="body2 emphasis2--text mt-1">@(string.IsNullOrEmpty(MessageTemplate.Title) ? MessageTemplate.DisplayName : MessageTemplate.Title)</dd>
+    </dl>
+    <dl class="mt-8">
+        <dt class="overline regular3--text">@T("MessageContent")</dt>
+        <dd class="body2 emphasis2--text mt-1"><RichText Value="@MessageTemplate.Content"></RichText></dd>
+    </dl>
+    @if (MessageTemplate.IsJump)
+    {
+        <dl class="mt-8">
+            <dt class="overline regular3--text">@T("DisplayName.MessageTemplateJumpUrl")</dt>
+            <dd class="body2 emphasis2--text mt-1">@MessageTemplate.JumpUrl</dd>
+        </dl>
+    }
+    @if (MessageRecord.Channel.Type == ChannelTypes.App)
+    {
+        @if (!string.IsNullOrEmpty(MessageTemplate.Options.GetProperty<string>(BusinessConsts.INTENT_URL)))
+        {
+            <dl class="mt-8">
+                <dt class="overline regular3--text">@T("IntentUrl")</dt>
+                <dd class="body2 emphasis2--text mt-1">@(MessageTemplate.Options.GetProperty<string>(BusinessConsts.INTENT_URL))</dd>
+            </dl>
+        }
+        @if (MessageTemplate.ExtraProperties.Any())
+        {
+            <div class="subtitle2 emphasis2--text mt-8">@T("AdditionalFields")</div>
+            <MSimpleTable Class="btn-fill-line mt-8" Style="position:relative">
+                <thead>
+                    <tr>
+                        <th class="text-left body2 regular3--text">
+                            @T("Key")
+                        </th>
+                        <th class="text-left body2 regular3--text">
+                            @T("Value")
+                        </th>
+                    </tr>
+                </thead>
+                <span class="d-flex px-4" style="width: 100%;position: absolute;">
+                    <MDivider />
+                </span>
+                <tbody>
+                    @foreach (var item in MessageTemplate.ExtraProperties)
+                    {
+                        <tr @key="item.Key" class="body regular--text">
+                            <td>@item.Key</td>
+                            <td>@item.Value</td>
+                        </tr>
+                    }
+                </tbody>
+            </MSimpleTable>
+        }
+    }
+    @if (!IsRender && Variables.Any())
+    {
+        <div class="subtitle2 emphasis2--text mt-8">@T("DisplayName.VariableValueTransfer")</div>
+        <MSimpleTable Class="btn-fill-line mt-8" Style="position:relative">
+            <thead>
+                <tr>
+                    <th class="text-left body2 regular3--text">
+                        @T("DisplayName.MessageTemplateItemCode")
+                    </th>
+                    <th class="text-left body2 regular3--text">
+                        @T("DisplayName.MessageTemplateItemValue")
+                    </th>
+                </tr>
+            </thead>
+            <span class="d-flex px-4" style="width: 100%;position: absolute;">
+                <MDivider />
+            </span>
+            <tbody>
+                @foreach (var item in Variables)
+                {
+                    <tr @key="item.Key" class="body regular--text">
+                        <td>@item.Key</td>
+                        <td>@item.Value</td>
+                    </tr>
+                }
+            </tbody>
+        </MSimpleTable>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public Guid MessageTemplateId { get; set; }
+
+    [Parameter]
+    public MessageRecordDto MessageRecord { get; set; } = new();
+
+    [Parameter]
+    public ExtraPropertyDictionary Variables { get; set; } = new();
+
+    [Parameter]
+    public bool IsRender { get; set; }
+
+    public MessageTemplateDto MessageTemplate { get; set; } = new();
+
+    MessageTemplateService MessageTemplateService => McCaller.MessageTemplateService;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        MessageTemplate = await MessageTemplateService.GetAsync(MessageTemplateId) ?? new();
+        if (IsRender)
+        {
+            await RenderMessageContent();
+        }
+    }
+
+    public async Task RenderMessageContent()
+    {
+        var startstr = "{{";
+        var endstr = "}}";
+        if (MessageRecord.Channel.Type == ChannelTypes.Sms)
+        {
+            startstr = "${";
+            endstr = "}";
+            MessageTemplate.Content = $"【{MessageTemplate.Sign}】{MessageTemplate.Content}";
+        }
+        MessageTemplate.Title = await RenderAsync(MessageTemplate.Title, Variables, startstr, endstr);
+        MessageTemplate.Content = await RenderAsync(MessageTemplate.Content, Variables, startstr, endstr);
+        MessageTemplate.JumpUrl = await RenderAsync(MessageTemplate.JumpUrl, Variables, startstr, endstr);
+    }
+
+    public Task<string> RenderAsync(string context, ExtraPropertyDictionary model, string startstr, string endstr)
+    {
+        foreach (var item in model)
+        {
+            context = context.Replace($"{startstr}{item.Key}{endstr}", item.Value.ToString());
+        }
+        return Task.FromResult(context);
+    }
+}
