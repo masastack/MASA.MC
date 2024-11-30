@@ -15,15 +15,7 @@ public class SendSimpleMessageJob : BackgroundJobBase<SendSimpleMessageArgs>
 
     protected override async Task ExecutingAsync(SendSimpleMessageArgs args)
     {
-        var simpleInput = new SendSimpleTemplateMessageInputDto
-        {
-            ChannelCode = args.ChannelCode,
-            ChannelType = args.ChannelType,
-            TemplateCode = args.TemplateCode,
-            ChannelUserIdentity = args.ChannelUserIdentity,
-            Variables = args.Variables,
-            SystemId = args.SystemId
-        };
+        var simpleInput = args.Adapt<SendSimpleTemplateMessageInputDto>();
         await _eventBus.PublishAsync(new SendSimpleTemplateMessageCommand(simpleInput));
     }
 }

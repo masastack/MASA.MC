@@ -103,12 +103,8 @@ builder.Services.AddBackgroundJob(options =>
 {
     options.UseInMemoryDatabase(_ =>
     {
-        _.MaxRetryTimes = 2;
-    }, serviceProvider =>
-    {
-        var idGenerator = serviceProvider.GetService<IIdGenerator<Guid>>();
-        return idGenerator;
-    });
+        _.MaxRetryTimes = 1;
+    }, serviceProvider => serviceProvider.GetService<IIdGenerator<Guid>>());
 });
 var mock = builder.Services.GetMasaConfiguration().ConfigurationApi.GetDefault().GetValue<bool>("Mock:Enable");
 if (mock)
