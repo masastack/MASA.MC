@@ -180,6 +180,13 @@ public class MessageTaskService : ServiceBase
 
     public async Task SendTemplateMessageByExternalAsync(IEventBus eventBus, SendTemplateMessageByExternalInputDto inputDto)
     {
+        if (inputDto.ChannelType == ChannelTypes.Sms && inputDto.Receivers.Count == 1)
+        {
+            var args = inputDto.Adapt<SendSimpleMessageArgs>();
+            await BackgroundJobManager.EnqueueAsync(args);
+            return;
+        }
+
         var command = new SendTemplateMessageByExternalCommand(inputDto);
         await eventBus.PublishAsync(command);
     }
@@ -211,6 +218,13 @@ public class MessageTaskService : ServiceBase
     public async Task HandleJobStatusNotifyAsync(IEventBus eventBus, [FromBody] HandleJobStatusNotifyInputDto inputDto)
     {
         var command = new HandleJobStatusNotifyCommand(inputDto.JobId, inputDto.Status);
+        await eventBus.PublishAsync(command);
+    }
+
+    [RoutePattern("simple-send", StartWithBaseUri = true, HttpMethod = "Post")]
+    public async Task SendSimpleMessageAsync(IEventBus eventBus, [FromBody] SendSimpleTemplateMessageInputDto inputDto)
+    {
+        var command = new SendSimpleTemplateMessageCommand(inputDto);
         await eventBus.PublishAsync(command);
     }
 }

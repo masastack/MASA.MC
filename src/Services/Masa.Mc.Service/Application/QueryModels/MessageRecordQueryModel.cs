@@ -35,7 +35,7 @@ public class MessageRecordQueryModel : Entity<Guid>, ISoftDelete
 
     public Guid MessageEntityId { get; set; }
 
-    public string ChannelUserIdentity { get; protected set; } = string.Empty;
+    public string ChannelUserIdentity { get; set; } = string.Empty;
 
     public string SystemId { get; set; } = string.Empty;
 

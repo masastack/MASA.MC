@@ -9,8 +9,8 @@ public partial class MessageRecordDetailModal : AdminCompontentBase
     public EventCallback OnOk { get; set; }
 
     private MessageRecordDto _messageRecord = new();
-    private MessageTaskDto _messageTask = new();
-    private MessageTaskHistoryDto _messageTaskHistory = new();
+    private MessageTaskDto? _messageTask;
+    private MessageTaskHistoryDto? _messageTaskHistory;
     private Guid _entityId;
     private bool _visible;
 
@@ -34,8 +34,16 @@ public partial class MessageRecordDetailModal : AdminCompontentBase
     private async Task GetFormDataAsync()
     {
         _messageRecord = await MessageRecordService.GetAsync(_entityId) ?? new();
-        _messageTask = await MessageTaskService.GetAsync(_messageRecord.MessageTaskId) ?? new();
-        _messageTaskHistory = await MessageTaskHistoryService.GetAsync(_messageRecord.MessageTaskHistoryId) ?? new();
+
+        if (_messageRecord.MessageTaskId != Guid.Empty)
+        {
+            _messageTask = await MessageTaskService.GetAsync(_messageRecord.MessageTaskId);
+        }
+
+        if (_messageRecord.MessageTaskHistoryId != Guid.Empty)
+        {
+            _messageTaskHistory = await MessageTaskHistoryService.GetAsync(_messageRecord.MessageTaskHistoryId);
+        }
     }
 
     private void HandleCancel()
@@ -47,8 +55,8 @@ public partial class MessageRecordDetailModal : AdminCompontentBase
     private void ResetForm()
     {
         _messageRecord = new();
-        _messageTask = new();
-        _messageTaskHistory = new();
+        _messageTask = null;
+        _messageTaskHistory = null;
     }
 
     private void HandleVisibleChanged(bool val)

@@ -101,7 +101,10 @@ builder.Services.AddAuthChannelUserFinder();
 builder.Services.AddMessageTaskHttpJobService();
 builder.Services.AddBackgroundJob(options =>
 {
-    options.UseInMemoryDatabase();
+    options.UseInMemoryDatabase(_ =>
+    {
+        _.MaxRetryTimes = 1;
+    }, serviceProvider => serviceProvider.GetService<IIdGenerator<Guid>>());
 });
 var mock = builder.Services.GetMasaConfiguration().ConfigurationApi.GetDefault().GetValue<bool>("Mock:Enable");
 if (mock)

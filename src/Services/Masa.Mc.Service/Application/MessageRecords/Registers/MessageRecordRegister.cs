@@ -9,6 +9,9 @@ namespace Masa.Mc.Service.Admin.Application.MessageRecords.Registers
         {
             config.ForType<MessageRecord, MessageRecordDto>().MapToConstructor(true)
                 .Map(dest => dest.User, src => src.ExtraProperties);
+
+            config.ForType<SendTemplateMessageByExternalInputDto, SendSimpleMessageArgs>()
+                .Map(dest => dest.ChannelUserIdentity, src => src.Receivers.First().ChannelUserIdentity);
         }
     }
 }

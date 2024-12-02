@@ -18,8 +18,8 @@
                         </IconContent>
                         <ChildContent>
                             <div class="ml-n5">
-                                <div class="btn emphasis--text">@(_messageTask.ExpectSendTime?.ToOffset(JsInitVariables.TimezoneOffset).ToString(T("$DateFormat")))</div>
-                                <div class="overline regular3--text">@(_messageTask.ExpectSendTime?.ToOffset(JsInitVariables.TimezoneOffset).ToString(T("$TimeFormat")))</div>
+                                <div class="btn emphasis--text">@(_messageRecord.ExpectSendTime?.ToOffset(JsInitVariables.TimezoneOffset).ToString(T("$DateFormat")))</div>
+                                <div class="overline regular3--text">@(_messageRecord.ExpectSendTime?.ToOffset(JsInitVariables.TimezoneOffset).ToString(T("$TimeFormat")))</div>
                             </div>
                         </ChildContent>
                     </MTimelineItem>
@@ -65,24 +65,40 @@
                             <dd class="body2 regular3--text">@T("DisplayName.MessageRecordFailureReason")</dd>
                         </dl>
                     }
-                    <dl class="d-flex justify-space-between item align-center">
-                        <dt class="d-inline-flex body2 regular--text">
-                            <span>@_messageTaskHistory.TaskHistoryNo</span>
-                        </dt>
-                        <dd class="body2 regular3--text">@T("DisplayName.MessageTaskHistoryNo")</dd>
-                    </dl>
+                    @if (_messageTaskHistory is not null)
+                    {
+                        <dl class="d-flex justify-space-between item align-center">
+                            <dt class="d-inline-flex body2 regular--text">
+                                <span>@_messageTaskHistory.TaskHistoryNo</span>
+                            </dt>
+                            <dd class="body2 regular3--text">@T("DisplayName.MessageTaskHistoryNo")</dd>
+                        </dl>
+                    }
                 </div>
             </div>
             <MDivider Vertical></MDivider>
             <div class="record-detail-right full-height flex-column">
                 <div class="subtitle2 emphasis2--text">@T("DisplayName.MessageInfoContent")</div>
-                @if (_messageTask.EntityType == MessageEntityTypes.Ordinary)
+                @if (_messageTask is null)
                 {
-                    <OrdinaryMessageInfo MessageInfoId="_messageTask.EntityId" MessageTask="_messageTask"></OrdinaryMessageInfo>
+                    @if (_messageRecord.MessageEntityType == MessageEntityTypes.Ordinary)
+                    {
+                        <OrdinaryMessageInfoByMessageRecord MessageInfoId="_messageRecord.MessageEntityId" MessageRecord="_messageRecord" />
+                    }
+                    @if (_messageRecord.MessageEntityType == MessageEntityTypes.Template)
+                    {
+                        <TemplateMessageInfoByMessageRecord MessageTemplateId="_messageRecord.MessageEntityId" MessageRecord="_messageRecord" Variables="_messageRecord.Variables" IsRender />
+                    }
                 }
-                @if (_messageTask.EntityType == MessageEntityTypes.Template)
-                {
-                    <TemplateMessageInfo MessageTemplateId="_messageTask.EntityId" MessageTask="_messageTask" Variables="_messageRecord.Variables" IsRender></TemplateMessageInfo>
+                else{
+                    @if (_messageTask.EntityType == MessageEntityTypes.Ordinary)
+                    {
+                        <OrdinaryMessageInfo MessageInfoId="_messageTask.EntityId" MessageTask="_messageTask" />
+                    }
+                    @if (_messageTask.EntityType == MessageEntityTypes.Template)
+                    {
+                        <TemplateMessageInfo MessageTemplateId="_messageTask.EntityId" MessageTask="_messageTask" Variables="_messageRecord.Variables" IsRender />
+                    }
                 }
             </div>
 

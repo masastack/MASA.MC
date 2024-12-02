@@ -1,0 +1,92 @@
+﻿@inherits AdminCompontentBase
+<div>
+    <dl class="mt-8">
+        <dt class="overline regular3--text">@T("DisplayName.ChannelType")</dt>
+        <dd class="body2 emphasis2--text mt-1">@(MessageRecord.Channel != null ? T(MessageRecord.Channel.Type.ToString()) : string.Empty)</dd>
+    </dl>
+    <dl class="mt-8">
+        <dt class="overline regular3--text">@T("DisplayName.Channel")</dt>
+        <dd class="body2 emphasis2--text mt-1">@MessageRecord.Channel?.DisplayName</dd>
+    </dl>
+    @if (MessageRecord.Channel?.Type == ChannelTypes.App)
+    {
+        <MRow>
+            <MCol Class="d-flex">
+                <SCheckbox Value="true" Readonly Label="@T("NotificationMessage")"></SCheckbox>
+                <SCheckbox Value="@(MessageRecord.ExtraProperties.GetProperty<bool>(BusinessConsts.IS_WEBSITE_MESSAGE))" Readonly Class="ml-6" Label="@T("InAppMessages")"></SCheckbox>
+            </MCol>
+        </MRow>
+    }
+    <dl class="mt-8">
+        <dt class="overline regular3--text">@T("DisplayName.MessageInfoTitle")</dt>
+        <dd class="body2 emphasis2--text mt-1">@MessageInfo.Title</dd>
+    </dl>
+    <dl class="mt-8">
+        <dt class="overline regular3--text">@T("MessageContent")</dt>
+        <dd class="body2 emphasis2--text mt-1"><RichText Value="@MessageInfo.Content"></RichText></dd>
+    </dl>
+    @if (MessageInfo.IsJump)
+    {
+        <dl class="mt-8">
+            <dt class="overline regular3--text">@T("DisplayName.MessageTemplateJumpUrl")</dt>
+            <dd class="body2 emphasis2--text mt-1">@MessageInfo.JumpUrl</dd>
+        </dl>
+    }
+    @if (MessageRecord.Channel?.Type == ChannelTypes.App)
+    {
+        @if (!string.IsNullOrEmpty(MessageRecord.ExtraProperties.GetProperty<string>(BusinessConsts.INTENT_URL)))
+        {
+            <dl class="mt-8">
+                <dt class="overline regular3--text">@T("IntentUrl")</dt>
+                <dd class="body2 emphasis2--text mt-1">@(MessageRecord.ExtraProperties.GetProperty<string>(BusinessConsts.INTENT_URL))</dd>
+            </dl>
+        }
+        @if (MessageInfo.ExtraProperties.Any())
+        {
+            <div class="subtitle2 emphasis2--text mt-8">@T("AdditionalFields")</div>
+            <MSimpleTable Class="btn-fill-line mt-8" Style="position:relative">
+                <thead>
+                    <tr>
+                        <th class="text-left body2 regular3--text">
+                            @T("Key")
+                        </th>
+                        <th class="text-left body2 regular3--text">
+                            @T("Value")
+                        </th>
+                    </tr>
+                </thead>
+                <span class="d-flex px-4" style="width: 100%;position: absolute;">
+                    <MDivider />
+                </span>
+                <tbody>
+                    @foreach (var item in MessageInfo.ExtraProperties)
+                    {
+                        <tr @key="item.Key" class="body regular--text">
+                            <td>@item.Key</td>
+                            <td>@item.Value</td>
+                        </tr>
+                    }
+                </tbody>
+            </MSimpleTable>
+        }
+    }
+</div>
+
+@code {
+    [Parameter]
+    public Guid MessageInfoId { get; set; }
+
+    [Parameter]
+    public MessageRecordDto MessageRecord { get; set; } = new();
+
+    public MessageInfoDto MessageInfo { get; set; } = new();
+
+    MessageInfoService MessageInfoService => McCaller.MessageInfoService;
+
+    protected override string? PageName { get; set; } = "MessageRecordBlock";
+
+    protected override async Task OnParametersSetAsync()
+    {
+        MessageInfo = await MessageInfoService.GetAsync(MessageInfoId) ?? new();
+    }
+}
