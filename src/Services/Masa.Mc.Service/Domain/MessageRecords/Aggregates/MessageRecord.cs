@@ -37,7 +37,7 @@ public class MessageRecord : FullAggregateRoot<Guid, Guid>
 
     public void SetResult(bool success, string failureReason, DateTimeOffset? sendTime = null)
     {
-        SendTime = sendTime ?? DateTimeOffset.Now;
+        SendTime = sendTime ?? DateTimeOffset.UtcNow;
         Success = success;
         FailureReason = failureReason;
 

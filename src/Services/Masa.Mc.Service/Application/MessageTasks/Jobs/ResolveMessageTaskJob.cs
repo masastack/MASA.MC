@@ -75,7 +75,7 @@ public class ResolveMessageTaskJob : BackgroundJobBase<ResolveMessageTaskJobArgs
 
     private async Task GenerateSingleTaskHistoryAsync(IMessageTaskRepository messageTaskRepository, IMessageTaskHistoryRepository messageTaskHistoryRepository, MessageTask messageTask, List<MessageReceiverUser> receiverUsers)
     {
-        var sendTime = DateTimeOffset.Now;
+        var sendTime = DateTimeOffset.UtcNow;
         var history = new MessageTaskHistory(messageTask.Id, receiverUsers, false, sendTime);
         history.ExecuteTask();
         await messageTaskRepository.UpdateAsync(messageTask);
@@ -84,7 +84,7 @@ public class ResolveMessageTaskJob : BackgroundJobBase<ResolveMessageTaskJobArgs
 
     private async Task GenerateTaskHistoryAsync(IMessageTaskHistoryRepository messageTaskHistoryRepository, MessageTask messageTask, List<MessageReceiverUser> receiverUsers)
     {
-        var sendTime = DateTimeOffset.Now;
+        var sendTime = DateTimeOffset.UtcNow;
         var historyNum = messageTask.GetHistoryCount(receiverUsers);
         var sendingCount = messageTask.GetSendingCount(receiverUsers);
 

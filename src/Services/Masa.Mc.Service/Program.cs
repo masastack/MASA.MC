@@ -104,7 +104,7 @@ builder.Services.AddBackgroundJob(options =>
     options.UseInMemoryDatabase(_ =>
     {
         _.MaxRetryTimes = 1;
-    }, serviceProvider => serviceProvider.GetService<IIdGenerator<Guid>>());
+    }, serviceProvider => serviceProvider.GetService<IIdGenerator<Guid>>()!);
 });
 var mock = builder.Services.GetMasaConfiguration().ConfigurationApi.GetDefault().GetValue<bool>("Mock:Enable");
 if (mock)
@@ -149,12 +149,12 @@ builder.Services
     })
     .AddMasaDbContext<McDbContext>(builder =>
     {
-        builder.UseSqlServer();
+        builder.UseNpgsql();
         builder.UseFilter(options => options.EnableSoftDelete = true);
     })
     .AddMasaDbContext<McQueryContext>(builder =>
     {
-        builder.UseSqlServer();
+        builder.UseNpgsql();
         builder.UseFilter(options => options.EnableSoftDelete = true);
     })
     .AddScoped<IMcQueryContext, McQueryContext>()

@@ -14,7 +14,7 @@ public class McDbContextFactory : IDesignTimeDbContextFactory<McDbContext>
             .AddJsonFile("appsettings.json")
             .AddJsonFile("appsettings.Development.json")
             .Build();
-        optionsBuilder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+        optionsBuilder.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
 
         return new McDbContext(optionsBuilder.MasaOptions);
     }

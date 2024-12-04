@@ -53,13 +53,13 @@ public class MessageTaskHistory : FullAggregateRoot<Guid, Guid>
 
     public void SetSending()
     {
-        SendTime = DateTimeOffset.Now;
+        SendTime = DateTimeOffset.UtcNow;
         Status = MessageTaskHistoryStatuses.Sending;
     }
 
     public void SetWithdraw()
     {
-        WithdrawTime = DateTimeOffset.Now;
+        WithdrawTime = DateTimeOffset.UtcNow;
         Status = MessageTaskHistoryStatuses.Withdrawn;
 
         AddDomainEvent(new WithdrawMessageRecordEvent(Id, MessageTaskId));
@@ -80,7 +80,7 @@ public class MessageTaskHistory : FullAggregateRoot<Guid, Guid>
     public void SetResult(MessageTaskHistoryStatuses status)
     {
         Status = status;
-        CompletionTime = DateTimeOffset.Now;
+        CompletionTime = DateTimeOffset.UtcNow;
 
         if (!IsTest)
         {

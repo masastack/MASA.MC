@@ -45,11 +45,11 @@ public class MessageRecordQueryHandler
             PageSize = options.PageSize,
             Sorting = new Dictionary<string, bool>
             {
-                [nameof(MessageRecordQueryModel.Id)] = true
+                [nameof(MessageRecordQueryModel.CreationTime)] = true
             }
         });
         var dtos = resultList.Result.Adapt<List<MessageRecordDto>>();
-        await FillUserInfo(dtos);
+        //await FillUserInfo(dtos);
         var result = new PaginatedListDto<MessageRecordDto>(resultList.Total, resultList.TotalPages, dtos);
         query.Result = result;
     }
