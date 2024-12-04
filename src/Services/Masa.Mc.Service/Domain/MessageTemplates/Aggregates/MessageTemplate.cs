@@ -75,14 +75,14 @@ public class MessageTemplate : FullAggregateRoot<Guid, Guid>
         AuditStatus = auditStatus;
         if (auditStatus != MessageTemplateAuditStatuses.WaitAudit)
         {
-            AuditTime = DateTimeOffset.UtcNow;
+            AuditTime = DateTimeOffset.Now;
             AuditReason = auditReason;
         }
     }
 
     public virtual void SetInvalid()
     {
-        InvalidTime = DateTimeOffset.UtcNow;
+        InvalidTime = DateTimeOffset.Now;
         Status = MessageTemplateStatuses.Invalid;
     }
 

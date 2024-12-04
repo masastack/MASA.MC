@@ -60,7 +60,7 @@ public partial class MessageSendingRules : AdminCompontentBase
 
         var sb = new StringBuilder();
 
-        var startTime = DateTimeOffset.UtcNow;
+        var startTime = DateTimeOffset.Now;
 
         var cronExpression = new CronExpression(Value.CronExpression);
 

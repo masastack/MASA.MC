@@ -41,7 +41,7 @@ public class SendSimpleMessageEventHandler
 
             var response = await _smsSender.SendAsync(smsMessage) as SmsSendResponse;
 
-            var messageRecord = new MessageRecord(Guid.Empty, eto.ChannelUserIdentity, channel.Id, Guid.Empty, Guid.Empty, eto.Variables, eto.MessageData.MessageContent.Title, DateTimeOffset.UtcNow, eto.SystemId);
+            var messageRecord = new MessageRecord(Guid.Empty, eto.ChannelUserIdentity, channel.Id, Guid.Empty, Guid.Empty, eto.Variables, eto.MessageData.MessageContent.Title, DateTimeOffset.Now, eto.SystemId);
             messageRecord.SetMessageEntity(eto.MessageData.MessageType, messageEntityId);
             messageRecord.SetDataValue(nameof(MessageTemplate.Sign), sign);
             messageRecord.SetDataValue(nameof(MessageTemplate.TemplateId), templateId);

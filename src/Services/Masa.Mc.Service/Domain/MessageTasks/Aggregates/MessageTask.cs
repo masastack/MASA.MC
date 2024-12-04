@@ -115,7 +115,7 @@ public class MessageTask : FullAggregateRoot<Guid, Guid>
 
     public void SetSending()
     {
-        SendTime = DateTimeOffset.UtcNow;
+        SendTime = DateTimeOffset.Now;
         Status = MessageTaskStatuses.Sending;
     }
 
@@ -128,7 +128,7 @@ public class MessageTask : FullAggregateRoot<Guid, Guid>
     {
         if (!SendRules.IsCustom || string.IsNullOrEmpty(SendRules.CronExpression))
         {
-            ExpectSendTime = DateTimeOffset.UtcNow;
+            ExpectSendTime = DateTimeOffset.Now;
         }
         else
         {
