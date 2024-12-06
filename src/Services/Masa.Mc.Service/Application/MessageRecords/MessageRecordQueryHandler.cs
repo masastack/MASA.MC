@@ -49,7 +49,7 @@ public class MessageRecordQueryHandler
             }
         });
         var dtos = resultList.Result.Adapt<List<MessageRecordDto>>();
-        //await FillUserInfo(dtos);
+        await FillUserInfo(dtos);
         var result = new PaginatedListDto<MessageRecordDto>(resultList.Total, resultList.TotalPages, dtos);
         query.Result = result;
     }

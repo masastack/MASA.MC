@@ -1391,7 +1391,7 @@ public class CronExpression : IDeserializationCallback, ISerializable
             {
                 mon = 0;
             }
-            return new DateTimeOffset(DateTimeOffset.Now.Year, mon, dayofmn, hr, mn, sc, TimeSpan.Zero);
+            return new DateTimeOffset(DateTimeOffset.UtcNow.Year, mon, dayofmn, hr, mn, sc, TimeSpan.Zero);
         }
         catch (Exception)
         {
