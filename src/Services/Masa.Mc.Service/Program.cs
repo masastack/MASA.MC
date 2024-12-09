@@ -94,7 +94,7 @@ builder.Services.AddAppNotification();
 builder.Services.AddWeixinWork(builder.Configuration);
 builder.Services.AddCsv();
 builder.Services.AddSingleton<ITemplateRenderer, TextTemplateRenderer>();
-builder.Services.AddTransient<Microsoft.AspNetCore.SignalR.IUserIdProvider, McUserIdProvider>();
+builder.Services.AddTransient<IUserIdProvider, McUserIdProvider>();
 builder.Services.AddSignalR();
 builder.Services.AddTransient<NotificationsHub>();
 builder.Services.AddAuthChannelUserFinder();
@@ -104,7 +104,7 @@ builder.Services.AddBackgroundJob(options =>
     options.UseInMemoryDatabase(_ =>
     {
         _.MaxRetryTimes = 1;
-    }, serviceProvider => serviceProvider.GetService<IIdGenerator<Guid>>());
+    }, serviceProvider => serviceProvider.GetService<IIdGenerator<Guid>>()!);
 });
 var mock = builder.Services.GetMasaConfiguration().ConfigurationApi.GetDefault().GetValue<bool>("Mock:Enable");
 if (mock)
@@ -149,12 +149,12 @@ builder.Services
     })
     .AddMasaDbContext<McDbContext>(builder =>
     {
-        builder.UseSqlServer();
+        builder.UseDbSql(masaStackConfig.GetDbType());
         builder.UseFilter(options => options.EnableSoftDelete = true);
     })
     .AddMasaDbContext<McQueryContext>(builder =>
     {
-        builder.UseSqlServer();
+        builder.UseDbSql(masaStackConfig.GetDbType());
         builder.UseFilter(options => options.EnableSoftDelete = true);
     })
     .AddScoped<IMcQueryContext, McQueryContext>()
