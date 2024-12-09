@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="Masa.BuildingBlocks.Ddd.Domain" Version="$(MasaFrameworkPackageVersion)" />
+		<PackageReference Include="Masa.Contrib.Ddd.Domain" Version="$(MasaFrameworkPackageVersion)" />
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\..\Contracts\Masa.Mc.Contracts.Admin\Masa.Mc.Contracts.Admin.csproj" />
+	  <ProjectReference Include="..\..\Infrastructure\Masa.Mc.Infrastructure.ObjectExtending\Masa.Mc.Infrastructure.ObjectExtending.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Constants\" />
+	</ItemGroup>
+</Project>

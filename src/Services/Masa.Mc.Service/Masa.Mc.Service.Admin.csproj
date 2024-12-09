@@ -12,7 +12,6 @@
 	
 	<ItemGroup>
 		<PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="6.0.5" />
-		<PackageReference Include="EFCore.BulkExtensions" Version="6.5.4" />
 		<PackageReference Include="Mapster" Version="7.3.0" />
 		<PackageReference Include="Masa.BuildingBlocks.Data.UoW" Version="$(MasaFrameworkPackageVersion)" />
 		<PackageReference Include="Masa.BuildingBlocks.Dispatcher.Events" Version="$(MasaFrameworkPackageVersion)" />
@@ -29,14 +28,10 @@
 		<PackageReference Include="Masa.Contrib.Configuration" Version="$(MasaFrameworkPackageVersion)" />
 		<PackageReference Include="Masa.Contrib.Configuration.ConfigurationApi.Dcc" Version="$(MasaFrameworkPackageVersion)" />
 		<PackageReference Include="Masa.Contrib.Data.Contracts" Version="$(MasaFrameworkPackageVersion)" />
-		<PackageReference Include="Masa.Contrib.Data.EFCore.PostgreSql" Version="$(MasaFrameworkPackageVersion)" />
 		<PackageReference Include="Masa.Contrib.Dispatcher.Events" Version="$(MasaFrameworkPackageVersion)" />
 		<PackageReference Include="Masa.Contrib.Dispatcher.IntegrationEvents.EventLogs.EFCore" Version="$(MasaFrameworkPackageVersion)" />
 		<PackageReference Include="Dapr.Actors.AspNetCore" Version="1.10.0" />
 		<PackageReference Include="Dapr.AspNetCore" Version="1.10.0" />
-		<PackageReference Include="Masa.BuildingBlocks.Ddd.Domain" Version="$(MasaFrameworkPackageVersion)" />
-		<PackageReference Include="Masa.Contrib.Ddd.Domain" Version="$(MasaFrameworkPackageVersion)" />
-		<PackageReference Include="Masa.Contrib.Ddd.Domain.Repository.EFCore" Version="$(MasaFrameworkPackageVersion)" />
 		<PackageReference Include="Masa.BuildingBlocks.Authentication.Identity" Version="$(MasaFrameworkPackageVersion)" />
 		<PackageReference Include="Masa.Contrib.Isolation.MultiEnvironment" Version="$(MasaFrameworkPackageVersion)" />
 		<PackageReference Include="Masa.Contrib.ReadWriteSplitting.Cqrs" Version="$(MasaFrameworkPackageVersion)" />
@@ -44,7 +39,7 @@
 		<PackageReference Include="Masa.Contrib.Storage.ObjectStorage.Aliyun" Version="$(MasaFrameworkPackageVersion)" />
 		<PackageReference Include="Masa.Contrib.Development.DaprStarter.AspNetCore" Version="$(MasaFrameworkPackageVersion)" />
 		<PackageReference Include="Masa.Utils.Extensions.Expressions" Version="$(MasaFrameworkPackageVersion)" />
-		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.1" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="$(MicrosoftPackageVersion)" />
 		<PackageReference Include="Masa.Contrib.Data.UoW.EFCore" Version="$(MasaFrameworkPackageVersion)" />
 		<PackageReference Include="Masa.Contrib.Dispatcher.IntegrationEvents.Dapr" Version="$(MasaFrameworkPackageVersion)" />
 		<PackageReference Include="Masa.Contrib.Exceptions" Version="$(MasaFrameworkPackageVersion)" />
@@ -55,13 +50,7 @@
 		<PackageReference Include="Masa.Contrib.Globalization.I18n.AspNetCore" Version="$(MasaFrameworkPackageVersion)" />
 		<PackageReference Include="Masa.Contrib.Extensions.BackgroundJobs.Memory" Version="$(MasaFrameworkPackageVersion)" />
 		<PackageReference Include="Masa.Contrib.StackSdks.Isolation" Version="$(MasaStackSdksPackageVersion)" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.1" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.1" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.1">
-		  <PrivateAssets>all</PrivateAssets>
-		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
-		<PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="6.0.7" />
+		<PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="$(MicrosoftPackageVersion)" />
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0" />
 		<PackageReference Include="Moq" Version="4.18.4" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.0" />
@@ -70,12 +59,14 @@
 	
 	<ItemGroup>
 	  <ProjectReference Include="..\..\Contracts\Masa.Mc.Contracts.Admin\Masa.Mc.Contracts.Admin.csproj" />
+	  <ProjectReference Include="..\..\Domain\Masa.Mc.Domain\Masa.Mc.Domain.csproj" />
+	  <ProjectReference Include="..\..\Infrastructure\Masa.Mc.EntityFrameworkCore.PostgreSql\Masa.Mc.EntityFrameworkCore.PostgreSql.csproj" />
+	  <ProjectReference Include="..\..\Infrastructure\Masa.Mc.EntityFrameworkCore.SqlServer\Masa.Mc.EntityFrameworkCore.SqlServer.csproj" />
 	  <ProjectReference Include="..\..\Infrastructure\Masa.Mc.Infrastructure.AppNotification\Masa.Mc.Infrastructure.AppNotification.csproj" />
 	  <ProjectReference Include="..\..\Infrastructure\Masa.Mc.Infrastructure.Cache\Masa.Mc.Infrastructure.Cache.csproj" />
 	  <ProjectReference Include="..\..\Infrastructure\Masa.Mc.Infrastructure.Common\Masa.Mc.Infrastructure.Common.csproj" />
 	  <ProjectReference Include="..\..\Infrastructure\Masa.Mc.Infrastructure.Ddd.Application.Contracts\Masa.Mc.Infrastructure.Ddd.Application.Contracts.csproj" />
 	  <ProjectReference Include="..\..\Infrastructure\Masa.Mc.Infrastructure.Email\Masa.Mc.Infrastructure.Email.csproj" />
-	  <ProjectReference Include="..\..\Infrastructure\Masa.Mc.Infrastructure.EntityFrameworkCore\Masa.Mc.Infrastructure.EntityFrameworkCore.csproj" />
 	  <ProjectReference Include="..\..\Infrastructure\Masa.Mc.Infrastructure.ExporterAndImporter.Csv\Masa.Mc.Infrastructure.ExporterAndImporter.Csv.csproj" />
 	  <ProjectReference Include="..\..\Infrastructure\Masa.Mc.Infrastructure.MailKit\Masa.Mc.Infrastructure.MailKit.csproj" />
 	  <ProjectReference Include="..\..\Infrastructure\Masa.Mc.Infrastructure.Sms.Aliyun\Masa.Mc.Infrastructure.Sms.Aliyun.csproj" />

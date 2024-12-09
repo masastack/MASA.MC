@@ -31,3 +31,4 @@ global using Masa.BuildingBlocks.StackSdks.Config;
 global using Masa.Contrib.StackSdks.Caller;
 global using Masa.Contrib.StackSdks.Config;
 global using Microsoft.Extensions.Primitives;
+global using ExtraPropertyDictionary = Masa.Mc.Data.ExtraPropertyDictionary;

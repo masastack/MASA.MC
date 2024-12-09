@@ -1,7 +1,9 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
-namespace Masa.Mc.Service.Admin.Infrastructure.EntityFrameworkCore;
+using Masa.Mc.Infrastructure.EntityFrameworkCore.ValueConverters;
+
+namespace Masa.Mc.Service.Admin.EntityFrameworkCore;
 
 public class McQueryContext : MasaDbContext<McQueryContext>, IMcQueryContext
 {

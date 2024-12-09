@@ -94,7 +94,7 @@ builder.Services.AddAppNotification();
 builder.Services.AddWeixinWork(builder.Configuration);
 builder.Services.AddCsv();
 builder.Services.AddSingleton<ITemplateRenderer, TextTemplateRenderer>();
-builder.Services.AddTransient<Microsoft.AspNetCore.SignalR.IUserIdProvider, McUserIdProvider>();
+builder.Services.AddTransient<IUserIdProvider, McUserIdProvider>();
 builder.Services.AddSignalR();
 builder.Services.AddTransient<NotificationsHub>();
 builder.Services.AddAuthChannelUserFinder();
@@ -149,12 +149,12 @@ builder.Services
     })
     .AddMasaDbContext<McDbContext>(builder =>
     {
-        builder.UseNpgsql();
+        builder.UseDbSql(masaStackConfig.GetDbType());
         builder.UseFilter(options => options.EnableSoftDelete = true);
     })
     .AddMasaDbContext<McQueryContext>(builder =>
     {
-        builder.UseNpgsql();
+        builder.UseDbSql(masaStackConfig.GetDbType());
         builder.UseFilter(options => options.EnableSoftDelete = true);
     })
     .AddScoped<IMcQueryContext, McQueryContext>()
