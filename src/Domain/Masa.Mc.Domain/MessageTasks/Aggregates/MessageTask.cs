@@ -117,7 +117,7 @@ public class MessageTask : FullAggregateRoot<Guid, Guid>
 
     public void SetSending()
     {
-        SendTime = DateTimeOffset.Now;
+        SendTime = DateTimeOffset.UtcNow;
         Status = MessageTaskStatuses.Sending;
     }
 
@@ -130,13 +130,13 @@ public class MessageTask : FullAggregateRoot<Guid, Guid>
     {
         if (!SendRules.IsCustom || string.IsNullOrEmpty(SendRules.CronExpression))
         {
-            ExpectSendTime = DateTimeOffset.Now;
+            ExpectSendTime = DateTimeOffset.UtcNow;
         }
         else
         {
             var cronExpression = new CronExpression(SendRules.CronExpression);
             cronExpression.TimeZone = TimeZoneInfo.FindSystemTimeZoneById("China Standard Time");
-            var nextExcuteTime = cronExpression.GetNextValidTimeAfter(DateTimeOffset.Now);
+            var nextExcuteTime = cronExpression.GetNextValidTimeAfter(DateTimeOffset.UtcNow);
             ExpectSendTime = nextExcuteTime;
         }
     }

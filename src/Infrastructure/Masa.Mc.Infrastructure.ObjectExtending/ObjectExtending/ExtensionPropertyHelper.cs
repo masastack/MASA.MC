@@ -5,9 +5,9 @@ namespace System.Collections.Concurrent;
 
 public static class ExtensionPropertyHelper
 {
-    public static Masa.Mc.Data.ExtraPropertyDictionary ObjMapToExtraProperty(object obj)
+    public static ExtraPropertyDictionary ObjMapToExtraProperty(object obj)
     {
-        var source = new Masa.Mc.Data.ExtraPropertyDictionary();
+        var source = new ExtraPropertyDictionary();
         var properties = obj.GetType().GetProperties();
         foreach (var property in properties)
         {
@@ -23,7 +23,7 @@ public static class ExtensionPropertyHelper
         return source;
     }
 
-    public static T ExtraPropertyMapToObj<T>(Masa.Mc.Data.ExtraPropertyDictionary dic) where T : new()
+    public static T ExtraPropertyMapToObj<T>(ExtraPropertyDictionary dic) where T : new()
     {
         Type myType = typeof(T);
         T entity = new T();
@@ -63,7 +63,7 @@ public static class ExtensionPropertyHelper
         return entity;
     }
 
-    public static T ConvertToType<T>(Masa.Mc.Data.ExtraPropertyDictionary dic) where T : class
+    public static T ConvertToType<T>(ExtraPropertyDictionary dic) where T : class
     {
         var extraPropertiesAsJson = JsonSerializer.Serialize(dic);
         if (string.IsNullOrEmpty(extraPropertiesAsJson) || extraPropertiesAsJson == "{}")
@@ -73,13 +73,13 @@ public static class ExtensionPropertyHelper
         return JsonSerializer.Deserialize<T>(extraPropertiesAsJson) ?? Activator.CreateInstance<T>();
     }
 
-    public static Masa.Mc.Data.ExtraPropertyDictionary ConvertToExtraProperty(object obj)
+    public static ExtraPropertyDictionary ConvertToExtraProperty(object obj)
     {
         var objAsJson = JsonSerializer.Serialize(obj);
         if (string.IsNullOrEmpty(objAsJson) || objAsJson == "{}")
         {
-            return Activator.CreateInstance<Masa.Mc.Data.ExtraPropertyDictionary>();
+            return Activator.CreateInstance<ExtraPropertyDictionary>();
         }
-        return JsonSerializer.Deserialize<Masa.Mc.Data.ExtraPropertyDictionary>(objAsJson) ?? Activator.CreateInstance<Masa.Mc.Data.ExtraPropertyDictionary>();
+        return JsonSerializer.Deserialize<ExtraPropertyDictionary>(objAsJson) ?? Activator.CreateInstance<ExtraPropertyDictionary>();
     }
 }

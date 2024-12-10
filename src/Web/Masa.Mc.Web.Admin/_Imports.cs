@@ -1,75 +1,75 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
-global using Masa.Blazor;
-global using Masa.Mc.Web.Admin.Global;
-global using Masa.Mc.Web.Admin.Global.Config;
+// System Namespaces
+global using System.Collections.Concurrent;
+global using System.Reflection;
+global using System.Text;
+
+// Microsoft Namespaces
 global using Microsoft.AspNetCore.Components;
 global using Microsoft.AspNetCore.Components.Forms;
 global using Microsoft.AspNetCore.Components.Web;
-global using Microsoft.AspNetCore.Http;
-global using System.ComponentModel;
-global using System.ComponentModel.DataAnnotations;
-global using System.Net.Http.Json;
-global using System.Reflection;
-global using System.Text.Json;
-global using Masa.Mc.Contracts.Admin.Dtos.Channels;
-global using Masa.Mc.Contracts.Admin.Enums.Channels;
-global using Masa.Mc.Contracts.Admin.Options.Channels;
-global using Masa.Mc.Web.Admin.Pages.Channels.Modules;
-global using Masa.Mc.Infrastructure.Ddd.Application.Contracts.Dtos;
+global using Microsoft.AspNetCore.SignalR.Client;
+global using Microsoft.Extensions.DependencyInjection;
+global using Microsoft.JSInterop;
+
+// Third-party Libraries
+global using BlazorDownloadFile;
+global using FluentValidation;
 global using Mapster;
-global using Masa.Mc.Contracts.Admin.Dtos.MessageTemplates;
-global using Masa.Mc.Web.Admin.Pages.MessageTemplates.Modules;
-global using Masa.Mc.Contracts.Admin.Enums.MessageTemplates;
-global using Masa.Mc.Infrastructure.Common.Helper;
-global using Masa.Mc.Contracts.Admin.Dtos.ReceiverGroups;
-global using Masa.Mc.Web.Admin.Pages.ReceiverGroups.Modules;
-global using Masa.Mc.Contracts.Admin.Enums.ReceiverGroups;
+
+// MASA Building Blocks and Contrib Packages
+global using Masa.BuildingBlocks.StackSdks.Auth;
+global using Masa.BuildingBlocks.StackSdks.Auth.Contracts.Model;
+global using Masa.Contrib.StackSdks.Config;
+
+// MASA Blazor Components
+global using Masa.Blazor;
+global using Masa.Blazor.Components.Editor;
+global using Masa.Blazor.Presets;
+global using Masa.Stack.Components;
+global using Masa.Stack.Components.Extensions;
+
+// MASA MC Contracts, Infrastructure, Domain, Services, and Application
 global using Masa.Mc.ApiGateways.Caller;
 global using Masa.Mc.ApiGateways.Caller.Services.Channels;
 global using Masa.Mc.ApiGateways.Caller.Services.MessageTemplates;
 global using Masa.Mc.ApiGateways.Caller.Services.ReceiverGroups;
-global using FluentValidation;
-global using Masa.Mc.Infrastructure.Common.Extensions;
-global using Masa.Mc.Contracts.Admin.Dtos.MessageTasks;
 global using Masa.Mc.ApiGateways.Caller.Services.MessageTasks;
-global using Masa.Mc.Web.Admin.Pages.MessageTasks.Modules;
-global using Masa.Mc.Contracts.Admin.Enums.MessageTasks;
-global using Masa.Mc.Contracts.Admin.Dtos;
 global using Masa.Mc.ApiGateways.Caller.Services.MessageInfos;
-global using Masa.Mc.Contracts.Admin.Dtos.MessageInfos;
 global using Masa.Mc.ApiGateways.Caller.Services.MessageRecords;
+global using Masa.Mc.ApiGateways.Caller.Services.Oss;
+global using Masa.Mc.Contracts.Admin.Dtos;
+global using Masa.Mc.Contracts.Admin.Dtos.Channels;
+global using Masa.Mc.Contracts.Admin.Dtos.MessageTemplates;
+global using Masa.Mc.Contracts.Admin.Dtos.ReceiverGroups;
+global using Masa.Mc.Contracts.Admin.Dtos.MessageTasks;
+global using Masa.Mc.Contracts.Admin.Dtos.MessageInfos;
 global using Masa.Mc.Contracts.Admin.Dtos.MessageRecords;
+global using Masa.Mc.Contracts.Admin.Dtos.Subjects;
+global using Masa.Mc.Contracts.Admin.Enums.Channels;
+global using Masa.Mc.Contracts.Admin.Enums.MessageTemplates;
+global using Masa.Mc.Contracts.Admin.Enums.ReceiverGroups;
+global using Masa.Mc.Contracts.Admin.Enums.MessageTasks;
+global using Masa.Mc.Contracts.Admin.Enums.MessageRecords;
+global using Masa.Mc.Contracts.Admin.Consts;
+global using Masa.Mc.Infrastructure.Common.Helper;
+global using Masa.Mc.Infrastructure.Common.Extensions;
+global using Masa.Mc.Infrastructure.Ddd.Application.Contracts.Dtos;
+global using Masa.Mc.Data;
+
+// MASA MC Web Admin Pages and Components
+global using Masa.Mc.Web.Admin.Global;
+global using Masa.Mc.Web.Admin.Pages.Channels.Modules;
+global using Masa.Mc.Web.Admin.Pages.MessageTemplates.Modules;
+global using Masa.Mc.Web.Admin.Pages.ReceiverGroups.Modules;
+global using Masa.Mc.Web.Admin.Pages.MessageTasks.Modules;
 global using Masa.Mc.Web.Admin.Pages.MessageRecords.Modules;
 global using Masa.Mc.Web.Admin.Components.Modules.Subjects;
-global using System.Text;
-global using Masa.Mc.Contracts.Admin.Dtos.WebsiteMessages;
-global using Masa.Mc.ApiGateways.Caller.Services.WebsiteMessages;
-global using Microsoft.AspNetCore.SignalR.Client;
-global using Masa.Mc.Contracts.Admin.Consts;
-global using BlazorDownloadFile;
-global using Microsoft.JSInterop;
-global using Masa.Mc.ApiGateways.Caller.Services.Oss;
-global using Masa.Blazor.Components.Editor;
-global using Masa.Mc.Contracts.Admin.Dtos.Subjects;
-global using Masa.Mc.Web.Admin.Components.Modules.MessageTasks;
-global using Microsoft.Extensions.DependencyInjection;
-global using Masa.Utils.Data.Elasticsearch;
-global using Masa.Contrib.SearchEngine.AutoComplete;
-global using Masa.BuildingBlocks.SearchEngine.AutoComplete;
-global using Masa.BuildingBlocks.SearchEngine.AutoComplete.Options;
-global using Masa.Stack.Components;
-global using Masa.Mc.Contracts.Admin.Enums.MessageRecords;
+global using Masa.Mc.Web.Admin.Model;
+
+// Validators
 global using Masa.Mc.Contracts.Admin.Dtos.MessageInfos.Validator;
 global using Masa.Mc.Contracts.Admin.Dtos.MessageTasks.Validator;
-global using Masa.Mc.Web.Admin.Model;
-global using System.Collections.Concurrent;
-global using Masa.Blazor.Presets;
-global using Masa.BuildingBlocks.StackSdks.Auth;
-global using Masa.BuildingBlocks.StackSdks.Auth.Contracts.Model;
-global using Masa.Stack.Components.Extensions;
-global using Masa.Contrib.StackSdks.Config;
-global using ExtraPropertyDictionary = Masa.Mc.Data.ExtraPropertyDictionary;
-global using Masa.Mc.Data;
-global using Masa.Mc.Infrastructure.ObjectExtending;
+global using Masa.Mc.Contracts.Admin.Options.Channels;

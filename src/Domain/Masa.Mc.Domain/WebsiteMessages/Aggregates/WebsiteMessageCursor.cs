@@ -17,6 +17,6 @@ public class WebsiteMessageCursor : FullAggregateRoot<Guid, Guid>
 
     public virtual void Update()
     {
-        UpdateTime = DateTimeOffset.Now;
+        UpdateTime = DateTimeOffset.UtcNow;
     }
 }

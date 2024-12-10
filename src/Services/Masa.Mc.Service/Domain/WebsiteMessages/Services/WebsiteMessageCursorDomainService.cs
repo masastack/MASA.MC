@@ -21,7 +21,7 @@ public class WebsiteMessageCursorDomainService : DomainService
         var cursor = await _repository.FindAsync(x => x.UserId == userId);
         if (cursor == null)
         {
-            cursor = new WebsiteMessageCursor(userId, DateTimeOffset.Now);
+            cursor = new WebsiteMessageCursor(userId, DateTimeOffset.UtcNow);
             await _repository.AddAsync(cursor);
         }
         else

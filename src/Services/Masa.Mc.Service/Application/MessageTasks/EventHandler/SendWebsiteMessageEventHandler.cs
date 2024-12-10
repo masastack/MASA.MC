@@ -65,7 +65,7 @@ public class SendWebsiteMessageEventHandler
 
                 messageRecord.SetResult(true, string.Empty);
 
-                var websiteMessage = new WebsiteMessage(messageRecord.MessageTaskHistoryId, messageRecord.ChannelId, item.UserId, eto.MessageData.MessageContent.Title, eto.MessageData.MessageContent.Content, eto.MessageData.MessageContent.GetJumpUrl(), DateTimeOffset.Now, eto.MessageData.MessageContent.ExtraProperties);
+                var websiteMessage = new WebsiteMessage(messageRecord.MessageTaskHistoryId, messageRecord.ChannelId, item.UserId, eto.MessageData.MessageContent.Title, eto.MessageData.MessageContent.Content, eto.MessageData.MessageContent.GetJumpUrl(), DateTimeOffset.UtcNow, eto.MessageData.MessageContent.ExtraProperties);
                 insertMessageRecords.Add(messageRecord);
                 insertWebsiteMessages.Add(websiteMessage);
 
