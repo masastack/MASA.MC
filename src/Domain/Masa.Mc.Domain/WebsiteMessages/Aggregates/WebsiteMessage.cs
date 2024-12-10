@@ -60,7 +60,7 @@ public class WebsiteMessage : FullAggregateRoot<Guid, Guid>
     public void SetRead()
     {
         IsRead = true;
-        ReadTime = DateTimeOffset.Now;
+        ReadTime = DateTimeOffset.UtcNow;
     }
 
     public void SetWithdraw()

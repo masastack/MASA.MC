@@ -109,7 +109,7 @@ public class SendAppMessageEventHandler
 
             foreach (var item in taskHistory.ReceiverUsers)
             {
-                var websiteMessage = new WebsiteMessage(taskHistory.Id, channelId, item.UserId, messageData.MessageContent.Title, messageData.MessageContent.Content, messageData.MessageContent.GetJumpUrl(), DateTimeOffset.Now, messageData.MessageContent.ExtraProperties);
+                var websiteMessage = new WebsiteMessage(taskHistory.Id, channelId, item.UserId, messageData.MessageContent.Title, messageData.MessageContent.Content, messageData.MessageContent.GetJumpUrl(), DateTimeOffset.UtcNow, messageData.MessageContent.ExtraProperties);
                 insertWebsiteMessages.Add(websiteMessage);
             }
             await _websiteMessageRepository.AddRangeAsync(insertWebsiteMessages);
@@ -150,7 +150,7 @@ public class SendAppMessageEventHandler
             {
                 if (taskHistory.MessageTask.IsAppInWebsiteMessage || messageTemplate?.IsWebsiteMessage == true)
                 {
-                    var websiteMessage = new WebsiteMessage(messageRecord.MessageTaskHistoryId, messageRecord.ChannelId, item.UserId, messageData.MessageContent.Title, messageData.MessageContent.Content, messageData.MessageContent.GetJumpUrl(), DateTimeOffset.Now, messageData.MessageContent.ExtraProperties);
+                    var websiteMessage = new WebsiteMessage(messageRecord.MessageTaskHistoryId, messageRecord.ChannelId, item.UserId, messageData.MessageContent.Title, messageData.MessageContent.Content, messageData.MessageContent.GetJumpUrl(), DateTimeOffset.UtcNow, messageData.MessageContent.ExtraProperties);
                     insertWebsiteMessages.Add(websiteMessage);
                 }
 

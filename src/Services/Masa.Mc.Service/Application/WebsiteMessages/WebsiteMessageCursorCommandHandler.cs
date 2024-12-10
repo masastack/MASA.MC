@@ -34,7 +34,7 @@ public class WebsiteMessageCursorCommandHandler
         var cacheKey = $"{CacheKeys.MESSAGE_CURSOR_CHECK_COUNT}_{currentUserId}";
 
         var checkCount = await _cacheClient.HashIncrementAsync(cacheKey);
-        await _cacheClient.KeyExpireAsync<long>(cacheKey, DateTimeOffset.Now.AddMinutes(1));
+        await _cacheClient.KeyExpireAsync<long>(cacheKey, DateTimeOffset.UtcNow.AddMinutes(1));
 
         if (checkCount > 1)
         {
