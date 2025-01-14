@@ -203,12 +203,30 @@ public class WebsiteMessageQueryHandler
 
         if (!string.IsNullOrEmpty(query.Tag))
         {
-            query.Result = await _context.WebsiteMessageQueries.Include(x => x.Tags).CountAsync(x => x.UserId == userId && x.ChannelId == channelId && !x.IsRead && x.Tags.Any(t=>t.Tag == query.Tag));
+            query.Result = await _context.WebsiteMessageQueries.Include(x => x.Tags).CountAsync(x => x.UserId == userId && x.ChannelId == channelId && !x.IsRead && x.Tags.Any(t => t.Tag == query.Tag));
             return;
         }
 
         var unread = await _context.WebsiteMessageQueries.CountAsync(x => x.UserId == userId && x.ChannelId == channelId && !x.IsRead);
 
         query.Result = unread;
+    }
+
+    [EventHandler]
+    public async Task GetUnreadByTagsAsync(GetUnreadMessageCountByTagsQuery query)
+    {
+        var userId = _userContext.GetUserId<Guid>();
+
+        var channelId = (await _context.ChannelQueryQueries.FirstOrDefaultAsync(x => x.Code == query.ChannelCode))?.Id;
+
+        var unreadCount = (from tag in _context.WebsiteMessageTagQueries
+                           join message in _context.WebsiteMessageQueries on tag.WebsiteMessageId equals message.Id
+                           where !message.IsRead
+                                 && query.Tags.Contains(tag.Tag)
+                                 && message.UserId == userId
+                                 && message.ChannelId == channelId
+                           select 1).Count();
+
+        query.Result = unreadCount;
     }
 }

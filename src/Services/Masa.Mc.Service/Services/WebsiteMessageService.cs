@@ -90,4 +90,11 @@ public class WebsiteMessageService : ServiceBase
         await eventbus.PublishAsync(query);
         return query.Result;
     }
+
+    public async Task<int> GetUnreadByTagsAsync(IEventBus eventbus, string channelCode, string tags)
+    {
+        var query = new GetUnreadMessageCountByTagsQuery(channelCode, tags.Split(","));
+        await eventbus.PublishAsync(query);
+        return query.Result;
+    }
 }
