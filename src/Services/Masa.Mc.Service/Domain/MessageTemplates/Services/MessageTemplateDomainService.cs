@@ -83,7 +83,7 @@ public class MessageTemplateDomainService : DomainService
             return true;
         }
 
-        var sendNum = await _messageRecordRepository.GetCountAsync(x => x.SendTime.Value.Date == DateTime.Now.Date && x.ChannelUserIdentity == channelUserIdentity && x.MessageEntityId == messageTemplate.Id);
+        var sendNum = await _messageRecordRepository.GetCountAsync(x => x.SendTime.Value.Date == DateTime.UtcNow.Date && x.ChannelUserIdentity == channelUserIdentity && x.MessageEntityId == messageTemplate.Id);
         if (sendNum >= perDayLimit)
         {
             return false;
@@ -104,7 +104,7 @@ public class MessageTemplateDomainService : DomainService
         var query = await _messageRecordRepository.GetQueryableAsync();
 
         return await query
-            .Where(x => x.SendTime.Value.Date == DateTime.Now.Date && channelUserIdentitys.Contains(x.ChannelUserIdentity) && x.MessageEntityId == messageTemplate.Id)
+            .Where(x => x.SendTime.Value.Date == DateTime.UtcNow.Date && channelUserIdentitys.Contains(x.ChannelUserIdentity) && x.MessageEntityId == messageTemplate.Id)
             .GroupBy(x=>x.ChannelUserIdentity)
             .Where(x => x.Count() >= perDayLimit)
             .Select(x=>x.Key)
