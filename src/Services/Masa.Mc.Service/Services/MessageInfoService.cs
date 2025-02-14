@@ -7,7 +7,10 @@ public class MessageInfoService : ServiceBase
 {
     public MessageInfoService(IServiceCollection services) : base("api/message-info")
     {
-
+        RouteHandlerBuilder = builder =>
+        {
+            builder.RequireAuthorization();
+        };
     }
 
     public async Task<MessageInfoDto> GetAsync(IEventBus eventBus, Guid id)

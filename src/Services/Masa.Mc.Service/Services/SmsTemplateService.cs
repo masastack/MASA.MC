@@ -9,6 +9,10 @@ public class SmsTemplateService : ServiceBase
 
     public SmsTemplateService(IServiceCollection services) : base("api/sms-template")
     {
+        RouteHandlerBuilder = builder =>
+        {
+            builder.RequireAuthorization();
+        };
         MapGet(GetListByChannelIdAsync);
     }
 

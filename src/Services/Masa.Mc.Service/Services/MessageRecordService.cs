@@ -7,6 +7,10 @@ public class MessageRecordService : ServiceBase
 {
     public MessageRecordService(IServiceCollection services) : base("api/message-record")
     {
+        RouteHandlerBuilder = builder =>
+        {
+            builder.RequireAuthorization();
+        };
         MapGet(GetListAsync, string.Empty);
     }
 
