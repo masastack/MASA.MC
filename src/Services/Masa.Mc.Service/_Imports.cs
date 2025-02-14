@@ -144,6 +144,7 @@ global using Masa.Mc.Service.Admin.Infrastructure.Notifications.SignalR;
 global using Masa.Mc.Service.Admin.Infrastructure.Notifications.SignalR.Hubs;
 global using Masa.Mc.Service.Admin.Jobs;
 global using Masa.Mc.Service.Infrastructure.Middleware;
+global using Microsoft.AspNetCore.Authorization;
 global using Microsoft.AspNetCore.Authentication.JwtBearer;
 global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.AspNetCore.SignalR;
