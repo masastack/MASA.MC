@@ -164,24 +164,28 @@ public class MessageTaskService : ServiceBase
         await BackgroundJobManager.EnqueueAsync(args);
     }
 
+    [AllowAnonymous]
     public async Task SendOrdinaryMessageByInternalAsync(IEventBus eventBus, SendOrdinaryMessageByInternalInputDto inputDto)
     {
         var command = new SendOrdinaryMessageByInternalCommand(inputDto);
         await eventBus.PublishAsync(command);
     }
 
+    [AllowAnonymous]
     public async Task SendTemplateMessageByInternalAsync(IEventBus eventBus, SendTemplateMessageByInternalInputDto inputDto)
     {
         var command = new SendTemplateMessageByInternalCommand(inputDto);
         await eventBus.PublishAsync(command);
     }
 
+    [AllowAnonymous]
     public async Task SendOrdinaryMessageByExternalAsync(IEventBus eventBus, SendOrdinaryMessageByExternalInputDto inputDto)
     {
         var command = new SendOrdinaryMessageByExternalCommand(inputDto);
         await eventBus.PublishAsync(command);
     }
 
+    [AllowAnonymous]
     public async Task SendTemplateMessageByExternalAsync(IEventBus eventBus, SendTemplateMessageByExternalInputDto inputDto)
     {
         if (inputDto.ChannelType == ChannelTypes.Sms && inputDto.Receivers.Count == 1)
@@ -225,6 +229,7 @@ public class MessageTaskService : ServiceBase
         await eventBus.PublishAsync(command);
     }
 
+    [AllowAnonymous]
     [RoutePattern("simple-send", StartWithBaseUri = true, HttpMethod = "Post")]
     public async Task SendSimpleMessageAsync(IEventBus eventBus, [FromBody] SendSimpleTemplateMessageInputDto inputDto)
     {
