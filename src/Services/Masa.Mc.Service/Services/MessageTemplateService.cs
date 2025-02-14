@@ -7,6 +7,10 @@ public class MessageTemplateService : ServiceBase
 {
     public MessageTemplateService(IServiceCollection services) : base("api/message-template")
     {
+        RouteHandlerBuilder = builder =>
+        {
+            builder.RequireAuthorization();
+        };
         MapGet(GetListAsync, string.Empty);
     }
 

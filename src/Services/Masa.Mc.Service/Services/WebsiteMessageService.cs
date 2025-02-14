@@ -7,6 +7,10 @@ public class WebsiteMessageService : ServiceBase
 {
     public WebsiteMessageService(IServiceCollection services) : base("api/website-message")
     {
+        RouteHandlerBuilder = builder =>
+        {
+            builder.RequireAuthorization();
+        };
         MapGet(GetListAsync, string.Empty);
         MapGet(GetChannelListAsync);
         MapGet(GetNoticeListAsync);

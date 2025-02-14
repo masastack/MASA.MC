@@ -7,6 +7,10 @@ public class MessageTaskService : ServiceBase
 {
     public MessageTaskService(IServiceCollection services) : base("api/message-task")
     {
+        RouteHandlerBuilder = builder =>
+        {
+            builder.RequireAuthorization();
+        };
         MapGet(GetListAsync, string.Empty);
         MapGet(GenerateReceiverImportTemplateAsync);
         MapGet(GetMessageTaskReceiverListAsync);

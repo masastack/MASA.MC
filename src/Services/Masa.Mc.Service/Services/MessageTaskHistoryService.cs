@@ -9,6 +9,10 @@ public class MessageTaskHistoryService : ServiceBase
 
     public MessageTaskHistoryService(IServiceCollection services) : base("api/message-task-history")
     {
+        RouteHandlerBuilder = builder =>
+        {
+            builder.RequireAuthorization();
+        };
         MapGet(GetListAsync, string.Empty);
     }
 

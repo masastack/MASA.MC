@@ -7,6 +7,10 @@ public class ReceiverGroupService : ServiceBase
 {
     public ReceiverGroupService(IServiceCollection services) : base("api/receiver-group")
     {
+        RouteHandlerBuilder = builder =>
+        {
+            builder.RequireAuthorization();
+        };
         MapGet(GetListAsync, string.Empty);
     }
 

@@ -7,6 +7,10 @@ public class ChannelService : ServiceBase
 {
     public ChannelService(IServiceCollection services) : base("api/channel")
     {
+        RouteHandlerBuilder = builder =>
+        {
+            builder.RequireAuthorization();
+        };
         MapGet(GetListAsync, string.Empty);
         MapGet(FindByCodeAsync);
         MapGet(GetListByTypeAsync);
