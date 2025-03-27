@@ -11,7 +11,22 @@ namespace Masa.Mc.Service.Admin.Application.MessageRecords.Registers
                 .Map(dest => dest.User, src => src.ExtraProperties);
 
             config.ForType<SendTemplateMessageByExternalInputDto, SendSimpleMessageArgs>()
-                .Map(dest => dest.ChannelUserIdentity, src => src.Receivers.First().ChannelUserIdentity);
+                .Map(dest => dest.ChannelUserIdentity, src => src.Receivers.First().ChannelUserIdentity)
+                .Map(dest => dest.Variables, src => ConvertToVariables(src));
+        }
+
+        private ExtraPropertyDictionary ConvertToVariables(SendTemplateMessageByExternalInputDto dto)
+        {
+            if (dto.Receivers.Any())
+            {
+                var receiver = dto.Receivers.First();
+                if (receiver.Variables != null && receiver.Variables.Any())
+                {
+                    return receiver.Variables;
+                }
+            }
+
+            return dto.Variables ?? new ExtraPropertyDictionary();
         }
     }
 }
