@@ -18,7 +18,7 @@ public class ReceiverGroup : FullAggregateRoot<Guid, Guid>
         Items = new Collection<ReceiverGroupItem>();
     }
 
-    public virtual void AddItem(ReceiverGroupItem item)
+    public virtual void TryAddItem(ReceiverGroupItem item)
     {
         var existingItem = Items.SingleOrDefault(x => x.SubjectId == item.SubjectId && x.Type == item.Type);
 

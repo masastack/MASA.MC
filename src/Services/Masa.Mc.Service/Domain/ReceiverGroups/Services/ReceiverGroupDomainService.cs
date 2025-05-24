@@ -49,7 +49,7 @@ public class ReceiverGroupDomainService : DomainService
     {
         foreach (var item in items)
         {
-            receiverGroup.AddItem(item);
+            receiverGroup.TryAddItem(item);
         }
 
         receiverGroup.Items.RemoveAll(item => !items.Any(x => x.SubjectId == item.SubjectId && x.Type == item.Type));
