@@ -13,9 +13,5 @@ public class ReceiverGroupItemQueryModel : Entity<Guid>
 
     public string Avatar { get; set; } = string.Empty;
 
-    public string PhoneNumber { get; set; } = string.Empty;
-
-    public string Email { get; set; } = string.Empty;
-
     public ReceiverGroupItemTypes Type { get; set; }
 }

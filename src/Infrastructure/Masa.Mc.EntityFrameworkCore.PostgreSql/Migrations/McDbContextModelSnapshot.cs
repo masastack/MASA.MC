@@ -987,6 +987,17 @@ namespace Masa.Mc.EntityFrameworkCore.PostgreSql.Migrations
                                 .ValueGeneratedOnAdd()
                                 .HasColumnType("uuid");
 
+                            b1.Property<string>("Avatar")
+                                .IsRequired()
+                                .HasColumnType("text");
+
+                            b1.Property<string>("DisplayName")
+                                .IsRequired()
+                                .HasColumnType("text");
+
+                            b1.Property<Guid>("SubjectId")
+                                .HasColumnType("uuid");
+
                             b1.Property<int>("Type")
                                 .HasColumnType("integer");
 
@@ -996,53 +1007,6 @@ namespace Masa.Mc.EntityFrameworkCore.PostgreSql.Migrations
 
                             b1.WithOwner()
                                 .HasForeignKey("GroupId");
-
-                            b1.OwnsOne("Masa.Mc.Domain.ReceiverGroups.Aggregates.Receiver", "Receiver", b2 =>
-                                {
-                                    b2.Property<Guid>("ReceiverGroupItemGroupId")
-                                        .HasColumnType("uuid");
-
-                                    b2.Property<Guid>("ReceiverGroupItemId")
-                                        .HasColumnType("uuid");
-
-                                    b2.Property<string>("Avatar")
-                                        .IsRequired()
-                                        .HasMaxLength(128)
-                                        .HasColumnType("character varying(128)")
-                                        .HasColumnName("Avatar");
-
-                                    b2.Property<string>("DisplayName")
-                                        .IsRequired()
-                                        .HasMaxLength(128)
-                                        .HasColumnType("character varying(128)")
-                                        .HasColumnName("DisplayName");
-
-                                    b2.Property<string>("Email")
-                                        .IsRequired()
-                                        .HasMaxLength(128)
-                                        .HasColumnType("character varying(128)")
-                                        .HasColumnName("Email");
-
-                                    b2.Property<string>("PhoneNumber")
-                                        .IsRequired()
-                                        .HasMaxLength(128)
-                                        .HasColumnType("character varying(128)")
-                                        .HasColumnName("PhoneNumber");
-
-                                    b2.Property<Guid>("SubjectId")
-                                        .HasColumnType("uuid")
-                                        .HasColumnName("SubjectId");
-
-                                    b2.HasKey("ReceiverGroupItemGroupId", "ReceiverGroupItemId");
-
-                                    b2.ToTable("ReceiverGroupItems");
-
-                                    b2.WithOwner()
-                                        .HasForeignKey("ReceiverGroupItemGroupId", "ReceiverGroupItemId");
-                                });
-
-                            b1.Navigation("Receiver")
-                                .IsRequired();
                         });
 
                     b.Navigation("Items");
