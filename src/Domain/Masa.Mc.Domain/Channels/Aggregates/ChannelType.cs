@@ -36,11 +36,6 @@ public class ChannelType : Enumeration
         throw new NotImplementedException();
     }
 
-    public virtual string GetChannelUserIdentity(Receiver receiver)
-    {
-        throw new NotImplementedException();
-    }
-
     public virtual string GetChannelUserIdentity(UserModel user)
     {
         throw new NotImplementedException();
@@ -69,11 +64,6 @@ public class ChannelType : Enumeration
             return new RetrySmsMessageEvent(messageRecordId);
         }
 
-        public override string GetChannelUserIdentity(Receiver receiver)
-        {
-            return receiver.PhoneNumber;
-        }
-
         public override string GetChannelUserIdentity(UserModel user)
         {
             return user?.PhoneNumber ?? string.Empty;
@@ -92,11 +82,6 @@ public class ChannelType : Enumeration
         public override RetryMessageEvent GetRetryMessageEvent(Guid messageRecordId)
         {
             return new RetryEmailMessageEvent(messageRecordId);
-        }
-
-        public override string GetChannelUserIdentity(Receiver receiver)
-        {
-            return receiver.Email;
         }
 
         public override string GetChannelUserIdentity(UserModel user)
@@ -119,11 +104,6 @@ public class ChannelType : Enumeration
             return new RetryWebsiteMessageEvent(messageRecordId);
         }
 
-        public override string GetChannelUserIdentity(Receiver receiver)
-        {
-            return receiver.SubjectId.ToString();
-        }
-
         public override string GetChannelUserIdentity(UserModel user)
         {
             return user.Id.ToString();
@@ -142,11 +122,6 @@ public class ChannelType : Enumeration
         public override RetryMessageEvent GetRetryMessageEvent(Guid messageRecordId)
         {
             return new RetryAppMessageEvent(messageRecordId);
-        }
-
-        public override string GetChannelUserIdentity(Receiver receiver)
-        {
-            return string.Empty;
         }
 
         public override string GetChannelUserIdentity(UserModel user)
@@ -179,11 +154,6 @@ public class ChannelType : Enumeration
             return new RetryWeixinWorkMessageEvent(messageRecordId);
         }
 
-        public override string GetChannelUserIdentity(Receiver receiver)
-        {
-            return string.Empty;
-        }
-
         public override string GetChannelUserIdentity(UserModel user)
         {
             return string.Empty;
@@ -202,11 +172,6 @@ public class ChannelType : Enumeration
         public override RetryMessageEvent GetRetryMessageEvent(Guid messageRecordId)
         {
             return new RetryWeixinWorkWebhookMessageEvent(messageRecordId);
-        }
-
-        public override string GetChannelUserIdentity(Receiver receiver)
-        {
-            return string.Empty;
         }
 
         public override string GetChannelUserIdentity(UserModel user)

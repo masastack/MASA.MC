@@ -15,11 +15,13 @@ public class ReceiverGroupDomainService : DomainService
     public virtual async Task CreateAsync(ReceiverGroup receiverGroup, List<ReceiverGroupItem> items = null)
     {
         await ValidateAsync(receiverGroup.DisplayName);
+
         if (items != null)
         {
             SetItems(receiverGroup, items);
         }
         await _repository.AddAsync(receiverGroup);
+
         if (items != null)
         {
             await EventBus.PublishAsync(new ReceiverGroupItemChangedDomainEvent(receiverGroup.Id));
@@ -29,11 +31,14 @@ public class ReceiverGroupDomainService : DomainService
     public virtual async Task UpdateAsync(ReceiverGroup receiverGroup, List<ReceiverGroupItem> items = null)
     {
         await ValidateAsync(receiverGroup.DisplayName, receiverGroup.Id);
+
         if (items != null)
         {
             SetItems(receiverGroup, items);
         }
+
         await _repository.UpdateAsync(receiverGroup);
+
         if (items != null)
         {
             await EventBus.PublishAsync(new ReceiverGroupItemChangedDomainEvent(receiverGroup.Id));
@@ -44,14 +49,16 @@ public class ReceiverGroupDomainService : DomainService
     {
         foreach (var item in items)
         {
-            receiverGroup.AddOrUpdateItem(item.Type, item.Receiver);
+            receiverGroup.AddItem(item);
         }
-        receiverGroup.Items.RemoveAll(item => !items.Any(x => x.Receiver == item.Receiver && x.Type == item.Type));
+
+        receiverGroup.Items.RemoveAll(item => !items.Any(x => x.SubjectId == item.SubjectId && x.Type == item.Type));
     }
 
     private async Task ValidateAsync(string displayName, Guid? expectedId = null)
     {
         var receiverGroup = await _repository.FindAsync(d => d.DisplayName == displayName);
+
         if (receiverGroup != null && receiverGroup.Id != expectedId)
         {
             throw new UserFriendlyException(errorCode: UserFriendlyExceptionCodes.RECEIVER_GROUP_NAME_CANNOT_REPEATED);
