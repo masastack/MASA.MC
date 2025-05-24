@@ -989,11 +989,13 @@ namespace Masa.Mc.Service.Admin.Migrations
 
                             b1.Property<string>("Avatar")
                                 .IsRequired()
-                                .HasColumnType("nvarchar(max)");
+                                .HasMaxLength(128)
+                                .HasColumnType("nvarchar(128)");
 
                             b1.Property<string>("DisplayName")
                                 .IsRequired()
-                                .HasColumnType("nvarchar(max)");
+                                .HasMaxLength(128)
+                                .HasColumnType("nvarchar(128)");
 
                             b1.Property<Guid>("SubjectId")
                                 .HasColumnType("uniqueidentifier");

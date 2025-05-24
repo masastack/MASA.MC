@@ -70,6 +70,8 @@ public static class McDbContextModelBuilderExtensions
             b.OwnsMany(x => x.Items, b =>
             {
                 b.ToTable(MCConsts.DbTablePrefix + "ReceiverGroupItems", MCConsts.DbSchema);
+                b.Property(x => x.DisplayName).IsRequired().HasMaxLength(128);
+                b.Property(x => x.Avatar).HasMaxLength(128);
                 b.WithOwner().HasForeignKey(x => x.GroupId);
             });
         });
