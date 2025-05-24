@@ -87,12 +87,12 @@ public class AuthChannelUserFinder : IChannelUserFinder
             {
                 if (items.Key == ReceiverGroupItemTypes.User)
                 {
-                    var result = await GetInternalReceiverUsers(channel, items.Select(x => x.Receiver.SubjectId).ToList(), variables);
+                    var result = await GetInternalReceiverUsers(channel, items.Select(x => x.SubjectId).ToList(), variables);
                     receiverUsers.AddRange(result);
                 }
                 else
                 {
-                    var subjectIds = items.Select(x => x.Receiver.SubjectId).Distinct().ToList();
+                    var subjectIds = items.Select(x => x.SubjectId).Distinct().ToList();
                     var subjectUsers = await GetMessageReceiverUser(channel, items.Key, subjectIds, variables);
                     receiverUsers.AddRange(subjectUsers);
                 }

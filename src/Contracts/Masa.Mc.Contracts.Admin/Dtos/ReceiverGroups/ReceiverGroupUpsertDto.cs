@@ -9,7 +9,5 @@ public class ReceiverGroupUpsertDto
 
     public string Description { get; set; } = string.Empty;
 
-    public List<Guid> UserIds { get; set; } = new();
-
     public List<ReceiverGroupItemDto> Items { get; set; } = new();
 }

@@ -18,19 +18,13 @@ public class ReceiverGroup : FullAggregateRoot<Guid, Guid>
         Items = new Collection<ReceiverGroupItem>();
     }
 
-    public virtual void AddOrUpdateItem(ReceiverGroupItemTypes type, Receiver receiver)
+    public virtual void TryAddItem(ReceiverGroupItem item)
     {
-        var existingItem = Items.SingleOrDefault(item => item.Receiver == receiver && item.Type == type);
+        var existingItem = Items.SingleOrDefault(x => x.SubjectId == item.SubjectId && x.Type == item.Type);
 
         if (existingItem == null)
         {
-            Items.Add(new ReceiverGroupItem(Id,
-                type,
-                receiver));
-        }
-        else
-        {
-            existingItem.SetReceiver(receiver);
+            Items.Add(new ReceiverGroupItem(Id, item.Type, item.SubjectId, item.DisplayName, item.Avatar));
         }
     }
 }
