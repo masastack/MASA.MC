@@ -24,16 +24,18 @@ public class HuaweiOAuthService
         var cacheKey = $"huawei:access_token:{clientId}";
 
         // Use cache or retrieve again
-        return await _cacheContext.GetOrSetAsync(
-            cacheKey,
-            () => RefreshTokenInternalAsync(clientId, clientSecret, ct),
-            new CacheEntryOptions
-            {
-                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(55) // Expire 5 minutes early
-            });
+        return await _cacheContext.GetOrSetAsync(cacheKey,
+           async () =>
+           {
+               var tokenResponse = await RefreshTokenInternalAsync(clientId, clientSecret, ct);
+
+               var cacheEntryOptions = new CacheEntryOptions(TimeSpan.FromSeconds(tokenResponse.ExpiresIn - 60));
+               return (tokenResponse.AccessToken, cacheEntryOptions);
+           }
+           );
     }
 
-    private async Task<string> RefreshTokenInternalAsync(string clientId, string clientSecret, CancellationToken ct)
+    private async Task<AccessTokenResponse> RefreshTokenInternalAsync(string clientId, string clientSecret, CancellationToken ct)
     {
         var formData = new Dictionary<string, string>
         {
@@ -62,7 +64,7 @@ public class HuaweiOAuthService
             throw new InvalidOperationException("Failed to deserialize Huawei access token response.");
         }
 
-        return tokenResponse.AccessToken;
+        return tokenResponse;
     }
 
     private class AccessTokenResponse
