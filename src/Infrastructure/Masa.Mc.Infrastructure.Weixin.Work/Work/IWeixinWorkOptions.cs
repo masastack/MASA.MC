@@ -3,7 +3,7 @@
 
 namespace Masa.Mc.Infrastructure.Weixin.Work.Infrastructure.OptionsResolve.Work;
 
-public interface IWeixinWorkOptions
+public interface IWeixinWorkOptions : IOptions
 {
     public string CorpId { get; set; }
 

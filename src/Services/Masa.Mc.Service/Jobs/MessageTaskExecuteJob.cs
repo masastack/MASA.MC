@@ -53,7 +53,7 @@ public class MessageTaskExecuteJob : SchedulerJob
             serviceCollection.AddSchedulerClient(masaStackConfig.GetSchedulerServiceDomain());
             serviceCollection.AddAliyunSms();
             serviceCollection.AddMailKit();
-            serviceCollection.AddAppNotification();
+            serviceCollection.AddAppNotification(redisOptions);
             serviceCollection.AddSignalR();
             serviceCollection.AddSingleton<ITemplateRenderer, TextTemplateRenderer>();
             serviceCollection.AddAuthChannelUserFinder();

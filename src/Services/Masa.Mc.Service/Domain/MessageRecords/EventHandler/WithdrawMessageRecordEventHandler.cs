@@ -7,19 +7,16 @@ public class WithdrawMessageRecordEventHandler
 {
     private readonly IMessageRecordRepository _repository;
     private readonly IMessageTaskRepository _messageTaskRepository;
-    private readonly IAppNotificationAsyncLocal _appNotificationAsyncLocal;
     private readonly IChannelRepository _channelRepository;
     private readonly AppNotificationSenderFactory _appNotificationSenderFactory;
 
     public WithdrawMessageRecordEventHandler(IMessageRecordRepository repository
         , IMessageTaskRepository messageTaskRepository
-        , IAppNotificationAsyncLocal appNotificationAsyncLocal
         , IChannelRepository channelRepository
         , AppNotificationSenderFactory appNotificationSenderFactory)
     {
         _repository = repository;
         _messageTaskRepository = messageTaskRepository;
-        _appNotificationAsyncLocal = appNotificationAsyncLocal;
         _channelRepository = channelRepository;
         _appNotificationSenderFactory = appNotificationSenderFactory;
     }
@@ -34,18 +31,15 @@ public class WithdrawMessageRecordEventHandler
 
         if (task?.ChannelType?.Id == ChannelType.App.Id)
         {
-            var options = new AppOptions
-            {
-                AppID = channel.ExtraProperties.GetProperty<string>(nameof(AppChannelOptions.AppID)),
-                AppKey = channel.ExtraProperties.GetProperty<string>(nameof(AppChannelOptions.AppKey)),
-                AppSecret = channel.ExtraProperties.GetProperty<string>(nameof(AppChannelOptions.AppSecret)),
-                MasterSecret = channel.ExtraProperties.GetProperty<string>(nameof(AppChannelOptions.MasterSecret))
-            };
+            var provider = (Providers)channel.ExtraProperties.GetProperty<int>(nameof(AppChannelOptions.Provider));
 
-            using var change = _appNotificationAsyncLocal.Change(options);
+            var options = _appNotificationSenderFactory.GetOptions(provider, channel.ExtraProperties);
 
-            var provider = channel.ExtraProperties.GetProperty<int>(nameof(AppChannelOptions.Provider));
-            var appNotificationSender = _appNotificationSenderFactory.GetAppNotificationSender((Providers)provider);
+            var appNotificationAsyncLoca = _appNotificationSenderFactory.GetProviderAsyncLocal(provider);
+
+            using var change = appNotificationAsyncLoca.Change(options);
+
+            var appNotificationSender = _appNotificationSenderFactory.GetAppNotificationSender(provider);
 
             foreach (var item in messageRecords)
             {

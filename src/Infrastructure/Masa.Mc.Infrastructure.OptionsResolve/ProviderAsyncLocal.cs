@@ -3,9 +3,12 @@
 
 namespace Masa.Mc.Infrastructure.OptionsResolve;
 
-public class ProviderAsyncLocal<TOptions> : IProviderAsyncLocal<TOptions>
+public class ProviderAsyncLocal<TOptions> : IProviderAsyncLocal<TOptions>, IProviderAsyncLocalBase
+    where TOptions : class, IOptions
 {
     public TOptions CurrentOptions { get; private set; }
+
+    IOptions IProviderAsyncLocalBase.CurrentOptions => CurrentOptions;
 
     private readonly IAsyncLocalAccessor<TOptions> _asyncLocalAccessor;
 
@@ -26,5 +29,10 @@ public class ProviderAsyncLocal<TOptions> : IProviderAsyncLocal<TOptions>
         {
             _asyncLocalAccessor.Current = parentScope;
         });
+    }
+
+    IDisposable IProviderAsyncLocalBase.Change(IOptions options)
+    {
+        return Change((TOptions)options);
     }
 }
