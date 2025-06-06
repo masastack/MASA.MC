@@ -5,7 +5,6 @@ namespace Masa.Mc.Service.Admin.Application.MessageRecords.EventHandler;
 
 public class RetryAppMessageEventHandler
 {
-    private readonly IAppNotificationAsyncLocal _appNotificationAsyncLocal;
     private readonly AppNotificationSenderFactory _appNotificationSenderFactory;
     private readonly IChannelRepository _channelRepository;
     private readonly IMessageRecordRepository _messageRecordRepository;
@@ -16,8 +15,7 @@ public class RetryAppMessageEventHandler
     private readonly IMessageTaskRepository _messageTaskRepository;
     private readonly II18n<DefaultResource> _i18n;
 
-    public RetryAppMessageEventHandler(IAppNotificationAsyncLocal appNotificationAsyncLocal
-        , AppNotificationSenderFactory appNotificationSenderFactory
+    public RetryAppMessageEventHandler(AppNotificationSenderFactory appNotificationSenderFactory
         , IChannelRepository channelRepository
         , IMessageRecordRepository messageRecordRepository
         , MessageTaskDomainService taskDomainService
@@ -27,7 +25,6 @@ public class RetryAppMessageEventHandler
         , IMessageTaskRepository messageTaskRepository
         , II18n<DefaultResource> i18n)
     {
-        _appNotificationAsyncLocal = appNotificationAsyncLocal;
         _appNotificationSenderFactory = appNotificationSenderFactory;
         _channelRepository = channelRepository;
         _messageRecordRepository = messageRecordRepository;
@@ -47,14 +44,13 @@ public class RetryAppMessageEventHandler
         var channel = await _channelRepository.FindAsync(x => x.Id == messageRecord.ChannelId);
         if (channel == null) return;
 
-        var options = new AppOptions
-        {
-            AppID = channel.ExtraProperties.GetProperty<string>(nameof(AppChannelOptions.AppID)),
-            AppKey = channel.ExtraProperties.GetProperty<string>(nameof(AppChannelOptions.AppKey)),
-            AppSecret = channel.ExtraProperties.GetProperty<string>(nameof(AppChannelOptions.AppSecret)),
-            MasterSecret = channel.ExtraProperties.GetProperty<string>(nameof(AppChannelOptions.MasterSecret))
-        };
-        using (_appNotificationAsyncLocal.Change(options))
+        var provider = (Providers)channel.ExtraProperties.GetProperty<int>(nameof(AppChannelOptions.Provider));
+
+        var options = _appNotificationSenderFactory.GetOptions(provider, channel.ExtraProperties);
+
+        var appNotificationAsyncLoca = _appNotificationSenderFactory.GetProviderAsyncLocal(provider);
+
+        using (appNotificationAsyncLoca.Change(options))
         {
             var messageData = await _taskDomainService.GetMessageDataAsync(messageRecord.MessageTaskId, messageRecord.Variables);
 
@@ -73,8 +69,7 @@ public class RetryAppMessageEventHandler
             {
                 var appChannel = channel.Type as ChannelType.AppsChannel;
                 var transmissionContent = appChannel.GetMessageTransmissionContent(messageData.MessageContent);
-
-                var provider = channel.ExtraProperties.GetProperty<int>(nameof(AppChannelOptions.Provider));
+               
                 var appNotificationSender = _appNotificationSenderFactory.GetAppNotificationSender((Providers)provider);
                 var response = await appNotificationSender.SendAsync(new SingleAppMessage(messageRecord.ChannelUserIdentity, messageData.MessageContent.Title, messageData.MessageContent.Content, messageData.GetDataValue<string>(BusinessConsts.INTENT_URL), transmissionContent, messageData.GetDataValue<bool>(BusinessConsts.IS_APNS_PRODUCTION)));
                 if (response.Success)

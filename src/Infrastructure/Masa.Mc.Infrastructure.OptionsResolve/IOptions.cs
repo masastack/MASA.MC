@@ -1,11 +1,8 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
-namespace Masa.Mc.Contracts.Admin.Enums.Channels;
+namespace Masa.Mc.Infrastructure.OptionsResolve;
 
-public enum AppChannelProviders
+public interface IOptions
 {
-    GeTui = 1,
-    JPush,
-    Mc
 }

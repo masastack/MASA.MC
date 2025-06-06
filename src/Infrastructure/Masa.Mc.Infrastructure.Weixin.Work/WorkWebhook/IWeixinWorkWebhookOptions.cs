@@ -3,7 +3,7 @@
 
 namespace Masa.Mc.Infrastructure.Weixin.Work.Infrastructure.OptionsResolve.WorkWebhook;
 
-public interface IWeixinWorkWebhookOptions
+public interface IWeixinWorkWebhookOptions : IOptions
 {
     public string Key { get; set; }
 }

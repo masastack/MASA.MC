@@ -5,17 +5,17 @@ namespace Masa.Mc.Infrastructure.AppNotification.Getui;
 
 public class GetuiSender : IAppNotificationSender
 {
-    private readonly IAppNotificationOptionsResolver _getuiOptionsResolver;
+    private readonly IOptionsResolver<IGetuiOptions> _optionsResolver;
     private static string HOST = "http://api.getui.com/apiex.htm";
 
-    public GetuiSender(IAppNotificationOptionsResolver getuiOptionsResolver)
+    public GetuiSender(IOptionsResolver<IGetuiOptions> optionsResolver)
     {
-        _getuiOptionsResolver = getuiOptionsResolver;
+        _optionsResolver = optionsResolver;
     }
 
-    public async Task<AppNotificationResponseBase> SendAsync(SingleAppMessage appMessage)
+    public async Task<AppNotificationResponseBase> SendAsync(SingleAppMessage appMessage, CancellationToken ct = default)
     {
-        var options = await _getuiOptionsResolver.ResolveAsync();
+        var options = await _optionsResolver.ResolveAsync();
         IGtPush push = new IGtPush(HOST, options.AppKey, options.MasterSecret);
         NotificationTemplate template = NotificationTemplate(options, appMessage.Title, appMessage.Text, System.Text.Json.JsonSerializer.Serialize(appMessage.TransmissionContent));
 
@@ -44,9 +44,9 @@ public class GetuiSender : IAppNotificationSender
         }
     }
 
-    public async Task<AppNotificationResponseBase> SendAllAsync(AppMessage appMessage)
+    public async Task<AppNotificationResponseBase> BroadcastSendAsync(AppMessage appMessage, CancellationToken ct = default)
     {
-        var options = await _getuiOptionsResolver.ResolveAsync();
+        var options = await _optionsResolver.ResolveAsync();
         IGtPush push = new IGtPush(HOST, options.AppKey, options.MasterSecret);
         NotificationTemplate template = NotificationTemplate(options, appMessage.Title, appMessage.Text, System.Text.Json.JsonSerializer.Serialize(appMessage.TransmissionContent));
 
@@ -75,7 +75,7 @@ public class GetuiSender : IAppNotificationSender
         }
     }
 
-    public static NotificationTemplate NotificationTemplate(IAppNotificationOptions options, string title, string content, string transmissionContent)
+    public static NotificationTemplate NotificationTemplate(IGetuiOptions options, string title, string content, string transmissionContent)
     {
         NotificationTemplate template = new NotificationTemplate();
         template.AppId = options.AppID;
@@ -93,13 +93,13 @@ public class GetuiSender : IAppNotificationSender
         return template;
     }
 
-    public Task<AppNotificationResponseBase> WithdrawnAsync(string msgId)
+    public Task<AppNotificationResponseBase> WithdrawnAsync(string msgId, CancellationToken ct = default)
     {
-        throw new NotImplementedException();
+        return Task.FromResult(new AppNotificationResponseBase(false, "does not support message withdrawal"));
     }
 
-    public Task<AppNotificationResponseBase> BatchSendAsync(BatchAppMessage appMessage)
+    public Task<AppNotificationResponseBase> BatchSendAsync(BatchAppMessage appMessage, CancellationToken ct = default)
     {
-        throw new NotImplementedException();
+        return Task.FromResult(new AppNotificationResponseBase(false, "does not support message batch send"));
     }
 }

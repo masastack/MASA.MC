@@ -3,9 +3,9 @@
 
 namespace Masa.Mc.Infrastructure.OptionsResolve;
 
-public interface IProviderAsyncLocal<TOptions> : IProviderAsyncLocalBase where TOptions : class, IOptions
+public interface IProviderAsyncLocalBase
 {
-    TOptions CurrentOptions { get; }
+    IOptions CurrentOptions { get; }
 
-    IDisposable Change(TOptions options);
+    IDisposable Change(IOptions options);
 }

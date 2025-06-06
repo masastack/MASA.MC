@@ -85,7 +85,6 @@ global using Masa.Mc.Contracts.Admin.Options.Channels;
 global using Masa.Mc.Contracts.Admin.Scheduler;
 global using Masa.Mc.EntityFrameworkCore;
 global using Masa.Mc.Infrastructure.AppNotification;
-global using Masa.Mc.Infrastructure.AppNotification.Infrastructure.OptionsResolve;
 global using Masa.Mc.Infrastructure.Cache;
 global using Masa.Mc.Infrastructure.Common.Helper;
 global using Masa.Mc.Infrastructure.Common.Utils;

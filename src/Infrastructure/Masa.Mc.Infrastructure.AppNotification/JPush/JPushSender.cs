@@ -5,16 +5,16 @@ namespace Masa.Mc.Infrastructure.AppNotification.JPush;
 
 public class JPushSender : IAppNotificationSender
 {
-    private readonly IAppNotificationOptionsResolver _jPushOptionsResolver;
+    private readonly IOptionsResolver<IJPushOptions> _optionsResolver;
 
-    public JPushSender(IAppNotificationOptionsResolver jPushOptionsResolver)
+    public JPushSender(IOptionsResolver<IJPushOptions> optionsResolver)
     {
-        _jPushOptionsResolver = jPushOptionsResolver;
+        _optionsResolver = optionsResolver;;
     }
 
-    public async Task<AppNotificationResponseBase> SendAsync(SingleAppMessage appMessage)
+    public async Task<AppNotificationResponseBase> SendAsync(SingleAppMessage appMessage, CancellationToken ct = default)
     {
-        var options = await _jPushOptionsResolver.ResolveAsync();
+        var options = await _optionsResolver.ResolveAsync();
         JPushClient client = new JPushClient(options.AppKey, options.MasterSecret);
 
         var audience = new
@@ -43,9 +43,9 @@ public class JPushSender : IAppNotificationSender
         }
     }
 
-    public async Task<AppNotificationResponseBase> BatchSendAsync(BatchAppMessage appMessage)
+    public async Task<AppNotificationResponseBase> BatchSendAsync(BatchAppMessage appMessage, CancellationToken ct = default)
     {
-        var options = await _jPushOptionsResolver.ResolveAsync();
+        var options = await _optionsResolver.ResolveAsync();
         JPushClient client = new JPushClient(options.AppKey, options.MasterSecret);
 
         var audience = new
@@ -74,9 +74,9 @@ public class JPushSender : IAppNotificationSender
         }
     }
 
-    public async Task<AppNotificationResponseBase> SendAllAsync(AppMessage appMessage)
+    public async Task<AppNotificationResponseBase> BroadcastSendAsync(AppMessage appMessage, CancellationToken ct = default)
     {
-        var options = await _jPushOptionsResolver.ResolveAsync();
+        var options = await _optionsResolver.ResolveAsync();
         JPushClient client = new JPushClient(options.AppKey, options.MasterSecret);
 
         var pushPayload = GetPushPayload(appMessage, "all");
@@ -98,9 +98,9 @@ public class JPushSender : IAppNotificationSender
         }
     }
 
-    public async Task<AppNotificationResponseBase> WithdrawnAsync(string msgId)
+    public async Task<AppNotificationResponseBase> WithdrawnAsync(string msgId, CancellationToken ct = default)
     {
-        var options = await _jPushOptionsResolver.ResolveAsync();
+        var options = await _optionsResolver.ResolveAsync();
         JPushClient client = new JPushClient(options.AppKey, options.MasterSecret);
 
         HttpResponseMessage response = await JPushClient.HttpClient.DeleteAsync($"{JPushClient.BASE_URL_PUSH_DEFAULT}/{msgId}");

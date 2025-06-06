@@ -90,7 +90,7 @@ builder.Services.AddPmClient(masaStackConfig.GetPmServiceDomain());
 builder.Services.AddSchedulerClient(masaStackConfig.GetSchedulerServiceDomain());
 builder.Services.AddAliyunSms();
 builder.Services.AddMailKit();
-builder.Services.AddAppNotification();
+builder.Services.AddAppNotification(redisOptions);
 builder.Services.AddWeixinWork(builder.Configuration);
 builder.Services.AddCsv();
 builder.Services.AddSingleton<ITemplateRenderer, TextTemplateRenderer>();

@@ -6,5 +6,6 @@ namespace Masa.Mc.Infrastructure.AppNotification;
 public enum Providers
 {
     GeTui = 1,
-    JPush
+    JPush,
+    HuaweiPush
 }

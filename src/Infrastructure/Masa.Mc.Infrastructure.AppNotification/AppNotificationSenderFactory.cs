@@ -5,25 +5,40 @@ namespace Masa.Mc.Infrastructure.AppNotification;
 
 public class AppNotificationSenderFactory
 {
-    private readonly GetuiSender _getuiSender;
-    private readonly JPushSender _jPushSender;
+    private readonly Dictionary<Providers, IAppNotificationSenderProvider> _providers;
 
-    public AppNotificationSenderFactory(GetuiSender getuiSender, JPushSender jPushSender)
+    public AppNotificationSenderFactory(IEnumerable<IAppNotificationSenderProvider> providers)
     {
-        _getuiSender = getuiSender;
-        _jPushSender = jPushSender;
+        _providers = providers.ToDictionary(p => p.Provider);
+    }
+
+    public IOptions GetOptions(Providers provider, ConcurrentDictionary<string, object> extraProperties)
+    {
+        if (_providers.TryGetValue(provider, out var senderProvider))
+        {
+            return senderProvider.ResolveOptions(extraProperties);
+        }
+
+        throw new KeyNotFoundException($"No options resolver found for '{provider}'");
+    }
+
+    public IProviderAsyncLocalBase GetProviderAsyncLocal(Providers provider)
+    {
+        if (_providers.TryGetValue(provider, out var senderProvider))
+        {
+            return senderProvider.ResolveProviderAsyncLocal();
+        }
+
+        throw new KeyNotFoundException($"No async local resolver found for '{provider}'");
     }
 
     public IAppNotificationSender GetAppNotificationSender(Providers provider)
     {
-        switch (provider)
+        if (_providers.TryGetValue(provider, out var senderProvider))
         {
-            case Providers.GeTui:
-                return _getuiSender;
-            case Providers.JPush:
-                return _jPushSender;
-            default:
-                throw new Exception($"Unknow Provider: {provider}");
+            return senderProvider.ResolveSender();
         }
+
+        throw new KeyNotFoundException($"No sender resolver found for '{provider}'");
     }
 }
