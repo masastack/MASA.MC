@@ -25,3 +25,5 @@ global using Masa.BuildingBlocks.Caching;
 global using Masa.Mc.Infrastructure.Cache;
 global using Masa.Contrib.Caching.Distributed.StackExchangeRedis;
 global using System.Linq.Expressions;
+global using System.Net.Http.Headers;
+global using Masa.Mc.Infrastructure.AppNotification.Xiaomi;

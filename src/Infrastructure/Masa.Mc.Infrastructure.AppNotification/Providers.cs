@@ -7,5 +7,6 @@ public enum Providers
 {
     GeTui = 1,
     JPush,
-    HuaweiPush
+    Huawei,
+    Xiaomi
 }
