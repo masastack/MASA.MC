@@ -29,7 +29,8 @@ public class HuaweiOAuthService
            {
                var tokenResponse = await RefreshTokenInternalAsync(clientId, clientSecret, ct);
 
-               var cacheEntryOptions = new CacheEntryOptions(TimeSpan.FromSeconds(tokenResponse.ExpiresIn - 60));
+               const int minimumSeconds = 1;
+               var cacheEntryOptions = new CacheEntryOptions(TimeSpan.FromSeconds(Math.Max(tokenResponse.ExpiresIn - 60, minimumSeconds)));
                return (tokenResponse.AccessToken, cacheEntryOptions);
            }
            );
