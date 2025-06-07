@@ -117,7 +117,7 @@ public class OppoPushSender : IAppNotificationSender
             { "auth_token", token },
             { "message_id", messageId },
             { "target_type", "6" },
-            { "target_value", "all" }
+            { "target_value", AppNotificationConstants.BroadcastTag }
         };
         var content = new FormUrlEncodedContent(form);
         var response = await _httpClient.PostAsync(OppoConstants.BroadcastUrl, content, ct);

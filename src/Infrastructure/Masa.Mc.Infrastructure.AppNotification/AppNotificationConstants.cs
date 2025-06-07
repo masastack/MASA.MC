@@ -3,12 +3,7 @@
 
 namespace Masa.Mc.Infrastructure.AppNotification;
 
-public enum Providers
+public static class AppNotificationConstants
 {
-    GeTui = 1,
-    JPush,
-    Huawei,
-    Xiaomi,
-    Oppo,
-    Vivo
+    public const string BroadcastTag = "all";
 }

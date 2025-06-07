@@ -53,7 +53,7 @@ public class HuaweiPushSender : IAppNotificationSender
         var accessToken = await _oauthService.GetAccessTokenAsync(options.ClientId, options.ClientSecret, ct);
         var url = string.Format(HuaweiConstants.PushMessageUrlFormat, options.ProjectId);
 
-        var payload = BuildMessagePayload(message, null, "all");
+        var payload = BuildMessagePayload(message, null, AppNotificationConstants.BroadcastTag);
 
         var request = CreatePushRequest(url, payload, accessToken);
 

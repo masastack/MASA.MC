@@ -13,6 +13,7 @@ public static class ServiceCollectionExtensions
         services.AddHuaweiPush();
         services.AddXiaomiPush();
         services.AddOppoPush();
+        services.AddVivoPush();
         services.TryAddTransient<AppNotificationSenderFactory>();
         return services;
     }
@@ -37,6 +38,13 @@ public static class ServiceCollectionExtensions
     {
         services.AddPushProvider<IOppoPushOptions, OppoPushOptionsResolver, OppoPushSender, OppoSenderProvider>();
         services.AddScoped<OppoAuthService>();
+        return services;
+    }
+
+    public static IServiceCollection AddVivoPush(this IServiceCollection services)
+    {
+        services.AddPushProvider<IVivoPushOptions, VivoPushOptionsResolver, VivoPushSender, VivoSenderProvider>();
+        services.AddScoped<VivoAuthService>();
         return services;
     }
 
