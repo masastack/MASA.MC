@@ -67,6 +67,15 @@ public class HuaweiPushSender : IAppNotificationSender
         return Task.FromResult(new AppNotificationResponseBase(false, "Withdrawal operation not supported"));
     }
 
+    private object BuildClickAction(string url)
+    {
+        if (string.IsNullOrEmpty(url))
+            return new { type = 3 };
+        if (url.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+            return new { type = 2, url };
+        return new { type = 1, action = url };
+    }
+
     private HmsPushRequest BuildMessagePayload(AppMessage message, string[]? tokens = null, string? topic = null)
     {
         return new HmsPushRequest
@@ -81,11 +90,7 @@ public class HuaweiPushSender : IAppNotificationSender
                 {
                     Notification = new HmsAndroidNotification
                     {
-                        ClickAction = new
-                        {
-                            type = string.IsNullOrEmpty(message.Url) ? (int)ClickActionType.OpenApp : (int)ClickActionType.AppDefinedIntent,
-                            intent = message.Url
-                        }
+                        ClickAction = BuildClickAction(message.Url)
                     }
                 }
             }

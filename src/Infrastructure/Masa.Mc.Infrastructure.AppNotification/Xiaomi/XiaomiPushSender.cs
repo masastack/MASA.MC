@@ -61,7 +61,12 @@ public class XiaomiPushSender : IAppNotificationSender
             payload["registration_id"] = clientId;
         }
 
-        if (!string.IsNullOrEmpty(url))
+        if (url.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+        {
+            payload["extra.notify_effect"] = "3";
+            payload["extra.web_uri"] = url;
+        }
+        else if (!string.IsNullOrEmpty(url))
         {
             payload["extra.notify_effect"] = "2";
             payload["extra.intent_uri"] = url;

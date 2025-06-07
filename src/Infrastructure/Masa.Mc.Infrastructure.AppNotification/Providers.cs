@@ -8,5 +8,6 @@ public enum Providers
     GeTui = 1,
     JPush,
     Huawei,
-    Xiaomi
+    Xiaomi,
+    Oppo
 }
