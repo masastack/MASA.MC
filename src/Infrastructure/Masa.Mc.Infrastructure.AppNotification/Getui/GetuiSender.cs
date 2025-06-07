@@ -6,7 +6,6 @@ namespace Masa.Mc.Infrastructure.AppNotification.Getui;
 public class GetuiSender : IAppNotificationSender
 {
     private readonly IOptionsResolver<IGetuiOptions> _optionsResolver;
-    private static string HOST = "http://api.getui.com/apiex.htm";
 
     public GetuiSender(IOptionsResolver<IGetuiOptions> optionsResolver)
     {
@@ -16,7 +15,7 @@ public class GetuiSender : IAppNotificationSender
     public async Task<AppNotificationResponseBase> SendAsync(SingleAppMessage appMessage, CancellationToken ct = default)
     {
         var options = await _optionsResolver.ResolveAsync();
-        IGtPush push = new IGtPush(HOST, options.AppKey, options.MasterSecret);
+        IGtPush push = new IGtPush(GetuiConstants.DomainUrl, options.AppKey, options.MasterSecret);
         NotificationTemplate template = NotificationTemplate(options, appMessage.Title, appMessage.Text, System.Text.Json.JsonSerializer.Serialize(appMessage.TransmissionContent));
 
         SingleMessage message = new SingleMessage();
@@ -47,7 +46,7 @@ public class GetuiSender : IAppNotificationSender
     public async Task<AppNotificationResponseBase> BroadcastSendAsync(AppMessage appMessage, CancellationToken ct = default)
     {
         var options = await _optionsResolver.ResolveAsync();
-        IGtPush push = new IGtPush(HOST, options.AppKey, options.MasterSecret);
+        IGtPush push = new IGtPush(GetuiConstants.DomainUrl, options.AppKey, options.MasterSecret);
         NotificationTemplate template = NotificationTemplate(options, appMessage.Title, appMessage.Text, System.Text.Json.JsonSerializer.Serialize(appMessage.TransmissionContent));
 
         com.igetui.api.openservice.igetui.AppMessage message = new com.igetui.api.openservice.igetui.AppMessage();
