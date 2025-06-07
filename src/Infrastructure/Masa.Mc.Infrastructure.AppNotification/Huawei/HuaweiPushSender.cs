@@ -83,7 +83,7 @@ public class HuaweiPushSender : IAppNotificationSender
                     {
                         ClickAction = new
                         {
-                            type = string.IsNullOrEmpty(message.Url) ? 3 : 1,
+                            type = string.IsNullOrEmpty(message.Url) ? (int)ClickActionType.OpenApp : (int)ClickActionType.AppDefinedIntent,
                             intent = message.Url
                         }
                     }
@@ -98,7 +98,7 @@ public class HuaweiPushSender : IAppNotificationSender
         {
             Content = JsonContent.Create(payload)
         };
-        request.Headers.Add("Authorization", $"Bearer {accessToken}");
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
         return request;
     }
 

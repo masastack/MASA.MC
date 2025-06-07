@@ -87,6 +87,12 @@ public class XiaomiPushSender : IAppNotificationSender
         try
         {
             var response = await _httpClient.SendAsync(request, ct);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                return new AppNotificationResponseBase(false, $"Push failed with status code: {response.StatusCode}");
+            }
+
             var responseString = await response.Content.ReadAsStringAsync(ct);
 
             using var doc = JsonDocument.Parse(responseString);
