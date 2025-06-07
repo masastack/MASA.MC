@@ -11,6 +11,7 @@ public static class ServiceCollectionExtensions
         services.AddGetui();
         services.AddJPush();
         services.AddHuaweiPush();
+        services.AddXiaomiPush();
         services.TryAddTransient<AppNotificationSenderFactory>();
         return services;
     }
@@ -27,6 +28,9 @@ public static class ServiceCollectionExtensions
         services.AddScoped<HuaweiOAuthService>();
         return services;
     }
+
+    public static IServiceCollection AddXiaomiPush(this IServiceCollection services) =>
+        services.AddPushProvider<IXiaomiPushOptions, XiaomiPushOptionsResolver, XiaomiPushSender, XiaomiSenderProvider>();
 
     public static IServiceCollection AddPushProvider<TOptions, TOptionsResolver, TSender, TSenderProvider>(
     this IServiceCollection services)

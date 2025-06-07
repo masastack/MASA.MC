@@ -1,12 +1,10 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
-namespace Masa.Mc.Infrastructure.AppNotification;
+namespace Masa.Mc.Infrastructure.AppNotification.Huawei;
 
-public enum Providers
+public enum ClickActionType
 {
-    GeTui = 1,
-    JPush,
-    Huawei,
-    Xiaomi
+    AppDefinedIntent = 1,
+    OpenApp = 3
 }

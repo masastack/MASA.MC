@@ -22,51 +22,29 @@ public class HuaweiPushSender : IAppNotificationSender
         var accessToken = await _oauthService.GetAccessTokenAsync(options.ClientId, options.ClientSecret, ct);
         var url = string.Format(HuaweiConstants.PushMessageUrlFormat, options.ProjectId);
 
-        var payload = BuildSingleMessagePayload(message.ClientId, message);
+        var payload = BuildMessagePayload(message, new[] { message.ClientId });
 
-        var request = new HttpRequestMessage(HttpMethod.Post, url)
-        {
-            Content = JsonContent.Create(payload),
-            Headers = { { "Authorization", $"Bearer {accessToken}" } }
-        };
+        var request = CreatePushRequest(url, payload, accessToken);
 
         var response = await _httpClient.SendAsync(request, ct);
         return await HandleResponse(response, ct);
     }
 
-    private IEnumerable<string[]> SplitTokens(string[] tokens)
-    {
-        for (int i = 0; i < tokens.Length; i += 1000)
-        {
-            yield return tokens.Skip(i).Take(1000).ToArray();
-        }
-    }
-
     public async Task<AppNotificationResponseBase> BatchSendAsync(BatchAppMessage message, CancellationToken ct = default)
     {
+        if (message.ClientIds.Length > 1000)
+            return new AppNotificationResponseBase(false, "Up to 1000 device tokens can be sent at a time");
+
         var options = await _optionsResolver.ResolveAsync();
+        var accessToken = await _oauthService.GetAccessTokenAsync(options.ClientId, options.ClientSecret, ct);
+        var url = string.Format(HuaweiConstants.PushMessageUrlFormat, options.ProjectId);
 
-        var responses = new List<AppNotificationResponseBase>();
-        foreach (var batch in SplitTokens(message.ClientIds))
-        {
-            var accessToken = await _oauthService.GetAccessTokenAsync(options.ClientId, options.ClientSecret, ct);
-            var url = string.Format(HuaweiConstants.PushMessageUrlFormat, options.ProjectId);
+        var payload = BuildMessagePayload(message, message.ClientIds);
 
-            var payload = BuildBatchMessagePayload(batch, message);
+        var request = CreatePushRequest(url, payload, accessToken);
 
-            var request = new HttpRequestMessage(HttpMethod.Post, url)
-            {
-                Content = JsonContent.Create(payload),
-                Headers = { { "Authorization", $"Bearer {accessToken}" } }
-            };
-
-            var response = await _httpClient.SendAsync(request, ct);
-            responses.Add(await HandleResponse(response, ct));
-        }
-
-        return responses.All(r => r.Success)
-            ? new AppNotificationResponseBase(true, "All sent successfully")
-            : new AppNotificationResponseBase(false, "Partial failure");
+        var response = await _httpClient.SendAsync(request, ct);
+        return await HandleResponse(response, ct);
     }
 
     public async Task<AppNotificationResponseBase> BroadcastSendAsync(AppMessage message, CancellationToken ct = default)
@@ -75,13 +53,9 @@ public class HuaweiPushSender : IAppNotificationSender
         var accessToken = await _oauthService.GetAccessTokenAsync(options.ClientId, options.ClientSecret, ct);
         var url = string.Format(HuaweiConstants.PushMessageUrlFormat, options.ProjectId);
 
-        var payload = BuildBroadcastMessagePayload(message);
+        var payload = BuildMessagePayload(message, null, "all");
 
-        var request = new HttpRequestMessage(HttpMethod.Post, url)
-        {
-            Content = JsonContent.Create(payload),
-            Headers = { { "Authorization", $"Bearer {accessToken}" } }
-        };
+        var request = CreatePushRequest(url, payload, accessToken);
 
         var response = await _httpClient.SendAsync(request, ct);
         return await HandleResponse(response, ct);
@@ -93,13 +67,14 @@ public class HuaweiPushSender : IAppNotificationSender
         return Task.FromResult(new AppNotificationResponseBase(false, "Withdrawal operation not supported"));
     }
 
-    private HmsPushRequest BuildSingleMessagePayload(string token, AppMessage message)
+    private HmsPushRequest BuildMessagePayload(AppMessage message, string[]? tokens = null, string? topic = null)
     {
         return new HmsPushRequest
         {
             Message = new HmsMessage
             {
-                Token = new[] { token },
+                Token = tokens ?? Array.Empty<string>(),
+                Topic = topic ?? string.Empty,
                 Notification = new HmsNotification { Title = message.Title, Body = message.Text },
                 Data = JsonConvert.SerializeObject(message.TransmissionContent),
                 Android = new HmsAndroidConfig
@@ -108,8 +83,8 @@ public class HuaweiPushSender : IAppNotificationSender
                     {
                         ClickAction = new
                         {
-                            type = 1,
-                            intent = $"#Intent;action={message.Url};end"
+                            type = string.IsNullOrEmpty(message.Url) ? (int)ClickActionType.OpenApp : (int)ClickActionType.AppDefinedIntent,
+                            intent = message.Url
                         }
                     }
                 }
@@ -117,52 +92,14 @@ public class HuaweiPushSender : IAppNotificationSender
         };
     }
 
-    private HmsPushRequest BuildBatchMessagePayload(string[] tokens, AppMessage message)
+    private HttpRequestMessage CreatePushRequest(string url, object payload, string accessToken)
     {
-        return new HmsPushRequest
+        var request = new HttpRequestMessage(HttpMethod.Post, url)
         {
-            Message = new HmsMessage
-            {
-                Token = tokens,
-                Notification = new HmsNotification { Title = message.Title, Body = message.Text },
-                Data = JsonConvert.SerializeObject(message.TransmissionContent),
-                Android = new HmsAndroidConfig
-                {
-                    Notification = new HmsAndroidNotification
-                    {
-                        ClickAction = new
-                        {
-                            type = 1,
-                            intent = $"#Intent;action={message.Url};end"
-                        }
-                    }
-                }
-            }
+            Content = JsonContent.Create(payload)
         };
-    }
-
-    private HmsPushRequest BuildBroadcastMessagePayload(AppMessage message)
-    {
-        return new HmsPushRequest
-        {
-            Message = new HmsMessage
-            {
-                Topic = "all", // Assume all devices subscribe to the "all" topic  
-                Notification = new HmsNotification { Title = message.Title, Body = message.Text },
-                Data = JsonConvert.SerializeObject(message.TransmissionContent),
-                Android = new HmsAndroidConfig
-                {
-                    Notification = new HmsAndroidNotification
-                    {
-                        ClickAction = new
-                        {
-                            type = 1,
-                            intent = $"#Intent;action={message.Url};end"
-                        }
-                    }
-                }
-            }
-        };
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+        return request;
     }
 
     private async Task<AppNotificationResponseBase> HandleResponse(HttpResponseMessage response, CancellationToken ct)
