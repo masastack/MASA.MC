@@ -79,7 +79,7 @@ public class JPushSender : IAppNotificationSender
         var options = await _optionsResolver.ResolveAsync();
         JPushClient client = new JPushClient(options.AppKey, options.MasterSecret);
 
-        var pushPayload = GetPushPayload(appMessage, "all");
+        var pushPayload = GetPushPayload(appMessage, AppNotificationConstants.BroadcastTag);
 
         try
         {

@@ -25,7 +25,7 @@ public class OppoPushSender : IAppNotificationSender
 
         var messageObj = new
         {
-            target_type = 2,
+            target_type = OppoTargetType.RegistrationId,
             target_value = appMessage.ClientId,
             verify_registration_id = true,
             notification = BuildNotification(appMessage)
@@ -52,7 +52,7 @@ public class OppoPushSender : IAppNotificationSender
 
         var messages = appMessage.ClientIds.Select(id => new
         {
-            target_type = 2,
+            target_type = OppoTargetType.RegistrationId,
             target_value = id,
             notification = BuildNotification(appMessage)
         }).ToArray();
@@ -116,8 +116,8 @@ public class OppoPushSender : IAppNotificationSender
         {
             { "auth_token", token },
             { "message_id", messageId },
-            { "target_type", "6" },
-            { "target_value", "all" }
+            { "target_type", ((int)OppoTargetType.Tag).ToString() },
+            { "target_value", AppNotificationConstants.BroadcastTag }
         };
         var content = new FormUrlEncodedContent(form);
         var response = await _httpClient.PostAsync(OppoConstants.BroadcastUrl, content, ct);
