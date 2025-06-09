@@ -43,10 +43,10 @@ global using Masa.Mc.Domain.WebsiteMessages.Repositories;
 
 // MASA MC Contracts and Consts
 global using Masa.Mc.Domain.Consts;
-global using Masa.Mc.Contracts.Admin.Enums.MessageTasks;
 
 // MASA MC Entity Framework Core
 global using Masa.Mc.EntityFrameworkCore;
 global using Masa.Mc.EntityFrameworkCore.Repositories;
 global using Masa.Mc.EntityFrameworkCore.ValueConverters;
 global using Masa.Mc.Infrastructure.EntityFrameworkCore.ValueConverters;
+global using Masa.Mc.Domain.Shared.MessageTasks;

@@ -17,16 +17,7 @@ global using Masa.BuildingBlocks.Ddd.Domain.Events;
 global using Masa.BuildingBlocks.Ddd.Domain.Repositories;
 global using Masa.BuildingBlocks.Ddd.Domain.Values;
 global using Masa.BuildingBlocks.Dispatcher.Events;
-
-// MASA Stack SDKs and Contracts
 global using Masa.BuildingBlocks.StackSdks.Auth.Contracts.Model;
-
-// MASA MC Contracts and Consts
-global using Masa.Mc.Contracts.Admin.Consts;
-global using Masa.Mc.Contracts.Admin.Enums.Apps;
-global using Masa.Mc.Contracts.Admin.Enums.MessageTemplates;
-global using Masa.Mc.Contracts.Admin.Enums.MessageTasks;
-global using Masa.Mc.Contracts.Admin.Enums.ReceiverGroups;
 
 // MASA MC Domain Aggregates
 global using Masa.Mc.Domain.Apps.Aggregates;
@@ -50,3 +41,15 @@ global using Masa.Mc.Infrastructure.Common.Helper;
 
 // MASA MC Data
 global using Masa.Mc.Data;
+
+global using Masa.Mc.Domain.Shared.Apps;
+global using Masa.Mc.Domain.Shared.Channels;
+global using Masa.Mc.Domain.Shared.MessageRecords;
+global using Masa.Mc.Domain.Shared.MessageTasks;
+global using Masa.Mc.Domain.Shared.MessageTemplates;
+global using Masa.Mc.Domain.Shared.ReceiverGroups;
+global using Masa.Mc.Domain.Shared.Subjects;
+global using Masa.Mc.Domain.Shared.WebsiteMessages;
+
+global using Masa.Mc.Domain.Shared.Consts;
+global using Masa.Mc.Infrastructure.Common.Utils;
