@@ -14,6 +14,7 @@ public static class ServiceCollectionExtensions
         services.AddXiaomiPush();
         services.AddOppoPush();
         services.AddVivoPush();
+        services.AddHonorPush();
         services.TryAddTransient<AppNotificationSenderFactory>();
         return services;
     }
@@ -45,6 +46,13 @@ public static class ServiceCollectionExtensions
     {
         services.AddPushProvider<IVivoPushOptions, VivoPushOptionsResolver, VivoPushSender, VivoSenderProvider>();
         services.AddScoped<VivoAuthService>();
+        return services;
+    }
+
+    public static IServiceCollection AddHonorPush(this IServiceCollection services)
+    {
+        services.AddPushProvider<IHonorPushOptions, HonorPushOptionsResolver, HonorPushSender, HonorSenderProvider>();
+        services.AddScoped<HonorAuthService>();
         return services;
     }
 

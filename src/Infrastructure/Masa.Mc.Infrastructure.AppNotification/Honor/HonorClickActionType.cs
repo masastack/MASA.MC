@@ -1,15 +1,11 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
-namespace Masa.Mc.Infrastructure.AppNotification;
+namespace Masa.Mc.Infrastructure.AppNotification.Honor;
 
-public enum Providers
+public enum HonorClickActionType
 {
-    GeTui = 1,
-    JPush,
-    Huawei,
-    Honor,
-    Xiaomi,
-    Oppo,
-    Vivo
+    AppDefinedIntent = 1,
+    OpenUrl = 2,
+    OpenApp = 3
 }
