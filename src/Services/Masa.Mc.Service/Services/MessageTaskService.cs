@@ -5,6 +5,8 @@ namespace Masa.Mc.Service.Admin.Services;
 
 public class MessageTaskService : ServiceBase
 {
+    IEventBus _eventBus => GetRequiredService<IEventBus>();
+
     public MessageTaskService(IServiceCollection services) : base("api/message-task")
     {
         RouteHandlerBuilder = builder =>
@@ -16,32 +18,32 @@ public class MessageTaskService : ServiceBase
         MapGet(GetMessageTaskReceiverListAsync);
     }
 
-    public async Task<PaginatedListDto<MessageTaskDto>> GetListAsync(IEventBus eventbus, [FromQuery] Guid? channelId, [FromQuery] MessageEntityTypes? entityType, [FromQuery] bool? isDraft, [FromQuery] bool? isEnabled, [FromQuery] MessageTaskTimeTypes? timeType, [FromQuery] DateTime? startTime, [FromQuery] DateTime? endTime, [FromQuery] MessageTaskStatuses? status, [FromQuery] MessageTaskSources? source, [FromQuery] string systemId, [FromQuery] string channelCode = "", [FromQuery] string filter = "", [FromQuery] string sorting = "", [FromQuery] int page = 1, [FromQuery] int pagesize = 10)
+    public async Task<PaginatedListDto<MessageTaskDto>> GetListAsync([FromQuery] Guid? channelId, [FromQuery] MessageEntityTypes? entityType, [FromQuery] bool? isDraft, [FromQuery] bool? isEnabled, [FromQuery] MessageTaskTimeTypes? timeType, [FromQuery] DateTime? startTime, [FromQuery] DateTime? endTime, [FromQuery] MessageTaskStatuses? status, [FromQuery] MessageTaskSources? source, [FromQuery] string systemId, [FromQuery] string channelCode = "", [FromQuery] string filter = "", [FromQuery] string sorting = "", [FromQuery] int page = 1, [FromQuery] int pagesize = 10)
     {
         var inputDto = new GetMessageTaskInputDto(filter, channelId, channelCode,entityType, isDraft, isEnabled, timeType, startTime, endTime, status, source, systemId, sorting, page, pagesize);
         var query = new GetMessageTaskListQuery(inputDto);
-        await eventbus.PublishAsync(query);
+        await _eventBus.PublishAsync(query);
         return query.Result;
     }
 
-    public async Task<MessageTaskDto> GetAsync(IEventBus eventBus, Guid id)
+    public async Task<MessageTaskDto> GetAsync(Guid id)
     {
         var query = new GetMessageTaskQuery(id);
-        await eventBus.PublishAsync(query);
+        await _eventBus.PublishAsync(query);
         return query.Result;
     }
 
-    public async Task CreateAsync(IEventBus eventBus, [FromBody] MessageTaskUpsertDto inputDto)
+    public async Task CreateAsync([FromBody] MessageTaskUpsertDto inputDto)
     {
         switch (inputDto.EntityType)
         {
             case MessageEntityTypes.Ordinary:
                 var ordinaryCommand = new CreateOrdinaryMessageTaskCommand(inputDto);
-                await eventBus.PublishAsync(ordinaryCommand);
+                await _eventBus.PublishAsync(ordinaryCommand);
                 break;
             case MessageEntityTypes.Template:
                 var templateCommand = new CreateTemplateMessageTaskCommand(inputDto);
-                await eventBus.PublishAsync(templateCommand);
+                await _eventBus.PublishAsync(templateCommand);
                 break;
             default:
                 throw new UserFriendlyException("unknown message task type");
@@ -49,72 +51,72 @@ public class MessageTaskService : ServiceBase
 
     }
 
-    public async Task UpdateAsync(IEventBus eventBus, Guid id, [FromBody] MessageTaskUpsertDto inputDto)
+    public async Task UpdateAsync(Guid id, [FromBody] MessageTaskUpsertDto inputDto)
     {
         switch (inputDto.EntityType)
         {
             case MessageEntityTypes.Ordinary:
                 var ordinaryCommand = new UpdateOrdinaryMessageTaskCommand(id, inputDto);
-                await eventBus.PublishAsync(ordinaryCommand);
+                await _eventBus.PublishAsync(ordinaryCommand);
                 break;
             case MessageEntityTypes.Template:
                 var templateCommand = new UpdateTemplateMessageTaskCommand(id, inputDto);
-                await eventBus.PublishAsync(templateCommand);
+                await _eventBus.PublishAsync(templateCommand);
                 break;
             default:
                 throw new UserFriendlyException("unknown message task type");
         }
     }
 
-    public async Task DeleteAsync(IEventBus eventBus, Guid id)
+    public async Task DeleteAsync(Guid id)
     {
         var command = new DeleteMessageTaskCommand(id);
-        await eventBus.PublishAsync(command);
+        await _eventBus.PublishAsync(command);
     }
 
-    public async Task SendAsync(IEventBus eventBus, SendMessageTaskInputDto inputDto)
+    public async Task SendAsync(SendMessageTaskInputDto inputDto)
     {
         var command = new SendMessageTaskCommand(inputDto);
-        await eventBus.PublishAsync(command);
+        await _eventBus.PublishAsync(command);
     }
 
-    public async Task SendTestAsync(IEventBus eventBus, SendTestMessageTaskInputDto inputDto)
+    public async Task SendTestAsync(SendTestMessageTaskInputDto inputDto)
     {
         var command = new SendTestMessageTaskCommand(inputDto);
-        await eventBus.PublishAsync(command);
+        await _eventBus.PublishAsync(command);
     }
 
 
     [RoutePattern("{id}/enabled/{isEnabled}", StartWithBaseUri = true, HttpMethod = "Put")]
-    public async Task SetIsEnabledAsync(IEventBus eventBus, Guid id, bool isEnabled)
+    public async Task SetIsEnabledAsync(Guid id, bool isEnabled)
     {
         if (isEnabled)
         {
             var command = new EnabledMessageTaskCommand(id);
-            await eventBus.PublishAsync(command);
+            await _eventBus.PublishAsync(command);
         }
         else
         {
             var command = new DisableMessageTaskCommand(id);
-            await eventBus.PublishAsync(command);
+            await _eventBus.PublishAsync(command);
         }
     }
 
-    public async Task<byte[]> GenerateReceiverImportTemplateAsync(IEventBus eventBus, Guid? messageTemplatesId, ChannelTypes channelType)
+    public async Task<byte[]> GenerateReceiverImportTemplateAsync(Guid? messageTemplatesId, ChannelTypes channelType)
     {
         var query = new GenerateReceiverImportTemplateQuery(messageTemplatesId, channelType);
-        await eventBus.PublishAsync(query);
+        await _eventBus.PublishAsync(query);
         return query.Result;
     }
 
-    public async Task<ImportResultDto<MessageTaskReceiverDto>> ImportReceiversAsync(IEventBus eventBus, ImportReceiversDto dto)
+    public async Task<ImportResultDto<MessageTaskReceiverDto>> ImportReceiversAsync(ImportReceiversDto dto)
     {
         var command = new ImportReceiversCommand(dto);
-        await eventBus.PublishAsync(command);
+        await _eventBus.PublishAsync(command);
         return command.Result;
     }
 
-    public async Task<List<MessageTaskReceiverDto>> GetMessageTaskReceiverListAsync(IEventBus eventBus, IAuthClient authClient, [FromQuery] string filter = "")
+    public async Task<List<MessageTaskReceiverDto>> GetMessageTaskReceiverListAsync(IAuthClient authClient, [FromQuery] string filter = "")
     {
         var list = new List<MessageTaskReceiverDto>();
         var subjectList = await authClient.SubjectService.GetListAsync(filter);
@@ -130,7 +132,7 @@ public class MessageTaskService : ServiceBase
 
         var receiverGroupInputDto = new GetReceiverGroupInputDto(filter, "", 1, 99);
         var receiverGroupQuery = new GetReceiverGroupListQuery(receiverGroupInputDto);
-        await eventBus.PublishAsync(receiverGroupQuery);
+        await _eventBus.PublishAsync(receiverGroupQuery);
         var receiverGroupList = receiverGroupQuery.Result.Result;
         list.AddRange(receiverGroupList.Select(x => new MessageTaskReceiverDto
         {
@@ -142,10 +144,10 @@ public class MessageTaskService : ServiceBase
         return list;
     }
 
-    public async Task<long> ResolveReceiversCountAsync(IEventBus eventBus, List<MessageTaskReceiverDto> dto)
+    public async Task<long> ResolveReceiversCountAsync(List<MessageTaskReceiverDto> dto)
     {
         var query = new ResolveReceiversCountQuery(dto);
-        await eventBus.PublishAsync(query);
+        await _eventBus.PublishAsync(query);
         return query.Result;
     }
 
@@ -165,28 +167,28 @@ public class MessageTaskService : ServiceBase
     }
 
     [AllowAnonymous]
-    public async Task SendOrdinaryMessageByInternalAsync(IEventBus eventBus, SendOrdinaryMessageByInternalInputDto inputDto)
+    public async Task SendOrdinaryMessageByInternalAsync(SendOrdinaryMessageByInternalInputDto inputDto)
     {
         var command = new SendOrdinaryMessageByInternalCommand(inputDto);
-        await eventBus.PublishAsync(command);
+        await _eventBus.PublishAsync(command);
     }
 
     [AllowAnonymous]
-    public async Task SendTemplateMessageByInternalAsync(IEventBus eventBus, SendTemplateMessageByInternalInputDto inputDto)
+    public async Task SendTemplateMessageByInternalAsync(SendTemplateMessageByInternalInputDto inputDto)
     {
         var command = new SendTemplateMessageByInternalCommand(inputDto);
-        await eventBus.PublishAsync(command);
+        await _eventBus.PublishAsync(command);
     }
 
     [AllowAnonymous]
-    public async Task SendOrdinaryMessageByExternalAsync(IEventBus eventBus, SendOrdinaryMessageByExternalInputDto inputDto)
+    public async Task SendOrdinaryMessageByExternalAsync(SendOrdinaryMessageByExternalInputDto inputDto)
     {
         var command = new SendOrdinaryMessageByExternalCommand(inputDto);
-        await eventBus.PublishAsync(command);
+        await _eventBus.PublishAsync(command);
     }
 
     [AllowAnonymous]
-    public async Task SendTemplateMessageByExternalAsync(IEventBus eventBus, SendTemplateMessageByExternalInputDto inputDto)
+    public async Task SendTemplateMessageByExternalAsync(SendTemplateMessageByExternalInputDto inputDto)
     {
         if (inputDto.ChannelType == ChannelTypes.Sms && inputDto.Receivers.Count == 1)
         {
@@ -196,26 +198,36 @@ public class MessageTaskService : ServiceBase
         }
 
         var command = new SendTemplateMessageByExternalCommand(inputDto);
-        await eventBus.PublishAsync(command);
+        await _eventBus.PublishAsync(command);
     }
 
-    [RoutePattern("{id}/Withdrawn", StartWithBaseUri = true, HttpMethod = "Post")]
-    public async Task WithdrawnAsync(IEventBus eventBus, Guid id)
+    [RoutePattern("{id}/withdrawn", StartWithBaseUri = true, HttpMethod = "Post")]
+    public async Task WithdrawnAsync(Guid id)
     {
         var command = new WithdrawnMessageTaskCommand(id);
-        await eventBus.PublishAsync(command);
+        await _eventBus.PublishAsync(command);
     }
 
-    [RoutePattern("{id}/Resend", StartWithBaseUri = true, HttpMethod = "Post")]
-    public async Task ResendAsync(IEventBus eventBus, Guid id)
+    [RoutePattern("{id}/resend", StartWithBaseUri = true, HttpMethod = "Post")]
+    public async Task ResendAsync(Guid id)
     {
         var command = new ResendMessageTaskCommand(id);
-        await eventBus.PublishAsync(command);
+        await _eventBus.PublishAsync(command);
     }
 
     [RoutePattern(HttpMethod = "Post")]
     public async Task BindClientIdAsync([FromServices] IMasaConfiguration configuration, [FromServices] IAuthClient authClient, BindClientIdInputDto inputDto)
     {
+        if (inputDto.Platform.HasValue)
+        {
+            var query = new FindChannelByCodeQuery(inputDto.ChannelCode);
+            await _eventBus.PublishAsync(query);
+            var channel = query.Result;
+
+            var command = new BindAppDeviceTokenCommand(channel.Id, inputDto.ClientId, inputDto.Platform.Value);
+            await _eventBus.PublishAsync(command);
+        }
+
         var systemId = $"{MasaStackProject.MC.Name}:{inputDto.ChannelCode}";
         var userSystemData = await authClient.UserService.GetSystemDataAsync<UserSystemDataDto>(systemId) ?? new();
         userSystemData.ClientId = inputDto.ClientId;

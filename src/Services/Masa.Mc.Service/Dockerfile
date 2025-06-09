@@ -1,6 +1,7 @@
 FROM registry.cn-hangzhou.aliyuncs.com/masa/dotnet_sdk:6.0.100 AS publish
 WORKDIR /src
 COPY . .
+
 ENV CSPROJ="src/Services/Masa.Mc.Service/Masa.Mc.Service.Admin.csproj"
 RUN dotnet restore $CSPROJ && dotnet publish $CSPROJ -c Release -o /app/publish
 
