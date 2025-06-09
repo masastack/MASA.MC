@@ -160,6 +160,8 @@ global using ICsvExporter = Masa.Mc.Infrastructure.ExporterAndImporter.Csv.ICsvE
 global using ICsvImporter = Masa.Mc.Infrastructure.ExporterAndImporter.Csv.ICsvImporter;
 global using IdentityModel.Client;
 global using Masa.Mc.Contracts.Admin.Constants;
+global using Masa.Mc.Domain.Apps.Aggregates;
+global using Masa.Mc.Domain.Apps.Repositories;
 global using Masa.Mc.Domain.Channels.Aggregates;
 global using Masa.Mc.Domain.Channels.Repositories;
 global using Masa.Mc.Domain.MessageTasks.Repositories;

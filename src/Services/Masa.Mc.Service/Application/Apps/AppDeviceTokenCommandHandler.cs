@@ -1,9 +1,6 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
-using Masa.Mc.Domain.Apps.Aggregates;
-using Masa.Mc.Domain.Apps.Repositories;
-
 namespace Masa.Mc.Service.Admin.Application.Apps;
 
 public class AppDeviceTokenCommandHandler
