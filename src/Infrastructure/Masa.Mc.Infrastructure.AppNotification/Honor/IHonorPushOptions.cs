@@ -5,9 +5,9 @@ namespace Masa.Mc.Infrastructure.AppNotification.Honor;
 
 public interface IHonorPushOptions : IOptions
 {
-    public string ClientId { get; set; }
+    string ClientId { get; set; }
 
-    public string ClientSecret { get; set; }
+    string ClientSecret { get; set; }
 
-    public string AppId { get; set; }
+    string AppId { get; set; }
 }
