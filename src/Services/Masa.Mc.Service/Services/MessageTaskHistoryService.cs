@@ -31,7 +31,7 @@ public class MessageTaskHistoryService : ServiceBase
         return query.Result;
     }
 
-    [RoutePattern("{id}/Withdrawn", StartWithBaseUri = true, HttpMethod = "Post")]
+    [RoutePattern("{id}/withdrawn", StartWithBaseUri = true, HttpMethod = "Post")]
     public async Task WithdrawnAsync(IEventBus eventBus, Guid id)
     {
         var command = new WithdrawnMessageTaskHistoryCommand(id);

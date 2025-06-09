@@ -76,6 +76,55 @@ namespace Masa.Mc.EntityFrameworkCore.PostgreSql.Migrations
                     b.ToTable("IntegrationEventLog", (string)null);
                 });
 
+            modelBuilder.Entity("Masa.Mc.Domain.Apps.Aggregates.AppDeviceToken", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ChannelId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("Creator")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("DeviceToken")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.Property<string>("ExtraProperties")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("ModificationTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("Modifier")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Platform")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTimeOffset>("RegisteredTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChannelId", "UserId");
+
+                    b.ToTable("AppDeviceTokens", (string)null);
+                });
+
             modelBuilder.Entity("Masa.Mc.Domain.Channels.Aggregates.AppChannel", b =>
                 {
                     b.Property<Guid>("Id")

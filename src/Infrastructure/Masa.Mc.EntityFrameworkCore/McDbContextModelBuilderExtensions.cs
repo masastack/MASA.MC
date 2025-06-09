@@ -156,5 +156,13 @@ public static class McDbContextModelBuilderExtensions
             b.ToTable(MCConsts.DbTablePrefix + "WebsiteMessageCursors", MCConsts.DbSchema);
             b.HasIndex(x => x.UserId);
         });
+
+        builder.Entity<AppDeviceToken>(b =>
+        {
+            b.ToTable(MCConsts.DbTablePrefix + "AppDeviceTokens", MCConsts.DbSchema);
+            b.Property(x => x.DeviceToken).HasMaxLength(128);
+            b.Property(x => x.ExtraProperties).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
+            b.HasIndex(x => new { x.ChannelId, x.UserId });
+        });
     }
 }

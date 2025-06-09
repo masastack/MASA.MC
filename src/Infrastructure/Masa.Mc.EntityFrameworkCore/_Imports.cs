@@ -22,6 +22,8 @@ global using Masa.Contrib.Ddd.Domain.Repository.EFCore;
 global using Masa.Contrib.Dispatcher.IntegrationEvents.EventLogs.EFCore;
 
 // MASA MC Domain Aggregates
+global using Masa.Mc.Domain.Apps.Aggregates;
+global using Masa.Mc.Domain.Apps.Repositories;
 global using Masa.Mc.Domain.Channels.Aggregates;
 global using Masa.Mc.Domain.MessageInfos.Aggregates;
 global using Masa.Mc.Domain.MessageRecords.Aggregates;

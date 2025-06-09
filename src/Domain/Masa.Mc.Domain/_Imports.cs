@@ -23,11 +23,13 @@ global using Masa.BuildingBlocks.StackSdks.Auth.Contracts.Model;
 
 // MASA MC Contracts and Consts
 global using Masa.Mc.Contracts.Admin.Consts;
+global using Masa.Mc.Contracts.Admin.Enums.Apps;
 global using Masa.Mc.Contracts.Admin.Enums.MessageTemplates;
 global using Masa.Mc.Contracts.Admin.Enums.MessageTasks;
 global using Masa.Mc.Contracts.Admin.Enums.ReceiverGroups;
 
 // MASA MC Domain Aggregates
+global using Masa.Mc.Domain.Apps.Aggregates;
 global using Masa.Mc.Domain.Channels.Aggregates;
 global using Masa.Mc.Domain.MessageInfos.Aggregates;
 global using Masa.Mc.Domain.MessageRecords.Aggregates;

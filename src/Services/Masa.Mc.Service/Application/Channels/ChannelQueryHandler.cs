@@ -24,7 +24,9 @@ public class ChannelQueryHandler
         var entity = await _context.ChannelQueryQueries.FirstOrDefaultAsync(x => x.Id == query.ChannelId);
         MasaArgumentException.ThrowIfNull(entity, _i18n.T("Channel"));
 
-        query.Result = entity.Adapt<ChannelDto>();
+        var dto = entity.Adapt<ChannelDto>();
+        dto.ExtraProperties = entity.ExtraProperties;
+        query.Result = dto;
     }
 
     [EventHandler]

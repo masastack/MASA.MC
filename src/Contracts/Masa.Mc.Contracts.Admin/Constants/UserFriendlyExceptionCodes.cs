@@ -27,4 +27,5 @@ public static class UserFriendlyExceptionCodes
     public const string TEMPLATE_ID_CANNOT_REPEATED = "TemplateIdCannotRepeated";
     public const string RECEIVER_GROUP_NAME_CANNOT_REPEATED = "ReceiverGroupNameCannotRepeated";
     public const string SYNC_SMS_TEMPLATE_ERROR_MESSAGE = "SyncSmsTemplateErrorMessage";
+    public const string USER_NOT_LOGGED_IN = "UserNotLoggedIn";
 }
