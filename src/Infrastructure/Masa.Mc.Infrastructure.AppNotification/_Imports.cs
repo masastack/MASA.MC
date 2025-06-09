@@ -30,3 +30,4 @@ global using Masa.Mc.Infrastructure.AppNotification.Xiaomi;
 global using System.Text;
 global using Masa.Mc.Infrastructure.AppNotification.Oppo;
 global using Masa.Mc.Infrastructure.AppNotification.Vivo;
+global using Masa.Mc.Infrastructure.AppNotification.Honor;
