@@ -5,11 +5,6 @@ using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Masa.Mc.Infrastructure.AppNotification.Honor;
 
-// 优化点：  
-// 1. 减少重复代码：SendAsync 和 BatchSendAsync 方法中有大量重复逻辑，可以提取为一个通用方法。  
-// 2. 提高代码可读性：将 BuildPayload 和 BuildClickAction 方法的逻辑进一步简化。  
-// 3. 使用更明确的异常处理：在 HandleResponse 方法中增加对异常的处理。  
-
 public class HonorPushSender : IAppNotificationSender
 {
     private readonly HttpClient _httpClient;
