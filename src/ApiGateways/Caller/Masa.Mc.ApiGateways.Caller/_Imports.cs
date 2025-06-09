@@ -4,7 +4,7 @@
 global using Masa.Mc.Contracts.Admin.Dtos.Channels;
 global using Masa.Mc.Infrastructure.Ddd.Application.Contracts.Dtos;
 global using Masa.Mc.Contracts.Admin.Dtos.MessageTemplates;
-global using Masa.Mc.Contracts.Admin.Enums.Channels;
+global using Masa.Mc.Domain.Shared.Channels;
 global using Masa.Mc.Contracts.Admin.Dtos.ReceiverGroups;
 global using System.Net;
 global using Microsoft.AspNetCore.Http;

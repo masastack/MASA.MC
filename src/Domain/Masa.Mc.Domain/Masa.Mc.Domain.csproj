@@ -10,8 +10,8 @@
 		<PackageReference Include="Masa.Contrib.Ddd.Domain" Version="$(MasaFrameworkPackageVersion)" />
 	</ItemGroup>
 	<ItemGroup>
-	  <ProjectReference Include="..\..\Contracts\Masa.Mc.Contracts.Admin\Masa.Mc.Contracts.Admin.csproj" />
 	  <ProjectReference Include="..\..\Infrastructure\Masa.Mc.Infrastructure.ObjectExtending\Masa.Mc.Infrastructure.ObjectExtending.csproj" />
+	  <ProjectReference Include="..\Masa.Mc.Domain.Shared\Masa.Mc.Domain.Shared.csproj" />
 	</ItemGroup>
 	<ItemGroup>
 	  <Folder Include="Constants\" />

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Infrastructure\Masa.Mc.Infrastructure.Common\Masa.Mc.Infrastructure.Common.csproj" />
+    <ProjectReference Include="..\..\Domain\Masa.Mc.Domain.Shared\Masa.Mc.Domain.Shared.csproj" />
     <ProjectReference Include="..\..\Infrastructure\Masa.Mc.Infrastructure.Ddd.Application.Contracts\Masa.Mc.Infrastructure.Ddd.Application.Contracts.csproj" />
     <ProjectReference Include="..\..\Infrastructure\Masa.Mc.Infrastructure.ObjectExtending\Masa.Mc.Infrastructure.ObjectExtending.csproj" />
   </ItemGroup>
