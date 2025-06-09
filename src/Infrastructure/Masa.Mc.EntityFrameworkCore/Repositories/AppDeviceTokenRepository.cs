@@ -9,9 +9,4 @@ public class AppDeviceTokenRepository : Repository<McDbContext, AppDeviceToken>,
         : base(context, unitOfWork)
     {
     }
-
-    public async Task<IQueryable<AppDeviceToken>> AsQueryable()
-    {
-        return await Task.FromResult(Context.Set<AppDeviceToken>().AsQueryable());
-    }
 }
