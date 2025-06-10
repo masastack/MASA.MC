@@ -9,6 +9,7 @@ global using Jiguang.JPush.Model;
 global using Masa.BuildingBlocks.Caching;
 global using Masa.Contrib.Caching.Distributed.StackExchangeRedis;
 global using Masa.Mc.Infrastructure.AppNotification.Getui;
+global using Masa.Mc.Infrastructure.AppNotification.iOS;
 global using Masa.Mc.Infrastructure.AppNotification.Honor;
 global using Masa.Mc.Infrastructure.AppNotification.Huawei;
 global using Masa.Mc.Infrastructure.AppNotification.JPush;
