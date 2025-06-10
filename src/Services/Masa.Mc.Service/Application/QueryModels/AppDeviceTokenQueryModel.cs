@@ -11,7 +11,7 @@ public class AppDeviceTokenQueryModel : Entity<Guid>, ISoftDelete
 
     public string DeviceToken { get; set; } = string.Empty;
 
-    public AppDeviceTokenPlatform Platform { get; set; }
+    public AppPlatform Platform { get; set; }
 
     public DateTimeOffset RegisteredTime { get; set; }
 

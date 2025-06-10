@@ -25,6 +25,10 @@ public class McQueryContext : MasaDbContext<McQueryContext>, IMcQueryContext
 
     public IQueryable<MessageReceiverUserQueryModel> MessageReceiverUserQueries => Set<MessageReceiverUserQueryModel>().AsQueryable();
 
+    public IQueryable<AppDeviceTokenQueryModel> AppDeviceTokenQueries => Set<AppDeviceTokenQueryModel>().AsQueryable();
+
+    public IQueryable<AppVendorConfigQueryModel> AppVendorConfigQueries => Set<AppVendorConfigQueryModel>().AsQueryable();
+
     public McQueryContext(MasaDbContextOptions<McQueryContext> options) : base(options)
     {
     }
@@ -104,6 +108,18 @@ public class McQueryContext : MasaDbContext<McQueryContext>, IMcQueryContext
         builder.Entity<WebsiteMessageTagQueryModel>(b =>
         {
             b.ToView(MCConsts.DbTablePrefix + "WebsiteMessageTags", MCConsts.DbSchema);
+        });
+
+        builder.Entity<AppDeviceTokenQueryModel>(b =>
+        {
+            b.ToView(MCConsts.DbTablePrefix + "AppDeviceTokens", MCConsts.DbSchema);
+            b.Property(x => x.ExtraProperties).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
+        });
+
+        builder.Entity<AppVendorConfigQueryModel>(b =>
+        {
+            b.ToView(MCConsts.DbTablePrefix + "AppVendorConfigs", MCConsts.DbSchema);
+            b.Property(x => x.Options).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
         });
 
         base.OnModelCreatingExecuting(builder);

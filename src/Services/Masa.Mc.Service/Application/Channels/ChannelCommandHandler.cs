@@ -6,13 +6,15 @@ namespace Masa.Mc.Service.Admin.Application.Channels;
 public class ChannelCommandHandler
 {
     private readonly IChannelRepository _repository;
+    private readonly IAppVendorConfigRepository _appVendorConfigRepository;
     private readonly IMessageTaskRepository _messageTaskRepository;
     private readonly ChannelDomainService _domainService;
     private readonly II18n<DefaultResource> _i18n;
 
-    public ChannelCommandHandler(IChannelRepository repository, IMessageTaskRepository messageTaskRepository, ChannelDomainService domainService, II18n<DefaultResource> i18n)
+    public ChannelCommandHandler(IChannelRepository repository, IAppVendorConfigRepository appVendorConfigRepository, IMessageTaskRepository messageTaskRepository, ChannelDomainService domainService, II18n<DefaultResource> i18n)
     {
         _repository = repository;
+        _appVendorConfigRepository = appVendorConfigRepository;
         _messageTaskRepository = messageTaskRepository;
         _domainService = domainService;
         _i18n = i18n;
@@ -50,6 +52,24 @@ public class ChannelCommandHandler
             throw new UserFriendlyException(errorCode: UserFriendlyExceptionCodes.MESSAGE_TASK_TO_BE_SENT_OR_BEING_SENT_CANNOT_BE_DELETED);
         }
         await _domainService.DeleteAsync(entity);
+    }
+
+
+    [EventHandler]
+    public async Task SaveVendorConfigAsync(SaveChannelVendorConfigCommand command)
+    {
+        var entity = await _appVendorConfigRepository.FindAsync(x => x.ChannelId == command.ChannelId && x.Vendor == command.Vendor);
+
+        if (entity is null)
+        {
+            entity = new AppVendorConfig(command.ChannelId, command.Vendor, command.Options);
+            await _appVendorConfigRepository.AddAsync(entity);
+        }
+        else
+        {
+            entity.UpdateOptions(command.Options);
+            await _appVendorConfigRepository.UpdateAsync(entity);
+        }
     }
 
     private async Task ValidateChannelNameAsync(string displayName, Guid? id)

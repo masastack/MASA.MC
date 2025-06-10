@@ -11,13 +11,13 @@ public class AppDeviceToken : FullAggregateRoot<Guid, Guid>
 
     public string DeviceToken { get; private set; } = string.Empty;
 
-    public AppDeviceTokenPlatform Platform { get; private set; }
+    public AppPlatform Platform { get; private set; }
 
     public DateTimeOffset RegisteredTime { get; private set; }
 
     public ExtraPropertyDictionary ExtraProperties { get; private set; } = new();
 
-    public AppDeviceToken(Guid channelId, Guid userId, string deviceToken, AppDeviceTokenPlatform platform, DateTimeOffset registeredTime, ExtraPropertyDictionary extraProperties)
+    public AppDeviceToken(Guid channelId, Guid userId, string deviceToken, AppPlatform platform, DateTimeOffset registeredTime, ExtraPropertyDictionary extraProperties)
     {
         ChannelId = channelId;
         UserId = userId;
@@ -27,7 +27,7 @@ public class AppDeviceToken : FullAggregateRoot<Guid, Guid>
         ExtraProperties = extraProperties;
     }
 
-    public void UpdateToken(string newToken, AppDeviceTokenPlatform platform)
+    public void UpdateToken(string newToken, AppPlatform platform)
     {
         DeviceToken = newToken;
         RegisteredTime = DateTimeOffset.UtcNow;

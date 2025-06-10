@@ -1,15 +1,8 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
-namespace Masa.Mc.Domain.Shared.Apps;
+namespace Masa.Mc.Domain.Apps.Repositories;
 
-public enum AppDeviceTokenPlatform
+public interface IAppVendorConfigRepository : IRepository<AppVendorConfig>
 {
-    GeTui = 1,
-    JPush,
-    Huawei,
-    Honor,
-    Xiaomi,
-    Oppo,
-    Vivo
 }
