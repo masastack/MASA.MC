@@ -125,6 +125,44 @@ namespace Masa.Mc.EntityFrameworkCore.PostgreSql.Migrations
                     b.ToTable("AppDeviceTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Masa.Mc.Domain.Apps.Aggregates.AppVendorConfig", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ChannelId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("Creator")
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("ModificationTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("Modifier")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Options")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Vendor")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChannelId", "Vendor");
+
+                    b.ToTable("AppVendorConfigs", (string)null);
+                });
+
             modelBuilder.Entity("Masa.Mc.Domain.Channels.Aggregates.AppChannel", b =>
                 {
                     b.Property<Guid>("Id")

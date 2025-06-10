@@ -24,4 +24,8 @@ public interface IMcQueryContext
     public IQueryable<WebsiteMessageTagQueryModel> WebsiteMessageTagQueries { get; }
 
     public IQueryable<MessageReceiverUserQueryModel> MessageReceiverUserQueries { get; }
+
+    public IQueryable<AppDeviceTokenQueryModel> AppDeviceTokenQueries { get; }
+
+    public IQueryable<AppVendorConfigQueryModel> AppVendorConfigQueries { get; }
 }

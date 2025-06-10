@@ -65,6 +65,16 @@ public class ChannelQueryHandler
         query.Result = list.Adapt<List<ChannelDto>>();
     }
 
+    [EventHandler]
+    public async Task GetVendorConfigAsync(GetChannelVendorConfigQuery query)
+    {
+        var entity = await _context.AppVendorConfigQueries.FirstOrDefaultAsync(x => x.ChannelId == query.ChannelId && x.Vendor == query.Vendor);
+
+        var dto = entity?.Adapt<VendorConfigDto>() ?? new();
+
+        query.Result = dto;
+    }
+
     private async Task<Expression<Func<ChannelQueryModel, bool>>> CreateFilteredPredicate(GetChannelInputDto inputDto)
     {
         Expression<Func<ChannelQueryModel, bool>> condition = channel => true;

@@ -3,6 +3,6 @@
 
 namespace Masa.Mc.Service.Admin.Application.Apps.Commands;
 
-public record BindAppDeviceTokenCommand(Guid ChannelId, string DeviceToken, AppDeviceTokenPlatform Platform) : Command
+public record BindAppDeviceTokenCommand(Guid ChannelId, string DeviceToken, AppPlatform Platform) : Command
 {
 }

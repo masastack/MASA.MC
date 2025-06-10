@@ -164,5 +164,12 @@ public static class McDbContextModelBuilderExtensions
             b.Property(x => x.ExtraProperties).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
             b.HasIndex(x => new { x.ChannelId, x.UserId });
         });
+
+        builder.Entity<AppVendorConfig>(b =>
+        {
+            b.ToTable(MCConsts.DbTablePrefix + "AppVendorConfigs", MCConsts.DbSchema);
+            b.Property(x => x.Options).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
+            b.HasIndex(x => new { x.ChannelId, x.Vendor });
+        });
     }
 }

@@ -5,6 +5,8 @@ namespace Masa.Mc.Service.Services;
 
 public class ChannelService : ServiceBase
 {
+    IEventBus _eventBus => GetRequiredService<IEventBus>();
+
     public ChannelService(IServiceCollection services) : base("api/channel")
     {
         RouteHandlerBuilder = builder =>
@@ -17,51 +19,66 @@ public class ChannelService : ServiceBase
     }
 
 
-    public async Task<PaginatedListDto<ChannelDto>> GetListAsync(IEventBus eventbus, [FromQuery] ChannelTypes? type, [FromQuery] string displayName = "", [FromQuery] string filter = "", [FromQuery] string sorting = "", [FromQuery] int page = 1, [FromQuery] int pagesize = 10)
+    public async Task<PaginatedListDto<ChannelDto>> GetListAsync([FromQuery] ChannelTypes? type, [FromQuery] string displayName = "", [FromQuery] string filter = "", [FromQuery] string sorting = "", [FromQuery] int page = 1, [FromQuery] int pagesize = 10)
     {
         var inputDto = new GetChannelInputDto(filter, type, displayName, sorting, page, pagesize);
         var query = new GetChannelListQuery(inputDto);
-        await eventbus.PublishAsync(query);
+        await _eventBus.PublishAsync(query);
         return query.Result;
     }
 
-    public async Task<ChannelDto> GetAsync(IEventBus eventBus, Guid id)
+    public async Task<ChannelDto> GetAsync(Guid id)
     {
         var query = new GetChannelQuery(id);
-        await eventBus.PublishAsync(query);
+        await _eventBus.PublishAsync(query);
         return query.Result;
     }
 
-    public async Task CreateAsync(IEventBus eventBus, [FromBody] ChannelUpsertDto inputDto)
+    public async Task CreateAsync([FromBody] ChannelUpsertDto inputDto)
     {
         var command = new CreateChannelCommand(inputDto);
-        await eventBus.PublishAsync(command);
+        await _eventBus.PublishAsync(command);
     }
 
-    public async Task UpdateAsync(IEventBus eventBus, Guid id, [FromBody] ChannelUpsertDto inputDto)
+    public async Task UpdateAsync(Guid id, [FromBody] ChannelUpsertDto inputDto)
     {
         inputDto.Scheme ??= string.Empty;
         var command = new UpdateChannelCommand(id, inputDto);
-        await eventBus.PublishAsync(command);
+        await _eventBus.PublishAsync(command);
     }
 
-    public async Task DeleteAsync(IEventBus eventBus, Guid id)
+    public async Task DeleteAsync(Guid id)
     {
         var command = new DeleteChannelCommand(id);
-        await eventBus.PublishAsync(command);
+        await _eventBus.PublishAsync(command);
     }
 
-    public async Task<ChannelDto> FindByCodeAsync(IEventBus eventBus, string code)
+    public async Task<ChannelDto> FindByCodeAsync(string code)
     {
         var query = new FindChannelByCodeQuery(code);
-        await eventBus.PublishAsync(query);
+        await _eventBus.PublishAsync(query);
         return query.Result;
     }
 
-    public async Task<List<ChannelDto>> GetListByTypeAsync(IEventBus eventBus, ChannelTypes type)
+    public async Task<List<ChannelDto>> GetListByTypeAsync(ChannelTypes type)
     {
         var query = new GetListByTypeQuery(type);
-        await eventBus.PublishAsync(query);
+        await _eventBus.PublishAsync(query);
         return query.Result;
+    }
+
+    [RoutePattern("{id}/vendor/{vendor}/config", StartWithBaseUri = true, HttpMethod = "Get")]
+    public async Task<VendorConfigDto> GetVendorConfigAsync([FromRoute] Guid id, [FromRoute] AppVendor vendor)
+    {
+        var query = new GetChannelVendorConfigQuery(id, vendor);
+        await _eventBus.PublishAsync(query);
+        return query.Result;
+    }
+
+    [RoutePattern("{id}/vendor/{vendor}/config", StartWithBaseUri = true, HttpMethod = "Post")]
+    public async Task SaveVendorConfigAsync([FromRoute] Guid id, [FromRoute] AppVendor vendor, [FromBody] VendorConfigUpsertDto vendorConfig)
+    {
+        var command = new SaveChannelVendorConfigCommand(id, vendor, vendorConfig.Options);
+        await _eventBus.PublishAsync(command);
     }
 }
