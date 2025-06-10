@@ -22,7 +22,7 @@ public class JPushSender : IAppNotificationSender
             registration_id = new string[] { appMessage.ClientId }
         };
 
-        var pushPayload = GetPushPayload(appMessage, audience);
+        var pushPayload = BuildPushPayload(appMessage, audience);
 
         try
         {
@@ -53,7 +53,7 @@ public class JPushSender : IAppNotificationSender
             registration_id = appMessage.ClientIds
         };
 
-        var pushPayload = GetPushPayload(appMessage, audience);
+        var pushPayload = BuildPushPayload(appMessage, audience);
 
         try
         {
@@ -79,7 +79,7 @@ public class JPushSender : IAppNotificationSender
         var options = await _optionsResolver.ResolveAsync();
         JPushClient client = new JPushClient(options.AppKey, options.MasterSecret);
 
-        var pushPayload = GetPushPayload(appMessage, AppNotificationConstants.BroadcastTag);
+        var pushPayload = BuildPushPayload(appMessage, AppNotificationConstants.BroadcastTag);
 
         try
         {
@@ -114,7 +114,7 @@ public class JPushSender : IAppNotificationSender
         return new AppNotificationResponseBase(true, "ok");
     }
 
-    private PushPayload GetPushPayload(AppMessage appMessage, object audience)
+    private PushPayload BuildPushPayload(AppMessage appMessage, object audience)
     {
         PushPayload pushPayload = new PushPayload()
         {

@@ -1,6 +1,8 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
+using dotAPNS.AspNetCore;
+
 namespace Masa.Mc.Infrastructure.AppNotification;
 
 public static class ServiceCollectionExtensions
@@ -10,6 +12,7 @@ public static class ServiceCollectionExtensions
         services.AddCache(redisOptions);
         services.AddGetui();
         services.AddJPush();
+        services.AddiOSPush();
         services.AddHuaweiPush();
         services.AddXiaomiPush();
         services.AddOppoPush();
@@ -24,6 +27,13 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection AddJPush(this IServiceCollection services) =>
         services.AddPushProvider<IJPushOptions, JPushOptionsResolver, JPushSender, JPushSenderProvider>();
+
+    public static IServiceCollection AddiOSPush(this IServiceCollection services)
+    {
+        services.AddPushProvider<IiOSPushOptions, iOSPushOptionsResolver, ApnsPushSender, iOSSenderProvider>();
+        services.AddApns();
+        return services;
+    }
 
     public static IServiceCollection AddHuaweiPush(this IServiceCollection services)
     {

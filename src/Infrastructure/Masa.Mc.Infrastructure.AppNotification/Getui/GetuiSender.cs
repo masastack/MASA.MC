@@ -16,7 +16,7 @@ public class GetuiSender : IAppNotificationSender
     {
         var options = await _optionsResolver.ResolveAsync();
         IGtPush push = new IGtPush(GetuiConstants.DomainUrl, options.AppKey, options.MasterSecret);
-        NotificationTemplate template = NotificationTemplate(options, appMessage.Title, appMessage.Text, System.Text.Json.JsonSerializer.Serialize(appMessage.TransmissionContent));
+        NotificationTemplate template = BuildNotificationTemplate(options, appMessage.Title, appMessage.Text, System.Text.Json.JsonSerializer.Serialize(appMessage.TransmissionContent));
 
         SingleMessage message = new SingleMessage();
         message.IsOffline = true;
@@ -47,7 +47,7 @@ public class GetuiSender : IAppNotificationSender
     {
         var options = await _optionsResolver.ResolveAsync();
         IGtPush push = new IGtPush(GetuiConstants.DomainUrl, options.AppKey, options.MasterSecret);
-        NotificationTemplate template = NotificationTemplate(options, appMessage.Title, appMessage.Text, System.Text.Json.JsonSerializer.Serialize(appMessage.TransmissionContent));
+        NotificationTemplate template = BuildNotificationTemplate(options, appMessage.Title, appMessage.Text, System.Text.Json.JsonSerializer.Serialize(appMessage.TransmissionContent));
 
         com.igetui.api.openservice.igetui.AppMessage message = new com.igetui.api.openservice.igetui.AppMessage();
         message.IsOffline = true;
@@ -74,7 +74,7 @@ public class GetuiSender : IAppNotificationSender
         }
     }
 
-    public static NotificationTemplate NotificationTemplate(IGetuiOptions options, string title, string content, string transmissionContent)
+    public static NotificationTemplate BuildNotificationTemplate(IGetuiOptions options, string title, string content, string transmissionContent)
     {
         NotificationTemplate template = new NotificationTemplate();
         template.AppId = options.AppID;

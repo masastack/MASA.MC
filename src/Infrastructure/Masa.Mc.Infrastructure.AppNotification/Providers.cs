@@ -7,6 +7,7 @@ public enum Providers
 {
     GeTui = 1,
     JPush,
+    iOS,
     Huawei,
     Honor,
     Xiaomi,

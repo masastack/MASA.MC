@@ -5,7 +5,8 @@ namespace Masa.Mc.Domain.Shared.Apps;
 
 public enum AppVendor
 {
-    Huawei = 3,
+    iOS = 3,
+    Huawei,
     Honor,
     Xiaomi,
     Oppo,
