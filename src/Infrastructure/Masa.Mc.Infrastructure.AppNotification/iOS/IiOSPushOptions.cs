@@ -7,7 +7,7 @@ public interface IiOSPushOptions : IOptions
 {
     string BundleId { get; set; }
 
-    string CertContent{ get; set; }
+    string CertContent { get; set; }
 
     string KeyId { get; set; }
 
