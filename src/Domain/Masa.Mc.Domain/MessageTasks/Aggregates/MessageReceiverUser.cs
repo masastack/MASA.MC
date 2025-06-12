@@ -11,10 +11,13 @@ public class MessageReceiverUser : ValueObject
 
     public ExtraPropertyDictionary Variables { get; set; } = new();
 
+    public string Platform { get; set; } = string.Empty;
+
     protected override IEnumerable<object> GetEqualityValues()
     {
         yield return UserId;
         yield return ChannelUserIdentity;
+        yield return Platform;
 
         foreach (var variable in Variables.OrderBy(x => x.Key))
         {
@@ -25,10 +28,11 @@ public class MessageReceiverUser : ValueObject
 
     private MessageReceiverUser() { }
 
-    public MessageReceiverUser(Guid userId, string channelUserIdentity, ExtraPropertyDictionary variables)
+    public MessageReceiverUser(Guid userId, string channelUserIdentity, ExtraPropertyDictionary variables, string platform = "")
     {
         UserId = userId;
         ChannelUserIdentity = channelUserIdentity;
         Variables = variables;
+        Platform = platform;
     }
 }

@@ -180,27 +180,11 @@ public class MessageTask : FullAggregateRoot<Guid, Guid>
         return receiverUsers.Skip(historyNum * sendingCount).Take(sendingCount).ToList(); ;
     }
 
-    public bool IsAppInWebsiteMessage
-    {
-        get
-        {
-            return ChannelType?.Id == ChannelType.App.Id && ExtraProperties.GetProperty<bool>(BusinessConsts.IS_WEBSITE_MESSAGE);
-        }
-    }
+    public bool IsAppInWebsiteMessage => ChannelType?.Id == ChannelType.App.Id && ExtraProperties.GetProperty<bool>(BusinessConsts.IS_WEBSITE_MESSAGE);
 
-    public string AppIntentUrl
-    {
-        get
-        {
-            return ExtraProperties.GetProperty<string>(BusinessConsts.INTENT_URL);
-        }
-    }
+    public string AppIntentUrl => ExtraProperties.GetProperty<string>(BusinessConsts.INTENT_URL);
 
-    public string IsApnsProduction
-    {
-        get
-        {
-            return ExtraProperties.GetProperty<string>(BusinessConsts.IS_APNS_PRODUCTION);
-        }
-    }
+    public string IsApnsProduction => ExtraProperties.GetProperty<string>(BusinessConsts.IS_APNS_PRODUCTION);
+
+    public bool IsUniformContent => !Receivers.Any(x => x.Variables.Any());
 }

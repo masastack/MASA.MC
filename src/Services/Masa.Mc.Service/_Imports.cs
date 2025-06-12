@@ -187,3 +187,4 @@ global using Masa.Mc.Domain.Consts;
 global using Masa.Mc.Data;
 global using Masa.Mc.Infrastructure.EntityFrameworkCore.ValueConverters;
 global using Masa.Mc.Infrastructure.ObjectExtending;
+global using Masa.Mc.Infrastructure.AppNotification.Model.Response;

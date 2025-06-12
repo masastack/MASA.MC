@@ -128,6 +128,7 @@ public static class McDbContextModelBuilderExtensions
             b.Property<Guid>("Id").ValueGeneratedOnAdd();
             b.HasKey("Id");
             b.Property(x => x.ChannelUserIdentity).IsRequired().HasMaxLength(128);
+            b.Property(x => x.Platform).IsRequired().HasMaxLength(128);
             b.Property(x => x.Variables).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
         });
 

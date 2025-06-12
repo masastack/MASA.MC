@@ -11,28 +11,28 @@ public class XiaomiPushSender : IAppNotificationSender
         _optionsResolver = optionsResolver;
     }
 
-    public async Task<AppNotificationResponseBase> SendAsync(SingleAppMessage appMessage, CancellationToken ct = default)
+    public async Task<AppNotificationResponse> SendAsync(SingleAppMessage appMessage, CancellationToken ct = default)
     {
         var payload = await BuildPayloadAsync(appMessage.Title, appMessage.Text, appMessage.TransmissionContent, appMessage.Url, appMessage.ClientId, ct);
         return await SendPushAsync(XiaomiConstants.SendToRegIdUrl, payload, ct);
     }
 
-    public async Task<AppNotificationResponseBase> BatchSendAsync(BatchAppMessage appMessage, CancellationToken ct = default)
+    public async Task<AppNotificationResponse> BatchSendAsync(BatchAppMessage appMessage, CancellationToken ct = default)
     {
         if (appMessage.ClientIds.Length > 1000)
-            return new AppNotificationResponseBase(false, "Up to 1000 device tokens can be sent at a time");
+            return new AppNotificationResponse(false, "Up to 1000 device tokens can be sent at a time");
 
         var payload = await BuildPayloadAsync(appMessage.Title, appMessage.Text, appMessage.TransmissionContent, appMessage.Url, string.Join(",", appMessage.ClientIds), ct);
         return await SendPushAsync(XiaomiConstants.SendToRegIdUrl, payload, ct);
     }
 
-    public async Task<AppNotificationResponseBase> BroadcastSendAsync(AppMessage appMessage, CancellationToken ct = default)
+    public async Task<AppNotificationResponse> BroadcastSendAsync(AppMessage appMessage, CancellationToken ct = default)
     {
         var payload = await BuildPayloadAsync(appMessage.Title, appMessage.Text, appMessage.TransmissionContent, appMessage.Url, null, ct);
         return await SendPushAsync(XiaomiConstants.SendToAllUrl, payload, ct);
     }
 
-    public async Task<AppNotificationResponseBase> WithdrawnAsync(string msgId, CancellationToken ct = default)
+    public async Task<AppNotificationResponse> WithdrawnAsync(string msgId, CancellationToken ct = default)
     {
         var options = await _optionsResolver.ResolveAsync();
 
@@ -79,7 +79,7 @@ public class XiaomiPushSender : IAppNotificationSender
         return payload;
     }
 
-    private async Task<AppNotificationResponseBase> SendPushAsync(string url, Dictionary<string, string> payload, CancellationToken ct)
+    private async Task<AppNotificationResponse> SendPushAsync(string url, Dictionary<string, string> payload, CancellationToken ct)
     {
         var options = await _optionsResolver.ResolveAsync();
 
@@ -95,7 +95,7 @@ public class XiaomiPushSender : IAppNotificationSender
 
             if (!response.IsSuccessStatusCode)
             {
-                return new AppNotificationResponseBase(false, $"Push failed with status code: {response.StatusCode}");
+                return new AppNotificationResponse(false, $"Push failed with status code: {response.StatusCode}");
             }
 
             var responseString = await response.Content.ReadAsStringAsync(ct);
@@ -108,12 +108,12 @@ public class XiaomiPushSender : IAppNotificationSender
             var desc = root.GetProperty("description").GetString() ?? "";
 
             return code == 0 && result == "ok"
-                ? new AppNotificationResponseBase(true, "Push succeeded", msgId)
-                : new AppNotificationResponseBase(false, desc);
+                ? new AppNotificationResponse(true, "Push succeeded", msgId)
+                : new AppNotificationResponse(false, desc);
         }
         catch (Exception ex)
         {
-            return new AppNotificationResponseBase(false, $"Push exception: {ex.Message}");
+            return new AppNotificationResponse(false, $"Push exception: {ex.Message}");
         }
     }
 }

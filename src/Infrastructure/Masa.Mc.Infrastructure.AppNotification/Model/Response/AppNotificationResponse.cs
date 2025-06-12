@@ -3,7 +3,7 @@
 
 namespace Masa.Mc.Infrastructure.AppNotification.Model.Response;
 
-public class AppNotificationResponseBase
+public class AppNotificationResponse
 {
     public bool Success { get; }
 
@@ -11,10 +11,13 @@ public class AppNotificationResponseBase
 
     public string MsgId { get; set; } = string.Empty;
 
-    public AppNotificationResponseBase(bool success, string message, string msgId = "")
+    public List<string> ErrorTokens { get; set; }
+
+    public AppNotificationResponse(bool success, string message, string msgId = "", List<string> errorTokens = null)
     {
         Success = success;
         Message = message;
         MsgId = msgId;
+        ErrorTokens = errorTokens ?? new();
     }
 }
