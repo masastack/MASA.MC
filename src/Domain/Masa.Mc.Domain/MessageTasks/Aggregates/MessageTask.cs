@@ -186,5 +186,5 @@ public class MessageTask : FullAggregateRoot<Guid, Guid>
 
     public string IsApnsProduction => ExtraProperties.GetProperty<string>(BusinessConsts.IS_APNS_PRODUCTION);
 
-    public bool IsUniformContent => !Receivers.Any(x => x.Variables.Any());
+    public bool IsUniformContent => EntityType == MessageEntityTypes.Ordinary || !Receivers.Any(x => x.Variables.Any());
 }
