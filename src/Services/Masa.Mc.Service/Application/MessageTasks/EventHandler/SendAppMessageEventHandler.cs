@@ -35,6 +35,7 @@ public class SendAppMessageEventHandler
     public async Task HandleEventAsync(SendAppMessageEvent eto)
     {
         var taskHistory = eto.MessageTaskHistory;
+
         if (taskHistory.MessageTask.ReceiverType == ReceiverTypes.Assign && !taskHistory.ReceiverUsers.Any())
         {
             await SetTaskHistoryStatusAsync(taskHistory, MessageSendStatuses.Fail);
@@ -42,21 +43,21 @@ public class SendAppMessageEventHandler
         }
 
         var channel = await _channelRepository.FindAsync(x => x.Id == eto.ChannelId);
-        
         var transmissionContent = GetTransmissionContent(channel.Type, eto.MessageData.MessageContent);
-
         var channelProvider = channel.ExtraProperties.GetProperty<int>(nameof(AppChannelOptions.Provider));
+
+        MessageSendStatuses sendStatus;
 
         if (channelProvider == (int)AppChannelProviders.Mc)
         {
-            var sendStatus = await SendMcAppMessageAsync(eto, transmissionContent);
-            await SetTaskHistoryStatusAsync(taskHistory, sendStatus);
+            sendStatus = await SendMcAppMessageAsync(eto, transmissionContent);
         }
         else
         {
-            var sendStatus = await SendThirdPartyAppMessageAsync(eto, channelProvider, channel.ExtraProperties, transmissionContent, taskHistory);
-            await SetTaskHistoryStatusAsync(taskHistory, sendStatus);
+            sendStatus = await SendThirdPartyAppMessageAsync(eto, channelProvider, channel.ExtraProperties, transmissionContent, taskHistory);
         }
+
+        await SetTaskHistoryStatusAsync(taskHistory, sendStatus);
     }
 
     private async Task SetTaskHistoryStatusAsync(MessageTaskHistory taskHistory, MessageSendStatuses status)
