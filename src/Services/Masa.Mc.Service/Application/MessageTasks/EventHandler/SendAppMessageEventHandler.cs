@@ -34,21 +34,34 @@ public class SendAppMessageEventHandler
     [EventHandler]
     public async Task HandleEventAsync(SendAppMessageEvent eto)
     {
-        var channel = await _channelRepository.FindAsync(x => x.Id == eto.ChannelId);
         var taskHistory = eto.MessageTaskHistory;
+        if (taskHistory.MessageTask.ReceiverType == ReceiverTypes.Assign && !taskHistory.ReceiverUsers.Any())
+        {
+            await SetTaskHistoryStatusAsync(taskHistory, MessageSendStatuses.Fail);
+            return;
+        }
+
+        var channel = await _channelRepository.FindAsync(x => x.Id == eto.ChannelId);
+        
         var transmissionContent = GetTransmissionContent(channel.Type, eto.MessageData.MessageContent);
 
         var channelProvider = channel.ExtraProperties.GetProperty<int>(nameof(AppChannelOptions.Provider));
 
         if (channelProvider == (int)AppChannelProviders.Mc)
         {
-            await SendMcAppMessageAsync(eto, transmissionContent);
+            var sendStatus = await SendMcAppMessageAsync(eto, transmissionContent);
+            await SetTaskHistoryStatusAsync(taskHistory, sendStatus);
         }
         else
         {
-            await SendThirdPartyAppMessageAsync(eto, channelProvider, channel.ExtraProperties, transmissionContent, taskHistory);
+            var sendStatus = await SendThirdPartyAppMessageAsync(eto, channelProvider, channel.ExtraProperties, transmissionContent, taskHistory);
+            await SetTaskHistoryStatusAsync(taskHistory, sendStatus);
         }
+    }
 
+    private async Task SetTaskHistoryStatusAsync(MessageTaskHistory taskHistory, MessageSendStatuses status)
+    {
+        taskHistory.SetResult(status);
         await _messageTaskHistoryRepository.UpdateAsync(taskHistory);
     }
 
@@ -58,7 +71,7 @@ public class SendAppMessageEventHandler
         return appChannel?.GetMessageTransmissionContent(messageContent) ?? new ExtraPropertyDictionary();
     }
 
-    private async Task SendThirdPartyAppMessageAsync(SendAppMessageEvent eto, int channelProvider, ConcurrentDictionary<string, object> channelProperties, ExtraPropertyDictionary transmissionContent, MessageTaskHistory taskHistory)
+    private async Task<MessageSendStatuses> SendThirdPartyAppMessageAsync(SendAppMessageEvent eto, int channelProvider, ConcurrentDictionary<string, object> channelProperties, ExtraPropertyDictionary transmissionContent, MessageTaskHistory taskHistory)
     {
         var appSenderProvider = (Providers)channelProvider;
         var options = _appNotificationSenderFactory.GetOptions(appSenderProvider, channelProperties);
@@ -67,8 +80,7 @@ public class SendAppMessageEventHandler
         using (asyncLocal.Change(options))
         {
             var sender = _appNotificationSenderFactory.GetAppNotificationSender(appSenderProvider);
-            var sendStatus = await SendMessageBasedOnReceiverTypeAsync(sender, eto, transmissionContent, taskHistory);
-            taskHistory.SetResult(sendStatus);
+            return await SendMessageBasedOnReceiverTypeAsync(sender, eto, transmissionContent, taskHistory);
         }
     }
 
@@ -86,7 +98,7 @@ public class SendAppMessageEventHandler
         };
     }
 
-    private async Task SendMcAppMessageAsync(SendAppMessageEvent eto, ExtraPropertyDictionary transmissionContent)
+    private async Task<MessageSendStatuses> SendMcAppMessageAsync(SendAppMessageEvent eto, ExtraPropertyDictionary transmissionContent)
     {
         var messageData = eto.MessageData;
         var messageTaskHistory = eto.MessageTaskHistory;
@@ -100,13 +112,15 @@ public class SendAppMessageEventHandler
             sendStatuses.Add(result);
         }
 
-        var status = DetermineOverallStatus(sendStatuses);
-        eto.MessageTaskHistory.SetResult(status);
+        return DetermineOverallStatus(sendStatuses);
     }
 
     private Dictionary<Providers, IEnumerable<MessageReceiverUser>> GroupUsersByPlatform(IEnumerable<MessageReceiverUser> users)
     {
-        return users.GroupBy(x => Enum.Parse<Providers>(x.Platform)).ToDictionary(g => g.Key, g => g.AsEnumerable());
+        return users
+            .Where(user => Enum.TryParse<Providers>(user.Platform, out _))
+            .GroupBy(user => Enum.Parse<Providers>(user.Platform))
+            .ToDictionary(group => group.Key, group => group.AsEnumerable());
     }
 
     private async Task<MessageSendStatuses> SendToPlatformAsync(Providers platform, IEnumerable<MessageReceiverUser> users, SendAppMessageEvent eto, ExtraPropertyDictionary transmissionContent)

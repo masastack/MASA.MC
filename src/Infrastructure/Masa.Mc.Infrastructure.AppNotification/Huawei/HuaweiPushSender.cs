@@ -58,7 +58,7 @@ public class HuaweiPushSender : IAppNotificationSender
         var request = CreatePushRequest(url, payload, accessToken);
 
         var response = await _httpClient.SendAsync(request, ct);
-        return await HandleResponse(response, ct, true);
+        return await HandleResponse(response, ct);
     }
 
     public Task<AppNotificationResponse> WithdrawnAsync(string msgId, CancellationToken ct = default)
@@ -107,7 +107,7 @@ public class HuaweiPushSender : IAppNotificationSender
         return request;
     }
 
-    private async Task<AppNotificationResponse> HandleResponse(HttpResponseMessage response, CancellationToken ct, bool isBatch = false)
+    private async Task<AppNotificationResponse> HandleResponse(HttpResponseMessage response, CancellationToken ct)
     {
         if (response.IsSuccessStatusCode)
         {
@@ -120,7 +120,7 @@ public class HuaweiPushSender : IAppNotificationSender
             {
                 return new AppNotificationResponse(true, "Success", requestId);
             }
-            else if (code == "80100000" && isBatch)
+            else if (code == "80100000")
             {
                 var illegalTokens = result.GetProperty("msg").GetProperty("illegal_tokens")
                     .EnumerateArray().Select(t => t.GetString() ?? string.Empty).ToList();
