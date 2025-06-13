@@ -1,8 +1,6 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
-using System.Linq;
-
 namespace Masa.Mc.Service.Admin.Infrastructure.ChannelUserFinder.Provider.Auth;
 
 public class AuthChannelUserFinder : IChannelUserFinder
@@ -127,13 +125,12 @@ public class AuthChannelUserFinder : IChannelUserFinder
 
     private async Task<List<MessageReceiverUser>> GetInternalReceiverUsers(AppChannel channel, IReadOnlyCollection<MessageTaskReceiver> receivers, ExtraPropertyDictionary variables)
     {
-        var userIds = receivers.Select(r => r.SubjectId).ToList();
-
         if (channel.Type == ChannelType.App)
         {
-            return await GetAppChannelReceiverUser(userIds, channel.Id, variables);
+            return await GetAppChannelReceiverUser(receivers, channel.Id, variables);
         }
 
+        var userIds = receivers.Select(r => r.SubjectId).ToList();
         var identities = await GetChannelUserIdentitys(channel, userIds);
         var receiverVars = receivers.ToDictionary(r => r.SubjectId, r => r.Variables);
 
@@ -170,6 +167,19 @@ public class AuthChannelUserFinder : IChannelUserFinder
             (int)ChannelTypes.WebsiteMessage => userIds.ToDictionary(id => id, id => id.ToString()),
             _ => new Dictionary<Guid, string>()
         };
+    }
+
+    private async Task<List<MessageReceiverUser>> GetAppChannelReceiverUser(IReadOnlyCollection<MessageTaskReceiver> receivers, Guid channelId, ExtraPropertyDictionary variables)
+    {
+        var userIds = receivers.Select(r => r.SubjectId).ToList();
+        var receiverVars = receivers.ToDictionary(r => r.SubjectId, r => r.Variables);
+
+        var appDeviceTokens = await _appDeviceTokenRepository.GetListAsync(x => x.ChannelId == channelId && userIds.Contains(x.UserId));
+
+
+        return appDeviceTokens.Select(x => new MessageReceiverUser(x.UserId, x.DeviceToken, receiverVars.TryGetValue(x.UserId, out var vars) && vars.Any()
+                ? vars
+                : variables, x.Platform.ToString())).ToList();
     }
 
     private async Task<List<MessageReceiverUser>> GetAppChannelReceiverUser(List<Guid> userIds, Guid channelId, ExtraPropertyDictionary variables)
