@@ -1,6 +1,8 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
+using System.Text.Json.Serialization;
+
 namespace Masa.Mc.Infrastructure.AppNotification.Huawei;
 
 public class HmsPushRequest
@@ -40,5 +42,7 @@ public class HmsAndroidNotification
     public string Sound { get; set; }
     public bool DefaultSound { get; set; }
     public string Importance { get; set; } = "NORMAL";
+
+    [JsonPropertyName("click_action")]
     public object ClickAction { get; set; }
 }

@@ -135,5 +135,4 @@ public class HuaweiPushSender : IAppNotificationSender
         var error = await response.Content.ReadAsStringAsync(ct);
         return new AppNotificationResponse(false, $"Push failed: HTTP {response.StatusCode} - {error}");
     }
-
 }
