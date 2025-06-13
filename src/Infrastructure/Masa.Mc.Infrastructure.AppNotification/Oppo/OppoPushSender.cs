@@ -18,7 +18,7 @@ public class OppoPushSender : IAppNotificationSender
         _optionsResolver = optionsResolver;
     }
 
-    public async Task<AppNotificationResponseBase> SendAsync(SingleAppMessage appMessage, CancellationToken ct = default)
+    public async Task<AppNotificationResponse> SendAsync(SingleAppMessage appMessage, CancellationToken ct = default)
     {
         var options = await _optionsResolver.ResolveAsync();
         var token = await _authService.GetAccessTokenAsync(options.AppKey, options.MasterSecret, ct);
@@ -42,10 +42,10 @@ public class OppoPushSender : IAppNotificationSender
         return await HandleResponse(response, ct);
     }
 
-    public async Task<AppNotificationResponseBase> BatchSendAsync(BatchAppMessage appMessage, CancellationToken ct = default)
+    public async Task<AppNotificationResponse> BatchSendAsync(BatchAppMessage appMessage, CancellationToken ct = default)
     {
         if (appMessage.ClientIds.Length > 1000)
-            return new AppNotificationResponseBase(false, "Up to 1000 device tokens can be sent at a time");
+            return new AppNotificationResponse(false, "Up to 1000 device tokens can be sent at a time");
 
         var options = await _optionsResolver.ResolveAsync();
         var token = await _authService.GetAccessTokenAsync(options.AppKey, options.MasterSecret, ct);
@@ -58,14 +58,14 @@ public class OppoPushSender : IAppNotificationSender
         }).ToArray();
 
         var form = new Dictionary<string, string>
-        {
-            { "auth_token", token },
-            { "messages", JsonSerializer.Serialize(messages) }
-        };
+    {
+        { "auth_token", token },
+        { "messages", JsonSerializer.Serialize(messages) }
+    };
 
         var content = new FormUrlEncodedContent(form);
         var response = await _httpClient.PostAsync(OppoConstants.UnicastBatchUrl, content, ct);
-        return await HandleResponse(response, ct);
+        return await HandleBatchResponse(response, ct);
     }
 
     private Dictionary<string, object?> BuildNotification(AppMessage appMessage)
@@ -78,15 +78,18 @@ public class OppoPushSender : IAppNotificationSender
             { "off_line_ttl", 86400 }
         };
 
-        if (appMessage.Url.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+        if (!string.IsNullOrEmpty(appMessage.Url))
         {
-            notification["click_action_type"] = 2;
-            notification["click_action_url"] = appMessage.Url;
-        }
-        else if(!string.IsNullOrEmpty(appMessage.Url))
-        {
-            notification["click_action_type"] = 1;
-            notification["click_action_activity"] = appMessage.Url;
+            if (appMessage.Url.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+            {
+                notification["click_action_type"] = 2;
+                notification["click_action_url"] = appMessage.Url;
+            }
+            else
+            {
+                notification["click_action_type"] = 1;
+                notification["click_action_activity"] = appMessage.Url;
+            }
         }
 
         return notification;
@@ -106,7 +109,7 @@ public class OppoPushSender : IAppNotificationSender
         return doc.RootElement.GetProperty("data").GetProperty("message_id").GetString()!;
     }
 
-    public async Task<AppNotificationResponseBase> BroadcastSendAsync(AppMessage appMessage, CancellationToken ct = default)
+    public async Task<AppNotificationResponse> BroadcastSendAsync(AppMessage appMessage, CancellationToken ct = default)
     {
         var options = await _optionsResolver.ResolveAsync();
         var token = await _authService.GetAccessTokenAsync(options.AppKey, options.MasterSecret, ct);
@@ -124,10 +127,10 @@ public class OppoPushSender : IAppNotificationSender
         return await HandleResponse(response, ct);
     }
 
-    public Task<AppNotificationResponseBase> WithdrawnAsync(string msgId, CancellationToken ct = default)
-        => Task.FromResult(new AppNotificationResponseBase(false, "OPPO Push does not support message withdrawal"));
+    public Task<AppNotificationResponse> WithdrawnAsync(string msgId, CancellationToken ct = default)
+        => Task.FromResult(new AppNotificationResponse(false, "OPPO Push does not support message withdrawal"));
 
-    private async Task<AppNotificationResponseBase> HandleResponse(HttpResponseMessage response, CancellationToken ct)
+    private async Task<AppNotificationResponse> HandleResponse(HttpResponseMessage response, CancellationToken ct)
     {
         var json = await response.Content.ReadAsStringAsync(ct);
         try
@@ -138,13 +141,71 @@ public class OppoPushSender : IAppNotificationSender
             var msgId = doc.RootElement.TryGetProperty("data", out var data) && data.TryGetProperty("message_id", out var idProp) ? idProp.GetString() ?? "" : "";
 
             if (code == 0)
-                return new AppNotificationResponseBase(true, "Push succeeded", msgId);
+                return new AppNotificationResponse(true, "Push succeeded", msgId);
             else
-                return new AppNotificationResponseBase(false, $"Push failed: {message}");
+                return new AppNotificationResponse(false, $"Push failed: {message}");
         }
         catch
         {
-            return new AppNotificationResponseBase(false, $"Push failed: {json}");
+            return new AppNotificationResponse(false, $"Push failed: {json}");
         }
     }
+    private async Task<AppNotificationResponse> HandleBatchResponse(HttpResponseMessage response, CancellationToken ct)
+    {
+        var json = await response.Content.ReadAsStringAsync(ct);
+        try
+        {
+            using var doc = JsonDocument.Parse(json);
+            var code = doc.RootElement.GetProperty("code").GetInt32();
+            var message = doc.RootElement.GetProperty("message").GetString() ?? "";
+            var errorTokens = new List<string>();
+            string msgId = "";
+
+            if (doc.RootElement.TryGetProperty("data", out var data) && data.ValueKind == JsonValueKind.Array)
+            {
+                errorTokens = ExtractErrorTokens(data);
+                msgId = ExtractMessageId(data);
+            }
+
+            return CreateResponse(code, message, msgId, errorTokens);
+        }
+        catch (Exception ex)
+        {
+            return new AppNotificationResponse(false, $"Push failed: {json}. Exception: {ex.Message}");
+        }
+    }
+
+    private List<string> ExtractErrorTokens(JsonElement data)
+    {
+        var errorTokens = new List<string>();
+        foreach (var item in data.EnumerateArray())
+        {
+            if (item.TryGetProperty("errorCode", out var errorCodeProp) && errorCodeProp.GetInt32() != 0)
+            {
+                if (item.TryGetProperty("registrationId", out var regIdProp) && regIdProp.ValueKind == JsonValueKind.String)
+                    errorTokens.Add(regIdProp.GetString() ?? "");
+            }
+        }
+        return errorTokens;
+    }
+
+    private string ExtractMessageId(JsonElement data)
+    {
+        foreach (var item in data.EnumerateArray())
+        {
+            if (item.TryGetProperty("messageId", out var msgIdProp) && msgIdProp.ValueKind == JsonValueKind.String)
+            {
+                return msgIdProp.GetString() ?? "";
+            }
+        }
+        return "";
+    }
+
+    private AppNotificationResponse CreateResponse(int code, string message, string msgId, List<string> errorTokens)
+    {
+        return code == 0
+            ? new AppNotificationResponse(true, "Push succeeded", msgId, errorTokens)
+            : new AppNotificationResponse(false, $"Push failed: {message}", msgId, errorTokens);
+    }
 }
+

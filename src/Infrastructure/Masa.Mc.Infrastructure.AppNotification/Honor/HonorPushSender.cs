@@ -18,26 +18,26 @@ public class HonorPushSender : IAppNotificationSender
         _optionsResolver = optionsResolver;
     }
 
-    public async Task<AppNotificationResponseBase> SendAsync(SingleAppMessage appMessage, CancellationToken ct = default)
+    public async Task<AppNotificationResponse> SendAsync(SingleAppMessage appMessage, CancellationToken ct = default)
     {
         return await SendInternalAsync(appMessage, new[] { appMessage.ClientId }, ct);
     }
 
-    public async Task<AppNotificationResponseBase> BatchSendAsync(BatchAppMessage appMessage, CancellationToken ct = default)
+    public async Task<AppNotificationResponse> BatchSendAsync(BatchAppMessage appMessage, CancellationToken ct = default)
     {
         if (appMessage.ClientIds.Length > 1000)
-            return new AppNotificationResponseBase(false, "Up to 1000 device tokens can be sent at a time");
+            return new AppNotificationResponse(false, "Up to 1000 device tokens can be sent at a time");
 
         return await SendInternalAsync(appMessage, appMessage.ClientIds, ct);
     }
 
-    public Task<AppNotificationResponseBase> BroadcastSendAsync(AppMessage appMessage, CancellationToken ct = default)
-        => Task.FromResult(new AppNotificationResponseBase(false, "Honor Push does not support broadcast send"));
+    public Task<AppNotificationResponse> BroadcastSendAsync(AppMessage appMessage, CancellationToken ct = default)
+        => Task.FromResult(new AppNotificationResponse(false, "Honor Push does not support broadcast send"));
 
-    public Task<AppNotificationResponseBase> WithdrawnAsync(string msgId, CancellationToken ct = default)
-        => Task.FromResult(new AppNotificationResponseBase(false, "Honor Push does not support message withdrawal"));
+    public Task<AppNotificationResponse> WithdrawnAsync(string msgId, CancellationToken ct = default)
+        => Task.FromResult(new AppNotificationResponse(false, "Honor Push does not support message withdrawal"));
 
-    private async Task<AppNotificationResponseBase> SendInternalAsync(AppMessage appMessage, string[] clientIds, CancellationToken ct)
+    private async Task<AppNotificationResponse> SendInternalAsync(AppMessage appMessage, string[] clientIds, CancellationToken ct)
     {
         var options = await _optionsResolver.ResolveAsync();
         var accessToken = await _authService.GetAccessTokenAsync(options.ClientId, options.ClientSecret, ct);
@@ -93,25 +93,42 @@ public class HonorPushSender : IAppNotificationSender
                 : new { type = HonorClickActionType.AppDefinedIntent, action = url };
     }
 
-    private async Task<AppNotificationResponseBase> HandleResponse(HttpResponseMessage response, CancellationToken ct)
+    private async Task<AppNotificationResponse> HandleResponse(HttpResponseMessage response, CancellationToken ct)
     {
         try
         {
             var json = await response.Content.ReadAsStringAsync(ct);
             using var doc = JsonDocument.Parse(json);
-            var code = doc.RootElement.GetProperty("code").GetInt32();
+
+            if (!doc.RootElement.TryGetProperty("code", out var codeProp))
+                return new AppNotificationResponse(false, "Invalid response: missing 'code'");
+
+            var code = codeProp.GetInt32();
             var message = doc.RootElement.TryGetProperty("message", out var msgProp) ? msgProp.GetString() : null;
             var data = doc.RootElement.TryGetProperty("data", out var dataProp) ? dataProp : default;
-            var requestId = data.ValueKind != JsonValueKind.Undefined && data.TryGetProperty("requestId", out var idProp) ? idProp.GetString() : null;
-            var sendResult = data.ValueKind != JsonValueKind.Undefined && data.TryGetProperty("sendResult", out var sendResultProp) ? sendResultProp.GetBoolean() : false;
+
+            if (data.ValueKind == JsonValueKind.Undefined)
+                return new AppNotificationResponse(false, $"Push failed: {message}");
+
+            var requestId = data.TryGetProperty("requestId", out var idProp) ? idProp.GetString() : null;
+            var sendResult = data.TryGetProperty("sendResult", out var sendResultProp) && sendResultProp.GetBoolean();
+
+            if (code == 80100000 && data.TryGetProperty("failTokens", out var failTokensProp))
+            {
+                var failTokens = failTokensProp.EnumerateArray().Select(token => token.GetString()).ToList();
+                var msg = failTokens.Count > 0 ? "Partial push success" : $"Push failed: {message}";
+                return new AppNotificationResponse(true, msg, requestId, failTokens);
+            }
 
             return code == 200 && sendResult
-                ? new AppNotificationResponseBase(true, "Success", requestId)
-                : new AppNotificationResponseBase(false, $"Push failed: {message}", requestId);
+                ? new AppNotificationResponse(true, "Success", requestId)
+                : new AppNotificationResponse(false, $"Push failed: {message}", requestId);
         }
         catch (Exception ex)
         {
-            return new AppNotificationResponseBase(false, $"Error processing response: {ex.Message}");
+            // Log or handle the exception  
+            return new AppNotificationResponse(false, $"Error processing response: {ex.Message}");
         }
     }
+
 }
