@@ -88,6 +88,19 @@ public class MessageTaskHistory : FullAggregateRoot<Guid, Guid>
         }
     }
 
+    public void SetResult(MessageSendStatuses status)
+    {
+        var mappedStatus = status switch
+        {
+            MessageSendStatuses.Success => MessageTaskHistoryStatuses.Success,
+            MessageSendStatuses.Fail => MessageTaskHistoryStatuses.Fail,
+            MessageSendStatuses.PartialFailure => MessageTaskHistoryStatuses.PartialFailure,
+            _ => throw new ArgumentException($"Unsupported MessageSendStatuses: {status}", nameof(status))
+        };
+
+        SetResult(mappedStatus);
+    }
+
     public void SetTaskId(Guid taskId)
     {
         SchedulerTaskId = taskId;

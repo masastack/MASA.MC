@@ -12,93 +12,89 @@ public class GetuiSender : IAppNotificationSender
         _optionsResolver = optionsResolver;
     }
 
-    public async Task<AppNotificationResponseBase> SendAsync(SingleAppMessage appMessage, CancellationToken ct = default)
+    public async Task<AppNotificationResponse> SendAsync(SingleAppMessage appMessage, CancellationToken ct = default)
     {
         var options = await _optionsResolver.ResolveAsync();
         IGtPush push = new IGtPush(GetuiConstants.DomainUrl, options.AppKey, options.MasterSecret);
-        NotificationTemplate template = BuildNotificationTemplate(options, appMessage.Title, appMessage.Text, System.Text.Json.JsonSerializer.Serialize(appMessage.TransmissionContent));
+        var template = BuildNotificationTemplate(options, appMessage.Title, appMessage.Text, System.Text.Json.JsonSerializer.Serialize(appMessage.TransmissionContent));
 
-        SingleMessage message = new SingleMessage();
-        message.IsOffline = true;
-        message.OfflineExpireTime = 1000 * 3600 * 12;
-        message.Data = template;
-        com.igetui.api.openservice.igetui.Target target = new com.igetui.api.openservice.igetui.Target();
-        target.appId = options.AppID;
-        target.clientId = appMessage.ClientId;
+        var message = new SingleMessage
+        {
+            IsOffline = true,
+            OfflineExpireTime = 1000 * 3600 * 12,
+            Data = template
+        };
+        var target = new com.igetui.api.openservice.igetui.Target
+        {
+            appId = options.AppID,
+            clientId = appMessage.ClientId
+        };
 
         try
         {
             var pushResult = push.pushMessageToSingle(message, target);
 
             if (string.IsNullOrWhiteSpace(pushResult) || !pushResult.Contains("ok"))
-            {
-                return new AppNotificationResponseBase(false, pushResult);
-            }
+                return new AppNotificationResponse(false, pushResult);
 
-            return new AppNotificationResponseBase(true, "ok");
+            return new AppNotificationResponse(true, "ok");
         }
         catch (RequestException e)
         {
-            return new AppNotificationResponseBase(false, e.Message);
+            return new AppNotificationResponse(false, e.Message);
         }
     }
 
-    public async Task<AppNotificationResponseBase> BroadcastSendAsync(AppMessage appMessage, CancellationToken ct = default)
+    public async Task<AppNotificationResponse> BroadcastSendAsync(AppMessage appMessage, CancellationToken ct = default)
     {
         var options = await _optionsResolver.ResolveAsync();
         IGtPush push = new IGtPush(GetuiConstants.DomainUrl, options.AppKey, options.MasterSecret);
-        NotificationTemplate template = BuildNotificationTemplate(options, appMessage.Title, appMessage.Text, System.Text.Json.JsonSerializer.Serialize(appMessage.TransmissionContent));
+        var template = BuildNotificationTemplate(options, appMessage.Title, appMessage.Text, System.Text.Json.JsonSerializer.Serialize(appMessage.TransmissionContent));
 
-        com.igetui.api.openservice.igetui.AppMessage message = new com.igetui.api.openservice.igetui.AppMessage();
-        message.IsOffline = true;
-        message.OfflineExpireTime = 1000 * 3600 * 12;
-        message.Data = template;
-        var appIdList = new List<string>();
-        appIdList.Add(options.AppID);
-        message.AppIdList = appIdList;
+        var message = new com.igetui.api.openservice.igetui.AppMessage
+        {
+            IsOffline = true,
+            OfflineExpireTime = 1000 * 3600 * 12,
+            Data = template,
+            AppIdList = new List<string> { options.AppID }
+        };
 
         try
         {
             var pushResult = push.pushMessageToApp(message);
 
             if (string.IsNullOrWhiteSpace(pushResult) || !pushResult.Contains("ok"))
-            {
-                return new AppNotificationResponseBase(false, pushResult);
-            }
+                return new AppNotificationResponse(false, pushResult);
 
-            return new AppNotificationResponseBase(true, "ok");
+            return new AppNotificationResponse(true, "ok");
         }
         catch (RequestException e)
         {
-            return new AppNotificationResponseBase(false, e.Message);
+            return new AppNotificationResponse(false, e.Message);
         }
     }
 
     public static NotificationTemplate BuildNotificationTemplate(IGetuiOptions options, string title, string content, string transmissionContent)
     {
-        NotificationTemplate template = new NotificationTemplate();
-        template.AppId = options.AppID;
-        template.AppKey = options.AppKey;
-        template.Title = title;
-        template.Text = content;
-        template.Logo = "";
-        template.LogoURL = "";
-        template.TransmissionType = 1;
-        template.TransmissionContent = transmissionContent;
-        template.IsRing = true;
-        template.IsVibrate = true;
-        template.IsClearable = true;
-
-        return template;
+        return new NotificationTemplate
+        {
+            AppId = options.AppID,
+            AppKey = options.AppKey,
+            Title = title,
+            Text = content,
+            Logo = "",
+            LogoURL = "",
+            TransmissionType = 1,
+            TransmissionContent = transmissionContent,
+            IsRing = true,
+            IsVibrate = true,
+            IsClearable = true
+        };
     }
 
-    public Task<AppNotificationResponseBase> WithdrawnAsync(string msgId, CancellationToken ct = default)
-    {
-        return Task.FromResult(new AppNotificationResponseBase(false, "does not support message withdrawal"));
-    }
+    public Task<AppNotificationResponse> WithdrawnAsync(string msgId, CancellationToken ct = default)
+        => Task.FromResult(new AppNotificationResponse(false, "does not support message withdrawal"));
 
-    public Task<AppNotificationResponseBase> BatchSendAsync(BatchAppMessage appMessage, CancellationToken ct = default)
-    {
-        return Task.FromResult(new AppNotificationResponseBase(false, "does not support message batch send"));
-    }
+    public Task<AppNotificationResponse> BatchSendAsync(BatchAppMessage appMessage, CancellationToken ct = default)
+        => Task.FromResult(new AppNotificationResponse(false, "does not support message batch send"));
 }

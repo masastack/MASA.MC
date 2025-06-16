@@ -9,114 +9,78 @@ public class JPushSender : IAppNotificationSender
 
     public JPushSender(IOptionsResolver<IJPushOptions> optionsResolver)
     {
-        _optionsResolver = optionsResolver;;
+        _optionsResolver = optionsResolver;
     }
 
-    public async Task<AppNotificationResponseBase> SendAsync(SingleAppMessage appMessage, CancellationToken ct = default)
+    public async Task<AppNotificationResponse> SendAsync(SingleAppMessage appMessage, CancellationToken ct = default)
     {
         var options = await _optionsResolver.ResolveAsync();
-        JPushClient client = new JPushClient(options.AppKey, options.MasterSecret);
+        var client = new JPushClient(options.AppKey, options.MasterSecret);
 
-        var audience = new
-        {
-            registration_id = new string[] { appMessage.ClientId }
-        };
-
+        var audience = new { registration_id = new[] { appMessage.ClientId } };
         var pushPayload = BuildPushPayload(appMessage, audience);
 
-        try
-        {
-            var response = client.SendPush(pushPayload);
-
-            if (response.StatusCode != HttpStatusCode.OK)
-            {
-                return new AppNotificationResponseBase(false, response.Content);
-            }
-
-            var successResponse = JsonConvert.DeserializeObject<SendPushSuccessResponse>(response.Content);
-
-            return new AppNotificationResponseBase(true, "ok", successResponse.MsgId);
-        }
-        catch (Exception e)
-        {
-            return new AppNotificationResponseBase(false, e.Message);
-        }
+        return await SendPushAsync(client, pushPayload);
     }
 
-    public async Task<AppNotificationResponseBase> BatchSendAsync(BatchAppMessage appMessage, CancellationToken ct = default)
+    public async Task<AppNotificationResponse> BatchSendAsync(BatchAppMessage appMessage, CancellationToken ct = default)
     {
         var options = await _optionsResolver.ResolveAsync();
-        JPushClient client = new JPushClient(options.AppKey, options.MasterSecret);
+        var client = new JPushClient(options.AppKey, options.MasterSecret);
 
-        var audience = new
-        {
-            registration_id = appMessage.ClientIds
-        };
-
+        var audience = new { registration_id = appMessage.ClientIds };
         var pushPayload = BuildPushPayload(appMessage, audience);
 
-        try
-        {
-            var response = client.SendPush(pushPayload);
-
-            if (response.StatusCode != HttpStatusCode.OK)
-            {
-                return new AppNotificationResponseBase(false, response.Content);
-            }
-
-            var successResponse = JsonConvert.DeserializeObject<SendPushSuccessResponse>(response.Content);
-
-            return new AppNotificationResponseBase(true, "ok", successResponse.MsgId);
-        }
-        catch (Exception e)
-        {
-            return new AppNotificationResponseBase(false, e.Message);
-        }
+        return await SendPushAsync(client, pushPayload);
     }
 
-    public async Task<AppNotificationResponseBase> BroadcastSendAsync(AppMessage appMessage, CancellationToken ct = default)
+    public async Task<AppNotificationResponse> BroadcastSendAsync(AppMessage appMessage, CancellationToken ct = default)
     {
         var options = await _optionsResolver.ResolveAsync();
-        JPushClient client = new JPushClient(options.AppKey, options.MasterSecret);
+        var client = new JPushClient(options.AppKey, options.MasterSecret);
 
         var pushPayload = BuildPushPayload(appMessage, AppNotificationConstants.BroadcastTag);
 
+        return await SendPushAsync(client, pushPayload, isBroadcast: true);
+    }
+
+    public async Task<AppNotificationResponse> WithdrawnAsync(string msgId, CancellationToken ct = default)
+    {
+        var options = await _optionsResolver.ResolveAsync();
+        var client = new JPushClient(options.AppKey, options.MasterSecret);
+
+        var response = await JPushClient.HttpClient.DeleteAsync($"{JPushClient.BASE_URL_PUSH_DEFAULT}/{msgId}");
+        var content = await response.Content.ReadAsStringAsync();
+
+        return response.StatusCode == HttpStatusCode.OK
+            ? new AppNotificationResponse(true, "ok")
+            : new AppNotificationResponse(false, content);
+    }
+
+    private async Task<AppNotificationResponse> SendPushAsync(JPushClient client, PushPayload pushPayload, bool isBroadcast = false)
+    {
         try
         {
             var response = client.SendPush(pushPayload);
 
             if (response.StatusCode != HttpStatusCode.OK)
-            {
-                return new AppNotificationResponseBase(false, response.Content);
-            }
+                return new AppNotificationResponse(false, response.Content);
 
-            return new AppNotificationResponseBase(true, "ok");
+            if (isBroadcast)
+                return new AppNotificationResponse(true, "ok");
+
+            var successResponse = JsonConvert.DeserializeObject<SendPushSuccessResponse>(response.Content);
+            return new AppNotificationResponse(true, "ok", successResponse?.MsgId);
         }
         catch (Exception e)
         {
-            return new AppNotificationResponseBase(false, e.Message);
+            return new AppNotificationResponse(false, e.Message);
         }
-    }
-
-    public async Task<AppNotificationResponseBase> WithdrawnAsync(string msgId, CancellationToken ct = default)
-    {
-        var options = await _optionsResolver.ResolveAsync();
-        JPushClient client = new JPushClient(options.AppKey, options.MasterSecret);
-
-        HttpResponseMessage response = await JPushClient.HttpClient.DeleteAsync($"{JPushClient.BASE_URL_PUSH_DEFAULT}/{msgId}");
-        var content = await response.Content.ReadAsStringAsync();
-
-        if (response.StatusCode != HttpStatusCode.OK)
-        {
-            return new AppNotificationResponseBase(false, content);
-        }
-
-        return new AppNotificationResponseBase(true, "ok");
     }
 
     private PushPayload BuildPushPayload(AppMessage appMessage, object audience)
     {
-        PushPayload pushPayload = new PushPayload()
+        return new PushPayload
         {
             Platform = new List<string> { "android", "ios" },
             Audience = audience,
@@ -154,7 +118,5 @@ public class JPushSender : IAppNotificationSender
                 IsApnsProduction = appMessage.IsApnsProduction
             }
         };
-
-        return pushPayload;
     }
 }
