@@ -87,7 +87,7 @@ public class XiaomiPushSender : IAppNotificationSender
         {
             Content = new FormUrlEncodedContent(payload)
         };
-        request.Headers.Authorization = new AuthenticationHeaderValue("key", options.AppSecret);
+        request.Headers.TryAddWithoutValidation("Authorization", $"key={options.AppSecret}");
 
         try
         {
