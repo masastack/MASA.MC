@@ -17,7 +17,7 @@ public class ApnsPushSender : IAppNotificationSender
         _optionsResolver = optionsResolver;
     }
 
-    public async Task<AppNotificationResponseBase> SendAsync(SingleAppMessage appMessage, CancellationToken ct = default)
+    public async Task<AppNotificationResponse> SendAsync(SingleAppMessage appMessage, CancellationToken ct = default)
     {
         try
         {
@@ -30,11 +30,11 @@ public class ApnsPushSender : IAppNotificationSender
         }
         catch (Exception ex)
         {
-            return new AppNotificationResponseBase(false, $"Push failed due to an exception: {ex.Message}");
+            return new AppNotificationResponse(false, $"Push failed due to an exception: {ex.Message}");
         }
     }
 
-    public async Task<AppNotificationResponseBase> BatchSendAsync(BatchAppMessage appMessage, CancellationToken ct = default)
+    public async Task<AppNotificationResponse> BatchSendAsync(BatchAppMessage appMessage, CancellationToken ct = default)
     {
         try
         {
@@ -45,25 +45,50 @@ public class ApnsPushSender : IAppNotificationSender
             var apnsJwtOptions = options as ApnsJwtOptions;
             var responses = await _apnsService.SendPushes(pushes, apnsJwtOptions);
 
-            var results = responses.Select(CreateResponse).ToList();
-            var success = results.All(r => r.Success);
-            var message = success ? "Batch push succeeded" : string.Join(";", results.Where(r => !r.Success).Select(r => r.Message));
-            return new AppNotificationResponseBase(success, message);
+            var results = responses.Select((response, index) => new
+            {
+                Response = CreateResponse(response),
+                Token = appMessage.ClientIds[index]
+            }).ToList();
+
+            var failedTokens = results.Where(r => !r.Response.Success).Select(r => r.Token).ToList();
+            var successCount = results.Count(r => r.Response.Success);
+
+            string message;
+            bool success;
+            if (successCount == results.Count)
+            {
+                message = "Batch push succeeded";
+                success = true;
+            }
+            else if (successCount > 0)
+            {
+                message = "Partial push success";
+                success = true;
+            }
+            else
+            {
+                message = string.Join(";", results.Select(r => r.Response.Message));
+                success = false;
+            }
+
+            return new AppNotificationResponse(success, message, errorTokens: failedTokens);
         }
         catch (Exception ex)
         {
-            return new AppNotificationResponseBase(false, $"Batch push failed due to an exception: {ex.Message}");
+            return new AppNotificationResponse(false, $"Batch push failed due to an exception: {ex.Message}");
         }
     }
 
-    public Task<AppNotificationResponseBase> BroadcastSendAsync(AppMessage appMessage, CancellationToken ct = default)
+
+    public Task<AppNotificationResponse> BroadcastSendAsync(AppMessage appMessage, CancellationToken ct = default)
     {
-        return Task.FromResult(new AppNotificationResponseBase(false, "APNs does not support broadcast push"));
+        return Task.FromResult(new AppNotificationResponse(false, "APNs does not support broadcast push"));
     }
 
-    public Task<AppNotificationResponseBase> WithdrawnAsync(string msgId, CancellationToken ct = default)
+    public Task<AppNotificationResponse> WithdrawnAsync(string msgId, CancellationToken ct = default)
     {
-        return Task.FromResult(new AppNotificationResponseBase(false, "APNs does not support message withdrawal"));
+        return Task.FromResult(new AppNotificationResponse(false, "APNs does not support message withdrawal"));
     }
 
     private ApplePush CreatePush(string title, string text, string clientId, ConcurrentDictionary<string, object> transmissionContent)
@@ -83,10 +108,10 @@ public class ApnsPushSender : IAppNotificationSender
         return push;
     }
 
-    private AppNotificationResponseBase CreateResponse(ApnsResponse response)
+    private AppNotificationResponse CreateResponse(ApnsResponse response)
     {
         return response.IsSuccessful
-            ? new AppNotificationResponseBase(true, "Push succeeded")
-            : new AppNotificationResponseBase(false, $"Push failed: {response.Reason}");
+            ? new AppNotificationResponse(true, "Push succeeded")
+            : new AppNotificationResponse(false, $"Push failed: {response.Reason}");
     }
 }

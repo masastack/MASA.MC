@@ -40,5 +40,7 @@ public class HmsAndroidNotification
     public string Sound { get; set; }
     public bool DefaultSound { get; set; }
     public string Importance { get; set; } = "NORMAL";
+
+    [JsonPropertyName("click_action")]
     public object ClickAction { get; set; }
 }

@@ -16,7 +16,7 @@ public class HuaweiPushSender : IAppNotificationSender
         _optionsResolver = optionsResolver;
     }
 
-    public async Task<AppNotificationResponseBase> SendAsync(SingleAppMessage message, CancellationToken ct = default)
+    public async Task<AppNotificationResponse> SendAsync(SingleAppMessage message, CancellationToken ct = default)
     {
         var options = await _optionsResolver.ResolveAsync();
         var accessToken = await _oauthService.GetAccessTokenAsync(options.ClientId, options.ClientSecret, ct);
@@ -30,10 +30,10 @@ public class HuaweiPushSender : IAppNotificationSender
         return await HandleResponse(response, ct);
     }
 
-    public async Task<AppNotificationResponseBase> BatchSendAsync(BatchAppMessage message, CancellationToken ct = default)
+    public async Task<AppNotificationResponse> BatchSendAsync(BatchAppMessage message, CancellationToken ct = default)
     {
         if (message.ClientIds.Length > 1000)
-            return new AppNotificationResponseBase(false, "Up to 1000 device tokens can be sent at a time");
+            return new AppNotificationResponse(false, "Up to 1000 device tokens can be sent at a time");
 
         var options = await _optionsResolver.ResolveAsync();
         var accessToken = await _oauthService.GetAccessTokenAsync(options.ClientId, options.ClientSecret, ct);
@@ -47,7 +47,7 @@ public class HuaweiPushSender : IAppNotificationSender
         return await HandleResponse(response, ct);
     }
 
-    public async Task<AppNotificationResponseBase> BroadcastSendAsync(AppMessage message, CancellationToken ct = default)
+    public async Task<AppNotificationResponse> BroadcastSendAsync(AppMessage message, CancellationToken ct = default)
     {
         var options = await _optionsResolver.ResolveAsync();
         var accessToken = await _oauthService.GetAccessTokenAsync(options.ClientId, options.ClientSecret, ct);
@@ -61,10 +61,10 @@ public class HuaweiPushSender : IAppNotificationSender
         return await HandleResponse(response, ct);
     }
 
-    public Task<AppNotificationResponseBase> WithdrawnAsync(string msgId, CancellationToken ct = default)
+    public Task<AppNotificationResponse> WithdrawnAsync(string msgId, CancellationToken ct = default)
     {
         // Huawei Push V1/V2 does not support message withdrawal  
-        return Task.FromResult(new AppNotificationResponseBase(false, "Withdrawal operation not supported"));
+        return Task.FromResult(new AppNotificationResponse(false, "Withdrawal operation not supported"));
     }
 
     private object BuildClickAction(string url)
@@ -107,7 +107,7 @@ public class HuaweiPushSender : IAppNotificationSender
         return request;
     }
 
-    private async Task<AppNotificationResponseBase> HandleResponse(HttpResponseMessage response, CancellationToken ct)
+    private async Task<AppNotificationResponse> HandleResponse(HttpResponseMessage response, CancellationToken ct)
     {
         if (response.IsSuccessStatusCode)
         {
@@ -118,21 +118,21 @@ public class HuaweiPushSender : IAppNotificationSender
 
             if (code == "80000000")
             {
-                return new AppNotificationResponseBase(true, "Success", requestId);
+                return new AppNotificationResponse(true, "Success", requestId);
             }
             else if (code == "80100000")
             {
-                // Some tokens are invalid  
-                var illegalTokens = result.GetProperty("msg").GetProperty("illegal_tokens").EnumerateArray().Select(t => t.GetString()).ToList();
-                return new AppNotificationResponseBase(false, $"Some tokens are invalid: {string.Join(",", illegalTokens)}", requestId);
+                var illegalTokens = result.GetProperty("msg").GetProperty("illegal_tokens")
+                    .EnumerateArray().Select(t => t.GetString() ?? string.Empty).ToList();
+                return new AppNotificationResponse(true, $"Some tokens are invalid: {string.Join(",", illegalTokens)}", requestId, illegalTokens);
             }
             else
             {
-                return new AppNotificationResponseBase(false, $"Push failed: {msg}", requestId);
+                return new AppNotificationResponse(false, $"Push failed: {msg}", requestId);
             }
         }
 
         var error = await response.Content.ReadAsStringAsync(ct);
-        return new AppNotificationResponseBase(false, $"Push failed: HTTP {response.StatusCode} - {error}");
+        return new AppNotificationResponse(false, $"Push failed: HTTP {response.StatusCode} - {error}");
     }
 }

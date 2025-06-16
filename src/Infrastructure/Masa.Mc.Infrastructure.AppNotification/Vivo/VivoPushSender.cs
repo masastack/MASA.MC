@@ -16,16 +16,16 @@ public class VivoPushSender : IAppNotificationSender
         _authService = authService;
     }
 
-    public async Task<AppNotificationResponseBase> SendAsync(SingleAppMessage appMessage, CancellationToken ct = default)
+    public async Task<AppNotificationResponse> SendAsync(SingleAppMessage appMessage, CancellationToken ct = default)
     {
         var payload = await CreatePayloadAsync(appMessage, ct);
         return await SendWithResolvedOptionsAsync(VivoConstants.SendUrl, payload, ct);
     }
 
-    public async Task<AppNotificationResponseBase> BatchSendAsync(BatchAppMessage appMessage, CancellationToken ct = default)
+    public async Task<AppNotificationResponse> BatchSendAsync(BatchAppMessage appMessage, CancellationToken ct = default)
     {
         if (appMessage.ClientIds.Length < 2 || appMessage.ClientIds.Length > 1000)
-            return new AppNotificationResponseBase(false, "regIds count must be 2~1000");
+            return new AppNotificationResponse(false, "regIds count must be 2~1000");
 
         var options = await _optionsResolver.ResolveAsync();
         var token = await _authService.GetAccessTokenAsync(options, ct);
@@ -38,13 +38,13 @@ public class VivoPushSender : IAppNotificationSender
         return await SendRequestAsync(VivoConstants.PushToListUrl, pushPayload, token, ct);
     }
 
-    public async Task<AppNotificationResponseBase> BroadcastSendAsync(AppMessage appMessage, CancellationToken ct = default)
+    public async Task<AppNotificationResponse> BroadcastSendAsync(AppMessage appMessage, CancellationToken ct = default)
     {
         var payload = await CreatePayloadAsync(appMessage, ct, new { orTags = new[] { AppNotificationConstants.BroadcastTag } });
         return await SendWithResolvedOptionsAsync(VivoConstants.TagPushUrl, payload, ct);
     }
 
-    public async Task<AppNotificationResponseBase> WithdrawnAsync(string msgId, CancellationToken ct = default)
+    public async Task<AppNotificationResponse> WithdrawnAsync(string msgId, CancellationToken ct = default)
     {
         var payload = new
         {
@@ -56,14 +56,14 @@ public class VivoPushSender : IAppNotificationSender
         return await SendWithResolvedOptionsAsync(VivoConstants.RecycleUrl, payload, ct);
     }
 
-    private async Task<AppNotificationResponseBase> SendWithResolvedOptionsAsync(string url, object payload, CancellationToken ct)
+    private async Task<AppNotificationResponse> SendWithResolvedOptionsAsync(string url, object payload, CancellationToken ct)
     {
         var options = await _optionsResolver.ResolveAsync();
         var token = await _authService.GetAccessTokenAsync(options, ct);
         return await SendRequestAsync(url, payload, token, ct);
     }
 
-    private async Task<AppNotificationResponseBase> SendRequestAsync(string url, object payload, string? token = null, CancellationToken ct = default)
+    private async Task<AppNotificationResponse> SendRequestAsync(string url, object payload, string? token = null, CancellationToken ct = default)
     {
         var request = new HttpRequestMessage(HttpMethod.Post, url)
         {
@@ -105,15 +105,34 @@ public class VivoPushSender : IAppNotificationSender
         };
     }
 
-    private async Task<AppNotificationResponseBase> HandleResponse(HttpResponseMessage response, CancellationToken ct)
+    private async Task<AppNotificationResponse> HandleResponse(HttpResponseMessage response, CancellationToken ct)
     {
         var json = await response.Content.ReadAsStringAsync(ct);
         using var doc = JsonDocument.Parse(json);
         var result = doc.RootElement.GetProperty("result").GetInt32();
         var desc = doc.RootElement.GetProperty("desc").GetString() ?? "";
         var taskId = doc.RootElement.TryGetProperty("taskId", out var idProp) ? idProp.GetString() ?? "" : "";
-        return result == 0
-            ? new AppNotificationResponseBase(true, "Push succeeded", taskId)
-            : new AppNotificationResponseBase(false, $"Push failed: {desc}");
+
+        var errorTokens = new List<string>();
+        if (doc.RootElement.TryGetProperty("invalidUser", out var invalidUserProp) && invalidUserProp.ValueKind == JsonValueKind.Object)
+        {
+            if (invalidUserProp.TryGetProperty("userid", out var userIdProp) && userIdProp.ValueKind == JsonValueKind.String)
+                errorTokens.Add(userIdProp.GetString() ?? "");
+        }
+
+        if (result == 0)
+        {
+            var message = errorTokens.Count > 0 ? "Partial push success" : "Push succeeded";
+            return new AppNotificationResponse(true, message, taskId, errorTokens);
+        }
+        else if (errorTokens.Count > 0)
+        {
+            return new AppNotificationResponse(true, "Partial push success", taskId, errorTokens);
+        }
+        else
+        {
+            return new AppNotificationResponse(false, $"Push failed: {desc}", taskId);
+        }
     }
+
 }

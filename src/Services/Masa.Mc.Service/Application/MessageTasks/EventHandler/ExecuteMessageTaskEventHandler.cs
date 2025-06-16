@@ -37,8 +37,7 @@ public class ExecuteMessageTaskEventHandler
             var messageTask = await _messageTaskRepository.FindAsync(x => x.Id == eto.MessageTaskId, false);
             if (messageTask == null) return;
 
-            Guid userId = Guid.Empty;
-            await _messageTaskJobService.DisableJobAsync(messageTask.SchedulerJobId, userId);
+            await _messageTaskJobService.DisableJobAsync(messageTask.SchedulerJobId, Guid.Empty);
             return;
         }
         history.SetTaskId(eto.TaskId);
