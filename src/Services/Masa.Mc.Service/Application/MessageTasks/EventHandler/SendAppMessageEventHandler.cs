@@ -94,7 +94,7 @@ public class SendAppMessageEventHandler
         return receiverType switch
         {
             ReceiverTypes.Broadcast => await HandleBroadcastAsync(sender, eto.MessageData, transmissionContent),
-            _ when isUniformContent => await HandleBatchAsync(sender, eto.ChannelId, taskHistory, taskHistory.ReceiverUsers, eto.MessageData, transmissionContent, isWebsiteMessage),
+            _ when isUniformContent && taskHistory.ReceiverUsers.Count > 1 => await HandleBatchAsync(sender, eto.ChannelId, taskHistory, taskHistory.ReceiverUsers, eto.MessageData, transmissionContent, isWebsiteMessage),
             _ => await HandleSingleAsync(sender, eto.ChannelId, taskHistory, taskHistory.ReceiverUsers, eto.MessageData, transmissionContent)
         };
     }
