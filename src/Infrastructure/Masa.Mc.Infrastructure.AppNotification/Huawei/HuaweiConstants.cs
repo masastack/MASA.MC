@@ -14,5 +14,9 @@ namespace Masa.Mc.Infrastructure.AppNotification.Huawei
         /// HMS Push message sending base URL (replace {projectId})
         /// </summary>
         public const string PushMessageUrlFormat = "https://push-api.cloud.huawei.com/v2/{0}/messages:send";
+
+        public const string TopicSubscribeUrlFormat = "https://push-api.cloud.huawei.com/v1/{0}/topic:subscribe";
+
+        public const string TopicUnsubscribeUrlFormat = "https://push-api.cloud.huawei.com/v1/{0}/topic:unsubscribe";
     }
 }

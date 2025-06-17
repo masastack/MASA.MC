@@ -5,9 +5,9 @@ namespace Masa.Mc.Infrastructure.AppNotification.Model.Response;
 
 public class AppNotificationResponse
 {
-    public bool Success { get; }
+    public bool Success { get; set; }
 
-    public string Message { get; }
+    public string Message { get; set; }
 
     public string MsgId { get; set; } = string.Empty;
 

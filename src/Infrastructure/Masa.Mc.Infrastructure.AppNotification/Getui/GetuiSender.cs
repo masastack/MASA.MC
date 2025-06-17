@@ -7,6 +7,8 @@ public class GetuiSender : IAppNotificationSender
 {
     private readonly IOptionsResolver<IGetuiOptions> _optionsResolver;
 
+    public bool SupportsBroadcast => true;
+
     public GetuiSender(IOptionsResolver<IGetuiOptions> optionsResolver)
     {
         _optionsResolver = optionsResolver;
@@ -97,4 +99,10 @@ public class GetuiSender : IAppNotificationSender
 
     public Task<AppNotificationResponse> BatchSendAsync(BatchAppMessage appMessage, CancellationToken ct = default)
         => Task.FromResult(new AppNotificationResponse(false, "does not support message batch send"));
+
+    public Task<AppNotificationResponse> SubscribeAsync(string name, string clientId, CancellationToken ct = default) 
+        => Task.FromResult(new AppNotificationResponse(false, "does not support subscribe"));
+
+    public Task<AppNotificationResponse> UnsubscribeAsync(string name, string clientId, CancellationToken ct = default)
+        => Task.FromResult(new AppNotificationResponse(false, "does not support unsubscribe"));
 }

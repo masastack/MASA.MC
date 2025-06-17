@@ -3,8 +3,10 @@
 
 namespace Masa.Mc.Infrastructure.AppNotification;
 
-public interface IAppNotificationSender: ITransientDependency
+public interface IAppNotificationSender : ITransientDependency
 {
+    bool SupportsBroadcast {  get; }
+
     Task<AppNotificationResponse> SendAsync(SingleAppMessage appMessage, CancellationToken ct = default);
 
     Task<AppNotificationResponse> BatchSendAsync(BatchAppMessage appMessage, CancellationToken ct = default);
@@ -12,4 +14,8 @@ public interface IAppNotificationSender: ITransientDependency
     Task<AppNotificationResponse> BroadcastSendAsync(AppMessage appMessage, CancellationToken ct = default);
 
     Task<AppNotificationResponse> WithdrawnAsync(string msgId, CancellationToken ct = default);
+
+    Task<AppNotificationResponse> SubscribeAsync(string name, string clientId, CancellationToken ct = default);
+
+    Task<AppNotificationResponse> UnsubscribeAsync(string name, string clientId, CancellationToken ct = default);
 }

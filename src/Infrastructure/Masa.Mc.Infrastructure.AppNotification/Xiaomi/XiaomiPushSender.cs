@@ -5,6 +5,8 @@ public class XiaomiPushSender : IAppNotificationSender
     private readonly HttpClient _httpClient;
     private readonly IOptionsResolver<IXiaomiPushOptions> _optionsResolver;
 
+    public bool SupportsBroadcast => true;
+
     public XiaomiPushSender(HttpClient httpClient, IOptionsResolver<IXiaomiPushOptions> optionsResolver)
     {
         _httpClient = httpClient;
@@ -42,6 +44,42 @@ public class XiaomiPushSender : IAppNotificationSender
                { "msg_id", msgId }
            };
         return await SendPushAsync(XiaomiConstants.RevokeUrl, payload, ct);
+    }
+
+    public async Task<AppNotificationResponse> SubscribeAsync(string name, string clientId, CancellationToken ct = default)
+    {
+        var options = await _optionsResolver.ResolveAsync();
+
+        var payload = new Dictionary<string, string>
+        {
+            { "registration_id", clientId },
+            { "topic", name },
+            { "restricted_package_name", options.PackageName }
+        };
+
+        var response = await SendPushAsync(XiaomiConstants.TopicSubscribeUrl, payload, ct);
+        response.Message = response.Success
+            ? "Subscribe topic succeeded"
+            : $"Subscribe topic failed: {response.Message}";
+        return response;
+    }
+
+    public async Task<AppNotificationResponse> UnsubscribeAsync(string name, string clientId, CancellationToken ct = default)
+    {
+        var options = await _optionsResolver.ResolveAsync();
+
+        var payload = new Dictionary<string, string>
+        {
+            { "registration_id", clientId },
+            { "topic", name },
+            { "restricted_package_name", options.PackageName }
+        };
+
+        var response = await SendPushAsync(XiaomiConstants.TopicUnsubscribeUrl, payload, ct);
+        response.Message = response.Success
+            ? "Unsubscribe topic succeeded"
+            : $"Unsubscribe topic failed: {response.Message}";
+        return response;
     }
 
     private async Task<Dictionary<string, string>> BuildPayloadAsync(string title, string description, ConcurrentDictionary<string, object> transmissionContent, string url, string? clientId, CancellationToken ct)

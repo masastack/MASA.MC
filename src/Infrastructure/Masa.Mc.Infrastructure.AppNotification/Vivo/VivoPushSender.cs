@@ -9,6 +9,8 @@ public class VivoPushSender : IAppNotificationSender
     private readonly IOptionsResolver<IVivoPushOptions> _optionsResolver;
     private readonly VivoAuthService _authService;
 
+    public bool SupportsBroadcast => true;
+
     public VivoPushSender(HttpClient httpClient, IOptionsResolver<IVivoPushOptions> optionsResolver, VivoAuthService authService)
     {
         _httpClient = httpClient;
@@ -56,6 +58,52 @@ public class VivoPushSender : IAppNotificationSender
         return await SendWithResolvedOptionsAsync(VivoConstants.RecycleUrl, payload, ct);
     }
 
+    public async Task<AppNotificationResponse> SubscribeAsync(string name, string clientId, CancellationToken ct = default)
+    {
+        if (string.IsNullOrEmpty(clientId))
+            return new AppNotificationResponse(false, "regId is required");
+
+        var options = await _optionsResolver.ResolveAsync();
+        var token = await _authService.GetAccessTokenAsync(options, ct);
+
+        var payload = new
+        {
+            appId = options.AppId,
+            name = name,
+            type = 1,
+            ids = new[] { clientId }
+        };
+
+        var response = await SendRequestAsync(VivoConstants.AddMembersUrl, payload, token, ct);
+        response.Message = response.Success
+            ? "Subscribe tag succeeded"
+            : $"Subscribe tag failed: {response.Message}";
+        return response;
+    }
+
+    public async Task<AppNotificationResponse> UnsubscribeAsync(string name, string clientId, CancellationToken ct = default)
+    {
+        if (string.IsNullOrEmpty(clientId))
+            return new AppNotificationResponse(false, "regId is required");
+
+        var options = await _optionsResolver.ResolveAsync();
+        var token = await _authService.GetAccessTokenAsync(options, ct);
+
+        var payload = new
+        {
+            appId = options.AppId,
+            name = name,
+            type = 1,
+            ids = new[] { clientId }
+        };
+
+        var response = await SendRequestAsync(VivoConstants.RemoveMembersUrl, payload, token, ct);
+        response.Message = response.Success
+            ? "Unsubscribe tag succeeded"
+            : $"Unsubscribe tag failed: {response.Message}";
+        return response;
+    }
+
     private async Task<AppNotificationResponse> SendWithResolvedOptionsAsync(string url, object payload, CancellationToken ct)
     {
         var options = await _optionsResolver.ResolveAsync();
@@ -82,7 +130,7 @@ public class VivoPushSender : IAppNotificationSender
             return 1;
         if (url.StartsWith("http", StringComparison.OrdinalIgnoreCase))
             return 2;
-        return 3;
+        return 4;
     }
 
     private async Task<object> CreatePayloadAsync(AppMessage appMessage, CancellationToken ct, object? tagExpression = null, string[]? regIds = null, string? taskId = null)
@@ -134,5 +182,4 @@ public class VivoPushSender : IAppNotificationSender
             return new AppNotificationResponse(false, $"Push failed: {desc}", taskId);
         }
     }
-
 }

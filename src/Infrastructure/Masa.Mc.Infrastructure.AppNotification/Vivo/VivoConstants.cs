@@ -11,4 +11,6 @@ public static class VivoConstants
     public const string PushToListUrl = "https://api-push.vivo.com.cn/message/pushToList";
     public const string TagPushUrl = "https://api-push.vivo.com.cn/message/tagPush";
     public const string RecycleUrl = "https://api-push.vivo.com.cn/message/recycle";
+    public const string AddMembersUrl = "https://api-push.vivo.com.cn/tag/addMembers";
+    public const string RemoveMembersUrl = "https://api-push.vivo.com.cn/tag/removeMembers";
 }
