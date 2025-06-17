@@ -7,6 +7,8 @@ public class JPushSender : IAppNotificationSender
 {
     private readonly IOptionsResolver<IJPushOptions> _optionsResolver;
 
+    public bool SupportsBroadcast => true;
+
     public JPushSender(IOptionsResolver<IJPushOptions> optionsResolver)
     {
         _optionsResolver = optionsResolver;
@@ -56,6 +58,12 @@ public class JPushSender : IAppNotificationSender
             ? new AppNotificationResponse(true, "ok")
             : new AppNotificationResponse(false, content);
     }
+
+    public Task<AppNotificationResponse> SubscribeAsync(string name, string clientId, CancellationToken ct = default)
+        => Task.FromResult(new AppNotificationResponse(false, "does not support subscribe"));
+
+    public Task<AppNotificationResponse> UnsubscribeAsync(string name, string clientId, CancellationToken ct = default)
+        => Task.FromResult(new AppNotificationResponse(false, "does not support unsubscribe"));
 
     private async Task<AppNotificationResponse> SendPushAsync(JPushClient client, PushPayload pushPayload, bool isBroadcast = false)
     {

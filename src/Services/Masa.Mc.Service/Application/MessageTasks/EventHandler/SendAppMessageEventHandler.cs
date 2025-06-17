@@ -12,6 +12,8 @@ public class SendAppMessageEventHandler
     private readonly ILogger<SendAppMessageEventHandler> _logger;
     private readonly IWebsiteMessageRepository _websiteMessageRepository;
     private readonly IAppVendorConfigRepository _appVendorConfigRepository;
+    private readonly IAppDeviceTokenRepository _appDeviceTokenRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
     public SendAppMessageEventHandler(
         AppNotificationSenderFactory appNotificationSenderFactory,
@@ -20,7 +22,9 @@ public class SendAppMessageEventHandler
         IMessageTaskHistoryRepository messageTaskHistoryRepository,
         ILogger<SendAppMessageEventHandler> logger,
         IWebsiteMessageRepository websiteMessageRepository,
-        IAppVendorConfigRepository appVendorConfigRepository)
+        IAppVendorConfigRepository appVendorConfigRepository,
+        IAppDeviceTokenRepository appDeviceTokenRepository,
+        IUnitOfWork unitOfWork)
     {
         _appNotificationSenderFactory = appNotificationSenderFactory;
         _channelRepository = channelRepository;
@@ -29,6 +33,8 @@ public class SendAppMessageEventHandler
         _logger = logger;
         _websiteMessageRepository = websiteMessageRepository;
         _appVendorConfigRepository = appVendorConfigRepository;
+        _appDeviceTokenRepository = appDeviceTokenRepository;
+        _unitOfWork = unitOfWork;
     }
 
     [EventHandler]
@@ -81,23 +87,59 @@ public class SendAppMessageEventHandler
         using (asyncLocal.Change(options))
         {
             var sender = _appNotificationSenderFactory.GetAppNotificationSender(appSenderProvider);
-            return await SendMessageBasedOnReceiverTypeAsync(sender, eto, transmissionContent, taskHistory);
+            return await SendMessageBasedOnReceiverTypeAsync(sender, eto, transmissionContent, taskHistory, (AppPlatform)appSenderProvider);
         }
     }
 
-    private async Task<MessageSendStatuses> SendMessageBasedOnReceiverTypeAsync(IAppNotificationSender sender, SendAppMessageEvent eto, ExtraPropertyDictionary transmissionContent, MessageTaskHistory taskHistory)
+    private async Task<MessageSendStatuses> SendMessageBasedOnReceiverTypeAsync(
+    IAppNotificationSender sender,
+    SendAppMessageEvent eto,
+    ExtraPropertyDictionary transmissionContent,
+    MessageTaskHistory taskHistory,
+    AppPlatform platform)
     {
         var receiverType = taskHistory.MessageTask.ReceiverType;
         var isUniformContent = taskHistory.MessageTask.IsUniformContent;
         var isWebsiteMessage = taskHistory.MessageTask.IsAppInWebsiteMessage;
+        var receiverUsers = taskHistory.ReceiverUsers;
 
-        return receiverType switch
+        if (receiverType == ReceiverTypes.Broadcast)
         {
-            ReceiverTypes.Broadcast => await HandleBroadcastAsync(sender, eto.MessageData, transmissionContent),
-            _ when isUniformContent && taskHistory.ReceiverUsers.Count > 1 => await HandleBatchAsync(sender, eto.ChannelId, taskHistory, taskHistory.ReceiverUsers, eto.MessageData, transmissionContent, isWebsiteMessage),
-            _ => await HandleSingleAsync(sender, eto.ChannelId, taskHistory, taskHistory.ReceiverUsers, eto.MessageData, transmissionContent)
-        };
+            if (sender.SupportsBroadcast)
+            {
+                return await HandleBroadcastAsync(sender, eto.MessageData, transmissionContent);
+            }
+
+            receiverUsers = await GetReceiverUsersFromDeviceTokensAsync(eto.ChannelId, platform, taskHistory.MessageTask.Variables);
+        }
+
+        if (isUniformContent && receiverUsers.Count > 1)
+        {
+            return await HandleBatchAsync(
+                sender, eto.ChannelId, taskHistory, receiverUsers, eto.MessageData, transmissionContent, isWebsiteMessage);
+        }
+
+        return await HandleSingleAsync(
+            sender, eto.ChannelId, taskHistory, receiverUsers, eto.MessageData, transmissionContent);
     }
+
+    private async Task<List<MessageReceiverUser>> GetReceiverUsersFromDeviceTokensAsync(
+    Guid channelId,
+    AppPlatform platform,
+    ExtraPropertyDictionary variables)
+    {
+        var deviceTokens = await _appDeviceTokenRepository.GetListAsync(
+            x => x.ChannelId == channelId && x.Platform == platform);
+
+        return deviceTokens
+            .Select(x => new MessageReceiverUser(
+                x.UserId,
+                x.DeviceToken,
+                variables,
+                x.Platform.ToString()))
+            .ToList();
+    }
+
 
     private async Task<MessageSendStatuses> SendMcAppMessageAsync(SendAppMessageEvent eto, ExtraPropertyDictionary transmissionContent)
     {
@@ -140,7 +182,7 @@ public class SendAppMessageEventHandler
         using (asyncLocal.Change(options))
         {
             var sender = _appNotificationSenderFactory.GetAppNotificationSender(platform);
-            return await SendMessageBasedOnReceiverTypeAsync(sender, eto, transmissionContent, eto.MessageTaskHistory);
+            return await SendMessageBasedOnReceiverTypeAsync(sender, eto, transmissionContent, eto.MessageTaskHistory, (AppPlatform)platform);
         }
     }
 
@@ -179,26 +221,37 @@ public class SendAppMessageEventHandler
         );
     }
 
-    private async Task<MessageSendStatuses> HandleBatchAsync(IAppNotificationSender sender, Guid channelId, MessageTaskHistory taskHistory, List<MessageReceiverUser> receiverUsers, MessageData data, ExtraPropertyDictionary transmissionContent, bool isWebsiteMessage)
+    private async Task<MessageSendStatuses> HandleBatchAsync(
+    IAppNotificationSender sender,
+    Guid channelId,
+    MessageTaskHistory taskHistory,
+    List<MessageReceiverUser> receiverUsers,
+    MessageData data,
+    ExtraPropertyDictionary transmissionContent,
+    bool isWebsiteMessage)
     {
         const int batchSize = 1000;
         var userIdentities = receiverUsers.Select(x => x.ChannelUserIdentity).Distinct().ToArray();
         var totalBatches = (int)Math.Ceiling((double)userIdentities.Length / batchSize);
         var successCount = 0;
-        var records = receiverUsers.Select(user => CreateMessageRecord(user, channelId, taskHistory, data)).ToList();
 
         for (int i = 0; i < totalBatches; i++)
         {
             var batch = userIdentities.Skip(i * batchSize).Take(batchSize).ToArray();
+            var batchRecords = receiverUsers
+                .Where(u => batch.Contains(u.ChannelUserIdentity))
+                .Select(user => CreateMessageRecord(user, channelId, taskHistory, data))
+                .ToList();
+
             try
             {
                 var message = CreateBatchAppMessage(batch, data, transmissionContent);
                 var response = await sender.BatchSendAsync(message);
 
-                successCount += UpdateRecordsWithResponse(records, batch, response);
+                successCount += UpdateRecordsWithResponse(batchRecords, batch, response);
                 if (isWebsiteMessage)
                 {
-                    await AddWebsiteMessages(records, batch, channelId, data);
+                    await AddWebsiteMessages(batchRecords, batch, channelId, data);
                 }
             }
             catch (Exception ex)
@@ -206,18 +259,22 @@ public class SendAppMessageEventHandler
                 _logger.LogError(ex, "Error occurred during BatchSendAsync in HandleBatchAsync");
                 foreach (var item in batch)
                 {
-                    var record = records.FirstOrDefault(x => x.ChannelUserIdentity == item);
+                    var record = batchRecords.FirstOrDefault(x => x.ChannelUserIdentity == item);
                     if (record is not null)
                     {
                         record.SetResult(false, ex.Message);
                     }
                 }
             }
+
+            await _messageRecordRepository.AddRangeAsync(batchRecords);
+            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.CommitAsync();
         }
 
-        await _messageRecordRepository.AddRangeAsync(records);
         return DetermineBatchStatus(successCount, receiverUsers.Count);
     }
+
 
     private BatchAppMessage CreateBatchAppMessage(string[] batch, MessageData data, ExtraPropertyDictionary transmissionContent)
     {
@@ -335,21 +392,24 @@ public class SendAppMessageEventHandler
         return successCount;
     }
 
-    private async Task AddWebsiteMessages(List<MessageRecord> records, string[] batch, Guid channelId, MessageData data)
+    private async Task AddWebsiteMessages(List<MessageRecord> batchRecords, string[] batch, Guid channelId, MessageData data)
     {
-        var websiteMessages = records.Where(x => batch.Contains(x.ChannelUserIdentity)).Select(record =>
-            new WebsiteMessage(
-                record.MessageTaskHistoryId,
-                channelId,
-                record.UserId,
-                data.MessageContent.Title,
-                data.MessageContent.Content,
-                data.MessageContent.GetJumpUrl(),
-                DateTimeOffset.UtcNow,
-                data.MessageContent.ExtraProperties
-            )).ToList();
+        var websiteMessages = batchRecords
+            .Where(x => batch.Contains(x.ChannelUserIdentity))
+            .Select(record =>
+                new WebsiteMessage(
+                    record.MessageTaskHistoryId,
+                    channelId,
+                    record.UserId,
+                    data.MessageContent.Title,
+                    data.MessageContent.Content,
+                    data.MessageContent.GetJumpUrl(),
+                    DateTimeOffset.UtcNow,
+                    data.MessageContent.ExtraProperties
+                )).ToList();
         await _websiteMessageRepository.AddRangeAsync(websiteMessages);
     }
+
 
     private void UpdateRecordWithResponse(MessageRecord record, AppNotificationResponse response)
     {

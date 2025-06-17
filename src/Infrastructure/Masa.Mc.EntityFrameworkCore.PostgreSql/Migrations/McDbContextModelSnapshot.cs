@@ -120,7 +120,7 @@ namespace Masa.Mc.EntityFrameworkCore.PostgreSql.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ChannelId", "UserId");
+                    b.HasIndex("ChannelId", "UserId", "Platform");
 
                     b.ToTable("AppDeviceTokens", (string)null);
                 });

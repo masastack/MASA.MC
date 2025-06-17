@@ -226,6 +226,15 @@ public class MessageTaskService : ServiceBase
 
             var command = new BindAppDeviceTokenCommand(channel.Id, inputDto.ClientId, inputDto.Platform.Value);
             await _eventBus.PublishAsync(command);
+
+            if (string.IsNullOrEmpty(inputDto.ClientId))
+            {
+                await _eventBus.PublishAsync(new AppNotificationUnsubscribeCommand(channel.Id, inputDto.Platform.Value, inputDto.ClientId));
+            }
+            else
+            {
+                await _eventBus.PublishAsync(new AppNotificationSubscribeCommand(channel.Id, inputDto.Platform.Value, inputDto.ClientId));
+            }
         }
 
         var systemId = $"{MasaStackProject.MC.Name}:{inputDto.ChannelCode}";

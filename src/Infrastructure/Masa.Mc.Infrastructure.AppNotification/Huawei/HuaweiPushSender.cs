@@ -9,6 +9,8 @@ public class HuaweiPushSender : IAppNotificationSender
     private readonly HuaweiOAuthService _oauthService;
     private readonly IOptionsResolver<IHuaweiPushOptions> _optionsResolver;
 
+    public bool SupportsBroadcast => true;
+
     public HuaweiPushSender(HttpClient httpClient, HuaweiOAuthService oauthService, IOptionsResolver<IHuaweiPushOptions> optionsResolver)
     {
         _httpClient = httpClient;
@@ -67,13 +69,58 @@ public class HuaweiPushSender : IAppNotificationSender
         return Task.FromResult(new AppNotificationResponse(false, "Withdrawal operation not supported"));
     }
 
+    public async Task<AppNotificationResponse> SubscribeAsync(string name, string clientId, CancellationToken ct = default)
+    {
+        var options = await _optionsResolver.ResolveAsync();
+        var accessToken = await _oauthService.GetAccessTokenAsync(options.ClientId, options.ClientSecret, ct);
+        var url = string.Format(HuaweiConstants.TopicSubscribeUrlFormat, options.ProjectId);
+
+        var payload = new
+        {
+            topic = name,
+            token = new[] { clientId }
+        };
+
+        var request = CreatePushRequest(url, payload, accessToken);
+
+        var response = await _httpClient.SendAsync(request, ct);
+        var result = await HandleResponse(response, ct);
+        result.Message = result.Success
+            ? "Subscribe topic succeeded"
+            : $"Subscribe topic failed: {result.Message}";
+        return result;
+    }
+
+    public async Task<AppNotificationResponse> UnsubscribeAsync(string name, string clientId, CancellationToken ct = default)
+    {
+        var options = await _optionsResolver.ResolveAsync();
+        var accessToken = await _oauthService.GetAccessTokenAsync(options.ClientId, options.ClientSecret, ct);
+        var url = string.Format(HuaweiConstants.TopicUnsubscribeUrlFormat, options.ProjectId);
+
+        var payload = new
+        {
+            topic = name,
+            token = new[] { clientId }
+        };
+
+        var request = CreatePushRequest(url, payload, accessToken);
+
+        var response = await _httpClient.SendAsync(request, ct);
+        var result = await HandleResponse(response, ct);
+        result.Message = result.Success
+            ? "Unsubscribe topic succeeded"
+            : $"Unsubscribe topic failed: {result.Message}";
+        return result;
+    }
+
+
     private object BuildClickAction(string url)
     {
         if (string.IsNullOrEmpty(url))
             return new { type = 3 };
         if (url.StartsWith("http", StringComparison.OrdinalIgnoreCase))
             return new { type = 2, url };
-        return new { type = 1, action = url };
+        return new { type = 1, intent = url };
     }
 
     private HmsPushRequest BuildMessagePayload(AppMessage message, string[]? tokens = null, string? topic = null)

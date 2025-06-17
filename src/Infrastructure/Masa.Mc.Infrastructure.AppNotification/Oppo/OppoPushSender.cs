@@ -11,6 +11,8 @@ public class OppoPushSender : IAppNotificationSender
     private readonly OppoAuthService _authService;
     private readonly IOptionsResolver<IOppoPushOptions> _optionsResolver;
 
+    public bool SupportsBroadcast => true;
+
     public OppoPushSender(HttpClient httpClient, OppoAuthService authService, IOptionsResolver<IOppoPushOptions> optionsResolver)
     {
         _httpClient = httpClient;
@@ -87,8 +89,8 @@ public class OppoPushSender : IAppNotificationSender
             }
             else
             {
-                notification["click_action_type"] = 1;
-                notification["click_action_activity"] = appMessage.Url;
+                notification["click_action_type"] = 5;
+                notification["click_action_url"] = appMessage.Url;
             }
         }
 
@@ -129,6 +131,72 @@ public class OppoPushSender : IAppNotificationSender
 
     public Task<AppNotificationResponse> WithdrawnAsync(string msgId, CancellationToken ct = default)
         => Task.FromResult(new AppNotificationResponse(false, "OPPO Push does not support message withdrawal"));
+
+    public async Task<AppNotificationResponse> SubscribeAsync(string name, string clientId, CancellationToken ct = default)
+    {
+        var options = await _optionsResolver.ResolveAsync();
+        var token = await _authService.GetAccessTokenAsync(options.AppKey, options.MasterSecret, ct);
+        if (string.IsNullOrEmpty(clientId))
+            return new AppNotificationResponse(false, "registration_id is required");
+
+        var payload = new Dictionary<string, object?>
+        {
+            { "auth_token", token },
+            { "registration_id", clientId },
+            { "tags", name }
+        };
+
+        var request = new HttpRequestMessage(HttpMethod.Post, OppoConstants.SubscribeTagsUrl)
+        {
+            Content = JsonContent.Create(payload)
+        };
+
+        var response = await _httpClient.SendAsync(request, ct);
+        var json = await response.Content.ReadAsStringAsync(ct);
+
+        if (!response.IsSuccessStatusCode)
+            return new AppNotificationResponse(false, $"Subscribe tag failed: {json}");
+
+        using var doc = JsonDocument.Parse(json);
+        var code = doc.RootElement.GetProperty("code").GetInt32();
+        if (code == 0)
+            return new AppNotificationResponse(true, "Subscribe tag succeeded");
+        else
+            return new AppNotificationResponse(false, $"Subscribe tag failed: {doc.RootElement.GetProperty("message").GetString()}");
+    }
+
+    public async Task<AppNotificationResponse> UnsubscribeAsync(string name, string clientId, CancellationToken ct = default)
+    {
+        var options = await _optionsResolver.ResolveAsync();
+        var token = await _authService.GetAccessTokenAsync(options.AppKey, options.MasterSecret, ct);
+        if (string.IsNullOrEmpty(clientId))
+            return new AppNotificationResponse(false, "registration_id is required");
+
+        var payload = new Dictionary<string, object?>
+    {
+        { "auth_token", token },
+        { "registration_id", clientId },
+        { "tags", name }
+    };
+
+        var request = new HttpRequestMessage(HttpMethod.Post, OppoConstants.UnsubscribeTagsUrl)
+        {
+            Content = JsonContent.Create(payload)
+        };
+
+        var response = await _httpClient.SendAsync(request, ct);
+        var json = await response.Content.ReadAsStringAsync(ct);
+
+        if (!response.IsSuccessStatusCode)
+            return new AppNotificationResponse(false, $"Unsubscribe tag failed: {json}");
+
+        using var doc = JsonDocument.Parse(json);
+        var code = doc.RootElement.GetProperty("code").GetInt32();
+        if (code == 0)
+            return new AppNotificationResponse(true, "Unsubscribe tag succeeded");
+        else
+            return new AppNotificationResponse(false, $"Unsubscribe tag failed: {doc.RootElement.GetProperty("message").GetString()}");
+    }
 
     private async Task<AppNotificationResponse> HandleResponse(HttpResponseMessage response, CancellationToken ct)
     {

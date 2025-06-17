@@ -11,6 +11,8 @@ public class HonorPushSender : IAppNotificationSender
     private readonly HonorAuthService _authService;
     private readonly IOptionsResolver<IHonorPushOptions> _optionsResolver;
 
+    public bool SupportsBroadcast => false;
+
     public HonorPushSender(HttpClient httpClient, HonorAuthService authService, IOptionsResolver<IHonorPushOptions> optionsResolver)
     {
         _httpClient = httpClient;
@@ -36,6 +38,12 @@ public class HonorPushSender : IAppNotificationSender
 
     public Task<AppNotificationResponse> WithdrawnAsync(string msgId, CancellationToken ct = default)
         => Task.FromResult(new AppNotificationResponse(false, "Honor Push does not support message withdrawal"));
+
+    public Task<AppNotificationResponse> SubscribeAsync(string name, string clientId, CancellationToken ct = default)
+        => Task.FromResult(new AppNotificationResponse(false, "does not support subscribe"));
+
+    public Task<AppNotificationResponse> UnsubscribeAsync(string name, string clientId, CancellationToken ct = default)
+        => Task.FromResult(new AppNotificationResponse(false, "does not support unsubscribe"));
 
     private async Task<AppNotificationResponse> SendInternalAsync(AppMessage appMessage, string[] clientIds, CancellationToken ct)
     {
@@ -90,7 +98,7 @@ public class HonorPushSender : IAppNotificationSender
             ? new { type = HonorClickActionType.OpenApp }
             : url.StartsWith("http", StringComparison.OrdinalIgnoreCase)
                 ? new { type = HonorClickActionType.OpenUrl, url }
-                : new { type = HonorClickActionType.AppDefinedIntent, action = url };
+                : new { type = HonorClickActionType.AppDefinedIntent, intent = url };
     }
 
     private async Task<AppNotificationResponse> HandleResponse(HttpResponseMessage response, CancellationToken ct)

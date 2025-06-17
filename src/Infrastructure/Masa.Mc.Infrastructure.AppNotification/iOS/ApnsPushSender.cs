@@ -11,6 +11,8 @@ public class ApnsPushSender : IAppNotificationSender
     private readonly IApnsService _apnsService;
     private readonly IOptionsResolver<IiOSPushOptions> _optionsResolver;
 
+    public bool SupportsBroadcast => false;
+
     public ApnsPushSender(IApnsService apnsService, IOptionsResolver<IiOSPushOptions> optionsResolver)
     {
         _apnsService = apnsService;
@@ -90,6 +92,17 @@ public class ApnsPushSender : IAppNotificationSender
     {
         return Task.FromResult(new AppNotificationResponse(false, "APNs does not support message withdrawal"));
     }
+
+    public Task<AppNotificationResponse> SubscribeAsync(string name, string clientId, CancellationToken ct = default)
+    {
+        return Task.FromResult(new AppNotificationResponse(false, "APNs does not support tag subscribe"));
+    }
+
+    public Task<AppNotificationResponse> UnsubscribeAsync(string name, string clientId, CancellationToken ct = default)
+    {
+        return Task.FromResult(new AppNotificationResponse(false, "APNs does not support tag unsubscribe"));
+    }
+
 
     private ApplePush CreatePush(string title, string text, string clientId, ConcurrentDictionary<string, object> transmissionContent)
     {
