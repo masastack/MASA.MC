@@ -93,8 +93,8 @@ namespace Masa.Mc.EntityFrameworkCore.PostgreSql.Migrations
 
                     b.Property<string>("DeviceToken")
                         .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("character varying(128)");
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
 
                     b.Property<string>("ExtraProperties")
                         .IsRequired()
@@ -335,8 +335,8 @@ namespace Masa.Mc.EntityFrameworkCore.PostgreSql.Migrations
 
                     b.Property<string>("ChannelUserIdentity")
                         .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("character varying(128)");
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("timestamp with time zone");
@@ -418,8 +418,8 @@ namespace Masa.Mc.EntityFrameworkCore.PostgreSql.Migrations
 
                     b.Property<string>("ChannelUserIdentity")
                         .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("character varying(128)");
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
 
                     b.Property<Guid?>("MessageTaskHistoryId")
                         .HasColumnType("uuid");
