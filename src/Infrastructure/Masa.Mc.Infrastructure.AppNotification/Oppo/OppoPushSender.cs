@@ -140,11 +140,11 @@ public class OppoPushSender : IAppNotificationSender
             return new AppNotificationResponse(false, "registration_id is required");
 
         var payload = new Dictionary<string, object?>
-    {
-        { "auth_token", token },
-        { "registration_id", clientId },
-        { "tags", name }
-    };
+        {
+            { "auth_token", token },
+            { "registration_id", clientId },
+            { "tags", name }
+        };
 
         var request = new HttpRequestMessage(HttpMethod.Post, OppoConstants.SubscribeTagsUrl)
         {
