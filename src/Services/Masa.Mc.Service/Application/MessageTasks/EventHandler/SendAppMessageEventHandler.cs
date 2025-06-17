@@ -87,7 +87,7 @@ public class SendAppMessageEventHandler
         using (asyncLocal.Change(options))
         {
             var sender = _appNotificationSenderFactory.GetAppNotificationSender(appSenderProvider);
-            return await SendMessageBasedOnReceiverTypeAsync(sender, eto, transmissionContent, taskHistory, (AppPlatform)appSenderProvider);
+            return await SendMessageBasedOnReceiverTypeAsync(sender, eto, transmissionContent, taskHistory, (AppPlatform)appSenderProvider, taskHistory.ReceiverUsers);
         }
     }
 
@@ -96,12 +96,12 @@ public class SendAppMessageEventHandler
     SendAppMessageEvent eto,
     ExtraPropertyDictionary transmissionContent,
     MessageTaskHistory taskHistory,
-    AppPlatform platform)
+    AppPlatform platform,
+    List<MessageReceiverUser> receiverUsers)
     {
         var receiverType = taskHistory.MessageTask.ReceiverType;
         var isUniformContent = taskHistory.MessageTask.IsUniformContent;
         var isWebsiteMessage = taskHistory.MessageTask.IsAppInWebsiteMessage;
-        var receiverUsers = taskHistory.ReceiverUsers;
 
         if (receiverType == ReceiverTypes.Broadcast)
         {
@@ -182,7 +182,7 @@ public class SendAppMessageEventHandler
         using (asyncLocal.Change(options))
         {
             var sender = _appNotificationSenderFactory.GetAppNotificationSender(platform);
-            return await SendMessageBasedOnReceiverTypeAsync(sender, eto, transmissionContent, eto.MessageTaskHistory, (AppPlatform)platform);
+            return await SendMessageBasedOnReceiverTypeAsync(sender, eto, transmissionContent, eto.MessageTaskHistory, (AppPlatform)platform, users.ToList());
         }
     }
 
@@ -379,7 +379,7 @@ public class SendAppMessageEventHandler
             {
                 if (!response.Success || response.ErrorTokens.Contains(item))
                 {
-                    record.SetResult(false, response.Message);
+                    record.SetResult(false, "Error token");
                 }
                 else
                 {

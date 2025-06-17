@@ -114,7 +114,7 @@ public static class McDbContextModelBuilderExtensions
         {
             b.ToTable(MCConsts.DbTablePrefix + "MessageRecords", MCConsts.DbSchema);
             b.Property(x => x.DisplayName).IsRequired().HasMaxLength(128);
-            b.Property(x => x.ChannelUserIdentity).IsRequired().HasMaxLength(128);
+            b.Property(x => x.ChannelUserIdentity).IsRequired().HasMaxLength(256);
             b.Property(x => x.ExtraProperties).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
             b.Property(x => x.Variables).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
             b.HasIndex(x => x.UserId);
@@ -127,7 +127,7 @@ public static class McDbContextModelBuilderExtensions
             b.ToTable(MCConsts.DbTablePrefix + "MessageReceiverUsers", MCConsts.DbSchema);
             b.Property<Guid>("Id").ValueGeneratedOnAdd();
             b.HasKey("Id");
-            b.Property(x => x.ChannelUserIdentity).IsRequired().HasMaxLength(128);
+            b.Property(x => x.ChannelUserIdentity).IsRequired().HasMaxLength(256);
             b.Property(x => x.Platform).IsRequired().HasMaxLength(128);
             b.Property(x => x.Variables).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
         });
@@ -161,7 +161,7 @@ public static class McDbContextModelBuilderExtensions
         builder.Entity<AppDeviceToken>(b =>
         {
             b.ToTable(MCConsts.DbTablePrefix + "AppDeviceTokens", MCConsts.DbSchema);
-            b.Property(x => x.DeviceToken).HasMaxLength(128);
+            b.Property(x => x.DeviceToken).HasMaxLength(256);
             b.Property(x => x.ExtraProperties).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
             b.HasIndex(x => new { x.ChannelId, x.UserId, x.Platform });
         });
