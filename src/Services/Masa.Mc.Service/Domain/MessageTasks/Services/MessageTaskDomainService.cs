@@ -76,6 +76,7 @@ public class MessageTaskDomainService : DomainService
             messageData.SetDataValue(BusinessConsts.INTENT_URL, messageTask.AppIntentUrl);
             messageData.SetDataValue(BusinessConsts.IS_APNS_PRODUCTION, messageTask.IsApnsProduction);
             messageData.SetDataValue(BusinessConsts.MESSAGE_TYPE, messageInfo.Type.ToString());
+            messageData.SetDataValue(BusinessConsts.IS_WEBSITE_MESSAGE, messageTask.IsAppInWebsiteMessage.ToString());
             return messageData;
         }
         if (messageTask.EntityType == MessageEntityTypes.Template)
@@ -90,6 +91,7 @@ public class MessageTaskDomainService : DomainService
             messageData.SetDataValue(BusinessConsts.INTENT_URL, messageTemplate.Options.GetProperty<string>(BusinessConsts.INTENT_URL));
             messageData.SetDataValue(BusinessConsts.IS_APNS_PRODUCTION, messageTemplate.Options.GetProperty<string>(BusinessConsts.IS_APNS_PRODUCTION));
             messageData.SetDataValue(BusinessConsts.MESSAGE_TYPE, messageTemplate.TemplateType.ToString());
+            messageData.SetDataValue(BusinessConsts.IS_WEBSITE_MESSAGE, messageTemplate.IsWebsiteMessage.ToString());
             return messageData;
         }
 

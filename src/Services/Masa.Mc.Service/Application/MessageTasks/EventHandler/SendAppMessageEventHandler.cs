@@ -101,7 +101,6 @@ public class SendAppMessageEventHandler
     {
         var receiverType = taskHistory.MessageTask.ReceiverType;
         var isUniformContent = taskHistory.MessageTask.IsUniformContent;
-        var isWebsiteMessage = taskHistory.MessageTask.IsAppInWebsiteMessage;
 
         if (receiverType == ReceiverTypes.Broadcast)
         {
@@ -116,7 +115,7 @@ public class SendAppMessageEventHandler
         if (isUniformContent && receiverUsers.Count > 1)
         {
             return await HandleBatchAsync(
-                sender, eto.ChannelId, taskHistory, receiverUsers, eto.MessageData, transmissionContent, isWebsiteMessage);
+                sender, eto.ChannelId, taskHistory, receiverUsers, eto.MessageData, transmissionContent);
         }
 
         return await HandleSingleAsync(
@@ -227,8 +226,7 @@ public class SendAppMessageEventHandler
     MessageTaskHistory taskHistory,
     List<MessageReceiverUser> receiverUsers,
     MessageData data,
-    ExtraPropertyDictionary transmissionContent,
-    bool isWebsiteMessage)
+    ExtraPropertyDictionary transmissionContent)
     {
         const int batchSize = 1000;
         var userIdentities = receiverUsers.Select(x => x.ChannelUserIdentity).Distinct().ToArray();
@@ -249,6 +247,8 @@ public class SendAppMessageEventHandler
                 var response = await sender.BatchSendAsync(message);
 
                 successCount += UpdateRecordsWithResponse(batchRecords, batch, response);
+
+                var isWebsiteMessage = data.GetDataValue<bool>(BusinessConsts.IS_WEBSITE_MESSAGE);
                 if (isWebsiteMessage)
                 {
                     await AddWebsiteMessages(batchRecords, batch, channelId, data);
@@ -299,7 +299,8 @@ public class SendAppMessageEventHandler
             var record = CreateMessageRecord(user, channelId, taskHistory, data);
             try
             {
-                if (taskHistory.MessageTask.IsAppInWebsiteMessage)
+                var isWebsiteMessage = data.GetDataValue<bool>(BusinessConsts.IS_WEBSITE_MESSAGE);
+                if (isWebsiteMessage)
                 {
                     websiteMessages.Add(CreateWebsiteMessage(record, user, data));
                 }
@@ -379,7 +380,8 @@ public class SendAppMessageEventHandler
             {
                 if (!response.Success || response.ErrorTokens.Contains(item))
                 {
-                    record.SetResult(false, "Error token");
+                    var errMsg = response.ErrorTokens.Contains(item) ? "Error token" : response.Message;
+                    record.SetResult(false, errMsg);
                 }
                 else
                 {
