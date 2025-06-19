@@ -3,7 +3,7 @@
 
 using dotAPNS.AspNetCore;
 
-namespace Masa.Mc.Infrastructure.AppNotification;
+namespace Masa.Mc.Infrastructure.AppNotification.Extensions;
 
 public static class ServiceCollectionExtensions
 {

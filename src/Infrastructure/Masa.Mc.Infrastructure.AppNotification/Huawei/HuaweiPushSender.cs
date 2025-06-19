@@ -154,32 +154,61 @@ public class HuaweiPushSender : IAppNotificationSender
         return request;
     }
 
-    private async Task<AppNotificationResponse> HandleResponse(HttpResponseMessage response, CancellationToken ct)
+    private async Task<AppNotificationResponse> HandleResponse(HttpResponseMessage response, CancellationToken ct = default)
     {
-        if (response.IsSuccessStatusCode)
+        if (!response.IsSuccessStatusCode)
         {
-            var result = await response.Content.ReadFromJsonAsync<JsonElement>(options: null, cancellationToken: ct);
-            var code = result.GetProperty("code").GetString();
-            var msg = result.TryGetProperty("msg", out var msgProp) ? msgProp.GetString() : null;
-            var requestId = result.TryGetProperty("requestId", out var idProp) ? idProp.GetString() : null;
-
-            if (code == "80000000")
-            {
-                return new AppNotificationResponse(true, "Success", requestId);
-            }
-            else if (code == "80100000")
-            {
-                var illegalTokens = result.GetProperty("msg").GetProperty("illegal_tokens")
-                    .EnumerateArray().Select(t => t.GetString() ?? string.Empty).ToList();
-                return new AppNotificationResponse(true, $"Some tokens are invalid: {string.Join(",", illegalTokens)}", requestId, illegalTokens);
-            }
-            else
-            {
-                return new AppNotificationResponse(false, $"Push failed: {msg}", requestId);
-            }
+            var error = await response.Content.ReadAsStringAsync(ct);
+            return new AppNotificationResponse(false, $"HTTP {response.StatusCode}: {error}");
         }
 
-        var error = await response.Content.ReadAsStringAsync(ct);
-        return new AppNotificationResponse(false, $"Push failed: HTTP {response.StatusCode} - {error}");
+        JsonElement root;
+        try
+        {
+            var raw = await response.Content.ReadFromJsonAsync<JsonElement>();
+            root = raw.ValueKind == JsonValueKind.String
+                ? JsonDocument.Parse(raw.GetString()).RootElement
+                : raw;
+        }
+        catch
+        {
+            return new AppNotificationResponse(false, "Invalid JSON");
+        }
+
+        string? code = null, msg = null, requestId = null;
+        if (root.TryGetProperty("code", out var c) && c.ValueKind == JsonValueKind.String)
+            code = c.GetString();
+
+        if (root.TryGetProperty("msg", out var m))
+            msg = m.ValueKind == JsonValueKind.String ? m.GetString() : m.ToString();
+
+        if (root.TryGetProperty("requestId", out var r) && r.ValueKind == JsonValueKind.String)
+            requestId = r.GetString();
+
+        if (code == "80000000")
+            return new AppNotificationResponse(true, "Success", requestId);
+
+        if (code == "80100000" && TryGetIllegalTokens(msg, out var tokens))
+            return new AppNotificationResponse(true, "Invalid token", requestId, tokens);
+
+        return new AppNotificationResponse(false, $"Push failed: {msg}", requestId);
+    }
+
+    private bool TryGetIllegalTokens(string? msg, out List<string> tokens)
+    {
+        tokens = new();
+        if (string.IsNullOrWhiteSpace(msg) || !msg.TrimStart().StartsWith("{")) return false;
+
+        try
+        {
+            using var doc = JsonDocument.Parse(msg);
+            var arr = doc.RootElement.GetProperty("illegal_tokens").EnumerateArray();
+            tokens = arr.Select(t => t.GetString() ?? "").Where(t => t.Length > 0).ToList();
+            return tokens.Count > 0;
+        }
+        catch
+        {
+            return false;
+        }
     }
 }
