@@ -10,6 +10,4 @@ public static class CompensateConsts
     public const string TEMPLATE_CODE = "CompensateTemplateCode";
 
     public const string VARIABLES = "CompensateVariables";
-
-    public const string IS_COMPENSATE = "IsCompensate";
 }
