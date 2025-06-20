@@ -139,7 +139,6 @@ public class SendAppMessageEventHandler
             .ToList();
     }
 
-
     private async Task<MessageSendStatuses> SendMcAppMessageAsync(SendAppMessageEvent eto, ExtraPropertyDictionary transmissionContent)
     {
         var messageData = eto.MessageData;
@@ -353,6 +352,12 @@ public class SendAppMessageEventHandler
         );
         record.SetMessageEntity(taskHistory.MessageTask.EntityType, taskHistory.MessageTask.EntityId);
         data.RenderContent(user.Variables);
+
+        if (taskHistory.MessageTask.IsCompensateMessage)
+        {
+            record.SetCompensate(taskHistory.MessageTask.ExtraProperties);
+        }
+
         return record;
     }
 

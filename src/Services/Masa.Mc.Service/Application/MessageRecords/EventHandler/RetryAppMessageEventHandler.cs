@@ -74,8 +74,7 @@ public class RetryAppMessageEventHandler
                 var response = await appNotificationSender.SendAsync(new SingleAppMessage(messageRecord.ChannelUserIdentity, messageData.MessageContent.Title, messageData.MessageContent.Content, messageData.GetDataValue<string>(BusinessConsts.INTENT_URL), transmissionContent, messageData.GetDataValue<bool>(BusinessConsts.IS_APNS_PRODUCTION)));
                 if (response.Success)
                 {
-                    messageRecord.SetResult(true, string.Empty);
-                    messageRecord.SetDataValue(BusinessConsts.APP_PUSH_MSG_ID, response.MsgId);
+                    messageRecord.SetResult(true, string.Empty, null, response.MsgId);
                 }
                 else
                 {

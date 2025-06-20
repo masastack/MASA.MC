@@ -64,6 +64,23 @@ public class MessageRecord : FullAggregateRoot<Guid, Guid>
             Id = IdGeneratorFactory.SequentialGuidGenerator.NewId();
             AddDomainEvent(new UpdateMessageRecordUserEvent(Id));
         }
+
+        if (Success == false && IsCompensate && UserId != Guid.Empty)
+        {
+            AddCompensateDomainEvent();
+        }
+    }
+
+    private void AddCompensateDomainEvent()
+    {
+        var compensateChannelCode = ExtraProperties.GetProperty<string>(CompensateConsts.CHANNEL_CODE) ?? string.Empty;
+        var compensateTemplateCode = ExtraProperties.GetProperty<string>(CompensateConsts.TEMPLATE_CODE) ?? string.Empty;
+        var compensateVariablesStr = ExtraProperties.GetProperty<string>(CompensateConsts.VARIABLES) ?? string.Empty;
+        var compensateVariablesDict = QueryHelpers.ParseQuery(compensateVariablesStr)
+            .ToDictionary(kvp => kvp.Key, kvp => (object)kvp.Value.ToString());
+        var compensateVariables = new ExtraPropertyDictionary(compensateVariablesDict);
+
+        AddDomainEvent(new CompensateMessageEvent(UserId, compensateChannelCode, compensateTemplateCode, compensateVariables));
     }
 
     public void UpdateResult(bool success, string failureReason)
@@ -102,5 +119,23 @@ public class MessageRecord : FullAggregateRoot<Guid, Guid>
     public void SetDisplayName(string displayName)
     {
         DisplayName = displayName;
+    }
+
+    public void SetCompensate(ExtraPropertyDictionary extraProperties)
+    {
+        SetDataValue(CompensateConsts.CHANNEL_CODE, extraProperties.GetProperty<string>(CompensateConsts.CHANNEL_CODE) ?? string.Empty);
+        SetDataValue(CompensateConsts.TEMPLATE_CODE, extraProperties.GetProperty<string>(CompensateConsts.TEMPLATE_CODE) ?? string.Empty);
+        SetDataValue(CompensateConsts.VARIABLES, extraProperties.GetProperty<string>(CompensateConsts.VARIABLES) ?? string.Empty);
+    }
+
+    public bool IsCompensate
+    {
+        get
+        {
+            if (ExtraProperties == null) return false;
+
+            return !string.IsNullOrEmpty(ExtraProperties.GetProperty<string>(CompensateConsts.CHANNEL_CODE)) &&
+                   !string.IsNullOrEmpty(ExtraProperties.GetProperty<string>(CompensateConsts.TEMPLATE_CODE));
+        }
     }
 }
