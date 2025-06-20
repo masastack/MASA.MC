@@ -96,7 +96,12 @@ public class XiaomiPushSender : IAppNotificationSender
                { "payload", System.Text.Json.JsonSerializer.Serialize(transmissionContent ?? new()) },
                { "restricted_package_name", options.PackageName },
                { "extra.callback", options.CallbackUrl},
-               { "extra.callback.type", "17"}
+               { "extra.callback.type", ((int)(XiaomiCallbackType.Delivered
+               | XiaomiCallbackType.InvalidDevice
+               | XiaomiCallbackType.PushDisabled
+               | XiaomiCallbackType.FilterMismatch
+               | XiaomiCallbackType.PushLimitExceeded
+               | XiaomiCallbackType.TTLEnded)).ToString() }
            };
 
         if (!string.IsNullOrEmpty(clientId))
