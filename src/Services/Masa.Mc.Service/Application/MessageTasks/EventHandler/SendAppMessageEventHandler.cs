@@ -392,15 +392,15 @@ public class SendAppMessageEventHandler
     {
         var successCount = 0;
 
+        var responseDictionary = responses.ToDictionary(response => response.RegId);
+
         foreach (var record in records)
         {
-            var response = responses.FirstOrDefault(x => x.RegId == record.ChannelUserIdentity);
-
-            if (response != null)
+            if (responseDictionary.TryGetValue(record.ChannelUserIdentity, out var response))
             {
                 if (response.Success)
                 {
-                    record.SetResult(supportsReceipt == false ? true : null, response.Message, null, response.MsgId);
+                    record.SetResult(supportsReceipt == false ? true : null, string.Empty, null, response.MsgId);
                     successCount++;
                 }
                 else
