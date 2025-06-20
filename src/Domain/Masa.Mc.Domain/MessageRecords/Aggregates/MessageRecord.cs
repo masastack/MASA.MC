@@ -6,21 +6,38 @@ namespace Masa.Mc.Domain.MessageRecords.Aggregates;
 public class MessageRecord : FullAggregateRoot<Guid, Guid>
 {
     public Guid UserId { get; protected set; }
+
     public Guid ChannelId { get; protected set; }
+
     public AppChannel Channel { get; protected set; } = default!;
+
     public Guid MessageTaskId { get; protected set; }
+
     public Guid MessageTaskHistoryId { get; protected set; }
+
     public bool? Success { get; protected set; }
+
     public DateTimeOffset? SendTime { get; protected set; }
+
     public DateTimeOffset? ExpectSendTime { get; protected set; }
+
     public string FailureReason { get; protected set; } = string.Empty;
+
     public ExtraPropertyDictionary ExtraProperties { get; protected set; } = new();
+
     public ExtraPropertyDictionary Variables { get; protected set; } = new();
+
     public string DisplayName { get; protected set; } = string.Empty;
+
     public MessageEntityTypes MessageEntityType { get; protected set; }
+
     public Guid MessageEntityId { get; protected set; }
+
     public string ChannelUserIdentity { get; protected set; } = string.Empty;
+
     public string SystemId { get; protected set; } = string.Empty;
+
+    public string MessageId { get; protected set; } = string.Empty;
 
     public MessageRecord(Guid userId, string channelUserIdentity, Guid channelId, Guid messageTaskId, Guid messageTaskHistoryId, ExtraPropertyDictionary variables, string displayName, DateTimeOffset? expectSendTime, string systemId)
     {
@@ -35,17 +52,24 @@ public class MessageRecord : FullAggregateRoot<Guid, Guid>
         SystemId = systemId;
     }
 
-    public void SetResult(bool success, string failureReason, DateTimeOffset? sendTime = null)
+    public void SetResult(bool? success, string failureReason, DateTimeOffset? sendTime = null, string messageId = "")
     {
         SendTime = sendTime ?? DateTimeOffset.UtcNow;
         Success = success;
         FailureReason = failureReason;
+        MessageId = messageId;
 
         if (UserId == default && Id == default)
         {
             Id = IdGeneratorFactory.SequentialGuidGenerator.NewId();
             AddDomainEvent(new UpdateMessageRecordUserEvent(Id));
         }
+    }
+
+    public void UpdateResult(bool success, string failureReason)
+    {
+        Success = success;
+        FailureReason = failureReason;
     }
 
     public virtual T GetDataValue<T>(string name)

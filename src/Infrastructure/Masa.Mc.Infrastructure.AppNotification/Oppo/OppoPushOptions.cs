@@ -8,4 +8,6 @@ public class OppoPushOptions: IOppoPushOptions
     public string AppKey { get; set; } = string.Empty;
 
     public string MasterSecret { get; set; } = string.Empty;
+
+    public string CallbackUrl { get; set; } = string.Empty;
 }

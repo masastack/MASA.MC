@@ -7,9 +7,11 @@ public interface IAppNotificationSender : ITransientDependency
 {
     bool SupportsBroadcast {  get; }
 
+    bool SupportsReceipt { get; }
+
     Task<AppNotificationResponse> SendAsync(SingleAppMessage appMessage, CancellationToken ct = default);
 
-    Task<AppNotificationResponse> BatchSendAsync(BatchAppMessage appMessage, CancellationToken ct = default);
+    Task<IEnumerable<AppNotificationResponse>> BatchSendAsync(BatchAppMessage appMessage, CancellationToken ct = default);
 
     Task<AppNotificationResponse> BroadcastSendAsync(AppMessage appMessage, CancellationToken ct = default);
 

@@ -13,6 +13,8 @@ public class ApnsPushSender : IAppNotificationSender
 
     public bool SupportsBroadcast => false;
 
+    public bool SupportsReceipt => false;
+
     public ApnsPushSender(IApnsService apnsService, IOptionsResolver<IiOSPushOptions> optionsResolver)
     {
         _apnsService = apnsService;
@@ -28,7 +30,7 @@ public class ApnsPushSender : IAppNotificationSender
             var apnsJwtOptions = options as ApnsJwtOptions;
 
             var response = await _apnsService.SendPush(push, apnsJwtOptions);
-            return CreateResponse(response);
+            return CreateResponse(response, appMessage.ClientId);
         }
         catch (Exception ex)
         {
@@ -36,7 +38,7 @@ public class ApnsPushSender : IAppNotificationSender
         }
     }
 
-    public async Task<AppNotificationResponse> BatchSendAsync(BatchAppMessage appMessage, CancellationToken ct = default)
+    public async Task<IEnumerable<AppNotificationResponse>> BatchSendAsync(BatchAppMessage appMessage, CancellationToken ct = default)
     {
         try
         {
@@ -47,38 +49,11 @@ public class ApnsPushSender : IAppNotificationSender
             var apnsJwtOptions = options as ApnsJwtOptions;
             var responses = await _apnsService.SendPushes(pushes, apnsJwtOptions);
 
-            var results = responses.Select((response, index) => new
-            {
-                Response = CreateResponse(response),
-                Token = appMessage.ClientIds[index]
-            }).ToList();
-
-            var failedTokens = results.Where(r => !r.Response.Success).Select(r => r.Token).ToList();
-            var successCount = results.Count(r => r.Response.Success);
-
-            string message;
-            bool success;
-            if (successCount == results.Count)
-            {
-                message = "Batch push succeeded";
-                success = true;
-            }
-            else if (successCount > 0)
-            {
-                message = "Partial push success";
-                success = true;
-            }
-            else
-            {
-                message = string.Join(";", results.Select(r => r.Response.Message));
-                success = false;
-            }
-
-            return new AppNotificationResponse(success, message, errorTokens: failedTokens);
+            return responses.Select((response, index) => CreateResponse(response, appMessage.ClientIds[index])).ToList();
         }
         catch (Exception ex)
         {
-            return new AppNotificationResponse(false, $"Batch push failed due to an exception: {ex.Message}");
+            return appMessage.ClientIds.Select(x => new AppNotificationResponse(false, $"Batch push failed due to an exception: {ex.Message}", string.Empty, x));
         }
     }
 
@@ -121,10 +96,10 @@ public class ApnsPushSender : IAppNotificationSender
         return push;
     }
 
-    private AppNotificationResponse CreateResponse(ApnsResponse response)
+    private AppNotificationResponse CreateResponse(ApnsResponse response, string clientId)
     {
         return response.IsSuccessful
-            ? new AppNotificationResponse(true, "Push succeeded")
-            : new AppNotificationResponse(false, $"Push failed: {response.Reason}");
+            ? new AppNotificationResponse(true, "Push succeeded", string.Empty, clientId)
+            : new AppNotificationResponse(false, $"Push failed: {response.Reason}", string.Empty, clientId);
     }
 }

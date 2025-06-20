@@ -31,6 +31,8 @@ public class HmsAndroidConfig
     public string Category { get; set; }
     public string Ttl { get; set; } = "86400s";
     public HmsAndroidNotification Notification { get; set; }
+    [JsonPropertyName("receipt_id")]
+    public string ReceiptId { get; set; }
 }
 
 public class HmsAndroidNotification

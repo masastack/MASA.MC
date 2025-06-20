@@ -11,13 +11,13 @@ public class AppNotificationResponse
 
     public string MsgId { get; set; } = string.Empty;
 
-    public List<string> ErrorTokens { get; set; }
+    public string RegId { get; set; } = string.Empty;
 
-    public AppNotificationResponse(bool success, string message, string msgId = "", List<string> errorTokens = null)
+    public AppNotificationResponse(bool success, string message, string msgId = "", string regId = "")
     {
         Success = success;
         Message = message;
         MsgId = msgId;
-        ErrorTokens = errorTokens ?? new();
+        RegId = regId;
     }
 }

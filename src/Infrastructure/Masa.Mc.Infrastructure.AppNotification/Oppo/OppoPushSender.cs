@@ -13,6 +13,8 @@ public class OppoPushSender : IAppNotificationSender
 
     public bool SupportsBroadcast => true;
 
+    public bool SupportsReceipt => true;
+
     public OppoPushSender(HttpClient httpClient, OppoAuthService authService, IOptionsResolver<IOppoPushOptions> optionsResolver)
     {
         _httpClient = httpClient;
@@ -30,7 +32,7 @@ public class OppoPushSender : IAppNotificationSender
             target_type = OppoTargetType.RegistrationId,
             target_value = appMessage.ClientId,
             verify_registration_id = true,
-            notification = BuildNotification(appMessage)
+            notification = BuildNotification(appMessage, options.CallbackUrl)
         };
 
         var form = new Dictionary<string, string>
@@ -44,10 +46,10 @@ public class OppoPushSender : IAppNotificationSender
         return await HandleResponse(response, ct);
     }
 
-    public async Task<AppNotificationResponse> BatchSendAsync(BatchAppMessage appMessage, CancellationToken ct = default)
+    public async Task<IEnumerable<AppNotificationResponse>> BatchSendAsync(BatchAppMessage appMessage, CancellationToken ct = default)
     {
         if (appMessage.ClientIds.Length > 1000)
-            return new AppNotificationResponse(false, "Up to 1000 device tokens can be sent at a time");
+            return appMessage.ClientIds.Select(x => new AppNotificationResponse(false, "Up to 1000 device tokens can be sent at a time", string.Empty, x));
 
         var options = await _optionsResolver.ResolveAsync();
         var token = await _authService.GetAccessTokenAsync(options.AppKey, options.MasterSecret, ct);
@@ -56,7 +58,7 @@ public class OppoPushSender : IAppNotificationSender
         {
             target_type = OppoTargetType.RegistrationId,
             target_value = id,
-            notification = BuildNotification(appMessage)
+            notification = BuildNotification(appMessage, options.CallbackUrl)
         }).ToArray();
 
         var form = new Dictionary<string, string>
@@ -67,17 +69,18 @@ public class OppoPushSender : IAppNotificationSender
 
         var content = new FormUrlEncodedContent(form);
         var response = await _httpClient.PostAsync(OppoConstants.UnicastBatchUrl, content, ct);
-        return await HandleBatchResponse(response, ct);
+        return await HandleBatchResponse(response, appMessage.ClientIds, ct);
     }
 
-    private Dictionary<string, object?> BuildNotification(AppMessage appMessage)
+    private Dictionary<string, object?> BuildNotification(AppMessage appMessage, string callbackUrl)
     {
         var notification = new Dictionary<string, object?>
         {
             { "app_message_id", Guid.NewGuid().ToString("N") },
             { "title", appMessage.Title },
             { "content", appMessage.Text },
-            { "off_line_ttl", 86400 }
+            { "off_line_ttl", 86400 },
+            { "call_back_url", callbackUrl}
         };
 
         if (!string.IsNullOrEmpty(appMessage.Url))
@@ -97,9 +100,9 @@ public class OppoPushSender : IAppNotificationSender
         return notification;
     }
 
-    private async Task<string> SaveBroadcastMessageAsync(AppMessage appMessage, string authToken, CancellationToken ct)
+    private async Task<string> SaveBroadcastMessageAsync(AppMessage appMessage, string callbackUrl, string authToken, CancellationToken ct)
     {
-        var notification = BuildNotification(appMessage);
+        var notification = BuildNotification(appMessage, callbackUrl);
         var form = notification.ToDictionary(kvp => kvp.Key, kvp => kvp.Value?.ToString() ?? string.Empty);
         form["auth_token"] = authToken;
 
@@ -115,7 +118,7 @@ public class OppoPushSender : IAppNotificationSender
     {
         var options = await _optionsResolver.ResolveAsync();
         var token = await _authService.GetAccessTokenAsync(options.AppKey, options.MasterSecret, ct);
-        var messageId = await SaveBroadcastMessageAsync(appMessage, token, ct);
+        var messageId = await SaveBroadcastMessageAsync(appMessage, options.CallbackUrl, token, ct);
 
         var form = new Dictionary<string, string>
         {
@@ -126,7 +129,7 @@ public class OppoPushSender : IAppNotificationSender
         };
         var content = new FormUrlEncodedContent(form);
         var response = await _httpClient.PostAsync(OppoConstants.BroadcastUrl, content, ct);
-        return await HandleResponse(response, ct);
+        return await HandleBroadcastResponse(response, ct);
     }
 
     public Task<AppNotificationResponse> WithdrawnAsync(string msgId, CancellationToken ct = default)
@@ -206,7 +209,7 @@ public class OppoPushSender : IAppNotificationSender
             using var doc = JsonDocument.Parse(json);
             var code = doc.RootElement.GetProperty("code").GetInt32();
             var message = doc.RootElement.GetProperty("message").GetString() ?? "";
-            var msgId = doc.RootElement.TryGetProperty("data", out var data) && data.TryGetProperty("message_id", out var idProp) ? idProp.GetString() ?? "" : "";
+            var msgId = doc.RootElement.TryGetProperty("data", out var data) && data.TryGetProperty("messageId", out var idProp) ? idProp.GetString() ?? "" : "";
 
             if (code == 0)
                 return new AppNotificationResponse(true, "Push succeeded", msgId);
@@ -218,7 +221,8 @@ public class OppoPushSender : IAppNotificationSender
             return new AppNotificationResponse(false, $"Push failed: {json}");
         }
     }
-    private async Task<AppNotificationResponse> HandleBatchResponse(HttpResponseMessage response, CancellationToken ct)
+
+    private async Task<IEnumerable<AppNotificationResponse>> HandleBatchResponse(HttpResponseMessage response, string[] clientIds, CancellationToken ct)
     {
         var json = await response.Content.ReadAsStringAsync(ct);
         try
@@ -231,49 +235,57 @@ public class OppoPushSender : IAppNotificationSender
 
             if (doc.RootElement.TryGetProperty("data", out var data) && data.ValueKind == JsonValueKind.Array)
             {
-                errorTokens = ExtractErrorTokens(data);
-                msgId = ExtractMessageId(data);
+                return ParseBatchPushResponses(data);
             }
 
-            return CreateResponse(code, message, msgId, errorTokens);
+            return clientIds.Select(x => new AppNotificationResponse(code == 0, message, string.Empty, x));
         }
         catch (Exception ex)
         {
-            return new AppNotificationResponse(false, $"Push failed: {json}. Exception: {ex.Message}");
+            return clientIds.Select(x => new AppNotificationResponse(false, $"Push failed: {json}. Exception: {ex.Message}", string.Empty, x));
         }
     }
 
-    private List<string> ExtractErrorTokens(JsonElement data)
+    private async Task<AppNotificationResponse> HandleBroadcastResponse(HttpResponseMessage response, CancellationToken ct)
     {
-        var errorTokens = new List<string>();
+        var json = await response.Content.ReadAsStringAsync(ct);
+        try
+        {
+            using var doc = JsonDocument.Parse(json);
+            var code = doc.RootElement.GetProperty("code").GetInt32();
+            var message = doc.RootElement.GetProperty("message").GetString() ?? "";
+            var msgId = doc.RootElement.TryGetProperty("data", out var data) && data.TryGetProperty("message_id", out var idProp) ? idProp.GetString() ?? "" : "";
+
+            if (code == 0)
+                return new AppNotificationResponse(true, "Push succeeded", msgId);
+            else
+                return new AppNotificationResponse(false, $"Push failed: {message}");
+        }
+        catch
+        {
+            return new AppNotificationResponse(false, $"Push failed: {json}");
+        }
+    }
+
+    private List<AppNotificationResponse> ParseBatchPushResponses(JsonElement data)
+    {
+        var responses = new List<AppNotificationResponse>();
         foreach (var item in data.EnumerateArray())
         {
+            var msgId = item.TryGetProperty("messageId", out var msgIdProp) ? msgIdProp.GetString() ?? string.Empty : string.Empty;
+            var regId = item.TryGetProperty("registrationId", out var regIdProp) ? regIdProp.GetString() ?? string.Empty : string.Empty;
+            var success = true;
+            var message = string.Empty;
             if (item.TryGetProperty("errorCode", out var errorCodeProp) && errorCodeProp.GetInt32() != 0)
             {
-                if (item.TryGetProperty("registrationId", out var regIdProp) && regIdProp.ValueKind == JsonValueKind.String)
-                    errorTokens.Add(regIdProp.GetString() ?? "");
+                success = false;
+                message = item.TryGetProperty("errorMessage", out var errorMsgProp) ? errorMsgProp.GetString() ?? string.Empty : string.Empty;
             }
-        }
-        return errorTokens;
-    }
 
-    private string ExtractMessageId(JsonElement data)
-    {
-        foreach (var item in data.EnumerateArray())
-        {
-            if (item.TryGetProperty("messageId", out var msgIdProp) && msgIdProp.ValueKind == JsonValueKind.String)
-            {
-                return msgIdProp.GetString() ?? "";
-            }
+            responses.Add(new AppNotificationResponse(success, message, msgId, regId));
         }
-        return "";
-    }
 
-    private AppNotificationResponse CreateResponse(int code, string message, string msgId, List<string> errorTokens)
-    {
-        return code == 0
-            ? new AppNotificationResponse(true, "Push succeeded", msgId, errorTokens)
-            : new AppNotificationResponse(false, $"Push failed: {message}", msgId, errorTokens);
+        return responses;
     }
 }
 

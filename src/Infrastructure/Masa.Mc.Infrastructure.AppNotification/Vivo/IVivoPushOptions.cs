@@ -10,4 +10,6 @@ public interface IVivoPushOptions : IOptions
     public string AppKey { get; set; }
 
     public string AppSecret { get; set; }
+
+    public string CallbackId { get; set; }
 }

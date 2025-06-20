@@ -369,6 +369,11 @@ namespace Masa.Mc.EntityFrameworkCore.PostgreSql.Migrations
                     b.Property<int>("MessageEntityType")
                         .HasColumnType("integer");
 
+                    b.Property<string>("MessageId")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
                     b.Property<Guid>("MessageTaskHistoryId")
                         .HasColumnType("uuid");
 
@@ -402,6 +407,8 @@ namespace Masa.Mc.EntityFrameworkCore.PostgreSql.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ChannelId");
+
+                    b.HasIndex("MessageId");
 
                     b.HasIndex("MessageTaskHistoryId");
 

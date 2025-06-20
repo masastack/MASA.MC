@@ -115,11 +115,13 @@ public static class McDbContextModelBuilderExtensions
             b.ToTable(MCConsts.DbTablePrefix + "MessageRecords", MCConsts.DbSchema);
             b.Property(x => x.DisplayName).IsRequired().HasMaxLength(128);
             b.Property(x => x.ChannelUserIdentity).IsRequired().HasMaxLength(256);
+            b.Property(x => x.SystemId).HasMaxLength(128);
+            b.Property(x => x.MessageId).HasMaxLength(256);
             b.Property(x => x.ExtraProperties).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
             b.Property(x => x.Variables).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
             b.HasIndex(x => x.UserId);
             b.HasIndex(x => x.MessageTaskHistoryId);
-            b.Property(x => x.SystemId).HasMaxLength(128);
+            b.HasIndex(x => x.MessageId);
         });
 
         builder.Entity<MessageReceiverUser>(b =>

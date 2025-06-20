@@ -47,5 +47,7 @@ public class MessageRecordQueryModel : Entity<Guid>, ISoftDelete
 
     public DateTime ModificationTime { get; set; }
 
+    public string MessageId { get; set; } = string.Empty;
+
     public bool IsDeleted { get; set; }
 }

@@ -11,6 +11,8 @@ public class VivoPushSender : IAppNotificationSender
 
     public bool SupportsBroadcast => true;
 
+    public bool SupportsReceipt => true;
+
     public VivoPushSender(HttpClient httpClient, IOptionsResolver<IVivoPushOptions> optionsResolver, VivoAuthService authService)
     {
         _httpClient = httpClient;
@@ -24,20 +26,24 @@ public class VivoPushSender : IAppNotificationSender
         return await SendWithResolvedOptionsAsync(VivoConstants.SendUrl, payload, ct);
     }
 
-    public async Task<AppNotificationResponse> BatchSendAsync(BatchAppMessage appMessage, CancellationToken ct = default)
+    public async Task<IEnumerable<AppNotificationResponse>> BatchSendAsync(BatchAppMessage appMessage, CancellationToken ct = default)
     {
         if (appMessage.ClientIds.Length < 2 || appMessage.ClientIds.Length > 1000)
-            return new AppNotificationResponse(false, "regIds count must be 2~1000");
+            return appMessage.ClientIds.Select(x => new AppNotificationResponse(false, "regIds count must be 2~1000", string.Empty, x));
 
         var options = await _optionsResolver.ResolveAsync();
         var token = await _authService.GetAccessTokenAsync(options, ct);
 
         var savePayload = await CreatePayloadAsync(appMessage, ct);
         var saveResponse = await SendRequestAsync(VivoConstants.SaveListPayloadUrl, savePayload, token, ct);
-        if (!saveResponse.Success) return saveResponse;
+        var saveResult = await HandleResponse(saveResponse, ct);
+        if (!saveResult.Success) 
+            return appMessage.ClientIds.Select(x => new AppNotificationResponse(saveResult.Success, saveResult.Message, saveResult.MsgId, x));
 
-        var pushPayload = await CreatePayloadAsync(appMessage, ct, null, appMessage.ClientIds, saveResponse.MsgId);
-        return await SendRequestAsync(VivoConstants.PushToListUrl, pushPayload, token, ct);
+        var pushPayload = await CreatePayloadAsync(appMessage, ct, null, appMessage.ClientIds, saveResult.MsgId);
+
+        var response = await SendRequestAsync(VivoConstants.PushToListUrl, pushPayload, token, ct);
+        return await HandleBatchResponse(response, appMessage.ClientIds, saveResult.MsgId, ct);
     }
 
     public async Task<AppNotificationResponse> BroadcastSendAsync(AppMessage appMessage, CancellationToken ct = default)
@@ -75,10 +81,7 @@ public class VivoPushSender : IAppNotificationSender
         };
 
         var response = await SendRequestAsync(VivoConstants.AddMembersUrl, payload, token, ct);
-        response.Message = response.Success
-            ? "Subscribe tag succeeded"
-            : $"Subscribe tag failed: {response.Message}";
-        return response;
+        return await HandleResponse(response, ct);
     }
 
     public async Task<AppNotificationResponse> UnsubscribeAsync(string name, string clientId, CancellationToken ct = default)
@@ -98,20 +101,18 @@ public class VivoPushSender : IAppNotificationSender
         };
 
         var response = await SendRequestAsync(VivoConstants.RemoveMembersUrl, payload, token, ct);
-        response.Message = response.Success
-            ? "Unsubscribe tag succeeded"
-            : $"Unsubscribe tag failed: {response.Message}";
-        return response;
+        return await HandleResponse(response, ct);
     }
 
     private async Task<AppNotificationResponse> SendWithResolvedOptionsAsync(string url, object payload, CancellationToken ct)
     {
         var options = await _optionsResolver.ResolveAsync();
         var token = await _authService.GetAccessTokenAsync(options, ct);
-        return await SendRequestAsync(url, payload, token, ct);
+        var response = await SendRequestAsync(url, payload, token, ct);
+        return await HandleResponse(response, ct);
     }
 
-    private async Task<AppNotificationResponse> SendRequestAsync(string url, object payload, string? token = null, CancellationToken ct = default)
+    private async Task<HttpResponseMessage> SendRequestAsync(string url, object payload, string? token = null, CancellationToken ct = default)
     {
         var request = new HttpRequestMessage(HttpMethod.Post, url)
         {
@@ -120,8 +121,7 @@ public class VivoPushSender : IAppNotificationSender
         if (!string.IsNullOrEmpty(token))
             request.Headers.Add("authToken", token);
 
-        var response = await _httpClient.SendAsync(request, ct);
-        return await HandleResponse(response, ct);
+        return await _httpClient.SendAsync(request, ct);
     }
 
     private int BuildSkipType(string url)
@@ -149,7 +149,11 @@ public class VivoPushSender : IAppNotificationSender
             content = appMessage.Text,
             skipType = BuildSkipType(appMessage.Url),
             skipContent = appMessage.Url,
-            requestId = Guid.NewGuid().ToString("N")
+            requestId = Guid.NewGuid().ToString("N"),
+            extra = new Dictionary<string, string>
+           {
+               { "callback.id", options.CallbackId }
+           }
         };
     }
 
@@ -161,6 +165,16 @@ public class VivoPushSender : IAppNotificationSender
         var desc = doc.RootElement.GetProperty("desc").GetString() ?? "";
         var taskId = doc.RootElement.TryGetProperty("taskId", out var idProp) ? idProp.GetString() ?? "" : "";
 
+        return new AppNotificationResponse(result == 0, desc, taskId);
+    }
+
+    private async Task<IEnumerable<AppNotificationResponse>> HandleBatchResponse(HttpResponseMessage response, string[] clientIds, string msgId, CancellationToken ct)
+    {
+        var json = await response.Content.ReadAsStringAsync(ct);
+        using var doc = JsonDocument.Parse(json);
+        var result = doc.RootElement.GetProperty("result").GetInt32();
+        var desc = doc.RootElement.GetProperty("desc").GetString() ?? "";
+
         var errorTokens = new List<string>();
         if (doc.RootElement.TryGetProperty("invalidUser", out var invalidUserProp) && invalidUserProp.ValueKind == JsonValueKind.Object)
         {
@@ -170,16 +184,15 @@ public class VivoPushSender : IAppNotificationSender
 
         if (result == 0)
         {
-            var message = errorTokens.Count > 0 ? "Partial push success" : "Push succeeded";
-            return new AppNotificationResponse(true, message, taskId, errorTokens);
+            return clientIds.Select(x => new AppNotificationResponse(true, desc, msgId, x));
         }
         else if (errorTokens.Count > 0)
         {
-            return new AppNotificationResponse(true, "Partial push success", taskId, errorTokens);
+            return clientIds.Select(x => new AppNotificationResponse(!errorTokens.Contains(x), errorTokens.Contains(x) ? "Error token" : "Success", msgId, x));
         }
         else
         {
-            return new AppNotificationResponse(false, $"Push failed: {desc}", taskId);
+            return clientIds.Select(x => new AppNotificationResponse(false, desc, msgId, x));
         }
     }
 }

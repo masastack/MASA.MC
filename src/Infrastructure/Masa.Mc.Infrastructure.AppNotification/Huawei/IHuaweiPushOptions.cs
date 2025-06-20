@@ -10,4 +10,6 @@ public interface IHuaweiPushOptions : IOptions
     public string ClientSecret { get; set; }
 
     public string ProjectId { get; set; }
+
+    public string CallbackId { get; set; }
 }

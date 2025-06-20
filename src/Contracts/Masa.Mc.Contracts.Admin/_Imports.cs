@@ -22,5 +22,6 @@ global using Masa.Mc.Infrastructure.Ddd.Application.Contracts.Dtos;
 global using Microsoft.AspNetCore.Http;
 global using System.Collections.Concurrent;
 global using System.Collections.ObjectModel;
+global using System.ComponentModel;
 global using System.ComponentModel.DataAnnotations;
 global using System.Reflection;

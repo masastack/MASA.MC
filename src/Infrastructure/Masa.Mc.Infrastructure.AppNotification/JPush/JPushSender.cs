@@ -1,6 +1,8 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
+using System.Linq;
+
 namespace Masa.Mc.Infrastructure.AppNotification.JPush;
 
 public class JPushSender : IAppNotificationSender
@@ -8,6 +10,8 @@ public class JPushSender : IAppNotificationSender
     private readonly IOptionsResolver<IJPushOptions> _optionsResolver;
 
     public bool SupportsBroadcast => true;
+
+    public bool SupportsReceipt => false;
 
     public JPushSender(IOptionsResolver<IJPushOptions> optionsResolver)
     {
@@ -25,7 +29,7 @@ public class JPushSender : IAppNotificationSender
         return await SendPushAsync(client, pushPayload);
     }
 
-    public async Task<AppNotificationResponse> BatchSendAsync(BatchAppMessage appMessage, CancellationToken ct = default)
+    public async Task<IEnumerable<AppNotificationResponse>> BatchSendAsync(BatchAppMessage appMessage, CancellationToken ct = default)
     {
         var options = await _optionsResolver.ResolveAsync();
         var client = new JPushClient(options.AppKey, options.MasterSecret);
@@ -33,7 +37,8 @@ public class JPushSender : IAppNotificationSender
         var audience = new { registration_id = appMessage.ClientIds };
         var pushPayload = BuildPushPayload(appMessage, audience);
 
-        return await SendPushAsync(client, pushPayload);
+        var response = await SendPushAsync(client, pushPayload);
+        return appMessage.ClientIds.Select(x => new AppNotificationResponse(response.Success, response.Message, response.MsgId, x));
     }
 
     public async Task<AppNotificationResponse> BroadcastSendAsync(AppMessage appMessage, CancellationToken ct = default)
@@ -85,6 +90,7 @@ public class JPushSender : IAppNotificationSender
             return new AppNotificationResponse(false, e.Message);
         }
     }
+
 
     private PushPayload BuildPushPayload(AppMessage appMessage, object audience)
     {

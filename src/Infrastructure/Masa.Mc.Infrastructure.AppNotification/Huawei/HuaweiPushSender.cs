@@ -11,6 +11,8 @@ public class HuaweiPushSender : IAppNotificationSender
 
     public bool SupportsBroadcast => true;
 
+    public bool SupportsReceipt => true;
+
     public HuaweiPushSender(HttpClient httpClient, HuaweiOAuthService oauthService, IOptionsResolver<IHuaweiPushOptions> optionsResolver)
     {
         _httpClient = httpClient;
@@ -24,7 +26,7 @@ public class HuaweiPushSender : IAppNotificationSender
         var accessToken = await _oauthService.GetAccessTokenAsync(options.ClientId, options.ClientSecret, ct);
         var url = string.Format(HuaweiConstants.PushMessageUrlFormat, options.ProjectId);
 
-        var payload = BuildMessagePayload(message, new[] { message.ClientId });
+        var payload = BuildMessagePayload(options.CallbackId, message, new[] { message.ClientId });
 
         var request = CreatePushRequest(url, payload, accessToken);
 
@@ -32,21 +34,21 @@ public class HuaweiPushSender : IAppNotificationSender
         return await HandleResponse(response, ct);
     }
 
-    public async Task<AppNotificationResponse> BatchSendAsync(BatchAppMessage message, CancellationToken ct = default)
+    public async Task<IEnumerable<AppNotificationResponse>> BatchSendAsync(BatchAppMessage message, CancellationToken ct = default)
     {
         if (message.ClientIds.Length > 1000)
-            return new AppNotificationResponse(false, "Up to 1000 device tokens can be sent at a time");
+            return message.ClientIds.Select(x => new AppNotificationResponse(false, "Up to 1000 device tokens can be sent at a time", string.Empty, x));
 
         var options = await _optionsResolver.ResolveAsync();
         var accessToken = await _oauthService.GetAccessTokenAsync(options.ClientId, options.ClientSecret, ct);
         var url = string.Format(HuaweiConstants.PushMessageUrlFormat, options.ProjectId);
 
-        var payload = BuildMessagePayload(message, message.ClientIds);
+        var payload = BuildMessagePayload(options.CallbackId, message, message.ClientIds);
 
         var request = CreatePushRequest(url, payload, accessToken);
 
         var response = await _httpClient.SendAsync(request, ct);
-        return await HandleResponse(response, ct);
+        return await HandleBatchResponse(response, message.ClientIds, ct);
     }
 
     public async Task<AppNotificationResponse> BroadcastSendAsync(AppMessage message, CancellationToken ct = default)
@@ -55,7 +57,7 @@ public class HuaweiPushSender : IAppNotificationSender
         var accessToken = await _oauthService.GetAccessTokenAsync(options.ClientId, options.ClientSecret, ct);
         var url = string.Format(HuaweiConstants.PushMessageUrlFormat, options.ProjectId);
 
-        var payload = BuildMessagePayload(message, null, AppNotificationConstants.BroadcastTag);
+        var payload = BuildMessagePayload(options.CallbackId, message, null, AppNotificationConstants.BroadcastTag);
 
         var request = CreatePushRequest(url, payload, accessToken);
 
@@ -123,7 +125,7 @@ public class HuaweiPushSender : IAppNotificationSender
         return new { type = 1, intent = url };
     }
 
-    private HmsPushRequest BuildMessagePayload(AppMessage message, string[]? tokens = null, string? topic = null)
+    private HmsPushRequest BuildMessagePayload(string callbackId, AppMessage message, string[]? tokens = null, string? topic = null)
     {
         return new HmsPushRequest
         {
@@ -138,7 +140,8 @@ public class HuaweiPushSender : IAppNotificationSender
                     Notification = new HmsAndroidNotification
                     {
                         ClickAction = BuildClickAction(message.Url)
-                    }
+                    },
+                    ReceiptId = callbackId
                 }
             }
         };
@@ -175,23 +178,61 @@ public class HuaweiPushSender : IAppNotificationSender
             return new AppNotificationResponse(false, "Invalid JSON");
         }
 
-        string? code = null, msg = null, requestId = null;
+        string? code = null, msg = string.Empty, requestId = null;
         if (root.TryGetProperty("code", out var c) && c.ValueKind == JsonValueKind.String)
             code = c.GetString();
 
         if (root.TryGetProperty("msg", out var m))
-            msg = m.ValueKind == JsonValueKind.String ? m.GetString() : m.ToString();
+            msg = (m.ValueKind == JsonValueKind.String ? m.GetString() : m.ToString()) ?? string.Empty;
 
         if (root.TryGetProperty("requestId", out var r) && r.ValueKind == JsonValueKind.String)
             requestId = r.GetString();
 
         if (code == "80000000")
-            return new AppNotificationResponse(true, "Success", requestId);
+            return new AppNotificationResponse(true, msg, requestId);
+
+
+        return new AppNotificationResponse(false, msg, requestId);
+    }
+
+    private async Task<IEnumerable<AppNotificationResponse>> HandleBatchResponse(HttpResponseMessage response, string[] clientIds, CancellationToken ct = default)
+    {
+        if (!response.IsSuccessStatusCode)
+        {
+            var error = await response.Content.ReadAsStringAsync(ct);
+            return clientIds.Select(x => new AppNotificationResponse(false, $"HTTP {response.StatusCode}: {error}", string.Empty, x));
+        }
+
+        JsonElement root;
+        try
+        {
+            var raw = await response.Content.ReadFromJsonAsync<JsonElement>();
+            root = raw.ValueKind == JsonValueKind.String
+                ? JsonDocument.Parse(raw.GetString()).RootElement
+                : raw;
+        }
+        catch
+        {
+            return clientIds.Select(x => new AppNotificationResponse(false, "Invalid JSON", string.Empty, x));
+        }
+
+        string? code = null, msg = string.Empty, requestId = string.Empty;
+        if (root.TryGetProperty("code", out var c) && c.ValueKind == JsonValueKind.String)
+            code = c.GetString();
+
+        if (root.TryGetProperty("msg", out var m))
+            msg = (m.ValueKind == JsonValueKind.String ? m.GetString() : m.ToString()) ?? string.Empty;
+
+        if (root.TryGetProperty("requestId", out var r) && r.ValueKind == JsonValueKind.String)
+            requestId = r.GetString() ?? string.Empty;
+
+        if (code == "80000000")
+            return clientIds.Select(x => new AppNotificationResponse(true, msg, requestId, x));
 
         if (code == "80100000" && TryGetIllegalTokens(msg, out var tokens))
-            return new AppNotificationResponse(true, "Invalid token", requestId, tokens);
+            return clientIds.Select(x => new AppNotificationResponse(!tokens.Contains(x), tokens.Contains(x) ? "Illegal token" : "Success", requestId, x));
 
-        return new AppNotificationResponse(false, $"Push failed: {msg}", requestId);
+        return clientIds.Select(x => new AppNotificationResponse(false, msg, requestId, x));
     }
 
     private bool TryGetIllegalTokens(string? msg, out List<string> tokens)

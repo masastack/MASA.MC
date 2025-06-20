@@ -8,4 +8,6 @@ public interface IXiaomiPushOptions : IOptions
     public string AppSecret { get; set; }
 
     public string PackageName { get; set; }
+
+    public string CallbackUrl { get; set; }
 }
