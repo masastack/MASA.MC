@@ -9,6 +9,8 @@ public class GetuiSender : IAppNotificationSender
 
     public bool SupportsBroadcast => true;
 
+    public bool SupportsReceipt => false;
+
     public GetuiSender(IOptionsResolver<IGetuiOptions> optionsResolver)
     {
         _optionsResolver = optionsResolver;
@@ -47,8 +49,11 @@ public class GetuiSender : IAppNotificationSender
         }
     }
 
-    public async Task<AppNotificationResponse> BatchSendAsync(BatchAppMessage appMessage, CancellationToken ct = default)
+    public async Task<IEnumerable<AppNotificationResponse>> BatchSendAsync(BatchAppMessage appMessage, CancellationToken ct = default)
     {
+        if (appMessage.ClientIds.Length > 1000)
+            return appMessage.ClientIds.Select(x => new AppNotificationResponse(false, "Up to 1000 device tokens can be sent at a time", string.Empty, x));
+
         var options = await _optionsResolver.ResolveAsync();
         IGtPush push = new IGtPush(GetuiConstants.DomainUrl, options.AppKey, options.MasterSecret);
         var template = BuildNotificationTemplate(options, appMessage.Title, appMessage.Text, System.Text.Json.JsonSerializer.Serialize(appMessage.TransmissionContent));
@@ -67,7 +72,7 @@ public class GetuiSender : IAppNotificationSender
         }
         catch (Exception ex)
         {
-            return new AppNotificationResponse(false, $"getContentId failed: {ex.Message}");
+            return appMessage.ClientIds.Select(x=>new AppNotificationResponse(false, $"getContentId failed: {ex.Message}", string.Empty, x));
         }
 
         var targets = appMessage.ClientIds
@@ -83,13 +88,13 @@ public class GetuiSender : IAppNotificationSender
             var pushResult = push.pushMessageToList(contentId, targets);
 
             if (string.IsNullOrWhiteSpace(pushResult) || !pushResult.Contains("ok"))
-                return new AppNotificationResponse(false, pushResult);
+                return appMessage.ClientIds.Select(x => new AppNotificationResponse(false, pushResult, string.Empty, x));
 
-            return new AppNotificationResponse(true, "ok");
+            return appMessage.ClientIds.Select(x => new AppNotificationResponse(true, "ok", string.Empty, x));
         }
         catch (RequestException e)
         {
-            return new AppNotificationResponse(false, e.Message);
+            return appMessage.ClientIds.Select(x => new AppNotificationResponse(false, e.Message, string.Empty, x));
         }
     }
 

@@ -7,6 +7,8 @@ public class XiaomiPushSender : IAppNotificationSender
 
     public bool SupportsBroadcast => true;
 
+    public bool SupportsReceipt => true;
+
     public XiaomiPushSender(HttpClient httpClient, IOptionsResolver<IXiaomiPushOptions> optionsResolver)
     {
         _httpClient = httpClient;
@@ -19,13 +21,14 @@ public class XiaomiPushSender : IAppNotificationSender
         return await SendPushAsync(XiaomiConstants.SendToRegIdUrl, payload, ct);
     }
 
-    public async Task<AppNotificationResponse> BatchSendAsync(BatchAppMessage appMessage, CancellationToken ct = default)
+    public async Task<IEnumerable<AppNotificationResponse>> BatchSendAsync(BatchAppMessage appMessage, CancellationToken ct = default)
     {
         if (appMessage.ClientIds.Length > 1000)
-            return new AppNotificationResponse(false, "Up to 1000 device tokens can be sent at a time");
+            return appMessage.ClientIds.Select(x => new AppNotificationResponse(false, "Up to 1000 device tokens can be sent at a time", string.Empty, x));
 
         var payload = await BuildPayloadAsync(appMessage.Title, appMessage.Text, appMessage.TransmissionContent, appMessage.Url, string.Join(",", appMessage.ClientIds), ct);
-        return await SendPushAsync(XiaomiConstants.SendToRegIdUrl, payload, ct);
+        var response = await SendPushAsync(XiaomiConstants.SendToRegIdUrl, payload, ct);
+        return appMessage.ClientIds.Select(x => new AppNotificationResponse(response.Success, response.Message, response.RegId, x));
     }
 
     public async Task<AppNotificationResponse> BroadcastSendAsync(AppMessage appMessage, CancellationToken ct = default)
@@ -91,7 +94,9 @@ public class XiaomiPushSender : IAppNotificationSender
                { "title", title },
                { "description", description },
                { "payload", System.Text.Json.JsonSerializer.Serialize(transmissionContent ?? new()) },
-               { "restricted_package_name", options.PackageName }
+               { "restricted_package_name", options.PackageName },
+               { "extra.callback", options.CallbackUrl},
+               { "extra.callback.type", "17"}
            };
 
         if (!string.IsNullOrEmpty(clientId))
@@ -147,7 +152,7 @@ public class XiaomiPushSender : IAppNotificationSender
 
             return code == 0 && result == "ok"
                 ? new AppNotificationResponse(true, "Push succeeded", msgId)
-                : new AppNotificationResponse(false, desc);
+                : new AppNotificationResponse(false, desc, msgId);
         }
         catch (Exception ex)
         {

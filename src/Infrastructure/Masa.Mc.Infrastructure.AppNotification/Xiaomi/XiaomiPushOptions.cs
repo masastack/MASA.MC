@@ -8,4 +8,6 @@ public class XiaomiPushOptions : IXiaomiPushOptions
     public string AppSecret { get; set; } = string.Empty;
 
     public string PackageName { get; set; } = string.Empty;
+
+    public string CallbackUrl { get; set; } = string.Empty;
 }

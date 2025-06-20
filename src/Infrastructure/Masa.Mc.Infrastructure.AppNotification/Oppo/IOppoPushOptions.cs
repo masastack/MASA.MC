@@ -8,4 +8,6 @@ public interface IOppoPushOptions : IOptions
     public string AppKey { get; set; }
 
     public string MasterSecret { get; set; }
+
+    public string CallbackUrl { get; set; }
 }

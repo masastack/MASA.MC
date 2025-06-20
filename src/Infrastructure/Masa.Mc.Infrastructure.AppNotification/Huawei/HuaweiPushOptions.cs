@@ -10,4 +10,6 @@ public class HuaweiPushOptions : IHuaweiPushOptions
     public string ClientSecret { get; set; } = string.Empty;
 
     public string ProjectId { get; set; } = string.Empty;
+
+    public string CallbackId { get; set; } = string.Empty;
 }

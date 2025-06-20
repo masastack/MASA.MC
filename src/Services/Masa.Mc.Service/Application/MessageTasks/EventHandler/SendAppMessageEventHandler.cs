@@ -244,9 +244,9 @@ public class SendAppMessageEventHandler
             try
             {
                 var message = CreateBatchAppMessage(batch, data, transmissionContent);
-                var response = await sender.BatchSendAsync(message);
+                var responses = await sender.BatchSendAsync(message);
 
-                successCount += UpdateRecordsWithResponse(batchRecords, batch, response);
+                successCount += UpdateRecordsWithResponse(batchRecords, batch, responses, sender.SupportsReceipt);
 
                 var isWebsiteMessage = data.GetDataValue<bool>(BusinessConsts.IS_WEBSITE_MESSAGE);
                 if (isWebsiteMessage)
@@ -308,7 +308,7 @@ public class SendAppMessageEventHandler
                 var message = CreateSingleAppMessage(user.ChannelUserIdentity, data, transmissionContent);
                 var response = await sender.SendAsync(message);
 
-                UpdateRecordWithResponse(record, response);
+                UpdateRecordWithResponse(record, response, sender.SupportsReceipt);
                 if (response.Success) successCount++;
             }
             catch (Exception ex)
@@ -370,30 +370,6 @@ public class SendAppMessageEventHandler
         );
     }
 
-    private int UpdateRecordsWithResponse(List<MessageRecord> records, string[] batch, AppNotificationResponse response)
-    {
-        var successCount = 0;
-        foreach (var item in batch)
-        {
-            var record = records.FirstOrDefault(x => x.ChannelUserIdentity == item);
-            if (record is not null)
-            {
-                if (!response.Success || response.ErrorTokens.Contains(item))
-                {
-                    var errMsg = response.ErrorTokens.Contains(item) ? "Error token" : response.Message;
-                    record.SetResult(false, errMsg);
-                }
-                else
-                {
-                    record.SetResult(true, string.Empty);
-                    record.SetDataValue(BusinessConsts.APP_PUSH_MSG_ID, response.MsgId);
-                    successCount++;
-                }
-            }
-        }
-        return successCount;
-    }
-
     private async Task AddWebsiteMessages(List<MessageRecord> batchRecords, string[] batch, Guid channelId, MessageData data)
     {
         var websiteMessages = batchRecords
@@ -412,17 +388,40 @@ public class SendAppMessageEventHandler
         await _websiteMessageRepository.AddRangeAsync(websiteMessages);
     }
 
+    private int UpdateRecordsWithResponse(List<MessageRecord> records, string[] batch, IEnumerable<AppNotificationResponse> responses, bool supportsReceipt)
+    {
+        var successCount = 0;
 
-    private void UpdateRecordWithResponse(MessageRecord record, AppNotificationResponse response)
+        foreach (var record in records)
+        {
+            var response = responses.FirstOrDefault(x => x.RegId == record.ChannelUserIdentity);
+
+            if (response != null)
+            {
+                if (response.Success)
+                {
+                    record.SetResult(supportsReceipt == false ? true : null, response.Message, null, response.MsgId);
+                    successCount++;
+                }
+                else
+                {
+                    record.SetResult(false, response.Message, null, response.MsgId);
+                }
+            }
+        }
+
+        return successCount;
+    }
+
+    private void UpdateRecordWithResponse(MessageRecord record, AppNotificationResponse response, bool supportsReceipt)
     {
         if (response.Success)
         {
-            record.SetResult(true, string.Empty);
-            record.SetDataValue(BusinessConsts.APP_PUSH_MSG_ID, response.MsgId);
+            record.SetResult(supportsReceipt == false ? true : null, string.Empty, null, response.MsgId);
         }
         else
         {
-            record.SetResult(false, response.Message);
+            record.SetResult(false, response.Message, null, response.MsgId);
         }
     }
 

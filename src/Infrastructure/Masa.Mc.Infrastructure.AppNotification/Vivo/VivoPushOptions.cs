@@ -10,4 +10,6 @@ public class VivoPushOptions: IVivoPushOptions
     public string AppKey { get; set; } = string.Empty;
 
     public string AppSecret { get; set; } = string.Empty;
+
+    public string CallbackId { get; set; } = string.Empty;
 }
