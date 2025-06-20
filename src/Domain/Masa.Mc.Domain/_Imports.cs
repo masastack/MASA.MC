@@ -53,3 +53,5 @@ global using Masa.Mc.Domain.Shared.WebsiteMessages;
 
 global using Masa.Mc.Domain.Shared.Consts;
 global using Masa.Mc.Infrastructure.Common.Utils;
+
+global using Microsoft.AspNetCore.WebUtilities;

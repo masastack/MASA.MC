@@ -142,6 +142,7 @@ global using Masa.Mc.Service.Admin.Application.MessageInfos.Queries;
 global using Masa.Mc.Service.Admin.Application.MessageReceipts.Commands;
 global using Masa.Mc.Service.Admin.Application.MessageRecords.Commands;
 global using Masa.Mc.Service.Admin.Application.MessageRecords.Queries;
+global using Masa.Mc.Service.Admin.Application.MessageRecords.Jobs;
 global using Masa.Mc.Service.Admin.Application.MessageTasks.Commands;
 global using Masa.Mc.Service.Admin.Application.MessageTasks.Jobs;
 global using Masa.Mc.Service.Admin.Application.MessageTasks.Queries;
