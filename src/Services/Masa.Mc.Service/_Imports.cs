@@ -103,6 +103,7 @@ global using Masa.Mc.Domain.Shared.WebsiteMessages;
 global using Masa.Mc.Domain.WebsiteMessages.Aggregates;
 global using Masa.Mc.Domain.WebsiteMessages.Events;
 global using Masa.Mc.Domain.WebsiteMessages.Repositories;
+global using Masa.Mc.Domain.Users;
 global using Masa.Mc.EntityFrameworkCore;
 global using Masa.Mc.Infrastructure.AppNotification;
 global using Masa.Mc.Infrastructure.AppNotification.Extensions;
