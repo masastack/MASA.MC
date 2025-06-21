@@ -40,9 +40,10 @@ builder.Services.AddMasaIdentity(options =>
     options.Environment = "environment";
     options.UserName = "name";
     options.UserId = "sub";
-    options.Mapping(nameof(MasaUser.CurrentTeamId), IdentityClaimConsts.CURRENT_TEAM);
-    options.Mapping(nameof(MasaUser.StaffId), IdentityClaimConsts.STAFF);
-    options.Mapping(nameof(MasaUser.Account), IdentityClaimConsts.ACCOUNT);
+    options.Mapping(nameof(McUser.CurrentTeamId), IdentityClaimConsts.CURRENT_TEAM);
+    options.Mapping(nameof(McUser.StaffId), IdentityClaimConsts.STAFF);
+    options.Mapping(nameof(McUser.Account), IdentityClaimConsts.ACCOUNT);
+    options.Mapping(nameof(McUser.ClientId), "client_id");
 });
 builder.Services.AddAuthorization();
 builder.Services.AddAuthentication(options =>
