@@ -10,7 +10,7 @@ public class SendOrdinaryMessageByInternalDtoValidator : AbstractValidator<SendO
         RuleFor(x => x.ChannelType).Required();
         RuleFor(x => x.ChannelCode).Required();
         RuleFor(x => x.ReceiverType).IsInEnum();
-        RuleFor(x => x.Receivers).ForEach(x => x.SetValidator(new InternalReceiverDtoValidator())).Required();
+        RuleFor(x => x.Receivers).ForEach(x => x.SetValidator(new InternalReceiverDtoValidator())).Required().When(x => x.ReceiverType == ReceiverTypes.Assign);
         RuleFor(x => x.SendRules).SetValidator(new SendRuleDtoValidator());
         RuleFor(x => x.MessageInfo).SetValidator(new MessageInfoUpsertDtoValidator());
     }
