@@ -7,11 +7,13 @@ public class CreateTemplateMessageTaskCommandHandler
 {
     private readonly MessageTaskDomainService _domainService;
     private readonly IMessageTemplateRepository _messageTemplateRepository;
+    private readonly IUserContext _userContext;
 
-    public CreateTemplateMessageTaskCommandHandler(MessageTaskDomainService domainService, IMessageTemplateRepository messageTemplateRepository)
+    public CreateTemplateMessageTaskCommandHandler(MessageTaskDomainService domainService, IMessageTemplateRepository messageTemplateRepository, IUserContext userContext)
     {
         _domainService = domainService;
         _messageTemplateRepository = messageTemplateRepository;
+        _userContext = userContext;
     }
 
     [EventHandler(1)]
@@ -40,6 +42,13 @@ public class CreateTemplateMessageTaskCommandHandler
     public async Task CreateTemplateMessageTaskAsync(CreateTemplateMessageTaskCommand createCommand)
     {
         var entity = createCommand.MessageTask.Adapt<MessageTask>();
-        await _domainService.CreateAsync(entity, createCommand.MessageTask.SystemId);
+        var systemId = createCommand.MessageTask.SystemId;
+
+        if (string.IsNullOrEmpty(systemId))
+        {
+            systemId = _userContext.GetUser<McUser>()?.ClientId ?? string.Empty;
+        }
+
+        await _domainService.CreateAsync(entity, systemId);
     }
 }

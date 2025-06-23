@@ -7,11 +7,13 @@ public class CreateOrdinaryMessageTaskCommandHandler
 {
     private readonly MessageTaskDomainService _domainService;
     private readonly IMessageInfoRepository _messageInfoRepository;
+    private readonly IUserContext _userContext;
 
-    public CreateOrdinaryMessageTaskCommandHandler(MessageTaskDomainService domainService, IMessageInfoRepository messageInfoRepositor)
+    public CreateOrdinaryMessageTaskCommandHandler(MessageTaskDomainService domainService, IMessageInfoRepository messageInfoRepositor, IUserContext userContext)
     {
         _domainService = domainService;
         _messageInfoRepository = messageInfoRepositor;
+        _userContext = userContext;
     }
 
     [EventHandler(1)]
@@ -28,6 +30,13 @@ public class CreateOrdinaryMessageTaskCommandHandler
     public async Task CreateOrdinaryMessageTaskAsync(CreateOrdinaryMessageTaskCommand createCommand)
     {
         var entity = createCommand.MessageTask.Adapt<MessageTask>();
-        await _domainService.CreateAsync(entity, createCommand.MessageTask.SystemId);
+        var systemId = createCommand.MessageTask.SystemId;
+
+        if (string.IsNullOrEmpty(systemId))
+        {
+            systemId = _userContext.GetUser<McUser>()?.ClientId ?? string.Empty;
+        }
+
+        await _domainService.CreateAsync(entity, systemId);
     }
 }
