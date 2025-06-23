@@ -143,7 +143,7 @@ public class SendAppMessageEventHandler
     {
         var messageData = eto.MessageData;
         var messageTaskHistory = eto.MessageTaskHistory;
-        var groupByPlatform = GroupUsersByPlatform(messageTaskHistory.ReceiverUsers);
+        var groupByPlatform = GroupUsersByPlatform(messageTaskHistory.ReceiverUsers, messageTaskHistory.MessageTask.ReceiverType);
 
         var sendStatuses = new List<MessageSendStatuses>();
 
@@ -156,8 +156,18 @@ public class SendAppMessageEventHandler
         return DetermineOverallStatus(sendStatuses);
     }
 
-    private Dictionary<Providers, IEnumerable<MessageReceiverUser>> GroupUsersByPlatform(IEnumerable<MessageReceiverUser> users)
+    private Dictionary<Providers, IEnumerable<MessageReceiverUser>> GroupUsersByPlatform(IEnumerable<MessageReceiverUser> users, ReceiverTypes receiverType)
     {
+        if (receiverType == ReceiverTypes.Broadcast)
+        {
+            return Enum.GetValues<AppVendor>()
+                .Cast<AppVendor>()
+                .ToDictionary(
+                    vendor => (Providers)vendor,
+                    _ => Enumerable.Empty<MessageReceiverUser>()
+                );
+        }
+
         return users
             .Where(user => Enum.TryParse<Providers>(user.Platform, out _))
             .GroupBy(user => Enum.Parse<Providers>(user.Platform))
