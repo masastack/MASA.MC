@@ -15,6 +15,7 @@ public class MessageTaskCommandHandler
     private readonly IUnitOfWork _unitOfWork;
     private readonly II18n<DefaultResource> _i18n;
     private readonly IMultiEnvironmentContext _multiEnvironmentContext;
+    private readonly MessageTemplateDomainService _messageTemplateDomainService;
 
     public MessageTaskCommandHandler(IMessageTaskRepository repository
         , IMessageTaskHistoryRepository messageTaskHistoryRepository
@@ -25,7 +26,8 @@ public class MessageTaskCommandHandler
         , IMessageTemplateRepository messageTemplateRepository
         , IUnitOfWork unitOfWork
         , II18n<DefaultResource> i18n
-        , IMultiEnvironmentContext multiEnvironmentContext)
+        , IMultiEnvironmentContext multiEnvironmentContext
+        , MessageTemplateDomainService messageTemplateDomainService)
     {
         _repository = repository;
         _messageTaskHistoryRepository = messageTaskHistoryRepository;
@@ -37,6 +39,7 @@ public class MessageTaskCommandHandler
         _unitOfWork = unitOfWork;
         _i18n = i18n;
         _multiEnvironmentContext = multiEnvironmentContext;
+        _messageTemplateDomainService = messageTemplateDomainService;
     }
 
     [EventHandler]
@@ -214,9 +217,10 @@ public class MessageTaskCommandHandler
         messageData.SetDataValue(BusinessConsts.MESSAGE_TYPE, template.TemplateType.ToString());
         messageData.SetDataValue(nameof(MessageTemplate.Id), template.Id.ToString());
 
+        var variables = _messageTemplateDomainService.ConvertVariables(template, command.InputDto.Variables);
         var channelType = Enumeration.FromValue<ChannelType>((int)command.InputDto.ChannelType);
 
-        var eto = channelType.GetSendSimpleMessageEvent(command.InputDto.ChannelUserIdentity, command.InputDto.ChannelCode, messageData, command.InputDto.Variables, command.InputDto.SystemId);
+        var eto = channelType.GetSendSimpleMessageEvent(command.InputDto.ChannelUserIdentity, command.InputDto.ChannelCode, messageData, variables, command.InputDto.Variables, command.InputDto.SystemId);
         await _eventBus.PublishAsync(eto);
     }
 

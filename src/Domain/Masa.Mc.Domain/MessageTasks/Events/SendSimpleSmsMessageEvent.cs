@@ -7,6 +7,8 @@ public record SendSimpleSmsMessageEvent: SendSimpleMessageEvent
 {
     public ExtraPropertyDictionary Variables { get; set; }
 
+    public ExtraPropertyDictionary OriginalVariables { get; set; }
+
     public string SystemId { get; set; } = string.Empty;
 
     public SendSimpleSmsMessageEvent(string channelUserIdentity, string channelCode, MessageData messageData)

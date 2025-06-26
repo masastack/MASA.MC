@@ -22,4 +22,6 @@ public class ChannelUpsertDto
     public string Scheme { get; set; } = string.Empty;
 
     public string SchemeField { get; set; } = string.Empty;
+
+    public int Provider { get; set; }
 }
