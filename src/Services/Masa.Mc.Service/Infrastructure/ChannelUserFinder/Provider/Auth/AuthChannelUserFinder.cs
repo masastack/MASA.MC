@@ -123,11 +123,11 @@ public class AuthChannelUserFinder : IChannelUserFinder
         return results.SelectMany(GetUserModelByStaff).ToList();
     }
 
-    private async Task<List<MessageReceiverUser>> GetInternalReceiverUsers(AppChannel channel, IReadOnlyCollection<MessageTaskReceiver> receivers, ExtraPropertyDictionary variables)
+    private async Task<IEnumerable<MessageReceiverUser>> GetInternalReceiverUsers(AppChannel channel, IReadOnlyCollection<MessageTaskReceiver> receivers, ExtraPropertyDictionary variables)
     {
         if (channel.Type == ChannelType.App)
         {
-            return await GetAppChannelReceiverUser(receivers, channel.Id, variables);
+            return await GetAppChannelReceiverUser(receivers, channel, variables);
         }
 
         var userIds = receivers.Select(r => r.SubjectId).ToList();
@@ -143,11 +143,11 @@ public class AuthChannelUserFinder : IChannelUserFinder
         )).ToList();
     }
 
-    private async Task<List<MessageReceiverUser>> GetInternalReceiverUsers(AppChannel channel, List<Guid> userIds, ExtraPropertyDictionary variables)
+    private async Task<IEnumerable<MessageReceiverUser>> GetInternalReceiverUsers(AppChannel channel, List<Guid> userIds, ExtraPropertyDictionary variables)
     {
         if (channel.Type == ChannelType.App)
         {
-            return await GetAppChannelReceiverUser(userIds, channel.Id, variables);
+            return await GetAppChannelReceiverUser(userIds, channel, variables);
         }
 
         var identities = await GetChannelUserIdentitys(channel, userIds);
@@ -169,24 +169,40 @@ public class AuthChannelUserFinder : IChannelUserFinder
         };
     }
 
-    private async Task<List<MessageReceiverUser>> GetAppChannelReceiverUser(IReadOnlyCollection<MessageTaskReceiver> receivers, Guid channelId, ExtraPropertyDictionary variables)
+    private async Task<IEnumerable<MessageReceiverUser>> GetAppChannelReceiverUser(IReadOnlyCollection<MessageTaskReceiver> receivers, AppChannel channel, ExtraPropertyDictionary variables)
     {
         var userIds = receivers.Select(r => r.SubjectId).ToList();
         var receiverVars = receivers.ToDictionary(r => r.SubjectId, r => r.Variables);
+        var receiverUsers = await GetAppChannelReceiverUser(userIds, channel);
 
-        var appDeviceTokens = await _appDeviceTokenRepository.GetListAsync(x => x.ChannelId == channelId && userIds.Contains(x.UserId));
-
-
-        return appDeviceTokens.Select(x => new MessageReceiverUser(x.UserId, x.DeviceToken, receiverVars.TryGetValue(x.UserId, out var vars) && vars.Any()
-                ? vars
-                : variables, x.Platform.ToString())).ToList();
+        return receiverUsers
+            .Select(x => new MessageReceiverUser(
+                x.UserId, 
+                x.ChannelUserIdentity, 
+                receiverVars.TryGetValue(x.UserId, out var vars) && vars.Any() ? vars : variables, x.Platform));
     }
 
-    private async Task<List<MessageReceiverUser>> GetAppChannelReceiverUser(List<Guid> userIds, Guid channelId, ExtraPropertyDictionary variables)
+    private async Task<IEnumerable<MessageReceiverUser>> GetAppChannelReceiverUser(List<Guid> userIds, AppChannel channel, ExtraPropertyDictionary variables)
     {
-        var appDeviceTokens = await _appDeviceTokenRepository.GetListAsync(x => x.ChannelId == channelId && userIds.Contains(x.UserId));
+        var receiverUsers = await GetAppChannelReceiverUser(userIds, channel);
 
-        return appDeviceTokens.Select(x => new MessageReceiverUser(x.UserId, x.DeviceToken, variables, x.Platform.ToString())).ToList();
+        return receiverUsers
+            .Select(x => new MessageReceiverUser(x.UserId, x.ChannelUserIdentity, variables, x.Platform));
+    }
+
+    private async Task<IEnumerable<MessageReceiverUser>> GetAppChannelReceiverUser(List<Guid> userIds, AppChannel channel)
+    {
+        if (channel.Provider == (int)AppChannelProviders.Mc)
+        {
+            var appDeviceTokens = await _appDeviceTokenRepository.GetListAsync(x => x.ChannelId == channel.Id && userIds.Contains(x.UserId));
+            return appDeviceTokens.Select(x => new MessageReceiverUser(x.UserId, x.DeviceToken, new(), x.Platform.ToString()));
+        }
+        else
+        {
+            var userSystemDatas = await _authClient.UserService.GetSystemListDataAsync<UserSystemData>(userIds, $"{MasaStackProject.MC.Name}:{channel.Code}");
+            var dic = userSystemDatas.ToDictionary(x => x.Key, x => x.Value?.ClientId ?? string.Empty);
+            return dic.Select(x => new MessageReceiverUser(x.Key, x.Value, new(), string.Empty));
+        }
     }
 
     private async Task<Dictionary<Guid, string>> GetEmailOrSmsUserIdentities(List<Guid> userIds, AppChannel channel)

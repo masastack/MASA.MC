@@ -6,13 +6,23 @@ namespace Masa.Mc.Domain.Channels.Aggregates;
 public class Channel : FullAggregateRoot<Guid, Guid>
 {
     public string DisplayName { get; protected set; } = string.Empty;
+
     public string Color { get; protected set; } = string.Empty;
+
     public string Code { get; protected set; } = string.Empty;
+
     public ChannelType Type { get; } = default!;
+
     public string Description { get; protected set; } = string.Empty;
+
     public bool IsStatic { get; protected set; }
+
     public string Scheme { get; protected set; }
+
     public string SchemeField { get; protected set; }
+
+    public int Provider { get; protected set; }
+
     public ExtraPropertyDictionary ExtraProperties { get; protected set; } = new();
 
     public Channel(string displayName, string color, string code, ChannelType type, string description) : this(displayName, color, code, type, description, new Dictionary<string, string>())

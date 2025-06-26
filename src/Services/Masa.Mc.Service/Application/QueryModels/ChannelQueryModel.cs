@@ -21,6 +21,8 @@ public class ChannelQueryModel : Entity<Guid>, ISoftDelete
 
     public string SchemeField { get; set; }
 
+    public int Provider { get; set; }
+
     public ExtraPropertyDictionary ExtraProperties { get; set; } = new();
 
     public Guid Creator { get; set; }

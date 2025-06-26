@@ -11,8 +11,7 @@ public class RetryAppMessageEventHandler
     private readonly MessageTaskDomainService _taskDomainService;
     private readonly MessageTemplateDomainService _messageTemplateDomainService;
     private readonly IMessageTemplateRepository _repository;
-    private readonly IWebsiteMessageRepository _websiteMessageRepository;
-    private readonly IMessageTaskRepository _messageTaskRepository;
+    private readonly IAppDeviceTokenRepository _appDeviceTokenRepository;
     private readonly II18n<DefaultResource> _i18n;
 
     public RetryAppMessageEventHandler(AppNotificationSenderFactory appNotificationSenderFactory
@@ -21,8 +20,7 @@ public class RetryAppMessageEventHandler
         , MessageTaskDomainService taskDomainService
         , MessageTemplateDomainService messageTemplateDomainService
         , IMessageTemplateRepository repository
-        , IWebsiteMessageRepository websiteMessageRepository
-        , IMessageTaskRepository messageTaskRepository
+        , IAppDeviceTokenRepository appDeviceTokenRepository
         , II18n<DefaultResource> i18n)
     {
         _appNotificationSenderFactory = appNotificationSenderFactory;
@@ -31,8 +29,7 @@ public class RetryAppMessageEventHandler
         _taskDomainService = taskDomainService;
         _messageTemplateDomainService = messageTemplateDomainService;
         _repository = repository;
-        _websiteMessageRepository = websiteMessageRepository;
-        _messageTaskRepository = messageTaskRepository;
+        _appDeviceTokenRepository = appDeviceTokenRepository;
         _i18n = i18n;
     }
 
@@ -44,7 +41,7 @@ public class RetryAppMessageEventHandler
         var channel = await _channelRepository.FindAsync(x => x.Id == messageRecord.ChannelId);
         if (channel == null) return;
 
-        var provider = (Providers)channel.ExtraProperties.GetProperty<int>(nameof(AppChannelOptions.Provider));
+        var provider = await DetermineProviderAsync(channel, messageRecord);
 
         var options = _appNotificationSenderFactory.GetOptions(provider, channel.ExtraProperties);
 
@@ -88,5 +85,21 @@ public class RetryAppMessageEventHandler
 
             await _messageRecordRepository.UpdateAsync(messageRecord);
         }
+    }
+
+    private async Task<Providers> DetermineProviderAsync(Channel channel, MessageRecord messageRecord)
+    {
+        if (channel.Provider != (int)AppChannelProviders.Mc)
+        {
+            return (Providers)channel.Provider;
+        }
+
+        var appDeviceToken = await _appDeviceTokenRepository.FindAsync(x => x.ChannelId == messageRecord.ChannelId && x.UserId == messageRecord.UserId);
+        if (appDeviceToken == null)
+        {
+            MasaArgumentException.ThrowIfNull(appDeviceToken, _i18n.T("AppDeviceToken"));
+        }
+
+        return (Providers)appDeviceToken.Platform;
     }
 }

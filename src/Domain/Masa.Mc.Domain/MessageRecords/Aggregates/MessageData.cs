@@ -35,7 +35,15 @@ public class MessageData : ValueObject
 
     public void RenderContent(ExtraPropertyDictionary variables, string startstr = "{{", string endstr = "}}")
     {
-        MessageContent = new MessageContent(Render(MessageContent.Title, variables, startstr, endstr)
+        var intentUrl = GetDataValue<string>(BusinessConsts.INTENT_URL);
+        if (!intentUrl.IsNullOrEmpty())
+        {
+            intentUrl = Render(intentUrl, variables, startstr, endstr);
+            SetDataValue(BusinessConsts.INTENT_URL, intentUrl);
+        }
+
+        MessageContent = new MessageContent(
+            Render(MessageContent.Title, variables, startstr, endstr)
             , Render(MessageContent.Content, variables, startstr, endstr)
             , MessageContent.Markdown
             , MessageContent.IsJump

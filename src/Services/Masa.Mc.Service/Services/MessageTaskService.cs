@@ -235,6 +235,8 @@ public class MessageTaskService : ServiceBase
             {
                 await _eventBus.PublishAsync(new AppNotificationSubscribeCommand(channel.Id, inputDto.Platform.Value, inputDto.ClientId));
             }
+
+            return;
         }
 
         var systemId = $"{MasaStackProject.MC.Name}:{inputDto.ChannelCode}";

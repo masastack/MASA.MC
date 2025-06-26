@@ -20,6 +20,7 @@ public static class McDbContextModelBuilderExtensions
             b.Property(x => x.Type).HasConversion(x => x.Id, x => Enumeration.FromValue<ChannelType>(x)).HasColumnName(nameof(Channel.Type));
             b.Property(x => x.Scheme).HasMaxLength(128).HasColumnName(nameof(Channel.Scheme));
             b.Property(x => x.SchemeField).HasMaxLength(128).HasColumnName(nameof(Channel.SchemeField));
+            b.Property(x => x.Provider).HasColumnName(nameof(Channel.Provider));
             b.HasIndex(x => x.Code);
             b.HasIndex(x => x.Type);
         });

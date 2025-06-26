@@ -50,17 +50,16 @@ public class SendAppMessageEventHandler
 
         var channel = await _channelRepository.FindAsync(x => x.Id == eto.ChannelId);
         var transmissionContent = GetTransmissionContent(channel.Type, eto.MessageData.MessageContent);
-        var channelProvider = channel.ExtraProperties.GetProperty<int>(nameof(AppChannelOptions.Provider));
 
         MessageSendStatuses sendStatus;
 
-        if (channelProvider == (int)AppChannelProviders.Mc)
+        if (channel.Provider == (int)AppChannelProviders.Mc)
         {
             sendStatus = await SendMcAppMessageAsync(eto, transmissionContent);
         }
         else
         {
-            sendStatus = await SendThirdPartyAppMessageAsync(eto, channelProvider, channel.ExtraProperties, transmissionContent, taskHistory);
+            sendStatus = await SendThirdPartyAppMessageAsync(eto, channel.Provider, channel.ExtraProperties, transmissionContent, taskHistory);
         }
 
         await SetTaskHistoryStatusAsync(taskHistory, sendStatus);
