@@ -41,7 +41,7 @@ public class RetryAppMessageEventHandler
         var channel = await _channelRepository.FindAsync(x => x.Id == messageRecord.ChannelId);
         if (channel == null) return;
 
-        var provider = DetermineProvider(channel, messageRecord);
+        var provider = await DetermineProviderAsync(channel, messageRecord);
 
         var options = _appNotificationSenderFactory.GetOptions(provider, channel.ExtraProperties);
 
@@ -87,14 +87,14 @@ public class RetryAppMessageEventHandler
         }
     }
 
-    private Providers DetermineProvider(Channel channel, MessageRecord messageRecord)
+    private async Task<Providers> DetermineProviderAsync(Channel channel, MessageRecord messageRecord)
     {
         if (channel.Provider != (int)AppChannelProviders.Mc)
         {
             return (Providers)channel.Provider;
         }
 
-        var appDeviceToken = _appDeviceTokenRepository.FindAsync(x => x.ChannelId == messageRecord.ChannelId && x.UserId == messageRecord.UserId).Result;
+        var appDeviceToken = await _appDeviceTokenRepository.FindAsync(x => x.ChannelId == messageRecord.ChannelId && x.UserId == messageRecord.UserId);
         if (appDeviceToken == null)
         {
             MasaArgumentException.ThrowIfNull(appDeviceToken, _i18n.T("AppDeviceToken"));
