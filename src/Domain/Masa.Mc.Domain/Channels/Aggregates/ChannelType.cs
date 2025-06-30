@@ -132,12 +132,12 @@ public class ChannelType : Enumeration
 
         public ExtraPropertyDictionary GetMessageTransmissionContent(MessageContent messageContent)
         {
-            if (messageContent.IsJump && !messageContent.ExtraProperties.Any(x => x.Key == "url"))
+            var extraProperties = new ExtraPropertyDictionary(messageContent.ExtraProperties);
+            if (messageContent.IsJump && !extraProperties.ContainsKey("url"))
             {
-                messageContent.ExtraProperties.TryAdd("url", messageContent.JumpUrl);
+                extraProperties.TryAdd("url", messageContent.JumpUrl);
             }
-
-            return messageContent.ExtraProperties;
+            return extraProperties;
         }
     }
 
