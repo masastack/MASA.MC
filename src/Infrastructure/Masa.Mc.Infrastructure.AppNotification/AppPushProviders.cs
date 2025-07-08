@@ -3,7 +3,7 @@
 
 namespace Masa.Mc.Infrastructure.AppNotification;
 
-public enum Providers
+public enum AppPushProviders
 {
     GeTui = 1,
     JPush,

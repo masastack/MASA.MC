@@ -79,7 +79,7 @@ public class SendAppMessageEventHandler
 
     private async Task<MessageSendStatuses> SendThirdPartyAppMessageAsync(SendAppMessageEvent eto, int channelProvider, ConcurrentDictionary<string, object> channelProperties, ExtraPropertyDictionary transmissionContent, MessageTaskHistory taskHistory)
     {
-        var appSenderProvider = (Providers)channelProvider;
+        var appSenderProvider = (AppPushProviders)channelProvider;
         var options = _appNotificationSenderFactory.GetOptions(appSenderProvider, channelProperties);
         var asyncLocal = _appNotificationSenderFactory.GetProviderAsyncLocal(appSenderProvider);
 
@@ -155,25 +155,25 @@ public class SendAppMessageEventHandler
         return DetermineOverallStatus(sendStatuses);
     }
 
-    private Dictionary<Providers, IEnumerable<MessageReceiverUser>> GroupUsersByPlatform(IEnumerable<MessageReceiverUser> users, ReceiverTypes receiverType)
+    private Dictionary<AppPushProviders, IEnumerable<MessageReceiverUser>> GroupUsersByPlatform(IEnumerable<MessageReceiverUser> users, ReceiverTypes receiverType)
     {
         if (receiverType == ReceiverTypes.Broadcast)
         {
             return Enum.GetValues<AppVendor>()
                 .Cast<AppVendor>()
                 .ToDictionary(
-                    vendor => (Providers)vendor,
+                    vendor => (AppPushProviders)vendor,
                     _ => Enumerable.Empty<MessageReceiverUser>()
                 );
         }
 
         return users
-            .Where(user => Enum.TryParse<Providers>(user.Platform, out _))
-            .GroupBy(user => Enum.Parse<Providers>(user.Platform))
+            .Where(user => Enum.TryParse<AppPushProviders>(user.Platform, out _))
+            .GroupBy(user => Enum.Parse<AppPushProviders>(user.Platform))
             .ToDictionary(group => group.Key, group => group.AsEnumerable());
     }
 
-    private async Task<MessageSendStatuses> SendToPlatformAsync(Providers platform, IEnumerable<MessageReceiverUser> users, SendAppMessageEvent eto, ExtraPropertyDictionary transmissionContent)
+    private async Task<MessageSendStatuses> SendToPlatformAsync(AppPushProviders platform, IEnumerable<MessageReceiverUser> users, SendAppMessageEvent eto, ExtraPropertyDictionary transmissionContent)
     {
         var vendorConfig = await _appVendorConfigRepository.FindAsync(x => x.ChannelId == eto.ChannelId && x.Vendor == (AppVendor)platform);
 

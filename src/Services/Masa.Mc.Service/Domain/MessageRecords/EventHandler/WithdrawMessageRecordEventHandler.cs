@@ -31,7 +31,7 @@ public class WithdrawMessageRecordEventHandler
 
         if (task?.ChannelType?.Id == ChannelType.App.Id)
         {
-            var provider = (Providers)channel.ExtraProperties.GetProperty<int>(nameof(AppChannelOptions.Provider));
+            var provider = (AppPushProviders)channel.ExtraProperties.GetProperty<int>(nameof(AppChannelOptions.Provider));
 
             var options = _appNotificationSenderFactory.GetOptions(provider, channel.ExtraProperties);
 

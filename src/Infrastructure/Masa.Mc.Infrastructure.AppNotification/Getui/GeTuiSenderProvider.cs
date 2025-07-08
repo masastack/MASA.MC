@@ -7,7 +7,7 @@ public class GeTuiSenderProvider : IAppNotificationSenderProvider
 {
     private readonly IServiceProvider _serviceProvider;
 
-    public Providers Provider => Providers.GeTui;
+    public AppPushProviders Provider => AppPushProviders.GeTui;
 
     public GeTuiSenderProvider(IServiceProvider serviceProvider)
     {

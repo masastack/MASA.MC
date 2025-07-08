@@ -7,7 +7,7 @@ public class VivoSenderProvider : IAppNotificationSenderProvider
 {
     private readonly IServiceProvider _serviceProvider;
 
-    public Providers Provider => Providers.Vivo;
+    public AppPushProviders Provider => AppPushProviders.Vivo;
 
     public VivoSenderProvider(IServiceProvider serviceProvider)
     {

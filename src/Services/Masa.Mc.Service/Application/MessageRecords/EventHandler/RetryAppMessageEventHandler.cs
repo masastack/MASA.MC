@@ -67,7 +67,7 @@ public class RetryAppMessageEventHandler
                 var appChannel = channel.Type as ChannelType.AppsChannel;
                 var transmissionContent = appChannel.GetMessageTransmissionContent(messageData.MessageContent);
                
-                var appNotificationSender = _appNotificationSenderFactory.GetAppNotificationSender((Providers)provider);
+                var appNotificationSender = _appNotificationSenderFactory.GetAppNotificationSender((AppPushProviders)provider);
                 var response = await appNotificationSender.SendAsync(new SingleAppMessage(messageRecord.ChannelUserIdentity, messageData.MessageContent.Title, messageData.MessageContent.Content, messageData.GetDataValue<string>(BusinessConsts.INTENT_URL), transmissionContent, messageData.GetDataValue<bool>(BusinessConsts.IS_APNS_PRODUCTION)));
                 if (response.Success)
                 {
@@ -87,11 +87,11 @@ public class RetryAppMessageEventHandler
         }
     }
 
-    private async Task<Providers> DetermineProviderAsync(Channel channel, MessageRecord messageRecord)
+    private async Task<AppPushProviders> DetermineProviderAsync(Channel channel, MessageRecord messageRecord)
     {
         if (channel.Provider != (int)AppChannelProviders.Mc)
         {
-            return (Providers)channel.Provider;
+            return (AppPushProviders)channel.Provider;
         }
 
         var appDeviceToken = await _appDeviceTokenRepository.FindAsync(x => x.ChannelId == messageRecord.ChannelId && x.UserId == messageRecord.UserId);
@@ -100,6 +100,6 @@ public class RetryAppMessageEventHandler
             MasaArgumentException.ThrowIfNull(appDeviceToken, _i18n.T("AppDeviceToken"));
         }
 
-        return (Providers)appDeviceToken.Platform;
+        return (AppPushProviders)appDeviceToken.Platform;
     }
 }

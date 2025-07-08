@@ -7,7 +7,7 @@ public class XiaomiSenderProvider : IAppNotificationSenderProvider
 {
     private readonly IServiceProvider _serviceProvider;
 
-    public Providers Provider => Providers.Xiaomi;
+    public AppPushProviders Provider => AppPushProviders.Xiaomi;
 
     public XiaomiSenderProvider(IServiceProvider serviceProvider)
     {

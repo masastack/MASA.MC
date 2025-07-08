@@ -7,7 +7,7 @@ public class HuaweiSenderProvider : IAppNotificationSenderProvider
 {
     private readonly IServiceProvider _serviceProvider;
 
-    public Providers Provider => Providers.Huawei;
+    public AppPushProviders Provider => AppPushProviders.Huawei;
 
     public HuaweiSenderProvider(IServiceProvider serviceProvider)
     {

@@ -7,7 +7,7 @@ public class JPushSenderProvider : IAppNotificationSenderProvider
 {
     private readonly IServiceProvider _serviceProvider;
 
-    public Providers Provider => Providers.JPush;
+    public AppPushProviders Provider => AppPushProviders.JPush;
 
     public JPushSenderProvider(IServiceProvider serviceProvider)
     {

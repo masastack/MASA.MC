@@ -7,7 +7,7 @@ public class OppoSenderProvider : IAppNotificationSenderProvider
 {
     private readonly IServiceProvider _serviceProvider;
 
-    public Providers Provider => Providers.Oppo;
+    public AppPushProviders Provider => AppPushProviders.Oppo;
 
     public OppoSenderProvider(IServiceProvider serviceProvider)
     {

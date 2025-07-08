@@ -5,7 +5,7 @@ namespace Masa.Mc.Infrastructure.AppNotification;
 
 public interface IAppNotificationSenderProvider
 {
-    Providers Provider { get; }
+    AppPushProviders Provider { get; }
 
     IOptions ResolveOptions(ConcurrentDictionary<string, object> extraProperties);
     IProviderAsyncLocalBase ResolveProviderAsyncLocal();

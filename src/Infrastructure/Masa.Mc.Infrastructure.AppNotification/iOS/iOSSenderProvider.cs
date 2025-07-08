@@ -7,7 +7,7 @@ public class iOSSenderProvider : IAppNotificationSenderProvider
 {
     private readonly IServiceProvider _serviceProvider;
 
-    public Providers Provider => Providers.iOS;
+    public AppPushProviders Provider => AppPushProviders.iOS;
 
     public iOSSenderProvider(IServiceProvider serviceProvider)
     {
