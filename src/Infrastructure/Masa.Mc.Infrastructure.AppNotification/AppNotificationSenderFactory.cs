@@ -5,14 +5,14 @@ namespace Masa.Mc.Infrastructure.AppNotification;
 
 public class AppNotificationSenderFactory
 {
-    private readonly Dictionary<Providers, IAppNotificationSenderProvider> _providers;
+    private readonly Dictionary<AppPushProviders, IAppNotificationSenderProvider> _providers;
 
     public AppNotificationSenderFactory(IEnumerable<IAppNotificationSenderProvider> providers)
     {
         _providers = providers.ToDictionary(p => p.Provider);
     }
 
-    public IOptions GetOptions(Providers provider, ConcurrentDictionary<string, object> extraProperties)
+    public IOptions GetOptions(AppPushProviders provider, ConcurrentDictionary<string, object> extraProperties)
     {
         if (_providers.TryGetValue(provider, out var senderProvider))
         {
@@ -22,7 +22,7 @@ public class AppNotificationSenderFactory
         throw new KeyNotFoundException($"No options resolver found for '{provider}'");
     }
 
-    public IProviderAsyncLocalBase GetProviderAsyncLocal(Providers provider)
+    public IProviderAsyncLocalBase GetProviderAsyncLocal(AppPushProviders provider)
     {
         if (_providers.TryGetValue(provider, out var senderProvider))
         {
@@ -32,7 +32,7 @@ public class AppNotificationSenderFactory
         throw new KeyNotFoundException($"No async local resolver found for '{provider}'");
     }
 
-    public IAppNotificationSender GetAppNotificationSender(Providers provider)
+    public IAppNotificationSender GetAppNotificationSender(AppPushProviders provider)
     {
         if (_providers.TryGetValue(provider, out var senderProvider))
         {

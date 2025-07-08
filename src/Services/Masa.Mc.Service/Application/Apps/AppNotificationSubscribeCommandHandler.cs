@@ -27,7 +27,7 @@ public class AppNotificationSubscribeCommandHandler
             return;
         }
 
-        var appSenderProvider = (Providers)command.Platform;
+        var appSenderProvider = (AppPushProviders)command.Platform;
         var options = _appNotificationSenderFactory.GetOptions(appSenderProvider, vendorConfig.Options);
         var asyncLocal = _appNotificationSenderFactory.GetProviderAsyncLocal(appSenderProvider);
 
@@ -49,7 +49,7 @@ public class AppNotificationSubscribeCommandHandler
             return;
         }
 
-        var appSenderProvider = (Providers)command.Platform;
+        var appSenderProvider = (AppPushProviders)command.Platform;
         var options = _appNotificationSenderFactory.GetOptions(appSenderProvider, vendorConfig.Options);
         var asyncLocal = _appNotificationSenderFactory.GetProviderAsyncLocal(appSenderProvider);
 

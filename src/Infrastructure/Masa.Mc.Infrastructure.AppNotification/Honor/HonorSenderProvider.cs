@@ -7,7 +7,7 @@ public class HonorSenderProvider : IAppNotificationSenderProvider
 {
     private readonly IServiceProvider _serviceProvider;
 
-    public Providers Provider => Providers.Honor;
+    public AppPushProviders Provider => AppPushProviders.Honor;
 
     public HonorSenderProvider(IServiceProvider serviceProvider)
     {
