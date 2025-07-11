@@ -89,7 +89,7 @@ builder.Services.AddAuthClient(masaStackConfig.GetAuthServiceDomain(), redisOpti
 builder.Services.AddMcClient(masaStackConfig.GetMcServiceDomain());
 builder.Services.AddPmClient(masaStackConfig.GetPmServiceDomain());
 builder.Services.AddSchedulerClient(masaStackConfig.GetSchedulerServiceDomain());
-builder.Services.AddAliyunSms();
+builder.Services.AddSmsSender();
 builder.Services.AddMailKit();
 builder.Services.AddAppNotification(redisOptions);
 builder.Services.AddWeixinWork(builder.Configuration);

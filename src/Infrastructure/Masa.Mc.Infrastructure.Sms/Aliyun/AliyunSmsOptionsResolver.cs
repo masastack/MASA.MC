@@ -1,25 +1,25 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
-namespace Masa.Mc.Infrastructure.Sms.Aliyun.Infrastructure.OptionsResolve;
+namespace Masa.Mc.Infrastructure.Sms.Aliyun;
 
-public class AliyunSmsOptionsResolver : IAliyunSmsOptionsResolver
+public class AliyunSmsOptionsResolver : IOptionsResolver<IAliyunSmsOptions>
 {
     private readonly IServiceProvider _serviceProvider;
-    private readonly AliyunSmsResolveOptions _options;
+    private readonly ResolveOptions<IAliyunSmsOptions> _options;
 
     public AliyunSmsOptionsResolver(IServiceProvider serviceProvider,
-        IOptions<AliyunSmsResolveOptions> aliyunSmsResolveOptions)
+        IOptions<ResolveOptions<IAliyunSmsOptions>> resolveOptions)
     {
         _serviceProvider = serviceProvider;
-        _options = aliyunSmsResolveOptions.Value;
+        _options = resolveOptions.Value;
     }
 
     public async Task<IAliyunSmsOptions> ResolveAsync()
     {
         using (var serviceScope = _serviceProvider.CreateScope())
         {
-            var context = new AliyunSmsOptionsResolveContext(serviceScope.ServiceProvider);
+            var context = new OptionsResolveContext<IAliyunSmsOptions>(serviceScope.ServiceProvider);
 
             foreach (var resolver in _options.Contributors)
             {

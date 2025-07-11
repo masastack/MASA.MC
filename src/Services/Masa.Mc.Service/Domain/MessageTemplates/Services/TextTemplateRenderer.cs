@@ -5,12 +5,12 @@ namespace Masa.Mc.Service.Admin.Domain.MessageTemplates.Services;
 
 public class TextTemplateRenderer : ITemplateRenderer
 {
-    public Task<string> RenderAsync(string context, ExtraPropertyDictionary model, string startstr = "{{", string endstr = "}}")
+    public string Render(string context, ExtraPropertyDictionary model, string startstr = "{{", string endstr = "}}")
     {
         foreach (var item in model)
         {
             context = context.Replace($"{startstr}{item.Key}{endstr}", item.Value?.ToString() ?? string.Empty);
         }
-        return Task.FromResult(context);
+        return context;
     }
 }

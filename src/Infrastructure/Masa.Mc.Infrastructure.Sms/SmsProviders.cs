@@ -3,11 +3,8 @@
 
 namespace Masa.Mc.Infrastructure.Sms;
 
-public interface ISmsSender
+public enum SmsProviders
 {
-    bool SupportsTemplate { get; }
-
-    Task<SmsResponseBase> SendAsync(SmsMessage smsMessage);
-
-    Task<SmsResponseBase> SendBatchAsync(BatchSmsMessage smsMessage);
+    Aliyun = 1,
+    YunMas
 }

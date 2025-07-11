@@ -1,9 +1,9 @@
 ﻿// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
-namespace Masa.Mc.Infrastructure.Sms.Aliyun.Infrastructure.OptionsResolve;
+namespace Masa.Mc.Infrastructure.Sms.Aliyun;
 
-public interface IAliyunSmsOptions
+public interface IAliyunSmsOptions : IOptions
 {
     public string AccessKeyId { get; set; }
 
