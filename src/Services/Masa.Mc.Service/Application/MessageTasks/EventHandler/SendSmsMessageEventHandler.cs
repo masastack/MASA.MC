@@ -5,8 +5,7 @@ namespace Masa.Mc.Service.Admin.Application.MessageTasks.EventHandler;
 
 public class SendSmsMessageEventHandler
 {
-    private readonly IAliyunSmsAsyncLocal _aliyunSmsAsyncLocal;
-    private readonly ISmsSender _smsSender;
+    private readonly SmsSenderFactory _smsSenderFactory;
     private readonly IChannelRepository _channelRepository;
     private readonly IMessageRecordRepository _messageRecordRepository;
     private readonly IMessageTaskHistoryRepository _messageTaskHistoryRepository;
@@ -14,19 +13,19 @@ public class SendSmsMessageEventHandler
     private readonly ILogger<SendSmsMessageEventHandler> _logger;
     private readonly IMessageTemplateRepository _templateRepository;
     private readonly II18n<DefaultResource> _i18n;
+    private readonly ITemplateRenderer _templateRenderer;
 
-    public SendSmsMessageEventHandler(IAliyunSmsAsyncLocal aliyunSmsAsyncLocal
-        , ISmsSender smsSender
+    public SendSmsMessageEventHandler(SmsSenderFactory smsSenderFactory
         , IChannelRepository channelRepository
         , IMessageRecordRepository messageRecordRepository
         , IMessageTaskHistoryRepository messageTaskHistoryRepository
         , MessageTemplateDomainService messageTemplateDomainService
         , ILogger<SendSmsMessageEventHandler> logger
         , IMessageTemplateRepository templateRepository
-        , II18n<DefaultResource> i18n)
+        , II18n<DefaultResource> i18n
+        , ITemplateRenderer templateRenderer)
     {
-        _aliyunSmsAsyncLocal = aliyunSmsAsyncLocal;
-        _smsSender = smsSender;
+        _smsSenderFactory = smsSenderFactory;
         _channelRepository = channelRepository;
         _messageRecordRepository = messageRecordRepository;
         _messageTaskHistoryRepository = messageTaskHistoryRepository;
@@ -34,6 +33,7 @@ public class SendSmsMessageEventHandler
         _logger = logger;
         _templateRepository = templateRepository;
         _i18n = i18n;
+        _templateRenderer = templateRenderer;
     }
 
     [EventHandler(1)]
@@ -91,37 +91,37 @@ public class SendSmsMessageEventHandler
     public async Task SendAsync(SendSmsMessageEvent eto)
     {
         var channel = await _channelRepository.FindAsync(x => x.Id == eto.ChannelId);
-        var options = new AliyunSmsOptions
-        {
-            AccessKeyId = channel.GetDataValue<string>(nameof(SmsChannelOptions.AccessKeyId)),
-            AccessKeySecret = channel.GetDataValue<string>(nameof(SmsChannelOptions.AccessKeySecret))
-        };
-        using (_aliyunSmsAsyncLocal.Change(options))
+        var provider = (SmsProviders)channel.Provider;
+        var options = _smsSenderFactory.GetOptions(provider, channel.ExtraProperties);
+        var smsAsyncLoca = _smsSenderFactory.GetProviderAsyncLocal(provider);
+        var smsSender = _smsSenderFactory.GetSender(provider);
+
+        using (smsAsyncLoca.Change(options))
         {
             foreach (var item in eto.PhoneNumberVariables)
             {
                 var phoneNumbers = item.Select(x => x.Key).ToList();
-                var variables = item.Select(x => x.Value).ToList();
-                var batchSmsMessage = new BatchSmsMessage(phoneNumbers, JsonSerializer.Serialize(variables));
+                var text = BuildSmsMessageText(provider, item, eto.MessageTemplate);
+                var batchSmsMessage = new BatchSmsMessage(phoneNumbers, text);
                 batchSmsMessage.Properties.Add("SignName", eto.Sign);
                 batchSmsMessage.Properties.Add("TemplateCode", eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.TemplateId)));
-                SetMessageRecordResult(eto, item, true, string.Empty);
+                SetMessageRecordResult(eto, item, true, string.Empty, string.Empty);
                 try
                 {
-                    var response = await _smsSender.SendBatchAsync(batchSmsMessage) as BatchSmsSendResponse;
+                    var response = await smsSender.SendBatchAsync(batchSmsMessage) as BatchSmsSendResponse;
                     if (response.Success)
                     {
-                        SetMessageRecordResult(eto, item, true, string.Empty);
+                        SetMessageRecordResult(eto, item, true, string.Empty, response.MsgId);
                     }
                     else
                     {
-                        SetMessageRecordResult(eto, item, false, response.Message);
+                        SetMessageRecordResult(eto, item, false, response.Message, response.MsgId);
                     }
                 }
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, "SendSmsMessageEventHandler");
-                    SetMessageRecordResult(eto, item, false, ex.Message);
+                    SetMessageRecordResult(eto, item, false, ex.Message, string.Empty);
                 }
             }
         }
@@ -139,7 +139,7 @@ public class SendSmsMessageEventHandler
         await _messageTaskHistoryRepository.UpdateAsync(messageTaskHistory);
     }
 
-    private void SetMessageRecordResult(SendSmsMessageEvent eto, Dictionary<string, ExtraPropertyDictionary> phoneNumberVariable, bool success, string message)
+    private void SetMessageRecordResult(SendSmsMessageEvent eto, Dictionary<string, ExtraPropertyDictionary> phoneNumberVariable, bool success, string message, string msgId)
     {
         foreach (var item in phoneNumberVariable)
         {
@@ -147,7 +147,34 @@ public class SendSmsMessageEventHandler
             if (record == null)
                 continue;
 
-            record.SetResult(success, message);
+            record.SetResult(success, message, DateTimeOffset.UtcNow, msgId);
+        }
+    }
+
+    private string BuildSmsMessageText(SmsProviders provider, Dictionary<string, ExtraPropertyDictionary> phoneNumberVariable, MessageTemplate messageTemplate)
+    {
+        if (provider == SmsProviders.Aliyun)
+        {
+            return JsonSerializer.Serialize(phoneNumberVariable.Select(x => x.Value));
+        }
+        else if (provider == SmsProviders.YunMas)
+        {
+            var dic = new Dictionary<string, string>();
+            foreach (var item in phoneNumberVariable)
+            {
+                var content = _templateRenderer.Render(messageTemplate.MessageContent.Content, item.Value);
+                dic.TryAdd(item.Key, content);
+            }
+
+            var settings = new Newtonsoft.Json.JsonSerializerSettings
+            {
+                StringEscapeHandling = Newtonsoft.Json.StringEscapeHandling.EscapeNonAscii
+            };
+            return Newtonsoft.Json.JsonConvert.SerializeObject(dic, settings);
+        }
+        else
+        {
+            return string.Empty;
         }
     }
 }

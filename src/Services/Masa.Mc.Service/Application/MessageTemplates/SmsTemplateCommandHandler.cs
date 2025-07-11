@@ -5,13 +5,13 @@ namespace Masa.Mc.Service.Admin.Application.MessageTemplates;
 
 public class SmsTemplateCommandHandler
 {
-    private readonly IAliyunSmsAsyncLocal _aliyunSmsAsyncLocal;
+    private readonly IProviderAsyncLocal<IAliyunSmsOptions> _aliyunSmsAsyncLocal;
     private readonly ISmsTemplateService _smsTemplateService;
     private readonly IChannelRepository _channelRepository;
     private readonly ISmsTemplateRepository _smsTemplateRepository;
     private readonly IMessageTemplateRepository _messageTemplateRepository;
 
-    public SmsTemplateCommandHandler(IAliyunSmsAsyncLocal aliyunSmsAsyncLocal
+    public SmsTemplateCommandHandler(IProviderAsyncLocal<IAliyunSmsOptions> aliyunSmsAsyncLocal
         , ISmsTemplateService smsTemplateService
         , IChannelRepository channelRepository
         , ISmsTemplateRepository smsTemplateRepository

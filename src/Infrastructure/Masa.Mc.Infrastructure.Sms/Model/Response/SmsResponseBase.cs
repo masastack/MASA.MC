@@ -9,9 +9,12 @@ public class SmsResponseBase
 
     public string Message { get; }
 
-    protected SmsResponseBase(bool success, string message)
+    public string MsgId { get; }
+
+    public SmsResponseBase(bool success, string message, string msgId)
     {
         Success = success;
         Message = message;
+        MsgId = msgId;
     }
 }

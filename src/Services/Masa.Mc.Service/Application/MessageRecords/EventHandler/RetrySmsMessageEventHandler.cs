@@ -5,32 +5,29 @@ namespace Masa.Mc.Service.Admin.Application.MessageRecords.EventHandler;
 
 public class RetrySmsMessageEventHandler
 {
-    private readonly IAliyunSmsAsyncLocal _aliyunSmsAsyncLocal;
-    private readonly ISmsSender _smsSender;
+    private readonly SmsSenderFactory _smsSenderFactory;
     private readonly IChannelRepository _channelRepository;
     private readonly IMessageRecordRepository _messageRecordRepository;
-    private readonly MessageTaskDomainService _taskDomainService;
     private readonly MessageTemplateDomainService _messageTemplateDomainService;
     private readonly IMessageTemplateRepository _repository;
     private readonly II18n<DefaultResource> _i18n;
+    private readonly ITemplateRenderer _templateRenderer;
 
-    public RetrySmsMessageEventHandler(IAliyunSmsAsyncLocal aliyunSmsAsyncLocal
-        , ISmsSender smsSender
+    public RetrySmsMessageEventHandler(SmsSenderFactory smsSenderFactory
         , IChannelRepository channelRepository
         , IMessageRecordRepository messageRecordRepository
-        , MessageTaskDomainService taskDomainService
         , MessageTemplateDomainService messageTemplateDomainService
         , IMessageTemplateRepository repository
-        , II18n<DefaultResource> i18n)
+        , II18n<DefaultResource> i18n
+        , ITemplateRenderer templateRenderer)
     {
-        _aliyunSmsAsyncLocal = aliyunSmsAsyncLocal;
-        _smsSender = smsSender;
+        _smsSenderFactory = smsSenderFactory;
         _channelRepository = channelRepository;
         _messageRecordRepository = messageRecordRepository;
-        _taskDomainService = taskDomainService;
         _messageTemplateDomainService = messageTemplateDomainService;
         _repository = repository;
         _i18n = i18n;
+        _templateRenderer = templateRenderer;
     }
 
     [EventHandler]
@@ -42,33 +39,31 @@ public class RetrySmsMessageEventHandler
         var channel = await _channelRepository.FindAsync(x => x.Id == messageRecord.ChannelId);
         if (channel == null) return;
 
-        var options = new AliyunSmsOptions
-        {
-            AccessKeyId = channel.GetDataValue<string>(nameof(SmsChannelOptions.AccessKeyId)),
-            AccessKeySecret = channel.GetDataValue<string>(nameof(SmsChannelOptions.AccessKeySecret))
-        };
-        using (_aliyunSmsAsyncLocal.Change(options))
+        var provider = (SmsProviders)channel.Provider;
+        var options = _smsSenderFactory.GetOptions(provider, channel.ExtraProperties);
+        var smsAsyncLoca = _smsSenderFactory.GetProviderAsyncLocal(provider);
+        var smsSender = _smsSenderFactory.GetSender(provider);
+
+        using (smsAsyncLoca.Change(options))
         {
             var variables = messageRecord.Variables;
-            if (messageRecord.MessageEntityType == MessageEntityTypes.Template)
+            var messageTemplate = await _repository.FindAsync(x => x.Id == messageRecord.MessageEntityId, false);
+            if (!await _messageTemplateDomainService.CheckSendUpperLimitAsync(messageTemplate, messageRecord.ChannelUserIdentity))
             {
-                var messageTemplate = await _repository.FindAsync(x => x.Id == messageRecord.MessageEntityId, false);
-                if (!await _messageTemplateDomainService.CheckSendUpperLimitAsync(messageTemplate, messageRecord.ChannelUserIdentity))
-                {
-                    messageRecord.SetResult(false, _i18n.T("DailySendingLimit"));
-                    await _messageRecordRepository.UpdateAsync(messageRecord);
-                    return;
-                }
-
-                variables = _messageTemplateDomainService.ConvertVariables(messageTemplate, messageRecord.Variables);
+                messageRecord.SetResult(false, _i18n.T("DailySendingLimit"));
+                await _messageRecordRepository.UpdateAsync(messageRecord);
+                return;
             }
 
-            var smsMessage = new SmsMessage(messageRecord.ChannelUserIdentity, JsonSerializer.Serialize(variables));
+            variables = _messageTemplateDomainService.ConvertVariables(messageTemplate, messageRecord.Variables);
+            var text = BuildSmsMessageText(smsSender, variables, messageTemplate);
+
+            var smsMessage = new SmsMessage(messageRecord.ChannelUserIdentity, text);
             smsMessage.Properties.Add("SignName", messageRecord.GetDataValue<string>(nameof(MessageTemplate.Sign)));
             smsMessage.Properties.Add("TemplateCode", messageRecord.GetDataValue<string>(nameof(MessageTemplate.TemplateId)));
             try
             {
-                var response = await _smsSender.SendAsync(smsMessage) as SmsSendResponse;
+                var response = await smsSender.SendAsync(smsMessage) as SmsSendResponse;
                 if (response.Success)
                 {
                     messageRecord.SetResult(true, string.Empty);
@@ -85,5 +80,10 @@ public class RetrySmsMessageEventHandler
 
             await _messageRecordRepository.UpdateAsync(messageRecord);
         }
+    }
+
+    private string BuildSmsMessageText(ISmsSender sender, ExtraPropertyDictionary variables, MessageTemplate messageTemplate)
+    {
+        return sender.SupportsTemplate ? JsonSerializer.Serialize(variables) : _templateRenderer.Render(messageTemplate.MessageContent.Content, variables);
     }
 }

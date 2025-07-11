@@ -5,12 +5,14 @@ namespace Masa.Mc.Infrastructure.Sms.Aliyun;
 
 public class AliyunSmsSender : ISmsSender
 {
-    private readonly IAliyunSmsOptionsResolver _aliyunSmsOptionsResolver;
+    private readonly IOptionsResolver<IAliyunSmsOptions> _optionsResolver;
 
-    public AliyunSmsSender(IAliyunSmsOptionsResolver aliyunSmsOptionsResolver)
+    public AliyunSmsSender(IOptionsResolver<IAliyunSmsOptions> optionsResolver)
     {
-        _aliyunSmsOptionsResolver = aliyunSmsOptionsResolver;
+        _optionsResolver = optionsResolver;
     }
+
+    public bool SupportsTemplate => true;
 
     public async Task<SmsResponseBase> SendAsync(SmsMessage smsMessage)
     {
@@ -23,7 +25,7 @@ public class AliyunSmsSender : ISmsSender
             TemplateCode = smsMessage.Properties["TemplateCode"] as string,
             TemplateParam = smsMessage.Text
         });
-        return new SmsSendResponse(response.Body.Code == "OK", response.Body.Message, response);
+        return new SmsSendResponse(response.Body.Code == "OK", response.Body.Message, response.Body.BizId, response);
     }
 
     public async Task<SmsResponseBase> SendBatchAsync(BatchSmsMessage smsMessage)
@@ -41,12 +43,12 @@ public class AliyunSmsSender : ISmsSender
         };
 
         var response = await client.SendBatchSmsAsync(request);
-        return new BatchSmsSendResponse(response.Body.Code == "OK", response.Body.Message, response);
+        return new BatchSmsSendResponse(response.Body.Code == "OK", response.Body.Message, response.Body.BizId, response);
     }
 
     protected async Task<AliyunClient> CreateClientAsync()
     {
-        var options = await _aliyunSmsOptionsResolver.ResolveAsync();
+        var options = await _optionsResolver.ResolveAsync();
         return new(new AliyunConfig
         {
             AccessKeyId = options.AccessKeyId,
