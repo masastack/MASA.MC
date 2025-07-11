@@ -15,5 +15,6 @@ jobs:
           REMOTE: '${{ secrets.GITLAB_ADDER }}/cicd/masa.mc.git'
           GIT_USERNAME: ${{ secrets.GIT_USERNAME }}
           GIT_PASSWORD: ${{ secrets.GIT_PASSWORD }}
+          PUSH_ALL_REFS: "false"
 
           
