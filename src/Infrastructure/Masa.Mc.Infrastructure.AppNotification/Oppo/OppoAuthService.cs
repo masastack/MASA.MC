@@ -6,40 +6,30 @@ namespace Masa.Mc.Infrastructure.AppNotification.Oppo;
 public class OppoAuthService
 {
     private readonly HttpClient _httpClient;
-    private readonly ICacheContext _cacheContext;
 
-    public OppoAuthService(HttpClient httpClient, ICacheContext cacheContext)
+    public OppoAuthService(HttpClient httpClient)
     {
         _httpClient = httpClient;
-        _cacheContext = cacheContext;
     }
 
     public async Task<string> GetAccessTokenAsync(string appKey, string masterSecret, CancellationToken ct)
     {
-        var cacheKey = $"oppo:access_token:{appKey}";
+        var now = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+        var timestamp = now;
+        var sign = GenerateSign(appKey, masterSecret, timestamp);
 
-        return await _cacheContext.GetOrSetAsync(cacheKey, async () =>
-        {
-            var now = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-            var timestamp = now;
-            var sign = GenerateSign(appKey, masterSecret, timestamp);
-
-            var content = new FormUrlEncodedContent(new Dictionary<string, string>
+        var content = new FormUrlEncodedContent(new Dictionary<string, string>
             {
                 { "app_key", appKey },
                 { "sign", sign },
                 { "timestamp", timestamp.ToString() }
             });
 
-            var response = await _httpClient.PostAsync(OppoConstants.AuthUrl, content, ct);
-            response.EnsureSuccessStatusCode();
-            var json = await response.Content.ReadAsStringAsync(ct);
-            using var doc = JsonDocument.Parse(json);
-            var token = doc.RootElement.GetProperty("data").GetProperty("auth_token").GetString()!;
-            // OPPO official documentation states the validity period is 24 hours, it is recommended to refresh 1 hour in advance
-            var cacheEntryOptions = new CacheEntryOptions(TimeSpan.FromHours(23));
-            return (token, cacheEntryOptions);
-        });
+        var response = await _httpClient.PostAsync(OppoConstants.AuthUrl, content, ct);
+        response.EnsureSuccessStatusCode();
+        var json = await response.Content.ReadAsStringAsync(ct);
+        using var doc = JsonDocument.Parse(json);
+        return doc.RootElement.GetProperty("data").GetProperty("auth_token").GetString()!;
     }
 
     private string GenerateSign(string appKey, string masterSecret, long timestamp)
