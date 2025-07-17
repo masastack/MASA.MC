@@ -38,21 +38,36 @@ public class MessageTaskQueryHandler
         MasaArgumentException.ThrowIfNull(entity, _i18n.T("MessageTask"));
 
         var dto = entity.Adapt<MessageTaskDto>();
+        await FillMessageTaskDto(dto);
+        query.Result = dto;
+    }
 
-        if (entity.EntityType == MessageEntityTypes.Ordinary)
+    private async Task FillMessageTaskDto(MessageTaskDto dto)
+    {
+        if (dto.EntityType == MessageEntityTypes.Ordinary)
         {
-            var info = await _context.MessageInfoQueries.FirstOrDefaultAsync(x => x.Id == entity.EntityId);
+            var info = await _context.MessageInfoQueries.FirstOrDefaultAsync(x => x.Id == dto.EntityId);
             dto.MessageInfo = info?.Adapt<MessageInfoDto>() ?? new();
         }
 
-        query.Result = dto;
+        var userIds = dto.Receivers.Where(x => x.Type == MessageTaskReceiverTypes.User && x.SubjectId != Guid.Empty).Select(x => x.SubjectId).Distinct().ToArray();
+        var userInfos = await _authClient.UserService.GetListByIdsAsync(userIds);
+        foreach (var item in dto.Receivers)
+        {
+            if (item.Type == MessageTaskReceiverTypes.User)
+            {
+                var userInfo = userInfos.FirstOrDefault(x => x.Id == item.SubjectId);
+                item.Avatar = userInfo?.Avatar ?? string.Empty;
+                item.DisplayName = userInfo?.StaffDisplayName ?? string.Empty;
+                item.Email = userInfo?.Email ?? string.Empty;
+                item.PhoneNumber = userInfo?.PhoneNumber ?? string.Empty;
+            }
+        }
     }
 
     [EventHandler]
     public async Task GetListAsync(GetMessageTaskListQuery query)
     {
-        var ac = _queryContext.Database.GetConnectionString();
-
         var options = query.Input;
 
         if (!options.ChannelId.HasValue && !string.IsNullOrEmpty(options.ChannelCode))
