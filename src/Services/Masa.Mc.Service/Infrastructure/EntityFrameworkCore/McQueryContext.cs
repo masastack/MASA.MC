@@ -122,6 +122,30 @@ public class McQueryContext : MasaDbContext<McQueryContext>, IMcQueryContext
             b.Property(x => x.Options).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
         });
 
+        // Apply provider-specific configurations
+        ApplyProviderSpecificConfigurations(builder);
+
         base.OnModelCreatingExecuting(builder);
+    }
+
+    private void ApplyProviderSpecificConfigurations(ModelBuilder builder)
+    {
+        if (Database.ProviderName == "Npgsql.EntityFrameworkCore.PostgreSQL")
+        {
+            foreach (var entityType in builder.Model.GetEntityTypes())
+            {
+                foreach (var property in entityType.GetProperties())
+                {
+                    if (property.ClrType == typeof(DateTime))
+                    {
+                        property.SetValueConverter(new DateTimeUtcConverter());
+                    }
+                    else if (property.ClrType == typeof(DateTime?))
+                    {
+                        property.SetValueConverter(new NullableDateTimeUtcConverter());
+                    }
+                }
+            }
+        }
     }
 }
