@@ -3,6 +3,4 @@
 
 namespace Masa.Mc.Domain.WebsiteMessages.Events;
 
-public record AddWebsiteMessageDomainEvent(Guid UserId, DateTimeOffset CheckTime) : DomainEvent
-{
-}
+public record AddWebsiteMessageDomainEvent(Guid UserId, DateTimeOffset CheckTime) : DomainEvent;

@@ -41,6 +41,8 @@ public class ChannelType : Enumeration
         throw new NotImplementedException();
     }
 
+    public virtual bool SupportsBroadcast {  get; }
+
     private class SmsChannel : ChannelType
     {
         public SmsChannel() : base(1, nameof(Sms)) { }
@@ -69,6 +71,8 @@ public class ChannelType : Enumeration
         {
             return user?.PhoneNumber ?? string.Empty;
         }
+
+        public override bool SupportsBroadcast => false;
     }
 
     private class EmailChannel : ChannelType
@@ -89,6 +93,8 @@ public class ChannelType : Enumeration
         {
             return user?.Email ?? string.Empty;
         }
+
+        public override bool SupportsBroadcast => false;
     }
 
     private class WebsiteMessageChannel : ChannelType
@@ -109,6 +115,8 @@ public class ChannelType : Enumeration
         {
             return user.Id.ToString();
         }
+
+        public override bool SupportsBroadcast => true;
     }
 
     public class AppsChannel : ChannelType
@@ -139,6 +147,8 @@ public class ChannelType : Enumeration
             }
             return extraProperties;
         }
+
+        public override bool SupportsBroadcast => true;
     }
 
     private class WeixinWorkChannel : ChannelType
@@ -159,6 +169,8 @@ public class ChannelType : Enumeration
         {
             return string.Empty;
         }
+
+        public override bool SupportsBroadcast => false;
     }
 
     private class WeixinWorkWebhookChannel : ChannelType
@@ -179,5 +191,7 @@ public class ChannelType : Enumeration
         {
             return string.Empty;
         }
+
+        public override bool SupportsBroadcast => false;
     }
 }
