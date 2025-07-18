@@ -35,10 +35,34 @@ public class McDbContext : MasaDbContext<McDbContext>
 
         builder.ApplyConfiguration(new IntegrationEventLogEntityTypeConfiguration());
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly()!);
+
+        // Apply provider-specific configurations
+        ApplyProviderSpecificConfigurations(builder);
     }
 
     public static void RegisterAssembly(Assembly assembly)
     {
         Assembly = assembly;
+    }
+
+    private void ApplyProviderSpecificConfigurations(ModelBuilder builder)
+    {
+        if (Database.ProviderName == "Npgsql.EntityFrameworkCore.PostgreSQL")
+        {
+            foreach (var entityType in builder.Model.GetEntityTypes())
+            {
+                foreach (var property in entityType.GetProperties())
+                {
+                    if (property.ClrType == typeof(DateTime))
+                    {
+                        property.SetValueConverter(new DateTimeUtcConverter());
+                    }
+                    else if (property.ClrType == typeof(DateTime?))
+                    {
+                        property.SetValueConverter(new NullableDateTimeUtcConverter());
+                    }
+                }
+            }
+        }
     }
 }
