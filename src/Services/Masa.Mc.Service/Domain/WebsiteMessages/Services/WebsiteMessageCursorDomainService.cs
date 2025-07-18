@@ -6,14 +6,14 @@ namespace Masa.Mc.Service.Admin.Domain.WebsiteMessages.Services;
 public class WebsiteMessageCursorDomainService : DomainService
 {
     private readonly IWebsiteMessageCursorRepository _repository;
-    private readonly IHubContext<NotificationsHub> _hubContext;
+    private readonly IUnitOfWork _unitOfWork;
 
     public WebsiteMessageCursorDomainService(IDomainEventBus eventBus
         , IWebsiteMessageCursorRepository repository
-        , IHubContext<NotificationsHub> hubContext) : base(eventBus)
+        , IUnitOfWork unitOfWork) : base(eventBus)
     {
         _repository = repository;
-        _hubContext = hubContext;
+        _unitOfWork = unitOfWork;
     }
 
     public virtual async Task CheckAsync(Guid userId)
@@ -26,14 +26,12 @@ public class WebsiteMessageCursorDomainService : DomainService
         }
         else
         {
-            await EventBus.PublishAsync(new AddWebsiteMessageDomainEvent(userId, cursor.UpdateTime));
+            var eventData = new AddWebsiteMessageDomainEvent(userId, cursor.UpdateTime);
+            await EventBus.PublishAsync(eventData);
             cursor.Update();
             await _repository.UpdateAsync(cursor);
-            await _repository.UnitOfWork.SaveChangesAsync();
-            await _repository.UnitOfWork.CommitAsync();
-
-            var onlineClients = _hubContext.Clients.Users(userId.ToString());
-            await onlineClients.SendAsync(SignalRMethodConsts.GET_NOTIFICATION);
+            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.CommitAsync();
         }
     }
 }
