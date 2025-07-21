@@ -75,6 +75,20 @@ public class ChannelQueryHandler
         query.Result = dto;
     }
 
+    [EventHandler]
+    public async Task GetVendorsAsync(GetChannelVendorsQuery query)
+    {
+        var configs = await _context.AppVendorConfigQueries.Where(x => x.ChannelId == query.ChannelId).ToListAsync();
+        var configDict = configs.ToDictionary(x => x.Vendor, x => x);
+        
+        query.Result = Enum.GetValues<AppVendor>()
+            .OrderBy(x => x)
+            .Select(vendor => configDict.TryGetValue(vendor, out var config) 
+                ? config.Adapt<AppVendorConfigDto>() 
+                : new AppVendorConfigDto { Id = Guid.Empty, Vendor = vendor, Options = new() })
+            .ToList();
+    }
+
     private async Task<Expression<Func<ChannelQueryModel, bool>>> CreateFilteredPredicate(GetChannelInputDto inputDto)
     {
         Expression<Func<ChannelQueryModel, bool>> condition = channel => true;

@@ -140,16 +140,31 @@ public class SendAppMessageEventHandler
 
     private async Task<MessageSendStatuses> SendMcAppMessageAsync(SendAppMessageEvent eto, ExtraPropertyDictionary transmissionContent)
     {
-        var messageData = eto.MessageData;
         var messageTaskHistory = eto.MessageTaskHistory;
-        var groupByPlatform = GroupUsersByPlatform(messageTaskHistory.ReceiverUsers, messageTaskHistory.MessageTask.ReceiverType);
+        var users = messageTaskHistory.ReceiverUsers;
+        
+        // Separate valid and invalid platform users
+        var validUsers = users.Where(user => !string.IsNullOrEmpty(user.Platform) && Enum.TryParse<AppPushProviders>(user.Platform, out _)).ToList();
+        var invalidUsers = users.Where(user => string.IsNullOrEmpty(user.Platform) || !Enum.TryParse<AppPushProviders>(user.Platform, out _)).ToList();
 
         var sendStatuses = new List<MessageSendStatuses>();
 
-        foreach (var platformGroup in groupByPlatform)
+        // Process valid platform users
+        if (validUsers.Any())
         {
-            var result = await SendToPlatformAsync(platformGroup.Key, platformGroup.Value, eto, transmissionContent);
-            sendStatuses.Add(result);
+            var groupByPlatform = GroupUsersByPlatform(validUsers, messageTaskHistory.MessageTask.ReceiverType);
+            foreach (var platformGroup in groupByPlatform)
+            {
+                var result = await SendToPlatformAsync(platformGroup.Key, platformGroup.Value, eto, transmissionContent);
+                sendStatuses.Add(result);
+            }
+        }
+
+        // Process invalid platform users
+        if (invalidUsers.Any())
+        {
+            await ProcessInvalidPlatformUsers(invalidUsers, eto, transmissionContent);
+            sendStatuses.Add(MessageSendStatuses.Fail);
         }
 
         return DetermineOverallStatus(sendStatuses);
@@ -168,7 +183,7 @@ public class SendAppMessageEventHandler
         }
 
         return users
-            .Where(user => Enum.TryParse<AppPushProviders>(user.Platform, out _))
+            .Where(user => !string.IsNullOrEmpty(user.Platform) && Enum.TryParse<AppPushProviders>(user.Platform, out _))
             .GroupBy(user => Enum.Parse<AppPushProviders>(user.Platform))
             .ToDictionary(group => group.Key, group => group.AsEnumerable());
     }
@@ -190,6 +205,25 @@ public class SendAppMessageEventHandler
         {
             var sender = _appNotificationSenderFactory.GetAppNotificationSender(platform);
             return await SendMessageBasedOnReceiverTypeAsync(sender, eto, transmissionContent, eto.MessageTaskHistory, (AppPlatform)platform, users.ToList());
+        }
+    }
+
+    private async Task ProcessInvalidPlatformUsers(IEnumerable<MessageReceiverUser> users, SendAppMessageEvent eto, ExtraPropertyDictionary transmissionContent)
+    {
+        var records = new List<MessageRecord>();
+
+        foreach (var user in users)
+        {
+            var record = CreateMessageRecord(user, eto.ChannelId, eto.MessageTaskHistory, eto.MessageData);
+            record.SetResult(false, "Invalid platform: Unable to determine push provider");
+            records.Add(record);
+        }
+
+        if (records.Any())
+        {
+            await _messageRecordRepository.AddRangeAsync(records);
+            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.CommitAsync();
         }
     }
 

@@ -72,6 +72,36 @@ public class ChannelCommandHandler
         }
     }
 
+    [EventHandler]
+    public async Task SaveVendorsAsync(SaveChannelVendorsCommand command)
+    {
+        var existingConfigs = await _appVendorConfigRepository.GetListAsync(x => x.ChannelId == command.ChannelId);
+        var existingVendors = existingConfigs.ToDictionary(x => x.Vendor, x => x);
+        var newVendors = command.Vendors.ToDictionary(x => x.Vendor, x => x);
+
+        // Update existing and remove deleted vendors
+        foreach (var existingConfig in existingConfigs)
+        {
+            if (newVendors.TryGetValue(existingConfig.Vendor, out var newConfig))
+            {
+                existingConfig.UpdateOptions(newConfig.Options);
+                await _appVendorConfigRepository.UpdateAsync(existingConfig);
+            }
+            else
+            {
+                await _appVendorConfigRepository.RemoveAsync(existingConfig);
+            }
+        }
+
+        // Add new vendors
+        var newVendorConfigs = command.Vendors.Where(v => !existingVendors.ContainsKey(v.Vendor)).ToList();
+        foreach (var vendorConfig in newVendorConfigs)
+        {
+            var entity = new AppVendorConfig(command.ChannelId, vendorConfig.Vendor, vendorConfig.Options);
+            await _appVendorConfigRepository.AddAsync(entity);
+        }
+    }
+
     private async Task ValidateChannelNameAsync(string displayName, Guid? id)
     {
         if (await _repository.FindAsync(x => x.DisplayName == displayName && x.Id != id) != null)

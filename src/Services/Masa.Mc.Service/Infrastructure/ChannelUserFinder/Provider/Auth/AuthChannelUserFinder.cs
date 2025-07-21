@@ -195,7 +195,13 @@ public class AuthChannelUserFinder : IChannelUserFinder
         if (channel.Provider == (int)AppChannelProviders.Mc)
         {
             var appDeviceTokens = await _appDeviceTokenRepository.GetListAsync(x => x.ChannelId == channel.Id && userIds.Contains(x.UserId));
-            return appDeviceTokens.Select(x => new MessageReceiverUser(x.UserId, x.DeviceToken, new(), x.Platform.ToString()));
+            var deviceTokenDict = appDeviceTokens.ToDictionary(x => x.UserId);
+            
+            return userIds.Select(userId => 
+                deviceTokenDict.TryGetValue(userId, out var token)
+                    ? new MessageReceiverUser(token.UserId, token.DeviceToken, new(), 
+                        Enum.IsDefined(typeof(AppPlatform), token.Platform) ? token.Platform.ToString() : string.Empty)
+                    : new MessageReceiverUser(userId, string.Empty, new(), string.Empty));
         }
         else
         {
