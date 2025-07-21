@@ -94,7 +94,8 @@ public class ChannelCommandHandler
         }
 
         // Add new vendors
-        foreach (var vendorConfig in command.Vendors.Where(v => !existingVendors.ContainsKey(v.Vendor)))
+        var newVendorConfigs = command.Vendors.Where(v => !existingVendors.ContainsKey(v.Vendor)).ToList();
+        foreach (var vendorConfig in newVendorConfigs)
         {
             var entity = new AppVendorConfig(command.ChannelId, vendorConfig.Vendor, vendorConfig.Options);
             await _appVendorConfigRepository.AddAsync(entity);
