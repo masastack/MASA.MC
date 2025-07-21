@@ -75,10 +75,25 @@ public class ChannelService : ServiceBase
         return query.Result;
     }
 
+    [RoutePattern("{id}/vendors", StartWithBaseUri = true, HttpMethod = "Get")]
+    public async Task<List<AppVendorConfigDto>> GetVendorConfigsAsync([FromRoute] Guid id)
+    {
+        var query = new GetChannelVendorsQuery(id);
+        await _eventBus.PublishAsync(query);
+        return query.Result;
+    }
+
     [RoutePattern("{id}/vendor/{vendor}/config", StartWithBaseUri = true, HttpMethod = "Post")]
     public async Task SaveVendorConfigAsync([FromRoute] Guid id, [FromRoute] AppVendor vendor, [FromBody] VendorConfigUpsertDto vendorConfig)
     {
         var command = new SaveChannelVendorConfigCommand(id, vendor, vendorConfig.Options);
+        await _eventBus.PublishAsync(command);
+    }
+
+    [RoutePattern("{id}/vendors", StartWithBaseUri = true, HttpMethod = "Post")]
+    public async Task SaveVendorsAsync([FromRoute] Guid id, [FromBody] List<AppVendorConfigDto> vendors)
+    {
+        var command = new SaveChannelVendorsCommand(id, vendors);
         await _eventBus.PublishAsync(command);
     }
 }
