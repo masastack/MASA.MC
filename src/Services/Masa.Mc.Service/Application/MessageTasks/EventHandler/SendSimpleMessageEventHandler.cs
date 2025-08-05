@@ -38,24 +38,30 @@ public class SendSimpleMessageEventHandler
             smsMessage.Properties.Add("SignName", sign);
             smsMessage.Properties.Add("TemplateCode", templateId);
 
-            var response = await smsSender.SendAsync(smsMessage);
-
             var messageRecord = new MessageRecord(Guid.Empty, eto.ChannelUserIdentity, channel.Id, Guid.Empty, Guid.Empty, eto.OriginalVariables, eto.MessageData.MessageContent.Title, DateTimeOffset.UtcNow, eto.SystemId);
             messageRecord.SetMessageEntity(eto.MessageData.MessageType, messageEntityId);
             messageRecord.SetDataValue(nameof(MessageTemplate.Sign), sign);
             messageRecord.SetDataValue(nameof(MessageTemplate.TemplateId), templateId);
-
             messageRecord.SetDisplayName(eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.DisplayName)));
 
-            if (response?.Success == true)
+            try
             {
-                messageRecord.SetResult(true, string.Empty, DateTimeOffset.UtcNow, response.MsgId);
-            }
-            else
-            {
-                messageRecord.SetResult(false, response?.Message ?? string.Empty, DateTimeOffset.UtcNow, response.MsgId);
-            }
+                var response = await smsSender.SendAsync(smsMessage);
 
+                if (response.Success == true)
+                {
+                    messageRecord.SetResult(true, string.Empty, DateTimeOffset.UtcNow, response.MsgId);
+                }
+                else
+                {
+                    messageRecord.SetResult(false, response?.Message ?? string.Empty, DateTimeOffset.UtcNow, response?.MsgId ?? string.Empty);
+                }
+            }
+            catch (Exception ex)
+            {
+                messageRecord.SetResult(false, ex.Message ?? string.Empty, DateTimeOffset.UtcNow, string.Empty);
+            }
+            
             await _messageRecordRepository.AddAsync(messageRecord);
         }
     }
