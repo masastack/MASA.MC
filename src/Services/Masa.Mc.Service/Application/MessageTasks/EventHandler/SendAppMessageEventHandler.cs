@@ -144,8 +144,8 @@ public class SendAppMessageEventHandler
         var users = messageTaskHistory.ReceiverUsers;
         
         // Separate valid and invalid platform users
-        var validUsers = users.Where(user => !string.IsNullOrEmpty(user.Platform) && Enum.TryParse<AppPushProviders>(user.Platform, out _)).ToList();
-        var invalidUsers = users.Where(user => string.IsNullOrEmpty(user.Platform) || !Enum.TryParse<AppPushProviders>(user.Platform, out _)).ToList();
+        var validUsers = users.Where(user => !string.IsNullOrEmpty(user.Platform) && Enum.TryParse<AppPushProviders>(user.Platform, out _) && !string.IsNullOrEmpty(user.ChannelUserIdentity)).ToList();
+        var invalidUsers = users.Where(user => string.IsNullOrEmpty(user.Platform) || !Enum.TryParse<AppPushProviders>(user.Platform, out _) || string.IsNullOrEmpty(user.ChannelUserIdentity)).ToList();
 
         var sendStatuses = new List<MessageSendStatuses>();
 
@@ -163,7 +163,7 @@ public class SendAppMessageEventHandler
         // Process invalid platform users
         if (invalidUsers.Any())
         {
-            await ProcessInvalidPlatformUsers(invalidUsers, eto, transmissionContent);
+            await ProcessInvalidUsers(invalidUsers, eto, transmissionContent);
             sendStatuses.Add(MessageSendStatuses.Fail);
         }
 
@@ -208,14 +208,21 @@ public class SendAppMessageEventHandler
         }
     }
 
-    private async Task ProcessInvalidPlatformUsers(IEnumerable<MessageReceiverUser> users, SendAppMessageEvent eto, ExtraPropertyDictionary transmissionContent)
+    private async Task ProcessInvalidUsers(IEnumerable<MessageReceiverUser> users, SendAppMessageEvent eto, ExtraPropertyDictionary transmissionContent)
     {
         var records = new List<MessageRecord>();
 
         foreach (var user in users)
         {
             var record = CreateMessageRecord(user, eto.ChannelId, eto.MessageTaskHistory, eto.MessageData);
-            record.SetResult(false, "Invalid platform: Unable to determine push provider");
+            if (string.IsNullOrEmpty(user.ChannelUserIdentity))
+            {
+                record.SetResult(false, "Invalid channel user identity");
+            }
+            else
+            {
+                record.SetResult(false, "Invalid platform");
+            }
             records.Add(record);
         }
 

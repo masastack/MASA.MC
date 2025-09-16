@@ -62,7 +62,7 @@ public class HonorPushSender : IAppNotificationSender
             Content = JsonContent.Create(payload)
         };
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-        request.Headers.Add("timestamp", DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString());
+        request.Headers.Add("timestamp", DateTimeOffset.UtcNow.ToUnixTimeMilliseconds().ToString());
 
         return await _httpClient.SendAsync(request, ct);
     }
@@ -113,9 +113,14 @@ public class HonorPushSender : IAppNotificationSender
 
             var code = doc.RootElement.GetProperty("code").GetInt32();
             var message = doc.RootElement.GetProperty("message").GetString() ?? string.Empty;
-            var data = doc.RootElement.TryGetProperty("data", out var dataProp) ? dataProp : default;
-            var requestId = data.TryGetProperty("requestId", out var idProp) ? idProp.GetString() : string.Empty;
-            var sendResult = data.TryGetProperty("sendResult", out var sendResultProp) && sendResultProp.GetBoolean();
+            string requestId = string.Empty;
+            bool sendResult = false;
+
+            if (doc.RootElement.TryGetProperty("data", out var data) && data.ValueKind == JsonValueKind.Object)
+            {
+                requestId = data.TryGetProperty("requestId", out var idProp) ? (idProp.GetString() ?? string.Empty) : string.Empty;
+                sendResult = data.TryGetProperty("sendResult", out var sendResultProp) && sendResultProp.GetBoolean();
+            }
 
             return code == 200 && sendResult
                 ? new AppNotificationResponse(true, "Success", requestId)
@@ -136,11 +141,17 @@ public class HonorPushSender : IAppNotificationSender
 
             var code = doc.RootElement.GetProperty("code").GetInt32();
             var message = doc.RootElement.GetProperty("message").GetString() ?? string.Empty;
-            var data = doc.RootElement.TryGetProperty("data", out var dataProp) ? dataProp : default;
-            var requestId = (data.TryGetProperty("requestId", out var idProp) ? idProp.GetString() : string.Empty) ?? string.Empty;
-            var sendResult = data.TryGetProperty("sendResult", out var sendResultProp) && sendResultProp.GetBoolean();
+            string requestId = string.Empty;
+            bool sendResult = false;
+            JsonElement data;
+            bool hasData = doc.RootElement.TryGetProperty("data", out data) && data.ValueKind == JsonValueKind.Object;
+            if (hasData)
+            {
+                requestId = (data.TryGetProperty("requestId", out var idProp) ? idProp.GetString() : string.Empty) ?? string.Empty;
+                sendResult = data.TryGetProperty("sendResult", out var sendResultProp) && sendResultProp.GetBoolean();
+            }
 
-            if (code == 80100000 && data.TryGetProperty("failTokens", out var failTokensProp))
+            if (code == 80100000 && hasData && data.TryGetProperty("failTokens", out var failTokensProp))
             {
                 var failTokens = failTokensProp.EnumerateArray().Select(token => token.GetString()).ToList();
                 return clientIds.Select(x => new AppNotificationResponse(!failTokens.Contains(x), failTokens.Contains(x) ? "Failed token" : "Success", requestId, x));
