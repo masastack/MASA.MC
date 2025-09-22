@@ -12,6 +12,23 @@ public class OppoReceiptInput
     public long EventTime { get; set; }
     public string Param { get; set; }
     public string EventType { get; set; }
+
+    public OppoReceiptEventType? GetEventTypeEnum()
+    {
+        switch (EventType)
+        {
+            case "push_arrive":
+                return OppoReceiptEventType.PushArrive;
+            case "regid_invalid":
+                return OppoReceiptEventType.RegidInvalid;
+            case "user_daily_limit":
+                return OppoReceiptEventType.UserDailyLimit;
+            case "message_night_control":
+                return OppoReceiptEventType.MessageNightControl;
+            default:
+                return null;
+        }
+    }
 }
 
 
@@ -24,5 +41,7 @@ public enum OppoReceiptEventType
     RegidInvalid,
 
     [Description("单应用单设备限量")]
-    UserDailyLimit
+    UserDailyLimit,
+    [Description("下发时段管控")]
+    MessageNightControl,
 }

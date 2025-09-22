@@ -15,116 +15,100 @@ public class MessageReceiptCommandHandler
     [EventHandler]
     public async Task ReceiveHuaweiReceiptAsync(ReceiveHuaweiReceiptCommand command, CancellationToken cancellationToken = default)
     {
-        var requestIds = command.Input.Statuses.Select(x => x.RequestId);
-        var records = await _repository.GetListAsync(x => requestIds.Contains(x.MessageId));
-
-        foreach (var record in records)
+        foreach (var item in command.Input.Statuses)
         {
-            var status = command.Input.Statuses.FirstOrDefault(x => x.RequestId == record.MessageId && x.Token == record.ChannelUserIdentity);
-            if (status != null) 
-            {
-                var success = status.DeliveryStatus.Result == HuaweiDeliveryResult.Success;
-                var failureReason = status.DeliveryStatus.Result.GetDescription();
-                record.UpdateResult(success, failureReason);
-            }
-        }
+            var messageId = item.RequestId;
+            var record = await _repository.FindAsync(x => x.MessageId == messageId && x.ChannelUserIdentity == item.Token, cancellationToken);
+            if (record == null) continue;
 
-        await _repository.UpdateRangeAsync(records, cancellationToken);
+            var success = item.DeliveryStatus.Result == HuaweiDeliveryResult.Success;
+            var failureReason = item.DeliveryStatus.Result.GetDescription();
+            record.UpdateResult(success, failureReason);
+            await _repository.UpdateAsync(record, cancellationToken);
+        }
     }
 
     [EventHandler]
     public async Task ReceiveHonorReceiptAsync(ReceiveHonorReceiptCommand command, CancellationToken cancellationToken = default)
     {
-        var requestIds = command.Input.Statuses.Select(x => x.RequestId);
-        var records = await _repository.GetListAsync(x => requestIds.Contains(x.MessageId));
-
-        foreach (var record in records)
+        foreach (var item in command.Input.Statuses)
         {
-            var status = command.Input.Statuses.FirstOrDefault(x => x.RequestId == record.MessageId && x.Token == record.ChannelUserIdentity);
-            if (status != null)
-            {
-                var success = status.Status == HonorReceiptStatus.Success;
-                var failureReason = status.Status.GetDescription();
-                record.UpdateResult(success, failureReason);
-            }
-        }
+            var messageId = item.RequestId;
+            var record = await _repository.FindAsync(x => x.MessageId == messageId && x.ChannelUserIdentity == item.Token, cancellationToken);
+            if (record == null) continue;
 
-        await _repository.UpdateRangeAsync(records, cancellationToken);
+            var success = item.Status == HonorReceiptStatus.Success;
+            var failureReason = item.Status.GetDescription();
+            record.UpdateResult(success, failureReason);
+            await _repository.UpdateAsync(record, cancellationToken);
+        }
     }
 
     [EventHandler]
     public async Task ReceiveXiaomiReceiptAsync(ReceiveXiaomiReceiptCommand command, CancellationToken cancellationToken = default)
     {
-        var msgIds = command.Input.Keys.ToList();
-        var records = await _repository.GetListAsync(x => msgIds.Contains(x.MessageId));
-
-        foreach (var record in records)
+        foreach (var item in command.Input)
         {
-            if (!command.Input.TryGetValue(record.MessageId, out var status))
-                continue;
+            var messageId = item.Key;
+            var targets = item.Value.Targets?.Split(',') ?? Array.Empty<string>();
+            var records = await _repository.GetListAsync(x => x.MessageId == messageId && targets.Contains(x.ChannelUserIdentity), cancellationToken);
+            if (!records.Any()) continue;
 
-            var success = status.Type == MiReceiptType.Delivered || status.Type == MiReceiptType.Clicked;
-            var failureReason = status.Type.GetDescription();
+            var success = item.Value.Type == MiReceiptType.Delivered || item.Value.Type == MiReceiptType.Clicked;
+            var failureReason = item.Value.Type.GetDescription();
 
-            record.UpdateResult(success, failureReason);
+            foreach (var record in records)
+            {
+                record.UpdateResult(success, failureReason);
+            }
+
+            await _repository.UpdateRangeAsync(records, cancellationToken);
         }
-
-        await _repository.UpdateRangeAsync(records, cancellationToken);
     }
 
     [EventHandler]
     public async Task ReceiveOppoReceiptAsync(ReceiveOppoReceiptCommand command, CancellationToken cancellationToken = default)
     {
-        var messageIds = command.Input.Select(x => x.MessageId);
-        var records = await _repository.GetListAsync(x => messageIds.Contains(x.MessageId));
-
-        foreach (var record in records)
+        foreach (var item in command.Input)
         {
-            var status = command.Input.FirstOrDefault(x =>
-                x.MessageId == record.MessageId &&
-                x.RegistrationIds?.Split(',').Contains(record.ChannelUserIdentity) == true);
+            var messageId = item.MessageId;
+            var targets = item.RegistrationIds?.Split(',') ?? Array.Empty<string>();
+            var records = await _repository.GetListAsync(x => x.MessageId == messageId && targets.Contains(x.ChannelUserIdentity), cancellationToken);
+            if (!records.Any()) continue;
 
-            if (status == null) continue;
+            var eventType = item.GetEventTypeEnum();
+            var success = eventType == OppoReceiptEventType.PushArrive;
+            var failureReason = eventType?.GetDescription() ?? string.Empty;
 
-            switch (status.EventType)
+            foreach (var record in records)
             {
-                case "push_arrive":
-                    record.UpdateResult(true, OppoReceiptEventType.PushArrive.GetDescription());
-                    break;
-                case "regid_invalid":
-                    record.UpdateResult(false, OppoReceiptEventType.RegidInvalid.GetDisplayName());
-                    break;
-                case "user_daily_limit":
-                    record.UpdateResult(false, OppoReceiptEventType.UserDailyLimit.GetDescription());
-                    break;
-                default:
-                    record.UpdateResult(false, string.Empty);
-                    break;
+                record.UpdateResult(success, failureReason);
             }
-        }
 
-        await _repository.UpdateRangeAsync(records);
+            await _repository.UpdateRangeAsync(records, cancellationToken);
+        }
     }
 
     [EventHandler]
     public async Task ReceiveVivoReceiptAsync(ReceiveVivoReceiptCommand command, CancellationToken cancellationToken = default)
     {
-        var taskIds = command.Input.Keys.ToList();
-        var records = await _repository.GetListAsync(x => taskIds.Contains(x.MessageId));
-
-        foreach (var record in records)
+        foreach (var item in command.Input)
         {
-            if (!command.Input.TryGetValue(record.MessageId, out var status))
-                continue;
+            var messageId = item.Key;
+            var targets = item.Value.Targets?.Split(',') ?? Array.Empty<string>();
+            var records = await _repository.GetListAsync(x=>x.MessageId == messageId && targets.Contains(x.ChannelUserIdentity), cancellationToken);
+            if (!records.Any()) continue;
 
-   
-            var success = string.IsNullOrEmpty(status.AckType) || status.AckType == "0";
-            var failureReason = GetVivoAckTypeDescription(status.AckType, status.SubAckType);
+            var success = string.IsNullOrEmpty(item.Value.AckType) || item.Value.AckType == "0";
+            var failureReason = GetVivoAckTypeDescription(item.Value.AckType, item.Value.SubAckType);
 
-            record.UpdateResult(success, failureReason);
+            foreach (var record in records)
+            {
+                record.UpdateResult(success, failureReason);
+            }
+
+            await _repository.UpdateRangeAsync(records, cancellationToken);
         }
-
-        await _repository.UpdateRangeAsync(records, cancellationToken);
     }
 
     private string GetVivoAckTypeDescription(string? ackType, string? subAckType)
