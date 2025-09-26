@@ -73,6 +73,7 @@ public class MessageRecordQueryHandler
             condition = condition.And(inputDto.EndTime.HasValue, m => m.SendTime <= inputDto.EndTime);
         }
         condition = condition.And(!string.IsNullOrEmpty(inputDto.SystemId), x => x.SystemId == inputDto.SystemId);
+        condition = condition.And(!string.IsNullOrEmpty(inputDto.ChannelUserIdentity), x => x.ChannelUserIdentity == inputDto.ChannelUserIdentity);
         return await Task.FromResult(condition); ;
     }
 
