@@ -43,7 +43,7 @@ public class AliyunSmsSender : ISmsSender
         };
 
         var response = await client.SendBatchSmsAsync(request);
-        return new BatchSmsSendResponse(response.Body.Code == "OK", response.Body.Message, response.Body.BizId, response);
+        return new SmsResponseBase(response.Body.Code == "OK", response.Body.Message, response.Body.BizId);
     }
 
     protected async Task<AliyunClient> CreateClientAsync()
