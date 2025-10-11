@@ -105,13 +105,13 @@ public class SendSmsMessageEventHandler
                 var batchSmsMessage = new BatchSmsMessage(phoneNumbers, text);
                 batchSmsMessage.Properties.Add("SignName", eto.Sign);
                 batchSmsMessage.Properties.Add("TemplateCode", eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.TemplateId)));
-                SetMessageRecordResult(eto, item, true, string.Empty, string.Empty);
+
                 try
                 {
-                    var response = await smsSender.SendBatchAsync(batchSmsMessage) as BatchSmsSendResponse;
+                    var response = await smsSender.SendBatchAsync(batchSmsMessage);
                     if (response.Success)
                     {
-                        SetMessageRecordResult(eto, item, true, string.Empty, response.MsgId);
+                        SetMessageRecordResult(eto, item, true, response.Message, response.MsgId);
                     }
                     else
                     {
