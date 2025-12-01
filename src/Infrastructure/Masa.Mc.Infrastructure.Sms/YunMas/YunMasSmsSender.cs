@@ -1,14 +1,16 @@
-﻿namespace Masa.Mc.Infrastructure.Sms;
+﻿namespace Masa.Mc.Infrastructure.Sms.YunMas;
 
 public class YunMasSmsSender : ISmsSender
 {
     private readonly HttpClient _httpClient;
     private readonly IOptionsResolver<IYunMasOptions> _optionsResolver;
+    private readonly ILogger<YunMasSmsSender> _logger;
 
-    public YunMasSmsSender(IOptionsResolver<IYunMasOptions> optionsResolver, HttpClient httpClient)
+    public YunMasSmsSender(IOptionsResolver<IYunMasOptions> optionsResolver, HttpClient httpClient, ILogger<YunMasSmsSender> logger)
     {
         _optionsResolver = optionsResolver;
         _httpClient = httpClient;
+        _logger = logger;
     }
 
     public bool SupportsTemplate => false;
@@ -37,8 +39,12 @@ public class YunMasSmsSender : ISmsSender
         var respJson = await response.Content.ReadAsStringAsync();
         var respObj = JsonSerializer.Deserialize<YunMasSmsSendResponse>(respJson);
         if (respObj == null)
+        {
+            LogYunMasSendResult(false, false, "Response parsing failed", respJson);
             return new SmsResponseBase(false, "Response parsing failed", string.Empty);
+        }
 
+        LogYunMasSendResult(false, respObj.Success, respObj.MgsGroup, respJson);
         return new SmsResponseBase(respObj.Success, respObj.Rspcod, respObj.MgsGroup);
     }
 
@@ -67,8 +73,24 @@ public class YunMasSmsSender : ISmsSender
         var respObj = JsonSerializer.Deserialize<YunMasSmsSendResponse>(respJson);
 
         if (respObj == null)
+        {
+            LogYunMasSendResult(true, false, "Response parsing failed", respJson);
             return new SmsResponseBase(false, "Response parsing failed", string.Empty);
+        }
 
+        LogYunMasSendResult(true, respObj.Success, respObj.MgsGroup, respJson);
         return new SmsResponseBase(respObj.Success, respObj.Rspcod, respObj.MgsGroup);
+    }
+
+    private void LogYunMasSendResult(bool isBatch, bool success, string? message, string rawResponseJson)
+    {
+        if (success)
+        {
+            _logger.LogInformation("SMS send {Mode} success: {Message}. RawResponse={RawResponse}", isBatch ? "batch" : "single", message, rawResponseJson);
+        }
+        else
+        {
+            _logger.LogWarning("SMS send {Mode} failed: {Message}. RawResponse={RawResponse}", isBatch ? "batch" : "single", message, rawResponseJson);
+        }
     }
 }

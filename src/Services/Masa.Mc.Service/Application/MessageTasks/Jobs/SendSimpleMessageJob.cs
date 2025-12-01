@@ -15,7 +15,15 @@ public class SendSimpleMessageJob : BackgroundJobBase<SendSimpleMessageArgs>
 
     protected override async Task ExecutingAsync(SendSimpleMessageArgs args)
     {
-        var simpleInput = args.Adapt<SendSimpleTemplateMessageInputDto>();
-        await _eventBus.PublishAsync(new SendSimpleTemplateMessageCommand(simpleInput));
+        var activity = string.IsNullOrEmpty(args.TraceParent) ? default : MessageTaskExecuteJobConsts.ActivitySource.StartActivity("", ActivityKind.Consumer, args.TraceParent);
+        
+        try {
+            var simpleInput = args.Adapt<SendSimpleTemplateMessageInputDto>();
+            await _eventBus.PublishAsync(new SendSimpleTemplateMessageCommand(simpleInput));
+        }
+        finally
+        {
+            activity?.Dispose();
+        }
     }
 }
