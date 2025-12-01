@@ -193,6 +193,7 @@ public class MessageTaskService : ServiceBase
         if (inputDto.ChannelType == ChannelTypes.Sms && inputDto.Receivers.Count == 1)
         {
             var args = inputDto.Adapt<SendSimpleMessageArgs>();
+            args.TraceParent = Activity.Current?.Id;
             await BackgroundJobManager.EnqueueAsync(args);
             return;
         }

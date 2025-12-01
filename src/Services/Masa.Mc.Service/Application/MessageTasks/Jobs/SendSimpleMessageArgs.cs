@@ -16,4 +16,6 @@ public class SendSimpleMessageArgs
     public ExtraPropertyDictionary Variables { get; set; }
 
     public string SystemId { get; set; } = string.Empty;
+
+    public string? TraceParent { get; set; }
 }
