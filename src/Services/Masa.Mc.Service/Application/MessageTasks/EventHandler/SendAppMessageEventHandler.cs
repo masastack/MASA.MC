@@ -48,7 +48,7 @@ public class SendAppMessageEventHandler
             return;
         }
 
-        var channel = await _channelRepository.FindAsync(x => x.Id == eto.ChannelId);
+        var channel = await _channelRepository.AsNoTracking().FirstAsync(x => x.Id == eto.ChannelId);
         var transmissionContent = GetTransmissionContent(channel.Type, eto.MessageData.MessageContent);
 
         MessageSendStatuses sendStatus;

@@ -39,7 +39,7 @@ public class SendEmailMessageEventHandler
     [EventHandler]
     public async Task HandleEventAsync(SendEmailMessageEvent eto)
     {
-        var channel = await _channelRepository.FindAsync(x => x.Id == eto.ChannelId);
+        var channel = await _channelRepository.AsNoTracking().FirstAsync(x => x.Id == eto.ChannelId);
         var options = new SmtpEmailOptions
         {
             Host = channel.ExtraProperties.GetProperty<string>(nameof(EmailChannelOptions.Smtp)),

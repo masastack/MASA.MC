@@ -6,4 +6,6 @@ namespace Masa.Mc.Domain.Channels.Repositories;
 public interface IChannelRepository : IRepository<Channel>
 {
     Task<Guid?> GetIdByCode(string code);
+    
+    IQueryable<Channel> AsNoTracking();
 }

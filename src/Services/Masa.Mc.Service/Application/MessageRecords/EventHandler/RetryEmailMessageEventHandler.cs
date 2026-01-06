@@ -39,7 +39,7 @@ public class RetryEmailMessageEventHandler
         var messageRecord = await _messageRecordRepository.FindAsync(x => x.Id == eto.MessageRecordId);
         if (messageRecord == null) return;
 
-        var channel = await _channelRepository.FindAsync(x => x.Id == messageRecord.ChannelId);
+        var channel = await _channelRepository.AsNoTracking().FirstAsync(x => x.Id == messageRecord.ChannelId);
         if (channel == null) return;
 
         var options = new SmtpEmailOptions
