@@ -21,7 +21,7 @@ public class SendSimpleMessageEventHandler
     [EventHandler]
     public async Task HandleEventAsync(SendSimpleSmsMessageEvent eto)
     {
-        var channel = await _channelRepository.AsNoTracking().FirstAsync(x => x.Code == eto.ChannelCode);
+        var channel = await _channelRepository.AsNoTracking().FirstOrDefaultAsync(x => x.Code == eto.ChannelCode);
         var provider = (SmsProviders)channel.Provider;
         var options = _smsSenderFactory.GetOptions(provider, channel.ExtraProperties);
         var smsAsyncLoca = _smsSenderFactory.GetProviderAsyncLocal(provider);

@@ -111,7 +111,7 @@ public class MessageTaskCommandHandler
     [EventHandler]
     public async Task SendOrdinaryMessageByInternalAsync(SendOrdinaryMessageByInternalCommand command)
     {
-        var channel = await _channelRepository.AsNoTracking().FirstAsync(x => x.Code == command.inputDto.ChannelCode);
+        var channel = await _channelRepository.AsNoTracking().FirstOrDefaultAsync(x => x.Code == command.inputDto.ChannelCode);
         MasaArgumentException.ThrowIfNull(channel, _i18n.T("Channel"));
 
         var taskUpsertDto = (MessageTaskUpsertDto)command.inputDto;
@@ -123,7 +123,7 @@ public class MessageTaskCommandHandler
     [EventHandler]
     public async Task SendTemplateMessageByInternalAsync(SendTemplateMessageByInternalCommand command)
     {
-        var channel = await _channelRepository.AsNoTracking().FirstAsync(x => x.Code == command.inputDto.ChannelCode);
+        var channel = await _channelRepository.AsNoTracking().FirstOrDefaultAsync(x => x.Code == command.inputDto.ChannelCode);
         MasaArgumentException.ThrowIfNull(channel, _i18n.T("Channel"));
 
         var template = await _messageTemplateRepository.FindAsync(x => x.Code == command.inputDto.TemplateCode);
@@ -139,7 +139,7 @@ public class MessageTaskCommandHandler
     [EventHandler]
     public async Task SendOrdinaryMessageByExternalAsync(SendOrdinaryMessageByExternalCommand command)
     {
-        var channel = await _channelRepository.AsNoTracking().FirstAsync(x => x.Code == command.inputDto.ChannelCode);
+        var channel = await _channelRepository.AsNoTracking().FirstOrDefaultAsync(x => x.Code == command.inputDto.ChannelCode);
         MasaArgumentException.ThrowIfNull(channel, _i18n.T("Channel"));
 
         var taskUpsertDto = (MessageTaskUpsertDto)command.inputDto;
@@ -151,7 +151,7 @@ public class MessageTaskCommandHandler
     [EventHandler]
     public async Task SendTemplateMessageByExternalAsync(SendTemplateMessageByExternalCommand command)
     {
-        var channel = await _channelRepository.AsNoTracking().FirstAsync(x => x.Code == command.inputDto.ChannelCode);
+        var channel = await _channelRepository.AsNoTracking().FirstOrDefaultAsync(x => x.Code == command.inputDto.ChannelCode);
         MasaArgumentException.ThrowIfNull(channel, _i18n.T("Channel"));
 
         var template = await _messageTemplateRepository.FindAsync(x => x.Code == command.inputDto.TemplateCode);
@@ -226,7 +226,7 @@ public class MessageTaskCommandHandler
 
     private async Task CheckDataIsExistsAsync(MessageTask entity)
     {
-        var channel = await _channelRepository.AsNoTracking().FirstAsync(e => e.Id == entity.ChannelId);
+        var channel = await _channelRepository.AsNoTracking().FirstOrDefaultAsync(e => e.Id == entity.ChannelId);
         if (channel == null)
             throw new UserFriendlyException(errorCode: UserFriendlyExceptionCodes.CHANNEL_REQUIRED);
         if (entity.EntityType == MessageEntityTypes.Template)

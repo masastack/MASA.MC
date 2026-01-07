@@ -25,7 +25,7 @@ public class WithdrawMessageRecordEventHandler
     public async Task HandleEventAsync(WithdrawMessageRecordEvent eto)
     {
         var task = await _messageTaskRepository.FindAsync(x => x.Id == eto.MessageTaskId);
-        var channel = await _channelRepository.AsNoTracking().FirstAsync(x => x.Id == task.ChannelId);
+        var channel = await _channelRepository.AsNoTracking().FirstOrDefaultAsync(x => x.Id == task.ChannelId);
 
         var messageRecords = await _repository.GetListAsync(x => x.MessageTaskHistoryId == eto.MessageTaskHistoryId);
 

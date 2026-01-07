@@ -108,7 +108,7 @@ public class MessageTaskDomainService : DomainService
 
     protected async Task ValidateChannelAsync(MessageTask messageTask)
     {
-        var channel = await _channelRepository.AsNoTracking().FirstAsync(x => x.Id == messageTask.ChannelId);
+        var channel = await _channelRepository.AsNoTracking().FirstOrDefaultAsync(x => x.Id == messageTask.ChannelId);
         MasaArgumentException.ThrowIfNull(channel, _i18n.T("Channel"));
 
         if (channel.Type.Id != messageTask.ChannelType?.Id)

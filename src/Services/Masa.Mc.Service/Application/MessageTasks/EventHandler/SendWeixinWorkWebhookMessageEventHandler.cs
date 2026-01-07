@@ -88,7 +88,7 @@ public class SendWeixinWorkWebhookMessageEventHandler
 
     private async Task<WeixinWorkWebhookOptions> GetOptionsAsync(Guid channelId)
     {
-        var channel = await _channelRepository.AsNoTracking().FirstAsync(x => x.Id == channelId);
+        var channel = await _channelRepository.AsNoTracking().FirstOrDefaultAsync(x => x.Id == channelId);
         var options = new WeixinWorkWebhookOptions
         {
             Key = channel?.ExtraProperties.GetProperty<string>(nameof(WeixinWorkWebhookOptions.Key)) ?? string.Empty

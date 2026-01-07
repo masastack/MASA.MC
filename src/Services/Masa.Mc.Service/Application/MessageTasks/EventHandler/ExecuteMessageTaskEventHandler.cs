@@ -51,7 +51,7 @@ public class ExecuteMessageTaskEventHandler
 
         await _messageTaskHistoryRepository.UpdateAsync(history);
 
-        var channel = await _channelRepository.AsNoTracking().FirstAsync(x => x.Id == history.MessageTask.ChannelId);
+        var channel = await _channelRepository.AsNoTracking().FirstOrDefaultAsync(x => x.Id == history.MessageTask.ChannelId);
 
         var sendEto = channel.Type.GetSendMessageEvent(history.MessageTask.ChannelId.Value, messageData, history);
         await _eventBus.PublishAsync(sendEto);

@@ -95,7 +95,7 @@ public class SendWebsiteMessageEventHandler
 
         if (eto.MessageTaskHistory.MessageTask.ReceiverType == ReceiverTypes.Assign)
         {
-            var channel = await _channelRepository.AsNoTracking().FirstAsync(x => x.Id == eto.ChannelId);
+            var channel = await _channelRepository.AsNoTracking().FirstOrDefaultAsync(x => x.Id == eto.ChannelId);
 
             foreach (var item in websiteMessages)
             {
