@@ -10,14 +10,14 @@ public class ChannelRepository : Repository<McDbContext, Channel>, IChannelRepos
     {
     }
 
-    public async Task<IQueryable<Channel>> GetQueryableAsync()
-    {
-        return await Task.FromResult(Context.Set<Channel>().AsQueryable());
-    }
-
     public async Task<Guid?> GetIdByCode(string code)
     {
-        var channel = await Context.Set<MessageTemplate>().FirstOrDefaultAsync(x => x.Code == code);
-        return channel?.Id;
+        var channelId = await Context.Set<Channel>().AsNoTracking().Where(x => x.Code == code).Select(x => x.Id).FirstOrDefaultAsync();
+        return channelId;
+    }
+
+    public IQueryable<Channel> AsNoTracking()
+    {
+        return Context.Set<Channel>().AsNoTracking();
     }
 }

@@ -102,7 +102,7 @@ public class SendWeixinWorkMessageEventHandler
 
     private async Task<WeixinWorkOptions> GetOptionsAsync(Guid channelId)
     {
-        var channel = await _channelRepository.FindAsync(x => x.Id == channelId);
+        var channel = await _channelRepository.AsNoTracking().FirstOrDefaultAsync(x => x.Id == channelId);
         var options = new WeixinWorkOptions
         {
             CorpId = channel?.ExtraProperties.GetProperty<string>(nameof(WeixinWorkOptions.CorpId)) ?? string.Empty,

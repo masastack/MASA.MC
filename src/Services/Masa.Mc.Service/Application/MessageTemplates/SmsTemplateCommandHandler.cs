@@ -27,7 +27,7 @@ public class SmsTemplateCommandHandler
     [EventHandler]
     public async Task SyncAsync(SyncSmsTemplateCommand command)
     {
-        var channel = await _channelRepository.FindAsync(x => x.Id == command.ChannelId);
+        var channel = await _channelRepository.AsNoTracking().FirstOrDefaultAsync(x => x.Id == command.ChannelId);
         if (channel == null)
         {
             return;

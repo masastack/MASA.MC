@@ -90,7 +90,7 @@ public class SendSmsMessageEventHandler
     [EventHandler(3)]
     public async Task SendAsync(SendSmsMessageEvent eto)
     {
-        var channel = await _channelRepository.FindAsync(x => x.Id == eto.ChannelId);
+        var channel = await _channelRepository.AsNoTracking().FirstOrDefaultAsync(x => x.Id == eto.ChannelId);
         var provider = (SmsProviders)channel.Provider;
         var options = _smsSenderFactory.GetOptions(provider, channel.ExtraProperties);
         var smsAsyncLoca = _smsSenderFactory.GetProviderAsyncLocal(provider);
