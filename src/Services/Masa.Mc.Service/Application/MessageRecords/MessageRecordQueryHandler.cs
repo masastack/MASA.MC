@@ -57,7 +57,7 @@ public class MessageRecordQueryHandler
     private async Task<Expression<Func<MessageRecordQueryModel, bool>>> CreateFilteredPredicate(GetMessageRecordInputDto inputDto)
     {
         Expression<Func<MessageRecordQueryModel, bool>> condition = x => true;
-        condition = condition.And(!string.IsNullOrEmpty(inputDto.Filter), x => x.DisplayName.Contains(inputDto.Filter));
+        condition = condition.And(!string.IsNullOrEmpty(inputDto.Filter), x => x.DisplayName.ToLower().Contains(inputDto.Filter.ToLower()));
         condition = condition.And(inputDto.MessageTaskHistoryId.HasValue, m => m.MessageTaskHistoryId == inputDto.MessageTaskHistoryId);
         condition = condition.And(inputDto.ChannelId.HasValue, m => m.ChannelId == inputDto.ChannelId);
         condition = condition.And(inputDto.Success.HasValue, m => m.Success == inputDto.Success);

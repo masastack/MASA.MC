@@ -55,7 +55,7 @@ public class MessageTemplateQueryHandler
     private async Task<Expression<Func<MessageTemplateQueryModel, bool>>> CreateFilteredPredicate(GetMessageTemplateInputDto inputDto)
     {
         Expression<Func<MessageTemplateQueryModel, bool>> condition = x => true;
-        condition = condition.And(!string.IsNullOrEmpty(inputDto.Filter), x => x.DisplayName.Contains(inputDto.Filter) || x.TemplateId.Contains(inputDto.Filter));
+        condition = condition.And(!string.IsNullOrEmpty(inputDto.Filter), x => x.DisplayName.ToLower().Contains(inputDto.Filter.ToLower()) || x.TemplateId.ToLower().Contains(inputDto.Filter.ToLower()));
         condition = condition.And(inputDto.ChannelType.HasValue, x => x.Channel.Type == inputDto.ChannelType);
         condition = condition.And(inputDto.Status.HasValue, x => x.Status == inputDto.Status);
         condition = condition.And(inputDto.AuditStatus.HasValue, x => x.AuditStatus == inputDto.AuditStatus);
