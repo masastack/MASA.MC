@@ -100,13 +100,13 @@ public class WebsiteMessageQueryHandler
         switch (inputDto.FilterType)
         {
             case WebsiteMessageFilterType.MessageTitle:
-                condition = condition.And(!string.IsNullOrEmpty(inputDto.Filter), w => w.Title.Contains(inputDto.Filter));
+                condition = condition.And(!string.IsNullOrEmpty(inputDto.Filter), w => w.Title.ToLower().Contains(inputDto.Filter.ToLower()));
                 break;
             case WebsiteMessageFilterType.MessageContent:
-                condition = condition.And(!string.IsNullOrEmpty(inputDto.Filter), w => w.Content.Contains(inputDto.Filter));
+                condition = condition.And(!string.IsNullOrEmpty(inputDto.Filter), w => w.Content.ToLower().Contains(inputDto.Filter.ToLower()));
                 break;
             default:
-                condition = condition.And(!string.IsNullOrEmpty(inputDto.Filter), w => w.Title.Contains(inputDto.Filter) || w.Content.Contains(inputDto.Filter));
+                condition = condition.And(!string.IsNullOrEmpty(inputDto.Filter), w => w.Title.ToLower().Contains(inputDto.Filter.ToLower()) || w.Content.ToLower().Contains(inputDto.Filter.ToLower()));
                 break;
         }
         condition = condition.And(inputDto.ChannelId.HasValue, w => w.ChannelId == inputDto.ChannelId);

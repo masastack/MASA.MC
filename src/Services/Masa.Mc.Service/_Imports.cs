@@ -193,3 +193,6 @@ global using ICsvExporter = Masa.Mc.Infrastructure.ExporterAndImporter.Csv.ICsvE
 global using ICsvImporter = Masa.Mc.Infrastructure.ExporterAndImporter.Csv.ICsvImporter;
 global using Masa.Mc.Infrastructure.Sms.Model.Response.SendSms;
 global using Masa.Mc.Infrastructure.Sms.Model.Response.SmsTemplate;
+global using Masa.Mc.Infrastructure.Sms.Model.Response;
+global using Masa.Mc.Infrastructure.Sms.YunMas;
+global using Masa.Mc.Service.Admin.Infrastructure.Mock.Fakes;

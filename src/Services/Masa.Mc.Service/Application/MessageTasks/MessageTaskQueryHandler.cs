@@ -157,7 +157,7 @@ public class MessageTaskQueryHandler
     private async Task<Expression<Func<MessageTaskQueryModel, bool>>> CreateFilteredPredicate(GetMessageTaskInputDto inputDto)
     {
         Expression<Func<MessageTaskQueryModel, bool>> condition = x => true;
-        condition = condition.And(!string.IsNullOrEmpty(inputDto.Filter), x => x.DisplayName.Contains(inputDto.Filter));
+        condition = condition.And(!string.IsNullOrEmpty(inputDto.Filter), x => x.DisplayName.ToLower().Contains(inputDto.Filter.ToLower()));
         condition = condition.And(inputDto.EntityType.HasValue, x => x.EntityType == inputDto.EntityType);
         condition = condition.And(inputDto.ChannelId.HasValue, x => x.ChannelId == inputDto.ChannelId);
         condition = condition.And(inputDto.IsEnabled.HasValue, x => x.IsEnabled == inputDto.IsEnabled);

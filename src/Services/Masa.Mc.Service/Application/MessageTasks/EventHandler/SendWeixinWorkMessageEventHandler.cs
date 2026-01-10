@@ -45,7 +45,8 @@ public class SendWeixinWorkMessageEventHandler
 
         foreach (var item in eto.MessageTaskHistory.ReceiverUsers)
         {
-            var messageRecord = new MessageRecord(item.UserId, item.ChannelUserIdentity, eto.ChannelId, taskHistory.MessageTaskId, taskHistory.Id, item.Variables, eto.MessageData.MessageContent.Title, taskHistory.SendTime, taskHistory.MessageTask.SystemId);
+            var displayName = string.IsNullOrEmpty(eto.MessageData.MessageContent.Title) ? eto.MessageTaskHistory.MessageTask.DisplayName : eto.MessageData.MessageContent.Title;
+            var messageRecord = new MessageRecord(item.UserId, item.ChannelUserIdentity, eto.ChannelId, taskHistory.MessageTaskId, taskHistory.Id, item.Variables, displayName, taskHistory.SendTime, taskHistory.MessageTask.SystemId);
             messageRecord.SetMessageEntity(taskHistory.MessageTask.EntityType, taskHistory.MessageTask.EntityId);
             messageRecord.SetDataValue(nameof(MessageTemplate.TemplateId), eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.TemplateId)));
 
