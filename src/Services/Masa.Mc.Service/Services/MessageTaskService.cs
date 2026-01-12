@@ -166,7 +166,6 @@ public class MessageTaskService : ServiceBase
         await BackgroundJobManager.EnqueueAsync(args);
     }
 
-    [AllowAnonymous]
     public async Task SendOrdinaryMessageByInternalAsync(SendOrdinaryMessageByInternalInputDto inputDto)
     {
         var command = new SendOrdinaryMessageByInternalCommand(inputDto);
@@ -180,7 +179,6 @@ public class MessageTaskService : ServiceBase
         await _eventBus.PublishAsync(command);
     }
 
-    [AllowAnonymous]
     public async Task SendOrdinaryMessageByExternalAsync(SendOrdinaryMessageByExternalInputDto inputDto)
     {
         var command = new SendOrdinaryMessageByExternalCommand(inputDto);
