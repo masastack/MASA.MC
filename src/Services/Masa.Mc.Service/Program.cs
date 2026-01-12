@@ -1,4 +1,4 @@
-﻿// Copyright (c) MASA Stack All rights reserved.
+// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
 var builder = WebApplication.CreateBuilder(args);
@@ -90,6 +90,8 @@ builder.Services.AddMcClient(masaStackConfig.GetMcServiceDomain());
 builder.Services.AddPmClient(masaStackConfig.GetPmServiceDomain());
 builder.Services.AddSchedulerClient(masaStackConfig.GetSchedulerServiceDomain());
 builder.Services.AddSmsSender();
+// 注册阿里云MNS回执消费服务
+builder.Services.AddHostedService<AliyunMnsReceiptConsumer>();
 builder.Services.AddMailKit();
 builder.Services.AddAppNotification(redisOptions);
 builder.Services.AddWeixinWork(builder.Configuration);

@@ -11,10 +11,16 @@ public class AliyunSmsOptions : IAliyunSmsOptions
 
     public string EndPoint { get; set; } = "dysmsapi.aliyuncs.com";
 
+    public string? MnsQueueName { get; set; }
+
+    public bool EnableMnsConsumer { get; set; }
+
     public void SetOptions(AliyunSmsOptions options)
     {
         AccessKeySecret = options.AccessKeySecret;
         AccessKeyId = options.AccessKeyId;
         EndPoint = options.EndPoint;
+        MnsQueueName = options.MnsQueueName;
+        EnableMnsConsumer = options.EnableMnsConsumer;
     }
 }
