@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -8,10 +8,12 @@
 
 	<ItemGroup>
 		<PackageReference Include="AlibabaCloud.SDK.Dysmsapi20170525" Version="2.0.9" />
+		<PackageReference Include="AlibabaCloud.SDK.Dybaseapi20170525" Version="1.0.1" />
 		<PackageReference Include="Microsoft.Extensions.Http" Version="6.0.1" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.4" />
 		<PackageReference Include="Microsoft.Extensions.Options" Version="6.0.1" />
 		<PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="6.0.1" />
+		<PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="6.0.1" />
 		<ProjectReference Include="..\Masa.Mc.Infrastructure.OptionsResolve\Masa.Mc.Infrastructure.OptionsResolve.csproj" />
 	</ItemGroup>
 

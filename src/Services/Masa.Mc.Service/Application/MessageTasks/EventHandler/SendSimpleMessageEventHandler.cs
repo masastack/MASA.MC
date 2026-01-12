@@ -1,4 +1,4 @@
-﻿// Copyright (c) MASA Stack All rights reserved.
+// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
 namespace Masa.Mc.Service.Admin.Application.MessageTasks.EventHandler;
@@ -50,7 +50,8 @@ public class SendSimpleMessageEventHandler
 
                 if (response.Success == true)
                 {
-                    messageRecord.SetResult(true, string.Empty, DateTimeOffset.UtcNow, response.MsgId);
+                    // 如果支持消息回执，则设置为null等待回执；否则立即标记为成功
+                    messageRecord.SetResult(smsSender.SupportsReceipt ? null : true, string.Empty, DateTimeOffset.UtcNow, response.MsgId);
                 }
                 else
                 {

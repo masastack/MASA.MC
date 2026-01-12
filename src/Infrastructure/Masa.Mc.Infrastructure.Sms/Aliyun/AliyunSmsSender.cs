@@ -16,6 +16,8 @@ public class AliyunSmsSender : ISmsSender
 
     public bool SupportsTemplate => true;
 
+    public bool SupportsReceipt => true;
+
     public async Task<SmsResponseBase> SendAsync(SmsMessage smsMessage)
     {
         var client = await CreateClientAsync();

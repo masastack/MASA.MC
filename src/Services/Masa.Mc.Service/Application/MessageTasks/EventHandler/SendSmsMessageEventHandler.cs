@@ -1,4 +1,4 @@
-﻿// Copyright (c) MASA Stack All rights reserved.
+// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
 namespace Masa.Mc.Service.Admin.Application.MessageTasks.EventHandler;
@@ -111,7 +111,8 @@ public class SendSmsMessageEventHandler
                     var response = await smsSender.SendBatchAsync(batchSmsMessage);
                     if (response.Success)
                     {
-                        SetMessageRecordResult(eto, item, true, response.Message, response.MsgId);
+                        // 如果支持消息回执，则设置为null等待回执；否则立即标记为成功
+                        SetMessageRecordResult(eto, item, smsSender.SupportsReceipt ? null : true, response.Message, response.MsgId);
                     }
                     else
                     {
@@ -139,7 +140,7 @@ public class SendSmsMessageEventHandler
         await _messageTaskHistoryRepository.UpdateAsync(messageTaskHistory);
     }
 
-    private void SetMessageRecordResult(SendSmsMessageEvent eto, Dictionary<string, ExtraPropertyDictionary> phoneNumberVariable, bool success, string message, string msgId)
+    private void SetMessageRecordResult(SendSmsMessageEvent eto, Dictionary<string, ExtraPropertyDictionary> phoneNumberVariable, bool? success, string message, string msgId)
     {
         foreach (var item in phoneNumberVariable)
         {

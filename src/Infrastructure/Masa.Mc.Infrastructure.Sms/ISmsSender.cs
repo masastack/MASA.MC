@@ -7,6 +7,8 @@ public interface ISmsSender
 {
     bool SupportsTemplate { get; }
 
+    bool SupportsReceipt { get; }
+
     Task<SmsResponseBase> SendAsync(SmsMessage smsMessage);
 
     Task<SmsResponseBase> SendBatchAsync(BatchSmsMessage smsMessage);

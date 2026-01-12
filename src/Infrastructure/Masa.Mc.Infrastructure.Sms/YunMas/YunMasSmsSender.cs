@@ -15,6 +15,8 @@ public class YunMasSmsSender : ISmsSender
 
     public bool SupportsTemplate => false;
 
+    public bool SupportsReceipt => true;
+
     public async Task<SmsResponseBase> SendAsync(SmsMessage smsMessage)
     {
         var options = await _optionsResolver.ResolveAsync();

@@ -1,4 +1,4 @@
-﻿// Copyright (c) MASA Stack All rights reserved.
+// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
 namespace Masa.Mc.Service.Admin.Application.MessageReceipts;
@@ -109,6 +109,52 @@ public class MessageReceiptCommandHandler
 
             await _repository.UpdateRangeAsync(records, cancellationToken);
         }
+    }
+
+    [EventHandler]
+    public async Task ReceiveAliyunReceiptAsync(ReceiveAliyunReceiptCommand command, CancellationToken cancellationToken = default)
+    {
+        foreach (var item in command.Input.Statuses)
+        {
+            // 阿里云回执通过BizId（对应发送时的BizId）和手机号来匹配记录
+            var messageId = item.BizId;
+            var phoneNumber = item.PhoneNumber;
+            var record = await _repository.FindAsync(x => x.MessageId == messageId && x.ChannelUserIdentity == phoneNumber, cancellationToken);
+            if (record == null) continue;
+
+            // 使用Success字段（Boolean类型，官方格式）
+            var success = item.Success;
+            var failureReason = success
+                ? string.Empty
+                : (string.IsNullOrEmpty(item.ErrMsg) ? $"失败({item.ErrCode})" : item.ErrMsg);
+            record.UpdateResult(success, failureReason);
+            await _repository.UpdateAsync(record, cancellationToken);
+        }
+    }
+
+    [EventHandler]
+    public async Task ReceiveYunMasReceiptAsync(ReceiveYunMasReceiptCommand command, CancellationToken cancellationToken = default)
+    {
+        foreach (var item in command.Input.Statuses)
+        {
+            // 移动云mas回执通过MsgGroup（批次号）和手机号来匹配记录
+            var msgGroup = item.MsgGroup;
+            var phoneNumber = item.Mobile;
+            var record = await _repository.FindAsync(x => x.MessageId == msgGroup && x.ChannelUserIdentity == phoneNumber, cancellationToken);
+            if (record == null) continue;
+
+            // errorCode == "DELIVRD" 表示成功，否则失败
+            var success = item.ErrorCode == "DELIVRD";
+            var failureReason = success 
+                ? string.Empty 
+                : (!string.IsNullOrEmpty(item.ErrorCode) ? item.ErrorCode : "发送失败");
+            
+            record.UpdateResult(success, failureReason);
+            await _repository.UpdateAsync(record, cancellationToken);
+        }
+
+        // 设置返回结果
+        command.Result = new YunMasReceiptResultDto(0, "接收成功");
     }
 
     private string GetVivoAckTypeDescription(string? ackType, string? subAckType)
