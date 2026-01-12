@@ -64,15 +64,3 @@ public class AliyunReceiptStatusDto
     [JsonPropertyName("err_msg")]
     public string ErrMsg { get; set; } = string.Empty;
 }
-
-public enum AliyunReceiptStatus
-{
-    [Description("成功")]
-    Success = 1,
-
-    [Description("失败")]
-    Failed = 2,
-
-    [Description("失效")]
-    Invalid = 6
-}
