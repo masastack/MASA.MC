@@ -16,6 +16,7 @@ public class McCaller : StackHttpClientCaller
     MessageTaskHistoryService? _messageTaskHistoryService;
     WebsiteMessageService? _websiteMessageService;
     OssService? _ossService;
+    ChannelStatisticsService? _channelStatisticsService;
     #endregion
 
     public ChannelService ChannelService => _channelService ?? (_channelService = new(Caller));
@@ -37,6 +38,8 @@ public class McCaller : StackHttpClientCaller
     public WebsiteMessageService WebsiteMessageService => _websiteMessageService ?? (_websiteMessageService = new(Caller));
 
     public OssService OssService => _ossService ?? (_ossService = new OssService(Caller));
+
+    public ChannelStatisticsService ChannelStatisticsService => _channelStatisticsService ?? (_channelStatisticsService = new(Caller));
 
     protected override string BaseAddress { get; set; }
 
