@@ -11,5 +11,7 @@ public class MessageReceiverUserQueryModel : Entity<Guid>
 
     public ExtraPropertyDictionary Variables { get; set; } = new();
 
+    public string Platform { get; set; } = string.Empty;
+
     public Guid MessageTaskHistoryId { get; set; }
 }
