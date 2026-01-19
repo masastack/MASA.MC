@@ -155,7 +155,7 @@ public class ChannelStatisticsQueryHandler
         var records = ApplyBaseFilter(_context.MessageRecordQueries.AsNoTracking(), input);
         records = ApplyVendorFilter(records, input);
 
-        var exportItems = await records
+        var exportQuery = records
             .Where(x => x.Success == false)
             .OrderByDescending(x => x.SendTime ?? x.ExpectSendTime ?? DateTimeOffset.MinValue)
             .Select(x => new FailureReasonDetailExportItem
@@ -166,8 +166,15 @@ public class ChannelStatisticsQueryHandler
                 ExpectSendTime = x.ExpectSendTime,
                 SendTime = x.SendTime,
                 MessageId = x.MessageId
-            })
-            .ToListAsync();
+            });
+
+        const int maxExportCount = 100000;
+        var exportCount = await exportQuery.CountAsync();
+        if (exportCount > maxExportCount)
+        {
+            throw new UserFriendlyException("导出数据量过大，请缩小筛选范围");
+        }
+        var exportItems = await exportQuery.ToListAsync();
 
         query.Result = await _exporter.ExportAsByteArray(exportItems);
     }
@@ -207,8 +214,8 @@ public class ChannelStatisticsQueryHandler
         query = query.Where(x => !input.ChannelId.HasValue || x.ChannelId == input.ChannelId);
         query = query.Where(x => !input.TemplateId.HasValue
             || (x.MessageTask.EntityType == MessageEntityTypes.Template && x.MessageTask.EntityId == input.TemplateId));
-        query = query.Where(x => !input.StartTime.HasValue || x.SendTime >= input.StartTime);
-        query = query.Where(x => !input.EndTime.HasValue || x.SendTime <= input.EndTime);
+        query = query.Where(x => !input.StartTime.HasValue || (x.SendTime ?? x.ExpectSendTime) >= input.StartTime);
+        query = query.Where(x => !input.EndTime.HasValue || (x.SendTime ?? x.ExpectSendTime) <= input.EndTime);
         return query;
     }
 
