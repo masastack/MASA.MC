@@ -206,7 +206,7 @@ public class MessageTaskCommandHandler
     [EventHandler]
     public async Task SendSimpleMessageAsync(SendSimpleTemplateMessageCommand command)
     {
-        var template = await _messageTemplateRepository.AsNoTracking().FirstOrDefaultAsync(x => x.Code == command.InputDto.TemplateCode);
+        var template = await _messageTemplateRepository.FindAsync(x => x.Code == command.InputDto.TemplateCode);
         MasaArgumentException.ThrowIfNull(template, _i18n.T("MessageTemplate"));
 
         var messageData = new MessageData(template.MessageContent, MessageEntityTypes.Template);
