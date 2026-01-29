@@ -10,14 +10,14 @@ public class MessageTemplateRepository : Repository<McDbContext, MessageTemplate
     {
     }
 
-    private async Task<IQueryable<MessageTemplate>> GetQueryableAsync()
+    private IQueryable<MessageTemplate> AsQueryable()
     {
-        return await Task.FromResult(Context.Set<MessageTemplate>().AsQueryable());
+        return Context.Set<MessageTemplate>().AsQueryable();
     }
 
     private async Task<IQueryable<MessageTemplate>> WithDetailsAsync()
     {
-        var query = await GetQueryableAsync();
+        var query = AsQueryable();
         return query.IncludeDetails();
     }
 
@@ -31,6 +31,11 @@ public class MessageTemplateRepository : Repository<McDbContext, MessageTemplate
     public async Task<bool> AnyAsync(Expression<Func<MessageTemplate, bool>> predicate)
     {
         return await Context.Set<MessageTemplate>().AnyAsync(predicate);
+    }
+
+    public IQueryable<MessageTemplate> AsNoTracking()
+    {
+        return Context.Set<MessageTemplate>().AsNoTracking();
     }
 }
 

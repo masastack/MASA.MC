@@ -62,6 +62,7 @@ public class MessageRecordQueryHandler
         condition = condition.And(inputDto.ChannelId.HasValue, m => m.ChannelId == inputDto.ChannelId);
         condition = condition.And(inputDto.Success.HasValue, m => m.Success == inputDto.Success);
         condition = condition.And(inputDto.UserId.HasValue, m => m.UserId == inputDto.UserId);
+        condition = condition.And(inputDto.MessageTemplateId.HasValue, m => m.MessageEntityId == inputDto.MessageTemplateId && m.MessageEntityType == MessageEntityTypes.Template);
         if (inputDto.TimeType == MessageRecordTimeTypes.ExpectSendTime)
         {
             condition = condition.And(inputDto.StartTime.HasValue, m => m.ExpectSendTime >= inputDto.StartTime);
