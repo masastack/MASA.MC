@@ -210,13 +210,13 @@ public class ChannelStatisticsQueryHandler
 
     private IQueryable<MessageRecordQueryModel> ApplyBaseFilter(IQueryable<MessageRecordQueryModel> query, ChannelSendStatisticsInputDto input)
     {
-        query = query.Where(x => x.ChannelId.HasValue);
-        query = query.Where(x => !input.ChannelId.HasValue || x.ChannelId == input.ChannelId);
-        query = query.Where(x => !input.TemplateId.HasValue
-            || (x.MessageTask.EntityType == MessageEntityTypes.Template && x.MessageTask.EntityId == input.TemplateId));
-        query = query.Where(x => !input.StartTime.HasValue || (x.SendTime ?? x.ExpectSendTime) >= input.StartTime);
-        query = query.Where(x => !input.EndTime.HasValue || (x.SendTime ?? x.ExpectSendTime) <= input.EndTime);
-        return query;
+        Expression<Func<MessageRecordQueryModel, bool>> condition = x => true;
+        condition = condition.And(input.ChannelId.HasValue, x => x.ChannelId == input.ChannelId);
+        condition = condition.And(input.TemplateId.HasValue, x => x.MessageEntityType == MessageEntityTypes.Template && x.MessageEntityId == input.TemplateId);
+        condition = condition.And(input.StartTime.HasValue, x => (x.SendTime ?? x.ExpectSendTime) >= input.StartTime);
+        condition = condition.And(input.EndTime.HasValue, x => (x.SendTime ?? x.ExpectSendTime) >= input.EndTime);
+
+        return query.Where(condition);
     }
 
     private IQueryable<MessageRecordQueryModel> ApplyVendorFilter(IQueryable<MessageRecordQueryModel> records, ChannelSendStatisticsInputDto input)
