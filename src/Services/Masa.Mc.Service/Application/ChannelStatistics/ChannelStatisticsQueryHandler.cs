@@ -215,7 +215,6 @@ public class ChannelStatisticsQueryHandler
         condition = condition.And(input.TemplateId.HasValue, x => x.MessageEntityType == MessageEntityTypes.Template && x.MessageEntityId == input.TemplateId);
         condition = condition.And(input.StartTime.HasValue, x => (x.SendTime ?? x.ExpectSendTime) >= input.StartTime);
         condition = condition.And(input.EndTime.HasValue, x => (x.SendTime ?? x.ExpectSendTime) <= input.EndTime);
-
         return query.Where(condition);
     }
 
