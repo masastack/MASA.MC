@@ -133,16 +133,25 @@ public class ChannelStatisticsQueryHandler
         var records = ApplyBaseFilter(_context.MessageRecordQueries.AsNoTracking(), input);
         records = ApplyVendorFilter(records, input);
 
-        var result = await records
+        var rawGroups = await records
             .Where(x => x.Success == false)
-            .GroupBy(x => string.IsNullOrWhiteSpace(x.FailureReason) ? "Unknown" : x.FailureReason)
-            .Select(g => new ChannelFailureReasonOverviewDto
+            .GroupBy(x => string.IsNullOrWhiteSpace(x.FailureReason) ? "Unknown" : x.FailureReason.Trim())
+            .Select(g => new
             {
                 FailureReason = g.Key,
                 Count = g.LongCount()
             })
-            .OrderByDescending(x => x.Count)
             .ToListAsync();
+
+        var result = rawGroups
+            .GroupBy(x => NormalizeFailureReason(x.FailureReason))
+            .Select(g => new ChannelFailureReasonOverviewDto
+            {
+                FailureReason = g.Key,
+                Count = g.Sum(x => x.Count)
+            })
+            .OrderByDescending(x => x.Count)
+            .ToList();
 
         query.Result = result;
     }
@@ -265,5 +274,21 @@ public class ChannelStatisticsQueryHandler
     }
 
     private sealed record VendorStat(string Platform, long TotalCount, long SuccessCount, long FailCount, long NoReceiptCount);
+
+    private static string NormalizeFailureReason(string failureReason)
+    {
+        if (string.IsNullOrWhiteSpace(failureReason))
+        {
+            return "Unknown";
+        }
+
+        var colonIndex = failureReason.LastIndexOf(':');
+        if (colonIndex > 0)
+        {
+            return failureReason[..colonIndex].Trim();
+        }
+
+        return failureReason.Trim();
+    }
 
 }

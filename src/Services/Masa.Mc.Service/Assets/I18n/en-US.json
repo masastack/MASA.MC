@@ -34,5 +34,7 @@
   "ReceiverGroupNameCannotRepeated": "ReceiverGroup name cannot be repeated",
   "SyncSmsTemplateErrorMessage": "SMS template synchronization failed. Please check whether the channel information is correct",
   "ClientIdNotBound": "Client Id not bound",
-  "UserNotLoggedIn": "User not logged in"
+  "UserNotLoggedIn": "User not logged in",
+  "EndTimeMustBeGreaterThanOrEqualStartTime": "End time must be greater than or equal to start time",
+  "TimeRangeMustNotExceedOneYear": "Time range must not exceed one year"
 }

@@ -63,6 +63,7 @@ global using Masa.Mc.Contracts.Admin.Dtos.MessageTasks.Validator;
 global using Masa.Mc.Contracts.Admin.Dtos.MessageTemplates;
 global using Masa.Mc.Contracts.Admin.Dtos.MessageTemplates.Validator;
 global using Masa.Mc.Contracts.Admin.Dtos.Statistics;
+global using Masa.Mc.Contracts.Admin.Dtos.Statistics.Validator;
 global using Masa.Mc.Contracts.Admin.Dtos.Oss;
 global using Masa.Mc.Contracts.Admin.Dtos.ReceiverGroups;
 global using Masa.Mc.Contracts.Admin.Dtos.ReceiverGroups.Validator;
