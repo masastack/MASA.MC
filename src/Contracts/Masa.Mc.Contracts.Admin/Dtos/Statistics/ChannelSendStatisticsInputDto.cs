@@ -11,7 +11,7 @@ public class ChannelSendStatisticsInputDto
 
     public AppVendor? Vendor { get; set; }
 
-    public DateTime? StartTime { get; set; }
+    public DateTime StartTime { get; set; }
 
-    public DateTime? EndTime { get; set; }
+    public DateTime EndTime { get; set; }
 }

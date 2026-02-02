@@ -35,5 +35,7 @@
  "ReceiverGroupNameCannotRepeated": "消息组名称不能重复",  
  "SyncSmsTemplateErrorMessage": "短信模板同步失败，请检查渠道信息是否正确",  
  "ClientIdNotBound": "设备Id未绑定",  
- "UserNotLoggedIn": "用户未登录"  
+ "UserNotLoggedIn": "用户未登录",
+ "EndTimeMustBeGreaterThanOrEqualStartTime": "结束时间不能早于开始时间",
+ "TimeRangeMustNotExceedOneYear": "时间跨度不能超过一年"
 }

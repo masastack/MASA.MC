@@ -20,8 +20,8 @@ public class ChannelStatisticsService : ServiceBase
         [FromQuery] Guid? channelId,
         [FromQuery] Guid? templateId,
         [FromQuery] AppVendor? vendor,
-        [FromQuery] DateTime? startTime,
-        [FromQuery] DateTime? endTime)
+        [FromQuery] DateTime startTime,
+        [FromQuery] DateTime endTime)
     {
         var input = new ChannelSendStatisticsInputDto
         {
@@ -41,8 +41,8 @@ public class ChannelStatisticsService : ServiceBase
         [FromQuery] Guid? channelId,
         [FromQuery] Guid? templateId,
         [FromQuery] AppVendor? vendor,
-        [FromQuery] DateTime? startTime,
-        [FromQuery] DateTime? endTime)
+        [FromQuery] DateTime startTime,
+        [FromQuery] DateTime endTime)
     {
         var input = new ChannelSendStatisticsInputDto
         {
@@ -62,8 +62,8 @@ public class ChannelStatisticsService : ServiceBase
         [FromQuery] Guid? channelId,
         [FromQuery] Guid? templateId,
         [FromQuery] AppVendor? vendor,
-        [FromQuery] DateTime? startTime,
-        [FromQuery] DateTime? endTime)
+        [FromQuery] DateTime startTime,
+        [FromQuery] DateTime endTime)
     {
         var input = new ChannelSendStatisticsInputDto
         {
@@ -83,8 +83,8 @@ public class ChannelStatisticsService : ServiceBase
         [FromQuery] Guid? channelId,
         [FromQuery] Guid? templateId,
         [FromQuery] AppVendor? vendor,
-        [FromQuery] DateTime? startTime,
-        [FromQuery] DateTime? endTime)
+        [FromQuery] DateTime startTime,
+        [FromQuery] DateTime endTime)
     {
         var input = new ChannelSendStatisticsInputDto
         {
@@ -104,8 +104,8 @@ public class ChannelStatisticsService : ServiceBase
         [FromQuery] Guid? channelId,
         [FromQuery] Guid? templateId,
         [FromQuery] AppVendor? vendor,
-        [FromQuery] DateTime? startTime,
-        [FromQuery] DateTime? endTime)
+        [FromQuery] DateTime startTime,
+        [FromQuery] DateTime endTime)
     {
         var input = new ChannelSendStatisticsInputDto
         {
