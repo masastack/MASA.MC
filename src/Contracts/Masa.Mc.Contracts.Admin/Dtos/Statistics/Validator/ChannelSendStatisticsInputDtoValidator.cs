@@ -13,7 +13,7 @@ public class ChannelSendStatisticsInputDtoValidator : AbstractValidator<ChannelS
             .Must(inputDto => inputDto.EndTime >= inputDto.StartTime)
             .WithMessage("EndTimeMustBeGreaterThanOrEqualStartTime");
         RuleFor(inputDto => inputDto)
-            .Must(inputDto => inputDto.StartTime!.Value.AddYears(1) >= inputDto.EndTime!.Value)
+            .Must(inputDto => inputDto.StartTime.AddYears(1) >= inputDto.EndTime)
             .WithMessage("TimeRangeMustNotExceedOneYear");
     }
 }
