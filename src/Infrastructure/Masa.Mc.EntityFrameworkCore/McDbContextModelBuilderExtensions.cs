@@ -1,4 +1,4 @@
-﻿// Copyright (c) MASA Stack All rights reserved.
+// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
 namespace Masa.Mc.EntityFrameworkCore;
@@ -133,6 +133,7 @@ public static class McDbContextModelBuilderExtensions
             b.Property(x => x.ChannelUserIdentity).IsRequired().HasMaxLength(256);
             b.Property(x => x.Platform).IsRequired().HasMaxLength(128);
             b.Property(x => x.Variables).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
+            b.HasIndex("MessageTaskHistoryId", nameof(MessageReceiverUser.ChannelUserIdentity), nameof(MessageReceiverUser.Platform));
         });
 
         builder.Entity<WebsiteMessage>(b =>
