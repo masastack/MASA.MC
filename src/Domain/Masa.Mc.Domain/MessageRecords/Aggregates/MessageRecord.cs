@@ -52,11 +52,14 @@ public class MessageRecord : FullAggregateRoot<Guid, Guid>
         SystemId = systemId;
     }
 
-    public void SetResult(bool? success, string failureReason, DateTimeOffset? sendTime = null, string messageId = "")
+    public void SetResult(bool? success, string message, DateTimeOffset? sendTime = null, string messageId = "")
     {
         SendTime = sendTime ?? DateTimeOffset.UtcNow;
         Success = success;
-        FailureReason = failureReason;
+        if (success == false)
+        {
+            FailureReason = message;
+        }
         MessageId = messageId;
 
         if (UserId == default && Id == default)
