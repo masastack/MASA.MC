@@ -21,9 +21,8 @@ public class ChannelStatisticsQueryHandler
     {
         using var dataFilter = _dataFilter.Disable<ISoftDelete>();
         var input = query.Input;
-        var records = ApplyBaseFilter(_context.MessageRecordQueries.Include(x => x.Channel).AsNoTracking(), input)
-            .Where(x => x.Channel.Type == ChannelTypes.App)
-            .Where(x => x.ChannelId.HasValue);
+        var records = ApplyBaseFilter(_context.MessageRecordQueries.AsNoTracking(), input);
+        records = ApplyAppChannelFilter(records);
 
         var receiverUsers = _context.MessageReceiverUserQueries.AsNoTracking();
         if (input.Vendor.HasValue)
@@ -93,7 +92,7 @@ public class ChannelStatisticsQueryHandler
     {
         using var dataFilter = _dataFilter.Disable<ISoftDelete>();
         var input = query.Input;
-        var records = ApplyBaseFilter(_context.MessageRecordQueries.Include(x => x.Channel).AsNoTracking(), input);
+        var records = ApplyBaseFilter(_context.MessageRecordQueries.AsNoTracking(), input);
         records = ApplyVendorFilter(records, input);
 
         var summary = await BuildSummaryAsync(records);
@@ -105,12 +104,11 @@ public class ChannelStatisticsQueryHandler
     {
         using var dataFilter = _dataFilter.Disable<ISoftDelete>();
         var input = query.Input;
-        var records = ApplyBaseFilter(_context.MessageRecordQueries.AsNoTracking(), input)
-            .Where(x => x.SendTime.HasValue);
+        var records = ApplyBaseFilter(_context.MessageRecordQueries.AsNoTracking(), input);
         records = ApplyVendorFilter(records, input);
 
         var result = await records
-            .GroupBy(x => x.SendTime!.Value.Date)
+            .GroupBy(x => x.CreationTime.AddHours(8).Date)
             .Select(g => new ChannelSendTrendDto
             {
                 Date = g.Key,
@@ -222,8 +220,8 @@ public class ChannelStatisticsQueryHandler
         Expression<Func<MessageRecordQueryModel, bool>> condition = x => true;
         condition = condition.And(input.ChannelId.HasValue, x => x.ChannelId == input.ChannelId);
         condition = condition.And(input.TemplateId.HasValue, x => x.MessageEntityType == MessageEntityTypes.Template && x.MessageEntityId == input.TemplateId);
-        condition = condition.And(true, x => (x.SendTime ?? x.ExpectSendTime) >= input.StartTime);
-        condition = condition.And(true, x => (x.SendTime ?? x.ExpectSendTime) <= input.EndTime);
+        condition = condition.And(true, x => x.CreationTime >= input.StartTime);
+        condition = condition.And(true, x => x.CreationTime <= input.EndTime);
         return query.Where(condition);
     }
 
@@ -234,6 +232,8 @@ public class ChannelStatisticsQueryHandler
             return records;
         }
 
+        records = ApplyAppChannelFilter(records);
+
         var platform = input.Vendor.Value.ToString();
         var receiverUsers = _context.MessageReceiverUserQueries.AsNoTracking()
             .Where(x => x.Platform == platform);
@@ -242,6 +242,16 @@ public class ChannelStatisticsQueryHandler
                join receiver in receiverUsers
                    on new { record.MessageTaskHistoryId, record.ChannelUserIdentity }
                    equals new { receiver.MessageTaskHistoryId, receiver.ChannelUserIdentity }
+               select record;
+    }
+
+    private IQueryable<MessageRecordQueryModel> ApplyAppChannelFilter(IQueryable<MessageRecordQueryModel> records)
+    {
+        var channels = _context.ChannelQueryQueries.AsNoTracking()
+            .Where(x => x.Type == ChannelTypes.App);
+
+        return from record in records
+               join channel in channels on record.ChannelId equals channel.Id
                select record;
     }
 
