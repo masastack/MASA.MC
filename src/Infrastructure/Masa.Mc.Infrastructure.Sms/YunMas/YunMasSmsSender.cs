@@ -47,7 +47,7 @@ public class YunMasSmsSender : ISmsSender
         }
 
         LogYunMasSendResult(false, respObj.Success, respObj.MgsGroup, respJson);
-        return new SmsResponseBase(respObj.Success, respObj.Rspcod, respObj.MgsGroup);
+        return new SmsResponseBase(respObj.Success, respObj.Rspcod, respObj.MgsGroup ?? string.Empty);
     }
 
     public async Task<SmsResponseBase> SendBatchAsync(BatchSmsMessage smsMessage)

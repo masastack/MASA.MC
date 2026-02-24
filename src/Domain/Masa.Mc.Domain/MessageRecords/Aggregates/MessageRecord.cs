@@ -60,7 +60,7 @@ public class MessageRecord : FullAggregateRoot<Guid, Guid>
         {
             FailureReason = message;
         }
-        MessageId = messageId;
+        MessageId = messageId ?? string.Empty;
 
         if (UserId == default && Id == default)
         {
