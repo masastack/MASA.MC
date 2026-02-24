@@ -66,11 +66,11 @@ public class RetrySmsMessageEventHandler
                 var response = await smsSender.SendAsync(smsMessage) as SmsSendResponse;
                 if (response.Success)
                 {
-                    messageRecord.SetResult(true, string.Empty);
+                    messageRecord.SetResult(smsSender.SupportsReceipt ? null : true, string.Empty, DateTimeOffset.UtcNow, response.MsgId);
                 }
                 else
                 {
-                    messageRecord.SetResult(false, response.Message);
+                    messageRecord.SetResult(false, response.Message, DateTimeOffset.UtcNow, response.MsgId);
                 }
             }
             catch (Exception ex)

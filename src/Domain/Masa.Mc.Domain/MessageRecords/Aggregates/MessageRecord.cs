@@ -56,11 +56,8 @@ public class MessageRecord : FullAggregateRoot<Guid, Guid>
     {
         SendTime = sendTime ?? DateTimeOffset.UtcNow;
         Success = success;
-        if (success == false)
-        {
-            FailureReason = message;
-        }
-        MessageId = messageId;
+        FailureReason = success == false ? message : string.Empty;
+        MessageId = messageId ?? string.Empty;
 
         if (UserId == default && Id == default)
         {
