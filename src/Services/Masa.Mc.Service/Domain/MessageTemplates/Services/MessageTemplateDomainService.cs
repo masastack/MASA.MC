@@ -5,6 +5,7 @@ namespace Masa.Mc.Service.Admin.Domain.MessageTemplates.Services;
 
 public class MessageTemplateDomainService : DomainService
 {
+    private static readonly Lazy<TimeZoneInfo> ChinaTimeZone = new(ResolveChinaTimeZone);
     private readonly IMessageTemplateRepository _repository;
     private readonly IMessageRecordRepository _messageRecordRepository;
 
@@ -42,7 +43,7 @@ public class MessageTemplateDomainService : DomainService
         return await _repository.RemoveAsync(template);
     }
 
-    public async void ParseTemplateItem(MessageTemplate messageTemplate, string startstr = "{{", string endstr = "}}")
+    public void ParseTemplateItem(MessageTemplate messageTemplate, string startstr = "{{", string endstr = "}}")
     {
         if (!string.IsNullOrEmpty(messageTemplate.TemplateId))
         {
@@ -85,8 +86,9 @@ public class MessageTemplateDomainService : DomainService
 
         var (startTimeUtc, endTimeUtc) = GetChinaTodayUtcRange();
         var sendNum = await _messageRecordRepository.GetCountAsync(x =>
-            x.SendTime >= startTimeUtc &&
-            x.SendTime < endTimeUtc &&
+            x.SendTime.HasValue &&
+            x.SendTime.Value >= startTimeUtc &&
+            x.SendTime.Value < endTimeUtc &&
             x.ChannelUserIdentity == channelUserIdentity &&
             x.MessageEntityId == messageTemplate.Id);
         if (sendNum >= perDayLimit)
@@ -110,8 +112,9 @@ public class MessageTemplateDomainService : DomainService
         var (startTimeUtc, endTimeUtc) = GetChinaTodayUtcRange();
 
         return await query
-            .Where(x => x.SendTime >= startTimeUtc &&
-                        x.SendTime < endTimeUtc &&
+            .Where(x => x.SendTime.HasValue &&
+                        x.SendTime.Value >= startTimeUtc &&
+                        x.SendTime.Value < endTimeUtc &&
                         channelUserIdentitys.Contains(x.ChannelUserIdentity) &&
                         x.MessageEntityId == messageTemplate.Id)
             .GroupBy(x => x.ChannelUserIdentity)
@@ -140,7 +143,7 @@ public class MessageTemplateDomainService : DomainService
 
     private static (DateTimeOffset startTimeUtc, DateTimeOffset endTimeUtc) GetChinaTodayUtcRange()
     {
-        var chinaTimeZone = GetChinaTimeZone();
+        var chinaTimeZone = ChinaTimeZone.Value;
         var nowChina = TimeZoneInfo.ConvertTime(DateTimeOffset.UtcNow, chinaTimeZone);
         var chinaDayStart = new DateTimeOffset(nowChina.Year, nowChina.Month, nowChina.Day, 0, 0, 0, nowChina.Offset);
         var startTimeUtc = chinaDayStart.ToUniversalTime();
@@ -148,19 +151,19 @@ public class MessageTemplateDomainService : DomainService
         return (startTimeUtc, endTimeUtc);
     }
 
-    private static TimeZoneInfo GetChinaTimeZone()
+    private static TimeZoneInfo ResolveChinaTimeZone()
     {
         try
         {
             return TimeZoneInfo.FindSystemTimeZoneById("China Standard Time");
         }
-        catch (TimeZoneNotFoundException)
+        catch (Exception ex) when (ex is TimeZoneNotFoundException || ex is InvalidTimeZoneException)
         {
             try
             {
                 return TimeZoneInfo.FindSystemTimeZoneById("Asia/Shanghai");
             }
-            catch (TimeZoneNotFoundException)
+            catch (Exception innerEx) when (innerEx is TimeZoneNotFoundException || innerEx is InvalidTimeZoneException)
             {
                 return TimeZoneInfo.CreateCustomTimeZone("UTC+08", TimeSpan.FromHours(8), "UTC+08", "UTC+08");
             }
