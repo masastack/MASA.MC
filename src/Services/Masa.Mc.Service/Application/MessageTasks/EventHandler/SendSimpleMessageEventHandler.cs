@@ -8,20 +8,31 @@ public class SendSimpleMessageEventHandler
     private readonly SmsSenderFactory _smsSenderFactory;
     private readonly IChannelRepository _channelRepository;
     private readonly IMessageRecordRepository _messageRecordRepository;
+    private readonly MessageTemplateDomainService _messageTemplateDomainService;
+    private readonly IMessageTemplateRepository _messageTemplateRepository;
+    private readonly II18n<DefaultResource> _i18n;
 
     public SendSimpleMessageEventHandler(SmsSenderFactory smsSenderFactory
         , IChannelRepository channelRepository
-        , IMessageRecordRepository messageRecordRepository)
+        , IMessageRecordRepository messageRecordRepository
+        , MessageTemplateDomainService messageTemplateDomainService
+        , IMessageTemplateRepository messageTemplateRepository
+        , II18n<DefaultResource> i18n)
     {
         _smsSenderFactory = smsSenderFactory;
         _channelRepository = channelRepository;
         _messageRecordRepository = messageRecordRepository;
+        _messageTemplateDomainService = messageTemplateDomainService;
+        _messageTemplateRepository = messageTemplateRepository;
+        _i18n = i18n;
     }
 
     [EventHandler]
     public async Task HandleEventAsync(SendSimpleSmsMessageEvent eto)
     {
         var channel = await _channelRepository.AsNoTracking().FirstOrDefaultAsync(x => x.Code == eto.ChannelCode);
+        if (channel == null) return;
+
         var provider = (SmsProviders)channel.Provider;
         var options = _smsSenderFactory.GetOptions(provider, channel.ExtraProperties);
         var smsAsyncLoca = _smsSenderFactory.GetProviderAsyncLocal(provider);
@@ -44,6 +55,13 @@ public class SendSimpleMessageEventHandler
             messageRecord.SetDataValue(nameof(MessageTemplate.TemplateId), templateId);
             messageRecord.SetDisplayName(eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.DisplayName)));
 
+            if (!await CheckTemplateSendUpperLimitAsync(messageEntityId, eto.ChannelUserIdentity))
+            {
+                messageRecord.SetResult(false, _i18n.T("DailySendingLimit"));
+                await _messageRecordRepository.AddAsync(messageRecord);
+                return;
+            }
+
             try
             {
                 var response = await smsSender.SendAsync(smsMessage);
@@ -65,5 +83,11 @@ public class SendSimpleMessageEventHandler
             
             await _messageRecordRepository.AddAsync(messageRecord);
         }
+    }
+
+    private async Task<bool> CheckTemplateSendUpperLimitAsync(Guid messageEntityId, string channelUserIdentity)
+    {
+        var messageTemplate = await _messageTemplateRepository.FindAsync(x => x.Id == messageEntityId, false);
+        return messageTemplate == null || await _messageTemplateDomainService.CheckSendUpperLimitAsync(messageTemplate, channelUserIdentity);
     }
 }
