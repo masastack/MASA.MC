@@ -133,16 +133,26 @@ public class ChannelStatisticsQueryHandler
 
         var rawGroups = await records
             .Where(x => x.Success == false)
-            .GroupBy(x => string.IsNullOrWhiteSpace(x.FailureReason) ? "Unknown" : x.FailureReason.Trim())
+            .Select(x => new
+            {
+                FailureReason = string.IsNullOrWhiteSpace(x.FailureReason) ? "Unknown" : x.FailureReason.Trim(),
+                IsAliyunSmsChannel = x.Channel.Type == ChannelTypes.Sms && x.Channel.Provider == (int)SmsProviders.Aliyun
+            })
+            .GroupBy(x => new
+            {
+                x.FailureReason,
+                x.IsAliyunSmsChannel
+            })
             .Select(g => new
             {
-                FailureReason = g.Key,
+                g.Key.FailureReason,
+                g.Key.IsAliyunSmsChannel,
                 Count = g.LongCount()
             })
             .ToListAsync();
 
         var result = rawGroups
-            .GroupBy(x => NormalizeFailureReason(x.FailureReason))
+            .GroupBy(x => x.IsAliyunSmsChannel ? NormalizeFailureReason(x.FailureReason) : x.FailureReason)
             .Select(g => new ChannelFailureReasonOverviewDto
             {
                 FailureReason = g.Key,
