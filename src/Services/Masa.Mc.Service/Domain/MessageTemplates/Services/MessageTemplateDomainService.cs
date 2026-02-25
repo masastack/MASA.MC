@@ -1,4 +1,4 @@
-﻿// Copyright (c) MASA Stack All rights reserved.
+// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
 namespace Masa.Mc.Service.Admin.Domain.MessageTemplates.Services;
@@ -83,7 +83,12 @@ public class MessageTemplateDomainService : DomainService
             return true;
         }
 
-        var sendNum = await _messageRecordRepository.GetCountAsync(x => x.SendTime.Value.Date == DateTime.UtcNow.Date && x.ChannelUserIdentity == channelUserIdentity && x.MessageEntityId == messageTemplate.Id);
+        var (startTimeUtc, endTimeUtc) = GetChinaTodayUtcRange();
+        var sendNum = await _messageRecordRepository.GetCountAsync(x =>
+            x.SendTime >= startTimeUtc &&
+            x.SendTime < endTimeUtc &&
+            x.ChannelUserIdentity == channelUserIdentity &&
+            x.MessageEntityId == messageTemplate.Id);
         if (sendNum >= perDayLimit)
         {
             return false;
@@ -102,12 +107,16 @@ public class MessageTemplateDomainService : DomainService
         }
 
         var query = await _messageRecordRepository.GetQueryableAsync();
+        var (startTimeUtc, endTimeUtc) = GetChinaTodayUtcRange();
 
         return await query
-            .Where(x => x.SendTime.Value.Date == DateTime.UtcNow.Date && channelUserIdentitys.Contains(x.ChannelUserIdentity) && x.MessageEntityId == messageTemplate.Id)
-            .GroupBy(x=>x.ChannelUserIdentity)
+            .Where(x => x.SendTime >= startTimeUtc &&
+                        x.SendTime < endTimeUtc &&
+                        channelUserIdentitys.Contains(x.ChannelUserIdentity) &&
+                        x.MessageEntityId == messageTemplate.Id)
+            .GroupBy(x => x.ChannelUserIdentity)
             .Where(x => x.Count() >= perDayLimit)
-            .Select(x=>x.Key)
+            .Select(x => x.Key)
             .ToListAsync();
     }
 
@@ -127,5 +136,34 @@ public class MessageTemplateDomainService : DomainService
             newVariables[key] = value;
         }
         return newVariables;
+    }
+
+    private static (DateTimeOffset startTimeUtc, DateTimeOffset endTimeUtc) GetChinaTodayUtcRange()
+    {
+        var chinaTimeZone = GetChinaTimeZone();
+        var nowChina = TimeZoneInfo.ConvertTime(DateTimeOffset.UtcNow, chinaTimeZone);
+        var chinaDayStart = new DateTimeOffset(nowChina.Year, nowChina.Month, nowChina.Day, 0, 0, 0, nowChina.Offset);
+        var startTimeUtc = chinaDayStart.ToUniversalTime();
+        var endTimeUtc = chinaDayStart.AddDays(1).ToUniversalTime();
+        return (startTimeUtc, endTimeUtc);
+    }
+
+    private static TimeZoneInfo GetChinaTimeZone()
+    {
+        try
+        {
+            return TimeZoneInfo.FindSystemTimeZoneById("China Standard Time");
+        }
+        catch (TimeZoneNotFoundException)
+        {
+            try
+            {
+                return TimeZoneInfo.FindSystemTimeZoneById("Asia/Shanghai");
+            }
+            catch (TimeZoneNotFoundException)
+            {
+                return TimeZoneInfo.CreateCustomTimeZone("UTC+08", TimeSpan.FromHours(8), "UTC+08", "UTC+08");
+            }
+        }
     }
 }
