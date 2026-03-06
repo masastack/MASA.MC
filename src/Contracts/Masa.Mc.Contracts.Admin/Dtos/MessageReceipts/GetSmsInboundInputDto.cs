@@ -13,7 +13,6 @@ public class GetSmsInboundInputDto : PaginatedOptionsDto
 
     public string SmsContent { get; set; } = string.Empty;
 
-
     public DateTimeOffset? StartTime { get; set; }
 
     public DateTimeOffset? EndTime { get; set; }
