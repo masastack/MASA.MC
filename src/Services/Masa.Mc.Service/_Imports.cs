@@ -1,4 +1,4 @@
-﻿// Copyright (c) MASA Stack All rights reserved.
+// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
 global using Dapr;
@@ -81,6 +81,8 @@ global using Masa.Mc.Domain.Channels.Repositories;
 global using Masa.Mc.Domain.Consts;
 global using Masa.Mc.Domain.MessageInfos.Aggregates;
 global using Masa.Mc.Domain.MessageInfos.Repositories;
+global using Masa.Mc.Domain.MessageReceipts.Aggregates;
+global using Masa.Mc.Domain.MessageReceipts.Repositories;
 global using Masa.Mc.Domain.MessageRecords.Aggregates;
 global using Masa.Mc.Domain.MessageRecords.Events;
 global using Masa.Mc.Domain.MessageRecords.Repositories;
@@ -98,6 +100,7 @@ global using Masa.Mc.Domain.Shared.Apps;
 global using Masa.Mc.Domain.Shared.Channels;
 global using Masa.Mc.Domain.Shared.Consts;
 global using Masa.Mc.Domain.Shared.MessageRecords;
+global using Masa.Mc.Domain.Shared.MessageReceipts;
 global using Masa.Mc.Domain.Shared.MessageTasks;
 global using Masa.Mc.Domain.Shared.MessageTemplates;
 global using Masa.Mc.Domain.Shared.ReceiverGroups;
@@ -140,6 +143,7 @@ global using Masa.Mc.Service.Admin.Application.Channels.Queries;
 global using Masa.Mc.Service.Admin.Application.MessageInfos.Commands;
 global using Masa.Mc.Service.Admin.Application.MessageInfos.Queries;
 global using Masa.Mc.Service.Admin.Application.MessageReceipts.Commands;
+global using Masa.Mc.Service.Admin.Application.MessageReceipts.Queries;
 global using Masa.Mc.Service.Admin.Application.MessageRecords.Commands;
 global using Masa.Mc.Service.Admin.Application.MessageRecords.Queries;
 global using Masa.Mc.Service.Admin.Application.MessageRecords.Jobs;

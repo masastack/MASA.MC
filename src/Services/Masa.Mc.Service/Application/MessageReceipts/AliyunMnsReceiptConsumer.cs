@@ -10,9 +10,8 @@ namespace Masa.Mc.Service.Admin.Application.MessageReceipts;
 
 public class AliyunMnsReceiptConsumer : BackgroundService
 {
-    private readonly IChannelRepository _channelRepository;
+    private readonly IServiceScopeFactory _serviceScopeFactory;
     private readonly ILogger<AliyunMnsReceiptConsumer> _logger;
-    private readonly IServiceProvider _serviceProvider;
     private const int SleepTimeMs = 50;
     private const int NoChannelWaitSeconds = 60;
     private const int ErrorRetrySeconds = 5;
@@ -27,13 +26,11 @@ public class AliyunMnsReceiptConsumer : BackgroundService
     private readonly Dictionary<string, (string AccessKeyId, string AccessKeySecret)> _credentialsMap = new();
 
     public AliyunMnsReceiptConsumer(
-        IChannelRepository channelRepository,
-        ILogger<AliyunMnsReceiptConsumer> logger,
-        IServiceProvider serviceProvider)
+        IServiceScopeFactory serviceScopeFactory,
+        ILogger<AliyunMnsReceiptConsumer> logger)
     {
-        _channelRepository = channelRepository;
+        _serviceScopeFactory = serviceScopeFactory;
         _logger = logger;
-        _serviceProvider = serviceProvider;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -73,7 +70,10 @@ public class AliyunMnsReceiptConsumer : BackgroundService
 
     private async Task<List<Channel>> GetEnabledMnsChannelsAsync(CancellationToken cancellationToken)
     {
-        var channels = await _channelRepository.AsNoTracking()
+        await using var scope = _serviceScopeFactory.CreateAsyncScope();
+        var channelRepository = scope.ServiceProvider.GetRequiredService<IChannelRepository>();
+
+        var channels = await channelRepository.AsNoTracking()
             .Where(x => x.Type == ChannelType.Sms && x.Provider == (int)SmsProviders.Aliyun)
             .ToListAsync(cancellationToken);
 
@@ -283,7 +283,7 @@ public class AliyunMnsReceiptConsumer : BackgroundService
             var receiptInput = new AliyunReceiptInput { Statuses = receiptData };
 
             // 通过事件总线发布回执处理命令
-            await using var scope = _serviceProvider.CreateAsyncScope();
+            await using var scope = _serviceScopeFactory.CreateAsyncScope();
             var eventBus = scope.ServiceProvider.GetRequiredService<IEventBus>();
             var command = new ReceiveAliyunReceiptCommand(receiptInput);
             await eventBus.PublishAsync(command, cancellationToken);

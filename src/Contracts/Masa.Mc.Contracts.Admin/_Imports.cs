@@ -1,4 +1,4 @@
-﻿global using FluentValidation;
+global using FluentValidation;
 global using Magicodes.ExporterAndImporter.Core;
 global using Magicodes.ExporterAndImporter.Core.Models;
 global using Masa.Mc.Contracts.Admin.Dtos.Channels;
@@ -10,6 +10,7 @@ global using Masa.Mc.Contracts.Admin.Dtos.ReceiverGroups;
 global using Masa.Mc.Domain.Shared.Apps;
 global using Masa.Mc.Domain.Shared.Channels;
 global using Masa.Mc.Domain.Shared.MessageRecords;
+global using Masa.Mc.Domain.Shared.MessageReceipts;
 global using Masa.Mc.Domain.Shared.MessageTasks;
 global using Masa.Mc.Domain.Shared.MessageTemplates;
 global using Masa.Mc.Domain.Shared.ReceiverGroups;

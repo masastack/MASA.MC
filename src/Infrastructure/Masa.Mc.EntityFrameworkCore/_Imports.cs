@@ -1,4 +1,4 @@
-﻿// Copyright (c) MASA Stack All rights reserved.
+// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
 // System Namespaces
@@ -26,6 +26,8 @@ global using Masa.Mc.Domain.Apps.Aggregates;
 global using Masa.Mc.Domain.Apps.Repositories;
 global using Masa.Mc.Domain.Channels.Aggregates;
 global using Masa.Mc.Domain.MessageInfos.Aggregates;
+global using Masa.Mc.Domain.MessageReceipts.Aggregates;
+global using Masa.Mc.Domain.MessageReceipts.Repositories;
 global using Masa.Mc.Domain.MessageRecords.Aggregates;
 global using Masa.Mc.Domain.MessageTasks.Aggregates;
 global using Masa.Mc.Domain.MessageTemplates.Aggregates;

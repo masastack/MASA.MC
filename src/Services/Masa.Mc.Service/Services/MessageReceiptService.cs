@@ -60,10 +60,10 @@ public class MessageReceiptService : ServiceBase
     [RoutePattern("yunmas", StartWithBaseUri = true, HttpMethod = "Post")]
     public async Task<YunMasReceiptResultDto> ReceiveYunMasReceiptAsync([FromBody] YunMasReceiptStatusDto status)
     {
-        // 云MAS推送的是单个状态报告对象，包装成YunMasReceiptInput
         var input = new YunMasReceiptInput { Statuses = new List<YunMasReceiptStatusDto> { status } };
         var command = new ReceiveYunMasReceiptCommand(input);
         await _eventBus.PublishAsync(command);
         return command.Result;
     }
+
 }

@@ -6,10 +6,12 @@ namespace Masa.Mc.Service.Admin.Application.MessageReceipts;
 public class MessageReceiptCommandHandler
 {
     private readonly IMessageRecordRepository _repository;
+    private readonly ISmsInboundRepository _smsInboundRepository;
 
-    public MessageReceiptCommandHandler(IMessageRecordRepository repository)
+    public MessageReceiptCommandHandler(IMessageRecordRepository repository, ISmsInboundRepository smsInboundRepository)
     {
         _repository = repository;
+        _smsInboundRepository = smsInboundRepository;
     }
 
     [EventHandler]
@@ -155,6 +157,16 @@ public class MessageReceiptCommandHandler
 
         // 设置返回结果
         command.Result = new YunMasReceiptResultDto(0, "接收成功");
+    }
+
+    [EventHandler]
+    public async Task ReceiveSmsInboundAsync(ReceiveSmsInboundCommand command, CancellationToken cancellationToken = default)
+    {
+        var input = command.Input;
+        var sendTime = DateTimeParseUtil.ParseLocalToUtcOrNow(input.SendTime, "yyyy-MM-dd HH:mm:ss");
+
+        var entity = new SmsInbound(command.ChannelId, input.Mobile, input.SmsContent, sendTime, input.AddSerial, command.Provider);
+        await _smsInboundRepository.AddAsync(entity, cancellationToken);
     }
 
     private string GetVivoAckTypeDescription(string? ackType, string? subAckType)
