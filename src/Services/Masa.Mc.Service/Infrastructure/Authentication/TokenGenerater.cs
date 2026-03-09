@@ -1,4 +1,4 @@
-﻿// Copyright (c) MASA Stack All rights reserved.
+// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
 namespace Masa.Mc.Service.Admin.Infrastructure.Authentication;
@@ -49,9 +49,10 @@ public class TokenGenerater : ITokenGenerater
         var accessToken = await _cacheContext.GetOrSetAsync(CacheKeys.ClientCredentialsTokenKey(_masaStackConfig.GetWebId(MasaStackProject.MC)),
             async () =>
             {
+                var ssoDomain = _masaStackConfig.GetSsoDomain().TrimEnd('/');
                 var request = new ClientCredentialsTokenRequest
                 {
-                    Address = _masaStackConfig.GetSsoDomain() + "/connect/token",
+                    Address = $"{ssoDomain}/connect/token",
                     GrantType = BuildingBlocks.Authentication.OpenIdConnect.Models.Constans.GrantType.CLIENT_CREDENTIALS,
                     ClientId = _masaStackConfig.GetWebId(MasaStackProject.MC),
                     Scope = BusinessConsts.COMMON_SCOPE
