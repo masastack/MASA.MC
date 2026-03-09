@@ -163,7 +163,7 @@ public class MessageReceiptCommandHandler
     public async Task ReceiveSmsInboundAsync(ReceiveSmsInboundCommand command, CancellationToken cancellationToken = default)
     {
         var input = command.Input;
-        var sendTime = DateTimeParseUtil.ParseLocalToUtcOrNow(input.SendTime, "yyyy-MM-dd HH:mm:ss");
+        var sendTime = DateTimeParseUtil.ParseChinaTimeToUtcOrNow(input.SendTime, "yyyy-MM-dd HH:mm:ss");
 
         var entity = new SmsInbound(command.ChannelId, input.Mobile, input.SmsContent, sendTime, input.AddSerial, command.Provider);
         await _smsInboundRepository.AddAsync(entity, cancellationToken);
