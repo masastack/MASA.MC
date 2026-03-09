@@ -1,4 +1,4 @@
-﻿// Copyright (c) MASA Stack All rights reserved.
+// Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
 namespace Masa.Mc.Service.Admin.EntityFrameworkCore;
@@ -28,6 +28,8 @@ public class McQueryContext : MasaDbContext<McQueryContext>, IMcQueryContext
     public IQueryable<AppDeviceTokenQueryModel> AppDeviceTokenQueries => Set<AppDeviceTokenQueryModel>().AsQueryable();
 
     public IQueryable<AppVendorConfigQueryModel> AppVendorConfigQueries => Set<AppVendorConfigQueryModel>().AsQueryable();
+
+    public IQueryable<SmsInboundQueryModel> SmsInboundQueries => Set<SmsInboundQueryModel>().AsQueryable();
 
     public McQueryContext(MasaDbContextOptions<McQueryContext> options) : base(options)
     {
@@ -120,6 +122,11 @@ public class McQueryContext : MasaDbContext<McQueryContext>, IMcQueryContext
         {
             b.ToView(MCConsts.DbTablePrefix + "AppVendorConfigs", MCConsts.DbSchema);
             b.Property(x => x.Options).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
+        });
+
+        builder.Entity<SmsInboundQueryModel>(b =>
+        {
+            b.ToView(MCConsts.DbTablePrefix + "SmsInbounds", MCConsts.DbSchema);
         });
 
         // Apply provider-specific configurations

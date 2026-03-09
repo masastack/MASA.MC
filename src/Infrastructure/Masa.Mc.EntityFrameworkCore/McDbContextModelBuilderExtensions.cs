@@ -176,5 +176,18 @@ public static class McDbContextModelBuilderExtensions
             b.Property(x => x.Options).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
             b.HasIndex(x => new { x.ChannelId, x.Vendor });
         });
+
+        builder.Entity<SmsInbound>(b =>
+        {
+            b.ToTable(MCConsts.DbTablePrefix + "SmsInbounds", MCConsts.DbSchema);
+            b.Property(x => x.Mobile).IsRequired().HasMaxLength(32);
+            b.Property(x => x.SmsContent).IsRequired().HasMaxLength(1000);
+            b.Property(x => x.AddSerial).HasMaxLength(64);
+            b.Property(x => x.Provider).IsRequired();
+            b.HasIndex(x => x.ChannelId);
+            b.HasIndex(x => x.Mobile);
+            b.HasIndex(x => x.SendTime);
+            b.HasIndex(x => x.Provider);
+        });
     }
 }

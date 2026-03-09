@@ -189,6 +189,11 @@ namespace Masa.Mc.Service.Admin.Migrations
                         .HasColumnType("nvarchar(128)")
                         .HasColumnName("DisplayName");
 
+                    b.Property<int>("Provider")
+                        .ValueGeneratedOnUpdateSometimes()
+                        .HasColumnType("int")
+                        .HasColumnName("Provider");
+
                     b.Property<string>("Scheme")
                         .IsRequired()
                         .ValueGeneratedOnUpdateSometimes()
@@ -267,6 +272,11 @@ namespace Masa.Mc.Service.Admin.Migrations
                     b.Property<Guid>("Modifier")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int>("Provider")
+                        .ValueGeneratedOnUpdateSometimes()
+                        .HasColumnType("int")
+                        .HasColumnName("Provider");
+
                     b.Property<string>("Scheme")
                         .IsRequired()
                         .ValueGeneratedOnUpdateSometimes()
@@ -322,6 +332,64 @@ namespace Masa.Mc.Service.Admin.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("MessageInfos", (string)null);
+                });
+
+            modelBuilder.Entity("Masa.Mc.Domain.MessageReceipts.Aggregates.SmsInbound", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AddSerial")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
+                    b.Property<Guid>("ChannelId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("Creator")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Mobile")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("nvarchar(32)");
+
+                    b.Property<DateTime>("ModificationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("Modifier")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Provider")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("SendTime")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("SmsContent")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChannelId");
+
+                    b.HasIndex("Mobile");
+
+                    b.HasIndex("Provider");
+
+                    b.HasIndex("SendTime");
+
+                    b.ToTable("SmsInbounds", (string)null);
                 });
 
             modelBuilder.Entity("Masa.Mc.Domain.MessageRecords.Aggregates.MessageRecord", b =>
@@ -445,7 +513,7 @@ namespace Masa.Mc.Service.Admin.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("MessageTaskHistoryId");
+                    b.HasIndex("MessageTaskHistoryId", "ChannelUserIdentity", "Platform");
 
                     b.ToTable("MessageReceiverUsers", (string)null);
                 });
