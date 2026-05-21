@@ -21,6 +21,7 @@ public class MessageTemplate : FullAggregateRoot<Guid, Guid>
     public long PerDayLimit { get; protected set; }
     public virtual bool IsStatic { get; protected set; }
     public ICollection<MessageTemplateItem> Items { get; protected set; } = new List<MessageTemplateItem>();
+    public MessageTemplateUnsubscribeConfig UnsubscribeConfig { get; protected set; } = MessageTemplateUnsubscribeConfig.Disabled();
     public ExtraPropertyDictionary Options { get; set; } = new();
 
     private MessageTemplate() { }
@@ -35,6 +36,7 @@ public class MessageTemplate : FullAggregateRoot<Guid, Guid>
         string sign,
         int templateType,
         long perDayLimit,
+        MessageTemplateUnsubscribeConfig? unsubscribeConfig = null,
         MessageTemplateStatuses status = MessageTemplateStatuses.Normal,
         MessageTemplateAuditStatuses auditStatus = MessageTemplateAuditStatuses.WaitAudit,
         string auditReason = "",
@@ -52,6 +54,7 @@ public class MessageTemplate : FullAggregateRoot<Guid, Guid>
         IsStatic = isStatic;
         MessageContent = messageContent;
         SetAuditStatus(auditStatus, auditReason);
+        ConfigureUnsubscribe(unsubscribeConfig ?? MessageTemplateUnsubscribeConfig.Disabled());
 
         Items = new List<MessageTemplateItem>();
     }
@@ -86,9 +89,37 @@ public class MessageTemplate : FullAggregateRoot<Guid, Guid>
         Status = MessageTemplateStatuses.Invalid;
     }
 
+    public virtual void ConfigureUnsubscribe(MessageTemplateUnsubscribeConfig config)
+    {
+        Check.NotNull(config, nameof(config));
+        if (TemplateType == (int)SmsTemplateTypes.VerificationCode && config.Enabled)
+        {
+            throw new UserFriendlyException(errorCode: MessageTemplateExceptionCodes.VERIFICATION_CODE_TEMPLATE_CANNOT_ENABLE_UNSUBSCRIBE);
+        }
+
+        UnsubscribeConfig = config;
+    }
+
     public void Remove()
     {
         AddDomainEvent(new RemoveTemplateMessageTasksDomainEvent(Id));
+    }
+
+    public string AppendUnsubscribeSuffix(string content)
+    {
+        var normalizedContent = content ?? string.Empty;
+        var suffix = UnsubscribeConfig.BuildSuffix();
+        if (string.IsNullOrEmpty(suffix))
+        {
+            return normalizedContent;
+        }
+
+        if (string.IsNullOrWhiteSpace(normalizedContent))
+        {
+            return suffix;
+        }
+
+        return $"{normalizedContent}{Environment.NewLine}{suffix}";
     }
 
     public bool IsWebsiteMessage

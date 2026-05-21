@@ -84,6 +84,12 @@ public class RetrySmsMessageEventHandler
 
     private string BuildSmsMessageText(ISmsSender sender, ExtraPropertyDictionary variables, MessageTemplate messageTemplate)
     {
-        return sender.SupportsTemplate ? JsonSerializer.Serialize(variables) : _templateRenderer.Render(messageTemplate.MessageContent.Content, variables);
+        if (sender.SupportsTemplate)
+        {
+            return JsonSerializer.Serialize(variables);
+        }
+
+        var content = _templateRenderer.Render(messageTemplate.MessageContent.Content, variables);
+        return messageTemplate.AppendUnsubscribeSuffix(content);
     }
 }

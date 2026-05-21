@@ -164,6 +164,7 @@ public class SendSmsMessageEventHandler
             foreach (var item in phoneNumberVariable)
             {
                 var content = _templateRenderer.Render(messageTemplate.MessageContent.Content, item.Value);
+                content = messageTemplate.AppendUnsubscribeSuffix(content);
                 dic.TryAdd(item.Key, content);
             }
 

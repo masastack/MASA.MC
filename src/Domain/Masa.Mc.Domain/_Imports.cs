@@ -13,6 +13,7 @@ global using Masa.Mc.Data;
 global using Masa.Mc.Domain.Apps.Aggregates;
 global using Masa.Mc.Domain.Channels.Aggregates;
 global using Masa.Mc.Domain.Channels.Events;
+global using Masa.Mc.Domain.Constants;
 global using Masa.Mc.Domain.MessageInfos.Aggregates;
 global using Masa.Mc.Domain.MessageReceipts.Aggregates;
 global using Masa.Mc.Domain.MessageRecords.Aggregates;

@@ -22,5 +22,29 @@ public class MessageTemplateUpsertDtoValidator : AbstractValidator<MessageTempla
         RuleFor(inputDto => inputDto.Content).Required("ContentRequired");
         RuleFor(inputDto => inputDto.JumpUrl).Required("JumpUrlRequired").When(x => x.IsJump);
         RuleFor(inputDto => inputDto.Items).Must(x => !x.GroupBy(y => y.Code).Any(z => z.Count() > 1)).WithMessage("MessageTemplateItemsCannotRepeated");
+
+        RuleFor(inputDto => inputDto.UnsubscribeConfig).NotNull();
+        RuleFor(inputDto => inputDto.UnsubscribeConfig.UnsubscribeKeyword).Required("UnsubscribeKeywordRequired")
+            .Length(1, 20).WithMessage("UnsubscribeKeywordLength")
+            .When(x => x.UnsubscribeConfig.Enabled);
+        RuleFor(inputDto => inputDto.UnsubscribeConfig.UnsubscribeAutoReply).Required("UnsubscribeAutoReplyRequired")
+            .Length(1, 500).WithMessage("UnsubscribeAutoReplyLength")
+            .When(x => x.UnsubscribeConfig.Enabled);
+        RuleFor(inputDto => inputDto.UnsubscribeConfig.ResubscribeKeyword).Required("ResubscribeKeywordRequired")
+            .Length(1, 20).WithMessage("ResubscribeKeywordLength")
+            .When(x => x.UnsubscribeConfig.Enabled);
+        RuleFor(inputDto => inputDto.UnsubscribeConfig.ResubscribeAutoReply).Required("ResubscribeAutoReplyRequired")
+            .Length(1, 500).WithMessage("ResubscribeAutoReplyLength")
+            .When(x => x.UnsubscribeConfig.Enabled);
+        RuleFor(inputDto => inputDto.UnsubscribeConfig.CooldownSeconds)
+            .GreaterThan(0).WithMessage("UnsubscribeCooldownSecondsRequired")
+            .When(x => x.UnsubscribeConfig.Enabled && x.UnsubscribeConfig.DebounceEnabled);
+        RuleFor(inputDto => inputDto).Must(inputDto =>
+            !inputDto.UnsubscribeConfig.Enabled ||
+            !string.Equals(inputDto.UnsubscribeConfig.UnsubscribeKeyword?.Trim(), inputDto.UnsubscribeConfig.ResubscribeKeyword?.Trim(), StringComparison.OrdinalIgnoreCase))
+            .WithMessage("UnsubscribeKeywordsMustBeDifferent");
+        RuleFor(inputDto => inputDto).Must(inputDto =>
+            !(inputDto.TemplateType == (int)SmsTemplateTypes.VerificationCode && inputDto.UnsubscribeConfig.Enabled))
+            .WithMessage("VerificationCodeTemplateCannotEnableUnsubscribe");
     }
 }

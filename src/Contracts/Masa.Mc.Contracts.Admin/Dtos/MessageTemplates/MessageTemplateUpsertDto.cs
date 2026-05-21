@@ -30,6 +30,7 @@ public class MessageTemplateUpsertDto
     public long PerDayLimit { get; set; }
     public bool IsStatic { get; set; }
     public List<MessageTemplateItemDto> Items { get; set; }
+    public MessageTemplateUnsubscribeConfigDto UnsubscribeConfig { get; set; } = new();
     public MessageInfoUpsertDto MessageInfo { get; set; } = new();
     public ExtraPropertyDictionary ExtraProperties { get; set; } = new();
     public ExtraPropertyDictionary Options { get; set; } = new();

@@ -45,6 +45,19 @@ public static class McDbContextModelBuilderExtensions
                 b.Property(x => x.JumpUrl).HasMaxLength(256).HasColumnName("JumpUrl");
                 b.Property(x => x.ExtraProperties).HasColumnName("ExtraProperties").HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
             });
+            b.OwnsOne(x => x.UnsubscribeConfig, ub =>
+            {
+                ub.ToTable(MCConsts.DbTablePrefix + "MessageTemplateUnsubscribeConfigs", MCConsts.DbSchema);
+                ub.WithOwner().HasForeignKey("MessageTemplateId");
+                ub.HasKey("MessageTemplateId");
+                ub.Property(x => x.Enabled).HasColumnName(nameof(MessageTemplateUnsubscribeConfig.Enabled)).HasDefaultValue(false);
+                ub.Property(x => x.UnsubscribeKeyword).HasColumnName(nameof(MessageTemplateUnsubscribeConfig.UnsubscribeKeyword)).HasMaxLength(20).HasDefaultValue(string.Empty);
+                ub.Property(x => x.UnsubscribeAutoReply).HasColumnName(nameof(MessageTemplateUnsubscribeConfig.UnsubscribeAutoReply)).HasMaxLength(500).HasDefaultValue(string.Empty);
+                ub.Property(x => x.ResubscribeKeyword).HasColumnName(nameof(MessageTemplateUnsubscribeConfig.ResubscribeKeyword)).HasMaxLength(20).HasDefaultValue(string.Empty);
+                ub.Property(x => x.ResubscribeAutoReply).HasColumnName(nameof(MessageTemplateUnsubscribeConfig.ResubscribeAutoReply)).HasMaxLength(500).HasDefaultValue(string.Empty);
+                ub.Property(x => x.DebounceEnabled).HasColumnName(nameof(MessageTemplateUnsubscribeConfig.DebounceEnabled)).HasDefaultValue(false);
+                ub.Property(x => x.CooldownSeconds).HasColumnName(nameof(MessageTemplateUnsubscribeConfig.CooldownSeconds)).HasDefaultValue(0);
+            });
         });
 
         builder.Entity<MessageTemplateItem>(b =>
