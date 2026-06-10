@@ -54,7 +54,7 @@ public class MessageTemplate : FullAggregateRoot<Guid, Guid>
         IsStatic = isStatic;
         MessageContent = messageContent;
         SetAuditStatus(auditStatus, auditReason);
-        ConfigureUnsubscribe(unsubscribeConfig ?? MessageTemplateUnsubscribeConfig.Disabled());
+        ApplyUnsubscribeConfig(unsubscribeConfig ?? MessageTemplateUnsubscribeConfig.Disabled());
 
         Items = new List<MessageTemplateItem>();
     }
@@ -90,6 +90,11 @@ public class MessageTemplate : FullAggregateRoot<Guid, Guid>
     }
 
     public virtual void ConfigureUnsubscribe(MessageTemplateUnsubscribeConfig config)
+    {
+        ApplyUnsubscribeConfig(config);
+    }
+
+    private void ApplyUnsubscribeConfig(MessageTemplateUnsubscribeConfig config)
     {
         Check.NotNull(config, nameof(config));
         if (TemplateType == (int)SmsTemplateTypes.VerificationCode && config.Enabled)
