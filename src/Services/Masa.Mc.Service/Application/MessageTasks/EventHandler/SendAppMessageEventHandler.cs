@@ -211,6 +211,8 @@ public class SendAppMessageEventHandler
     private async Task ProcessInvalidUsers(IEnumerable<MessageReceiverUser> users, SendAppMessageEvent eto, ExtraPropertyDictionary transmissionContent)
     {
         var records = new List<MessageRecord>();
+        var websiteMessages = new List<WebsiteMessage>();
+        var isWebsiteMessage = eto.MessageData.GetDataValue<bool>(BusinessConsts.IS_WEBSITE_MESSAGE);
 
         foreach (var user in users)
         {
@@ -224,11 +226,17 @@ public class SendAppMessageEventHandler
                 record.SetResult(false, "Invalid platform");
             }
             records.Add(record);
+
+            if (isWebsiteMessage)
+            {
+                websiteMessages.Add(CreateWebsiteMessage(record, user, eto.MessageData));
+            }
         }
 
         if (records.Any())
         {
             await _messageRecordRepository.AddRangeAsync(records);
+            await _websiteMessageRepository.AddRangeAsync(websiteMessages);
             await _unitOfWork.SaveChangesAsync();
             await _unitOfWork.CommitAsync();
         }
