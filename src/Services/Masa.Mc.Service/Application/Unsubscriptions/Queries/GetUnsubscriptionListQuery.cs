@@ -1,0 +1,9 @@
+// Copyright (c) MASA Stack All rights reserved.
+// Licensed under the Apache License. See LICENSE.txt in the project root for license information.
+
+namespace Masa.Mc.Service.Admin.Application.Unsubscriptions.Queries;
+
+public record GetUnsubscriptionListQuery(GetUnsubscriptionInputDto Input) : Query<PaginatedListDto<UnsubscriptionDto>>
+{
+    public override PaginatedListDto<UnsubscriptionDto> Result { get; set; } = default!;
+}

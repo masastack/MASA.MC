@@ -11,13 +11,15 @@ public class SendSimpleMessageEventHandler
     private readonly MessageTemplateDomainService _messageTemplateDomainService;
     private readonly IMessageTemplateRepository _messageTemplateRepository;
     private readonly II18n<DefaultResource> _i18n;
+    private readonly UnsubscriptionDomainService _channelUnsubscriptionDomainService;
 
     public SendSimpleMessageEventHandler(SmsSenderFactory smsSenderFactory
         , IChannelRepository channelRepository
         , IMessageRecordRepository messageRecordRepository
         , MessageTemplateDomainService messageTemplateDomainService
         , IMessageTemplateRepository messageTemplateRepository
-        , II18n<DefaultResource> i18n)
+        , II18n<DefaultResource> i18n
+        , UnsubscriptionDomainService channelUnsubscriptionDomainService)
     {
         _smsSenderFactory = smsSenderFactory;
         _channelRepository = channelRepository;
@@ -25,6 +27,7 @@ public class SendSimpleMessageEventHandler
         _messageTemplateDomainService = messageTemplateDomainService;
         _messageTemplateRepository = messageTemplateRepository;
         _i18n = i18n;
+        _channelUnsubscriptionDomainService = channelUnsubscriptionDomainService;
     }
 
     [EventHandler]
@@ -43,6 +46,7 @@ public class SendSimpleMessageEventHandler
             var sign = eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.Sign));
             var templateId = eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.TemplateId));
             var messageEntityId = eto.MessageData.GetDataValue<Guid>(nameof(MessageTemplate.Id));
+            MessageTemplate? messageTemplate = null;
             var text = smsSender.SupportsTemplate ? JsonSerializer.Serialize(eto.Variables) : eto.MessageData.MessageContent.Content;
 
             var smsMessage = new SmsMessage(eto.ChannelUserIdentity, text);
@@ -55,11 +59,24 @@ public class SendSimpleMessageEventHandler
             messageRecord.SetDataValue(nameof(MessageTemplate.TemplateId), templateId);
             messageRecord.SetDisplayName(eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.DisplayName)));
 
-            if (!await CheckTemplateSendUpperLimitAsync(messageEntityId, eto.ChannelUserIdentity))
+            if (eto.MessageData.MessageType == MessageEntityTypes.Template)
             {
-                messageRecord.SetResult(false, _i18n.T("DailySendingLimit"));
-                await _messageRecordRepository.AddAsync(messageRecord);
-                return;
+                messageTemplate = await _messageTemplateRepository.FindAsync(x => x.Id == messageEntityId, false);
+                if (messageTemplate?.UnsubscribeConfig.Enabled == true &&
+                    await _channelUnsubscriptionDomainService.IsSmsTemplateUnsubscribedAsync(channel.Id, eto.ChannelUserIdentity, messageEntityId))
+                {
+                    messageRecord.SetResult(false, _i18n.T("MessageBlockedByUnsubscription"));
+                    await _messageRecordRepository.AddAsync(messageRecord);
+                    return;
+                }
+
+                if (messageTemplate != null &&
+                    !await _messageTemplateDomainService.CheckSendUpperLimitAsync(messageTemplate, eto.ChannelUserIdentity))
+                {
+                    messageRecord.SetResult(false, _i18n.T("DailySendingLimit"));
+                    await _messageRecordRepository.AddAsync(messageRecord);
+                    return;
+                }
             }
 
             try
@@ -85,9 +102,4 @@ public class SendSimpleMessageEventHandler
         }
     }
 
-    private async Task<bool> CheckTemplateSendUpperLimitAsync(Guid messageEntityId, string channelUserIdentity)
-    {
-        var messageTemplate = await _messageTemplateRepository.FindAsync(x => x.Id == messageEntityId, false);
-        return messageTemplate == null || await _messageTemplateDomainService.CheckSendUpperLimitAsync(messageTemplate, channelUserIdentity);
-    }
 }

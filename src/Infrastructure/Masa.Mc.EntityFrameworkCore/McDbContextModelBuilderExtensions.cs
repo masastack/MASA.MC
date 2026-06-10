@@ -202,5 +202,34 @@ public static class McDbContextModelBuilderExtensions
             b.HasIndex(x => x.SendTime);
             b.HasIndex(x => x.Provider);
         });
+
+        builder.Entity<Unsubscription>(b =>
+        {
+            b.ToTable(MCConsts.DbTablePrefix + "Unsubscriptions", MCConsts.DbSchema);
+            b.Property(x => x.ChannelUserIdentity).IsRequired().HasMaxLength(256);
+            b.Property(x => x.ScopeRefId).IsRequired().HasMaxLength(64);
+            b.Property(x => x.Keyword).HasMaxLength(20);
+            b.Property(x => x.Reason).IsRequired().HasMaxLength(500);
+            b.Property(x => x.LastInboundMessageId).HasMaxLength(128);
+
+            b.HasIndex(x => x.UserId);
+            b.HasIndex(x => x.ChannelId);
+            b.HasIndex(x => x.ChannelType);
+            b.HasIndex(x => x.Status);
+            b.HasIndex(x => new { x.ChannelId, x.ChannelUserIdentity, x.ScopeType, x.ScopeRefId, x.Status });
+
+            b.HasMany(x => x.Timelines).WithOne().HasForeignKey(x => x.UnsubscriptionId).IsRequired();
+        });
+
+        builder.Entity<UnsubscriptionTimeline>(b =>
+        {
+            b.ToTable(MCConsts.DbTablePrefix + "UnsubscriptionTimelines", MCConsts.DbSchema);
+            b.Property(x => x.UnsubscriptionId).HasColumnName("UnsubscriptionId");
+            b.Property(x => x.Detail).HasMaxLength(1000);
+            b.Property(x => x.Keyword).HasMaxLength(20);
+            b.Property(x => x.MessageId).HasMaxLength(128);
+            b.HasIndex(x => x.UnsubscriptionId);
+            b.HasIndex(x => x.OccurredAt);
+        });
     }
 }

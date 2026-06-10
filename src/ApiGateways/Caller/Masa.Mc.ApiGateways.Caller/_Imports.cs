@@ -2,6 +2,7 @@
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
 global using Masa.Mc.Contracts.Admin.Dtos.Channels;
+global using Masa.Mc.Contracts.Admin.Dtos.Unsubscriptions;
 global using Masa.Mc.Infrastructure.Ddd.Application.Contracts.Dtos;
 global using Masa.Mc.Contracts.Admin.Dtos.MessageTemplates;
 global using Masa.Mc.Domain.Shared.Channels;
@@ -26,6 +27,7 @@ global using Masa.Mc.ApiGateways.Caller.Services.WebsiteMessages;
 global using Masa.Mc.Contracts.Admin.Dtos.Oss;
 global using Masa.Mc.ApiGateways.Caller.Services.Oss;
 global using Masa.Mc.ApiGateways.Caller.Services.ChannelStatistics;
+global using Masa.Mc.ApiGateways.Caller.Services.Unsubscriptions;
 global using Masa.BuildingBlocks.Service.Caller;
 global using System.Text.Json;
 global using Masa.Contrib.Service.Caller.HttpClient;

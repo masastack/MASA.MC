@@ -30,4 +30,8 @@ public interface IMcQueryContext
     public IQueryable<AppVendorConfigQueryModel> AppVendorConfigQueries { get; }
 
     public IQueryable<SmsInboundQueryModel> SmsInboundQueries { get; }
+
+    public IQueryable<UnsubscriptionQueryModel> UnsubscriptionQueries { get; }
+
+    public IQueryable<UnsubscriptionTimelineQueryModel> UnsubscriptionTimelineQueries { get; }
 }

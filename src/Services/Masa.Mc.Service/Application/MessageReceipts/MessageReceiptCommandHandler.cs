@@ -7,11 +7,22 @@ public class MessageReceiptCommandHandler
 {
     private readonly IMessageRecordRepository _repository;
     private readonly ISmsInboundRepository _smsInboundRepository;
+    private readonly IMessageTemplateRepository _messageTemplateRepository;
+    private readonly SmsInboundAutoReplyService _smsInboundAutoReplyService;
+    private readonly UnsubscriptionDomainService _channelUnsubscriptionDomainService;
 
-    public MessageReceiptCommandHandler(IMessageRecordRepository repository, ISmsInboundRepository smsInboundRepository)
+    public MessageReceiptCommandHandler(
+        IMessageRecordRepository repository,
+        ISmsInboundRepository smsInboundRepository,
+        IMessageTemplateRepository messageTemplateRepository,
+        SmsInboundAutoReplyService smsInboundAutoReplyService,
+        UnsubscriptionDomainService channelUnsubscriptionDomainService)
     {
         _repository = repository;
         _smsInboundRepository = smsInboundRepository;
+        _messageTemplateRepository = messageTemplateRepository;
+        _smsInboundAutoReplyService = smsInboundAutoReplyService;
+        _channelUnsubscriptionDomainService = channelUnsubscriptionDomainService;
     }
 
     [EventHandler]
@@ -167,6 +178,94 @@ public class MessageReceiptCommandHandler
 
         var entity = new SmsInbound(command.ChannelId, input.Mobile, input.SmsContent, sendTime, input.AddSerial, command.Provider);
         await _smsInboundRepository.AddAsync(entity, cancellationToken);
+        await TryHandleSmsInboundUnsubscriptionAsync(command, entity, sendTime, cancellationToken);
+    }
+
+    private async Task TryHandleSmsInboundUnsubscriptionAsync(
+        ReceiveSmsInboundCommand command,
+        SmsInbound inboundEntity,
+        DateTimeOffset sendTime,
+        CancellationToken cancellationToken)
+    {
+        if (command.Provider != SmsInboundProviders.YunMas)
+        {
+            return;
+        }
+
+        var inboundKeyword = (command.Input.SmsContent ?? string.Empty).Trim();
+        if (string.IsNullOrWhiteSpace(inboundKeyword))
+        {
+            return;
+        }
+
+        var context = await TryGetInboundTemplateContextAsync(command.ChannelId, command.Input.Mobile, cancellationToken);
+        if (context is null)
+        {
+            return;
+        }
+
+        var (lastTemplateRecord, template) = context.Value;
+        var action = template.UnsubscribeConfig.ResolveInboundKeywordAction(inboundKeyword);
+
+        if (action == SmsInboundKeywordAction.None)
+        {
+            return;
+        }
+
+        var handledAction = await _channelUnsubscriptionDomainService.HandleSmsInboundKeywordAsync(
+            lastTemplateRecord.UserId,
+            lastTemplateRecord.ChannelUserIdentity,
+            command.ChannelId,
+            (int)command.Provider,
+            template.Id,
+            action,
+            inboundKeyword,
+            sendTime,
+            inboundEntity.Id.ToString("N"),
+            template.UnsubscribeConfig.DebounceEnabled,
+            template.UnsubscribeConfig.CooldownSeconds,
+            cancellationToken);
+        if (handledAction == SmsInboundKeywordAction.None)
+        {
+            return;
+        }
+
+        await _smsInboundAutoReplyService.TrySendAutoReplyAsync(
+            command.ChannelId,
+            command.Provider,
+            lastTemplateRecord.ChannelUserIdentity,
+            template.UnsubscribeConfig.GetAutoReplyContent(handledAction),
+            cancellationToken);
+    }
+
+    private async Task<(MessageRecord LastTemplateRecord, MessageTemplate Template)?> TryGetInboundTemplateContextAsync(
+        Guid channelId,
+        string channelUserIdentity,
+        CancellationToken cancellationToken)
+    {
+        var messageRecordQuery = await _repository.GetQueryableAsync();
+        var lastTemplateRecord = await messageRecordQuery
+            .Where(x =>
+                x.ChannelId == channelId &&
+                x.ChannelUserIdentity == channelUserIdentity &&
+                x.MessageEntityType == MessageEntityTypes.Template)
+            .OrderByDescending(x => x.SendTime)
+            .ThenByDescending(x => x.CreationTime)
+            .FirstOrDefaultAsync(cancellationToken);
+        if (lastTemplateRecord == null || lastTemplateRecord.MessageEntityId == default)
+        {
+            return null;
+        }
+
+        var template = await _messageTemplateRepository.FindAsync(
+            x => x.Id == lastTemplateRecord.MessageEntityId,
+            cancellationToken: cancellationToken);
+        if (template == null || !template.UnsubscribeConfig.Enabled)
+        {
+            return null;
+        }
+
+        return (lastTemplateRecord, template);
     }
 
     private string GetVivoAckTypeDescription(string? ackType, string? subAckType)

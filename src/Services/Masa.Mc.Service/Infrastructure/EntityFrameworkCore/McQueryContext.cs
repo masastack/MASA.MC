@@ -31,6 +31,10 @@ public class McQueryContext : MasaDbContext<McQueryContext>, IMcQueryContext
 
     public IQueryable<SmsInboundQueryModel> SmsInboundQueries => Set<SmsInboundQueryModel>().AsQueryable();
 
+    public IQueryable<UnsubscriptionQueryModel> UnsubscriptionQueries => Set<UnsubscriptionQueryModel>().AsQueryable();
+
+    public IQueryable<UnsubscriptionTimelineQueryModel> UnsubscriptionTimelineQueries => Set<UnsubscriptionTimelineQueryModel>().AsQueryable();
+
     public McQueryContext(MasaDbContextOptions<McQueryContext> options) : base(options)
     {
     }
@@ -141,6 +145,18 @@ public class McQueryContext : MasaDbContext<McQueryContext>, IMcQueryContext
         builder.Entity<SmsInboundQueryModel>(b =>
         {
             b.ToView(MCConsts.DbTablePrefix + "SmsInbounds", MCConsts.DbSchema);
+        });
+
+        builder.Entity<UnsubscriptionQueryModel>(b =>
+        {
+            b.ToView(MCConsts.DbTablePrefix + "Unsubscriptions", MCConsts.DbSchema);
+            b.HasMany(x => x.Timelines).WithOne().HasForeignKey(x => x.UnsubscriptionId).IsRequired();
+        });
+
+        builder.Entity<UnsubscriptionTimelineQueryModel>(b =>
+        {
+            b.ToView(MCConsts.DbTablePrefix + "UnsubscriptionTimelines", MCConsts.DbSchema);
+            b.Property(x => x.UnsubscriptionId).HasColumnName("UnsubscriptionId");
         });
 
         // Apply provider-specific configurations

@@ -14,6 +14,7 @@ public class SendSmsMessageEventHandler
     private readonly IMessageTemplateRepository _templateRepository;
     private readonly II18n<DefaultResource> _i18n;
     private readonly ITemplateRenderer _templateRenderer;
+    private readonly UnsubscriptionDomainService _channelUnsubscriptionDomainService;
 
     public SendSmsMessageEventHandler(SmsSenderFactory smsSenderFactory
         , IChannelRepository channelRepository
@@ -23,7 +24,8 @@ public class SendSmsMessageEventHandler
         , ILogger<SendSmsMessageEventHandler> logger
         , IMessageTemplateRepository templateRepository
         , II18n<DefaultResource> i18n
-        , ITemplateRenderer templateRenderer)
+        , ITemplateRenderer templateRenderer
+        , UnsubscriptionDomainService channelUnsubscriptionDomainService)
     {
         _smsSenderFactory = smsSenderFactory;
         _channelRepository = channelRepository;
@@ -34,6 +36,7 @@ public class SendSmsMessageEventHandler
         _templateRepository = templateRepository;
         _i18n = i18n;
         _templateRenderer = templateRenderer;
+        _channelUnsubscriptionDomainService = channelUnsubscriptionDomainService;
     }
 
     [EventHandler(1)]
@@ -70,11 +73,27 @@ public class SendSmsMessageEventHandler
     {
         if (eto.MessageData.MessageType == MessageEntityTypes.Template)
         {
+            if (eto.MessageTemplate is null)
+            {
+                return;
+            }
+
+            var templateId = eto.MessageTemplate.Id;
+            var unsubscriptionEnabled = eto.MessageTemplate.UnsubscribeConfig.Enabled;
             var channelUserIdentitys = eto.MessageRecords.Select(x => x.ChannelUserIdentity).Distinct().ToList();
             var checkChannelUserIdentitys = await _messageTemplateDomainService.CheckSendUpperLimitAsync(eto.MessageTemplate, channelUserIdentitys);
 
             foreach (var messageRecord in eto.MessageRecords)
             {
+                if (unsubscriptionEnabled && await _channelUnsubscriptionDomainService.IsSmsTemplateUnsubscribedAsync(
+                        eto.ChannelId,
+                        messageRecord.ChannelUserIdentity,
+                        templateId))
+                {
+                    messageRecord.SetResult(false, _i18n.T("MessageBlockedByUnsubscription"));
+                    continue;
+                }
+
                 if (checkChannelUserIdentitys.Contains(messageRecord.ChannelUserIdentity))
                 {
                     messageRecord.SetResult(false, _i18n.T("DailySendingLimit"));

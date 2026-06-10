@@ -58,6 +58,37 @@ public class MessageTemplateUnsubscribeConfig : ValueObject
         return $"【回复{UnsubscribeKeyword}退订】";
     }
 
+    public SmsInboundKeywordAction ResolveInboundKeywordAction(string inboundKeyword)
+    {
+        if (!Enabled || string.IsNullOrWhiteSpace(inboundKeyword))
+        {
+            return SmsInboundKeywordAction.None;
+        }
+
+        var normalizedKeyword = inboundKeyword.Trim();
+        if (string.Equals(normalizedKeyword, UnsubscribeKeyword, StringComparison.OrdinalIgnoreCase))
+        {
+            return SmsInboundKeywordAction.Unsubscribe;
+        }
+
+        if (string.Equals(normalizedKeyword, ResubscribeKeyword, StringComparison.OrdinalIgnoreCase))
+        {
+            return SmsInboundKeywordAction.Resubscribe;
+        }
+
+        return SmsInboundKeywordAction.None;
+    }
+
+    public string GetAutoReplyContent(SmsInboundKeywordAction action)
+    {
+        return action switch
+        {
+            SmsInboundKeywordAction.Unsubscribe => UnsubscribeAutoReply,
+            SmsInboundKeywordAction.Resubscribe => ResubscribeAutoReply,
+            _ => string.Empty
+        };
+    }
+
     protected override IEnumerable<object> GetEqualityValues()
     {
         yield return Enabled;

@@ -7,7 +7,7 @@ public class SmsInboundCallbackService : ServiceBase
 {
     IEventBus _eventBus => GetRequiredService<IEventBus>();
 
-    public SmsInboundCallbackService() : base("api/sms-inbound/callback")
+    public SmsInboundCallbackService() : base("api/smsi")
     {
     }
 

@@ -44,6 +44,11 @@ public class MessageTemplateUpsertDtoValidator : AbstractValidator<MessageTempla
             !string.Equals(inputDto.UnsubscribeConfig.UnsubscribeKeyword?.Trim(), inputDto.UnsubscribeConfig.ResubscribeKeyword?.Trim(), StringComparison.OrdinalIgnoreCase))
             .WithMessage("UnsubscribeKeywordsMustBeDifferent");
         RuleFor(inputDto => inputDto).Must(inputDto =>
+            !inputDto.UnsubscribeConfig.Enabled ||
+            inputDto.ChannelType != ChannelTypes.Sms ||
+            !string.Equals(inputDto.UnsubscribeConfig.UnsubscribeKeyword?.Trim(), SmsInboundReservedKeywords.YunMasUnsubscribeKeyword, StringComparison.OrdinalIgnoreCase))
+            .WithMessage("UnsubscribeKeywordCannotUseProviderReservedKeyword");
+        RuleFor(inputDto => inputDto).Must(inputDto =>
             !(inputDto.TemplateType == (int)SmsTemplateTypes.VerificationCode && inputDto.UnsubscribeConfig.Enabled))
             .WithMessage("VerificationCodeTemplateCannotEnableUnsubscribe");
     }
