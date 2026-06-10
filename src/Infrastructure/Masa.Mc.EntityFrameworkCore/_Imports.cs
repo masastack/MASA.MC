@@ -24,6 +24,8 @@ global using Masa.Contrib.Dispatcher.IntegrationEvents.EventLogs.EFCore;
 // MASA MC Domain Aggregates
 global using Masa.Mc.Domain.Apps.Aggregates;
 global using Masa.Mc.Domain.Apps.Repositories;
+global using Masa.Mc.Domain.Unsubscriptions.Aggregates;
+global using Masa.Mc.Domain.Unsubscriptions.Repositories;
 global using Masa.Mc.Domain.Channels.Aggregates;
 global using Masa.Mc.Domain.MessageInfos.Aggregates;
 global using Masa.Mc.Domain.MessageReceipts.Aggregates;
@@ -45,6 +47,7 @@ global using Masa.Mc.Domain.WebsiteMessages.Repositories;
 
 // MASA MC Contracts and Consts
 global using Masa.Mc.Domain.Consts;
+global using Masa.Mc.Domain.Shared.Channels;
 
 // MASA MC Entity Framework Core
 global using Masa.Mc.EntityFrameworkCore;
@@ -52,3 +55,4 @@ global using Masa.Mc.EntityFrameworkCore.Repositories;
 global using Masa.Mc.EntityFrameworkCore.ValueConverters;
 global using Masa.Mc.Infrastructure.EntityFrameworkCore.ValueConverters;
 global using Masa.Mc.Domain.Shared.MessageTasks;
+global using Masa.Mc.Domain.Shared.Unsubscriptions;

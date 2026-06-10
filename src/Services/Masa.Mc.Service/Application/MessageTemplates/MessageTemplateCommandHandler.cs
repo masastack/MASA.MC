@@ -23,6 +23,7 @@ public class MessageTemplateCommandHandler
     {
         var dto = createCommand.MessageTemplate;
         var entity = dto.Adapt<MessageTemplate>();
+        entity.ConfigureUnsubscribe(dto.UnsubscribeConfig.Adapt<MessageTemplateUnsubscribeConfig>());
         foreach (var itemDto in dto.Items)
         {
             entity.AddOrUpdateItem(itemDto.Code, itemDto.MappingCode, itemDto.DisplayText, itemDto.Description);
@@ -38,6 +39,7 @@ public class MessageTemplateCommandHandler
         MasaArgumentException.ThrowIfNull(entity, _i18n.T("MessageTemplate"));
 
         dto.Adapt(entity);
+        entity.ConfigureUnsubscribe(dto.UnsubscribeConfig.Adapt<MessageTemplateUnsubscribeConfig>());
         foreach (var itemDto in dto.Items)
         {
             entity.AddOrUpdateItem(itemDto.Code, itemDto.MappingCode, itemDto.DisplayText, itemDto.Description);

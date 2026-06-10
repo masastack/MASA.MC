@@ -21,7 +21,7 @@ public abstract class ServiceBase
 
     protected async Task<TResponse> GetAsync<TRequest, TResponse>(string methodName, TRequest data) where TRequest : class
     {
-        return await Caller.GetAsync<TRequest, TResponse>(BuildAdress(methodName), data) ?? throw new UserFriendlyException("The service is abnormal, please contact the administrator!");
+        return await GetByQueryAsync<TRequest, TResponse>(methodName, data);
     }
 
     protected async Task PutAsync<TRequest>(string methodName, TRequest data)
@@ -74,7 +74,46 @@ public abstract class ServiceBase
 
     protected async Task<TResponse> SendAsync<TRequest, TResponse>(string methodName, TRequest data) where TRequest : class
     {
-        return await Caller.GetAsync<TRequest, TResponse>(BuildAdress(methodName), data) ?? throw new Exception("The service is abnormal, please contact the administrator!");
+        return await GetByQueryAsync<TRequest, TResponse>(methodName, data);
+    }
+
+    private async Task<TResponse> GetByQueryAsync<TRequest, TResponse>(string methodName, TRequest data) where TRequest : class
+    {
+        return await GetAsync<TResponse>(methodName, BuildQueryParameters(data));
+    }
+
+    private static Dictionary<string, string> BuildQueryParameters<TRequest>(TRequest data) where TRequest : class
+    {
+        var parameters = new Dictionary<string, string>();
+        var properties = data.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public);
+
+        foreach (var property in properties)
+        {
+            if (!property.CanRead)
+            {
+                continue;
+            }
+
+            var value = property.GetValue(data);
+            if (value == null)
+            {
+                continue;
+            }
+
+            parameters[property.Name] = SerializeQueryValue(value);
+        }
+
+        return parameters;
+    }
+
+    private static string SerializeQueryValue(object value)
+    {
+        return value switch
+        {
+            DateTimeOffset dateTimeOffset => dateTimeOffset.ToUniversalTime().UtcDateTime.ToString("O"),
+            DateTime dateTime => (dateTime.Kind == DateTimeKind.Utc ? dateTime : dateTime.ToUniversalTime()).ToString("O"),
+            _ => value.ToString() ?? string.Empty
+        };
     }
 
     string BuildAdress(string methodName)

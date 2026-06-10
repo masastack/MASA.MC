@@ -31,6 +31,10 @@ public class McQueryContext : MasaDbContext<McQueryContext>, IMcQueryContext
 
     public IQueryable<SmsInboundQueryModel> SmsInboundQueries => Set<SmsInboundQueryModel>().AsQueryable();
 
+    public IQueryable<UnsubscriptionQueryModel> UnsubscriptionQueries => Set<UnsubscriptionQueryModel>().AsQueryable();
+
+    public IQueryable<UnsubscriptionTimelineQueryModel> UnsubscriptionTimelineQueries => Set<UnsubscriptionTimelineQueryModel>().AsQueryable();
+
     public McQueryContext(MasaDbContextOptions<McQueryContext> options) : base(options)
     {
     }
@@ -49,6 +53,20 @@ public class McQueryContext : MasaDbContext<McQueryContext>, IMcQueryContext
             b.HasMany(x => x.Items).WithOne().HasForeignKey(x => x.MessageTemplateId).IsRequired();
             b.Property(x => x.Options).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
             b.Property(x => x.ExtraProperties).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
+            b.OwnsOne(x => x.UnsubscribeConfig, ub =>
+            {
+                ub.ToView(MCConsts.DbTablePrefix + "MessageTemplateUnsubscribeConfigs", MCConsts.DbSchema);
+                ub.WithOwner().HasForeignKey("MessageTemplateId");
+                ub.Property<Guid>("MessageTemplateId");
+                ub.HasKey("MessageTemplateId");
+                ub.Property(x => x.Enabled).HasColumnName(nameof(MessageTemplateUnsubscribeConfigQueryModel.Enabled));
+                ub.Property(x => x.UnsubscribeKeyword).HasColumnName(nameof(MessageTemplateUnsubscribeConfigQueryModel.UnsubscribeKeyword));
+                ub.Property(x => x.UnsubscribeAutoReply).HasColumnName(nameof(MessageTemplateUnsubscribeConfigQueryModel.UnsubscribeAutoReply));
+                ub.Property(x => x.ResubscribeKeyword).HasColumnName(nameof(MessageTemplateUnsubscribeConfigQueryModel.ResubscribeKeyword));
+                ub.Property(x => x.ResubscribeAutoReply).HasColumnName(nameof(MessageTemplateUnsubscribeConfigQueryModel.ResubscribeAutoReply));
+                ub.Property(x => x.DebounceEnabled).HasColumnName(nameof(MessageTemplateUnsubscribeConfigQueryModel.DebounceEnabled));
+                ub.Property(x => x.CooldownSeconds).HasColumnName(nameof(MessageTemplateUnsubscribeConfigQueryModel.CooldownSeconds));
+            });
         });
 
         builder.Entity<MessageTemplateItemQueryModel>(b =>
@@ -127,6 +145,18 @@ public class McQueryContext : MasaDbContext<McQueryContext>, IMcQueryContext
         builder.Entity<SmsInboundQueryModel>(b =>
         {
             b.ToView(MCConsts.DbTablePrefix + "SmsInbounds", MCConsts.DbSchema);
+        });
+
+        builder.Entity<UnsubscriptionQueryModel>(b =>
+        {
+            b.ToView(MCConsts.DbTablePrefix + "Unsubscriptions", MCConsts.DbSchema);
+            b.HasMany(x => x.Timelines).WithOne().HasForeignKey(x => x.UnsubscriptionId).IsRequired();
+        });
+
+        builder.Entity<UnsubscriptionTimelineQueryModel>(b =>
+        {
+            b.ToView(MCConsts.DbTablePrefix + "UnsubscriptionTimelines", MCConsts.DbSchema);
+            b.Property(x => x.UnsubscriptionId).HasColumnName("UnsubscriptionId");
         });
 
         // Apply provider-specific configurations

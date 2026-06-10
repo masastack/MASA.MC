@@ -30,6 +30,7 @@ public class MessageTemplateDto : AuditEntityDto<Guid, Guid>
     public long PerDayLimit { get; set; }
     public bool IsStatic { get; set; }
     public List<MessageTemplateItemDto> Items { get; set; }
+    public MessageTemplateUnsubscribeConfigDto UnsubscribeConfig { get; set; } = new();
     public ChannelDto Channel { get; set; }
 
     public string ModifierName { get; set; } = string.Empty;

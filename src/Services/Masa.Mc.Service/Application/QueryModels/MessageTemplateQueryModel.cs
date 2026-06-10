@@ -47,6 +47,8 @@ public class MessageTemplateQueryModel : Entity<Guid>, ISoftDelete
 
     public List<MessageTemplateItemQueryModel> Items { get; set; } = new();
 
+    public MessageTemplateUnsubscribeConfigQueryModel UnsubscribeConfig { get; set; } = new();
+
     public ExtraPropertyDictionary Options { get; set; } = new();
 
     public ExtraPropertyDictionary ExtraProperties { get; set; } = new();

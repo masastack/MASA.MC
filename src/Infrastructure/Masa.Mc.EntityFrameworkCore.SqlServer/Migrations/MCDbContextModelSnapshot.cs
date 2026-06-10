@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Masa.Mc.Service.Admin.Migrations
+namespace Masa.Mc.EntityFrameworkCore.SqlServer.Migrations
 {
     [DbContext(typeof(McDbContext))]
     partial class McDbContextModelSnapshot : ModelSnapshot
@@ -882,6 +882,160 @@ namespace Masa.Mc.Service.Admin.Migrations
                     b.ToTable("ReceiverGroups", (string)null);
                 });
 
+            modelBuilder.Entity("Masa.Mc.Domain.Unsubscriptions.Aggregates.Unsubscription", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ChannelId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("ChannelProvider")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ChannelType")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ChannelUserIdentity")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("Creator")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Keyword")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("LastInboundMessageId")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<DateTime>("ModificationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("Modifier")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Reason")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTimeOffset?>("ResubscribedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("ScopeRefId")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
+                    b.Property<int>("ScopeType")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Source")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("UnsubscribedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChannelId");
+
+                    b.HasIndex("ChannelType");
+
+                    b.HasIndex("Status");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("ChannelId", "ChannelUserIdentity", "ScopeType", "ScopeRefId", "Status");
+
+                    b.ToTable("Unsubscriptions", (string)null);
+                });
+
+            modelBuilder.Entity("Masa.Mc.Domain.Unsubscriptions.Aggregates.UnsubscriptionTimeline", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Action")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("Creator")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Detail")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("Keyword")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<Guid?>("MatchedMessageRecordId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset?>("MatchedMessageSentAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("MatchedMessageSnapshot")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<string>("MessageId")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<DateTime>("ModificationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("Modifier")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("OccurredAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("Source")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("UnsubscriptionId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("UnsubscriptionId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OccurredAt");
+
+                    b.HasIndex("UnsubscriptionId");
+
+                    b.ToTable("UnsubscriptionTimelines", (string)null);
+                });
+
             modelBuilder.Entity("Masa.Mc.Domain.WebsiteMessages.Aggregates.WebsiteMessage", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1130,7 +1284,73 @@ namespace Masa.Mc.Service.Admin.Migrations
                                 .HasForeignKey("MessageTemplateId");
                         });
 
+                    b.OwnsOne("Masa.Mc.Domain.MessageTemplates.Aggregates.MessageTemplateUnsubscribeConfig", "UnsubscribeConfig", b1 =>
+                        {
+                            b1.Property<Guid>("MessageTemplateId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<int>("CooldownSeconds")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("int")
+                                .HasDefaultValue(0)
+                                .HasColumnName("CooldownSeconds");
+
+                            b1.Property<bool>("DebounceEnabled")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("bit")
+                                .HasDefaultValue(false)
+                                .HasColumnName("DebounceEnabled");
+
+                            b1.Property<bool>("Enabled")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("bit")
+                                .HasDefaultValue(false)
+                                .HasColumnName("Enabled");
+
+                            b1.Property<string>("ResubscribeAutoReply")
+                                .IsRequired()
+                                .ValueGeneratedOnAdd()
+                                .HasMaxLength(500)
+                                .HasColumnType("nvarchar(500)")
+                                .HasDefaultValue("")
+                                .HasColumnName("ResubscribeAutoReply");
+
+                            b1.Property<string>("ResubscribeKeyword")
+                                .IsRequired()
+                                .ValueGeneratedOnAdd()
+                                .HasMaxLength(20)
+                                .HasColumnType("nvarchar(20)")
+                                .HasDefaultValue("")
+                                .HasColumnName("ResubscribeKeyword");
+
+                            b1.Property<string>("UnsubscribeAutoReply")
+                                .IsRequired()
+                                .ValueGeneratedOnAdd()
+                                .HasMaxLength(500)
+                                .HasColumnType("nvarchar(500)")
+                                .HasDefaultValue("")
+                                .HasColumnName("UnsubscribeAutoReply");
+
+                            b1.Property<string>("UnsubscribeKeyword")
+                                .IsRequired()
+                                .ValueGeneratedOnAdd()
+                                .HasMaxLength(20)
+                                .HasColumnType("nvarchar(20)")
+                                .HasDefaultValue("")
+                                .HasColumnName("UnsubscribeKeyword");
+
+                            b1.HasKey("MessageTemplateId");
+
+                            b1.ToTable("MessageTemplateUnsubscribeConfigs", (string)null);
+
+                            b1.WithOwner()
+                                .HasForeignKey("MessageTemplateId");
+                        });
+
                     b.Navigation("MessageContent")
+                        .IsRequired();
+
+                    b.Navigation("UnsubscribeConfig")
                         .IsRequired();
                 });
 
@@ -1179,6 +1399,15 @@ namespace Masa.Mc.Service.Admin.Migrations
                         });
 
                     b.Navigation("Items");
+                });
+
+            modelBuilder.Entity("Masa.Mc.Domain.Unsubscriptions.Aggregates.UnsubscriptionTimeline", b =>
+                {
+                    b.HasOne("Masa.Mc.Domain.Unsubscriptions.Aggregates.Unsubscription", null)
+                        .WithMany("Timelines")
+                        .HasForeignKey("UnsubscriptionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Masa.Mc.Domain.WebsiteMessages.Aggregates.WebsiteMessage", b =>
@@ -1243,6 +1472,11 @@ namespace Masa.Mc.Service.Admin.Migrations
             modelBuilder.Entity("Masa.Mc.Domain.MessageTemplates.Aggregates.MessageTemplate", b =>
                 {
                     b.Navigation("Items");
+                });
+
+            modelBuilder.Entity("Masa.Mc.Domain.Unsubscriptions.Aggregates.Unsubscription", b =>
+                {
+                    b.Navigation("Timelines");
                 });
 #pragma warning restore 612, 618
         }
