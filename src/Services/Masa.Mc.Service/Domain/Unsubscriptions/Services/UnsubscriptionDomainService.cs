@@ -27,6 +27,9 @@ public class UnsubscriptionDomainService : DomainService
         string keyword,
         DateTimeOffset occurredAt,
         string inboundMessageId,
+        Guid? matchedMessageRecordId,
+        string matchedMessageSnapshot,
+        DateTimeOffset? matchedMessageSentAt,
         bool debounceEnabled,
         int cooldownSeconds,
         CancellationToken cancellationToken = default)
@@ -42,6 +45,9 @@ public class UnsubscriptionDomainService : DomainService
                 keyword,
                 occurredAt,
                 inboundMessageId,
+                matchedMessageRecordId,
+                matchedMessageSnapshot,
+                matchedMessageSentAt,
                 debounceEnabled,
                 cooldownSeconds,
                 cancellationToken);
@@ -73,6 +79,9 @@ public class UnsubscriptionDomainService : DomainService
         string keyword,
         DateTimeOffset occurredAt,
         string inboundMessageId,
+        Guid? matchedMessageRecordId,
+        string matchedMessageSnapshot,
+        DateTimeOffset? matchedMessageSentAt,
         bool debounceEnabled,
         int cooldownSeconds,
         CancellationToken cancellationToken = default)
@@ -97,7 +106,10 @@ public class UnsubscriptionDomainService : DomainService
                 keyword,
                 INBOUND_UNSUBSCRIBE_REASON,
                 occurredAt,
-                inboundMessageId);
+                inboundMessageId,
+                matchedMessageRecordId,
+                matchedMessageSnapshot,
+                matchedMessageSentAt);
 
             await _repository.AddAsync(aggregate, cancellationToken);
             return true;
@@ -108,6 +120,9 @@ public class UnsubscriptionDomainService : DomainService
             INBOUND_UNSUBSCRIBE_REASON,
             occurredAt,
             inboundMessageId,
+            matchedMessageRecordId,
+            matchedMessageSnapshot,
+            matchedMessageSentAt,
             debounceEnabled,
             cooldownSeconds);
         if (!changed)

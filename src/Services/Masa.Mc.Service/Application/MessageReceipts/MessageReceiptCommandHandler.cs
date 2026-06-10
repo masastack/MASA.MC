@@ -10,19 +10,22 @@ public class MessageReceiptCommandHandler
     private readonly IMessageTemplateRepository _messageTemplateRepository;
     private readonly SmsInboundAutoReplyService _smsInboundAutoReplyService;
     private readonly UnsubscriptionDomainService _channelUnsubscriptionDomainService;
+    private readonly ITemplateRenderer _templateRenderer;
 
     public MessageReceiptCommandHandler(
         IMessageRecordRepository repository,
         ISmsInboundRepository smsInboundRepository,
         IMessageTemplateRepository messageTemplateRepository,
         SmsInboundAutoReplyService smsInboundAutoReplyService,
-        UnsubscriptionDomainService channelUnsubscriptionDomainService)
+        UnsubscriptionDomainService channelUnsubscriptionDomainService,
+        ITemplateRenderer templateRenderer)
     {
         _repository = repository;
         _smsInboundRepository = smsInboundRepository;
         _messageTemplateRepository = messageTemplateRepository;
         _smsInboundAutoReplyService = smsInboundAutoReplyService;
         _channelUnsubscriptionDomainService = channelUnsubscriptionDomainService;
+        _templateRenderer = templateRenderer;
     }
 
     [EventHandler]
@@ -212,6 +215,7 @@ public class MessageReceiptCommandHandler
             return;
         }
 
+        var matchedMessageSnapshot = BuildMatchedMessageSnapshot(lastTemplateRecord, template);
         var handledAction = await _channelUnsubscriptionDomainService.HandleSmsInboundKeywordAsync(
             lastTemplateRecord.UserId,
             lastTemplateRecord.ChannelUserIdentity,
@@ -222,6 +226,9 @@ public class MessageReceiptCommandHandler
             inboundKeyword,
             sendTime,
             inboundEntity.Id.ToString("N"),
+            lastTemplateRecord.Id,
+            matchedMessageSnapshot,
+            lastTemplateRecord.SendTime,
             template.UnsubscribeConfig.DebounceEnabled,
             template.UnsubscribeConfig.CooldownSeconds,
             cancellationToken);
@@ -266,6 +273,18 @@ public class MessageReceiptCommandHandler
         }
 
         return (lastTemplateRecord, template);
+    }
+
+    private string BuildMatchedMessageSnapshot(MessageRecord messageRecord, MessageTemplate template)
+    {
+        if (template == null || template.MessageContent == null)
+        {
+            return string.Empty;
+        }
+
+        var content = template.MessageContent.Content ?? string.Empty;
+        var rendered = _templateRenderer.Render(content, messageRecord.Variables ?? new());
+        return template.AppendUnsubscribeSuffix(rendered);
     }
 
     private string GetVivoAckTypeDescription(string? ackType, string? subAckType)

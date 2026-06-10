@@ -49,7 +49,10 @@ public class Unsubscription : FullAggregateRoot<Guid, Guid>
         string keyword,
         string reason,
         DateTimeOffset occurredAt,
-        string inboundMessageId)
+        string inboundMessageId,
+        Guid? matchedMessageRecordId = null,
+        string matchedMessageSnapshot = "",
+        DateTimeOffset? matchedMessageSentAt = null)
     {
         var aggregate = new Unsubscription
         {
@@ -76,7 +79,10 @@ public class Unsubscription : FullAggregateRoot<Guid, Guid>
             occurredAt,
             aggregate.Reason,
             aggregate.Keyword,
-            aggregate.LastInboundMessageId);
+            aggregate.LastInboundMessageId,
+            matchedMessageRecordId,
+            matchedMessageSnapshot,
+            matchedMessageSentAt);
         aggregate.AddDomainEvent(new UnsubscribedBySmsInboundDomainEvent(
             aggregate.Id,
             aggregate.ChannelId,
@@ -93,6 +99,9 @@ public class Unsubscription : FullAggregateRoot<Guid, Guid>
         string reason,
         DateTimeOffset occurredAt,
         string inboundMessageId,
+        Guid? matchedMessageRecordId,
+        string matchedMessageSnapshot,
+        DateTimeOffset? matchedMessageSentAt,
         bool debounceEnabled,
         int cooldownSeconds)
     {
@@ -112,7 +121,14 @@ public class Unsubscription : FullAggregateRoot<Guid, Guid>
             return false;
         }
 
-        return AppendInboundKeyword(keyword, occurredAt, normalizedMessageId, reason);
+        return AppendInboundKeyword(
+            keyword,
+            occurredAt,
+            normalizedMessageId,
+            reason,
+            matchedMessageRecordId,
+            matchedMessageSnapshot,
+            matchedMessageSentAt);
     }
 
     public void ResubscribeByInboundKeyword(
@@ -130,7 +146,14 @@ public class Unsubscription : FullAggregateRoot<Guid, Guid>
             inboundMessageId);
     }
 
-    private bool AppendInboundKeyword(string keyword, DateTimeOffset occurredAt, string inboundMessageId, string detail = "")
+    private bool AppendInboundKeyword(
+        string keyword,
+        DateTimeOffset occurredAt,
+        string inboundMessageId,
+        string detail = "",
+        Guid? matchedMessageRecordId = null,
+        string matchedMessageSnapshot = "",
+        DateTimeOffset? matchedMessageSentAt = null)
     {
         if (Status != UnsubscriptionStatus.Unsubscribed)
         {
@@ -151,7 +174,10 @@ public class Unsubscription : FullAggregateRoot<Guid, Guid>
             occurredAt,
             detail,
             Keyword,
-            LastInboundMessageId);
+            LastInboundMessageId,
+            matchedMessageRecordId,
+            matchedMessageSnapshot,
+            matchedMessageSentAt);
         return true;
     }
 
@@ -246,8 +272,21 @@ public class Unsubscription : FullAggregateRoot<Guid, Guid>
         DateTimeOffset occurredAt,
         string detail = "",
         string keyword = "",
-        string messageId = "")
+        string messageId = "",
+        Guid? matchedMessageRecordId = null,
+        string matchedMessageSnapshot = "",
+        DateTimeOffset? matchedMessageSentAt = null)
     {
-        Timelines.Add(new UnsubscriptionTimeline(Id, action, source, occurredAt, detail, keyword, messageId));
+        Timelines.Add(new UnsubscriptionTimeline(
+            Id,
+            action,
+            source,
+            occurredAt,
+            detail,
+            keyword,
+            messageId,
+            matchedMessageRecordId,
+            matchedMessageSnapshot,
+            matchedMessageSentAt));
     }
 }

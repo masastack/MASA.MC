@@ -305,148 +305,6 @@ namespace Masa.Mc.EntityFrameworkCore.PostgreSql.Migrations
                     b.ToTable("Channels", (string)null);
                 });
 
-            modelBuilder.Entity("Masa.Mc.Domain.Unsubscriptions.Aggregates.Unsubscription", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("ChannelId")
-                        .HasColumnType("uuid");
-
-                    b.Property<int>("ChannelProvider")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("ChannelType")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("ChannelUserIdentity")
-                        .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
-
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid>("Creator")
-                        .HasColumnType("uuid");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("Keyword")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
-
-                    b.Property<string>("LastInboundMessageId")
-                        .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("character varying(128)");
-
-                    b.Property<DateTime>("ModificationTime")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid>("Modifier")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Reason")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("character varying(500)");
-
-                    b.Property<DateTimeOffset?>("ResubscribedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("ScopeRefId")
-                        .IsRequired()
-                        .HasMaxLength(64)
-                        .HasColumnType("character varying(64)");
-
-                    b.Property<int>("ScopeType")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Source")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTimeOffset>("UnsubscribedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ChannelId");
-
-                    b.HasIndex("ChannelType");
-
-                    b.HasIndex("Status");
-
-                    b.HasIndex("UserId");
-
-                    b.HasIndex("ChannelId", "ChannelUserIdentity", "ScopeType", "ScopeRefId", "Status");
-
-                    b.ToTable("Unsubscriptions", (string)null);
-                });
-
-            modelBuilder.Entity("Masa.Mc.Domain.Unsubscriptions.Aggregates.UnsubscriptionTimeline", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<int>("Action")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid>("Creator")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("ModificationTime")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid>("Modifier")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("UnsubscriptionId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Detail")
-                        .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("character varying(1000)");
-
-                    b.Property<string>("Keyword")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
-
-                    b.Property<string>("MessageId")
-                        .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("character varying(128)");
-
-                    b.Property<DateTimeOffset>("OccurredAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("Source")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UnsubscriptionId");
-
-                    b.HasIndex("OccurredAt");
-
-                    b.ToTable("UnsubscriptionTimelines", (string)null);
-                });
-
             modelBuilder.Entity("Masa.Mc.Domain.MessageInfos.Aggregates.MessageInfo", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1024,6 +882,160 @@ namespace Masa.Mc.EntityFrameworkCore.PostgreSql.Migrations
                     b.ToTable("ReceiverGroups", (string)null);
                 });
 
+            modelBuilder.Entity("Masa.Mc.Domain.Unsubscriptions.Aggregates.Unsubscription", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ChannelId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("ChannelProvider")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ChannelType")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("ChannelUserIdentity")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("Creator")
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Keyword")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<string>("LastInboundMessageId")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.Property<DateTime>("ModificationTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("Modifier")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Reason")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<DateTimeOffset?>("ResubscribedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ScopeRefId")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<int>("ScopeType")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Source")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTimeOffset>("UnsubscribedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChannelId");
+
+                    b.HasIndex("ChannelType");
+
+                    b.HasIndex("Status");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("ChannelId", "ChannelUserIdentity", "ScopeType", "ScopeRefId", "Status");
+
+                    b.ToTable("Unsubscriptions", (string)null);
+                });
+
+            modelBuilder.Entity("Masa.Mc.Domain.Unsubscriptions.Aggregates.UnsubscriptionTimeline", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Action")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("Creator")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Detail")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
+
+                    b.Property<string>("Keyword")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<Guid?>("MatchedMessageRecordId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset?>("MatchedMessageSentAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("MatchedMessageSnapshot")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<string>("MessageId")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.Property<DateTime>("ModificationTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("Modifier")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("OccurredAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Source")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("UnsubscriptionId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("UnsubscriptionId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OccurredAt");
+
+                    b.HasIndex("UnsubscriptionId");
+
+                    b.ToTable("UnsubscriptionTimelines", (string)null);
+                });
+
             modelBuilder.Entity("Masa.Mc.Domain.WebsiteMessages.Aggregates.WebsiteMessage", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1132,15 +1144,6 @@ namespace Masa.Mc.EntityFrameworkCore.PostgreSql.Migrations
                     b.HasOne("Masa.Mc.Domain.Channels.Aggregates.Channel", null)
                         .WithOne()
                         .HasForeignKey("Masa.Mc.Domain.Channels.Aggregates.AppChannel", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Masa.Mc.Domain.Unsubscriptions.Aggregates.UnsubscriptionTimeline", b =>
-                {
-                    b.HasOne("Masa.Mc.Domain.Unsubscriptions.Aggregates.Unsubscription", null)
-                        .WithMany("Timelines")
-                        .HasForeignKey("UnsubscriptionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -1398,6 +1401,15 @@ namespace Masa.Mc.EntityFrameworkCore.PostgreSql.Migrations
                     b.Navigation("Items");
                 });
 
+            modelBuilder.Entity("Masa.Mc.Domain.Unsubscriptions.Aggregates.UnsubscriptionTimeline", b =>
+                {
+                    b.HasOne("Masa.Mc.Domain.Unsubscriptions.Aggregates.Unsubscription", null)
+                        .WithMany("Timelines")
+                        .HasForeignKey("UnsubscriptionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Masa.Mc.Domain.WebsiteMessages.Aggregates.WebsiteMessage", b =>
                 {
                     b.HasOne("Masa.Mc.Domain.Channels.Aggregates.AppChannel", "Channel")
@@ -1452,11 +1464,6 @@ namespace Masa.Mc.EntityFrameworkCore.PostgreSql.Migrations
                     b.Navigation("Tags");
                 });
 
-            modelBuilder.Entity("Masa.Mc.Domain.Unsubscriptions.Aggregates.Unsubscription", b =>
-                {
-                    b.Navigation("Timelines");
-                });
-
             modelBuilder.Entity("Masa.Mc.Domain.MessageTasks.Aggregates.MessageTaskHistory", b =>
                 {
                     b.Navigation("ReceiverUsers");
@@ -1465,6 +1472,11 @@ namespace Masa.Mc.EntityFrameworkCore.PostgreSql.Migrations
             modelBuilder.Entity("Masa.Mc.Domain.MessageTemplates.Aggregates.MessageTemplate", b =>
                 {
                     b.Navigation("Items");
+                });
+
+            modelBuilder.Entity("Masa.Mc.Domain.Unsubscriptions.Aggregates.Unsubscription", b =>
+                {
+                    b.Navigation("Timelines");
                 });
 #pragma warning restore 612, 618
         }

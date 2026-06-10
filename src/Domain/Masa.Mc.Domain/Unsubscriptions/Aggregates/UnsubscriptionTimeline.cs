@@ -17,6 +17,12 @@ public class UnsubscriptionTimeline : AuditEntity<Guid, Guid>
 
     public string MessageId { get; private set; } = string.Empty;
 
+    public Guid? MatchedMessageRecordId { get; private set; }
+
+    public string MatchedMessageSnapshot { get; private set; } = string.Empty;
+
+    public DateTimeOffset? MatchedMessageSentAt { get; private set; }
+
     public DateTimeOffset OccurredAt { get; private set; }
 
     private UnsubscriptionTimeline()
@@ -30,7 +36,10 @@ public class UnsubscriptionTimeline : AuditEntity<Guid, Guid>
         DateTimeOffset occurredAt,
         string detail = "",
         string keyword = "",
-        string messageId = "")
+        string messageId = "",
+        Guid? matchedMessageRecordId = null,
+        string matchedMessageSnapshot = "",
+        DateTimeOffset? matchedMessageSentAt = null)
     {
         UnsubscriptionId = unsubscriptionId;
         Action = action;
@@ -39,5 +48,8 @@ public class UnsubscriptionTimeline : AuditEntity<Guid, Guid>
         Detail = detail ?? string.Empty;
         Keyword = keyword ?? string.Empty;
         MessageId = messageId ?? string.Empty;
+        MatchedMessageRecordId = matchedMessageRecordId;
+        MatchedMessageSnapshot = matchedMessageSnapshot ?? string.Empty;
+        MatchedMessageSentAt = matchedMessageSentAt;
     }
 }
