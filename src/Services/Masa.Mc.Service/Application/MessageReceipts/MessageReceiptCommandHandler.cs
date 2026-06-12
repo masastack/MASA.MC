@@ -278,6 +278,11 @@ public class MessageReceiptCommandHandler
 
     private string BuildMatchedMessageSnapshot(MessageRecord messageRecord, MessageTemplate template)
     {
+        if (template == null || template.MessageContent == null)
+        {
+            return string.Empty;
+        }
+        
         var content = template.MessageContent.Content ?? string.Empty;
         var rendered = _templateRenderer.Render(content, messageRecord.Variables ?? new());
         return template.AppendUnsubscribeSuffix(rendered);
