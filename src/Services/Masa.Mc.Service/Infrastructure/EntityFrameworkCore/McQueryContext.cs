@@ -67,6 +67,7 @@ public class McQueryContext : MasaDbContext<McQueryContext>, IMcQueryContext
                 ub.Property(x => x.DebounceEnabled).HasColumnName(nameof(MessageTemplateUnsubscribeConfigQueryModel.DebounceEnabled));
                 ub.Property(x => x.CooldownSeconds).HasColumnName(nameof(MessageTemplateUnsubscribeConfigQueryModel.CooldownSeconds));
             });
+            b.Navigation(x => x.UnsubscribeConfig).IsRequired(false);
         });
 
         builder.Entity<MessageTemplateItemQueryModel>(b =>

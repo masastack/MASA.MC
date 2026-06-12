@@ -62,7 +62,7 @@ public class SendSimpleMessageEventHandler
             if (eto.MessageData.MessageType == MessageEntityTypes.Template)
             {
                 messageTemplate = await _messageTemplateRepository.FindAsync(x => x.Id == messageEntityId, false);
-                if (messageTemplate?.UnsubscribeConfig.Enabled == true &&
+                if (messageTemplate?.GetUnsubscribeConfig().Enabled == true &&
                     await _channelUnsubscriptionDomainService.IsSmsTemplateUnsubscribedAsync(channel.Id, eto.ChannelUserIdentity, messageEntityId))
                 {
                     messageRecord.SetResult(false, _i18n.T("MessageBlockedByUnsubscription"));

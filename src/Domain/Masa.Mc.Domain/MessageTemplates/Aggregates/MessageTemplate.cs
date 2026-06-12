@@ -21,7 +21,7 @@ public class MessageTemplate : FullAggregateRoot<Guid, Guid>
     public long PerDayLimit { get; protected set; }
     public virtual bool IsStatic { get; protected set; }
     public ICollection<MessageTemplateItem> Items { get; protected set; } = new List<MessageTemplateItem>();
-    public MessageTemplateUnsubscribeConfig UnsubscribeConfig { get; protected set; } = MessageTemplateUnsubscribeConfig.Disabled();
+    public MessageTemplateUnsubscribeConfig? UnsubscribeConfig { get; protected set; }
     public ExtraPropertyDictionary Options { get; set; } = new();
 
     private MessageTemplate() { }
@@ -94,6 +94,11 @@ public class MessageTemplate : FullAggregateRoot<Guid, Guid>
         ApplyUnsubscribeConfig(config);
     }
 
+    public MessageTemplateUnsubscribeConfig GetUnsubscribeConfig()
+    {
+        return UnsubscribeConfig ?? MessageTemplateUnsubscribeConfig.Disabled();
+    }
+
     private void ApplyUnsubscribeConfig(MessageTemplateUnsubscribeConfig config)
     {
         Check.NotNull(config, nameof(config));
@@ -113,7 +118,7 @@ public class MessageTemplate : FullAggregateRoot<Guid, Guid>
     public string AppendUnsubscribeSuffix(string content)
     {
         var normalizedContent = content ?? string.Empty;
-        var suffix = UnsubscribeConfig.BuildSuffix();
+        var suffix = GetUnsubscribeConfig().BuildSuffix();
         if (string.IsNullOrEmpty(suffix))
         {
             return normalizedContent;
