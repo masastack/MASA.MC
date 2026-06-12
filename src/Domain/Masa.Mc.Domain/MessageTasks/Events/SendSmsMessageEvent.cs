@@ -11,7 +11,7 @@ public record SendSmsMessageEvent : SendMessageEvent
 
     public List<Dictionary<string, ExtraPropertyDictionary>> PhoneNumberVariables = new();
 
-    public string Sign { get; set; }
+    public string Sign { get; set; } = string.Empty;
 
     public SendSmsMessageEvent(Guid channelId, MessageData messageData, MessageTaskHistory messageTaskHistory)
         : base(channelId, messageData, messageTaskHistory)

@@ -5,6 +5,9 @@ namespace Masa.Mc.Domain.MessageTemplates.Aggregates;
 
 public class MessageTemplateUnsubscribeConfig : ValueObject
 {
+    // EF Core owned type FK (split table key), keep CLR property to avoid shadow key tracking issues.
+    public Guid MessageTemplateId { get; protected set; }
+
     public bool Enabled { get; protected set; }
 
     public string UnsubscribeKeyword { get; protected set; } = string.Empty;

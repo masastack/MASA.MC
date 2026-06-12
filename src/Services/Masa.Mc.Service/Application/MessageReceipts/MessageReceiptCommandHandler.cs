@@ -208,7 +208,8 @@ public class MessageReceiptCommandHandler
         }
 
         var (lastTemplateRecord, template) = context.Value;
-        var action = template.UnsubscribeConfig.ResolveInboundKeywordAction(inboundKeyword);
+        var unsubscribeConfig = template.GetUnsubscribeConfig();
+        var action = unsubscribeConfig.ResolveInboundKeywordAction(inboundKeyword);
 
         if (action == SmsInboundKeywordAction.None)
         {
@@ -229,8 +230,8 @@ public class MessageReceiptCommandHandler
             lastTemplateRecord.Id,
             matchedMessageSnapshot,
             lastTemplateRecord.SendTime,
-            template.UnsubscribeConfig.DebounceEnabled,
-            template.UnsubscribeConfig.CooldownSeconds,
+            unsubscribeConfig.DebounceEnabled,
+            unsubscribeConfig.CooldownSeconds,
             cancellationToken);
         if (handledAction == SmsInboundKeywordAction.None)
         {
@@ -241,7 +242,7 @@ public class MessageReceiptCommandHandler
             command.ChannelId,
             command.Provider,
             lastTemplateRecord.ChannelUserIdentity,
-            template.UnsubscribeConfig.GetAutoReplyContent(handledAction),
+            unsubscribeConfig.GetAutoReplyContent(handledAction),
             cancellationToken);
     }
 
@@ -267,7 +268,7 @@ public class MessageReceiptCommandHandler
         var template = await _messageTemplateRepository.FindAsync(
             x => x.Id == lastTemplateRecord.MessageEntityId,
             cancellationToken: cancellationToken);
-        if (template == null || !template.UnsubscribeConfig.Enabled)
+        if (template == null || !template.GetUnsubscribeConfig().Enabled)
         {
             return null;
         }
@@ -281,7 +282,7 @@ public class MessageReceiptCommandHandler
         {
             return string.Empty;
         }
-
+        
         var content = template.MessageContent.Content ?? string.Empty;
         var rendered = _templateRenderer.Render(content, messageRecord.Variables ?? new());
         return template.AppendUnsubscribeSuffix(rendered);

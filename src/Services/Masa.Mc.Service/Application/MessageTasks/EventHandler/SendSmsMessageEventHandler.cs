@@ -77,9 +77,9 @@ public class SendSmsMessageEventHandler
             {
                 return;
             }
-
+            
             var templateId = eto.MessageTemplate.Id;
-            var unsubscriptionEnabled = eto.MessageTemplate.UnsubscribeConfig.Enabled;
+            var unsubscriptionEnabled = eto.MessageTemplate.GetUnsubscribeConfig().Enabled;
             var channelUserIdentitys = eto.MessageRecords.Select(x => x.ChannelUserIdentity).Distinct().ToList();
             var checkChannelUserIdentitys = await _messageTemplateDomainService.CheckSendUpperLimitAsync(eto.MessageTemplate, channelUserIdentitys);
 
