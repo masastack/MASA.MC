@@ -73,6 +73,11 @@ public class SendSmsMessageEventHandler
     {
         if (eto.MessageData.MessageType == MessageEntityTypes.Template)
         {
+            if (eto.MessageTemplate is null)
+            {
+                return;
+            }
+            
             var templateId = eto.MessageTemplate.Id;
             var unsubscriptionEnabled = eto.MessageTemplate.GetUnsubscribeConfig().Enabled;
             var channelUserIdentitys = eto.MessageRecords.Select(x => x.ChannelUserIdentity).Distinct().ToList();
