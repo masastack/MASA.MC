@@ -179,11 +179,20 @@ public class SendSmsMessageEventHandler
         }
         else if (provider == SmsProviders.YunMas)
         {
+            if (messageTemplate == null)
+            {
+                return string.Empty;
+            }
+
             var dic = new Dictionary<string, string>();
+            var unsubscriptionEnabled = messageTemplate.GetUnsubscribeConfig().Enabled;
             foreach (var item in phoneNumberVariable)
             {
                 var content = _templateRenderer.Render(messageTemplate.MessageContent.Content, item.Value);
-                content = messageTemplate.AppendUnsubscribeSuffix(content);
+                if (unsubscriptionEnabled)
+                {
+                    content = messageTemplate.AppendUnsubscribeSuffix(content);
+                }
                 dic.TryAdd(item.Key, content);
             }
 

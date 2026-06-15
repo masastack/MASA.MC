@@ -47,11 +47,6 @@ public class SendSimpleMessageEventHandler
             var templateId = eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.TemplateId));
             var messageEntityId = eto.MessageData.GetDataValue<Guid>(nameof(MessageTemplate.Id));
             MessageTemplate? messageTemplate = null;
-            var text = smsSender.SupportsTemplate ? JsonSerializer.Serialize(eto.Variables) : eto.MessageData.MessageContent.Content;
-
-            var smsMessage = new SmsMessage(eto.ChannelUserIdentity, text);
-            smsMessage.Properties.Add("SignName", sign);
-            smsMessage.Properties.Add("TemplateCode", templateId);
 
             var messageRecord = new MessageRecord(Guid.Empty, eto.ChannelUserIdentity, channel.Id, Guid.Empty, Guid.Empty, eto.OriginalVariables, eto.MessageData.MessageContent.Title, DateTimeOffset.UtcNow, eto.SystemId);
             messageRecord.SetMessageEntity(eto.MessageData.MessageType, messageEntityId);
@@ -78,6 +73,16 @@ public class SendSimpleMessageEventHandler
                     return;
                 }
             }
+
+            var text = smsSender.SupportsTemplate ? JsonSerializer.Serialize(eto.Variables) : eto.MessageData.MessageContent.Content;
+            if (!smsSender.SupportsTemplate && messageTemplate?.GetUnsubscribeConfig().Enabled == true)
+            {
+                text = messageTemplate.AppendUnsubscribeSuffix(text);
+            }
+
+            var smsMessage = new SmsMessage(eto.ChannelUserIdentity, text);
+            smsMessage.Properties.Add("SignName", sign);
+            smsMessage.Properties.Add("TemplateCode", templateId);
 
             try
             {
