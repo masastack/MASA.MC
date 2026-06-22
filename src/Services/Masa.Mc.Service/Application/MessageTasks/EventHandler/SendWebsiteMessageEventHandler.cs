@@ -37,6 +37,14 @@ public class SendWebsiteMessageEventHandler
     public async Task HandleEventAsync(SendWebsiteMessageEvent eto)
     {
         var taskHistory = eto.MessageTaskHistory;
+        if (!taskHistory.MessageTask.ChannelId.HasValue)
+        {
+            taskHistory.SetResult(MessageTaskHistoryStatuses.Fail);
+            await _messageTaskHistoryRepository.UpdateAsync(taskHistory);
+            return;
+        }
+
+        var channelId = taskHistory.MessageTask.ChannelId.Value;
         var userIds = new List<string>();
         int okCount = 0;
         int totalCount = taskHistory.ReceiverUsers.Count;
@@ -49,12 +57,20 @@ public class SendWebsiteMessageEventHandler
         {
             foreach (var item in taskHistory.ReceiverUsers)
             {
-                eto.MessageData.RenderContent(item.Variables);
-                var messageRecord = new MessageRecord(item.UserId, item.ChannelUserIdentity, taskHistory.MessageTask.ChannelId.Value, taskHistory.MessageTaskId, taskHistory.Id, item.Variables, eto.MessageData.MessageContent.Title, taskHistory.SendTime, taskHistory.MessageTask.SystemId);
+                var renderedData = eto.MessageData.RenderForReceiver(item.Variables);
+
+                var messageRecord = new MessageRecord(item.UserId, item.ChannelUserIdentity, channelId, taskHistory.MessageTaskId, taskHistory.Id, item.Variables, renderedData.MessageContent.Title, taskHistory.SendTime, taskHistory.MessageTask.SystemId);
                 messageRecord.SetMessageEntity(taskHistory.MessageTask.EntityType, taskHistory.MessageTask.EntityId);
 
-                if (eto.MessageData.MessageType == MessageEntityTypes.Template)
+                if (renderedData.MessageType == MessageEntityTypes.Template)
                 {
+                    if (messageTemplate is null)
+                    {
+                        messageRecord.SetResult(false, _i18n.T("MessageTemplate"));
+                        insertMessageRecords.Add(messageRecord);
+                        continue;
+                    }
+
                     if (!await _messageTemplateDomainService.CheckSendUpperLimitAsync(messageTemplate, messageRecord.ChannelUserIdentity))
                     {
                         messageRecord.SetResult(false, _i18n.T("DailySendingLimit"));
@@ -65,7 +81,7 @@ public class SendWebsiteMessageEventHandler
 
                 messageRecord.SetResult(true, string.Empty);
 
-                var websiteMessage = new WebsiteMessage(messageRecord.MessageTaskHistoryId, messageRecord.ChannelId, item.UserId, eto.MessageData.MessageContent.Title, eto.MessageData.MessageContent.Content, eto.MessageData.MessageContent.GetJumpUrl(), DateTimeOffset.UtcNow, eto.MessageData.MessageContent.ExtraProperties);
+                var websiteMessage = new WebsiteMessage(messageRecord.MessageTaskHistoryId, messageRecord.ChannelId, item.UserId, renderedData.MessageContent.Title, renderedData.MessageContent.Content, renderedData.MessageContent.GetJumpUrl(), DateTimeOffset.UtcNow, renderedData.MessageContent.ExtraProperties);
                 insertMessageRecords.Add(messageRecord);
                 insertWebsiteMessages.Add(websiteMessage);
 
