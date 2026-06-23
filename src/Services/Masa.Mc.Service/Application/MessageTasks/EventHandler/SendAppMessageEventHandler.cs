@@ -49,6 +49,13 @@ public class SendAppMessageEventHandler
         }
 
         var channel = await _channelRepository.AsNoTracking().FirstOrDefaultAsync(x => x.Id == eto.ChannelId);
+        if (channel is null)
+        {
+            _logger.LogWarning("Channel not found for app message send. ChannelId: {ChannelId}", eto.ChannelId);
+            await SetTaskHistoryStatusAsync(taskHistory, MessageSendStatuses.Fail);
+            return;
+        }
+
         var transmissionContent = GetTransmissionContent(channel.Type, eto.MessageData.MessageContent);
 
         MessageSendStatuses sendStatus;
@@ -216,7 +223,8 @@ public class SendAppMessageEventHandler
 
         foreach (var user in users)
         {
-            var record = CreateMessageRecord(user, eto.ChannelId, eto.MessageTaskHistory, eto.MessageData);
+            var renderedData = eto.MessageData.RenderForReceiver(user.Variables);
+            var record = CreateMessageRecord(user, eto.ChannelId, eto.MessageTaskHistory, renderedData);
             if (string.IsNullOrEmpty(user.ChannelUserIdentity))
             {
                 record.SetResult(false, "Invalid channel user identity");
@@ -229,7 +237,7 @@ public class SendAppMessageEventHandler
 
             if (isWebsiteMessage)
             {
-                websiteMessages.Add(CreateWebsiteMessage(record, user, eto.MessageData));
+                websiteMessages.Add(CreateWebsiteMessage(record, user, renderedData));
             }
         }
 
@@ -353,16 +361,17 @@ public class SendAppMessageEventHandler
 
         foreach (var user in receiverUsers)
         {
-            var record = CreateMessageRecord(user, channelId, taskHistory, data);
+            var renderedData = data.RenderForReceiver(user.Variables);
+            var record = CreateMessageRecord(user, channelId, taskHistory, renderedData);
             try
             {
-                var isWebsiteMessage = data.GetDataValue<bool>(BusinessConsts.IS_WEBSITE_MESSAGE);
+                var isWebsiteMessage = renderedData.GetDataValue<bool>(BusinessConsts.IS_WEBSITE_MESSAGE);
                 if (isWebsiteMessage)
                 {
-                    websiteMessages.Add(CreateWebsiteMessage(record, user, data));
+                    websiteMessages.Add(CreateWebsiteMessage(record, user, renderedData));
                 }
 
-                var message = CreateSingleAppMessage(user.ChannelUserIdentity, data, transmissionContent);
+                var message = CreateSingleAppMessage(user.ChannelUserIdentity, renderedData, transmissionContent);
                 var response = await sender.SendAsync(message);
 
                 UpdateRecordWithResponse(record, response, sender.SupportsReceipt);
@@ -409,7 +418,6 @@ public class SendAppMessageEventHandler
             taskHistory.MessageTask.SystemId
         );
         record.SetMessageEntity(taskHistory.MessageTask.EntityType, taskHistory.MessageTask.EntityId);
-        data.RenderContent(user.Variables);
 
         if (taskHistory.MessageTask.IsCompensateMessage)
         {

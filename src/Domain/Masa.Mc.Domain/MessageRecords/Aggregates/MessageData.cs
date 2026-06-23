@@ -51,6 +51,32 @@ public class MessageData : ValueObject
             , MessageContent.ExtraProperties);
     }
 
+    private MessageData Clone()
+    {
+        var clonedContent = new MessageContent(
+            MessageContent.Title,
+            MessageContent.Content,
+            MessageContent.Markdown,
+            MessageContent.IsJump,
+            MessageContent.JumpUrl,
+            new ExtraPropertyDictionary(MessageContent.ExtraProperties));
+
+        var clonedData = new MessageData(clonedContent, MessageType);
+        foreach (var item in ExtraProperties)
+        {
+            clonedData.SetDataValue(item.Key, item.Value?.ToString() ?? string.Empty);
+        }
+
+        return clonedData;
+    }
+
+    public MessageData RenderForReceiver(ExtraPropertyDictionary variables, string startstr = "{{", string endstr = "}}")
+    {
+        var clonedData = Clone();
+        clonedData.RenderContent(variables, startstr, endstr);
+        return clonedData;
+    }
+
     private string Render(string context, ExtraPropertyDictionary variables, string startstr, string endstr)
     {
         foreach (var item in variables)

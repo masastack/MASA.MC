@@ -39,19 +39,27 @@ public class SendEmailMessageEventHandler
     [EventHandler]
     public async Task HandleEventAsync(SendEmailMessageEvent eto)
     {
+        var taskHistory = eto.MessageTaskHistory;
         var channel = await _channelRepository.AsNoTracking().FirstOrDefaultAsync(x => x.Id == eto.ChannelId);
+        if (channel is null)
+        {
+            _logger.LogWarning("Channel not found for email message send. ChannelId: {ChannelId}", eto.ChannelId);
+            taskHistory.SetResult(MessageTaskHistoryStatuses.Fail);
+            await _messageTaskHistoryRepository.UpdateAsync(taskHistory);
+            return;
+        }
+
         var options = new SmtpEmailOptions
         {
-            Host = channel.ExtraProperties.GetProperty<string>(nameof(EmailChannelOptions.Smtp)),
+            Host = channel.ExtraProperties.GetProperty<string>(nameof(EmailChannelOptions.Smtp)) ?? string.Empty,
             Port = channel.ExtraProperties.GetProperty<int>(nameof(EmailChannelOptions.Port)),
-            UserName = channel.ExtraProperties.GetProperty<string>(nameof(EmailChannelOptions.UserName)),
-            Password = channel.ExtraProperties.GetProperty<string>(nameof(EmailChannelOptions.Password)),
+            UserName = channel.ExtraProperties.GetProperty<string>(nameof(EmailChannelOptions.UserName)) ?? string.Empty,
+            Password = channel.ExtraProperties.GetProperty<string>(nameof(EmailChannelOptions.Password)) ?? string.Empty,
             EnableSsl = channel.ExtraProperties.GetProperty<bool>(nameof(EmailChannelOptions.Ssl)),
-            DefaultFromAddress = channel.ExtraProperties.GetProperty<string>(nameof(EmailChannelOptions.UserName))
+            DefaultFromAddress = channel.ExtraProperties.GetProperty<string>(nameof(EmailChannelOptions.UserName)) ?? string.Empty
         };
         using (_emailAsyncLocal.Change(options))
         {
-            var taskHistory = eto.MessageTaskHistory;
             int okCount = 0;
             int totalCount = taskHistory.ReceiverUsers.Count;
 
@@ -60,12 +68,20 @@ public class SendEmailMessageEventHandler
 
             foreach (var item in taskHistory.ReceiverUsers)
             {
-                var messageRecord = new MessageRecord(item.UserId, item.ChannelUserIdentity, channel.Id, taskHistory.MessageTaskId, taskHistory.Id, item.Variables, eto.MessageData.MessageContent.Title, taskHistory.SendTime, taskHistory.MessageTask.SystemId);
-                messageRecord.SetMessageEntity(taskHistory.MessageTask.EntityType, taskHistory.MessageTask.EntityId);
-                eto.MessageData.RenderContent(item.Variables);
+                var renderedData = eto.MessageData.RenderForReceiver(item.Variables);
 
-                if (eto.MessageData.MessageType == MessageEntityTypes.Template)
+                var messageRecord = new MessageRecord(item.UserId, item.ChannelUserIdentity, channel.Id, taskHistory.MessageTaskId, taskHistory.Id, item.Variables, renderedData.MessageContent.Title, taskHistory.SendTime, taskHistory.MessageTask.SystemId);
+                messageRecord.SetMessageEntity(taskHistory.MessageTask.EntityType, taskHistory.MessageTask.EntityId);
+
+                if (renderedData.MessageType == MessageEntityTypes.Template)
                 {
+                    if (messageTemplate is null)
+                    {
+                        messageRecord.SetResult(false, _i18n.T("MessageTemplate"));
+                        insertMessageRecords.Add(messageRecord);
+                        continue;
+                    }
+
                     if (!await _messageTemplateDomainService.CheckSendUpperLimitAsync(messageTemplate, messageRecord.ChannelUserIdentity))
                     {
                         messageRecord.SetResult(false, _i18n.T("DailySendingLimit"));
@@ -78,8 +94,8 @@ public class SendEmailMessageEventHandler
                 {
                     await _emailSender.SendAsync(
                         item.ChannelUserIdentity,
-                        eto.MessageData.MessageContent.Title,
-                        eto.MessageData.MessageContent.Content
+                        renderedData.MessageContent.Title,
+                        renderedData.MessageContent.Content
                     );
                     messageRecord.SetResult(true, string.Empty);
                     okCount++;
