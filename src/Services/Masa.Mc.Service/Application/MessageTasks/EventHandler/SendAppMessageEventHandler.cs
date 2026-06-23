@@ -223,7 +223,8 @@ public class SendAppMessageEventHandler
 
         foreach (var user in users)
         {
-            var record = CreateMessageRecord(user, eto.ChannelId, eto.MessageTaskHistory, eto.MessageData);
+            var renderedData = eto.MessageData.RenderForReceiver(user.Variables);
+            var record = CreateMessageRecord(user, eto.ChannelId, eto.MessageTaskHistory, renderedData);
             if (string.IsNullOrEmpty(user.ChannelUserIdentity))
             {
                 record.SetResult(false, "Invalid channel user identity");
@@ -236,7 +237,7 @@ public class SendAppMessageEventHandler
 
             if (isWebsiteMessage)
             {
-                websiteMessages.Add(CreateWebsiteMessage(record, user, eto.MessageData));
+                websiteMessages.Add(CreateWebsiteMessage(record, user, renderedData));
             }
         }
 
