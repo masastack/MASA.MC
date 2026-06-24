@@ -92,4 +92,33 @@ public class UnsubscriptionService : ServiceBase
         await eventBus.PublishAsync(query);
         return query.Result;
     }
+
+    [RoutePattern("channel-user-identities", StartWithBaseUri = true, HttpMethod = "Get")]
+    public async Task<List<ChannelUserIdentityUnsubscriptionItemDto>> GetChannelUserIdentityUnsubscriptionsAsync(
+        IEventBus eventBus,
+        [FromQuery] string channelCode,
+        [FromQuery] string channelUserIdentity)
+    {
+        var query = new GetChannelUserIdentityUnsubscriptionsQuery(channelCode, channelUserIdentity);
+        await eventBus.PublishAsync(query);
+        return query.Result;
+    }
+
+    [RoutePattern("channel-user-identities/unsubscriptions", StartWithBaseUri = true, HttpMethod = "Post")]
+    public async Task AddChannelUserIdentityToBlacklistAsync(
+        IEventBus eventBus,
+        [FromBody] AddChannelUserIdentityToUnsubscriptionBlacklistInputDto input)
+    {
+        var command = new AddChannelUserIdentityToUnsubscriptionBlacklistCommand(input);
+        await eventBus.PublishAsync(command);
+    }
+
+    [RoutePattern("channel-user-identities/unsubscriptions", StartWithBaseUri = true, HttpMethod = "Delete")]
+    public async Task RemoveChannelUserIdentityFromBlacklistAsync(
+        IEventBus eventBus,
+        [FromBody] RemoveChannelUserIdentityFromUnsubscriptionBlacklistInputDto input)
+    {
+        var command = new RemoveChannelUserIdentityFromUnsubscriptionBlacklistCommand(input);
+        await eventBus.PublishAsync(command);
+    }
 }

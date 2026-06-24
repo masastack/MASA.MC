@@ -39,6 +39,88 @@ public class Unsubscription : FullAggregateRoot<Guid, Guid>
     {
     }
 
+    public static Unsubscription CreateManualBlacklist(
+        Guid userId,
+        string channelUserIdentity,
+        Guid channelId,
+        ChannelTypes channelType,
+        int channelProvider,
+        UnsubscriptionScopeTypes scopeType,
+        string scopeRefId,
+        string reason,
+        DateTimeOffset occurredAt)
+    {
+        var aggregate = new Unsubscription
+        {
+            Id = IdGeneratorFactory.SequentialGuidGenerator.NewId(),
+            UserId = userId,
+            ChannelUserIdentity = channelUserIdentity?.Trim() ?? string.Empty,
+            ChannelType = channelType,
+            ChannelId = channelId,
+            ChannelProvider = channelProvider,
+            ScopeType = scopeType,
+            ScopeRefId = scopeType is UnsubscriptionScopeTypes.Global or UnsubscriptionScopeTypes.Channel
+                ? string.Empty
+                : scopeRefId?.Trim() ?? string.Empty,
+            Source = UnsubscriptionSource.ManualSupport,
+            Status = UnsubscriptionStatus.Unsubscribed,
+            Keyword = string.Empty,
+            Reason = reason?.Trim() ?? string.Empty,
+            UnsubscribedAt = occurredAt,
+            LastInboundMessageId = string.Empty
+        };
+
+        aggregate.ValidateInvariant();
+        aggregate.AppendTimeline(
+            UnsubscriptionTimelineActions.ManualUnsubscribed,
+            UnsubscriptionSource.ManualSupport,
+            occurredAt,
+            aggregate.Reason);
+        return aggregate;
+    }
+
+    public static Unsubscription CreateGlobalManualBlacklist(
+        Guid userId,
+        string channelUserIdentity,
+        Guid channelId,
+        ChannelTypes channelType,
+        int channelProvider,
+        string reason,
+        DateTimeOffset occurredAt)
+    {
+        return CreateManualBlacklist(
+            userId,
+            channelUserIdentity,
+            channelId,
+            channelType,
+            channelProvider,
+            UnsubscriptionScopeTypes.Global,
+            string.Empty,
+            reason,
+            occurredAt);
+    }
+
+    public static Unsubscription CreateChannelManualBlacklist(
+        Guid userId,
+        string channelUserIdentity,
+        Guid channelId,
+        ChannelTypes channelType,
+        int channelProvider,
+        string reason,
+        DateTimeOffset occurredAt)
+    {
+        return CreateManualBlacklist(
+            userId,
+            channelUserIdentity,
+            channelId,
+            channelType,
+            channelProvider,
+            UnsubscriptionScopeTypes.Channel,
+            string.Empty,
+            reason,
+            occurredAt);
+    }
+
     public static Unsubscription CreateFromSmsInbound(
         Guid userId,
         string channelUserIdentity,
@@ -199,8 +281,8 @@ public class Unsubscription : FullAggregateRoot<Guid, Guid>
             throw new UserFriendlyException(errorCode: UnsubscriptionExceptionCodes.UNSUBSCRIPTION_REASON_REQUIRED);
         }
 
+        var normalizedReason = reason.Trim();
         Status = UnsubscriptionStatus.Resubscribed;
-        Reason = reason.Trim();
         ResubscribedAt = occurredAt;
         var normalizedMessageId = inboundMessageId?.Trim() ?? string.Empty;
         if (!string.IsNullOrWhiteSpace(keyword))
@@ -217,7 +299,7 @@ public class Unsubscription : FullAggregateRoot<Guid, Guid>
             action,
             source,
             occurredAt,
-            Reason,
+            normalizedReason,
             Keyword,
             LastInboundMessageId);
     }
@@ -255,7 +337,7 @@ public class Unsubscription : FullAggregateRoot<Guid, Guid>
             throw new UserFriendlyException(errorCode: UnsubscriptionExceptionCodes.CHANNEL_USER_IDENTITY_REQUIRED);
         }
 
-        if (string.IsNullOrWhiteSpace(ScopeRefId) && ScopeType != UnsubscriptionScopeTypes.Global)
+        if (ScopeType == UnsubscriptionScopeTypes.Template && string.IsNullOrWhiteSpace(ScopeRefId))
         {
             throw new UserFriendlyException(errorCode: UnsubscriptionExceptionCodes.INVALID_UNSUBSCRIPTION_SCOPE_REFERENCE);
         }

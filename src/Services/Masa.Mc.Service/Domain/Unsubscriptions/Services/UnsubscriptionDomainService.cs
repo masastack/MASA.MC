@@ -5,16 +5,16 @@ namespace Masa.Mc.Service.Admin.Domain.Unsubscriptions.Services;
 
 public class UnsubscriptionDomainService : DomainService
 {
-    private const string INBOUND_UNSUBSCRIBE_REASON = "用户上行关键字退订";
-    private const string INBOUND_RESUBSCRIBE_REASON = "用户上行关键字恢复退订";
-
     private readonly IUnsubscriptionRepository _repository;
+    private readonly II18n<DefaultResource> _i18n;
 
     public UnsubscriptionDomainService(
         IDomainEventBus eventBus,
-        IUnsubscriptionRepository repository) : base(eventBus)
+        IUnsubscriptionRepository repository,
+        II18n<DefaultResource> i18n) : base(eventBus)
     {
         _repository = repository;
+        _i18n = i18n;
     }
 
     public async Task<SmsInboundKeywordAction> HandleSmsInboundKeywordAsync(
@@ -104,7 +104,7 @@ public class UnsubscriptionDomainService : DomainService
                 UnsubscriptionScopeTypes.Template,
                 scopeRefId,
                 keyword,
-                INBOUND_UNSUBSCRIBE_REASON,
+                LocalizeReason(UnsubscriptionReasonConstants.INBOUND_UNSUBSCRIBE_REASON),
                 occurredAt,
                 inboundMessageId,
                 matchedMessageRecordId,
@@ -117,7 +117,7 @@ public class UnsubscriptionDomainService : DomainService
 
         var changed = active.TryUnsubscribeByInboundKeyword(
             keyword,
-            INBOUND_UNSUBSCRIBE_REASON,
+            LocalizeReason(UnsubscriptionReasonConstants.INBOUND_UNSUBSCRIBE_REASON),
             occurredAt,
             inboundMessageId,
             matchedMessageRecordId,
@@ -156,7 +156,7 @@ public class UnsubscriptionDomainService : DomainService
 
         active.ResubscribeByInboundKeyword(
             keyword,
-            INBOUND_RESUBSCRIBE_REASON,
+            LocalizeReason(UnsubscriptionReasonConstants.INBOUND_RESUBSCRIBE_REASON),
             occurredAt,
             inboundMessageId);
 
@@ -183,5 +183,137 @@ public class UnsubscriptionDomainService : DomainService
             cancellationToken);
 
         return aggregate is not null;
+    }
+
+    public async Task<bool> IsChannelUserIdentityUnsubscribedAsync(
+        string channelUserIdentity,
+        CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrWhiteSpace(channelUserIdentity))
+        {
+            return false;
+        }
+
+        var existing = await _repository.FindAsync(
+            x => x.ChannelUserIdentity == channelUserIdentity.Trim() &&
+                 (x.ScopeType == UnsubscriptionScopeTypes.Channel || x.ScopeType == UnsubscriptionScopeTypes.Global) &&
+                 x.Status == UnsubscriptionStatus.Unsubscribed,
+            cancellationToken);
+        return existing is not null;
+    }
+
+    public async Task AddChannelUserIdentityToBlacklistAsync(
+        Guid operatorId,
+        Guid channelId,
+        ChannelTypes channelType,
+        int channelProvider,
+        string channelUserIdentity,
+        Guid? templateId,
+        string reason,
+        CancellationToken cancellationToken = default)
+    {
+        if (channelId == Guid.Empty)
+        {
+            throw new UserFriendlyException(errorCode: UserFriendlyExceptionCodes.CHANNEL_REQUIRED);
+        }
+
+        if (string.IsNullOrWhiteSpace(channelUserIdentity))
+        {
+            throw new UserFriendlyException(errorCode: UnsubscriptionExceptionCodes.CHANNEL_USER_IDENTITY_REQUIRED);
+        }
+
+        var normalizedChannelUserIdentity = channelUserIdentity.Trim();
+        var hasTemplateScope = templateId.HasValue && templateId.Value != Guid.Empty;
+        var scopeType = hasTemplateScope ? UnsubscriptionScopeTypes.Template : UnsubscriptionScopeTypes.Channel;
+        var scopeRefId = hasTemplateScope ? templateId!.Value.ToString("N") : string.Empty;
+        var active = await _repository.FindAsync(
+            x => x.ChannelId == channelId &&
+                 x.ChannelType == channelType &&
+                 x.ChannelProvider == channelProvider &&
+                 x.ChannelUserIdentity == normalizedChannelUserIdentity &&
+                 (hasTemplateScope
+                     ? x.ScopeType == scopeType && x.ScopeRefId == scopeRefId
+                     : x.ScopeType == UnsubscriptionScopeTypes.Channel || x.ScopeType == UnsubscriptionScopeTypes.Global) &&
+                 x.Status == UnsubscriptionStatus.Unsubscribed,
+            cancellationToken);
+        if (active is not null)
+        {
+            return;
+        }
+
+        var localizedReason = string.IsNullOrWhiteSpace(reason)
+            ? LocalizeReason(UnsubscriptionReasonConstants.MANUAL_BLACKLIST_REASON)
+            : reason;
+        var aggregate = hasTemplateScope
+            ? Unsubscription.CreateManualBlacklist(
+                operatorId,
+                normalizedChannelUserIdentity,
+                channelId,
+                channelType,
+                channelProvider,
+                scopeType,
+                scopeRefId,
+                localizedReason,
+                DateTimeOffset.UtcNow)
+            : Unsubscription.CreateChannelManualBlacklist(
+                operatorId,
+                normalizedChannelUserIdentity,
+                channelId,
+                channelType,
+                channelProvider,
+                localizedReason,
+                DateTimeOffset.UtcNow);
+        await _repository.AddAsync(aggregate, cancellationToken);
+    }
+
+    public async Task RemoveChannelUserIdentityFromBlacklistAsync(
+        Guid operatorId,
+        Guid channelId,
+        ChannelTypes channelType,
+        int channelProvider,
+        string channelUserIdentity,
+        Guid? templateId,
+        string reason,
+        CancellationToken cancellationToken = default)
+    {
+        if (channelId == Guid.Empty)
+        {
+            throw new UserFriendlyException(errorCode: UserFriendlyExceptionCodes.CHANNEL_REQUIRED);
+        }
+
+        if (string.IsNullOrWhiteSpace(channelUserIdentity))
+        {
+            throw new UserFriendlyException(errorCode: UnsubscriptionExceptionCodes.CHANNEL_USER_IDENTITY_REQUIRED);
+        }
+
+        var normalizedChannelUserIdentity = channelUserIdentity.Trim();
+        var hasTemplateScope = templateId.HasValue && templateId.Value != Guid.Empty;
+        var scopeType = hasTemplateScope ? UnsubscriptionScopeTypes.Template : UnsubscriptionScopeTypes.Channel;
+        var scopeRefId = hasTemplateScope ? templateId!.Value.ToString("N") : string.Empty;
+        var active = await _repository.FindAsync(
+            x => x.ChannelId == channelId &&
+                 x.ChannelType == channelType &&
+                 x.ChannelProvider == channelProvider &&
+                 x.ChannelUserIdentity == normalizedChannelUserIdentity &&
+                 (hasTemplateScope
+                     ? x.ScopeType == scopeType && x.ScopeRefId == scopeRefId
+                     : x.ScopeType == UnsubscriptionScopeTypes.Channel || x.ScopeType == UnsubscriptionScopeTypes.Global) &&
+                 x.Status == UnsubscriptionStatus.Unsubscribed,
+            cancellationToken);
+        if (active is null)
+        {
+            return;
+        }
+
+        var localizedReason = string.IsNullOrWhiteSpace(reason)
+            ? LocalizeReason(UnsubscriptionReasonConstants.MANUAL_REMOVE_BLACKLIST_REASON)
+            : reason;
+        active.Resubscribe(localizedReason, DateTimeOffset.UtcNow);
+        await _repository.UpdateAsync(active, cancellationToken);
+    }
+
+    private string LocalizeReason(string reasonKey)
+    {
+        return _i18n.T(reasonKey);
     }
 }

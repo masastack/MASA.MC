@@ -16,6 +16,18 @@ public class MessageReceiptQueryHandler
     public async Task GetListSmsInboundAsync(GetListSmsInboundQuery query)
     {
         var input = query.Input;
+        if (!input.ChannelId.HasValue && !string.IsNullOrWhiteSpace(input.ChannelCode))
+        {
+            var channelCode = input.ChannelCode.Trim();
+            input.ChannelId = (await _context.ChannelQueryQueries.FirstOrDefaultAsync(x => x.Code == channelCode))?.Id;
+        }
+
+        if (!input.ChannelId.HasValue)
+        {
+            query.Result = new PaginatedListDto<SmsInboundDto>(0, 0, new List<SmsInboundDto>());
+            return;
+        }
+
         var condition = CreateSmsInboundPredicate(input);
         var resultList = await _context.SmsInboundQueries.GetPaginatedListAsync(condition, new()
         {
@@ -32,7 +44,7 @@ public class MessageReceiptQueryHandler
 
     private static Expression<Func<SmsInboundQueryModel, bool>> CreateSmsInboundPredicate(GetSmsInboundInputDto input)
     {
-        Expression<Func<SmsInboundQueryModel, bool>> condition = x => x.ChannelId == input.ChannelId;
+        Expression<Func<SmsInboundQueryModel, bool>> condition = x => x.ChannelId == input.ChannelId!.Value;
 
         condition = condition.And(!string.IsNullOrWhiteSpace(input.Mobile), x => x.Mobile == input.Mobile);
         condition = condition.And(!string.IsNullOrWhiteSpace(input.AddSerial), x => x.AddSerial == input.AddSerial);
