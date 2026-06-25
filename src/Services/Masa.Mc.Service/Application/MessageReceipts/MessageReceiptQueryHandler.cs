@@ -49,6 +49,7 @@ public class MessageReceiptQueryHandler
         condition = condition.And(!string.IsNullOrWhiteSpace(input.Mobile), x => x.Mobile == input.Mobile);
         condition = condition.And(!string.IsNullOrWhiteSpace(input.AddSerial), x => x.AddSerial == input.AddSerial);
         condition = condition.And(!string.IsNullOrWhiteSpace(input.SmsContent), x => x.SmsContent.Contains(input.SmsContent));
+        condition = condition.And(input.Provider.HasValue, x => x.Provider == input.Provider!.Value);
         condition = condition.And(input.StartTime.HasValue, x => x.SendTime >= input.StartTime!.Value);
         condition = condition.And(input.EndTime.HasValue, x => x.SendTime <= input.EndTime!.Value);
 
