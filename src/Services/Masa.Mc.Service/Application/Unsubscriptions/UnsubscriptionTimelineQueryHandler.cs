@@ -33,10 +33,10 @@ public class UnsubscriptionTimelineQueryHandler
                 ChannelId = unsubscription.ChannelId,
                 ScopeType = unsubscription.ScopeType,
                 ScopeRefId = unsubscription.ScopeRefId,
-                Source = timeline.Source,
+                Source = unsubscription.Source,
                 Action = timeline.Action,
                 Status = unsubscription.Status,
-                Keyword = timeline.Keyword,
+                Keyword = unsubscription.Keyword,
                 Detail = timeline.Detail,
                 OccurredAt = timeline.OccurredAt,
                 Operator = timeline.Creator == Guid.Empty ? unsubscription.Modifier : timeline.Creator
@@ -77,14 +77,14 @@ public class UnsubscriptionTimelineQueryHandler
         condition = condition.And(input.UserId.HasValue, x => x.UserId == input.UserId);
         condition = condition.And(!string.IsNullOrWhiteSpace(input.ChannelUserIdentity), x => x.ChannelUserIdentity.Contains(input.ChannelUserIdentity));
         condition = condition.And(!string.IsNullOrWhiteSpace(input.ScopeRefId), x => x.ScopeRefId == input.ScopeRefId);
+        condition = condition.And(!string.IsNullOrWhiteSpace(input.Keyword), x => x.Keyword.Contains(input.Keyword));
+        condition = condition.And(input.Source.HasValue, x => x.Source == input.Source);
         return condition;
     }
 
     private static Expression<Func<UnsubscriptionTimelineQueryModel, bool>> CreateTimelinePredicate(GetUnsubscriptionHistoryInputDto input)
     {
         Expression<Func<UnsubscriptionTimelineQueryModel, bool>> condition = _ => true;
-        condition = condition.And(!string.IsNullOrWhiteSpace(input.Keyword), x => x.Keyword.Contains(input.Keyword));
-        condition = condition.And(input.Source.HasValue, x => x.Source == input.Source);
         condition = condition.And(input.StartTime.HasValue, x => x.OccurredAt >= input.StartTime);
         condition = condition.And(input.EndTime.HasValue, x => x.OccurredAt <= input.EndTime);
         condition = condition.And(input.Action.HasValue, x => x.Action == input.Action);

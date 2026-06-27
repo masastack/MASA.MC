@@ -227,9 +227,6 @@ public static class McDbContextModelBuilderExtensions
             b.ToTable(MCConsts.DbTablePrefix + "UnsubscriptionTimelines", MCConsts.DbSchema);
             b.Property(x => x.UnsubscriptionId).HasColumnName("UnsubscriptionId");
             b.Property(x => x.Detail).HasMaxLength(1000);
-            b.Property(x => x.Keyword).HasMaxLength(20);
-            b.Property(x => x.MessageId).HasMaxLength(128);
-            b.Property(x => x.MatchedMessageSnapshot).HasMaxLength(2000);
             b.HasIndex(x => x.UnsubscriptionId);
             b.HasIndex(x => x.OccurredAt);
         });

@@ -27,7 +27,6 @@ public class UnsubscriptionDomainService : DomainService
         string keyword,
         DateTimeOffset occurredAt,
         string inboundMessageId,
-        Guid? matchedMessageRecordId,
         string matchedMessageSnapshot,
         DateTimeOffset? matchedMessageSentAt,
         bool debounceEnabled,
@@ -46,7 +45,6 @@ public class UnsubscriptionDomainService : DomainService
                 keyword,
                 occurredAt,
                 inboundMessageId,
-                matchedMessageRecordId,
                 matchedMessageSnapshot,
                 matchedMessageSentAt,
                 debounceEnabled,
@@ -79,7 +77,6 @@ public class UnsubscriptionDomainService : DomainService
         string keyword,
         DateTimeOffset occurredAt,
         string inboundMessageId,
-        Guid? matchedMessageRecordId,
         string matchedMessageSnapshot,
         DateTimeOffset? matchedMessageSentAt,
         CancellationToken cancellationToken = default)
@@ -94,7 +91,6 @@ public class UnsubscriptionDomainService : DomainService
             keyword,
             occurredAt,
             inboundMessageId,
-            matchedMessageRecordId,
             matchedMessageSnapshot,
             matchedMessageSentAt,
             debounceEnabled: false,
@@ -112,7 +108,6 @@ public class UnsubscriptionDomainService : DomainService
         string keyword,
         DateTimeOffset occurredAt,
         string inboundMessageId,
-        Guid? matchedMessageRecordId,
         string matchedMessageSnapshot,
         DateTimeOffset? matchedMessageSentAt,
         bool debounceEnabled,
@@ -128,6 +123,8 @@ public class UnsubscriptionDomainService : DomainService
 
         if (active is null)
         {
+            var timelineDetail = BuildInboundTimelineDetail(keyword, UnsubscriptionReasonConstants.INBOUND_UNSUBSCRIBE_REASON);
+            var outboundMessageDetail = BuildOutboundTimelineDetail(matchedMessageSnapshot);
             var aggregate = Unsubscription.CreateFromSmsInbound(
                 userId,
                 channelUserIdentity,
@@ -139,8 +136,8 @@ public class UnsubscriptionDomainService : DomainService
                 LocalizeReason(UnsubscriptionReasonConstants.INBOUND_UNSUBSCRIBE_REASON),
                 occurredAt,
                 inboundMessageId,
-                matchedMessageRecordId,
-                matchedMessageSnapshot,
+                timelineDetail,
+                outboundMessageDetail,
                 matchedMessageSentAt);
 
             await _repository.AddAsync(aggregate, cancellationToken);
@@ -152,8 +149,8 @@ public class UnsubscriptionDomainService : DomainService
             LocalizeReason(UnsubscriptionReasonConstants.INBOUND_UNSUBSCRIBE_REASON),
             occurredAt,
             inboundMessageId,
-            matchedMessageRecordId,
-            matchedMessageSnapshot,
+            BuildInboundTimelineDetail(keyword, UnsubscriptionReasonConstants.INBOUND_UNSUBSCRIBE_REASON),
+            BuildOutboundTimelineDetail(matchedMessageSnapshot),
             matchedMessageSentAt,
             debounceEnabled,
             cooldownSeconds);
@@ -190,7 +187,8 @@ public class UnsubscriptionDomainService : DomainService
             keyword,
             LocalizeReason(UnsubscriptionReasonConstants.INBOUND_RESUBSCRIBE_REASON),
             occurredAt,
-            inboundMessageId);
+            inboundMessageId,
+            BuildInboundTimelineDetail(keyword, UnsubscriptionReasonConstants.INBOUND_RESUBSCRIBE_REASON));
 
         await _repository.UpdateAsync(active, cancellationToken);
         return true;
@@ -242,6 +240,7 @@ public class UnsubscriptionDomainService : DomainService
         string channelUserIdentity,
         Guid? templateId,
         string reason,
+        string operatorName,
         CancellationToken cancellationToken = default)
     {
         if (channelId == Guid.Empty)
@@ -276,6 +275,7 @@ public class UnsubscriptionDomainService : DomainService
         var localizedReason = string.IsNullOrWhiteSpace(reason)
             ? LocalizeReason(UnsubscriptionReasonConstants.MANUAL_BLACKLIST_REASON)
             : reason;
+        var timelineDetail = BuildManualUnsubscribedTimelineDetail(operatorName, localizedReason);
         var aggregate = hasTemplateScope
             ? Unsubscription.CreateManualBlacklist(
                 userId,
@@ -286,7 +286,8 @@ public class UnsubscriptionDomainService : DomainService
                 scopeType,
                 scopeRefId,
                 localizedReason,
-                DateTimeOffset.UtcNow)
+                DateTimeOffset.UtcNow,
+                timelineDetail)
             : Unsubscription.CreateChannelManualBlacklist(
                 userId,
                 normalizedChannelUserIdentity,
@@ -294,7 +295,8 @@ public class UnsubscriptionDomainService : DomainService
                 channelType,
                 channelProvider,
                 localizedReason,
-                DateTimeOffset.UtcNow);
+                DateTimeOffset.UtcNow,
+                timelineDetail);
         await _repository.AddAsync(aggregate, cancellationToken);
     }
 
@@ -306,6 +308,7 @@ public class UnsubscriptionDomainService : DomainService
         string channelUserIdentity,
         Guid? templateId,
         string reason,
+        string operatorName,
         CancellationToken cancellationToken = default)
     {
         if (channelId == Guid.Empty)
@@ -340,12 +343,55 @@ public class UnsubscriptionDomainService : DomainService
         var localizedReason = string.IsNullOrWhiteSpace(reason)
             ? LocalizeReason(UnsubscriptionReasonConstants.MANUAL_REMOVE_BLACKLIST_REASON)
             : reason;
-        active.Resubscribe(localizedReason, DateTimeOffset.UtcNow);
+        active.Resubscribe(
+            localizedReason,
+            DateTimeOffset.UtcNow,
+            timelineDetail: BuildManualResubscribedTimelineDetail(operatorName, localizedReason));
         await _repository.UpdateAsync(active, cancellationToken);
     }
 
     private string LocalizeReason(string reasonKey)
     {
         return _i18n.T(reasonKey);
+    }
+
+    private string BuildInboundTimelineDetail(string keyword, string fallbackReasonKey)
+    {
+        var normalizedKeyword = keyword?.Trim();
+        if (string.IsNullOrWhiteSpace(normalizedKeyword))
+        {
+            return fallbackReasonKey == UnsubscriptionReasonConstants.INBOUND_RESUBSCRIBE_REASON
+                ? "收到上行（恢复退订）"
+                : "收到上行（退订）";
+        }
+
+        return $"收到上行“{normalizedKeyword}”";
+    }
+
+    private string BuildOutboundTimelineDetail(string messageSnapshot)
+    {
+        var normalizedSnapshot = messageSnapshot?.Trim();
+        if (string.IsNullOrWhiteSpace(normalizedSnapshot))
+        {
+            return string.Empty;
+        }
+
+        return $"发送了“{normalizedSnapshot}”";
+    }
+
+    private string BuildManualUnsubscribedTimelineDetail(string operatorName, string reason)
+    {
+        return $"{NormalizeOperatorName(operatorName)}手动拉黑/ 原因：{reason?.Trim() ?? string.Empty}";
+    }
+
+    private string BuildManualResubscribedTimelineDetail(string operatorName, string reason)
+    {
+        return $"{NormalizeOperatorName(operatorName)}手动恢复/ 恢复原因： {reason?.Trim() ?? string.Empty}";
+    }
+
+    private static string NormalizeOperatorName(string operatorName)
+    {
+        var normalized = operatorName?.Trim();
+        return string.IsNullOrWhiteSpace(normalized) ? "-" : normalized;
     }
 }

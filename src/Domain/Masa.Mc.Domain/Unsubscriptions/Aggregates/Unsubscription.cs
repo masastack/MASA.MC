@@ -48,7 +48,8 @@ public class Unsubscription : FullAggregateRoot<Guid, Guid>
         UnsubscriptionScopeTypes scopeType,
         string scopeRefId,
         string reason,
-        DateTimeOffset occurredAt)
+        DateTimeOffset occurredAt,
+        string timelineDetail = "")
     {
         var aggregate = new Unsubscription
         {
@@ -73,9 +74,8 @@ public class Unsubscription : FullAggregateRoot<Guid, Guid>
         aggregate.ValidateInvariant();
         aggregate.AppendTimeline(
             UnsubscriptionTimelineActions.ManualUnsubscribed,
-            UnsubscriptionSource.ManualSupport,
             occurredAt,
-            aggregate.Reason);
+            string.IsNullOrWhiteSpace(timelineDetail) ? aggregate.Reason : timelineDetail);
         return aggregate;
     }
 
@@ -86,7 +86,8 @@ public class Unsubscription : FullAggregateRoot<Guid, Guid>
         ChannelTypes channelType,
         int channelProvider,
         string reason,
-        DateTimeOffset occurredAt)
+        DateTimeOffset occurredAt,
+        string timelineDetail = "")
     {
         return CreateManualBlacklist(
             userId,
@@ -97,7 +98,8 @@ public class Unsubscription : FullAggregateRoot<Guid, Guid>
             UnsubscriptionScopeTypes.Global,
             string.Empty,
             reason,
-            occurredAt);
+            occurredAt,
+            timelineDetail);
     }
 
     public static Unsubscription CreateChannelManualBlacklist(
@@ -107,7 +109,8 @@ public class Unsubscription : FullAggregateRoot<Guid, Guid>
         ChannelTypes channelType,
         int channelProvider,
         string reason,
-        DateTimeOffset occurredAt)
+        DateTimeOffset occurredAt,
+        string timelineDetail = "")
     {
         return CreateManualBlacklist(
             userId,
@@ -118,7 +121,8 @@ public class Unsubscription : FullAggregateRoot<Guid, Guid>
             UnsubscriptionScopeTypes.Channel,
             string.Empty,
             reason,
-            occurredAt);
+            occurredAt,
+            timelineDetail);
     }
 
     public static Unsubscription CreateFromSmsInbound(
@@ -132,9 +136,9 @@ public class Unsubscription : FullAggregateRoot<Guid, Guid>
         string reason,
         DateTimeOffset occurredAt,
         string inboundMessageId,
-        Guid? matchedMessageRecordId = null,
-        string matchedMessageSnapshot = "",
-        DateTimeOffset? matchedMessageSentAt = null)
+        string timelineDetail = "",
+        string outboundMessageDetail = "",
+        DateTimeOffset? outboundMessageSentAt = null)
     {
         var aggregate = new Unsubscription
         {
@@ -155,16 +159,11 @@ public class Unsubscription : FullAggregateRoot<Guid, Guid>
         };
 
         aggregate.ValidateInvariant();
+        aggregate.AppendOutboundTimelineIfNeeded(outboundMessageDetail, outboundMessageSentAt);
         aggregate.AppendTimeline(
             UnsubscriptionTimelineActions.InboundUnsubscribed,
-            UnsubscriptionSource.SmsInboundKeyword,
             occurredAt,
-            aggregate.Reason,
-            aggregate.Keyword,
-            aggregate.LastInboundMessageId,
-            matchedMessageRecordId,
-            matchedMessageSnapshot,
-            matchedMessageSentAt);
+            timelineDetail);
         aggregate.AddDomainEvent(new UnsubscribedBySmsInboundDomainEvent(
             aggregate.Id,
             aggregate.ChannelId,
@@ -181,9 +180,9 @@ public class Unsubscription : FullAggregateRoot<Guid, Guid>
         string reason,
         DateTimeOffset occurredAt,
         string inboundMessageId,
-        Guid? matchedMessageRecordId,
-        string matchedMessageSnapshot,
-        DateTimeOffset? matchedMessageSentAt,
+        string timelineDetail,
+        string outboundMessageDetail,
+        DateTimeOffset? outboundMessageSentAt,
         bool debounceEnabled,
         int cooldownSeconds)
     {
@@ -208,24 +207,25 @@ public class Unsubscription : FullAggregateRoot<Guid, Guid>
             occurredAt,
             normalizedMessageId,
             reason,
-            matchedMessageRecordId,
-            matchedMessageSnapshot,
-            matchedMessageSentAt);
+            timelineDetail,
+            outboundMessageDetail,
+            outboundMessageSentAt);
     }
 
     public void ResubscribeByInboundKeyword(
         string keyword,
         string reason,
         DateTimeOffset occurredAt,
-        string inboundMessageId)
+        string inboundMessageId,
+        string timelineDetail)
     {
         Resubscribe(
             reason,
             occurredAt,
             UnsubscriptionTimelineActions.AutoResubscribed,
-            UnsubscriptionSource.SmsInboundKeyword,
             keyword,
-            inboundMessageId);
+            inboundMessageId,
+            timelineDetail);
     }
 
     private bool AppendInboundKeyword(
@@ -233,9 +233,9 @@ public class Unsubscription : FullAggregateRoot<Guid, Guid>
         DateTimeOffset occurredAt,
         string inboundMessageId,
         string detail = "",
-        Guid? matchedMessageRecordId = null,
-        string matchedMessageSnapshot = "",
-        DateTimeOffset? matchedMessageSentAt = null)
+        string timelineDetail = "",
+        string outboundMessageDetail = "",
+        DateTimeOffset? outboundMessageSentAt = null)
     {
         if (Status != UnsubscriptionStatus.Unsubscribed)
         {
@@ -250,16 +250,11 @@ public class Unsubscription : FullAggregateRoot<Guid, Guid>
 
         Keyword = keyword?.Trim() ?? Keyword;
         LastInboundMessageId = normalizedMessageId;
+        AppendOutboundTimelineIfNeeded(outboundMessageDetail, outboundMessageSentAt);
         AppendTimeline(
             UnsubscriptionTimelineActions.InboundUnsubscribed,
-            UnsubscriptionSource.SmsInboundKeyword,
             occurredAt,
-            detail,
-            Keyword,
-            LastInboundMessageId,
-            matchedMessageRecordId,
-            matchedMessageSnapshot,
-            matchedMessageSentAt);
+            string.IsNullOrWhiteSpace(timelineDetail) ? detail : timelineDetail);
         return true;
     }
 
@@ -267,9 +262,9 @@ public class Unsubscription : FullAggregateRoot<Guid, Guid>
         string reason,
         DateTimeOffset occurredAt,
         UnsubscriptionTimelineActions action = UnsubscriptionTimelineActions.ManualResubscribed,
-        UnsubscriptionSource source = UnsubscriptionSource.ManualSupport,
         string keyword = "",
-        string inboundMessageId = "")
+        string inboundMessageId = "",
+        string timelineDetail = "")
     {
         if (Status != UnsubscriptionStatus.Unsubscribed)
         {
@@ -298,11 +293,8 @@ public class Unsubscription : FullAggregateRoot<Guid, Guid>
 
         AppendTimeline(
             action,
-            source,
             occurredAt,
-            normalizedReason,
-            Keyword,
-            LastInboundMessageId);
+            string.IsNullOrWhiteSpace(timelineDetail) ? normalizedReason : timelineDetail);
     }
 
     private bool IsInboundMessageDuplicated(string inboundMessageId)
@@ -351,25 +343,26 @@ public class Unsubscription : FullAggregateRoot<Guid, Guid>
 
     private void AppendTimeline(
         UnsubscriptionTimelineActions action,
-        UnsubscriptionSource source,
         DateTimeOffset occurredAt,
-        string detail = "",
-        string keyword = "",
-        string messageId = "",
-        Guid? matchedMessageRecordId = null,
-        string matchedMessageSnapshot = "",
-        DateTimeOffset? matchedMessageSentAt = null)
+        string detail = "")
     {
         Timelines.Add(new UnsubscriptionTimeline(
             Id,
             action,
-            source,
             occurredAt,
-            detail,
-            keyword,
-            messageId,
-            matchedMessageRecordId,
-            matchedMessageSnapshot,
-            matchedMessageSentAt));
+            detail));
+    }
+
+    private void AppendOutboundTimelineIfNeeded(string outboundMessageDetail, DateTimeOffset? outboundMessageSentAt)
+    {
+        if (string.IsNullOrWhiteSpace(outboundMessageDetail) || !outboundMessageSentAt.HasValue)
+        {
+            return;
+        }
+
+        AppendTimeline(
+            UnsubscriptionTimelineActions.OutboundMessageSent,
+            outboundMessageSentAt.Value,
+            outboundMessageDetail);
     }
 }

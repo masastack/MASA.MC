@@ -245,7 +245,6 @@ public class MessageReceiptCommandHandler
             inboundKeyword,
             sendTime,
             inboundEntity.Id.ToString("N"),
-            lastMessageRecord.Id,
             string.Empty,
             lastMessageRecord.SendTime,
             cancellationToken);
@@ -285,7 +284,6 @@ public class MessageReceiptCommandHandler
             inboundKeyword,
             sendTime,
             inboundEntity.Id.ToString("N"),
-            lastTemplateRecord.Id,
             matchedMessageSnapshot,
             lastTemplateRecord.SendTime,
             unsubscribeConfig.DebounceEnabled,

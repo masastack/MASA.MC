@@ -8,5 +8,6 @@ public enum UnsubscriptionTimelineActions
     InboundUnsubscribed = 1,
     ManualUnsubscribed,
     ManualResubscribed,
-    AutoResubscribed
+    AutoResubscribed,
+    OutboundMessageSent
 }

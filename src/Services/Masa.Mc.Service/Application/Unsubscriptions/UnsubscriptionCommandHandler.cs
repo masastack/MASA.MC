@@ -30,6 +30,7 @@ public class UnsubscriptionCommandHandler
     {
         var channel = await ResolveChannelAsync(command.Input.ChannelCode);
         var templateId = await ResolveTemplateIdAsync(channel.Id, command.Input.TemplateCode);
+        var operatorName = await ResolveCurrentOperatorDisplayNameAsync();
 
         var channelType = (ChannelTypes)Enum.Parse(typeof(ChannelTypes), channel.Type.Id.ToString());
         var (targetUserId, targetChannelUserIdentity) = await ResolveTargetUserAsync(
@@ -43,7 +44,8 @@ public class UnsubscriptionCommandHandler
             channel.Provider,
             targetChannelUserIdentity,
             templateId,
-            command.Input.Reason);
+            command.Input.Reason,
+            operatorName);
     }
 
     [EventHandler]
@@ -51,6 +53,7 @@ public class UnsubscriptionCommandHandler
     {
         var channel = await ResolveChannelAsync(command.Input.ChannelCode);
         var templateId = await ResolveTemplateIdAsync(channel.Id, command.Input.TemplateCode);
+        var operatorName = await ResolveCurrentOperatorDisplayNameAsync();
 
         var channelType = (ChannelTypes)Enum.Parse(typeof(ChannelTypes), channel.Type.Id.ToString());
         await _unsubscriptionDomainService.RemoveChannelUserIdentityFromBlacklistAsync(
@@ -60,7 +63,8 @@ public class UnsubscriptionCommandHandler
             channel.Provider,
             command.Input.ChannelUserIdentity,
             templateId,
-            command.Input.Reason);
+            command.Input.Reason,
+            operatorName);
     }
 
     private async Task<Channel> ResolveChannelAsync(string channelCode)
@@ -159,5 +163,18 @@ public class UnsubscriptionCommandHandler
             ChannelTypes.WebsiteMessage => user.Id.ToString(),
             _ => string.Empty
         };
+    }
+
+    private async Task<string> ResolveCurrentOperatorDisplayNameAsync()
+    {
+        var operatorId = _userContext.GetUserId<Guid>();
+        if (operatorId == Guid.Empty)
+        {
+            return "-";
+        }
+
+        var users = await _authClient.UserService.GetListByIdsAsync(new[] { operatorId });
+        var operatorName = users.FirstOrDefault()?.RealDisplayName?.Trim();
+        return string.IsNullOrWhiteSpace(operatorName) ? "-" : operatorName;
     }
 }

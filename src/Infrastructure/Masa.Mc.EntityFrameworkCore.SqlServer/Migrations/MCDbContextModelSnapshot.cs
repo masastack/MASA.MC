@@ -990,27 +990,6 @@ namespace Masa.Mc.EntityFrameworkCore.SqlServer.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
-                    b.Property<string>("Keyword")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<Guid?>("MatchedMessageRecordId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTimeOffset?>("MatchedMessageSentAt")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("MatchedMessageSnapshot")
-                        .IsRequired()
-                        .HasMaxLength(2000)
-                        .HasColumnType("nvarchar(2000)");
-
-                    b.Property<string>("MessageId")
-                        .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
-
                     b.Property<DateTime>("ModificationTime")
                         .HasColumnType("datetime2");
 
@@ -1019,9 +998,6 @@ namespace Masa.Mc.EntityFrameworkCore.SqlServer.Migrations
 
                     b.Property<DateTimeOffset>("OccurredAt")
                         .HasColumnType("datetimeoffset");
-
-                    b.Property<int>("Source")
-                        .HasColumnType("int");
 
                     b.Property<Guid>("UnsubscriptionId")
                         .HasColumnType("uniqueidentifier")
@@ -1350,8 +1326,7 @@ namespace Masa.Mc.EntityFrameworkCore.SqlServer.Migrations
                     b.Navigation("MessageContent")
                         .IsRequired();
 
-                    b.Navigation("UnsubscribeConfig")
-                        .IsRequired();
+                    b.Navigation("UnsubscribeConfig");
                 });
 
             modelBuilder.Entity("Masa.Mc.Domain.MessageTemplates.Aggregates.MessageTemplateItem", b =>
