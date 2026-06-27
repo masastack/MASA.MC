@@ -206,7 +206,7 @@ public class MessageTaskCommandHandler
     [EventHandler]
     public async Task SendSimpleMessageAsync(SendSimpleTemplateMessageCommand command)
     {
-        var template = await _messageTemplateRepository.FindAsync(x => x.Code == command.InputDto.TemplateCode);
+        var template = await _messageTemplateRepository.FindAsync(x => x.Code == command.InputDto.TemplateCode, false);
         MasaArgumentException.ThrowIfNull(template, _i18n.T("MessageTemplate"));
 
         var messageData = new MessageData(template.MessageContent, MessageEntityTypes.Template);
@@ -217,10 +217,9 @@ public class MessageTaskCommandHandler
         messageData.SetDataValue(BusinessConsts.MESSAGE_TYPE, template.TemplateType.ToString());
         messageData.SetDataValue(nameof(MessageTemplate.Id), template.Id.ToString());
 
-        var variables = _messageTemplateDomainService.ConvertVariables(template, command.InputDto.Variables);
         var channelType = Enumeration.FromValue<ChannelType>((int)command.InputDto.ChannelType);
 
-        var eto = channelType.GetSendSimpleMessageEvent(command.InputDto.ChannelUserIdentity, command.InputDto.ChannelCode, messageData, variables, command.InputDto.Variables, command.InputDto.SystemId);
+        var eto = channelType.GetSendSimpleMessageEvent(command.InputDto.ChannelUserIdentity, command.InputDto.ChannelCode, messageData, command.InputDto.Variables, command.InputDto.SystemId);
         await _eventBus.PublishAsync(eto);
     }
 

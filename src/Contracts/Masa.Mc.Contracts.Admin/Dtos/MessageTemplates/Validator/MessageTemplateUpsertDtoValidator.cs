@@ -8,7 +8,7 @@ public class MessageTemplateUpsertDtoValidator : AbstractValidator<MessageTempla
     public MessageTemplateUpsertDtoValidator()
     {
         RuleFor(inputDto => inputDto.DisplayName).Required("MessageTemplateDisplayNameRequired")
-            .Length(2, 50).WithMessage("MessageTemplateDisplayNameLength").When(x => x.ChannelType != ChannelTypes.WeixinWork && x.TemplateType != (int)WeixinWorkTemplateTypes.Text);
+            .Length(2, 100).WithMessage("MessageTemplateDisplayNameLength").When(x => x.ChannelType != ChannelTypes.WeixinWork && x.TemplateType != (int)WeixinWorkTemplateTypes.Text);
         RuleFor(inputDto => inputDto.Code).Required("MessageTemplateCodeRequired")
             .LetterNumberSymbol().WithMessage("MessageTemplateCodeLetterNumberSymbol")
             .Length(2, 50).WithMessage("MessageTemplateCodeLength");
@@ -17,7 +17,7 @@ public class MessageTemplateUpsertDtoValidator : AbstractValidator<MessageTempla
         RuleFor(inputDto => inputDto.AuditStatus).IsInEnum();
         RuleFor(inputDto => inputDto.PerDayLimit).InclusiveBetween(0, 500).WithMessage("MessageTemplatePerDayLimitBetween");
         RuleFor(inputDto => inputDto.Title).Required("TitleRequired")
-            .Length(2, 50).WithMessage("TitleLength")
+            .Length(2, 100).WithMessage("TitleLength")
             .When(x => x.ChannelType == ChannelTypes.Email || x.ChannelType == ChannelTypes.WebsiteMessage);
         RuleFor(inputDto => inputDto.Content).Required("ContentRequired");
         RuleFor(inputDto => inputDto.JumpUrl).Required("JumpUrlRequired").When(x => x.IsJump);

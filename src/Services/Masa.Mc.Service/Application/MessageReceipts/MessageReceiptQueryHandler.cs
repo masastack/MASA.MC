@@ -39,7 +39,27 @@ public class MessageReceiptQueryHandler
             }
         });
 
-        query.Result = new PaginatedListDto<SmsInboundDto>(resultList.Total, resultList.TotalPages, resultList.Result.Adapt<List<SmsInboundDto>>());
+        var inboundDtos = resultList.Result.Adapt<List<SmsInboundDto>>();
+        if (inboundDtos.Any())
+        {
+            var inboundMessageIds = inboundDtos
+                .Select(x => x.Id.ToString("N"))
+                .ToList();
+            var unsubscribedInboundIds = await _context.UnsubscriptionQueries
+                .Where(x => inboundMessageIds.Contains(x.LastInboundMessageId))
+                .Select(x => x.LastInboundMessageId)
+                .Distinct()
+                .ToListAsync();
+            var unsubscribedInboundIdSet = unsubscribedInboundIds.ToHashSet(StringComparer.OrdinalIgnoreCase);
+            foreach (var item in inboundDtos)
+            {
+                item.InboundType = unsubscribedInboundIdSet.Contains(item.Id.ToString("N"))
+                    ? SmsInboundTypes.Unsubscribe
+                    : SmsInboundTypes.Other;
+            }
+        }
+
+        query.Result = new PaginatedListDto<SmsInboundDto>(resultList.Total, resultList.TotalPages, inboundDtos);
     }
 
     private static Expression<Func<SmsInboundQueryModel, bool>> CreateSmsInboundPredicate(GetSmsInboundInputDto input)

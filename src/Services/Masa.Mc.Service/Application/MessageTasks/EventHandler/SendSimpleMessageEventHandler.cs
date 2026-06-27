@@ -1,6 +1,10 @@
 // Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
+using com.igetui.api.openservice;
+using Masa.Mc.Domain.MessageTemplates.Aggregates;
+using Masa.Mc.Service.Admin.Domain.MessageTemplates.Services;
+
 namespace Masa.Mc.Service.Admin.Application.MessageTasks.EventHandler;
 
 public class SendSimpleMessageEventHandler
@@ -48,7 +52,7 @@ public class SendSimpleMessageEventHandler
             var messageEntityId = eto.MessageData.GetDataValue<Guid>(nameof(MessageTemplate.Id));
             MessageTemplate? messageTemplate = null;
 
-            var messageRecord = new MessageRecord(Guid.Empty, eto.ChannelUserIdentity, channel.Id, Guid.Empty, Guid.Empty, eto.OriginalVariables, eto.MessageData.MessageContent.Title, DateTimeOffset.UtcNow, eto.SystemId);
+            var messageRecord = new MessageRecord(Guid.Empty, eto.ChannelUserIdentity, channel.Id, Guid.Empty, Guid.Empty, eto.Variables, eto.MessageData.MessageContent.Title, DateTimeOffset.UtcNow, eto.SystemId);
             messageRecord.SetMessageEntity(eto.MessageData.MessageType, messageEntityId);
             messageRecord.SetDataValue(nameof(MessageTemplate.Sign), sign);
             messageRecord.SetDataValue(nameof(MessageTemplate.TemplateId), templateId);
@@ -56,7 +60,7 @@ public class SendSimpleMessageEventHandler
 
             if (eto.MessageData.MessageType == MessageEntityTypes.Template)
             {
-                messageTemplate = await _messageTemplateRepository.FindAsync(x => x.Id == messageEntityId, false);
+                messageTemplate = await _messageTemplateRepository.FindAsync(x => x.Id == messageEntityId);
                 if (messageTemplate?.GetUnsubscribeConfig().Enabled == true &&
                     await _channelUnsubscriptionDomainService.IsSmsTemplateUnsubscribedAsync(channel.Id, eto.ChannelUserIdentity, messageEntityId))
                 {
@@ -74,11 +78,7 @@ public class SendSimpleMessageEventHandler
                 }
             }
 
-            var text = smsSender.SupportsTemplate ? JsonSerializer.Serialize(eto.Variables) : eto.MessageData.MessageContent.Content;
-            if (!smsSender.SupportsTemplate && messageTemplate?.GetUnsubscribeConfig().Enabled == true)
-            {
-                text = messageTemplate.AppendUnsubscribeSuffix(text);
-            }
+            var text = BuildSmsMessageText(eto, smsSender, messageTemplate);
 
             var smsMessage = new SmsMessage(eto.ChannelUserIdentity, text);
             smsMessage.Properties.Add("SignName", sign);
@@ -105,6 +105,27 @@ public class SendSimpleMessageEventHandler
             
             await _messageRecordRepository.AddAsync(messageRecord);
         }
+    }
+
+    private string BuildSmsMessageText(SendSimpleSmsMessageEvent eto, ISmsSender smsSender, MessageTemplate? template)
+    {
+        string text = string.Empty;
+        if (smsSender.SupportsTemplate)
+        {
+            var variables = template is null ? eto.Variables : _messageTemplateDomainService.ConvertVariables(template, eto.Variables);
+            text = JsonSerializer.Serialize(variables);
+        }
+        else
+        {
+            text = eto.MessageData.MessageContent.Content;
+
+            if (template?.GetUnsubscribeConfig().Enabled == true)
+            {
+                text = template.AppendUnsubscribeSuffix(text);
+            }
+        }
+
+        return text;
     }
 
 }

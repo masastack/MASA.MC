@@ -45,7 +45,7 @@ public class SendSmsMessageEventHandler
         var channelId = eto.ChannelId;
         var taskHistory = eto.MessageTaskHistory;
 
-        var messageTemplate = await _templateRepository.FindAsync(x => x.Id == taskHistory.MessageTask.EntityId, false);
+        var messageTemplate = await _templateRepository.FindAsync(x => x.Id == taskHistory.MessageTask.EntityId);
         var messageRecords = new List<MessageRecord>();
 
         foreach (var item in taskHistory.ReceiverUsers)
@@ -82,6 +82,7 @@ public class SendSmsMessageEventHandler
             var unsubscriptionEnabled = eto.MessageTemplate.GetUnsubscribeConfig().Enabled;
             var channelUserIdentitys = eto.MessageRecords.Select(x => x.ChannelUserIdentity).Distinct().ToList();
             var checkChannelUserIdentitys = await _messageTemplateDomainService.CheckSendUpperLimitAsync(eto.MessageTemplate, channelUserIdentitys);
+            var exceededUpperLimitIdentitySet = checkChannelUserIdentitys.ToHashSet();
 
             foreach (var messageRecord in eto.MessageRecords)
             {
@@ -90,13 +91,13 @@ public class SendSmsMessageEventHandler
                         messageRecord.ChannelUserIdentity,
                         templateId))
                 {
-                    messageRecord.SetResult(false, _i18n.T("MessageBlockedByUnsubscription"));
+                    messageRecord.SetResult(false, SmsSendBlockResultHelper.GetUnsubscriptionBlockedMessage(_i18n));
                     continue;
                 }
 
-                if (checkChannelUserIdentitys.Contains(messageRecord.ChannelUserIdentity))
+                if (exceededUpperLimitIdentitySet.Contains(messageRecord.ChannelUserIdentity))
                 {
-                    messageRecord.SetResult(false, _i18n.T("DailySendingLimit"));
+                    messageRecord.SetResult(false, SmsSendBlockResultHelper.GetDailySendingLimitMessage(_i18n));
                     continue;
                 }
 

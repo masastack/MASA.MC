@@ -26,7 +26,7 @@ public class ChannelType : Enumeration
         throw new NotImplementedException();
     }
 
-    public virtual SendSimpleMessageEvent GetSendSimpleMessageEvent(string channelUserIdentity, string channelCode, MessageData messageData, ExtraPropertyDictionary variables, ExtraPropertyDictionary originalVariables, string systemId)
+    public virtual SendSimpleMessageEvent GetSendSimpleMessageEvent(string channelUserIdentity, string channelCode, MessageData messageData, ExtraPropertyDictionary variables, string systemId)
     {
         throw new NotImplementedException();
     }
@@ -52,12 +52,11 @@ public class ChannelType : Enumeration
             return new SendSmsMessageEvent(channelId, messageData, messageTaskHistory);
         }
 
-        public override SendSimpleMessageEvent GetSendSimpleMessageEvent(string channelUserIdentity, string channelCode, MessageData messageData, ExtraPropertyDictionary variables, ExtraPropertyDictionary originalVariables, string systemId)
+        public override SendSimpleMessageEvent GetSendSimpleMessageEvent(string channelUserIdentity, string channelCode, MessageData messageData, ExtraPropertyDictionary variables, string systemId)
         {
             return new SendSimpleSmsMessageEvent(channelUserIdentity, channelCode, messageData)
             {
                 Variables = variables,
-                OriginalVariables = originalVariables,
                 SystemId = systemId
             };
         }

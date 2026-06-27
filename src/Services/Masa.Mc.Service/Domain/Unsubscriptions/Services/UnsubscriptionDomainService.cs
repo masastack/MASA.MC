@@ -41,7 +41,8 @@ public class UnsubscriptionDomainService : DomainService
                 channelUserIdentity,
                 channelId,
                 channelProvider,
-                templateId,
+                UnsubscriptionScopeTypes.Template,
+                templateId.ToString("N"),
                 keyword,
                 occurredAt,
                 inboundMessageId,
@@ -70,12 +71,44 @@ public class UnsubscriptionDomainService : DomainService
         return SmsInboundKeywordAction.None;
     }
 
+    public async Task<bool> HandleSmsInboundProviderReservedUnsubscribeAsync(
+        Guid userId,
+        string channelUserIdentity,
+        Guid channelId,
+        int channelProvider,
+        string keyword,
+        DateTimeOffset occurredAt,
+        string inboundMessageId,
+        Guid? matchedMessageRecordId,
+        string matchedMessageSnapshot,
+        DateTimeOffset? matchedMessageSentAt,
+        CancellationToken cancellationToken = default)
+    {
+        return await HandleInboundUnsubscribeAsync(
+            userId,
+            channelUserIdentity,
+            channelId,
+            channelProvider,
+            UnsubscriptionScopeTypes.Channel,
+            string.Empty,
+            keyword,
+            occurredAt,
+            inboundMessageId,
+            matchedMessageRecordId,
+            matchedMessageSnapshot,
+            matchedMessageSentAt,
+            debounceEnabled: false,
+            cooldownSeconds: 0,
+            cancellationToken);
+    }
+
     private async Task<bool> HandleInboundUnsubscribeAsync(
         Guid userId,
         string channelUserIdentity,
         Guid channelId,
         int channelProvider,
-        Guid templateId,
+        UnsubscriptionScopeTypes scopeType,
+        string scopeRefId,
         string keyword,
         DateTimeOffset occurredAt,
         string inboundMessageId,
@@ -86,11 +119,10 @@ public class UnsubscriptionDomainService : DomainService
         int cooldownSeconds,
         CancellationToken cancellationToken = default)
     {
-        var scopeRefId = templateId.ToString("N");
         var active = await _repository.FindActiveAsync(
             channelId,
             channelUserIdentity,
-            UnsubscriptionScopeTypes.Template,
+            scopeType,
             scopeRefId,
             cancellationToken);
 
@@ -101,7 +133,7 @@ public class UnsubscriptionDomainService : DomainService
                 channelUserIdentity,
                 channelId,
                 channelProvider,
-                UnsubscriptionScopeTypes.Template,
+                scopeType,
                 scopeRefId,
                 keyword,
                 LocalizeReason(UnsubscriptionReasonConstants.INBOUND_UNSUBSCRIBE_REASON),
