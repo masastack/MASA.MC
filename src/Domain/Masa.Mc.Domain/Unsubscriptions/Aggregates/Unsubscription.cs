@@ -282,6 +282,7 @@ public class Unsubscription : FullAggregateRoot<Guid, Guid>
         }
 
         var normalizedReason = reason.Trim();
+        Reason = normalizedReason;
         Status = UnsubscriptionStatus.Resubscribed;
         ResubscribedAt = occurredAt;
         var normalizedMessageId = inboundMessageId?.Trim() ?? string.Empty;

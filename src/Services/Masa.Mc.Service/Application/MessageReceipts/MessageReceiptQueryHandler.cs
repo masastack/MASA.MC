@@ -22,7 +22,7 @@ public class MessageReceiptQueryHandler
             input.ChannelId = (await _context.ChannelQueryQueries.FirstOrDefaultAsync(x => x.Code == channelCode))?.Id;
         }
 
-        if (!input.ChannelId.HasValue)
+        if (!input.ChannelId.HasValue && !string.IsNullOrWhiteSpace(input.ChannelCode))
         {
             query.Result = new PaginatedListDto<SmsInboundDto>(0, 0, new List<SmsInboundDto>());
             return;
@@ -64,8 +64,9 @@ public class MessageReceiptQueryHandler
 
     private static Expression<Func<SmsInboundQueryModel, bool>> CreateSmsInboundPredicate(GetSmsInboundInputDto input)
     {
-        Expression<Func<SmsInboundQueryModel, bool>> condition = x => x.ChannelId == input.ChannelId!.Value;
+        Expression<Func<SmsInboundQueryModel, bool>> condition = x => true;
 
+        condition = condition.And(input.ChannelId.HasValue, x => x.ChannelId == input.ChannelId!.Value);
         condition = condition.And(!string.IsNullOrWhiteSpace(input.Mobile), x => x.Mobile == input.Mobile);
         condition = condition.And(!string.IsNullOrWhiteSpace(input.AddSerial), x => x.AddSerial == input.AddSerial);
         condition = condition.And(!string.IsNullOrWhiteSpace(input.SmsContent), x => x.SmsContent.Contains(input.SmsContent));

@@ -92,6 +92,21 @@ public class MessageTemplateUnsubscribeConfig : ValueObject
         };
     }
 
+    public void Apply(MessageTemplateUnsubscribeConfig config)
+    {
+        Check.NotNull(config, nameof(config));
+
+        Enabled = config.Enabled;
+        UnsubscribeKeyword = config.UnsubscribeKeyword;
+        UnsubscribeAutoReply = config.UnsubscribeAutoReply;
+        ResubscribeKeyword = config.ResubscribeKeyword;
+        ResubscribeAutoReply = config.ResubscribeAutoReply;
+        DebounceEnabled = config.DebounceEnabled;
+        CooldownSeconds = config.CooldownSeconds;
+
+        NormalizeAndValidate();
+    }
+
     protected override IEnumerable<object> GetEqualityValues()
     {
         yield return Enabled;

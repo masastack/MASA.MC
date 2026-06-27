@@ -21,7 +21,6 @@ public class UnsubscriptionRepository : Repository<McDbContext, Unsubscription>,
             .Include(x => x.Timelines)
             .Where(x =>
                 x.ChannelId == channelId &&
-                x.ChannelType == ChannelTypes.Sms &&
                 x.ChannelUserIdentity == channelUserIdentity &&
                 x.ScopeType == scopeType &&
                 x.ScopeRefId == scopeRefId &&

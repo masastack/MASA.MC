@@ -235,7 +235,7 @@ public class UnsubscriptionDomainService : DomainService
     }
 
     public async Task AddChannelUserIdentityToBlacklistAsync(
-        Guid operatorId,
+        Guid userId,
         Guid channelId,
         ChannelTypes channelType,
         int channelProvider,
@@ -278,7 +278,7 @@ public class UnsubscriptionDomainService : DomainService
             : reason;
         var aggregate = hasTemplateScope
             ? Unsubscription.CreateManualBlacklist(
-                operatorId,
+                userId,
                 normalizedChannelUserIdentity,
                 channelId,
                 channelType,
@@ -288,7 +288,7 @@ public class UnsubscriptionDomainService : DomainService
                 localizedReason,
                 DateTimeOffset.UtcNow)
             : Unsubscription.CreateChannelManualBlacklist(
-                operatorId,
+                userId,
                 normalizedChannelUserIdentity,
                 channelId,
                 channelType,

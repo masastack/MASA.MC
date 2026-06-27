@@ -7,17 +7,20 @@ public class UnsubscriptionCommandHandler
 {
     private readonly UnsubscriptionDomainService _unsubscriptionDomainService;
     private readonly IUserContext _userContext;
+    private readonly IAuthClient _authClient;
     private readonly IChannelRepository _channelRepository;
     private readonly IMessageTemplateRepository _messageTemplateRepository;
 
     public UnsubscriptionCommandHandler(
         UnsubscriptionDomainService unsubscriptionDomainService,
         IUserContext userContext,
+        IAuthClient authClient,
         IChannelRepository channelRepository,
         IMessageTemplateRepository messageTemplateRepository)
     {
         _unsubscriptionDomainService = unsubscriptionDomainService;
         _userContext = userContext;
+        _authClient = authClient;
         _channelRepository = channelRepository;
         _messageTemplateRepository = messageTemplateRepository;
     }
@@ -29,12 +32,16 @@ public class UnsubscriptionCommandHandler
         var templateId = await ResolveTemplateIdAsync(channel.Id, command.Input.TemplateCode);
 
         var channelType = (ChannelTypes)Enum.Parse(typeof(ChannelTypes), channel.Type.Id.ToString());
+        var (targetUserId, targetChannelUserIdentity) = await ResolveTargetUserAsync(
+            channelType,
+            command.Input.UserId,
+            command.Input.ChannelUserIdentity);
         await _unsubscriptionDomainService.AddChannelUserIdentityToBlacklistAsync(
-            _userContext.GetUserId<Guid>(),
+            targetUserId,
             channel.Id,
             channelType,
             channel.Provider,
-            command.Input.ChannelUserIdentity,
+            targetChannelUserIdentity,
             templateId,
             command.Input.Reason);
     }
@@ -86,5 +93,71 @@ public class UnsubscriptionCommandHandler
         }
 
         return template.Id;
+    }
+
+    private async Task<Guid> ResolveTargetUserIdAsync(ChannelTypes channelType, string channelUserIdentity)
+    {
+        var normalizedChannelUserIdentity = channelUserIdentity?.Trim();
+        if (string.IsNullOrWhiteSpace(normalizedChannelUserIdentity))
+        {
+            throw new UserFriendlyException(errorCode: UnsubscriptionExceptionCodes.CHANNEL_USER_IDENTITY_REQUIRED);
+        }
+
+        if (channelType == ChannelTypes.WebsiteMessage && Guid.TryParse(normalizedChannelUserIdentity, out var websiteUserId))
+        {
+            return websiteUserId;
+        }
+
+        UserModel? user = channelType switch
+        {
+            ChannelTypes.Sms => await _authClient.UserService.GetByPhoneNumberAsync(normalizedChannelUserIdentity),
+            ChannelTypes.Email => await _authClient.UserService.GetByEmailAsync(normalizedChannelUserIdentity),
+            _ => null
+        };
+
+        if (user is not null && user.Id != Guid.Empty)
+        {
+            return user.Id;
+        }
+
+        throw new UserFriendlyException(errorCode: UnsubscriptionExceptionCodes.CHANNEL_USER_IDENTITY_REQUIRED);
+    }
+
+    private async Task<(Guid userId, string channelUserIdentity)> ResolveTargetUserAsync(
+        ChannelTypes channelType,
+        Guid? inputUserId,
+        string inputChannelUserIdentity)
+    {
+        if (inputUserId.HasValue && inputUserId.Value != Guid.Empty)
+        {
+            var users = await _authClient.UserService.GetListByIdsAsync(new[] { inputUserId.Value });
+            var user = users.FirstOrDefault(x => x.Id == inputUserId.Value);
+            if (user is null)
+            {
+                throw new UserFriendlyException(errorCode: UnsubscriptionExceptionCodes.CHANNEL_USER_IDENTITY_REQUIRED);
+            }
+
+            var resolvedChannelUserIdentity = ResolveChannelUserIdentityByUser(channelType, user);
+            if (string.IsNullOrWhiteSpace(resolvedChannelUserIdentity))
+            {
+                throw new UserFriendlyException(errorCode: UnsubscriptionExceptionCodes.CHANNEL_USER_IDENTITY_REQUIRED);
+            }
+
+            return (inputUserId.Value, resolvedChannelUserIdentity.Trim());
+        }
+
+        var targetUserId = await ResolveTargetUserIdAsync(channelType, inputChannelUserIdentity);
+        return (targetUserId, inputChannelUserIdentity.Trim());
+    }
+
+    private static string ResolveChannelUserIdentityByUser(ChannelTypes channelType, UserModel user)
+    {
+        return channelType switch
+        {
+            ChannelTypes.Sms => user.PhoneNumber ?? string.Empty,
+            ChannelTypes.Email => user.Email ?? string.Empty,
+            ChannelTypes.WebsiteMessage => user.Id.ToString(),
+            _ => string.Empty
+        };
     }
 }

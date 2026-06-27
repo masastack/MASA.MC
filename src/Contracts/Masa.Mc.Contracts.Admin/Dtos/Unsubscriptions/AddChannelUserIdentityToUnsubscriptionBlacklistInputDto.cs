@@ -5,6 +5,8 @@ namespace Masa.Mc.Contracts.Admin.Dtos.Unsubscriptions;
 
 public class AddChannelUserIdentityToUnsubscriptionBlacklistInputDto
 {
+    public Guid? UserId { get; set; }
+
     public string ChannelCode { get; set; } = string.Empty;
 
     public string ChannelUserIdentity { get; set; } = string.Empty;

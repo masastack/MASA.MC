@@ -107,7 +107,13 @@ public class MessageTemplate : FullAggregateRoot<Guid, Guid>
             throw new UserFriendlyException(errorCode: MessageTemplateExceptionCodes.VERIFICATION_CODE_TEMPLATE_CANNOT_ENABLE_UNSUBSCRIBE);
         }
 
-        UnsubscribeConfig = config;
+        if (UnsubscribeConfig is null)
+        {
+            UnsubscribeConfig = config;
+            return;
+        }
+
+        UnsubscribeConfig.Apply(config);
     }
 
     public void Remove()
