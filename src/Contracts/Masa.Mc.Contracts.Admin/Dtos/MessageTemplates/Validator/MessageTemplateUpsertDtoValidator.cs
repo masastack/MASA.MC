@@ -31,14 +31,14 @@ public class MessageTemplateUpsertDtoValidator : AbstractValidator<MessageTempla
         RuleFor(inputDto => inputDto.UnsubscribeConfig.UnsubscribeKeyword).Required("UnsubscribeKeywordRequired")
             .Length(1, 20).WithMessage("UnsubscribeKeywordLength")
             .When(x => x.UnsubscribeConfig.Enabled);
-        RuleFor(inputDto => inputDto.UnsubscribeConfig.UnsubscribeAutoReply).Required("UnsubscribeAutoReplyRequired")
-            .Length(1, 500).WithMessage("UnsubscribeAutoReplyLength")
+        RuleFor(inputDto => inputDto.UnsubscribeConfig.UnsubscribeAutoReplyTemplateId).Required("UnsubscribeAutoReplyRequired")
+            .Length(1, 128).WithMessage("UnsubscribeAutoReplyLength")
             .When(x => x.UnsubscribeConfig.Enabled);
         RuleFor(inputDto => inputDto.UnsubscribeConfig.ResubscribeKeyword).Required("ResubscribeKeywordRequired")
             .Length(1, 20).WithMessage("ResubscribeKeywordLength")
             .When(x => x.UnsubscribeConfig.Enabled);
-        RuleFor(inputDto => inputDto.UnsubscribeConfig.ResubscribeAutoReply).Required("ResubscribeAutoReplyRequired")
-            .Length(1, 500).WithMessage("ResubscribeAutoReplyLength")
+        RuleFor(inputDto => inputDto.UnsubscribeConfig.ResubscribeAutoReplyTemplateId).Required("ResubscribeAutoReplyRequired")
+            .Length(1, 128).WithMessage("ResubscribeAutoReplyLength")
             .When(x => x.UnsubscribeConfig.Enabled);
         RuleFor(inputDto => inputDto).Must(inputDto =>
             !inputDto.UnsubscribeConfig.Enabled ||

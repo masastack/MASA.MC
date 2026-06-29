@@ -292,11 +292,13 @@ public class MessageReceiptCommandHandler
             return;
         }
 
+        var autoReplyTemplateId = unsubscribeConfig.GetAutoReplyTemplateId(handledAction);
         await _smsInboundAutoReplyService.TrySendAutoReplyAsync(
             command.ChannelId,
             command.Provider,
             lastTemplateRecord.ChannelUserIdentity,
-            unsubscribeConfig.GetAutoReplyContent(handledAction),
+            lastTemplateRecord.UserId,
+            autoReplyTemplateId,
             cancellationToken);
     }
 

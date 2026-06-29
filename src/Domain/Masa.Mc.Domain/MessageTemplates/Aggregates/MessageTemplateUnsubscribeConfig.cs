@@ -12,11 +12,11 @@ public class MessageTemplateUnsubscribeConfig : ValueObject
 
     public string UnsubscribeKeyword { get; protected set; } = string.Empty;
 
-    public string UnsubscribeAutoReply { get; protected set; } = string.Empty;
+    public string UnsubscribeAutoReplyTemplateId { get; protected set; } = string.Empty;
 
     public string ResubscribeKeyword { get; protected set; } = string.Empty;
 
-    public string ResubscribeAutoReply { get; protected set; } = string.Empty;
+    public string ResubscribeAutoReplyTemplateId { get; protected set; } = string.Empty;
 
     public bool DebounceEnabled { get; protected set; }
 
@@ -29,17 +29,17 @@ public class MessageTemplateUnsubscribeConfig : ValueObject
     public MessageTemplateUnsubscribeConfig(
         bool enabled,
         string unsubscribeKeyword,
-        string unsubscribeAutoReply,
+        string unsubscribeAutoReplyTemplateId,
         string resubscribeKeyword,
-        string resubscribeAutoReply,
+        string resubscribeAutoReplyTemplateId,
         bool debounceEnabled,
         int cooldownSeconds)
     {
         Enabled = enabled;
         UnsubscribeKeyword = (unsubscribeKeyword ?? string.Empty).Trim();
-        UnsubscribeAutoReply = (unsubscribeAutoReply ?? string.Empty).Trim();
+        UnsubscribeAutoReplyTemplateId = (unsubscribeAutoReplyTemplateId ?? string.Empty).Trim();
         ResubscribeKeyword = (resubscribeKeyword ?? string.Empty).Trim();
-        ResubscribeAutoReply = (resubscribeAutoReply ?? string.Empty).Trim();
+        ResubscribeAutoReplyTemplateId = (resubscribeAutoReplyTemplateId ?? string.Empty).Trim();
         DebounceEnabled = debounceEnabled;
         CooldownSeconds = cooldownSeconds;
 
@@ -82,12 +82,12 @@ public class MessageTemplateUnsubscribeConfig : ValueObject
         return SmsInboundKeywordAction.None;
     }
 
-    public string GetAutoReplyContent(SmsInboundKeywordAction action)
+    public string GetAutoReplyTemplateId(SmsInboundKeywordAction action)
     {
         return action switch
         {
-            SmsInboundKeywordAction.Unsubscribe => UnsubscribeAutoReply,
-            SmsInboundKeywordAction.Resubscribe => ResubscribeAutoReply,
+            SmsInboundKeywordAction.Unsubscribe => UnsubscribeAutoReplyTemplateId,
+            SmsInboundKeywordAction.Resubscribe => ResubscribeAutoReplyTemplateId,
             _ => string.Empty
         };
     }
@@ -98,9 +98,9 @@ public class MessageTemplateUnsubscribeConfig : ValueObject
 
         Enabled = config.Enabled;
         UnsubscribeKeyword = config.UnsubscribeKeyword;
-        UnsubscribeAutoReply = config.UnsubscribeAutoReply;
+        UnsubscribeAutoReplyTemplateId = config.UnsubscribeAutoReplyTemplateId;
         ResubscribeKeyword = config.ResubscribeKeyword;
-        ResubscribeAutoReply = config.ResubscribeAutoReply;
+        ResubscribeAutoReplyTemplateId = config.ResubscribeAutoReplyTemplateId;
         DebounceEnabled = config.DebounceEnabled;
         CooldownSeconds = config.CooldownSeconds;
 
@@ -111,9 +111,9 @@ public class MessageTemplateUnsubscribeConfig : ValueObject
     {
         yield return Enabled;
         yield return UnsubscribeKeyword;
-        yield return UnsubscribeAutoReply;
+        yield return UnsubscribeAutoReplyTemplateId;
         yield return ResubscribeKeyword;
-        yield return ResubscribeAutoReply;
+        yield return ResubscribeAutoReplyTemplateId;
         yield return DebounceEnabled;
         yield return CooldownSeconds;
     }
@@ -125,9 +125,9 @@ public class MessageTemplateUnsubscribeConfig : ValueObject
             DebounceEnabled = false;
             CooldownSeconds = 0;
             UnsubscribeKeyword = string.Empty;
-            UnsubscribeAutoReply = string.Empty;
+            UnsubscribeAutoReplyTemplateId = string.Empty;
             ResubscribeKeyword = string.Empty;
-            ResubscribeAutoReply = string.Empty;
+            ResubscribeAutoReplyTemplateId = string.Empty;
             return;
         }
 
