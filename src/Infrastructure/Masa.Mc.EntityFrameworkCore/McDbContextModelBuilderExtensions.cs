@@ -198,10 +198,10 @@ public static class McDbContextModelBuilderExtensions
             b.Property(x => x.SmsContent).IsRequired().HasMaxLength(1000);
             b.Property(x => x.AddSerial).HasMaxLength(64);
             b.Property(x => x.Provider).IsRequired();
-            b.HasIndex(x => x.ChannelId);
-            b.HasIndex(x => x.Mobile);
             b.HasIndex(x => x.SendTime);
             b.HasIndex(x => x.Provider);
+            b.HasIndex(x => new { x.ChannelId, x.SendTime });
+            b.HasIndex(x => new { x.Mobile, x.SendTime });
         });
 
         builder.Entity<Unsubscription>(b =>
@@ -214,10 +214,11 @@ public static class McDbContextModelBuilderExtensions
             b.Property(x => x.LastInboundMessageId).HasMaxLength(128);
 
             b.HasIndex(x => x.UserId);
-            b.HasIndex(x => x.ChannelId);
-            b.HasIndex(x => x.ChannelType);
-            b.HasIndex(x => x.Status);
-            b.HasIndex(x => new { x.ChannelId, x.ChannelUserIdentity, x.ScopeType, x.ScopeRefId, x.Status });
+            b.HasIndex(x => new { x.ChannelType, x.ChannelProvider, x.UnsubscribedAt });
+            b.HasIndex(x => new { x.ChannelId, x.ChannelUserIdentity, x.ScopeType, x.ScopeRefId, x.Status, x.UnsubscribedAt });
+            b.HasIndex(x => new { x.ChannelId, x.ChannelUserIdentity, x.Status, x.UnsubscribedAt });
+            b.HasIndex(x => new { x.ChannelUserIdentity, x.Status, x.ScopeType });
+            b.HasIndex(x => x.LastInboundMessageId);
 
             b.HasMany(x => x.Timelines).WithOne().HasForeignKey(x => x.UnsubscriptionId).IsRequired();
         });
@@ -225,10 +226,9 @@ public static class McDbContextModelBuilderExtensions
         builder.Entity<UnsubscriptionTimeline>(b =>
         {
             b.ToTable(MCConsts.DbTablePrefix + "UnsubscriptionTimelines", MCConsts.DbSchema);
-            b.Property(x => x.UnsubscriptionId).HasColumnName("UnsubscriptionId");
             b.Property(x => x.Detail).HasMaxLength(1000);
-            b.HasIndex(x => x.UnsubscriptionId);
-            b.HasIndex(x => x.OccurredAt);
+            b.HasIndex(x => new { x.UnsubscriptionId, x.OccurredAt });
+            b.HasIndex(x => new { x.OccurredAt, x.Action, x.UnsubscriptionId });
         });
     }
 }

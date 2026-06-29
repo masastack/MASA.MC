@@ -29,8 +29,6 @@ public class UnsubscriptionDomainService : DomainService
         string inboundMessageId,
         string matchedMessageSnapshot,
         DateTimeOffset? matchedMessageSentAt,
-        bool debounceEnabled,
-        int cooldownSeconds,
         CancellationToken cancellationToken = default)
     {
         if (action == SmsInboundKeywordAction.Unsubscribe)
@@ -47,8 +45,6 @@ public class UnsubscriptionDomainService : DomainService
                 inboundMessageId,
                 matchedMessageSnapshot,
                 matchedMessageSentAt,
-                debounceEnabled,
-                cooldownSeconds,
                 cancellationToken);
             return handled ? SmsInboundKeywordAction.Unsubscribe : SmsInboundKeywordAction.None;
         }
@@ -93,8 +89,6 @@ public class UnsubscriptionDomainService : DomainService
             inboundMessageId,
             matchedMessageSnapshot,
             matchedMessageSentAt,
-            debounceEnabled: false,
-            cooldownSeconds: 0,
             cancellationToken);
     }
 
@@ -110,8 +104,6 @@ public class UnsubscriptionDomainService : DomainService
         string inboundMessageId,
         string matchedMessageSnapshot,
         DateTimeOffset? matchedMessageSentAt,
-        bool debounceEnabled,
-        int cooldownSeconds,
         CancellationToken cancellationToken = default)
     {
         var active = await _repository.FindActiveAsync(
@@ -151,9 +143,7 @@ public class UnsubscriptionDomainService : DomainService
             inboundMessageId,
             BuildInboundTimelineDetail(keyword, UnsubscriptionReasonConstants.INBOUND_UNSUBSCRIBE_REASON),
             BuildOutboundTimelineDetail(matchedMessageSnapshot),
-            matchedMessageSentAt,
-            debounceEnabled,
-            cooldownSeconds);
+            matchedMessageSentAt);
         if (!changed)
         {
             return false;

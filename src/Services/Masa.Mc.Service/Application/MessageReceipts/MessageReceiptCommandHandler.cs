@@ -286,8 +286,6 @@ public class MessageReceiptCommandHandler
             inboundEntity.Id.ToString("N"),
             matchedMessageSnapshot,
             lastTemplateRecord.SendTime,
-            unsubscribeConfig.DebounceEnabled,
-            unsubscribeConfig.CooldownSeconds,
             cancellationToken);
         if (handledAction == SmsInboundKeywordAction.None)
         {

@@ -36,9 +36,6 @@ public class MessageTemplateUpsertDtoValidator : AbstractValidator<MessageTempla
         RuleFor(inputDto => inputDto.UnsubscribeConfig.ResubscribeAutoReply).Required("ResubscribeAutoReplyRequired")
             .Length(1, 500).WithMessage("ResubscribeAutoReplyLength")
             .When(x => x.UnsubscribeConfig.Enabled);
-        RuleFor(inputDto => inputDto.UnsubscribeConfig.CooldownSeconds)
-            .GreaterThan(0).WithMessage("UnsubscribeCooldownSecondsRequired")
-            .When(x => x.UnsubscribeConfig.Enabled && x.UnsubscribeConfig.DebounceEnabled);
         RuleFor(inputDto => inputDto).Must(inputDto =>
             !inputDto.UnsubscribeConfig.Enabled ||
             !string.Equals(inputDto.UnsubscribeConfig.UnsubscribeKeyword?.Trim(), inputDto.UnsubscribeConfig.ResubscribeKeyword?.Trim(), StringComparison.OrdinalIgnoreCase))

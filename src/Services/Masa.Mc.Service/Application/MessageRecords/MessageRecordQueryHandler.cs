@@ -139,6 +139,77 @@ public class MessageRecordQueryHandler
         query.Result = new PaginatedListDto<SmsRecordDto>(resultList.Total, resultList.TotalPages, items);
     }
 
+    [EventHandler]
+    public async Task GetSmsInteractionHistoryAsync(GetSmsInteractionHistoryQuery query)
+    {
+        var mobile = query.Mobile?.Trim();
+        if (string.IsNullOrWhiteSpace(mobile) || query.ChannelId == Guid.Empty)
+        {
+            query.Result = new();
+            return;
+        }
+
+        using var dataFilter = _dataFilter.Disable<ISoftDelete>();
+
+        var startTime = DateTimeOffset.UtcNow.AddMonths(-1);
+        var outboundRecords = await _context.MessageRecordQueries
+            .AsNoTracking()
+            .Where(CreateSmsOutboundRecordPredicate(mobile, query.ChannelId))
+            .Where(x => x.SendTime.HasValue && x.SendTime.Value >= startTime)
+            .Select(x => new
+            {
+                x.SendTime,
+                x.MessageEntityId,
+                x.Variables,
+                x.DisplayName
+            })
+            .ToListAsync();
+
+        var templateIds = outboundRecords
+            .Select(x => x.MessageEntityId)
+            .Distinct()
+            .ToList();
+        var templateContents = templateIds.Any()
+            ? await _context.MessageTemplateQueries
+                .AsNoTracking()
+                .Where(x => templateIds.Contains(x.Id))
+                .ToDictionaryAsync(x => x.Id, x => x.Content)
+            : new Dictionary<Guid, string>();
+
+        var outboundItems = outboundRecords
+            .Where(x => x.SendTime.HasValue)
+            .Select(x => new SmsInteractionHistoryDto
+            {
+                SendTime = x.SendTime!.Value,
+                Content = ResolveSmsContent(
+                    x.MessageEntityId,
+                    x.Variables,
+                    x.DisplayName,
+                    templateContents),
+                IsInbound = false
+            })
+            .ToList();
+
+        var inboundQuery = _context.SmsInboundQueries
+            .AsNoTracking()
+            .Where(x => x.Mobile == mobile && x.ChannelId == query.ChannelId && x.SendTime >= startTime);
+
+        var inboundItems = await inboundQuery
+            .Select(x => new SmsInteractionHistoryDto
+            {
+                SendTime = x.SendTime,
+                Content = x.SmsContent,
+                IsInbound = true
+            })
+            .ToListAsync();
+
+        query.Result = inboundItems
+            .Concat(outboundItems)
+            .Where(x => !string.IsNullOrWhiteSpace(x.Content))
+            .OrderByDescending(x => x.SendTime)
+            .ToList();
+    }
+
     private static Expression<Func<MessageRecordQueryModel, bool>> CreateSmsOutboundRecordPredicate(
         string mobile,
         Guid? channelId)

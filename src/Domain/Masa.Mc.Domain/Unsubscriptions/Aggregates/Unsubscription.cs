@@ -182,9 +182,7 @@ public class Unsubscription : FullAggregateRoot<Guid, Guid>
         string inboundMessageId,
         string timelineDetail,
         string outboundMessageDetail,
-        DateTimeOffset? outboundMessageSentAt,
-        bool debounceEnabled,
-        int cooldownSeconds)
+        DateTimeOffset? outboundMessageSentAt)
     {
         if (Status != UnsubscriptionStatus.Unsubscribed)
         {
@@ -193,11 +191,6 @@ public class Unsubscription : FullAggregateRoot<Guid, Guid>
 
         var normalizedMessageId = inboundMessageId?.Trim() ?? string.Empty;
         if (IsInboundMessageDuplicated(normalizedMessageId))
-        {
-            return false;
-        }
-
-        if (IsInInboundDebounceWindow(occurredAt, debounceEnabled, cooldownSeconds))
         {
             return false;
         }
@@ -301,26 +294,6 @@ public class Unsubscription : FullAggregateRoot<Guid, Guid>
     {
         return !string.IsNullOrEmpty(inboundMessageId) &&
                string.Equals(LastInboundMessageId, inboundMessageId, StringComparison.Ordinal);
-    }
-
-    private bool IsInInboundDebounceWindow(DateTimeOffset occurredAt, bool debounceEnabled, int cooldownSeconds)
-    {
-        if (!debounceEnabled || cooldownSeconds <= 0)
-        {
-            return false;
-        }
-
-        var lastInboundUnsubscribeOccurredAt = Timelines
-            .Where(x => x.Action == UnsubscriptionTimelineActions.InboundUnsubscribed)
-            .OrderByDescending(x => x.OccurredAt)
-            .Select(x => x.OccurredAt)
-            .FirstOrDefault();
-        if (lastInboundUnsubscribeOccurredAt == default)
-        {
-            return false;
-        }
-
-        return occurredAt < lastInboundUnsubscribeOccurredAt.AddSeconds(cooldownSeconds);
     }
 
     private void ValidateInvariant()

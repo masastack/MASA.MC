@@ -245,7 +245,8 @@ public class UnsubscriptionQueryHandler
                 item.UserDisplayName = userDisplayName;
             }
 
-            if (users.TryGetValue(item.Modifier, out var modifierName))
+            var operatorUserId = item.Modifier != Guid.Empty ? item.Modifier : item.UserId;
+            if (operatorUserId != Guid.Empty && users.TryGetValue(operatorUserId, out var modifierName))
             {
                 item.ModifierName = modifierName;
             }

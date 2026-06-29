@@ -48,4 +48,15 @@ public class MessageRecordService : ServiceBase
         await eventBus.PublishAsync(query);
         return query.Result;
     }
+
+    [RoutePattern("sms-interaction-history", StartWithBaseUri = true, HttpMethod = "Get")]
+    public async Task<List<SmsInteractionHistoryDto>> GetSmsInteractionHistoryAsync(
+        IEventBus eventBus,
+        [FromQuery] string mobile,
+        [FromQuery] Guid channelId)
+    {
+        var query = new GetSmsInteractionHistoryQuery(mobile, channelId);
+        await eventBus.PublishAsync(query);
+        return query.Result;
+    }
 }

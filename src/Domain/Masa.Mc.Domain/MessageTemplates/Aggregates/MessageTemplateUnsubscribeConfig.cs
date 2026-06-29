@@ -146,11 +146,6 @@ public class MessageTemplateUnsubscribeConfig : ValueObject
             throw new UserFriendlyException(errorCode: MessageTemplateExceptionCodes.UNSUBSCRIBE_KEYWORDS_MUST_BE_DIFFERENT);
         }
 
-        if (DebounceEnabled && CooldownSeconds <= 0)
-        {
-            throw new UserFriendlyException(errorCode: MessageTemplateExceptionCodes.UNSUBSCRIBE_COOLDOWN_SECONDS_REQUIRED);
-        }
-
         if (!DebounceEnabled)
         {
             CooldownSeconds = 0;
