@@ -47,27 +47,34 @@ public class SmsInboundAutoReplyService : ITransientDependency
             return;
         }
 
-        var smsTemplate = await _smsTemplateRepository.FindAsync(
-            x => x.ChannelId == channelId && x.TemplateCode == autoReplyTemplateId,
-            cancellationToken);
-        if (smsTemplate is null || string.IsNullOrWhiteSpace(smsTemplate.TemplateContent))
-        {
-            return;
-        }
-
         var messageTemplate = await _messageTemplateRepository.FindAsync(
-            x => x.ChannelId == channelId && x.TemplateId == autoReplyTemplateId,
+            x => x.ChannelId == channelId && (x.Code == autoReplyTemplateId || x.TemplateId == autoReplyTemplateId),
             cancellationToken: cancellationToken);
+
+        var smsTemplate = default(SmsTemplate);
+        var autoReplyContent = messageTemplate?.MessageContent?.Content?.Trim();
+        if (string.IsNullOrWhiteSpace(autoReplyContent))
+        {
+            smsTemplate = await _smsTemplateRepository.FindAsync(
+                x => x.ChannelId == channelId && x.TemplateCode == autoReplyTemplateId,
+                cancellationToken);
+            if (smsTemplate is null || string.IsNullOrWhiteSpace(smsTemplate.TemplateContent))
+            {
+                return;
+            }
+
+            autoReplyContent = smsTemplate.TemplateContent.Trim();
+        }
 
         var request = new SmsInboundAutoReplySendRequest(
             channelId,
             provider,
             channelUserIdentity,
             userId,
-            messageTemplate?.Id ?? smsTemplate.Id,
-            smsTemplate.TemplateCode ?? string.Empty,
-            messageTemplate?.DisplayName ?? smsTemplate.TemplateName ?? string.Empty,
-            smsTemplate.TemplateContent.Trim());
+            messageTemplate?.Id ?? smsTemplate?.Id ?? Guid.Empty,
+            messageTemplate?.TemplateId ?? smsTemplate?.TemplateCode ?? autoReplyTemplateId,
+            messageTemplate?.DisplayName ?? smsTemplate?.TemplateName ?? string.Empty,
+            autoReplyContent);
 
         await TrySendAutoReplyInternalAsync(request, messageTemplate, cancellationToken);
     }
