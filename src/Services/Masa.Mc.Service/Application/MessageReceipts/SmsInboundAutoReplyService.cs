@@ -7,21 +7,30 @@ public class SmsInboundAutoReplyService : ITransientDependency
 {
     private readonly IChannelRepository _channelRepository;
     private readonly ISmsTemplateRepository _smsTemplateRepository;
+    private readonly IMessageTemplateRepository _messageTemplateRepository;
     private readonly IMessageRecordRepository _messageRecordRepository;
+    private readonly MessageTemplateDomainService _messageTemplateDomainService;
     private readonly SmsSenderFactory _smsSenderFactory;
+    private readonly II18n<DefaultResource> _i18n;
     private readonly ILogger<SmsInboundAutoReplyService> _logger;
 
     public SmsInboundAutoReplyService(
         IChannelRepository channelRepository,
         ISmsTemplateRepository smsTemplateRepository,
+        IMessageTemplateRepository messageTemplateRepository,
         IMessageRecordRepository messageRecordRepository,
+        MessageTemplateDomainService messageTemplateDomainService,
         SmsSenderFactory smsSenderFactory,
+        II18n<DefaultResource> i18n,
         ILogger<SmsInboundAutoReplyService> logger)
     {
         _channelRepository = channelRepository;
         _smsTemplateRepository = smsTemplateRepository;
+        _messageTemplateRepository = messageTemplateRepository;
         _messageRecordRepository = messageRecordRepository;
+        _messageTemplateDomainService = messageTemplateDomainService;
         _smsSenderFactory = smsSenderFactory;
+        _i18n = i18n;
         _logger = logger;
     }
 
@@ -46,21 +55,26 @@ public class SmsInboundAutoReplyService : ITransientDependency
             return;
         }
 
+        var messageTemplate = await _messageTemplateRepository.FindAsync(
+            x => x.ChannelId == channelId && x.TemplateId == autoReplyTemplateId,
+            cancellationToken: cancellationToken);
+
         var request = new SmsInboundAutoReplySendRequest(
             channelId,
             provider,
             channelUserIdentity,
             userId,
-            smsTemplate.Id,
+            messageTemplate?.Id ?? smsTemplate.Id,
             smsTemplate.TemplateCode ?? string.Empty,
-            smsTemplate.TemplateName ?? string.Empty,
+            messageTemplate?.DisplayName ?? smsTemplate.TemplateName ?? string.Empty,
             smsTemplate.TemplateContent.Trim());
 
-        await TrySendAutoReplyInternalAsync(request, cancellationToken);
+        await TrySendAutoReplyInternalAsync(request, messageTemplate, cancellationToken);
     }
 
     private async Task TrySendAutoReplyInternalAsync(
         SmsInboundAutoReplySendRequest request,
+        MessageTemplate? messageTemplate,
         CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(request);
@@ -68,14 +82,19 @@ public class SmsInboundAutoReplyService : ITransientDependency
         var channelId = request.ChannelId;
         var provider = request.Provider;
         var channelUserIdentity = request.ChannelUserIdentity;
-        var userId = request.UserId;
-        var autoReplyTemplateEntityId = request.AutoReplyTemplateEntityId;
-        var autoReplyTemplateId = request.AutoReplyTemplateId;
-        var autoReplyTemplateName = request.AutoReplyTemplateName;
         var autoReplyContent = request.AutoReplyContent;
 
         if (string.IsNullOrWhiteSpace(autoReplyContent) || string.IsNullOrWhiteSpace(channelUserIdentity))
         {
+            return;
+        }
+
+        var messageRecord = CreateMessageRecord(request);
+        if (messageTemplate != null &&
+            !await _messageTemplateDomainService.CheckSendUpperLimitAsync(messageTemplate, channelUserIdentity))
+        {
+            messageRecord.SetResult(false, _i18n.T("DailySendingLimit"), DateTimeOffset.UtcNow, string.Empty);
+            await _messageRecordRepository.AddAsync(messageRecord);
             return;
         }
 
@@ -85,19 +104,6 @@ public class SmsInboundAutoReplyService : ITransientDependency
         {
             return;
         }
-
-        var messageRecord = new MessageRecord(
-            userId,
-            channelUserIdentity,
-            channelId,
-            Guid.Empty,
-            Guid.Empty,
-            new ExtraPropertyDictionary(),
-            autoReplyTemplateName ?? string.Empty,
-            DateTimeOffset.UtcNow,
-            string.Empty);
-        messageRecord.SetMessageEntity(MessageEntityTypes.Template, autoReplyTemplateEntityId);
-        messageRecord.SetDataValue(nameof(MessageTemplate.TemplateId), autoReplyTemplateId ?? string.Empty);
 
         var smsProvider = (SmsProviders)provider;
         var options = _smsSenderFactory.GetOptions(smsProvider, channel.ExtraProperties);
@@ -134,5 +140,22 @@ public class SmsInboundAutoReplyService : ITransientDependency
         }
 
         await _messageRecordRepository.AddAsync(messageRecord);
+    }
+
+    private static MessageRecord CreateMessageRecord(SmsInboundAutoReplySendRequest request)
+    {
+        var messageRecord = new MessageRecord(
+            request.UserId,
+            request.ChannelUserIdentity,
+            request.ChannelId,
+            Guid.Empty,
+            Guid.Empty,
+            new ExtraPropertyDictionary(),
+            request.AutoReplyTemplateName ?? string.Empty,
+            DateTimeOffset.UtcNow,
+            string.Empty);
+        messageRecord.SetMessageEntity(MessageEntityTypes.Template, request.AutoReplyTemplateEntityId);
+        messageRecord.SetDataValue(nameof(MessageTemplate.TemplateId), request.AutoReplyTemplateId ?? string.Empty);
+        return messageRecord;
     }
 }
