@@ -9,6 +9,8 @@ public enum SmsTemplateTypes
     Notification = 2,
     Promotion = 3,
     International = 4,
-    Digital=5,
+    Digital = 5,
+    Unsubscribe = 101,
+    Resubscribe = 102,
     Other = 99
 }

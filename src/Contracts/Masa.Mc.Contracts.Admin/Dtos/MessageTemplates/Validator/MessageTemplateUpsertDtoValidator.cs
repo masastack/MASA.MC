@@ -14,6 +14,10 @@ public class MessageTemplateUpsertDtoValidator : AbstractValidator<MessageTempla
             .Length(2, 50).WithMessage("MessageTemplateCodeLength");
         RuleFor(inputDto => inputDto.ChannelId).Required("ChannelIdRequired");
         RuleFor(inputDto => inputDto.Status).IsInEnum().WithMessage("MessageTemplateStatusRequired");
+        RuleFor(inputDto => inputDto.TemplateType)
+            .Must(templateType => System.Enum.IsDefined(typeof(SmsTemplateTypes), templateType))
+            .When(inputDto => inputDto.ChannelType == ChannelTypes.Sms)
+            .WithMessage("MessageTemplateTemplateTypeRequired");
         RuleFor(inputDto => inputDto.AuditStatus).IsInEnum();
         RuleFor(inputDto => inputDto.PerDayLimit).InclusiveBetween(0, 500).WithMessage("MessageTemplatePerDayLimitBetween");
         RuleFor(inputDto => inputDto.Title).Required("TitleRequired")
