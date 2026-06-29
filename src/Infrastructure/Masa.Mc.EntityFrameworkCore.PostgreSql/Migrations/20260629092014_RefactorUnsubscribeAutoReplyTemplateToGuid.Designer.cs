@@ -3,6 +3,7 @@ using System;
 using Masa.Mc.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Masa.Mc.EntityFrameworkCore.PostgreSql.Migrations
 {
     [DbContext(typeof(McDbContext))]
-    partial class McDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260629092014_RefactorUnsubscribeAutoReplyTemplateToGuid")]
+    partial class RefactorUnsubscribeAutoReplyTemplateToGuid
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1266,13 +1268,25 @@ namespace Masa.Mc.EntityFrameworkCore.PostgreSql.Migrations
                             b1.Property<Guid>("MessageTemplateId")
                                 .HasColumnType("uuid");
 
+                            b1.Property<int>("CooldownSeconds")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("integer")
+                                .HasDefaultValue(0)
+                                .HasColumnName("CooldownSeconds");
+
+                            b1.Property<bool>("DebounceEnabled")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("boolean")
+                                .HasDefaultValue(false)
+                                .HasColumnName("DebounceEnabled");
+
                             b1.Property<bool>("Enabled")
                                 .ValueGeneratedOnAdd()
                                 .HasColumnType("boolean")
                                 .HasDefaultValue(false)
                                 .HasColumnName("Enabled");
 
-                            b1.Property<Guid>("ResubscribeAutoReplyTemplateId")
+                            b1.Property<Guid?>("ResubscribeAutoReplyTemplateId")
                                 .HasColumnType("uuid")
                                 .HasColumnName("ResubscribeAutoReplyTemplateId");
 
@@ -1284,7 +1298,7 @@ namespace Masa.Mc.EntityFrameworkCore.PostgreSql.Migrations
                                 .HasDefaultValue("")
                                 .HasColumnName("ResubscribeKeyword");
 
-                            b1.Property<Guid>("UnsubscribeAutoReplyTemplateId")
+                            b1.Property<Guid?>("UnsubscribeAutoReplyTemplateId")
                                 .HasColumnType("uuid")
                                 .HasColumnName("UnsubscribeAutoReplyTemplateId");
 

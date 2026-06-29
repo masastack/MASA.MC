@@ -6,7 +6,6 @@ namespace Masa.Mc.Service.Admin.Application.MessageReceipts;
 public class SmsInboundAutoReplyService : ITransientDependency
 {
     private readonly IChannelRepository _channelRepository;
-    private readonly ISmsTemplateRepository _smsTemplateRepository;
     private readonly IMessageTemplateRepository _messageTemplateRepository;
     private readonly IMessageRecordRepository _messageRecordRepository;
     private readonly MessageTemplateDomainService _messageTemplateDomainService;
@@ -16,7 +15,6 @@ public class SmsInboundAutoReplyService : ITransientDependency
 
     public SmsInboundAutoReplyService(
         IChannelRepository channelRepository,
-        ISmsTemplateRepository smsTemplateRepository,
         IMessageTemplateRepository messageTemplateRepository,
         IMessageRecordRepository messageRecordRepository,
         MessageTemplateDomainService messageTemplateDomainService,
@@ -25,7 +23,6 @@ public class SmsInboundAutoReplyService : ITransientDependency
         ILogger<SmsInboundAutoReplyService> logger)
     {
         _channelRepository = channelRepository;
-        _smsTemplateRepository = smsTemplateRepository;
         _messageTemplateRepository = messageTemplateRepository;
         _messageRecordRepository = messageRecordRepository;
         _messageTemplateDomainService = messageTemplateDomainService;
@@ -39,31 +36,26 @@ public class SmsInboundAutoReplyService : ITransientDependency
         SmsInboundProviders provider,
         string channelUserIdentity,
         Guid userId,
-        string autoReplyTemplateId,
+        Guid autoReplyTemplateId,
         CancellationToken cancellationToken = default)
     {
-        if (string.IsNullOrWhiteSpace(autoReplyTemplateId))
+        if (autoReplyTemplateId == Guid.Empty)
         {
             return;
         }
 
         var messageTemplate = await _messageTemplateRepository.FindAsync(
-            x => x.ChannelId == channelId && (x.Code == autoReplyTemplateId || x.TemplateId == autoReplyTemplateId),
+            x => x.ChannelId == channelId && x.Id == autoReplyTemplateId,
             cancellationToken: cancellationToken);
+        if (messageTemplate is null)
+        {
+            return;
+        }
 
-        var smsTemplate = default(SmsTemplate);
         var autoReplyContent = messageTemplate?.MessageContent?.Content?.Trim();
         if (string.IsNullOrWhiteSpace(autoReplyContent))
         {
-            smsTemplate = await _smsTemplateRepository.FindAsync(
-                x => x.ChannelId == channelId && x.TemplateCode == autoReplyTemplateId,
-                cancellationToken);
-            if (smsTemplate is null || string.IsNullOrWhiteSpace(smsTemplate.TemplateContent))
-            {
-                return;
-            }
-
-            autoReplyContent = smsTemplate.TemplateContent.Trim();
+            return;
         }
 
         var request = new SmsInboundAutoReplySendRequest(
@@ -71,9 +63,9 @@ public class SmsInboundAutoReplyService : ITransientDependency
             provider,
             channelUserIdentity,
             userId,
-            messageTemplate?.Id ?? smsTemplate?.Id ?? Guid.Empty,
-            messageTemplate?.TemplateId ?? smsTemplate?.TemplateCode ?? autoReplyTemplateId,
-            messageTemplate?.DisplayName ?? smsTemplate?.TemplateName ?? string.Empty,
+            messageTemplate.Id,
+            messageTemplate.TemplateId,
+            messageTemplate.DisplayName,
             autoReplyContent);
 
         await TrySendAutoReplyInternalAsync(request, messageTemplate, cancellationToken);

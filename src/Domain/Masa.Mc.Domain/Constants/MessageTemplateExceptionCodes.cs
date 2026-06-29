@@ -7,7 +7,8 @@ public static class MessageTemplateExceptionCodes
 {
     public const string VERIFICATION_CODE_TEMPLATE_CANNOT_ENABLE_UNSUBSCRIBE = "VerificationCodeTemplateCannotEnableUnsubscribe";
     public const string UNSUBSCRIBE_KEYWORD_REQUIRED = "UnsubscribeKeywordRequired";
+    public const string UNSUBSCRIBE_AUTO_REPLY_REQUIRED = "UnsubscribeAutoReplyRequired";
     public const string RESUBSCRIBE_KEYWORD_REQUIRED = "ResubscribeKeywordRequired";
+    public const string RESUBSCRIBE_AUTO_REPLY_REQUIRED = "ResubscribeAutoReplyRequired";
     public const string UNSUBSCRIBE_KEYWORDS_MUST_BE_DIFFERENT = "UnsubscribeKeywordsMustBeDifferent";
-    public const string UNSUBSCRIBE_COOLDOWN_SECONDS_REQUIRED = "UnsubscribeCooldownSecondsRequired";
 }

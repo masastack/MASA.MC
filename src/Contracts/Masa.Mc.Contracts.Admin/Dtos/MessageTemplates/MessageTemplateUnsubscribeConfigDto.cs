@@ -9,13 +9,9 @@ public class MessageTemplateUnsubscribeConfigDto
 
     public string UnsubscribeKeyword { get; set; } = string.Empty;
 
-    public string UnsubscribeAutoReplyTemplateId { get; set; } = string.Empty;
+    public Guid UnsubscribeAutoReplyTemplateId { get; set; }
 
     public string ResubscribeKeyword { get; set; } = string.Empty;
 
-    public string ResubscribeAutoReplyTemplateId { get; set; } = string.Empty;
-
-    public bool DebounceEnabled { get; set; }
-
-    public int CooldownSeconds { get; set; }
+    public Guid ResubscribeAutoReplyTemplateId { get; set; }
 }

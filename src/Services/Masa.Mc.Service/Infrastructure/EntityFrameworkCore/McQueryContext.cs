@@ -61,11 +61,11 @@ public class McQueryContext : MasaDbContext<McQueryContext>, IMcQueryContext
                 ub.HasKey("MessageTemplateId");
                 ub.Property(x => x.Enabled).HasColumnName(nameof(MessageTemplateUnsubscribeConfigQueryModel.Enabled));
                 ub.Property(x => x.UnsubscribeKeyword).HasColumnName(nameof(MessageTemplateUnsubscribeConfigQueryModel.UnsubscribeKeyword));
-                ub.Property(x => x.UnsubscribeAutoReplyTemplateId).HasColumnName("UnsubscribeAutoReply");
+                ub.Property(x => x.UnsubscribeAutoReplyTemplateId)
+                    .HasColumnName(nameof(MessageTemplateUnsubscribeConfigQueryModel.UnsubscribeAutoReplyTemplateId));
                 ub.Property(x => x.ResubscribeKeyword).HasColumnName(nameof(MessageTemplateUnsubscribeConfigQueryModel.ResubscribeKeyword));
-                ub.Property(x => x.ResubscribeAutoReplyTemplateId).HasColumnName("ResubscribeAutoReply");
-                ub.Property(x => x.DebounceEnabled).HasColumnName(nameof(MessageTemplateUnsubscribeConfigQueryModel.DebounceEnabled));
-                ub.Property(x => x.CooldownSeconds).HasColumnName(nameof(MessageTemplateUnsubscribeConfigQueryModel.CooldownSeconds));
+                ub.Property(x => x.ResubscribeAutoReplyTemplateId)
+                    .HasColumnName(nameof(MessageTemplateUnsubscribeConfigQueryModel.ResubscribeAutoReplyTemplateId));
             });
             b.Navigation(x => x.UnsubscribeConfig).IsRequired(false);
         });
@@ -186,4 +186,5 @@ public class McQueryContext : MasaDbContext<McQueryContext>, IMcQueryContext
             }
         }
     }
+
 }
