@@ -1,10 +1,6 @@
 // Copyright (c) MASA Stack All rights reserved.
 // Licensed under the Apache License. See LICENSE.txt in the project root for license information.
 
-using com.igetui.api.openservice;
-using Masa.Mc.Domain.MessageTemplates.Aggregates;
-using Masa.Mc.Service.Admin.Domain.MessageTemplates.Services;
-
 namespace Masa.Mc.Service.Admin.Application.MessageTasks.EventHandler;
 
 public class SendSimpleMessageEventHandler
