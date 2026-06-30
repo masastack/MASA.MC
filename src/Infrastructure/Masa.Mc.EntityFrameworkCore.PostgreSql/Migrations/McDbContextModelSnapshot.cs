@@ -381,13 +381,13 @@ namespace Masa.Mc.EntityFrameworkCore.PostgreSql.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ChannelId");
-
-                    b.HasIndex("Mobile");
-
                     b.HasIndex("Provider");
 
                     b.HasIndex("SendTime");
+
+                    b.HasIndex("ChannelId", "SendTime");
+
+                    b.HasIndex("Mobile", "SendTime");
 
                     b.ToTable("SmsInbounds", (string)null);
                 });
@@ -957,15 +957,17 @@ namespace Masa.Mc.EntityFrameworkCore.PostgreSql.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ChannelId");
-
-                    b.HasIndex("ChannelType");
-
-                    b.HasIndex("Status");
+                    b.HasIndex("LastInboundMessageId");
 
                     b.HasIndex("UserId");
 
-                    b.HasIndex("ChannelId", "ChannelUserIdentity", "ScopeType", "ScopeRefId", "Status");
+                    b.HasIndex("ChannelType", "ChannelProvider", "UnsubscribedAt");
+
+                    b.HasIndex("ChannelUserIdentity", "Status", "ScopeType");
+
+                    b.HasIndex("ChannelId", "ChannelUserIdentity", "Status", "UnsubscribedAt");
+
+                    b.HasIndex("ChannelId", "ChannelUserIdentity", "ScopeType", "ScopeRefId", "Status", "UnsubscribedAt");
 
                     b.ToTable("Unsubscriptions", (string)null);
                 });
@@ -990,27 +992,6 @@ namespace Masa.Mc.EntityFrameworkCore.PostgreSql.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("character varying(1000)");
 
-                    b.Property<string>("Keyword")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
-
-                    b.Property<Guid?>("MatchedMessageRecordId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTimeOffset?>("MatchedMessageSentAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("MatchedMessageSnapshot")
-                        .IsRequired()
-                        .HasMaxLength(2000)
-                        .HasColumnType("character varying(2000)");
-
-                    b.Property<string>("MessageId")
-                        .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("character varying(128)");
-
                     b.Property<DateTime>("ModificationTime")
                         .HasColumnType("timestamp with time zone");
 
@@ -1020,18 +1001,14 @@ namespace Masa.Mc.EntityFrameworkCore.PostgreSql.Migrations
                     b.Property<DateTimeOffset>("OccurredAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("Source")
-                        .HasColumnType("integer");
-
                     b.Property<Guid>("UnsubscriptionId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("UnsubscriptionId");
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OccurredAt");
+                    b.HasIndex("UnsubscriptionId", "OccurredAt");
 
-                    b.HasIndex("UnsubscriptionId");
+                    b.HasIndex("OccurredAt", "Action", "UnsubscriptionId");
 
                     b.ToTable("UnsubscriptionTimelines", (string)null);
                 });
@@ -1289,31 +1266,15 @@ namespace Masa.Mc.EntityFrameworkCore.PostgreSql.Migrations
                             b1.Property<Guid>("MessageTemplateId")
                                 .HasColumnType("uuid");
 
-                            b1.Property<int>("CooldownSeconds")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("integer")
-                                .HasDefaultValue(0)
-                                .HasColumnName("CooldownSeconds");
-
-                            b1.Property<bool>("DebounceEnabled")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("boolean")
-                                .HasDefaultValue(false)
-                                .HasColumnName("DebounceEnabled");
-
                             b1.Property<bool>("Enabled")
                                 .ValueGeneratedOnAdd()
                                 .HasColumnType("boolean")
                                 .HasDefaultValue(false)
                                 .HasColumnName("Enabled");
 
-                            b1.Property<string>("ResubscribeAutoReply")
-                                .IsRequired()
-                                .ValueGeneratedOnAdd()
-                                .HasMaxLength(500)
-                                .HasColumnType("character varying(500)")
-                                .HasDefaultValue("")
-                                .HasColumnName("ResubscribeAutoReply");
+                            b1.Property<Guid>("ResubscribeAutoReplyTemplateId")
+                                .HasColumnType("uuid")
+                                .HasColumnName("ResubscribeAutoReplyTemplateId");
 
                             b1.Property<string>("ResubscribeKeyword")
                                 .IsRequired()
@@ -1323,13 +1284,9 @@ namespace Masa.Mc.EntityFrameworkCore.PostgreSql.Migrations
                                 .HasDefaultValue("")
                                 .HasColumnName("ResubscribeKeyword");
 
-                            b1.Property<string>("UnsubscribeAutoReply")
-                                .IsRequired()
-                                .ValueGeneratedOnAdd()
-                                .HasMaxLength(500)
-                                .HasColumnType("character varying(500)")
-                                .HasDefaultValue("")
-                                .HasColumnName("UnsubscribeAutoReply");
+                            b1.Property<Guid>("UnsubscribeAutoReplyTemplateId")
+                                .HasColumnType("uuid")
+                                .HasColumnName("UnsubscribeAutoReplyTemplateId");
 
                             b1.Property<string>("UnsubscribeKeyword")
                                 .IsRequired()
@@ -1350,8 +1307,7 @@ namespace Masa.Mc.EntityFrameworkCore.PostgreSql.Migrations
                     b.Navigation("MessageContent")
                         .IsRequired();
 
-                    b.Navigation("UnsubscribeConfig")
-                        .IsRequired();
+                    b.Navigation("UnsubscribeConfig");
                 });
 
             modelBuilder.Entity("Masa.Mc.Domain.MessageTemplates.Aggregates.MessageTemplateItem", b =>

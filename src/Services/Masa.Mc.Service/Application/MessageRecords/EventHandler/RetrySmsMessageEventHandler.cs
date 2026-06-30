@@ -9,6 +9,7 @@ public class RetrySmsMessageEventHandler
     private readonly IChannelRepository _channelRepository;
     private readonly IMessageRecordRepository _messageRecordRepository;
     private readonly MessageTemplateDomainService _messageTemplateDomainService;
+    private readonly UnsubscriptionDomainService _channelUnsubscriptionDomainService;
     private readonly IMessageTemplateRepository _repository;
     private readonly II18n<DefaultResource> _i18n;
     private readonly ITemplateRenderer _templateRenderer;
@@ -17,6 +18,7 @@ public class RetrySmsMessageEventHandler
         , IChannelRepository channelRepository
         , IMessageRecordRepository messageRecordRepository
         , MessageTemplateDomainService messageTemplateDomainService
+        , UnsubscriptionDomainService channelUnsubscriptionDomainService
         , IMessageTemplateRepository repository
         , II18n<DefaultResource> i18n
         , ITemplateRenderer templateRenderer)
@@ -25,6 +27,7 @@ public class RetrySmsMessageEventHandler
         _channelRepository = channelRepository;
         _messageRecordRepository = messageRecordRepository;
         _messageTemplateDomainService = messageTemplateDomainService;
+        _channelUnsubscriptionDomainService = channelUnsubscriptionDomainService;
         _repository = repository;
         _i18n = i18n;
         _templateRenderer = templateRenderer;
@@ -47,10 +50,21 @@ public class RetrySmsMessageEventHandler
         using (smsAsyncLoca.Change(options))
         {
             var variables = messageRecord.Variables;
-            var messageTemplate = await _repository.FindAsync(x => x.Id == messageRecord.MessageEntityId, false);
+            var messageTemplate = await _repository.FindAsync(x => x.Id == messageRecord.MessageEntityId);
+            if (messageTemplate?.GetUnsubscribeConfig().Enabled == true &&
+                await _channelUnsubscriptionDomainService.IsSmsTemplateUnsubscribedAsync(
+                    messageRecord.ChannelId,
+                    messageRecord.ChannelUserIdentity,
+                    messageTemplate.Id))
+            {
+                messageRecord.SetResult(false, Masa.Mc.Service.Admin.Application.MessageTasks.EventHandler.SmsSendBlockResultHelper.GetUnsubscriptionBlockedMessage(_i18n));
+                await _messageRecordRepository.UpdateAsync(messageRecord);
+                return;
+            }
+
             if (!await _messageTemplateDomainService.CheckSendUpperLimitAsync(messageTemplate, messageRecord.ChannelUserIdentity))
             {
-                messageRecord.SetResult(false, _i18n.T("DailySendingLimit"));
+                messageRecord.SetResult(false, Masa.Mc.Service.Admin.Application.MessageTasks.EventHandler.SmsSendBlockResultHelper.GetDailySendingLimitMessage(_i18n));
                 await _messageRecordRepository.UpdateAsync(messageRecord);
                 return;
             }
@@ -64,7 +78,7 @@ public class RetrySmsMessageEventHandler
             try
             {
                 var response = await smsSender.SendAsync(smsMessage) as SmsSendResponse;
-                if (response.Success)
+                if (response?.Success is true)
                 {
                     messageRecord.SetResult(smsSender.SupportsReceipt ? null : true, string.Empty, DateTimeOffset.UtcNow, response.MsgId);
                 }

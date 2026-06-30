@@ -57,6 +57,88 @@ public class UnsubscriptionQueryHandler
         query.Result = dto;
     }
 
+    [EventHandler]
+    public async Task GetChannelUserIdentityUnsubscriptionsAsync(GetChannelUserIdentityUnsubscriptionsQuery query)
+    {
+        var normalizedChannelCode = query.ChannelCode?.Trim();
+        var normalizedChannelUserIdentity = query.ChannelUserIdentity?.Trim();
+        if (string.IsNullOrWhiteSpace(normalizedChannelCode) || string.IsNullOrWhiteSpace(normalizedChannelUserIdentity))
+        {
+            query.Result = new();
+            return;
+        }
+
+        var channel = await _context.ChannelQueryQueries
+            .AsNoTracking()
+            .Where(x => x.Code == normalizedChannelCode)
+            .Select(x => new
+            {
+                x.Id,
+                x.Type,
+                x.Provider
+            })
+            .FirstOrDefaultAsync();
+        if (channel is null)
+        {
+            query.Result = new();
+            return;
+        }
+
+        var activeUnsubscriptions = await _context.UnsubscriptionQueries
+            .AsNoTracking()
+            .Where(x =>
+                x.ChannelId == channel.Id &&
+                x.ChannelType == channel.Type &&
+                x.ChannelProvider == channel.Provider &&
+                x.ChannelUserIdentity == normalizedChannelUserIdentity &&
+                x.Status == UnsubscriptionStatus.Unsubscribed)
+            .OrderByDescending(x => x.UnsubscribedAt)
+            .ToListAsync();
+        if (!activeUnsubscriptions.Any())
+        {
+            query.Result = new();
+            return;
+        }
+
+        var templateIds = activeUnsubscriptions
+            .Where(x => x.ScopeType == UnsubscriptionScopeTypes.Template)
+            .Select(x => Guid.TryParse(x.ScopeRefId, out var templateId) ? templateId : Guid.Empty)
+            .Where(x => x != Guid.Empty)
+            .Distinct()
+            .ToList();
+        var templateDict = templateIds.Any()
+            ? await _context.MessageTemplateQueries
+                .AsNoTracking()
+                .Where(x => templateIds.Contains(x.Id))
+                .Select(x => new MessageTemplateLookupItem(x.Id, x.Code, x.DisplayName, x.Content))
+                .ToDictionaryAsync(x => x.Id)
+            : new Dictionary<Guid, MessageTemplateLookupItem>();
+
+        query.Result = activeUnsubscriptions
+            .Select(item =>
+            {
+                var templateId = item.ScopeType == UnsubscriptionScopeTypes.Template &&
+                                 Guid.TryParse(item.ScopeRefId, out var parsedTemplateId)
+                    ? parsedTemplateId
+                    : (Guid?)null;
+                MessageTemplateLookupItem? template = null;
+                if (templateId.HasValue)
+                {
+                    templateDict.TryGetValue(templateId.Value, out template);
+                }
+
+                return new ChannelUserIdentityUnsubscriptionItemDto
+                {
+                    ChannelUserIdentity = item.ChannelUserIdentity,
+                    TemplateId = templateId,
+                    TemplateCode = template?.Code ?? string.Empty,
+                    TemplateName = template?.DisplayName ?? string.Empty,
+                    TemplateContent = template?.Content ?? string.Empty
+                };
+            })
+            .ToList();
+    }
+
     private static Expression<Func<UnsubscriptionQueryModel, bool>> CreatePredicate(GetUnsubscriptionInputDto input)
     {
         var condition = CreateUnsubscriptionScopePredicate(input);
@@ -163,10 +245,12 @@ public class UnsubscriptionQueryHandler
                 item.UserDisplayName = userDisplayName;
             }
 
-            if (users.TryGetValue(item.Modifier, out var modifierName))
+            var operatorUserId = item.Modifier != Guid.Empty ? item.Modifier : item.UserId;
+            if (operatorUserId != Guid.Empty && users.TryGetValue(operatorUserId, out var modifierName))
             {
                 item.ModifierName = modifierName;
             }
         }
     }
+
 }

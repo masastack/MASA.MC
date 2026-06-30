@@ -12,15 +12,11 @@ public class MessageTemplateUnsubscribeConfig : ValueObject
 
     public string UnsubscribeKeyword { get; protected set; } = string.Empty;
 
-    public string UnsubscribeAutoReply { get; protected set; } = string.Empty;
+    public Guid UnsubscribeAutoReplyTemplateId { get; protected set; }
 
     public string ResubscribeKeyword { get; protected set; } = string.Empty;
 
-    public string ResubscribeAutoReply { get; protected set; } = string.Empty;
-
-    public bool DebounceEnabled { get; protected set; }
-
-    public int CooldownSeconds { get; protected set; }
+    public Guid ResubscribeAutoReplyTemplateId { get; protected set; }
 
     private MessageTemplateUnsubscribeConfig()
     {
@@ -29,26 +25,22 @@ public class MessageTemplateUnsubscribeConfig : ValueObject
     public MessageTemplateUnsubscribeConfig(
         bool enabled,
         string unsubscribeKeyword,
-        string unsubscribeAutoReply,
+        Guid unsubscribeAutoReplyTemplateId,
         string resubscribeKeyword,
-        string resubscribeAutoReply,
-        bool debounceEnabled,
-        int cooldownSeconds)
+        Guid resubscribeAutoReplyTemplateId)
     {
         Enabled = enabled;
         UnsubscribeKeyword = (unsubscribeKeyword ?? string.Empty).Trim();
-        UnsubscribeAutoReply = (unsubscribeAutoReply ?? string.Empty).Trim();
+        UnsubscribeAutoReplyTemplateId = unsubscribeAutoReplyTemplateId;
         ResubscribeKeyword = (resubscribeKeyword ?? string.Empty).Trim();
-        ResubscribeAutoReply = (resubscribeAutoReply ?? string.Empty).Trim();
-        DebounceEnabled = debounceEnabled;
-        CooldownSeconds = cooldownSeconds;
+        ResubscribeAutoReplyTemplateId = resubscribeAutoReplyTemplateId;
 
         NormalizeAndValidate();
     }
 
     public static MessageTemplateUnsubscribeConfig Disabled()
     {
-        return new MessageTemplateUnsubscribeConfig(false, string.Empty, string.Empty, string.Empty, string.Empty, false, 0);
+        return new MessageTemplateUnsubscribeConfig(false, string.Empty, Guid.Empty, string.Empty, Guid.Empty);
     }
 
     public string BuildSuffix()
@@ -82,37 +74,46 @@ public class MessageTemplateUnsubscribeConfig : ValueObject
         return SmsInboundKeywordAction.None;
     }
 
-    public string GetAutoReplyContent(SmsInboundKeywordAction action)
+    public Guid GetAutoReplyTemplateId(SmsInboundKeywordAction action)
     {
         return action switch
         {
-            SmsInboundKeywordAction.Unsubscribe => UnsubscribeAutoReply,
-            SmsInboundKeywordAction.Resubscribe => ResubscribeAutoReply,
-            _ => string.Empty
+            SmsInboundKeywordAction.Unsubscribe => UnsubscribeAutoReplyTemplateId,
+            SmsInboundKeywordAction.Resubscribe => ResubscribeAutoReplyTemplateId,
+            _ => Guid.Empty
         };
+    }
+
+    public void Apply(MessageTemplateUnsubscribeConfig config)
+    {
+        Check.NotNull(config, nameof(config));
+
+        Enabled = config.Enabled;
+        UnsubscribeKeyword = config.UnsubscribeKeyword;
+        UnsubscribeAutoReplyTemplateId = config.UnsubscribeAutoReplyTemplateId;
+        ResubscribeKeyword = config.ResubscribeKeyword;
+        ResubscribeAutoReplyTemplateId = config.ResubscribeAutoReplyTemplateId;
+
+        NormalizeAndValidate();
     }
 
     protected override IEnumerable<object> GetEqualityValues()
     {
         yield return Enabled;
         yield return UnsubscribeKeyword;
-        yield return UnsubscribeAutoReply;
+        yield return UnsubscribeAutoReplyTemplateId;
         yield return ResubscribeKeyword;
-        yield return ResubscribeAutoReply;
-        yield return DebounceEnabled;
-        yield return CooldownSeconds;
+        yield return ResubscribeAutoReplyTemplateId;
     }
 
     private void NormalizeAndValidate()
     {
         if (!Enabled)
         {
-            DebounceEnabled = false;
-            CooldownSeconds = 0;
             UnsubscribeKeyword = string.Empty;
-            UnsubscribeAutoReply = string.Empty;
+            UnsubscribeAutoReplyTemplateId = Guid.Empty;
             ResubscribeKeyword = string.Empty;
-            ResubscribeAutoReply = string.Empty;
+            ResubscribeAutoReplyTemplateId = Guid.Empty;
             return;
         }
 
@@ -131,14 +132,14 @@ public class MessageTemplateUnsubscribeConfig : ValueObject
             throw new UserFriendlyException(errorCode: MessageTemplateExceptionCodes.UNSUBSCRIBE_KEYWORDS_MUST_BE_DIFFERENT);
         }
 
-        if (DebounceEnabled && CooldownSeconds <= 0)
+        if (UnsubscribeAutoReplyTemplateId == Guid.Empty)
         {
-            throw new UserFriendlyException(errorCode: MessageTemplateExceptionCodes.UNSUBSCRIBE_COOLDOWN_SECONDS_REQUIRED);
+            throw new UserFriendlyException(errorCode: MessageTemplateExceptionCodes.UNSUBSCRIBE_AUTO_REPLY_REQUIRED);
         }
 
-        if (!DebounceEnabled)
+        if (ResubscribeAutoReplyTemplateId == Guid.Empty)
         {
-            CooldownSeconds = 0;
+            throw new UserFriendlyException(errorCode: MessageTemplateExceptionCodes.RESUBSCRIBE_AUTO_REPLY_REQUIRED);
         }
     }
 }

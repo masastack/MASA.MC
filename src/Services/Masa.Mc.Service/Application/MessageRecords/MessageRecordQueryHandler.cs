@@ -9,16 +9,19 @@ public class MessageRecordQueryHandler
     private readonly IAuthClient _authClient;
     private readonly II18n<DefaultResource> _i18n;
     private readonly IDataFilter _dataFilter;
+    private readonly ITemplateRenderer _templateRenderer;
 
     public MessageRecordQueryHandler(IMcQueryContext context
         , IAuthClient authClient
         , II18n<DefaultResource> i18n
-        , IDataFilter dataFilter)
+        , IDataFilter dataFilter
+        , ITemplateRenderer templateRenderer)
     {
         _context = context;
         _authClient = authClient;
         _i18n = i18n;
         _dataFilter = dataFilter;
+        _templateRenderer = templateRenderer;
     }
 
     [EventHandler]
@@ -52,6 +55,171 @@ public class MessageRecordQueryHandler
         await FillUserInfo(dtos);
         var result = new PaginatedListDto<MessageRecordDto>(resultList.Total, resultList.TotalPages, dtos);
         query.Result = result;
+    }
+
+    [EventHandler]
+    public async Task GetSmsRecordsByMobileAsync(GetSmsRecordsByMobileQuery query)
+    {
+        var mobile = query.Mobile?.Trim();
+        if (string.IsNullOrWhiteSpace(mobile))
+        {
+            query.Result = new PaginatedListDto<SmsRecordDto>(0, 0, new());
+            return;
+        }
+
+        using var dataFilter = _dataFilter.Disable<ISoftDelete>();
+        Guid? channelId = null;
+        if (!string.IsNullOrWhiteSpace(query.ChannelCode))
+        {
+            var channelCode = query.ChannelCode.Trim();
+            channelId = await _context.ChannelQueryQueries
+                .AsNoTracking()
+                .Where(x => x.Type == ChannelTypes.Sms && x.Code == channelCode)
+                .Select(x => (Guid?)x.Id)
+                .FirstOrDefaultAsync();
+            if (!channelId.HasValue)
+            {
+                query.Result = new PaginatedListDto<SmsRecordDto>(0, 0, new());
+                return;
+            }
+        }
+
+        var condition = CreateSmsOutboundRecordPredicate(mobile, channelId);
+        var resultList = await _context.MessageRecordQueries
+            .AsNoTracking()
+            .GetPaginatedListAsync(condition, new()
+            {
+                Page = query.Page,
+                PageSize = query.PageSize,
+                Sorting = new Dictionary<string, bool>
+                {
+                    [nameof(MessageRecordQueryModel.SendTime)] = true
+                }
+            });
+        if (!resultList.Result.Any())
+        {
+            query.Result = new PaginatedListDto<SmsRecordDto>(0, 0, new());
+            return;
+        }
+
+        var records = resultList.Result
+            .Select(x => new
+            {
+                ChannelId = x.ChannelId!.Value,
+                x.SendTime,
+                x.MessageEntityId,
+                x.Variables,
+                x.DisplayName
+            })
+            .ToList();
+
+        var templateIds = records
+            .Select(x => x.MessageEntityId)
+            .Distinct()
+            .ToList();
+        var templateContents = templateIds.Any()
+            ? await _context.MessageTemplateQueries
+                .AsNoTracking()
+                .Where(x => templateIds.Contains(x.Id))
+                .ToDictionaryAsync(x => x.Id, x => x.Content)
+            : new Dictionary<Guid, string>();
+
+        var items = records
+            .Select(x => new SmsRecordDto
+            {
+                ChannelId = x.ChannelId,
+                SmsContent = ResolveSmsContent(
+                    x.MessageEntityId,
+                    x.Variables,
+                    x.DisplayName,
+                    templateContents),
+                SendTime = x.SendTime
+            })
+            .ToList();
+        query.Result = new PaginatedListDto<SmsRecordDto>(resultList.Total, resultList.TotalPages, items);
+    }
+
+    [EventHandler]
+    public async Task GetSmsInteractionHistoryAsync(GetSmsInteractionHistoryQuery query)
+    {
+        var mobile = query.Mobile?.Trim();
+        if (string.IsNullOrWhiteSpace(mobile) || query.ChannelId == Guid.Empty)
+        {
+            query.Result = new();
+            return;
+        }
+
+        using var dataFilter = _dataFilter.Disable<ISoftDelete>();
+
+        var startTime = DateTimeOffset.UtcNow.AddMonths(-1);
+        var outboundRecords = await _context.MessageRecordQueries
+            .AsNoTracking()
+            .Where(CreateSmsOutboundRecordPredicate(mobile, query.ChannelId))
+            .Where(x => x.SendTime.HasValue && x.SendTime.Value >= startTime)
+            .Select(x => new
+            {
+                x.SendTime,
+                x.MessageEntityId,
+                x.Variables,
+                x.DisplayName
+            })
+            .ToListAsync();
+
+        var templateIds = outboundRecords
+            .Select(x => x.MessageEntityId)
+            .Distinct()
+            .ToList();
+        var templateContents = templateIds.Any()
+            ? await _context.MessageTemplateQueries
+                .AsNoTracking()
+                .Where(x => templateIds.Contains(x.Id))
+                .ToDictionaryAsync(x => x.Id, x => x.Content)
+            : new Dictionary<Guid, string>();
+
+        var outboundItems = outboundRecords
+            .Where(x => x.SendTime.HasValue)
+            .Select(x => new SmsInteractionHistoryDto
+            {
+                SendTime = x.SendTime!.Value,
+                Content = ResolveSmsContent(
+                    x.MessageEntityId,
+                    x.Variables,
+                    x.DisplayName,
+                    templateContents),
+                IsInbound = false
+            })
+            .ToList();
+
+        var inboundQuery = _context.SmsInboundQueries
+            .AsNoTracking()
+            .Where(x => x.Mobile == mobile && x.ChannelId == query.ChannelId && x.SendTime >= startTime);
+
+        var inboundItems = await inboundQuery
+            .Select(x => new SmsInteractionHistoryDto
+            {
+                SendTime = x.SendTime,
+                Content = x.SmsContent,
+                IsInbound = true
+            })
+            .ToListAsync();
+
+        query.Result = inboundItems
+            .Concat(outboundItems)
+            .Where(x => !string.IsNullOrWhiteSpace(x.Content))
+            .OrderByDescending(x => x.SendTime)
+            .ToList();
+    }
+
+    private static Expression<Func<MessageRecordQueryModel, bool>> CreateSmsOutboundRecordPredicate(
+        string mobile,
+        Guid? channelId)
+    {
+        Expression<Func<MessageRecordQueryModel, bool>> condition = x =>
+            x.ChannelUserIdentity == mobile &&
+            x.MessageEntityType == MessageEntityTypes.Template &&
+            x.ChannelId.HasValue;
+        condition = condition.And(channelId.HasValue, x => x.ChannelId == channelId!.Value);
+        return condition;
     }
 
     private async Task<Expression<Func<MessageRecordQueryModel, bool>>> CreateFilteredPredicate(GetMessageRecordInputDto inputDto)
@@ -96,5 +264,20 @@ public class MessageRecordQueryHandler
 
             item.User.FillChannelUserIdentity(item.ChannelUserIdentity, item.Channel.Type);
         }
+    }
+
+    private string ResolveSmsContent(
+        Guid messageEntityId,
+        ExtraPropertyDictionary? variables,
+        string displayName,
+        IReadOnlyDictionary<Guid, string> templateContents)
+    {
+        if (templateContents.TryGetValue(messageEntityId, out var templateContent) &&
+            !string.IsNullOrWhiteSpace(templateContent))
+        {
+            return _templateRenderer.Render(templateContent, variables ?? new());
+        }
+
+        return displayName;
     }
 }

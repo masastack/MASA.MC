@@ -16,4 +16,6 @@ public class SmsInboundDto : AuditEntityDto<Guid, Guid>
     public string AddSerial { get; set; } = string.Empty;
 
     public SmsInboundProviders Provider { get; set; }
+
+    public SmsInboundTypes InboundType { get; set; }
 }

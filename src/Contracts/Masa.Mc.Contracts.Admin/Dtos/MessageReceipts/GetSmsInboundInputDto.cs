@@ -5,7 +5,11 @@ namespace Masa.Mc.Contracts.Admin.Dtos.MessageReceipts;
 
 public class GetSmsInboundInputDto : PaginatedOptionsDto
 {
-    public Guid ChannelId { get; set; }
+    public Guid? ChannelId { get; set; }
+
+    public string ChannelCode { get; set; } = string.Empty;
+
+    public SmsInboundProviders? Provider { get; set; }
 
     public string Mobile { get; set; } = string.Empty;
 
@@ -21,10 +25,12 @@ public class GetSmsInboundInputDto : PaginatedOptionsDto
     {
     }
 
-    public GetSmsInboundInputDto(Guid channelId, string mobile, string addSerial, string smsContent, DateTimeOffset? startTime, DateTimeOffset? endTime, string sorting, int page, int pageSize)
+    public GetSmsInboundInputDto(Guid? channelId, string channelCode, SmsInboundProviders? provider, string mobile, string addSerial, string smsContent, DateTimeOffset? startTime, DateTimeOffset? endTime, string sorting, int page, int pageSize)
         : base(sorting, page, pageSize)
     {
         ChannelId = channelId;
+        ChannelCode = channelCode;
+        Provider = provider;
         Mobile = mobile;
         AddSerial = addSerial;
         SmsContent = smsContent;

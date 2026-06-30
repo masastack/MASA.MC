@@ -14,12 +14,14 @@ public class SmsInboundService : ServiceBase
     }
 
     [RoutePattern("", StartWithBaseUri = true, HttpMethod = "Get")]
-    public async Task<PaginatedListDto<SmsInboundDto>> GetListAsync(IEventBus eventBus, [FromQuery] Guid channelId,
+    public async Task<PaginatedListDto<SmsInboundDto>> GetListAsync(IEventBus eventBus, [FromQuery] Guid? channelId,
+        [FromQuery] string? channelCode,
+        [FromQuery] SmsInboundProviders? provider,
         [FromQuery] DateTimeOffset? startTime, [FromQuery] DateTimeOffset? endTime, [FromQuery] string mobile = "", 
         [FromQuery] string addSerial = "", [FromQuery] string smsContent = "",
         [FromQuery] string sorting = "", [FromQuery] int page = 1, [FromQuery] int pagesize = 10)
     {
-        var input = new GetSmsInboundInputDto(channelId, mobile, addSerial, smsContent, startTime, endTime, sorting, page, pagesize);
+        var input = new GetSmsInboundInputDto(channelId, channelCode ?? string.Empty, provider, mobile, addSerial, smsContent, startTime, endTime, sorting, page, pagesize);
         var query = new GetListSmsInboundQuery(input);
         await eventBus.PublishAsync(query);
         return query.Result;

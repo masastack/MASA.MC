@@ -35,4 +35,28 @@ public class MessageRecordService : ServiceBase
         var command = new RetryMessageRecordCommand(inputDto);
         await eventBus.PublishAsync(command);
     }
+
+    [RoutePattern("sms-records", StartWithBaseUri = true, HttpMethod = "Get")]
+    public async Task<PaginatedListDto<SmsRecordDto>> GetSmsRecordsAsync(
+        IEventBus eventBus,
+        [FromQuery] string mobile,
+        [FromQuery] string channelCode = "",
+        [FromQuery] int page = 1,
+        [FromQuery] int pagesize = 10)
+    {
+        var query = new GetSmsRecordsByMobileQuery(mobile, channelCode, page, pagesize);
+        await eventBus.PublishAsync(query);
+        return query.Result;
+    }
+
+    [RoutePattern("sms-interaction-history", StartWithBaseUri = true, HttpMethod = "Get")]
+    public async Task<List<SmsInteractionHistoryDto>> GetSmsInteractionHistoryAsync(
+        IEventBus eventBus,
+        [FromQuery] string mobile,
+        [FromQuery] Guid channelId)
+    {
+        var query = new GetSmsInteractionHistoryQuery(mobile, channelId);
+        await eventBus.PublishAsync(query);
+        return query.Result;
+    }
 }

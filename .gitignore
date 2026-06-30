@@ -350,3 +350,7 @@ MigrationBackup/
 
 .idea/
 .DS_Store
+
+# Cursor local guidance (do not commit)
+.cursor/rules/
+.cursor/skills/

@@ -49,47 +49,40 @@ public class UnsubscriptionService : ServiceBase
         return query.Result;
     }
 
-    [RoutePattern("history", StartWithBaseUri = true, HttpMethod = "Get")]
-    public async Task<PaginatedListDto<UnsubscriptionHistoryDto>> GetHistoryListAsync(
-        IEventBus eventBus,
-        [FromQuery] Guid? channelId,
-        [FromQuery] Guid? userId,
-        [FromQuery] UnsubscriptionSource? source,
-        [FromQuery] UnsubscriptionTimelineActions? action,
-        [FromQuery] DateTimeOffset? startTime,
-        [FromQuery] DateTimeOffset? endTime,
-        [FromQuery] string filter = "",
-        [FromQuery] string channelUserIdentity = "",
-        [FromQuery] string scopeRefId = "",
-        [FromQuery] string keyword = "",
-        [FromQuery] string sorting = "",
-        [FromQuery] int page = 1,
-        [FromQuery] int pagesize = 10)
-    {
-        var input = new GetUnsubscriptionHistoryInputDto(
-            channelId,
-            userId,
-            filter,
-            channelUserIdentity,
-            scopeRefId,
-            keyword,
-            source,
-            action,
-            startTime,
-            endTime,
-            sorting,
-            page,
-            pagesize);
-        var query = new GetUnsubscriptionHistoryListQuery(input);
-        await eventBus.PublishAsync(query);
-        return query.Result;
-    }
-
     [RoutePattern("{id}", StartWithBaseUri = true, HttpMethod = "Get")]
     public async Task<UnsubscriptionDetailDto> GetAsync(IEventBus eventBus, Guid id)
     {
         var query = new GetUnsubscriptionQuery(id);
         await eventBus.PublishAsync(query);
         return query.Result;
+    }
+
+    [RoutePattern("channel-user-identities", StartWithBaseUri = true, HttpMethod = "Get")]
+    public async Task<List<ChannelUserIdentityUnsubscriptionItemDto>> GetChannelUserIdentityUnsubscriptionsAsync(
+        IEventBus eventBus,
+        [FromQuery] string channelCode,
+        [FromQuery] string channelUserIdentity)
+    {
+        var query = new GetChannelUserIdentityUnsubscriptionsQuery(channelCode, channelUserIdentity);
+        await eventBus.PublishAsync(query);
+        return query.Result;
+    }
+
+    [RoutePattern("channel-user-identities/unsubscriptions", StartWithBaseUri = true, HttpMethod = "Post")]
+    public async Task AddChannelUserIdentityToBlacklistAsync(
+        IEventBus eventBus,
+        [FromBody] AddChannelUserIdentityToUnsubscriptionBlacklistInputDto input)
+    {
+        var command = new AddChannelUserIdentityToUnsubscriptionBlacklistCommand(input);
+        await eventBus.PublishAsync(command);
+    }
+
+    [RoutePattern("channel-user-identities/unsubscriptions", StartWithBaseUri = true, HttpMethod = "Delete")]
+    public async Task RemoveChannelUserIdentityFromBlacklistAsync(
+        IEventBus eventBus,
+        [FromBody] RemoveChannelUserIdentityFromUnsubscriptionBlacklistInputDto input)
+    {
+        var command = new RemoveChannelUserIdentityFromUnsubscriptionBlacklistCommand(input);
+        await eventBus.PublishAsync(command);
     }
 }

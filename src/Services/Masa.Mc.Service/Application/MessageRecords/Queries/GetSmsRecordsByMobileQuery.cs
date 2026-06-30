@@ -1,0 +1,9 @@
+// Copyright (c) MASA Stack All rights reserved.
+// Licensed under the Apache License. See LICENSE.txt in the project root for license information.
+
+namespace Masa.Mc.Service.Admin.Application.MessageRecords.Queries;
+
+public record GetSmsRecordsByMobileQuery(string Mobile, string ChannelCode, int Page, int PageSize) : Query<PaginatedListDto<SmsRecordDto>>
+{
+    public override PaginatedListDto<SmsRecordDto> Result { get; set; } = new();
+}

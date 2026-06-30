@@ -9,19 +9,7 @@ public class UnsubscriptionTimelineQueryModel : Masa.BuildingBlocks.Ddd.Domain.E
 
     public UnsubscriptionTimelineActions Action { get; set; }
 
-    public UnsubscriptionSource Source { get; set; }
-
     public string Detail { get; set; } = string.Empty;
-
-    public string Keyword { get; set; } = string.Empty;
-
-    public string MessageId { get; set; } = string.Empty;
-
-    public Guid? MatchedMessageRecordId { get; set; }
-
-    public string MatchedMessageSnapshot { get; set; } = string.Empty;
-
-    public DateTimeOffset? MatchedMessageSentAt { get; set; }
 
     public DateTimeOffset OccurredAt { get; set; }
 }

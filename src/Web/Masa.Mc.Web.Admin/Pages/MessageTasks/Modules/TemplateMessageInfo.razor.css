@@ -1,6 +1,0 @@
-﻿.template-message-info ::deep .theme--light.m-data-table > .m-data-table__wrapper > table > thead > tr:last-child > th {
-    border-bottom: none !important;
-}
-.template-message-info ::deep .theme--light.m-data-table > .m-data-table__wrapper > table > tbody > tr:not(:last-child) > td:not(.m-data-table__mobile-row) {
-    border-bottom: none;
-}
