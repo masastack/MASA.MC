@@ -10,6 +10,7 @@ public class SmsInboundAutoReplyService : ITransientDependency
     private readonly IMessageRecordRepository _messageRecordRepository;
     private readonly MessageTemplateDomainService _messageTemplateDomainService;
     private readonly SmsSenderFactory _smsSenderFactory;
+    private readonly IHostEnvironment _hostEnvironment;
     private readonly II18n<DefaultResource> _i18n;
     private readonly ILogger<SmsInboundAutoReplyService> _logger;
 
@@ -19,6 +20,7 @@ public class SmsInboundAutoReplyService : ITransientDependency
         IMessageRecordRepository messageRecordRepository,
         MessageTemplateDomainService messageTemplateDomainService,
         SmsSenderFactory smsSenderFactory,
+        IHostEnvironment hostEnvironment,
         II18n<DefaultResource> i18n,
         ILogger<SmsInboundAutoReplyService> logger)
     {
@@ -27,6 +29,7 @@ public class SmsInboundAutoReplyService : ITransientDependency
         _messageRecordRepository = messageRecordRepository;
         _messageTemplateDomainService = messageTemplateDomainService;
         _smsSenderFactory = smsSenderFactory;
+        _hostEnvironment = hostEnvironment;
         _i18n = i18n;
         _logger = logger;
     }
@@ -78,32 +81,87 @@ public class SmsInboundAutoReplyService : ITransientDependency
     {
         ArgumentNullException.ThrowIfNull(request);
 
-        var channelId = request.ChannelId;
-        var provider = request.Provider;
-        var channelUserIdentity = request.ChannelUserIdentity;
-        var autoReplyContent = request.AutoReplyContent;
-
-        if (string.IsNullOrWhiteSpace(autoReplyContent) || string.IsNullOrWhiteSpace(channelUserIdentity))
+        if (!TryGetSendPayload(request, out var channelUserIdentity, out var autoReplyContent))
         {
             return;
         }
 
         var messageRecord = CreateMessageRecord(request);
-        if (messageTemplate != null &&
-            !await _messageTemplateDomainService.CheckSendUpperLimitAsync(messageTemplate, channelUserIdentity))
+        if (await TryHandleSendUpperLimitAsync(messageTemplate, channelUserIdentity, messageRecord))
         {
-            messageRecord.SetResult(false, _i18n.T("DailySendingLimit"), DateTimeOffset.UtcNow, string.Empty);
-            await _messageRecordRepository.AddAsync(messageRecord);
             return;
         }
 
-        var channel = await _channelRepository.AsNoTracking()
-            .FirstOrDefaultAsync(x => x.Id == channelId, cancellationToken);
+        var channelId = request.ChannelId;
+        var provider = request.Provider;
+        var channel = await _channelRepository.AsNoTracking().FirstOrDefaultAsync(x => x.Id == channelId, cancellationToken);
         if (channel is null)
         {
             return;
         }
 
+        if (await TryHandleNonProductionAsync(provider, channelId, channelUserIdentity, messageRecord))
+        {
+            return;
+        }
+
+        await SendAutoReplyInProductionAsync(channel, provider, channelUserIdentity, autoReplyContent, messageRecord);
+    }
+
+    private static bool TryGetSendPayload(
+        SmsInboundAutoReplySendRequest request,
+        out string channelUserIdentity,
+        out string autoReplyContent)
+    {
+        channelUserIdentity = request.ChannelUserIdentity;
+        autoReplyContent = request.AutoReplyContent;
+        return !string.IsNullOrWhiteSpace(autoReplyContent) && !string.IsNullOrWhiteSpace(channelUserIdentity);
+    }
+
+    private async Task<bool> TryHandleSendUpperLimitAsync(
+        MessageTemplate? messageTemplate,
+        string channelUserIdentity,
+        MessageRecord messageRecord)
+    {
+        if (messageTemplate == null ||
+            await _messageTemplateDomainService.CheckSendUpperLimitAsync(messageTemplate, channelUserIdentity))
+        {
+            return false;
+        }
+
+        messageRecord.SetResult(false, _i18n.T("DailySendingLimit"), DateTimeOffset.UtcNow, string.Empty);
+        await _messageRecordRepository.AddAsync(messageRecord);
+        return true;
+    }
+
+    private async Task<bool> TryHandleNonProductionAsync(
+        SmsInboundProviders provider,
+        Guid channelId,
+        string channelUserIdentity,
+        MessageRecord messageRecord)
+    {
+        if (_hostEnvironment.IsProduction())
+        {
+            return false;
+        }
+
+        messageRecord.SetResult(true, _i18n.T("InboundAutoReplySkippedInNonProduction"), DateTimeOffset.UtcNow, string.Empty);
+        _logger.LogInformation(
+            "Skip inbound auto reply real send in non-production. Provider: {Provider}, ChannelId: {ChannelId}, Target: {Target}",
+            provider,
+            channelId,
+            channelUserIdentity);
+        await _messageRecordRepository.AddAsync(messageRecord);
+        return true;
+    }
+
+    private async Task SendAutoReplyInProductionAsync(
+        Channel channel,
+        SmsInboundProviders provider,
+        string channelUserIdentity,
+        string autoReplyContent,
+        MessageRecord messageRecord)
+    {
         var smsProvider = (SmsProviders)provider;
         var options = _smsSenderFactory.GetOptions(smsProvider, channel.ExtraProperties);
         var smsAsyncLocal = _smsSenderFactory.GetProviderAsyncLocal(smsProvider);

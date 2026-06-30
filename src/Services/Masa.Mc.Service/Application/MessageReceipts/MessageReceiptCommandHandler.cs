@@ -322,17 +322,32 @@ public class MessageReceiptCommandHandler
         string channelUserIdentity,
         CancellationToken cancellationToken)
     {
+        var excludedTemplateTypes = new[]
+        {
+            (int)SmsTemplateTypes.VerificationCode,
+            (int)SmsTemplateTypes.Unsubscribe,
+            (int)SmsTemplateTypes.Resubscribe
+        };
+
+        var availableTemplateIdsQuery = _messageTemplateRepository.AsNoTracking()
+            .Where(x =>
+                x.ChannelId == channelId &&
+                !excludedTemplateTypes.Contains(x.TemplateType))
+            .Select(x => x.Id);
+
         var messageRecordQuery = await _repository.GetQueryableAsync();
         var lastTemplateRecord = await messageRecordQuery
             .Where(x =>
                 x.ChannelId == channelId &&
                 x.ChannelUserIdentity == channelUserIdentity &&
                 x.Success == true &&
-                x.MessageEntityType == MessageEntityTypes.Template)
+                x.MessageEntityType == MessageEntityTypes.Template &&
+                x.MessageEntityId != default &&
+                availableTemplateIdsQuery.Contains(x.MessageEntityId))
             .OrderByDescending(x => x.SendTime)
             .ThenByDescending(x => x.CreationTime)
             .FirstOrDefaultAsync(cancellationToken);
-        if (lastTemplateRecord == null || lastTemplateRecord.MessageEntityId == default)
+        if (lastTemplateRecord == null)
         {
             return null;
         }

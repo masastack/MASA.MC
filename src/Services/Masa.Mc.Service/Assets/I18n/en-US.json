@@ -8,6 +8,7 @@
   "ReceiverGroup": "ReceiverGroup",
   "WebsiteMessage": "WebsiteMessage",
   "DailySendingLimit": "The maximum number of times to send per day has been reached",
+  "InboundAutoReplySkippedInNonProduction": "Skipped inbound auto reply SMS send in non-production environment",
   "NoValidData": "no valid data detected",
   "PhoneCannotEmpty": "Phone number cannot be empty",
   "EmailCannotEmpty": "Email cannot be empty",
