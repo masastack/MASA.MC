@@ -327,6 +327,7 @@ public class MessageReceiptCommandHandler
             .Where(x =>
                 x.ChannelId == channelId &&
                 x.ChannelUserIdentity == channelUserIdentity &&
+                x.Success == true &&
                 x.MessageEntityType == MessageEntityTypes.Template)
             .OrderByDescending(x => x.SendTime)
             .ThenByDescending(x => x.CreationTime)
