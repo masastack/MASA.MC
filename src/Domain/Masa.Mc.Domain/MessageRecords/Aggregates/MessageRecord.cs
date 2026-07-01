@@ -87,6 +87,11 @@ public class MessageRecord : FullAggregateRoot<Guid, Guid>
     {
         Success = success;
         FailureReason = failureReason;
+
+        if (MessageTaskHistoryId != Guid.Empty)
+        {
+            AddDomainEvent(new UpdateMessageTaskHistoryStatusEvent(MessageTaskHistoryId));
+        }
     }
 
     public virtual T GetDataValue<T>(string name)

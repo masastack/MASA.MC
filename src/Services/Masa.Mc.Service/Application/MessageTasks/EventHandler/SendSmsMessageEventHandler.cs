@@ -155,6 +155,12 @@ public class SendSmsMessageEventHandler
 
         var messageTaskHistory = eto.MessageTaskHistory;
 
+        // 存在待回执记录时保持发送中，等待回执完成后再汇总最终状态。
+        if (eto.MessageRecords.Any(x => x.Success == null))
+        {
+            return;
+        }
+
         var result = !eto.MessageRecords.Any(x => x.Success != true) ? MessageTaskHistoryStatuses.Success : (!eto.MessageRecords.Any(x => x.Success == true) ? MessageTaskHistoryStatuses.Fail : MessageTaskHistoryStatuses.PartialFailure);
         messageTaskHistory.SetResult(result);
         await _messageTaskHistoryRepository.UpdateAsync(messageTaskHistory);
