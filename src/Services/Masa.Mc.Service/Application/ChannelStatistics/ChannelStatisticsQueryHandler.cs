@@ -108,7 +108,7 @@ public class ChannelStatisticsQueryHandler
         records = ApplyVendorFilter(records, input);
 
         var result = await records
-            .GroupBy(x => x.CreationTime.AddHours(8).Date)
+            .GroupBy(x => x.ExpectSendTime!.Value.AddHours(8).Date)
             .Select(g => new ChannelSendTrendDto
             {
                 Date = g.Key,
@@ -230,8 +230,8 @@ public class ChannelStatisticsQueryHandler
         Expression<Func<MessageRecordQueryModel, bool>> condition = x => true;
         condition = condition.And(input.ChannelId.HasValue, x => x.ChannelId == input.ChannelId);
         condition = condition.And(input.TemplateId.HasValue, x => x.MessageEntityType == MessageEntityTypes.Template && x.MessageEntityId == input.TemplateId);
-        condition = condition.And(true, x => x.CreationTime >= input.StartTime);
-        condition = condition.And(true, x => x.CreationTime <= input.EndTime);
+        condition = condition.And(true, x => x.ExpectSendTime >= input.StartTime);
+        condition = condition.And(true, x => x.ExpectSendTime <= input.EndTime);
         return query.Where(condition);
     }
 
