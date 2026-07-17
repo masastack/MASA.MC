@@ -33,8 +33,8 @@ public class ChannelStatisticsQueryHandler
 
         var grouped = await (from record in records
                              join receiver in receiverUsers
-                                 on new { record.MessageTaskHistoryId, record.ChannelUserIdentity }
-                                 equals new { receiver.MessageTaskHistoryId, receiver.ChannelUserIdentity } into receiverGroup
+                                 on new { record.MessageTaskHistoryId, record.ChannelUserIdentity, record.UserId }
+                                 equals new { receiver.MessageTaskHistoryId, receiver.ChannelUserIdentity, receiver.UserId } into receiverGroup
                              from receiver in receiverGroup.DefaultIfEmpty()
                              select new
                              {
@@ -250,8 +250,8 @@ public class ChannelStatisticsQueryHandler
 
         return from record in records
                join receiver in receiverUsers
-                   on new { record.MessageTaskHistoryId, record.ChannelUserIdentity }
-                   equals new { receiver.MessageTaskHistoryId, receiver.ChannelUserIdentity }
+                   on new { record.MessageTaskHistoryId, record.ChannelUserIdentity, record.UserId }
+                   equals new { receiver.MessageTaskHistoryId, receiver.ChannelUserIdentity, receiver.UserId }
                select record;
     }
 
