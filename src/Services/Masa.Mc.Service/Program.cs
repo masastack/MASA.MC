@@ -96,6 +96,7 @@ builder.Services.AddHostedService<AliyunMnsReceiptConsumer>();
 builder.Services.AddMailKit();
 builder.Services.AddAppNotification(redisOptions);
 builder.Services.AddWeixinWork(builder.Configuration);
+builder.Services.AddWeixinMiniProgram();
 builder.Services.AddCsv();
 builder.Services.AddSingleton<ITemplateRenderer, TextTemplateRenderer>();
 builder.Services.AddTransient<IUserIdProvider, McUserIdProvider>();

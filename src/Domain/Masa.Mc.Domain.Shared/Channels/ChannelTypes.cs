@@ -11,4 +11,5 @@ public enum ChannelTypes
     App,
     WeixinWork,
     WeixinWorkWebhook,
+    WeixinMiniProgram,
 }

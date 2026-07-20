@@ -8,6 +8,7 @@ public class McCaller : StackHttpClientCaller
     #region Field
     ChannelService? _channelService;
     MessageTemplateService? _messageTemplateService;
+    WeixinMiniProgramTemplateService? _weixinMiniProgramTemplateService;
     ReceiverGroupService? _receiverGroupService;
     SmsTemplateService? _smsTemplateService;
     MessageTaskService? _messageTaskService;
@@ -23,6 +24,8 @@ public class McCaller : StackHttpClientCaller
     public ChannelService ChannelService => _channelService ?? (_channelService = new(Caller));
 
     public MessageTemplateService MessageTemplateService => _messageTemplateService ?? (_messageTemplateService = new(Caller));
+
+    public WeixinMiniProgramTemplateService WeixinMiniProgramTemplateService => _weixinMiniProgramTemplateService ?? (_weixinMiniProgramTemplateService = new(Caller));
 
     public ReceiverGroupService ReceiverGroupService => _receiverGroupService ?? (_receiverGroupService = new(Caller));
 

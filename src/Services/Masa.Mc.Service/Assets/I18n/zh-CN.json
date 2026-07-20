@@ -31,6 +31,8 @@
  "ChannelCannotDeleted": "这个渠道不能被删除",  
  "ChannelCannotRepeated": "渠道编码不能重复",  
  "ChannelTypeDoesNotMatchChannel": "渠道类型与渠道不匹配",  
+ "WeixinMiniProgramOnlySupportsTemplateMessage": "微信小程序渠道仅支持订阅模板消息",
+ "WeixinMiniProgramDoesNotSupportBroadcast": "微信小程序渠道不支持广播发送",
  "TemplateCodeCannotRepeated": "模板编码不能重复",  
  "TemplateIdCannotRepeated": "模板不能重复",  
  "UnsubscribeKeywordRequired": "请输入退订关键词",
