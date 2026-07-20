@@ -30,6 +30,8 @@
   "ChannelCannotDeleted": "This channel cannot be deleted",
   "ChannelCannotRepeated": "Channel code cannot be repeated",
   "ChannelTypeDoesNotMatchChannel": "Channel type does not match the channel",
+  "WeixinMiniProgramOnlySupportsTemplateMessage": "Weixin mini program channel only supports subscribe template messages",
+  "WeixinMiniProgramDoesNotSupportBroadcast": "Weixin mini program channel does not support broadcast sending",
   "TemplateCodeCannotRepeated": "Template code cannot be repeated",
   "TemplateIdCannotRepeated": "Template id cannot be repeated",
   "UnsubscribeKeywordRequired": "Please enter unsubscribe keyword",

@@ -36,6 +36,11 @@ public class MessageTaskReceiverDto
             case ChannelTypes.WebsiteMessage:
                 SubjectId = new Guid(channelUserIdentity);
                 break;
+            case ChannelTypes.WeixinWork:
+            case ChannelTypes.WeixinWorkWebhook:
+            case ChannelTypes.WeixinMiniProgram:
+                Account = channelUserIdentity;
+                break;
             default:
                 break;
         }

@@ -135,7 +135,7 @@ public static class McDbContextModelBuilderExtensions
             b.Property(x => x.ExtraProperties).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
             b.Property(x => x.Variables).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
             b.HasIndex(x => x.UserId);
-            b.HasIndex(x => x.MessageTaskHistoryId);
+            b.HasIndex(x => new { x.MessageTaskHistoryId, x.Success });
             b.HasIndex(x => x.MessageId);
         });
 

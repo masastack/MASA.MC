@@ -21,19 +21,45 @@ public class UpdateMessageTaskHistoryStatusHandler
         var history = await _historyRepository.FindAsync(x => x.Id == eto.MessageTaskHistoryId, false);
         if (history == null) return;
 
-        var hasSuccessMessageRecord = await _messageRecordRepository.AnyAsync(x => x.MessageTaskHistoryId == history.Id && x.Success == true);
-
-        if (!await _messageRecordRepository.AnyAsync(x => x.MessageTaskHistoryId == history.Id && x.Success != true))
+        if (history.Status == MessageTaskHistoryStatuses.Withdrawn)
         {
-            history.SetResult(MessageTaskHistoryStatuses.Success);
+            return;
+        }
+
+        if (await _messageRecordRepository.AnyAsync(x => x.MessageTaskHistoryId == history.Id && x.Success == null))
+        {
+            return;
+        }
+
+        var hasSuccessMessageRecord = await _messageRecordRepository.AnyAsync(x => x.MessageTaskHistoryId == history.Id && x.Success == true);
+        var hasFailMessageRecord = await _messageRecordRepository.AnyAsync(x => x.MessageTaskHistoryId == history.Id && x.Success == false);
+
+        if (!hasSuccessMessageRecord && !hasFailMessageRecord)
+        {
+            return;
+        }
+
+        MessageTaskHistoryStatuses targetStatus;
+        if (!hasFailMessageRecord)
+        {
+            targetStatus = MessageTaskHistoryStatuses.Success;
         }
         else if (!hasSuccessMessageRecord)
         {
-            history.SetResult(MessageTaskHistoryStatuses.Fail);
+            targetStatus = MessageTaskHistoryStatuses.Fail;
         }
-        else if (hasSuccessMessageRecord)
+        else
         {
-            history.SetResult(MessageTaskHistoryStatuses.PartialFailure);
+            targetStatus = MessageTaskHistoryStatuses.PartialFailure;
         }
+
+        if (history.Status == targetStatus)
+        {
+            return;
+        }
+
+        history.SetResult(targetStatus);
+
+        await _historyRepository.UpdateAsync(history);
     }
 }

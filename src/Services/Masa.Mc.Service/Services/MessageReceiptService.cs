@@ -65,5 +65,4 @@ public class MessageReceiptService : ServiceBase
         await _eventBus.PublishAsync(command);
         return command.Result;
     }
-
 }
