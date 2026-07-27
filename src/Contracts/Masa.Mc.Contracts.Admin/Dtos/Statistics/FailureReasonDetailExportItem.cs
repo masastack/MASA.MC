@@ -15,10 +15,10 @@ public sealed class FailureReasonDetailExportItem
     public string FailureReason { get; init; } = string.Empty;
 
     [ExporterHeader(DisplayName = "预计发送时间")]
-    public DateTimeOffset? ExpectSendTime { get; init; }
+    public DateTime? ExpectSendTime { get; init; }
 
     [ExporterHeader(DisplayName = "实际发送时间")]
-    public DateTimeOffset? SendTime { get; init; }
+    public DateTime? SendTime { get; init; }
 
     [ExporterHeader(DisplayName = "消息ID")]
     public string MessageId { get; init; } = string.Empty;

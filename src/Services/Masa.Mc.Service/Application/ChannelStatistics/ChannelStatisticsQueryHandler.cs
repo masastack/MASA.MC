@@ -175,14 +175,14 @@ public class ChannelStatisticsQueryHandler
         var exportQuery = records
             .Where(x => x.Success == false)
             .OrderByDescending(x => x.SendTime ?? x.ExpectSendTime ?? DateTimeOffset.MinValue)
-            .Select(x => new FailureReasonDetailExportItem
+            .Select(x => new
             {
-                DisplayName = x.DisplayName,
-                ChannelUserIdentity = x.ChannelUserIdentity,
-                FailureReason = string.IsNullOrWhiteSpace(x.FailureReason) ? "Unknown" : x.FailureReason,
-                ExpectSendTime = x.ExpectSendTime,
-                SendTime = x.SendTime,
-                MessageId = x.MessageId
+                x.DisplayName,
+                x.ChannelUserIdentity,
+                x.FailureReason,
+                x.ExpectSendTime,
+                x.SendTime,
+                x.MessageId
             });
 
         const int maxExportCount = 100000;
@@ -191,7 +191,17 @@ public class ChannelStatisticsQueryHandler
         {
             throw new UserFriendlyException("导出数据量过大，请缩小筛选范围");
         }
-        var exportItems = await exportQuery.ToListAsync();
+        var exportRecords = await exportQuery.ToListAsync();
+        var exportTimeZone = CultureTimeZoneResolver.GetDefaultCultureTimeZone();
+        var exportItems = exportRecords.Select(x => new FailureReasonDetailExportItem
+        {
+            DisplayName = x.DisplayName,
+            ChannelUserIdentity = x.ChannelUserIdentity,
+            FailureReason = string.IsNullOrWhiteSpace(x.FailureReason) ? "Unknown" : x.FailureReason,
+            ExpectSendTime = CultureTimeZoneResolver.ConvertTime(x.ExpectSendTime, exportTimeZone),
+            SendTime = CultureTimeZoneResolver.ConvertTime(x.SendTime, exportTimeZone),
+            MessageId = x.MessageId
+        }).ToList();
 
         query.Result = await _exporter.ExportAsByteArray(exportItems);
     }
