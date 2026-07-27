@@ -49,15 +49,7 @@ public class SendEmailMessageEventHandler
             return;
         }
 
-        var options = new SmtpEmailOptions
-        {
-            Host = channel.ExtraProperties.GetProperty<string>(nameof(EmailChannelOptions.Smtp)) ?? string.Empty,
-            Port = channel.ExtraProperties.GetProperty<int>(nameof(EmailChannelOptions.Port)),
-            UserName = channel.ExtraProperties.GetProperty<string>(nameof(EmailChannelOptions.UserName)) ?? string.Empty,
-            Password = channel.ExtraProperties.GetProperty<string>(nameof(EmailChannelOptions.Password)) ?? string.Empty,
-            EnableSsl = channel.ExtraProperties.GetProperty<bool>(nameof(EmailChannelOptions.Ssl)),
-            DefaultFromAddress = channel.ExtraProperties.GetProperty<string>(nameof(EmailChannelOptions.UserName)) ?? string.Empty
-        };
+        var options = channel.GetSmtpEmailOptions();
         using (_emailAsyncLocal.Change(options))
         {
             int okCount = 0;

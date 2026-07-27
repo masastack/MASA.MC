@@ -11,7 +11,15 @@ public class MessageTaskUpsertDtoValidator : AbstractValidator<MessageTaskUpsert
         RuleFor(inputDto => inputDto.ChannelId).Required().When(m => !m.IsDraft);
         RuleFor(inputDto => inputDto.EntityId).Required().When(m => m.EntityType == MessageEntityTypes.Template).When(m => !m.IsDraft);
         RuleFor(inputDto => inputDto.EntityType).IsInEnum().When(m => !m.IsDraft);
+        RuleFor(inputDto => inputDto.EntityType)
+            .Equal(MessageEntityTypes.Template)
+            .WithMessage("WeixinMiniProgramOnlySupportsTemplateMessage")
+            .When(m => m.ChannelType == ChannelTypes.WeixinMiniProgram && !m.IsDraft);
         RuleFor(inputDto => inputDto.ReceiverType).IsInEnum().When(m => !m.IsDraft);
+        RuleFor(inputDto => inputDto.ReceiverType)
+            .NotEqual(ReceiverTypes.Broadcast)
+            .WithMessage("WeixinMiniProgramDoesNotSupportBroadcast")
+            .When(m => m.ChannelType == ChannelTypes.WeixinMiniProgram && !m.IsDraft);
         RuleFor(inputDto => inputDto.SelectReceiverType).IsInEnum().When(m => !m.IsDraft);
         RuleFor(inputDto => inputDto.Receivers).Required().When(m => m.ReceiverType == ReceiverTypes.Assign && !m.IsDraft);
         RuleFor(inputDto => inputDto.MessageInfo).SetValidator(new MessageInfoUpsertDtoValidator()).When(m => m.EntityType == MessageEntityTypes.Ordinary).When(m => !m.IsDraft);

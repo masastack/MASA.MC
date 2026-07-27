@@ -17,6 +17,8 @@ public class ChannelType : Enumeration
 
     public static ChannelType WeixinWorkWebhook = new WeixinWorkWebhookChannel();
 
+    public static ChannelType WeixinMiniProgram = new WeixinMiniProgramChannel();
+
     public ChannelType(int id, string name) : base(id, name)
     {
     }
@@ -184,6 +186,37 @@ public class ChannelType : Enumeration
         public override RetryMessageEvent GetRetryMessageEvent(Guid messageRecordId)
         {
             return new RetryWeixinWorkWebhookMessageEvent(messageRecordId);
+        }
+
+        public override string GetChannelUserIdentity(UserModel user)
+        {
+            return string.Empty;
+        }
+
+        public override bool SupportsBroadcast => false;
+    }
+
+    private class WeixinMiniProgramChannel : ChannelType
+    {
+        public WeixinMiniProgramChannel() : base(7, nameof(WeixinMiniProgram)) { }
+
+        public override SendMessageEvent GetSendMessageEvent(Guid channelId, MessageData messageData, MessageTaskHistory messageTaskHistory)
+        {
+            return new SendWeixinMiniProgramMessageEvent(channelId, messageData, messageTaskHistory);
+        }
+
+        public override SendSimpleMessageEvent GetSendSimpleMessageEvent(string channelUserIdentity, string channelCode, MessageData messageData, ExtraPropertyDictionary variables, string systemId)
+        {
+            return new SendSimpleWeixinMiniProgramMessageEvent(channelUserIdentity, channelCode, messageData)
+            {
+                Variables = variables,
+                SystemId = systemId
+            };
+        }
+
+        public override RetryMessageEvent GetRetryMessageEvent(Guid messageRecordId)
+        {
+            return new RetryWeixinMiniProgramMessageEvent(messageRecordId);
         }
 
         public override string GetChannelUserIdentity(UserModel user)

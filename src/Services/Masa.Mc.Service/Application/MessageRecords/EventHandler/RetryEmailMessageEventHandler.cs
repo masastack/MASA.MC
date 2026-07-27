@@ -42,15 +42,7 @@ public class RetryEmailMessageEventHandler
         var channel = await _channelRepository.AsNoTracking().FirstOrDefaultAsync(x => x.Id == messageRecord.ChannelId);
         if (channel == null) return;
 
-        var options = new SmtpEmailOptions
-        {
-            Host = channel.ExtraProperties.GetProperty<string>(nameof(EmailChannelOptions.Smtp)),
-            Port = channel.ExtraProperties.GetProperty<int>(nameof(EmailChannelOptions.Port)),
-            UserName = channel.ExtraProperties.GetProperty<string>(nameof(EmailChannelOptions.UserName)),
-            Password = channel.ExtraProperties.GetProperty<string>(nameof(EmailChannelOptions.Password)),
-            EnableSsl = channel.ExtraProperties.GetProperty<bool>(nameof(EmailChannelOptions.Ssl)),
-            DefaultFromAddress = channel.ExtraProperties.GetProperty<string>(nameof(EmailChannelOptions.UserName))
-        };
+        var options = channel.GetSmtpEmailOptions();
         using (_emailAsyncLocal.Change(options))
         {
             var messageData = await _taskDomainService.GetMessageDataAsync(messageRecord.MessageTaskId, messageRecord.Variables);

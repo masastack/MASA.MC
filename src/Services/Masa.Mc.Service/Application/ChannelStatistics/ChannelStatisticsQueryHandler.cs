@@ -33,8 +33,8 @@ public class ChannelStatisticsQueryHandler
 
         var grouped = await (from record in records
                              join receiver in receiverUsers
-                                 on new { record.MessageTaskHistoryId, record.ChannelUserIdentity }
-                                 equals new { receiver.MessageTaskHistoryId, receiver.ChannelUserIdentity } into receiverGroup
+                                 on new { record.MessageTaskHistoryId, record.ChannelUserIdentity, record.UserId }
+                                 equals new { receiver.MessageTaskHistoryId, receiver.ChannelUserIdentity, receiver.UserId } into receiverGroup
                              from receiver in receiverGroup.DefaultIfEmpty()
                              select new
                              {
@@ -108,7 +108,7 @@ public class ChannelStatisticsQueryHandler
         records = ApplyVendorFilter(records, input);
 
         var result = await records
-            .GroupBy(x => x.CreationTime.AddHours(8).Date)
+            .GroupBy(x => x.ExpectSendTime!.Value.AddHours(8).Date)
             .Select(g => new ChannelSendTrendDto
             {
                 Date = g.Key,
@@ -230,8 +230,8 @@ public class ChannelStatisticsQueryHandler
         Expression<Func<MessageRecordQueryModel, bool>> condition = x => true;
         condition = condition.And(input.ChannelId.HasValue, x => x.ChannelId == input.ChannelId);
         condition = condition.And(input.TemplateId.HasValue, x => x.MessageEntityType == MessageEntityTypes.Template && x.MessageEntityId == input.TemplateId);
-        condition = condition.And(true, x => x.CreationTime >= input.StartTime);
-        condition = condition.And(true, x => x.CreationTime <= input.EndTime);
+        condition = condition.And(true, x => x.ExpectSendTime >= input.StartTime);
+        condition = condition.And(true, x => x.ExpectSendTime <= input.EndTime);
         return query.Where(condition);
     }
 
@@ -250,8 +250,8 @@ public class ChannelStatisticsQueryHandler
 
         return from record in records
                join receiver in receiverUsers
-                   on new { record.MessageTaskHistoryId, record.ChannelUserIdentity }
-                   equals new { receiver.MessageTaskHistoryId, receiver.ChannelUserIdentity }
+                   on new { record.MessageTaskHistoryId, record.ChannelUserIdentity, record.UserId }
+                   equals new { receiver.MessageTaskHistoryId, receiver.ChannelUserIdentity, receiver.UserId }
                select record;
     }
 

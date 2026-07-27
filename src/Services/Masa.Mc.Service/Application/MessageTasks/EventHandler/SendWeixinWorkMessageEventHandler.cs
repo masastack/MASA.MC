@@ -36,7 +36,8 @@ public class SendWeixinWorkMessageEventHandler
     [EventHandler]
     public async Task HandleEventAsync(SendWeixinWorkMessageEvent eto)
     {
-        var options = await GetOptionsAsync(eto.ChannelId);
+        var channel = await _channelRepository.AsNoTracking().FirstOrDefaultAsync(x => x.Id == eto.ChannelId);
+        var options = channel.GetWeixinWorkOptions();
 
         var taskHistory = eto.MessageTaskHistory;
         var messageRecords = new List<MessageRecord>();
@@ -99,18 +100,6 @@ public class SendWeixinWorkMessageEventHandler
             var message = new WeixinWorkTextMessage(toUser, messageData.MessageContent.Content);
             return await _weixinWorkSender.SendTextAsync(message);
         }
-    }
-
-    private async Task<WeixinWorkOptions> GetOptionsAsync(Guid channelId)
-    {
-        var channel = await _channelRepository.AsNoTracking().FirstOrDefaultAsync(x => x.Id == channelId);
-        var options = new WeixinWorkOptions
-        {
-            CorpId = channel?.ExtraProperties.GetProperty<string>(nameof(WeixinWorkOptions.CorpId)) ?? string.Empty,
-            CorpSecret = channel?.ExtraProperties.GetProperty<string>(nameof(WeixinWorkOptions.CorpSecret)) ?? string.Empty,
-            AgentId = channel?.ExtraProperties.GetProperty<string>(nameof(WeixinWorkOptions.AgentId)) ?? string.Empty,
-        };
-        return options;
     }
 
     private async Task<List<string>> GetCheckChannelUserIdentitysAsync(SendWeixinWorkMessageEvent eto)
