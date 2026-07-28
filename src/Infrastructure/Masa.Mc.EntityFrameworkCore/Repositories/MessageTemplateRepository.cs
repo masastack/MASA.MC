@@ -28,6 +28,13 @@ public class MessageTemplateRepository : Repository<McDbContext, MessageTemplate
             : await Context.Set<MessageTemplate>().Where(predicate).FirstOrDefaultAsync(cancellationToken);
     }
 
+    public async Task<MessageTemplate?> FindNoTrackingAsync(Expression<Func<MessageTemplate, bool>> predicate, bool include = true, CancellationToken cancellationToken = default(CancellationToken))
+    {
+        return include
+            ? await (await WithDetailsAsync()).AsNoTracking().Where(predicate).FirstOrDefaultAsync(cancellationToken)
+            : await Context.Set<MessageTemplate>().AsNoTracking().Where(predicate).FirstOrDefaultAsync(cancellationToken);
+    }
+
     public async Task<bool> AnyAsync(Expression<Func<MessageTemplate, bool>> predicate)
     {
         return await Context.Set<MessageTemplate>().AnyAsync(predicate);

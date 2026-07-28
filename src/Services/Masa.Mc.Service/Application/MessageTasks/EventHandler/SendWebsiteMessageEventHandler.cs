@@ -49,7 +49,7 @@ public class SendWebsiteMessageEventHandler
         int okCount = 0;
         int totalCount = taskHistory.ReceiverUsers.Count;
 
-        var messageTemplate = await _templateRepository.FindAsync(x => x.Id == taskHistory.MessageTask.EntityId, false);
+        var messageTemplate = await _templateRepository.FindNoTrackingAsync(x => x.Id == taskHistory.MessageTask.EntityId, false);
         var insertMessageRecords = new List<MessageRecord>();
         var insertWebsiteMessages = new List<WebsiteMessage>();
 

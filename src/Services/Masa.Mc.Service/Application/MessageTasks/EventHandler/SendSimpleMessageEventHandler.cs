@@ -56,7 +56,7 @@ public class SendSimpleMessageEventHandler
 
             if (eto.MessageData.MessageType == MessageEntityTypes.Template)
             {
-                messageTemplate = await _messageTemplateRepository.FindAsync(x => x.Id == messageEntityId);
+                messageTemplate = await _messageTemplateRepository.FindNoTrackingAsync(x => x.Id == messageEntityId);
                 if (messageTemplate?.GetUnsubscribeConfig().Enabled == true &&
                     await _channelUnsubscriptionDomainService.IsSmsTemplateUnsubscribedAsync(channel.Id, eto.ChannelUserIdentity, messageEntityId))
                 {

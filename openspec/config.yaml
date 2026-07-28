@@ -1,0 +1,45 @@
+schema: spec-driven
+
+context: |
+  Project: MASA.MC，MASA Stack 的消息中心服务。
+  Domain: 支持全局消息配置与多渠道发放，核心领域包括渠道、消息模板、
+    消息任务、消息记录、消息回执、接收人组、退订、站内信，以及 App/vendor
+    通知配置。
+  Stack: .NET 6、MASA Framework 1.2 preview packages、MASA Stack SDKs、
+    Dapr、Entity Framework Core 6、PostgreSQL 和 SQL Server migrations、
+    Minimal APIs/CQRS、FluentValidation、Mapster、Redis cache、SignalR、
+    Scheduler SDK，以及短信、邮件、企业微信、微信小程序和 App 推送渠道集成。
+  Layout:
+    - src/Domain 放聚合、仓储接口、领域事件和共享常量。
+    - src/Contracts 放 Admin DTO、请求/响应契约、Options 和 validators。
+    - src/Infrastructure 放 EF Core、缓存、公共工具、渠道 provider、
+      object extending、邮件、短信、微信、SignalR、App notification 和 CSV 辅助能力。
+    - src/Services/Masa.Mc.Service 放 Admin service 的应用层、
+      query/command handlers、jobs、API 设置和 service-level infrastructure。
+    - src/ApiGateways/Caller 放 caller SDK gateway。
+  Conventions:
+    - 保持现有 DDD 分层和 namespace 风格。
+    - 优先使用已有 MASA 抽象、仓储模式、领域事件、options resolve、
+      validators 和 extension methods。
+    - 需求行为变化先走 OpenSpec change，再实现代码。
+    - 数据库行为变化要同时考虑 PostgreSQL 和 SQL Server。
+    - 消息发放行为变化要考虑重试、回执、退订规则、接收人解析、模板渲染、
+      幂等性和可审计性。
+
+rules:
+  proposal:
+    - 每个 change 聚焦一个用户可感知能力或一组内聚重构。
+    - 受影响 capability 使用稳定的英文 kebab-case 名称。
+    - 明确写出 API、契约、migration、Dapr、scheduler 和跨渠道影响。
+  specs:
+    - 规范性行为使用 SHALL 或 MUST。
+    - 每个 requirement 至少包含一个 WHEN/THEN scenario。
+    - 相关时覆盖失败、权限、空输入和跨渠道场景。
+  design:
+    - 跨层变化、数据模型变化、新依赖或发放语义变化时要包含 design.md。
+    - 说明变更如何落在 Domain、Contracts、Infrastructure 和 Service 层。
+    - 涉及 migration 或后台任务时记录发布和回滚考虑。
+  tasks:
+    - task 粒度要小到一次编码会话可以完成。
+    - 包含与受影响项目匹配的 validation/build/test 任务。
+    - 持久化变化要包含两个数据库 provider 的 migration 任务。

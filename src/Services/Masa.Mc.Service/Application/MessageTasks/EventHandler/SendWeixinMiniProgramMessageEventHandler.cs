@@ -50,7 +50,7 @@ public class SendWeixinMiniProgramMessageEventHandler
         }
 
         var messageTemplate = eto.MessageData.MessageType == MessageEntityTypes.Template
-            ? await _templateRepository.FindAsync(x => x.Id == taskHistory.MessageTask.EntityId, false)
+            ? await _templateRepository.FindNoTrackingAsync(x => x.Id == taskHistory.MessageTask.EntityId, false)
             : null;
         var templateId = eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.TemplateId));
         var options = channel.GetWeixinMiniProgramOptions();
@@ -87,7 +87,7 @@ public class SendWeixinMiniProgramMessageEventHandler
         var templateId = eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.TemplateId));
         var messageEntityId = eto.MessageData.GetDataValue<Guid>(nameof(MessageTemplate.Id));
         var messageTemplate = eto.MessageData.MessageType == MessageEntityTypes.Template
-            ? await _templateRepository.FindAsync(x => x.Id == messageEntityId, false)
+            ? await _templateRepository.FindNoTrackingAsync(x => x.Id == messageEntityId, false)
             : null;
         var messageRecord = new MessageRecord(Guid.Empty, eto.ChannelUserIdentity, channel.Id, Guid.Empty, Guid.Empty, eto.Variables, eto.MessageData.MessageContent.Title, DateTimeOffset.UtcNow, eto.SystemId);
         messageRecord.SetMessageEntity(eto.MessageData.MessageType, messageEntityId);

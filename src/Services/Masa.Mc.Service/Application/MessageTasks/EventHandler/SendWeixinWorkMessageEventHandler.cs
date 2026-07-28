@@ -107,7 +107,7 @@ public class SendWeixinWorkMessageEventHandler
         var checkChannelUserIdentitys = new List<string>();
         if (eto.MessageData.MessageType == MessageEntityTypes.Template)
         {
-            var messageTemplate = await _templateRepository.FindAsync(x => x.Id == eto.MessageTaskHistory.MessageTask.EntityId, false);
+            var messageTemplate = await _templateRepository.FindNoTrackingAsync(x => x.Id == eto.MessageTaskHistory.MessageTask.EntityId, false);
             checkChannelUserIdentitys = await _messageTemplateDomainService.CheckSendUpperLimitAsync(messageTemplate, eto.MessageTaskHistory.ReceiverUsers.Select(x => x.ChannelUserIdentity).Distinct().ToList());
         }
         return checkChannelUserIdentitys;
