@@ -19,7 +19,7 @@ public class CreateTemplateMessageTaskCommandHandler
     [EventHandler(1)]
     public async Task CheckMessageTemplateAsync(CreateTemplateMessageTaskCommand createCommand)
     {
-        var messageTemplate = await _messageTemplateRepository.FindAsync(x => x.Id == createCommand.MessageTask.EntityId);
+        var messageTemplate = await _messageTemplateRepository.FindNoTrackingAsync(x => x.Id == createCommand.MessageTask.EntityId);
         if (messageTemplate == null && !createCommand.MessageTask.IsDraft)
             throw new UserFriendlyException(errorCode: UserFriendlyExceptionCodes.MESSAGE_TEMPLATE_NOT_EXIST);
 

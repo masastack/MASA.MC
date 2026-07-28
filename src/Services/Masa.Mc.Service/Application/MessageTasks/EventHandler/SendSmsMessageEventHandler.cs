@@ -45,7 +45,7 @@ public class SendSmsMessageEventHandler
         var channelId = eto.ChannelId;
         var taskHistory = eto.MessageTaskHistory;
 
-        var messageTemplate = await _templateRepository.FindAsync(x => x.Id == taskHistory.MessageTask.EntityId);
+        var messageTemplate = await _templateRepository.FindNoTrackingAsync(x => x.Id == taskHistory.MessageTask.EntityId);
         var messageRecords = new List<MessageRecord>();
 
         foreach (var item in taskHistory.ReceiverUsers)

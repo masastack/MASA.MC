@@ -126,7 +126,7 @@ public class MessageTaskCommandHandler
         var channel = await _channelRepository.AsNoTracking().FirstOrDefaultAsync(x => x.Code == command.inputDto.ChannelCode);
         MasaArgumentException.ThrowIfNull(channel, _i18n.T("Channel"));
 
-        var template = await _messageTemplateRepository.FindAsync(x => x.Code == command.inputDto.TemplateCode);
+        var template = await _messageTemplateRepository.FindNoTrackingAsync(x => x.Code == command.inputDto.TemplateCode);
         MasaArgumentException.ThrowIfNull(template, _i18n.T("MessageTemplate"));
 
         var taskUpsertDto = (MessageTaskUpsertDto)command.inputDto;
@@ -154,7 +154,7 @@ public class MessageTaskCommandHandler
         var channel = await _channelRepository.AsNoTracking().FirstOrDefaultAsync(x => x.Code == command.inputDto.ChannelCode);
         MasaArgumentException.ThrowIfNull(channel, _i18n.T("Channel"));
 
-        var template = await _messageTemplateRepository.FindAsync(x => x.Code == command.inputDto.TemplateCode);
+        var template = await _messageTemplateRepository.FindNoTrackingAsync(x => x.Code == command.inputDto.TemplateCode);
         MasaArgumentException.ThrowIfNull(template, _i18n.T("MessageTemplate"));
 
         var taskUpsertDto = (MessageTaskUpsertDto)command.inputDto;
@@ -206,7 +206,7 @@ public class MessageTaskCommandHandler
     [EventHandler]
     public async Task SendSimpleMessageAsync(SendSimpleTemplateMessageCommand command)
     {
-        var template = await _messageTemplateRepository.FindAsync(x => x.Code == command.InputDto.TemplateCode, false);
+        var template = await _messageTemplateRepository.FindNoTrackingAsync(x => x.Code == command.InputDto.TemplateCode, false);
         MasaArgumentException.ThrowIfNull(template, _i18n.T("MessageTemplate"));
 
         var messageData = new MessageData(template.MessageContent, MessageEntityTypes.Template);
@@ -230,7 +230,7 @@ public class MessageTaskCommandHandler
             throw new UserFriendlyException(errorCode: UserFriendlyExceptionCodes.CHANNEL_REQUIRED);
         if (entity.EntityType == MessageEntityTypes.Template)
         {
-            var messageTemplate = await _messageTemplateRepository.FindAsync(e => e.Id == entity.EntityId);
+            var messageTemplate = await _messageTemplateRepository.FindNoTrackingAsync(e => e.Id == entity.EntityId);
             if (messageTemplate == null)
                 throw new UserFriendlyException(errorCode: UserFriendlyExceptionCodes.MESSAGE_TEMPLATE_NOT_EXIST);
         }
