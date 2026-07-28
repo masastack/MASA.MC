@@ -182,6 +182,7 @@ global using Masa.Mc.Service.Admin.Domain.WebsiteMessages.Services;
 global using Masa.Mc.Service.Admin.EntityFrameworkCore;
 global using Masa.Mc.Service.Admin.Infrastructure.Authentication;
 global using Masa.Mc.Service.Admin.Infrastructure.ChannelUserFinder.Provider.Auth;
+global using Masa.Mc.Service.Admin.Infrastructure.Culture;
 global using Masa.Mc.Service.Admin.Infrastructure.Extensions;
 global using Masa.Mc.Service.Admin.Infrastructure.MessageTaskJobService;
 global using Masa.Mc.Service.Admin.Infrastructure.Middleware;
