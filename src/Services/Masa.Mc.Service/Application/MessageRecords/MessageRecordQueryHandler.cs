@@ -206,7 +206,7 @@ public class MessageRecordQueryHandler
         query.Result = inboundItems
             .Concat(outboundItems)
             .Where(x => !string.IsNullOrWhiteSpace(x.Content))
-            .OrderByDescending(x => x.SendTime)
+            .OrderBy(x => x.SendTime)
             .ToList();
     }
 
