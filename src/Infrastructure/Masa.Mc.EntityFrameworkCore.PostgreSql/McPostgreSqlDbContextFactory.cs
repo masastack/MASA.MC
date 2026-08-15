@@ -12,6 +12,8 @@ public class McPostgreSqlDbContextFactory : IDesignTimeDbContextFactory<McDbCont
         var configurationBuilder = new ConfigurationBuilder();
         var configuration = configurationBuilder
             .AddJsonFile("appsettings.PostgreSql.json")
+            .AddJsonFile("appsettings.secrets.json", optional: true)
+            .AddEnvironmentVariables()
             .Build();
         optionsBuilder.UseNpgsql(configuration.GetConnectionString("DefaultConnection")!, b => b.MigrationsAssembly("Masa.Mc.EntityFrameworkCore.PostgreSql"));
 
