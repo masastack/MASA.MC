@@ -20,6 +20,9 @@
 	</ItemGroup>
 	
 	<ItemGroup>
+	  <None Update="appsettings.secrets.json">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
 	  <None Update="appsettings.SqlServer.json">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
