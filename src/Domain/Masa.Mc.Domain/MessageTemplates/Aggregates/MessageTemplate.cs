@@ -99,6 +99,11 @@ public class MessageTemplate : FullAggregateRoot<Guid, Guid>
         return UnsubscribeConfig ?? MessageTemplateUnsubscribeConfig.Disabled();
     }
 
+    public bool IsUnsubscribeOrResubscribeTemplate()
+    {
+        return TemplateType == (int)SmsTemplateTypes.Unsubscribe || TemplateType == (int)SmsTemplateTypes.Resubscribe;
+    }
+
     private void ApplyUnsubscribeConfig(MessageTemplateUnsubscribeConfig config)
     {
         Check.NotNull(config, nameof(config));

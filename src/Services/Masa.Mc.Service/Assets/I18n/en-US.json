@@ -27,6 +27,7 @@
   "MessageTaskHistoryWithdrawn": "Message task history has been canceled",
   "CanBeModifiedBeforeSending": "It can only be modified before being sent",
   "MessageTemplateCannotDeleteByMessageTask": "There are message tasks in use and cannot be deleted",
+  "MessageTemplateCannotDeleteByUnsubscribeConfig": "This template is referenced by other templates' unsubscribe configuration and cannot be deleted",
   "ChannelCannotDeleted": "This channel cannot be deleted",
   "ChannelCannotRepeated": "Channel code cannot be repeated",
   "ChannelTypeDoesNotMatchChannel": "Channel type does not match the channel",

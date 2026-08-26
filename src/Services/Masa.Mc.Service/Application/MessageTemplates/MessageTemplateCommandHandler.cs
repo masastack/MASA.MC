@@ -59,6 +59,22 @@ public class MessageTemplateCommandHandler
         {
             throw new UserFriendlyException(errorCode: UserFriendlyExceptionCodes.MESSAGE_TEMPLATE_CANNOT_DELETE_BY_MESSAGE_TASK);
         }
+
+        if (entity.IsUnsubscribeOrResubscribeTemplate()
+            && await IsReferencedByOtherTemplateUnsubscribeConfigAsync(createCommand.MessageTemplateId))
+        {
+            throw new UserFriendlyException(errorCode: UserFriendlyExceptionCodes.MESSAGE_TEMPLATE_CANNOT_DELETE_BY_UNSUBSCRIBE_CONFIG);
+        }
+
         await _domainService.DeleteAsync(entity);
+    }
+
+    private async Task<bool> IsReferencedByOtherTemplateUnsubscribeConfigAsync(Guid messageTemplateId)
+    {
+        return await _repository.AnyAsync(x =>
+            x.Id != messageTemplateId
+            && x.UnsubscribeConfig!.Enabled
+            && (x.UnsubscribeConfig.UnsubscribeAutoReplyTemplateId == messageTemplateId
+                || x.UnsubscribeConfig.ResubscribeAutoReplyTemplateId == messageTemplateId));
     }
 }

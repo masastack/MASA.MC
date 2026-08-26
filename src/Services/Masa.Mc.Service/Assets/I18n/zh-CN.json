@@ -28,6 +28,7 @@
  "MessageTaskHistoryWithdrawn": "消息任务历史已撤销",  
  "CanBeModifiedBeforeSending": "发送前才能修改",  
  "MessageTemplateCannotDeleteByMessageTask": "有消息任务正在使用，无法删除",  
+ "MessageTemplateCannotDeleteByUnsubscribeConfig": "该模板已被其他模板的退订配置引用，无法删除",
  "ChannelCannotDeleted": "这个渠道不能被删除",  
  "ChannelCannotRepeated": "渠道编码不能重复",  
  "ChannelTypeDoesNotMatchChannel": "渠道类型与渠道不匹配",  
