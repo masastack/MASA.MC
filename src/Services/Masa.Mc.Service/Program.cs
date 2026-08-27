@@ -187,7 +187,16 @@ var app = builder.AddServices(options =>
 
 app.UseMiddleware<AdminSafeListMiddleware>(publicConfiguration.GetSection("$public.WhiteListOptions").Get<WhiteListOptions>());
 
-app.UseI18n();
+app.UseI18n("zh-CN", options =>
+{
+    var acceptLanguageProvider = options.RequestCultureProviders
+        .OfType<Microsoft.AspNetCore.Localization.AcceptLanguageHeaderRequestCultureProvider>()
+        .FirstOrDefault();
+    if (acceptLanguageProvider != null)
+    {
+        options.RequestCultureProviders.Remove(acceptLanguageProvider);
+    }
+});
 app.UseWeixinWork(app.Environment);
 app.UseMasaExceptionHandler(opt =>
 {

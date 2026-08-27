@@ -20,6 +20,7 @@ public static class UserFriendlyExceptionCodes
     public const string MESSAGE_TASK_HISTORY_WITHDRAWN = "MessageTaskHistoryWithdrawn";
     public const string CAN_BE_MODIFIED_BEFORE_SENDING = "CanBeModifiedBeforeSending";
     public const string MESSAGE_TEMPLATE_CANNOT_DELETE_BY_MESSAGE_TASK = "MessageTemplateCannotDeleteByMessageTask";
+    public const string MESSAGE_TEMPLATE_CANNOT_DELETE_BY_UNSUBSCRIBE_CONFIG = "MessageTemplateCannotDeleteByUnsubscribeConfig";
     public const string CHANNEL_CANNOT_DELETED = "ChannelCannotDeleted";
     public const string CHANNEL_CANNOT_REPEATED = "ChannelCannotRepeated";
     public const string CHANNEL_TYPE_DOES_NOT_MATCH_CHANNEL = "ChannelTypeDoesNotMatchChannel";
