@@ -7,9 +7,9 @@ public class ChannelStatisticsQueryHandler
 {
     private readonly IMcQueryContext _context;
     private readonly IDataFilter _dataFilter;
-    private readonly ICsvExporter _exporter;
+    private readonly IXlsxExporter _exporter;
 
-    public ChannelStatisticsQueryHandler(IMcQueryContext context, IDataFilter dataFilter, ICsvExporter exporter)
+    public ChannelStatisticsQueryHandler(IMcQueryContext context, IDataFilter dataFilter, IXlsxExporter exporter)
     {
         _context = context;
         _dataFilter = dataFilter;
