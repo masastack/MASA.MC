@@ -98,6 +98,7 @@ builder.Services.AddAppNotification(redisOptions);
 builder.Services.AddWeixinWork(builder.Configuration);
 builder.Services.AddWeixinMiniProgram();
 builder.Services.AddCsv();
+builder.Services.AddXlsx();
 builder.Services.AddSingleton<ITemplateRenderer, TextTemplateRenderer>();
 builder.Services.AddTransient<IUserIdProvider, McUserIdProvider>();
 builder.Services.AddSignalR();

@@ -129,6 +129,7 @@ global using Masa.Mc.Infrastructure.Email.Infrastructure.OptionsResolve.Contribu
 global using Masa.Mc.Infrastructure.Email.Smtp;
 global using Masa.Mc.Infrastructure.EntityFrameworkCore.ValueConverters;
 global using Masa.Mc.Infrastructure.ExporterAndImporter.Csv;
+global using Masa.Mc.Infrastructure.ExporterAndImporter.Excel;
 global using Masa.Mc.Infrastructure.MailKit;
 global using Masa.Mc.Infrastructure.ObjectExtending;
 global using Masa.Mc.Infrastructure.OptionsResolve;
@@ -216,6 +217,7 @@ global using System.Text.RegularExpressions;
 global using static AlibabaCloud.SDK.Dysmsapi20170525.Models.QuerySmsTemplateListResponseBody;
 global using ICsvExporter = Masa.Mc.Infrastructure.ExporterAndImporter.Csv.ICsvExporter;
 global using ICsvImporter = Masa.Mc.Infrastructure.ExporterAndImporter.Csv.ICsvImporter;
+global using IXlsxExporter = Masa.Mc.Infrastructure.ExporterAndImporter.Excel.IXlsxExporter;
 global using Masa.Mc.Infrastructure.Sms.Model.Response.SendSms;
 global using Masa.Mc.Infrastructure.Sms.Model.Response.SmsTemplate;
 global using Masa.Mc.Infrastructure.Sms.Model.Response;
