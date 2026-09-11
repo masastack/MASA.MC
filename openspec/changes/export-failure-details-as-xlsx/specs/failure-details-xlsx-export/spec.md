@@ -41,15 +41,15 @@ The system SHALL format the expected send time and actual send time columns as `
 - **THEN** its corresponding XLSX cell uses the `yyyy-MM-dd HH:mm:ss` format
 - **AND** the cell display does not include a weekday or AM/PM marker
 
-### Requirement: Export without GDI dependencies
+### Requirement: Support automatic column sizing
 
-The system MUST generate failure-details workbooks in the Linux service container without invoking automatic column width calculation or requiring `libgdiplus`.
+The system SHALL generate failure-details workbooks with automatic column sizing when the Linux service image provides the required `libgdiplus` dependency.
 
 #### Scenario: Export from Linux container
 
 - **WHEN** an administrator requests a failure-details export from the Linux service container
-- **THEN** the system returns the XLSX workbook without invoking EPPlus `AutoFitColumns` or `AutoFit`
-- **AND** the export does not require `libgdiplus`
+- **THEN** the system returns the XLSX workbook with automatically sized columns
+- **AND** the service image provides `libgdiplus`
 
 ### Requirement: Preserve existing export constraints
 

@@ -6,7 +6,7 @@ ENV CSPROJ="src/Services/Masa.Mc.Service/Masa.Mc.Service.Admin.csproj"
 RUN dotnet restore $CSPROJ && dotnet publish $CSPROJ -c Release -o /app/publish
 
 
-FROM registry.cn-hangzhou.aliyuncs.com/masa/dotnet_aspnet:6.0.0
+FROM registry.cn-hangzhou.aliyuncs.com/masa/dotnet_aspnet:6.0.0-libgdiplus
 WORKDIR /app
 COPY --from=publish /app/publish .
 ENV ASPNETCORE_URLS=http://0.0.0.0:80
