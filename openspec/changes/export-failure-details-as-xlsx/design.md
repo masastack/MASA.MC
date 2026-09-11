@@ -36,9 +36,9 @@
 
 后端路由、查询参数和返回类型仍保持不变，仅返回 XLSX 字节。管理端将下载文件名改为 `.xlsx`，Content-Type 改为 `application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`。
 
-### 禁用失败详情导出的自动列宽
+### 使用默认自动列宽
 
-`Magicodes.IE.Excel` 2.6.4 的自动列宽会通过 EPPlus 调用 `System.Drawing`。由于 Service 运行在 Linux 容器中，失败详情导出模型必须同时设置 `AutoFitAllColumn = false`，并将每个 `ExporterHeader.IsAutoFit` 设为 `false`。前者关闭整表自动列宽，后者避免库在样式阶段对单列再次调用 `AutoFit()`。列宽由 Excel 默认值处理，不影响单元格文本类型和内容。
+`Magicodes.IE.Excel` 2.6.4 的自动列宽会通过 EPPlus 调用 `System.Drawing`。部署运行镜像已提供 `libgdiplus`，因此失败详情导出保留库的默认自动列宽，以改善工作簿可读性。运行环境必须持续提供该系统依赖。
 
 ## Risks / Trade-offs
 
@@ -46,7 +46,7 @@
 - [文件体积] XLSX 通常比 CSV 产生更多元数据 → 当前导出上限为 100,000 条，接受可控的体积增长。
 - [客户端兼容性] 旧的 CSV 下载脚本可能依赖 `.csv` 扩展名 → 该接口是管理端按钮调用，随前端同步更新；接口路径和参数不变。
 - [文本类型回归] 某些 Excel exporter 配置可能根据值推断类型 → 测试使用超过 15 位的纯数字消息 ID，读取生成的 XLSX 单元格确认其类型和完整值。
-- [列宽体验] 禁用自动列宽后，部分列可能需要用户手动调整宽度 → 优先保证 Linux 服务端稳定导出；后续可使用不依赖 GDI 的固定列宽方案优化。
+- [运行镜像依赖] 自动列宽需要 `libgdiplus` → 保持基础镜像已提供该依赖；镜像升级时验证导出功能。
 
 ## Migration Plan
 

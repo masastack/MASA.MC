@@ -3,24 +3,23 @@
 
 namespace Masa.Mc.Contracts.Admin.Dtos.Statistics;
 
-[ExcelExporter(AutoFitAllColumn = false)]
 public sealed class FailureReasonDetailExportItem
 {
-    [ExporterHeader(DisplayName = "消息标题", IsAutoFit = false)]
+    [ExporterHeader(DisplayName = "消息标题")]
     public string DisplayName { get; init; } = string.Empty;
 
-    [ExporterHeader(DisplayName = "渠道用户标识", IsAutoFit = false)]
+    [ExporterHeader(DisplayName = "渠道用户标识")]
     public string ChannelUserIdentity { get; init; } = string.Empty;
 
-    [ExporterHeader(DisplayName = "失败原因", IsAutoFit = false)]
+    [ExporterHeader(DisplayName = "失败原因")]
     public string FailureReason { get; init; } = string.Empty;
 
-    [ExporterHeader(DisplayName = "预计发送时间", Format = "yyyy-MM-dd HH:mm:ss", IsAutoFit = false)]
+    [ExporterHeader(DisplayName = "预计发送时间", Format = "yyyy-MM-dd HH:mm:ss")]
     public DateTime? ExpectSendTime { get; init; }
 
-    [ExporterHeader(DisplayName = "实际发送时间", Format = "yyyy-MM-dd HH:mm:ss", IsAutoFit = false)]
+    [ExporterHeader(DisplayName = "实际发送时间", Format = "yyyy-MM-dd HH:mm:ss")]
     public DateTime? SendTime { get; init; }
 
-    [ExporterHeader(DisplayName = "消息ID", IsAutoFit = false)]
+    [ExporterHeader(DisplayName = "消息ID")]
     public string MessageId { get; init; } = string.Empty;
 }

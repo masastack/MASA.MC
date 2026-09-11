@@ -1,7 +1,6 @@
 global using FluentValidation;
 global using Magicodes.ExporterAndImporter.Core;
 global using Magicodes.ExporterAndImporter.Core.Models;
-global using Magicodes.ExporterAndImporter.Excel;
 global using Masa.Mc.Contracts.Admin.Dtos.Channels;
 global using Masa.Mc.Contracts.Admin.Dtos.Unsubscriptions;
 global using Masa.Mc.Contracts.Admin.Dtos.MessageInfos;

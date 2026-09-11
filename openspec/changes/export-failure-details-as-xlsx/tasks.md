@@ -3,7 +3,7 @@
 - [x] 1.1 创建独立的 `Masa.Mc.Infrastructure.ExporterAndImporter.Excel` 项目
 - [x] 1.2 在 Excel 项目中添加 `Magicodes.IE.Excel` 2.6.4 依赖
 - [x] 1.3 在 Excel 项目中新增 XLSX exporter 接口、实现和 DI 注册，保留现有 CSV exporter
-- [x] 1.4 关闭失败详情导出模型及其每列的自动列宽，避免 Linux 容器依赖 `libgdiplus`
+- [x] 1.4 使用默认自动列宽，并以部署镜像提供 `libgdiplus` 为运行环境前提
 - [x] 1.5 验证字符串属性写入 XLSX 时为文本单元格，并覆盖长数字消息 ID
 
 ## 2. 失败详情导出链路
