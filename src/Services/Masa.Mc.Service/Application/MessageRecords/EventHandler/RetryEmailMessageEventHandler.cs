@@ -13,6 +13,7 @@ public class RetryEmailMessageEventHandler
     private readonly MessageTemplateDomainService _messageTemplateDomainService;
     private readonly IMessageTemplateRepository _repository;
     private readonly II18n<DefaultResource> _i18n;
+    private readonly MessageRecordContentDomainService _recordContentDomainService;
 
     public RetryEmailMessageEventHandler(IEmailAsyncLocal emailAsyncLocal
         , IEmailSender emailSender
@@ -21,7 +22,8 @@ public class RetryEmailMessageEventHandler
         , MessageTaskDomainService taskDomainService
         , MessageTemplateDomainService messageTemplateDomainService
         , IMessageTemplateRepository repository
-        , II18n<DefaultResource> i18n)
+        , II18n<DefaultResource> i18n
+        , MessageRecordContentDomainService recordContentDomainService)
     {
         _emailAsyncLocal = emailAsyncLocal;
         _emailSender = emailSender;
@@ -31,6 +33,7 @@ public class RetryEmailMessageEventHandler
         _messageTemplateDomainService = messageTemplateDomainService;
         _repository = repository;
         _i18n = i18n;
+        _recordContentDomainService = recordContentDomainService;
     }
 
     [EventHandler]
@@ -50,6 +53,7 @@ public class RetryEmailMessageEventHandler
             if (messageData.MessageType == MessageEntityTypes.Template)
             {
                 var messageTemplate = await _repository.FindAsync(x => x.Id == messageRecord.MessageEntityId, false);
+                messageRecord.RefreshTemplateContentForRetry(_recordContentDomainService.Create(messageData));
                 if (!await _messageTemplateDomainService.CheckSendUpperLimitAsync(messageTemplate, messageRecord.ChannelUserIdentity))
                 {
                     messageRecord.SetResult(false, _i18n.T("DailySendingLimit"));

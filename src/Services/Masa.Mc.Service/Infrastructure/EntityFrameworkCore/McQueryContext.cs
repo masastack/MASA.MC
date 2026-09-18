@@ -111,6 +111,16 @@ public class McQueryContext : MasaDbContext<McQueryContext>, IMcQueryContext
             b.ToView(MCConsts.DbTablePrefix + "MessageRecords", MCConsts.DbSchema);
             b.Property(x => x.ExtraProperties).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
             b.Property(x => x.Variables).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
+            b.HasOne(x => x.ContentSnapshot)
+                .WithOne()
+                .HasForeignKey<MessageRecordContentQueryModel>(x => x.MessageRecordId);
+        });
+
+        builder.Entity<MessageRecordContentQueryModel>(b =>
+        {
+            b.ToView(MCConsts.DbTablePrefix + "MessageRecordContents", MCConsts.DbSchema);
+            b.HasKey(x => x.MessageRecordId);
+            b.Property(x => x.ExtraProperties).HasConversion(new ExtraPropertiesValueConverter()).Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
         });
 
         builder.Entity<MessageReceiverUserQueryModel>(b =>

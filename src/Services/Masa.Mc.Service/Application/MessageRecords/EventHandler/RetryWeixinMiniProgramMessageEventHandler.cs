@@ -13,6 +13,7 @@ public class RetryWeixinMiniProgramMessageEventHandler
     private readonly MessageTemplateDomainService _messageTemplateDomainService;
     private readonly II18n<DefaultResource> _i18n;
     private readonly ILogger<RetryWeixinMiniProgramMessageEventHandler> _logger;
+    private readonly MessageRecordContentDomainService _recordContentDomainService;
 
     public RetryWeixinMiniProgramMessageEventHandler(IProviderAsyncLocal<IWeixinMiniProgramOptions> asyncLocal
         , IWeixinMiniProgramSender sender
@@ -21,7 +22,8 @@ public class RetryWeixinMiniProgramMessageEventHandler
         , IMessageTemplateRepository templateRepository
         , MessageTemplateDomainService messageTemplateDomainService
         , II18n<DefaultResource> i18n
-        , ILogger<RetryWeixinMiniProgramMessageEventHandler> logger)
+        , ILogger<RetryWeixinMiniProgramMessageEventHandler> logger
+        , MessageRecordContentDomainService recordContentDomainService)
     {
         _asyncLocal = asyncLocal;
         _sender = sender;
@@ -31,6 +33,7 @@ public class RetryWeixinMiniProgramMessageEventHandler
         _messageTemplateDomainService = messageTemplateDomainService;
         _i18n = i18n;
         _logger = logger;
+        _recordContentDomainService = recordContentDomainService;
     }
 
     [EventHandler]
@@ -49,6 +52,9 @@ public class RetryWeixinMiniProgramMessageEventHandler
             await _messageRecordRepository.UpdateAsync(messageRecord);
             return;
         }
+
+        messageRecord.RefreshTemplateContentForRetry(
+            _recordContentDomainService.CreateTemplate(messageTemplate, messageRecord.Variables));
 
         if (!await _messageTemplateDomainService.CheckSendUpperLimitAsync(messageTemplate, messageRecord.ChannelUserIdentity))
         {
@@ -107,7 +113,7 @@ public class RetryWeixinMiniProgramMessageEventHandler
 
     private Dictionary<string, string> BuildTemplateData(MessageTemplate messageTemplate, ExtraPropertyDictionary variables)
     {
-        var convertedVariables = _messageTemplateDomainService.ConvertVariables(messageTemplate, variables);
+        var convertedVariables = messageTemplate.ConvertVariables(variables);
         return convertedVariables.ToDictionary(x => x.Key, x => x.Value?.ToString() ?? string.Empty);
     }
 

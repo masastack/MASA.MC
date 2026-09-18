@@ -14,6 +14,7 @@ public class SendEmailMessageEventHandler
     private readonly ILogger<SendEmailMessageEventHandler> _logger;
     private readonly IMessageTemplateRepository _repository;
     private readonly II18n<DefaultResource> _i18n;
+    private readonly MessageRecordContentDomainService _recordContentDomainService;
 
     public SendEmailMessageEventHandler(IEmailAsyncLocal emailAsyncLocal
         , IEmailSender emailSender
@@ -23,7 +24,8 @@ public class SendEmailMessageEventHandler
         , MessageTemplateDomainService messageTemplateDomainService
         , ILogger<SendEmailMessageEventHandler> logger
         , IMessageTemplateRepository repository
-        , II18n<DefaultResource> i18n)
+        , II18n<DefaultResource> i18n
+        , MessageRecordContentDomainService recordContentDomainService)
     {
         _emailAsyncLocal = emailAsyncLocal;
         _emailSender = emailSender;
@@ -34,6 +36,7 @@ public class SendEmailMessageEventHandler
         _logger = logger;
         _repository = repository;
         _i18n = i18n;
+        _recordContentDomainService = recordContentDomainService;
     }
 
     [EventHandler]
@@ -64,6 +67,10 @@ public class SendEmailMessageEventHandler
 
                 var messageRecord = new MessageRecord(item.UserId, item.ChannelUserIdentity, channel.Id, taskHistory.MessageTaskId, taskHistory.Id, item.Variables, renderedData.MessageContent.Title, taskHistory.SendTime, taskHistory.MessageTask.SystemId);
                 messageRecord.SetMessageEntity(taskHistory.MessageTask.EntityType, taskHistory.MessageTask.EntityId);
+                if (renderedData.MessageType == MessageEntityTypes.Template)
+                {
+                    messageRecord.CaptureTemplateContent(_recordContentDomainService.Create(renderedData));
+                }
 
                 if (renderedData.MessageType == MessageEntityTypes.Template)
                 {

@@ -12,6 +12,7 @@ public class RetryWebsiteMessageEventHandler
     private readonly MessageTemplateDomainService _messageTemplateDomainService;
     private readonly IMessageTemplateRepository _templateRepository;
     private readonly II18n<DefaultResource> _i18n;
+    private readonly MessageRecordContentDomainService _recordContentDomainService;
 
     public RetryWebsiteMessageEventHandler(IHubContext<NotificationsHub> hubContext
         , IMessageRecordRepository messageRecordRepository
@@ -19,7 +20,8 @@ public class RetryWebsiteMessageEventHandler
         , IWebsiteMessageRepository repository
         , MessageTemplateDomainService messageTemplateDomainService
         , IMessageTemplateRepository templateRepository
-        , II18n<DefaultResource> i18n)
+        , II18n<DefaultResource> i18n
+        , MessageRecordContentDomainService recordContentDomainService)
     {
         _hubContext = hubContext;
         _messageRecordRepository = messageRecordRepository;
@@ -28,6 +30,7 @@ public class RetryWebsiteMessageEventHandler
         _messageTemplateDomainService = messageTemplateDomainService;
         _templateRepository = templateRepository;
         _i18n = i18n;
+        _recordContentDomainService = recordContentDomainService;
     }
 
     [EventHandler(1)]
@@ -41,6 +44,7 @@ public class RetryWebsiteMessageEventHandler
         if (messageData.MessageType == MessageEntityTypes.Template)
         {
             var messageTemplate = await _templateRepository.FindAsync(x => x.Id == messageRecord.MessageEntityId, false);
+            messageRecord.RefreshTemplateContentForRetry(_recordContentDomainService.Create(messageData));
             if (!await _messageTemplateDomainService.CheckSendUpperLimitAsync(messageTemplate, messageRecord.ChannelUserIdentity))
             {
                 messageRecord.SetResult(false, _i18n.T("DailySendingLimit"));

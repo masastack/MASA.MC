@@ -17,9 +17,9 @@ public class MessageRecordService : ServiceBase
         return await GetAsync<GetMessageRecordInputDto, PaginatedListDto<MessageRecordDto>>(string.Empty, inputDto) ?? new();
     }
 
-    public async Task<MessageRecordDto?> GetAsync(Guid id)
+    public async Task<MessageRecordDetailDto?> GetAsync(Guid id)
     {
-        return await GetAsync<MessageRecordDto>($"{id}");
+        return await GetAsync<MessageRecordDetailDto>($"{id}");
     }
 
     public async Task RetryAsync(RetryMessageRecordInputDto inputDto)

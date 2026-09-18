@@ -39,6 +39,8 @@ public class MessageRecord : FullAggregateRoot<Guid, Guid>
 
     public string MessageId { get; protected set; } = string.Empty;
 
+    public MessageContent? ContentSnapshot { get; protected set; }
+
     public MessageRecord(Guid userId, string channelUserIdentity, Guid channelId, Guid messageTaskId, Guid messageTaskHistoryId, ExtraPropertyDictionary variables, string displayName, DateTimeOffset? expectSendTime, string systemId)
     {
         UserId = userId;
@@ -116,6 +118,23 @@ public class MessageRecord : FullAggregateRoot<Guid, Guid>
         MessageEntityId = messageEntityId;
     }
 
+    public void CaptureTemplateContent(MessageContent content)
+    {
+        EnsureTemplateMessage();
+        ContentSnapshot = CloneContent(content);
+    }
+
+    public void RefreshTemplateContentForRetry(MessageContent content)
+    {
+        EnsureTemplateMessage();
+        if (Success == true)
+        {
+            throw new InvalidOperationException("A successfully sent message cannot be retried");
+        }
+
+        ContentSnapshot = CloneContent(content);
+    }
+
     public void SetUserId(Guid userId)
     {
         UserId = userId;
@@ -142,5 +161,19 @@ public class MessageRecord : FullAggregateRoot<Guid, Guid>
             return !string.IsNullOrEmpty(ExtraProperties.GetProperty<string>(CompensateConsts.CHANNEL_CODE)) &&
                    !string.IsNullOrEmpty(ExtraProperties.GetProperty<string>(CompensateConsts.TEMPLATE_CODE));
         }
+    }
+
+    private void EnsureTemplateMessage()
+    {
+        if (MessageEntityType != MessageEntityTypes.Template)
+        {
+            throw new InvalidOperationException("Only template message records can capture content snapshots");
+        }
+    }
+
+    private static MessageContent CloneContent(MessageContent content)
+    {
+        ArgumentNullException.ThrowIfNull(content);
+        return content.DeepCopy();
     }
 }

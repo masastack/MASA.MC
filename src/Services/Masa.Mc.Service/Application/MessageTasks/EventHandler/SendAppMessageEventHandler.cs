@@ -14,6 +14,7 @@ public class SendAppMessageEventHandler
     private readonly IAppVendorConfigRepository _appVendorConfigRepository;
     private readonly IAppDeviceTokenRepository _appDeviceTokenRepository;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly MessageRecordContentDomainService _recordContentDomainService;
 
     public SendAppMessageEventHandler(
         AppNotificationSenderFactory appNotificationSenderFactory,
@@ -24,7 +25,8 @@ public class SendAppMessageEventHandler
         IWebsiteMessageRepository websiteMessageRepository,
         IAppVendorConfigRepository appVendorConfigRepository,
         IAppDeviceTokenRepository appDeviceTokenRepository,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork,
+        MessageRecordContentDomainService recordContentDomainService)
     {
         _appNotificationSenderFactory = appNotificationSenderFactory;
         _channelRepository = channelRepository;
@@ -35,6 +37,7 @@ public class SendAppMessageEventHandler
         _appVendorConfigRepository = appVendorConfigRepository;
         _appDeviceTokenRepository = appDeviceTokenRepository;
         _unitOfWork = unitOfWork;
+        _recordContentDomainService = recordContentDomainService;
     }
 
     [EventHandler]
@@ -418,6 +421,10 @@ public class SendAppMessageEventHandler
             taskHistory.MessageTask.SystemId
         );
         record.SetMessageEntity(taskHistory.MessageTask.EntityType, taskHistory.MessageTask.EntityId);
+        if (data.MessageType == MessageEntityTypes.Template)
+        {
+            record.CaptureTemplateContent(_recordContentDomainService.Create(data));
+        }
 
         if (taskHistory.MessageTask.IsCompensateMessage)
         {

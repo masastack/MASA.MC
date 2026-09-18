@@ -53,15 +53,7 @@ public class MessageData : ValueObject
 
     private MessageData Clone()
     {
-        var clonedContent = new MessageContent(
-            MessageContent.Title,
-            MessageContent.Content,
-            MessageContent.Markdown,
-            MessageContent.IsJump,
-            MessageContent.JumpUrl,
-            new ExtraPropertyDictionary(MessageContent.ExtraProperties));
-
-        var clonedData = new MessageData(clonedContent, MessageType);
+        var clonedData = new MessageData(MessageContent.DeepCopy(), MessageType);
         foreach (var item in ExtraProperties)
         {
             clonedData.SetDataValue(item.Key, item.Value?.ToString() ?? string.Empty);

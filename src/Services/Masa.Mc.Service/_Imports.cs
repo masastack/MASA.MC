@@ -177,6 +177,7 @@ global using Masa.Mc.Service.Admin.Application.WebsiteMessages.Queries;
 global using Masa.Mc.Service.Admin.Domain.Channels.Services;
 global using Masa.Mc.Service.Admin.Domain.Unsubscriptions.Services;
 global using Masa.Mc.Service.Admin.Domain.MessageTasks.Services;
+global using Masa.Mc.Service.Admin.Domain.MessageRecords.Services;
 global using Masa.Mc.Service.Admin.Domain.MessageTemplates.Services;
 global using Masa.Mc.Service.Admin.Domain.ReceiverGroups.Services;
 global using Masa.Mc.Service.Admin.Domain.WebsiteMessages.Services;

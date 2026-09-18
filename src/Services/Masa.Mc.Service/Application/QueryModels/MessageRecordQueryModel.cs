@@ -49,5 +49,7 @@ public class MessageRecordQueryModel : Entity<Guid>, ISoftDelete
 
     public string MessageId { get; set; } = string.Empty;
 
+    public MessageRecordContentQueryModel? ContentSnapshot { get; set; }
+
     public bool IsDeleted { get; set; }
 }

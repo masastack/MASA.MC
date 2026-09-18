@@ -13,6 +13,7 @@ public class RetrySmsMessageEventHandler
     private readonly IMessageTemplateRepository _repository;
     private readonly II18n<DefaultResource> _i18n;
     private readonly ITemplateRenderer _templateRenderer;
+    private readonly MessageRecordContentDomainService _recordContentDomainService;
 
     public RetrySmsMessageEventHandler(SmsSenderFactory smsSenderFactory
         , IChannelRepository channelRepository
@@ -21,7 +22,8 @@ public class RetrySmsMessageEventHandler
         , UnsubscriptionDomainService channelUnsubscriptionDomainService
         , IMessageTemplateRepository repository
         , II18n<DefaultResource> i18n
-        , ITemplateRenderer templateRenderer)
+        , ITemplateRenderer templateRenderer
+        , MessageRecordContentDomainService recordContentDomainService)
     {
         _smsSenderFactory = smsSenderFactory;
         _channelRepository = channelRepository;
@@ -31,6 +33,7 @@ public class RetrySmsMessageEventHandler
         _repository = repository;
         _i18n = i18n;
         _templateRenderer = templateRenderer;
+        _recordContentDomainService = recordContentDomainService;
     }
 
     [EventHandler]
@@ -51,6 +54,18 @@ public class RetrySmsMessageEventHandler
         {
             var variables = messageRecord.Variables;
             var messageTemplate = await _repository.FindAsync(x => x.Id == messageRecord.MessageEntityId);
+            if (messageTemplate is null)
+            {
+                messageRecord.SetResult(false, _i18n.T("MessageTemplate"));
+                await _messageRecordRepository.UpdateAsync(messageRecord);
+                return;
+            }
+
+            messageRecord.RefreshTemplateContentForRetry(_recordContentDomainService.CreateSms(
+                messageTemplate,
+                messageRecord.Variables,
+                provider,
+                messageRecord.GetDataValue<string>(nameof(MessageTemplate.Sign))));
             if (messageTemplate?.GetUnsubscribeConfig().Enabled == true &&
                 await _channelUnsubscriptionDomainService.IsSmsTemplateUnsubscribedAsync(
                     messageRecord.ChannelId,
@@ -69,7 +84,7 @@ public class RetrySmsMessageEventHandler
                 return;
             }
 
-            variables = _messageTemplateDomainService.ConvertVariables(messageTemplate, messageRecord.Variables);
+            variables = messageTemplate.ConvertVariables(messageRecord.Variables);
             var text = BuildSmsMessageText(smsSender, variables, messageTemplate);
 
             var smsMessage = new SmsMessage(messageRecord.ChannelUserIdentity, text);
