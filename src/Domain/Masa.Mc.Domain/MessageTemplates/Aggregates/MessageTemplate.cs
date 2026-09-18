@@ -73,6 +73,24 @@ public class MessageTemplate : FullAggregateRoot<Guid, Guid>
         }
     }
 
+    public ExtraPropertyDictionary ConvertVariables(ExtraPropertyDictionary? variables)
+    {
+        var convertedVariables = new ExtraPropertyDictionary();
+        if (variables is null)
+        {
+            return convertedVariables;
+        }
+
+        foreach (var item in Items)
+        {
+            var key = string.IsNullOrEmpty(item.MappingCode) ? item.Code : item.MappingCode;
+            var value = variables.FirstOrDefault(x => x.Key == item.Code).Value;
+            convertedVariables[key] = value;
+        }
+
+        return convertedVariables;
+    }
+
     public virtual void SetAuditStatus(MessageTemplateAuditStatuses auditStatus, string auditReason = "")
     {
         AuditStatus = auditStatus;

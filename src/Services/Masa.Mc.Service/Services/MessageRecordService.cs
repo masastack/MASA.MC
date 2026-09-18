@@ -23,7 +23,7 @@ public class MessageRecordService : ServiceBase
         return query.Result;
     }
 
-    public async Task<MessageRecordDto> GetAsync(IEventBus eventBus, Guid id)
+    public async Task<MessageRecordDetailDto> GetAsync(IEventBus eventBus, Guid id)
     {
         var query = new GetMessageRecordQuery(id);
         await eventBus.PublishAsync(query);

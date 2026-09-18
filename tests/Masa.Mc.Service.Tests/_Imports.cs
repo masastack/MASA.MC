@@ -1,0 +1,17 @@
+global using System.Collections.Concurrent;
+global using System.Text.Json;
+global using Masa.BuildingBlocks.Ddd.Domain.Events;
+global using Masa.Mc.Contracts.Admin.Dtos.MessageRecords;
+global using Masa.Mc.Domain.MessageInfos.Aggregates;
+global using Masa.Mc.Domain.MessageRecords.Aggregates;
+global using Masa.Mc.Domain.MessageTemplates.Aggregates;
+global using Masa.Mc.Domain.Shared.Channels;
+global using Masa.Mc.Domain.Shared.MessageTasks;
+global using Masa.Mc.Domain.Shared.MessageTemplates;
+global using Masa.Mc.Infrastructure.Sms;
+global using Masa.Mc.Service.Admin.Application.MessageRecords;
+global using Masa.Mc.Service.Admin.Application.QueryModels;
+global using Masa.Mc.Service.Admin.Domain.MessageRecords.Services;
+global using Masa.Mc.Service.Admin.Domain.MessageTemplates.Services;
+global using Moq;
+global using Xunit;

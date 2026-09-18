@@ -15,6 +15,7 @@ public class SendSmsMessageEventHandler
     private readonly II18n<DefaultResource> _i18n;
     private readonly ITemplateRenderer _templateRenderer;
     private readonly UnsubscriptionDomainService _channelUnsubscriptionDomainService;
+    private readonly MessageRecordContentDomainService _recordContentDomainService;
 
     public SendSmsMessageEventHandler(SmsSenderFactory smsSenderFactory
         , IChannelRepository channelRepository
@@ -25,7 +26,8 @@ public class SendSmsMessageEventHandler
         , IMessageTemplateRepository templateRepository
         , II18n<DefaultResource> i18n
         , ITemplateRenderer templateRenderer
-        , UnsubscriptionDomainService channelUnsubscriptionDomainService)
+        , UnsubscriptionDomainService channelUnsubscriptionDomainService
+        , MessageRecordContentDomainService recordContentDomainService)
     {
         _smsSenderFactory = smsSenderFactory;
         _channelRepository = channelRepository;
@@ -37,6 +39,7 @@ public class SendSmsMessageEventHandler
         _i18n = i18n;
         _templateRenderer = templateRenderer;
         _channelUnsubscriptionDomainService = channelUnsubscriptionDomainService;
+        _recordContentDomainService = recordContentDomainService;
     }
 
     [EventHandler(1)]
@@ -46,6 +49,7 @@ public class SendSmsMessageEventHandler
         var taskHistory = eto.MessageTaskHistory;
 
         var messageTemplate = await _templateRepository.FindNoTrackingAsync(x => x.Id == taskHistory.MessageTask.EntityId);
+        var channel = await _channelRepository.AsNoTracking().FirstOrDefaultAsync(x => x.Id == channelId);
         var messageRecords = new List<MessageRecord>();
 
         foreach (var item in taskHistory.ReceiverUsers)
@@ -58,6 +62,11 @@ public class SendSmsMessageEventHandler
             if (eto.MessageData.MessageType == MessageEntityTypes.Template)
             {
                 messageRecord.SetDisplayName(messageTemplate.DisplayName);
+                messageRecord.CaptureTemplateContent(_recordContentDomainService.CreateSms(
+                    messageTemplate,
+                    item.Variables,
+                    (SmsProviders)channel.Provider,
+                    taskHistory.MessageTask.Sign));
             }
 
             messageRecords.Add(messageRecord);
@@ -101,7 +110,7 @@ public class SendSmsMessageEventHandler
                     continue;
                 }
 
-                var variables = _messageTemplateDomainService.ConvertVariables(eto.MessageTemplate, messageRecord.Variables);
+                var variables = eto.MessageTemplate.ConvertVariables(messageRecord.Variables);
                 eto.AddPhoneNumberVariable(messageRecord.ChannelUserIdentity, variables);
             }
         }

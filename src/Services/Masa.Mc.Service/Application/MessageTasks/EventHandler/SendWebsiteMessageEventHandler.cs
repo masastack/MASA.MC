@@ -13,6 +13,7 @@ public class SendWebsiteMessageEventHandler
     private readonly IChannelRepository _channelRepository;
     private readonly II18n<DefaultResource> _i18n;
     private readonly IHubContext<NotificationsHub> _hubContext;
+    private readonly MessageRecordContentDomainService _recordContentDomainService;
 
     public SendWebsiteMessageEventHandler(IMessageTaskHistoryRepository messageTaskHistoryRepository
         , IMessageRecordRepository messageRecordRepository
@@ -21,7 +22,8 @@ public class SendWebsiteMessageEventHandler
         , IMessageTemplateRepository templateRepository
         , IChannelRepository channelRepository
         , II18n<DefaultResource> i18n
-        , IHubContext<NotificationsHub> hubContext)
+        , IHubContext<NotificationsHub> hubContext
+        , MessageRecordContentDomainService recordContentDomainService)
     {
         _messageTaskHistoryRepository = messageTaskHistoryRepository;
         _messageRecordRepository = messageRecordRepository;
@@ -31,6 +33,7 @@ public class SendWebsiteMessageEventHandler
         _channelRepository = channelRepository;
         _i18n = i18n;
         _hubContext = hubContext;
+        _recordContentDomainService = recordContentDomainService;
     }
 
     [EventHandler(1)]
@@ -61,6 +64,10 @@ public class SendWebsiteMessageEventHandler
 
                 var messageRecord = new MessageRecord(item.UserId, item.ChannelUserIdentity, channelId, taskHistory.MessageTaskId, taskHistory.Id, item.Variables, renderedData.MessageContent.Title, taskHistory.SendTime, taskHistory.MessageTask.SystemId);
                 messageRecord.SetMessageEntity(taskHistory.MessageTask.EntityType, taskHistory.MessageTask.EntityId);
+                if (renderedData.MessageType == MessageEntityTypes.Template)
+                {
+                    messageRecord.CaptureTemplateContent(_recordContentDomainService.Create(renderedData));
+                }
 
                 if (renderedData.MessageType == MessageEntityTypes.Template)
                 {

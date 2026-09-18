@@ -11,13 +11,15 @@ public class WebsiteMessageCreatedEventHandler
     private readonly IWebsiteMessageRepository _websiteMessageRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IHubContext<NotificationsHub> _hubContext;
+    private readonly MessageRecordContentDomainService _recordContentDomainService;
 
     public WebsiteMessageCreatedEventHandler(IMessageTaskHistoryRepository messageTaskHistoryRepository
         , MessageTaskDomainService messageTaskDomainService
         , IMessageRecordRepository messageRecordRepository
         , IWebsiteMessageRepository websiteMessageRepository
         , IUnitOfWork unitOfWork
-        , IHubContext<NotificationsHub> hubContext)
+        , IHubContext<NotificationsHub> hubContext
+        , MessageRecordContentDomainService recordContentDomainService)
     {
         _messageTaskHistoryRepository = messageTaskHistoryRepository;
         _messageTaskDomainService = messageTaskDomainService;
@@ -25,6 +27,7 @@ public class WebsiteMessageCreatedEventHandler
         _websiteMessageRepository = websiteMessageRepository;
         _unitOfWork = unitOfWork;
         _hubContext = hubContext;
+        _recordContentDomainService = recordContentDomainService;
     }
 
     [EventHandler]
@@ -45,6 +48,10 @@ public class WebsiteMessageCreatedEventHandler
             var messageData = await _messageTaskDomainService.GetMessageDataAsync(taskHistory.MessageTask, taskHistory.MessageTask.Variables);
             var messageRecord = new MessageRecord(userId, userId.ToString(), taskHistory.MessageTask.ChannelId.Value, taskHistory.MessageTaskId, taskHistory.Id, taskHistory.MessageTask.Variables, messageData.MessageContent.Title, taskHistory.SendTime, taskHistory.MessageTask.SystemId);
             messageRecord.SetMessageEntity(taskHistory.MessageTask.EntityType, taskHistory.MessageTask.EntityId);
+            if (messageData.MessageType == MessageEntityTypes.Template)
+            {
+                messageRecord.CaptureTemplateContent(_recordContentDomainService.Create(messageData));
+            }
             messageRecord.SetResult(true, string.Empty, taskHistory.SendTime);
 
             var websiteMessage = new WebsiteMessage(messageRecord.MessageTaskHistoryId, messageRecord.ChannelId, userId, messageData.MessageContent.Title, messageData.MessageContent.Content, messageData.MessageContent.GetJumpUrl(), taskHistory.SendTime ?? DateTimeOffset.UtcNow, messageData.MessageContent.ExtraProperties);

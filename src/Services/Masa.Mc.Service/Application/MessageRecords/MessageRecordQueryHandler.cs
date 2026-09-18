@@ -10,6 +10,7 @@ public class MessageRecordQueryHandler
     private readonly II18n<DefaultResource> _i18n;
     private readonly IDataFilter _dataFilter;
     private readonly ITemplateRenderer _templateRenderer;
+    private readonly MessageRecordDetailContentResolver _contentResolver;
 
     public MessageRecordQueryHandler(IMcQueryContext context
         , IAuthClient authClient
@@ -22,16 +23,21 @@ public class MessageRecordQueryHandler
         _i18n = i18n;
         _dataFilter = dataFilter;
         _templateRenderer = templateRenderer;
+        _contentResolver = new MessageRecordDetailContentResolver(templateRenderer);
     }
 
     [EventHandler]
     public async Task GetAsync(GetMessageRecordQuery query)
     {
         using var dataFilter = _dataFilter.Disable<ISoftDelete>();
-        var entity = await _context.MessageRecordQueries.Include(x => x.Channel).FirstOrDefaultAsync(x => x.Id == query.MessageRecordId);
+        var entity = await _context.MessageRecordQueries
+            .Include(x => x.Channel)
+            .Include(x => x.ContentSnapshot)
+            .FirstOrDefaultAsync(x => x.Id == query.MessageRecordId);
         MasaArgumentException.ThrowIfNull(entity, _i18n.T("MessageRecord"));
 
-        var dto = entity.Adapt<MessageRecordDto>();
+        var dto = entity.Adapt<MessageRecordDetailDto>();
+        await FillContentAsync(entity, dto);
         await FillUserInfo(new List<MessageRecordDto> { dto });
         query.Result = dto;
     }
@@ -109,7 +115,8 @@ public class MessageRecordQueryHandler
                 x.SendTime,
                 x.MessageEntityId,
                 x.Variables,
-                x.DisplayName
+                x.DisplayName,
+                SnapshotContent = x.ContentSnapshot == null ? null : x.ContentSnapshot.Content
             })
             .ToList();
 
@@ -132,6 +139,7 @@ public class MessageRecordQueryHandler
                     x.MessageEntityId,
                     x.Variables,
                     x.DisplayName,
+                    x.SnapshotContent,
                     templateContents),
                 SendTime = x.SendTime
             })
@@ -161,7 +169,8 @@ public class MessageRecordQueryHandler
                 x.SendTime,
                 x.MessageEntityId,
                 x.Variables,
-                x.DisplayName
+                x.DisplayName,
+                SnapshotContent = x.ContentSnapshot == null ? null : x.ContentSnapshot.Content
             })
             .ToListAsync();
 
@@ -185,6 +194,7 @@ public class MessageRecordQueryHandler
                     x.MessageEntityId,
                     x.Variables,
                     x.DisplayName,
+                    x.SnapshotContent,
                     templateContents),
                 IsInbound = false
             })
@@ -270,8 +280,14 @@ public class MessageRecordQueryHandler
         Guid messageEntityId,
         ExtraPropertyDictionary? variables,
         string displayName,
+        string? snapshotContent,
         IReadOnlyDictionary<Guid, string> templateContents)
     {
+        if (!string.IsNullOrWhiteSpace(snapshotContent))
+        {
+            return snapshotContent;
+        }
+
         if (templateContents.TryGetValue(messageEntityId, out var templateContent) &&
             !string.IsNullOrWhiteSpace(templateContent))
         {
@@ -279,5 +295,29 @@ public class MessageRecordQueryHandler
         }
 
         return displayName;
+    }
+
+    private async Task FillContentAsync(MessageRecordQueryModel entity, MessageRecordDetailDto dto)
+    {
+        MessageInfoQueryModel? messageInfo = null;
+        MessageTemplateQueryModel? template = null;
+
+        if (entity.MessageEntityType == MessageEntityTypes.Ordinary)
+        {
+            messageInfo = await _context.MessageInfoQueries
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == entity.MessageEntityId);
+        }
+        else if (entity.MessageEntityType == MessageEntityTypes.Template && entity.ContentSnapshot is null)
+        {
+            template = await _context.MessageTemplateQueries
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == entity.MessageEntityId);
+        }
+
+        var resolution = _contentResolver.Resolve(entity, messageInfo, template);
+        dto.MessageContent = resolution.Content;
+        dto.ContentSource = resolution.Source;
+        dto.IsContentReliable = resolution.IsReliable;
     }
 }

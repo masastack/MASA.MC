@@ -137,6 +137,19 @@ public static class McDbContextModelBuilderExtensions
             b.HasIndex(x => x.UserId);
             b.HasIndex(x => new { x.MessageTaskHistoryId, x.Success });
             b.HasIndex(x => x.MessageId);
+            b.OwnsOne(x => x.ContentSnapshot, cb =>
+            {
+                cb.ToTable(MCConsts.DbTablePrefix + "MessageRecordContents", MCConsts.DbSchema);
+                cb.WithOwner().HasForeignKey("MessageRecordId");
+                cb.Property<Guid>("MessageRecordId");
+                cb.HasKey("MessageRecordId");
+                cb.Property(x => x.Title).HasMaxLength(128);
+                cb.Property(x => x.JumpUrl).HasMaxLength(256);
+                cb.Property(x => x.ExtraProperties)
+                    .HasConversion(new ExtraPropertiesValueConverter())
+                    .Metadata.SetValueComparer(new ExtraPropertyDictionaryValueComparer());
+            });
+            b.Navigation(x => x.ContentSnapshot).IsRequired(false);
         });
 
         builder.Entity<MessageReceiverUser>(b =>

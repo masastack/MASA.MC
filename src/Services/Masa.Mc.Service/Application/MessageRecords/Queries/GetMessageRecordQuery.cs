@@ -3,7 +3,7 @@
 
 namespace Masa.Mc.Service.Admin.Application.MessageRecords.Queries;
 
-public record GetMessageRecordQuery(Guid MessageRecordId) : Query<MessageRecordDto>
+public record GetMessageRecordQuery(Guid MessageRecordId) : Query<MessageRecordDetailDto>
 {
-    public override MessageRecordDto Result { get; set; } = new();
+    public override MessageRecordDetailDto Result { get; set; } = new();
 }

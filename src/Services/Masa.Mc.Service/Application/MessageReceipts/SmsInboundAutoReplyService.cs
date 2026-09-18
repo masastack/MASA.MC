@@ -13,6 +13,7 @@ public class SmsInboundAutoReplyService : ITransientDependency
     private readonly IHostEnvironment _hostEnvironment;
     private readonly II18n<DefaultResource> _i18n;
     private readonly ILogger<SmsInboundAutoReplyService> _logger;
+    private readonly MessageRecordContentDomainService _recordContentDomainService;
 
     public SmsInboundAutoReplyService(
         IChannelRepository channelRepository,
@@ -22,7 +23,8 @@ public class SmsInboundAutoReplyService : ITransientDependency
         SmsSenderFactory smsSenderFactory,
         IHostEnvironment hostEnvironment,
         II18n<DefaultResource> i18n,
-        ILogger<SmsInboundAutoReplyService> logger)
+        ILogger<SmsInboundAutoReplyService> logger,
+        MessageRecordContentDomainService recordContentDomainService)
     {
         _channelRepository = channelRepository;
         _messageTemplateRepository = messageTemplateRepository;
@@ -32,6 +34,7 @@ public class SmsInboundAutoReplyService : ITransientDependency
         _hostEnvironment = hostEnvironment;
         _i18n = i18n;
         _logger = logger;
+        _recordContentDomainService = recordContentDomainService;
     }
 
     public async Task TrySendAutoReplyAsync(
@@ -86,7 +89,7 @@ public class SmsInboundAutoReplyService : ITransientDependency
             return;
         }
 
-        var messageRecord = CreateMessageRecord(request);
+        var messageRecord = CreateMessageRecord(request, messageTemplate);
         if (await TryHandleSendUpperLimitAsync(messageTemplate, channelUserIdentity, messageRecord))
         {
             return;
@@ -199,7 +202,7 @@ public class SmsInboundAutoReplyService : ITransientDependency
         await _messageRecordRepository.AddAsync(messageRecord);
     }
 
-    private static MessageRecord CreateMessageRecord(SmsInboundAutoReplySendRequest request)
+    private MessageRecord CreateMessageRecord(SmsInboundAutoReplySendRequest request, MessageTemplate? template)
     {
         var messageRecord = new MessageRecord(
             request.UserId,
@@ -213,6 +216,12 @@ public class SmsInboundAutoReplyService : ITransientDependency
             string.Empty);
         messageRecord.SetMessageEntity(MessageEntityTypes.Template, request.AutoReplyTemplateEntityId);
         messageRecord.SetDataValue(nameof(MessageTemplate.TemplateId), request.AutoReplyTemplateId ?? string.Empty);
+        if (template is not null)
+        {
+            messageRecord.CaptureTemplateContent(
+                _recordContentDomainService.CreateTemplateWithContent(template, request.AutoReplyContent));
+        }
+
         return messageRecord;
     }
 }

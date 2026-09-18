@@ -13,6 +13,7 @@ public class SendWeixinWorkWebhookMessageEventHandler
     private readonly IMessageTemplateRepository _templateRepository;
     private readonly MessageTemplateDomainService _messageTemplateDomainService;
     private readonly II18n<DefaultResource> _i18n;
+    private readonly MessageRecordContentDomainService _recordContentDomainService;
 
     public SendWeixinWorkWebhookMessageEventHandler(IProviderAsyncLocal<IWeixinWorkWebhookOptions> asyncLocal
         , IWeixinWorkWebhookSender sender
@@ -21,7 +22,8 @@ public class SendWeixinWorkWebhookMessageEventHandler
         , IMessageTaskHistoryRepository messageTaskHistoryRepository
         , IMessageTemplateRepository templateRepository
         , MessageTemplateDomainService messageTemplateDomainService
-        , II18n<DefaultResource> i18n)
+        , II18n<DefaultResource> i18n
+        , MessageRecordContentDomainService recordContentDomainService)
     {
         _asyncLocal = asyncLocal;
         _sender = sender;
@@ -31,6 +33,7 @@ public class SendWeixinWorkWebhookMessageEventHandler
         _templateRepository = templateRepository;
         _messageTemplateDomainService = messageTemplateDomainService;
         _i18n = i18n;
+        _recordContentDomainService = recordContentDomainService;
     }
 
     [EventHandler]
@@ -50,14 +53,18 @@ public class SendWeixinWorkWebhookMessageEventHandler
             var messageRecord = new MessageRecord(item.UserId, item.ChannelUserIdentity, eto.ChannelId, taskHistory.MessageTaskId, taskHistory.Id, item.Variables, displayName, taskHistory.SendTime, taskHistory.MessageTask.SystemId);
             messageRecord.SetMessageEntity(taskHistory.MessageTask.EntityType, taskHistory.MessageTask.EntityId);
             messageRecord.SetDataValue(nameof(MessageTemplate.TemplateId), eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.TemplateId)));
+            if (eto.MessageData.MessageType == MessageEntityTypes.Template)
+            {
+                messageRecord.CaptureTemplateContent(_recordContentDomainService.Create(eto.MessageData));
+            }
+
+            messageRecords.Add(messageRecord);
 
             if (checkChannelUserIdentitys.Contains(messageRecord.ChannelUserIdentity))
             {
                 messageRecord.SetResult(false, _i18n.T("DailySendingLimit"));
                 continue;
             }
-
-            messageRecords.Add(messageRecord);
         }
 
         var channelUserIdentitys = messageRecords.Where(x => !x.Success.HasValue).Select(x => x.ChannelUserIdentity).ToList();

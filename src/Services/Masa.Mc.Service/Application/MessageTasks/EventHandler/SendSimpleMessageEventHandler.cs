@@ -12,6 +12,7 @@ public class SendSimpleMessageEventHandler
     private readonly IMessageTemplateRepository _messageTemplateRepository;
     private readonly II18n<DefaultResource> _i18n;
     private readonly UnsubscriptionDomainService _channelUnsubscriptionDomainService;
+    private readonly MessageRecordContentDomainService _recordContentDomainService;
 
     public SendSimpleMessageEventHandler(SmsSenderFactory smsSenderFactory
         , IChannelRepository channelRepository
@@ -19,7 +20,8 @@ public class SendSimpleMessageEventHandler
         , MessageTemplateDomainService messageTemplateDomainService
         , IMessageTemplateRepository messageTemplateRepository
         , II18n<DefaultResource> i18n
-        , UnsubscriptionDomainService channelUnsubscriptionDomainService)
+        , UnsubscriptionDomainService channelUnsubscriptionDomainService
+        , MessageRecordContentDomainService recordContentDomainService)
     {
         _smsSenderFactory = smsSenderFactory;
         _channelRepository = channelRepository;
@@ -28,6 +30,7 @@ public class SendSimpleMessageEventHandler
         _messageTemplateRepository = messageTemplateRepository;
         _i18n = i18n;
         _channelUnsubscriptionDomainService = channelUnsubscriptionDomainService;
+        _recordContentDomainService = recordContentDomainService;
     }
 
     [EventHandler]
@@ -57,6 +60,15 @@ public class SendSimpleMessageEventHandler
             if (eto.MessageData.MessageType == MessageEntityTypes.Template)
             {
                 messageTemplate = await _messageTemplateRepository.FindNoTrackingAsync(x => x.Id == messageEntityId);
+                if (messageTemplate != null)
+                {
+                    messageRecord.CaptureTemplateContent(_recordContentDomainService.CreateSms(
+                        messageTemplate,
+                        eto.Variables,
+                        provider,
+                        sign));
+                }
+
                 if (messageTemplate?.GetUnsubscribeConfig().Enabled == true &&
                     await _channelUnsubscriptionDomainService.IsSmsTemplateUnsubscribedAsync(channel.Id, eto.ChannelUserIdentity, messageEntityId))
                 {
@@ -108,7 +120,7 @@ public class SendSimpleMessageEventHandler
         string text = string.Empty;
         if (smsSender.SupportsTemplate)
         {
-            var variables = template is null ? eto.Variables : _messageTemplateDomainService.ConvertVariables(template, eto.Variables);
+            var variables = template is null ? eto.Variables : template.ConvertVariables(eto.Variables);
             text = JsonSerializer.Serialize(variables);
         }
         else

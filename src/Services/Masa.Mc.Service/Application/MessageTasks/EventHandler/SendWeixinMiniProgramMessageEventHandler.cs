@@ -15,6 +15,7 @@ public class SendWeixinMiniProgramMessageEventHandler
     private readonly MessageTemplateDomainService _messageTemplateDomainService;
     private readonly II18n<DefaultResource> _i18n;
     private readonly ILogger<SendWeixinMiniProgramMessageEventHandler> _logger;
+    private readonly MessageRecordContentDomainService _recordContentDomainService;
 
     public SendWeixinMiniProgramMessageEventHandler(IProviderAsyncLocal<IWeixinMiniProgramOptions> asyncLocal
         , IWeixinMiniProgramSender sender
@@ -24,7 +25,8 @@ public class SendWeixinMiniProgramMessageEventHandler
         , IMessageTemplateRepository templateRepository
         , MessageTemplateDomainService messageTemplateDomainService
         , II18n<DefaultResource> i18n
-        , ILogger<SendWeixinMiniProgramMessageEventHandler> logger)
+        , ILogger<SendWeixinMiniProgramMessageEventHandler> logger
+        , MessageRecordContentDomainService recordContentDomainService)
     {
         _asyncLocal = asyncLocal;
         _sender = sender;
@@ -35,6 +37,7 @@ public class SendWeixinMiniProgramMessageEventHandler
         _messageTemplateDomainService = messageTemplateDomainService;
         _i18n = i18n;
         _logger = logger;
+        _recordContentDomainService = recordContentDomainService;
     }
 
     [EventHandler]
@@ -65,6 +68,10 @@ public class SendWeixinMiniProgramMessageEventHandler
                 var messageRecord = new MessageRecord(item.UserId, item.ChannelUserIdentity, channel.Id, taskHistory.MessageTaskId, taskHistory.Id, item.Variables, displayName, taskHistory.SendTime, taskHistory.MessageTask.SystemId);
                 messageRecord.SetMessageEntity(taskHistory.MessageTask.EntityType, taskHistory.MessageTask.EntityId);
                 messageRecord.SetDataValue(nameof(MessageTemplate.TemplateId), templateId);
+                if (renderedData.MessageType == MessageEntityTypes.Template)
+                {
+                    messageRecord.CaptureTemplateContent(_recordContentDomainService.Create(renderedData));
+                }
 
                 await SendOrBlockAsync(messageRecord, messageTemplate, renderedData, templateId);
                 messageRecords.Add(messageRecord);
@@ -93,6 +100,10 @@ public class SendWeixinMiniProgramMessageEventHandler
         messageRecord.SetMessageEntity(eto.MessageData.MessageType, messageEntityId);
         messageRecord.SetDataValue(nameof(MessageTemplate.TemplateId), templateId);
         messageRecord.SetDisplayName(eto.MessageData.GetDataValue<string>(nameof(MessageTemplate.DisplayName)));
+        if (eto.MessageData.MessageType == MessageEntityTypes.Template)
+        {
+            messageRecord.CaptureTemplateContent(_recordContentDomainService.Create(eto.MessageData));
+        }
 
         using (_asyncLocal.Change(channel.GetWeixinMiniProgramOptions()))
         {
@@ -161,7 +172,7 @@ public class SendWeixinMiniProgramMessageEventHandler
 
     private Dictionary<string, string> BuildTemplateData(MessageTemplate messageTemplate, ExtraPropertyDictionary variables)
     {
-        var convertedVariables = _messageTemplateDomainService.ConvertVariables(messageTemplate, variables);
+        var convertedVariables = messageTemplate.ConvertVariables(variables);
         return convertedVariables.ToDictionary(x => x.Key, x => x.Value?.ToString() ?? string.Empty);
     }
 

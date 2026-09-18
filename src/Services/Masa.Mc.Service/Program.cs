@@ -125,6 +125,10 @@ builder.Services
     .AddEndpointsApiExplorer()
     .AddSwaggerGen(options =>
     {
+        options.AddServer(new OpenApiServer
+        {
+            Url = "../.."
+        });
         options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
         {
             Name = "Authorization",

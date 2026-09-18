@@ -365,6 +365,11 @@ public class MessageReceiptCommandHandler
 
     private string BuildMatchedMessageSnapshot(MessageRecord messageRecord, MessageTemplate template)
     {
+        if (!string.IsNullOrWhiteSpace(messageRecord.ContentSnapshot?.Content))
+        {
+            return messageRecord.ContentSnapshot.Content;
+        }
+
         if (template == null || template.MessageContent == null)
         {
             return string.Empty;

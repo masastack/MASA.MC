@@ -123,24 +123,6 @@ public class MessageTemplateDomainService : DomainService
             .ToListAsync();
     }
 
-    public ExtraPropertyDictionary ConvertVariables(MessageTemplate messageTemplate, ExtraPropertyDictionary variables)
-    {
-        var newVariables = new ExtraPropertyDictionary();
-
-        if (variables == null)
-        {
-            return newVariables;
-        }
-
-        foreach (var item in messageTemplate.Items)
-        {
-            var key = string.IsNullOrEmpty(item.MappingCode) ? item.Code : item.MappingCode;
-            var value = variables.FirstOrDefault(x => x.Key == item.Code).Value;
-            newVariables[key] = value;
-        }
-        return newVariables;
-    }
-
     private static (DateTimeOffset startTimeUtc, DateTimeOffset endTimeUtc) GetChinaTodayUtcRange()
     {
         var chinaTimeZone = ChinaTimeZone.Value;

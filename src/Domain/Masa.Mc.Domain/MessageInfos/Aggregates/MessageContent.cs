@@ -37,4 +37,12 @@ public class MessageContent : ValueObject
     {
         return IsJump ? JumpUrl : string.Empty;
     }
+
+    public MessageContent DeepCopy()
+    {
+        var serializedExtraProperties = JsonSerializer.Serialize(ExtraProperties);
+        var extraProperties = JsonSerializer.Deserialize<ExtraPropertyDictionary>(serializedExtraProperties) ?? new();
+
+        return new MessageContent(Title, Content, Markdown, IsJump, JumpUrl, extraProperties);
+    }
 }
