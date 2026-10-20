@@ -253,6 +253,7 @@ public class MessageRecordQueryHandler
         }
         condition = condition.And(!string.IsNullOrEmpty(inputDto.SystemId), x => x.SystemId == inputDto.SystemId);
         condition = condition.And(!string.IsNullOrEmpty(inputDto.ChannelUserIdentity), x => x.ChannelUserIdentity == inputDto.ChannelUserIdentity);
+        condition = condition.And(!string.IsNullOrEmpty(inputDto.FailureReason), x => x.FailureReason.ToLower().Contains(inputDto.FailureReason.ToLower()));
         return await Task.FromResult(condition); ;
     }
 
