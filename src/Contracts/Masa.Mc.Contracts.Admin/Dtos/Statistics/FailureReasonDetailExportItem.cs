@@ -11,6 +11,9 @@ public sealed class FailureReasonDetailExportItem
     [ExporterHeader(DisplayName = "渠道用户标识")]
     public string ChannelUserIdentity { get; init; } = string.Empty;
 
+    [ExporterHeader(DisplayName = "错误码")]
+    public string ErrorCode { get; init; } = string.Empty;
+
     [ExporterHeader(DisplayName = "失败原因")]
     public string FailureReason { get; init; } = string.Empty;
 
