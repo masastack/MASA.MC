@@ -180,6 +180,7 @@ public class ChannelStatisticsQueryHandler
                 x.DisplayName,
                 x.ChannelUserIdentity,
                 x.FailureReason,
+                IsYunMasSms = x.Channel.Type == ChannelTypes.Sms && x.Channel.Provider == (int)SmsProviders.YunMas,
                 x.ExpectSendTime,
                 x.SendTime,
                 x.MessageId
@@ -193,14 +194,19 @@ public class ChannelStatisticsQueryHandler
         }
         var exportRecords = await exportQuery.ToListAsync();
         var exportTimeZone = CultureTimeZoneResolver.GetDefaultCultureTimeZone();
-        var exportItems = exportRecords.Select(x => new FailureReasonDetailExportItem
+        var exportItems = exportRecords.Select(x =>
         {
-            DisplayName = x.DisplayName,
-            ChannelUserIdentity = x.ChannelUserIdentity,
-            FailureReason = string.IsNullOrWhiteSpace(x.FailureReason) ? "Unknown" : x.FailureReason,
-            ExpectSendTime = CultureTimeZoneResolver.ConvertTime(x.ExpectSendTime, exportTimeZone),
-            SendTime = CultureTimeZoneResolver.ConvertTime(x.SendTime, exportTimeZone),
-            MessageId = x.MessageId
+            var (errorCode, failureReason) = SplitFailureReason(x.FailureReason, x.IsYunMasSms);
+            return new FailureReasonDetailExportItem
+            {
+                DisplayName = x.DisplayName,
+                ChannelUserIdentity = x.ChannelUserIdentity,
+                ErrorCode = errorCode,
+                FailureReason = failureReason,
+                ExpectSendTime = CultureTimeZoneResolver.ConvertTime(x.ExpectSendTime, exportTimeZone),
+                SendTime = CultureTimeZoneResolver.ConvertTime(x.SendTime, exportTimeZone),
+                MessageId = x.MessageId
+            };
         }).ToList();
 
         query.Result = await _exporter.ExportAsByteArray(exportItems);
@@ -319,6 +325,31 @@ public class ChannelStatisticsQueryHandler
         }
 
         return failureReason.Trim();
+    }
+
+    /// <summary>
+    /// 拆分导出的错误码与失败原因。
+    /// 云MAS渠道：错误码为原始错误码，失败原因为中文说明（未命中字典时回退为原始错误码）。
+    /// 其他渠道：错误码为空，失败原因保持原始内容。
+    /// </summary>
+    private static (string ErrorCode, string FailureReason) SplitFailureReason(string? failureReason, bool isYunMasSms)
+    {
+        if (string.IsNullOrWhiteSpace(failureReason))
+        {
+            return (string.Empty, "Unknown");
+        }
+
+        if (!isYunMasSms)
+        {
+            return (string.Empty, failureReason);
+        }
+
+        var errorCode = failureReason.Trim();
+        var description = YunMasFailureReasonMapper.TryGetDescription(errorCode, out var mapped)
+            ? mapped
+            : errorCode;
+
+        return (errorCode, description);
     }
 
 }
